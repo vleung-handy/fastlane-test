@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.0.1/39eff75ddcb987ff65888361a29f489c178429a3/okio-1.0.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="39eff75ddcb987ff65888361a29f489c178429a3">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/okio-1.0.1-543ba0d24ffcd51b4136127040ef7184abc93142.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/classes-221300fb711004fafc23251b178de487f327c73a.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.6.1/efb0a36546aa8857ab8df358b106c1817e03cbee/retrofit-1.6.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="efb0a36546aa8857ab8df358b106c1817e03cbee">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/retrofit-1.6.1-4b3f4ee886d3dd7dfdc0edc04cabcb4644dd4a29.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6975da39a7040257bd51d21a231b76c915872d38">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/javax.inject-1-e88305b2f19d0fffd6ad3454e4b07a077cdc52f7.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-ededb7c03fc423126285d358fd47a326c10631a5.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup.dagger/dagger/1.2.2/e8f912ee19ad84958510883ea191135276b091f8/dagger-1.2.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e8f912ee19ad84958510883ea191135276b091f8">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/dagger-1.2.2-2b5907917d6162dff696967584f68f2367d5ab1e.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/5.1.2/daf5472b0df6dabaceb6ad755b3812535863965a/butterknife-5.1.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="daf5472b0df6dabaceb6ad755b3812535863965a">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/butterknife-5.1.2-2e65aa278e515ed3b4b43be94493925ca572727c.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.1.0/6025b7df8a6a4193138723ef120e7228b6a97024/okhttp-urlconnection-2.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6025b7df8a6a4193138723ef120e7228b6a97024">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/okhttp-urlconnection-2.1.0-50119a8003a39668ce9f3a137ba4a3d80fd69549.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/classes-0490756538021379db7cd4ec8a2394549b45f679.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup/otto/1.3.5/7941cd2c2c8ec006800d75c35f8a9dacf892ab93/otto-1.3.5.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7941cd2c2c8ec006800d75c35f8a9dacf892ab93">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/otto-1.3.5-c76cce665a111736133b127607c11b5932e4180a.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/exploded-aar/com.mixpanel.android/mixpanel-android/4.4.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3a0f4bb74cc7238463b31a9400dfecd0eb818f72">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/classes-af0d2219e6de286145eadf62ac3fdc8c4bc313e1.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.1.0/9b51f7d0c19f179b52beab7cb433f8ba5cf786a4/okhttp-2.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9b51f7d0c19f179b52beab7cb433f8ba5cf786a4">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/okhttp-2.1.0-ecca151e0001763b6ba8f208e7b76500a2c966f3.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/gson-2.2.4-22698448b30838c4003f1236f8cf2a789ff991a2.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-5b268d7b396d83bae3460cb000f81dedee6ba049.jar" />
+    </item>
+
+</items>
