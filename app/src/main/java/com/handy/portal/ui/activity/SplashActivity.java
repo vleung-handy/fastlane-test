@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.handy.portal.MainActivity;
 import com.handy.portal.R;
 import com.handy.portal.core.User;
 

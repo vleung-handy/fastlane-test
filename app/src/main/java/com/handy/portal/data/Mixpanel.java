@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import android.content.Context;
 
+import com.handy.portal.BuildConfig;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
 import com.handy.portal.core.BookingQuote;
@@ -9,7 +10,6 @@ import com.handy.portal.core.BookingRequest;
 import com.handy.portal.core.BookingTransaction;
 import com.handy.portal.core.User;
 import com.handy.portal.core.UserManager;
-import com.handybook.portal.BuildConfig;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

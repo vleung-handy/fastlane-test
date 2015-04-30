@@ -1,19 +1,15 @@
 package com.handy.portal.ui.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
+import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.NavigationManager;
 import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
@@ -38,6 +34,7 @@ public abstract class BaseActivity extends FragmentActivity {
     @Inject DataManager dataManager;
     @Inject DataManagerErrorHandler dataManagerErrorHandler;
     @Inject NavigationManager navigationManager;
+    @Inject GoogleService googleService;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -73,6 +70,9 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+
+
 
 //        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
 //            PlayServicesUtils.handleAnyPlayServicesError(this);

@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
+import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.NavigationManager;
 import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
@@ -29,6 +30,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment {
     @Inject DataManager dataManager;
     @Inject DataManagerErrorHandler dataManagerErrorHandler;
     @Inject NavigationManager navigationManager;
+    @Inject GoogleService googleService;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {

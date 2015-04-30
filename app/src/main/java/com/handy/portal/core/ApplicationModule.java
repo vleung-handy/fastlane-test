@@ -6,7 +6,8 @@ import android.provider.Settings;
 import android.util.Base64;
 
 import com.google.gson.GsonBuilder;
-import com.handy.portal.MainActivity;
+import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.BaseDataManagerErrorHandler;
 import com.handy.portal.data.DataManager;
@@ -17,7 +18,8 @@ import com.handy.portal.data.Mixpanel;
 import com.handy.portal.data.PropertiesReader;
 import com.handy.portal.data.SecurePreferences;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handybook.portal.BuildConfig;
+import com.handy.portal.BuildConfig;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -34,6 +36,10 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
+        PortalWebViewClient.class,
+        MainActivityFragment.class,
+        BaseApplication.class,
+        BaseActivity.class,
         MainActivity.class,
         SplashActivity.class
 })
@@ -159,6 +165,11 @@ public final class ApplicationModule {
                                                                           final DataManagerErrorHandler dataManagerErrorHandler) {
         return new NavigationManager(this.context, userManager, dataManager, dataManagerErrorHandler);
     }
+
+    @Provides @Singleton final GoogleService provideGoogleService() {
+        return new GoogleService(this.context);
+    }
+
 
     private String getDeviceId() {
         return Settings.Secure.getString(context.getContentResolver(),

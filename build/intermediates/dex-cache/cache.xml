@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0f6d5c1ef2e982c3b7858408e3df389cf5d202da">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/classes-5c317577a748190fd815458528323ea032f7ac08.jar" />
+    </item>
+    <item
         jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.0.1/39eff75ddcb987ff65888361a29f489c178429a3/okio-1.0.1.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -23,13 +30,6 @@
         <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/retrofit-1.6.1-4b3f4ee886d3dd7dfdc0edc04cabcb4644dd4a29.jar" />
     </item>
     <item
-        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="6975da39a7040257bd51d21a231b76c915872d38">
-        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/javax.inject-1-e88305b2f19d0fffd6ad3454e4b07a077cdc52f7.jar" />
-    </item>
-    <item
         jar="/Users/cdavis/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -44,32 +44,11 @@
         <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/dagger-1.2.2-2b5907917d6162dff696967584f68f2367d5ab1e.jar" />
     </item>
     <item
-        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/5.1.2/daf5472b0df6dabaceb6ad755b3812535863965a/butterknife-5.1.2.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="daf5472b0df6dabaceb6ad755b3812535863965a">
-        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/butterknife-5.1.2-2e65aa278e515ed3b4b43be94493925ca572727c.jar" />
-    </item>
-    <item
         jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.1.0/6025b7df8a6a4193138723ef120e7228b6a97024/okhttp-urlconnection-2.1.0.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="6025b7df8a6a4193138723ef120e7228b6a97024">
         <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/okhttp-urlconnection-2.1.0-50119a8003a39668ce9f3a137ba4a3d80fd69549.jar" />
-    </item>
-    <item
-        jar="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/classes-0490756538021379db7cd4ec8a2394549b45f679.jar" />
-    </item>
-    <item
-        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup/otto/1.3.5/7941cd2c2c8ec006800d75c35f8a9dacf892ab93/otto-1.3.5.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="7941cd2c2c8ec006800d75c35f8a9dacf892ab93">
-        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/otto-1.3.5-c76cce665a111736133b127607c11b5932e4180a.jar" />
     </item>
     <item
         jar="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/exploded-aar/com.mixpanel.android/mixpanel-android/4.4.1/classes.jar"
@@ -84,6 +63,34 @@
         revision="21.1.2"
         sha1="9b51f7d0c19f179b52beab7cb433f8ba5cf786a4">
         <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/okhttp-2.1.0-ecca151e0001763b6ba8f208e7b76500a2c966f3.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6975da39a7040257bd51d21a231b76c915872d38">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/javax.inject-1-e88305b2f19d0fffd6ad3454e4b07a077cdc52f7.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/5.1.2/daf5472b0df6dabaceb6ad755b3812535863965a/butterknife-5.1.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="daf5472b0df6dabaceb6ad755b3812535863965a">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/butterknife-5.1.2-2e65aa278e515ed3b4b43be94493925ca572727c.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/classes-0490756538021379db7cd4ec8a2394549b45f679.jar" />
+    </item>
+    <item
+        jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.squareup/otto/1.3.5/7941cd2c2c8ec006800d75c35f8a9dacf892ab93/otto-1.3.5.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7941cd2c2c8ec006800d75c35f8a9dacf892ab93">
+        <dex dex="/Users/cdavis/Desktop/REPOS/android-portal/app/build/intermediates/pre-dexed/debug/otto-1.3.5-c76cce665a111736133b127607c11b5932e4180a.jar" />
     </item>
     <item
         jar="/Users/cdavis/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"

@@ -1,6 +1,8 @@
 package com.handy.portal.util;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.format.Time;
@@ -19,6 +21,15 @@ public final class Utils {
 
     static int toDP(final int px, final Context context) {
         return toDP((float)px, context);
+    }
+
+    public static boolean isInteger(String input){
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch(Exception e){
+            return false;
+        }
     }
 
     public static boolean equalDates(final Date date1, final Date date2) {
@@ -61,5 +72,16 @@ public final class Utils {
 
         for (int i = 0; i < 3; i++) hsvb[i] = (hsva[i] + ((hsvb[i] - hsva[i]) * proportion));
         return Color.HSVToColor(hsvb);
+    }
+
+    public static int getAppVersion(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
     }
 }
