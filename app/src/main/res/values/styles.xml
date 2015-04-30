@@ -5,4 +5,430 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.Base" parent="android:Theme.Holo.Light.NoActionBar">
+        <!--
+        <item name="simpleAlertDialogStyle">@style/Theme.SimpleAlertDialog.Light</item>
+        <item name="abstractWheelViewStyle">@style/abstractWheelViewStyle</item>
+        <item name="vpiCirclePageIndicatorStyle">@style/CirclePageIndicatorStyle</item>
+        -->
+    </style>
+
+    <style name="ContentLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+
+    <style name="ContentLayout.NoBottom">
+        <item name="android:layout_marginTop">@dimen/default_margin</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+        <item name="android:layout_marginRight">@dimen/default_margin</item>
+    </style>
+
+    <style name="ContentLayoutCell">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_margin</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+        <item name="android:layout_marginRight">@dimen/default_margin</item>
+    </style>
+
+    <style name="MenuButtonLayout">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:paddingBottom">18dp</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:textSize">@dimen/xlarge_text_size</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="Button.Blue">
+        <item name="android:background">@drawable/button_blue</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
+    </style>
+
+    <style name="Button.Grey">
+        <item name="android:background">@drawable/button_grey</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
+    </style>
+
+    <style name="Button.Green">
+        <item name="android:background">@drawable/button_green</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
+    </style>
+
+    <style name="Button.Green.Round">
+        <item name="android:background">@drawable/button_green_round</item>
+    </style>
+
+    <style name="Button.White">
+        <item name="android:background">@drawable/button_white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="RoundedButton">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+        <item name="android:background">@drawable/rounded_button_grey</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
+    </style>
+
+    <style name="TextButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:textColor">@drawable/button_text_black</item>
+    </style>
+
+    <style name="TextButton.SmallFont">
+        <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
+    <style name="EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:freezesText">true</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/black_pressed</item>
+        <item name="android:background">@drawable/bg_edit_text</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="EditText.Last">
+        <item name="android:background">@drawable/bg_edit_text_last</item>
+    </style>
+
+    <style name="EditText.Email">
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/email</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.Password">
+        <item name="android:inputType">textPassword</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/password</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.Last.Password">
+        <item name="android:inputType">textPassword</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/password</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.FirstName">
+        <item name="android:inputType">textCapWords</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/name</item>
+        <item name="android:maxLength">50</item>
+    </style>
+
+    <style name="EditText.FullName">
+        <item name="android:inputType">textCapWords</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/full_name</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.StreetAddress">
+        <item name="android:inputType">textCapWords</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/street_addr</item>
+        <item name="android:maxLength">200</item>
+    </style>
+
+    <style name="EditText.OtherAddress">
+        <item name="android:inputType">textPostalAddress</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/apt_num</item>
+        <item name="android:maxLength">200</item>
+    </style>
+
+    <style name="EditText.Phone">
+        <item name="android:inputType">phone</item>
+        <item name="android:digits">1234567890</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/phone</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.Last.Phone">
+        <item name="android:inputType">phone</item>
+        <item name="android:digits">1234567890</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/phone</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.CreditCard">
+        <item name="android:inputType">number</item>
+        <item name="android:digits">1234567890</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/credit_card_num</item>
+        <item name="android:maxLength">32</item>
+    </style>
+
+    <style name="EditText.PromoCodeOpt">
+        <item name="android:inputType">textCapCharacters</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/promo_code_opt</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.Last.PromoCodeOpt">
+        <item name="android:inputType">textCapCharacters</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/promo_code_opt</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.Last.PromoCode">
+        <item name="android:inputType">textCapCharacters</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/promo_code</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.CreditCardExp">
+        <item name="android:inputType">number</item>
+        <item name="android:digits">1234567890</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/mm_yy</item>
+    </style>
+
+    <style name="EditText.CreditCardCVC">
+        <item name="android:inputType">number</item>
+        <item name="android:digits">1234567890</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/cvc</item>
+    </style>
+
+    <style name="EditText.ZipCode">
+        <item name="android:inputType">textPostalAddress</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/zip_code</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.Last.ZipCode">
+        <item name="android:inputType">textPostalAddress</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:hint">@string/zip_code</item>
+        <item name="android:maxLength">100</item>
+    </style>
+
+    <style name="EditText.Comment">
+        <item name="android:freezesText">true</item>
+        <item name="android:maxLength">1000</item>
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+    <style name="EditText.Last.Comment">
+        <item name="android:freezesText">true</item>
+        <item name="android:maxLength">1000</item>
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+    <style name="TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:freezesText">true</item>
+    </style>
+
+    <style name="TextView.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="TextView.Medium">
+        <item name="android:textSize">@dimen/medium_text_size</item>
+    </style>
+
+    <style name="TextView.Medium.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="TextView.Small">
+        <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
+    <style name="TextView.Small.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="TextView.Small.Med">
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+    </style>
+
+    <style name="TextView.XSmall">
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+    </style>
+
+    <style name="TextView.XSmall.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="TextView.Med">
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+    </style>
+
+    <style name="TextView.Large">
+        <item name="android:textSize">@dimen/large_text_size</item>
+    </style>
+
+    <style name="TextView.Large.Med">
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+    </style>
+
+    <style name="TextView.XLarge">
+        <item name="android:textSize">@dimen/xlarge_text_size</item>
+    </style>
+
+    <style name="TextView.XLarge.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="TextView.XXLarge">
+        <item name="android:textSize">@dimen/xxlarge_text_size</item>
+    </style>
+
+    <style name="TextView.XXLarge.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="TextView.Headline">
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextView.Headline.Blue">
+        <item name="android:textColor">@color/handy_blue</item>
+    </style>
+
+    <style name="TextView.Headline.Small">
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
+    <style name="TextView.Headline.Small.Light">
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+    </style>
+
+    <style name="TextView.Headline.XSmall">
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+    </style>
+
+    <style name="TextView.Headline.XSmall.Blue">
+        <item name="android:textColor">@color/handy_blue</item>
+    </style>
+
+    <style name="TextView.Headline.XSmall.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="TextView.Navbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/nav_bar</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="TextView.BookingsHeader">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/handy_bg</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="TextView.BookingOptionInfo">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+        <item name="android:freezesText">false</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="BookingsCell">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">96dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/cell_booking</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="BookingsCell.End">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="ServiceCell">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/cell_service</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="TextView.ServiceCategory">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:freezesText">false</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/handy_blue</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">@drawable/cell_service_category</item>
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+    </style>
+
+    <style name="abstractWheelViewStyle" />
+
+    <style name="CirclePageIndicatorStyle">
+    </style>
+
+    <string name="name">Name</string>
+
 </resources>
