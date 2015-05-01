@@ -62,7 +62,7 @@ public class AvailableBookingsFragment extends InjectedFragment {
 
         Random r = new Random();
 
-        for(int i = 0; i < 20; i++)
+        for(int i = 0; i < 5; i++)
         {
             int hour = (r.nextInt(12) + 8);
             int duration = r.nextInt(4) + 1;
@@ -70,7 +70,15 @@ public class AvailableBookingsFragment extends InjectedFragment {
             Date start = calendar.getTime();
             calendar.set(Calendar.HOUR, hour + duration);
             Date end = calendar.getTime();
-            testBookings.add(new TestBooking(i, "aaa" + (Integer.toString(i)), start, end));
+
+            TestBooking tb = new TestBooking(i, "aaa" + (Integer.toString(i)), start, end);
+            if(r.nextBoolean())
+            {
+                tb.isRequested = true;
+            }
+            testBookings.add(tb);
+
+
         }
 
         displayBookings(testBookings);
@@ -245,8 +253,6 @@ public class AvailableBookingsFragment extends InjectedFragment {
 
             return convertView;
         }
-
-
 
     }
 

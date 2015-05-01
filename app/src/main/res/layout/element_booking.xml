@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:minHeight="75dp"
+    >
 
     <TextView
         android:id="@+id/bookingStartDate"
@@ -20,8 +22,8 @@
         android:layout_height="wrap_content"
         android:text="1:00p"
         android:textColor="@color/dark_grey"
-        android:layout_alignBaseline="@+id/bookingArea"
-        android:layout_alignBottom="@+id/bookingArea"
+        android:layout_alignBaseline="@+id/bookingPaymentBonus"
+        android:layout_alignBottom="@+id/bookingPaymentBonus"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -31,18 +33,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/bookingArea"
-        android:layout_alignStart="@+id/bookingArea"
-        android:layout_marginTop="20dp">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:src="@drawable/abc_btn_check_to_on_mtrl_015" />
+        android:layout_alignLeft="@+id/bookingJobType"
+        android:layout_alignStart="@+id/bookingJobType">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="You&apos;re Requested!" />
+
     </LinearLayout>
 
 
@@ -51,54 +49,58 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Union Square"
-            android:layout_marginLeft="68dp"
-            android:layout_marginStart="68dp"
             android:layout_below="@+id/requested_indicator"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignRight="@+id/bookingJobType"
+            android:layout_alignEnd="@+id/bookingJobType" />
 
         <TextView
             android:id="@+id/bookingJobType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Home Cleaning"
-            android:layout_marginLeft="68dp"
-            android:layout_marginStart="68dp"
+            android:layout_marginLeft="26dp"
+            android:layout_marginStart="26dp"
             android:layout_below="@+id/bookingArea"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_toRightOf="@+id/bookingStartDate"
+            android:layout_toEndOf="@+id/bookingStartDate" />
 
     <TextView
         android:id="@+id/bookingPayment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="$45"
-        android:layout_marginLeft="22dp"
-        android:layout_marginStart="22dp"
-        android:layout_alignTop="@+id/requested_indicator"
-        android:layout_toRightOf="@+id/requested_indicator"
-        android:layout_above="@+id/bookingJobType"
-        android:textSize="50dp" />
+        android:textSize="50dp"
+        android:layout_alignBaseline="@+id/bookingJobType"
+        android:layout_alignBottom="@+id/bookingJobType"
+        android:layout_toLeftOf="@+id/imageView2"
+        android:layout_toStartOf="@+id/imageView2" />
 
     <TextView
         android:id="@+id/bookingPaymentBonus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="+$5 Bonus"
-        android:layout_alignTop="@+id/bookingJobType"
+        android:layout_below="@+id/bookingJobType"
         android:layout_alignLeft="@+id/bookingPayment"
         android:layout_alignStart="@+id/bookingPayment" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/abc_btn_check_to_on_mtrl_015"
+        android:layout_above="@+id/bookingArea"
+        android:layout_toLeftOf="@+id/requested_indicator"
+        android:layout_toStartOf="@+id/requested_indicator" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/imageView2"
-        android:layout_below="@+id/bookingStartDate"
-        android:layout_toRightOf="@+id/bookingPayment"
-        android:src="@drawable/abc_ic_go_search_api_mtrl_alpha"
-        android:layout_above="@+id/bookingJobType"
+        android:src="@drawable/abc_ic_menu_cut_mtrl_alpha"
+        android:layout_below="@+id/requested_indicator"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        />
 
 
 </RelativeLayout>

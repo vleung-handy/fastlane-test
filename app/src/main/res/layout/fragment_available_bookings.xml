@@ -14,9 +14,9 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="335dp"
         android:id="@+id/availableJobsListView"
-        android:layout_gravity="left|top"
+        android:layout_gravity="center"
         android:dividerHeight="10dp" />
 
 
