@@ -19,5 +19,16 @@
         android:layout_gravity="center"
         android:dividerHeight="10dp" />
 
+    <HorizontalScrollView
+        android:layout_width="306dp"
+        android:layout_height="65dp"
+        android:id="@+id/datesScrollView"
+        android:layout_gravity="center_horizontal|top" >
 
+        <LinearLayout
+            android:id="@+id/datesScrollViewLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></LinearLayout>
+    </HorizontalScrollView>
 </FrameLayout>

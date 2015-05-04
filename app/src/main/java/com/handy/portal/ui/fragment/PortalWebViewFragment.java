@@ -13,6 +13,8 @@ import com.handy.portal.R;
 import com.handy.portal.core.PortalWebViewClient;
 import com.handy.portal.core.ServerParams;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -86,9 +88,16 @@ public class PortalWebViewFragment extends InjectedFragment {
         if(booking_id != null) {
             FinalUrl = ServerParams.BaseUrl + "portal/jobs/" + booking_id + "/job_details";
         } else {
-            FinalUrl = ServerParams.BaseUrl + "professional";
+            FinalUrl = ServerParams.BaseUrl + "home/"; //add params here
         }
         openUrlWithChrome(FinalUrl);
     }
+
+    //how to go directly to a tab
+    //https://s-handybook.hbinternal.com/portal/home?goto="FOO"
+    //available
+    //future
+    //help
+    //profile
 
 }

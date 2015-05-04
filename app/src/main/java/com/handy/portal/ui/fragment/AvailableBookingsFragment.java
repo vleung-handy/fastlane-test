@@ -1,16 +1,10 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.GeolocationPermissions;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,8 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.core.PortalWebViewClient;
-import com.handy.portal.core.ServerParams;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +31,12 @@ import butterknife.InjectView;
 public class AvailableBookingsFragment extends InjectedFragment {
 
     @InjectView(R.id.availableJobsListView)
-    ListView listView;
+    ListView availableJobsListView;
+
+    @InjectView(R.id.datesScrollViewLayout)
+    LinearLayout datesScrollViewLayout;
+
+    private static int DAYS_TO_DISPLAY = 7;
 
     public AvailableBookingsFragment() {
     }
@@ -50,12 +47,28 @@ public class AvailableBookingsFragment extends InjectedFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_available_bookings, null);
         ButterKnife.inject(this, view);
+        addDateButtons(datesScrollViewLayout);
         testBookings();
         return view;
     }
 
+    private void addDateButtons(LinearLayout scrollViewLayout) {
+        Context c = getActivity().getApplicationContext();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat ft = new SimpleDateFormat("E\nd");
+        for (int i = 0; i < DAYS_TO_DISPLAY; i++) {
+            LayoutInflater.from(c).inflate(R.layout.element_date, scrollViewLayout);
+            Button dateButton = ((Button) (datesScrollViewLayout.getChildAt(i)));
+            Date calendarTime = calendar.getTime();
+            String formattedDate = ft.format(calendarTime);
+            dateButton.setText(formattedDate);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+    }
 
-    private void testBookings() {
+
+    private void testBookings()
+    {
         ArrayList<TestBooking> testBookings = new ArrayList<>();
 
         Calendar calendar = new GregorianCalendar(2015, 1, 28, 12, 00, 00);
@@ -92,40 +105,18 @@ public class AvailableBookingsFragment extends InjectedFragment {
         BookingElementAdapter itemsAdapter =
                 new BookingElementAdapter(getActivity().getApplicationContext(), bookings);
 
-        listView.setAdapter(itemsAdapter);
+        availableJobsListView.setAdapter(itemsAdapter);
 
-        listView.setOnItemClickListener(
+        availableJobsListView.setOnItemClickListener(
                 //todo :
                 new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
-                    {
+                    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
                         TestBooking booking = (TestBooking) adapter.getItemAtPosition(position);
                         System.out.println("clicked on booking with id " + Integer.toString(booking.id));
                     }
-
-                    //new View.OnClickListener()
-                    //{
-//            @Override
-//            public void onClick(View v) {
-//                System.out.println("Clicked on list view element : " + v);
-//
-////how to get the original data from the cell?
-//                    //could make a new booking cell class and have the adapter convert and let the cell hold a reference?
-//
-//            }
-
-//            @Override
-//            void onItemClick(AdapterView<?> parent, View view, int position, long id)
-//            //public void onItemClick(ArrayAdapter<?> adapter,View v, int position)
-//            {
-//                //TestBooking booking = adapter.getItem(position);
-//
-//            }
                 }
-
         );
-
     }
 
     class User
@@ -234,9 +225,6 @@ public class AvailableBookingsFragment extends InjectedFragment {
 
             Date startDate = booking.startDate;
 
-//            SimpleDateFormat ft =
-//                    new SimpleDateFormat ("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
-
             SimpleDateFormat ft =
                     new SimpleDateFormat ("hh:mma");
 
@@ -271,9 +259,6 @@ public class AvailableBookingsFragment extends InjectedFragment {
             TestBooking booking = getItem(position);
             BookingElementMediator bem = new BookingElementMediator(getContext(), booking, convertView, parent);
             return bem.getAssociatedView();
-
-//            BookingElementView bew = new BookingElementView(booking, convertView, parent);
-//            return bew.initView(getContext());
         }
 
     }
