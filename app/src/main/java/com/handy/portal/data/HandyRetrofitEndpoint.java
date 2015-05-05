@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import retrofit.Endpoint;
 
 public final class HandyRetrofitEndpoint implements Endpoint {
-    static enum Environment {P, S, Q1, Q2, Q3, Q4, Q6, D1}
+    static enum Environment {P, S, Q1, Q2, Q3, Q4, Q6, D1, L}
     private Environment env = Environment.S;
     private Context context;
     private final String apiEndpoint;

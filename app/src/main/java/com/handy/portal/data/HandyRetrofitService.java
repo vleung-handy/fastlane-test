@@ -163,6 +163,47 @@ public interface HandyRetrofitService {
     @POST("/self_service/create_case")
     void createHelpCase(@Body TypedInput body, HandyRetrofitCallback cb);
 
+
+
+    //***************
+    //PORTAL
+    //***************
+    @GET("/portal/provider/{provider_id}/jobs")
+    void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
+
+    @GET("/portal/provider/{provider_id}/schedule")
+    void getScheduledBookings(@Path("provider_id") String providerId,  HandyRetrofitCallback cb);
+
+    @POST("/portal/provider/{provider_id}/bookings/{booking_id}/claim")
+    void claimBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId,  HandyRetrofitCallback cb);
+
+    @GET("/portal/provider/{provider_id}/bookings/{booking_id}")
+    void getBookingDetails(@Path("id") String providerId, @Path("booking_id") String bookingId,HandyRetrofitCallback cb);
+
+    //@POST("/portal/provider/")
+    //void claimBooking(@Path("id") String providerId, @Path("booking_id") String bookingId,HandyRetrofitCallback cb);
+
+
+  /*
+    GET     /api/portal/provider/:id/jobs(.:format) # available jobs
+    GET     /api/portal/provider/:id/schedule(.:format) # provider's schedule
+    POST   /api/portal/provider/:provider_id/bookings/:id/claim(.:format) # claim a booking
+    GET     /api/portal/provider/:provider_id/bookings/:id(.:format) # booking details
+
+    http://localhost:3000/api/portal/provider/8/jobs?apiver=1
+
+    claim_api_portal_provider_booking POST   /api/portal/provider/:provider_id/bookings/:id/claim(.:format)                                           api/portal/v1/providers#claim {:format=>:json}
+    on_my_way_api_portal_provider_booking POST   /api/portal/provider/:provider_id/bookings/:id/on_my_way(.:format)                                       api/portal/v1/providers#on_my_way {:format=>:json}
+     check_in_api_portal_provider_booking POST   /api/portal/provider/:provider_id/bookings/:id/check_in(.:format)                                        api/portal/v1/providers#check_in {:format=>:json}
+    check_out_api_portal_provider_booking POST   /api/portal/provider/:provider_id/bookings/:id/check_out(.:format)                                       api/portal/v1/providers#check_out {:format=>:json}
+
+
+  */
+
+
+
+
+
     static final class UserUpdateRequest {
         @SerializedName("user") private User user;
         @SerializedName("auth_token") private String authToken;

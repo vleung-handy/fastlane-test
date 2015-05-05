@@ -8,12 +8,16 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public final class Booking implements Parcelable {
     @SerializedName("id") private String id;
     @SerializedName("booking_status") private int isPast;
     @SerializedName("service_name") private String service;
-    @SerializedName("date_start") private Date startDate;
+    @SerializedName("service") private ServiceInfo serviceInfo;
+    @SerializedName("start_date") private Date startDate;
+    @SerializedName("status") private String status;
+    @SerializedName("end_date") private Date endDate;
     @SerializedName("hours") private float hours;
     @SerializedName("price") private float price;
     @SerializedName("recurring") private int isRecurring;
@@ -27,6 +31,18 @@ public final class Booking implements Parcelable {
     @SerializedName("billed_status") private String billedStatus;
     @SerializedName("payment_hash") private ArrayList<LineItem> paymentInfo;
     @SerializedName("extras_info") private ArrayList<ExtraInfo> extrasInfo;
+    @SerializedName("is_requested") private boolean isRequested;
+    @SerializedName("payment_to_provider") private PaymentInfo paymentToProvider;
+    @SerializedName("bonus") private PaymentInfo bonusPayment;
+    @SerializedName("frequency") private int frequency;
+    @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions;
+
+    public final List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}
+    public final int getFrequency() { return frequency; }
+    public final PaymentInfo getPaymentToProvider() { return paymentToProvider; }
+    public final PaymentInfo getBonusPaymentToProvider() { return bonusPayment; }
+
+    public final boolean getIsRequested() { return isRequested;}
 
     public final String getId() {
         return id;
@@ -75,6 +91,10 @@ public final class Booking implements Parcelable {
 
     public final Date getStartDate() {
         return startDate;
+    }
+
+    public final Date getEndDate() {
+        return endDate;
     }
 
     public final void setStartDate(final Date startDate) {
@@ -199,12 +219,64 @@ public final class Booking implements Parcelable {
         }
     };
 
+    public static final class PaymentInfo
+    {
+        private MonetaryAmount payment;
+    }
+
+    public static final class MonetaryAmount
+    {
+        @SerializedName("amount")
+        private int amount;
+        @SerializedName("currency_code")
+        private String currencyCode;
+        @SerializedName("currency_symbol")
+        private String currencySymbol;
+    }
+
+    public static final class BookingInstruction
+    {
+        @SerializedName("description")
+        private String description;
+        @SerializedName("machine_name")
+        private String machineName;
+    }
+
+
+    public static final class ServiceInfo implements Parcelable {
+        @SerializedName("id")
+        private String id;
+        @SerializedName("machine_name")
+        private String machineName;
+        @SerializedName("name")
+        private String displayName;
+
+        @Override
+        public final void writeToParcel(final Parcel out, final int flags) {
+            out.writeStringArray(new String[]{ id, machineName, displayName});
+        }
+
+        @Override
+        public final int describeContents(){
+            return 0;
+        }
+    }
+
     public static final class Address implements Parcelable {
         @SerializedName("address1") private String address1;
         @SerializedName("address2") private String address2;
         @SerializedName("city") private String city;
         @SerializedName("state") private String state;
+        @SerializedName("country") private String country;
         @SerializedName("zipcode") private String zip;
+        @SerializedName("latitude") private float latitude;
+        @SerializedName("longitude") private float longitude;
+        @SerializedName("short_region") private String shortRegion;
+
+        public final float getLatitude() { return latitude;}
+        public final float getLongitude() { return longitude;}
+
+        public final String getShortRegion() { return shortRegion; }
 
         public final String getAddress1() {
             return address1;

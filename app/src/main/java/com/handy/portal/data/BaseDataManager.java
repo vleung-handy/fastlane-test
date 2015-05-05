@@ -12,6 +12,7 @@ import com.handy.portal.core.BookingOption;
 import com.handy.portal.core.BookingPostInfo;
 import com.handy.portal.core.BookingQuote;
 import com.handy.portal.core.BookingRequest;
+import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.BookingTransaction;
 import com.handy.portal.core.HelpNode;
 import com.handy.portal.core.LaundryDropInfo;
@@ -260,7 +261,8 @@ public final class BaseDataManager extends DataManager {
 
                 final Gson gson = new Gson();
                 final List<BookingOption> bookingOptions = gson.fromJson(array.toString(),
-                        new TypeToken<List<BookingOption>>(){}.getType());
+                        new TypeToken<List<BookingOption>>() {
+                        }.getType());
                 cb.onSuccess(bookingOptions);
             }
         });
@@ -270,11 +272,11 @@ public final class BaseDataManager extends DataManager {
     public void getBookingQuote(final BookingRequest bookingRequest, final Callback<BookingQuote> cb) {
         service.createBooking(new HandyRetrofitService.BookingCreateRequest(bookingRequest),
                 new HandyRetrofitCallback(cb) {
-            @Override
-            void success(final JSONObject response) {
-                cb.onSuccess(BookingQuote.fromJson(response.toString()));
-            }
-        });
+                    @Override
+                    void success(final JSONObject response) {
+                        cb.onSuccess(BookingQuote.fromJson(response.toString()));
+                    }
+                });
     }
 
     @Override
@@ -293,11 +295,11 @@ public final class BaseDataManager extends DataManager {
                            final String email, final String authToken, final Callback<BookingCoupon> cb) {
         service.applyPromo(promoCode, bookingId, userId, email, authToken,
                 new HandyRetrofitCallback(cb) {
-            @Override
-            void success(final JSONObject response) {
-                cb.onSuccess(BookingCoupon.fromJson(response.toString()));
-            }
-        });
+                    @Override
+                    void success(final JSONObject response) {
+                        cb.onSuccess(BookingCoupon.fromJson(response.toString()));
+                    }
+                });
     }
 
     @Override
@@ -317,8 +319,7 @@ public final class BaseDataManager extends DataManager {
             void success(final JSONObject response) {
                 if (response.has("coupon") && response.optInt("coupon") == 1) {
                     cb.onSuccess(new PromoCode(PromoCode.Type.COUPON, promoCode));
-                }
-                else if (response.has("voucher")) {
+                } else if (response.has("voucher")) {
                     final JSONObject voucher = response.optJSONObject("voucher");
 
                     final PromoCode code = new PromoCode(PromoCode.Type.VOUCHER,
@@ -331,8 +332,7 @@ public final class BaseDataManager extends DataManager {
                     //code.setUniq(voucher.optString("machine_name"));
 
                     cb.onSuccess(code);
-                }
-                else {
+                } else {
                     cb.onError(new DataManagerError(Type.SERVER));
                 }
             }
@@ -377,18 +377,18 @@ public final class BaseDataManager extends DataManager {
                                   final Callback<Pair<String, BookingQuote>> cb) {
         service.rescheduleBooking(bookingId, date, rescheduleAll ? 1 : 0, userId, authToken,
                 new HandyRetrofitCallback(cb) {
-            @Override
-            void success(final JSONObject response) {
-                final String message = parseAlertMessage(response);
-                BookingQuote quote = null;
+                    @Override
+                    void success(final JSONObject response) {
+                        final String message = parseAlertMessage(response);
+                        BookingQuote quote = null;
 
-                if (response.optJSONArray("dynamic_options") != null) {
-                    quote = BookingQuote.fromJson(response.toString());
-                }
+                        if (response.optJSONArray("dynamic_options") != null) {
+                            quote = BookingQuote.fromJson(response.toString());
+                        }
 
-                cb.onSuccess(new Pair<>(message, quote));
-            }
-        });
+                        cb.onSuccess(new Pair<>(message, quote));
+                    }
+                });
     }
 
     @Override
@@ -443,11 +443,11 @@ public final class BaseDataManager extends DataManager {
                                   final Callback<Void> cb) {
         service.setLaundryDropOff(bookingId, authToken, date, hour, minute, type,
                 new HandyRetrofitCallback(cb) {
-            @Override
-            void success(final JSONObject response) {
-                cb.onSuccess(null);
-            }
-        });
+                    @Override
+                    void success(final JSONObject response) {
+                        cb.onSuccess(null);
+                    }
+                });
     }
 
     @Override
@@ -511,11 +511,11 @@ public final class BaseDataManager extends DataManager {
                                  final String firstName, String lastName, final Callback<User> cb) {
         service.createUserSessionFB(fbid, accessToken, email, firstName, lastName,
                 new HandyRetrofitCallback(cb) {
-            @Override
-            void success(final JSONObject response) {
-                handleCreateSessionResponse(response, cb);
-            }
-        });
+                    @Override
+                    void success(final JSONObject response) {
+                        handleCreateSessionResponse(response, cb);
+                    }
+                });
     }
 
     public final void getUser(final String userId, final String authToken, final Callback<User> cb) {
@@ -593,6 +593,71 @@ public final class BaseDataManager extends DataManager {
             }
         });
     }
+
+    @Override
+    public final void getAvailableBookings(String providerId, final Callback<List<BookingSummary>> cb)
+    {
+        service.getAvailableBookings(providerId, new HandyRetrofitCallback(cb) {
+            @Override
+            void success(final JSONObject response)
+            {
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                final List<BookingSummary> bookings = new ArrayList<BookingSummary>();
+
+                //TODO: Move this to a properties/config file
+                int DAYS_TO_DISPLAY = 7;
+                for(int i = 0; i < DAYS_TO_DISPLAY ; i++)
+                {
+                    try
+                    {
+                        BookingSummary bs = gson.fromJson((response.get(Integer.toString(i)).toString()),
+                                new TypeToken<BookingSummary>() {
+                                }.getType());
+                        bookings.add(bs);
+                    }
+                    catch(Exception e)
+                    {
+                        System.err.println("Can not parse BookingSummary " + e);
+                    }
+                }
+                cb.onSuccess(bookings);
+            }
+        });
+    }
+
+    @Override
+    public final void getScheduledBookings(String providerId, final Callback<List<BookingSummary>> cb)
+    {
+        service.getAvailableBookings(providerId, new HandyRetrofitCallback(cb) {
+            @Override
+            void success(final JSONObject response) {
+                cb.onSuccess(null);
+            }
+        });
+    }
+
+    @Override
+    public final void claimBooking(String providerId, String bookingId, final Callback<List<Booking>> cb)
+    {
+        service.getAvailableBookings(providerId, new HandyRetrofitCallback(cb) {
+            @Override
+            void success(final JSONObject response) {
+                cb.onSuccess(null);
+            }
+        });
+    }
+
+    @Override
+    public final void getBookingDetails(String providerId, String bookingId, final Callback<List<Booking>> cb)
+    {
+        service.getAvailableBookings(providerId, new HandyRetrofitCallback(cb) {
+            @Override
+            void success(final JSONObject response) {
+                cb.onSuccess(null);
+            }
+        });
+    }
+
 
     private void handleCreateSessionResponse(final JSONObject response, final Callback<User> cb) {
         final User user = new User();

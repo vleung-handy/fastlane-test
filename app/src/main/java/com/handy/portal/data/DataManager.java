@@ -9,6 +9,7 @@ import com.handy.portal.core.BookingOption;
 import com.handy.portal.core.BookingPostInfo;
 import com.handy.portal.core.BookingQuote;
 import com.handy.portal.core.BookingRequest;
+import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.BookingTransaction;
 import com.handy.portal.core.HelpNode;
 import com.handy.portal.core.LaundryDropInfo;
@@ -17,6 +18,7 @@ import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -115,6 +117,12 @@ public abstract class DataManager {
     public abstract void getHelpBookingsInfo(String nodeId, String authToken, String bookingId, Callback<HelpNode> cb);
 
     public abstract void createHelpCase(TypedInput body,  Callback<Void> cb);
+
+    public abstract void getAvailableBookings(String providerId, Callback<List<BookingSummary>> cb);
+    public abstract void getScheduledBookings(String providerId, Callback<List<BookingSummary>> cb);
+    public abstract void claimBooking(String providerId, String bookingId, Callback<List<Booking>> cb);
+    public abstract void getBookingDetails(String providerId, String bookingId, Callback<List<Booking>> cb);
+
 
     public abstract String getBaseUrl();
 

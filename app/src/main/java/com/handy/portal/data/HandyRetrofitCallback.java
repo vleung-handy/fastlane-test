@@ -24,8 +24,10 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response> {
     @Override
     public final void success(final Response response, final Response raw) {
         final StringBuilder resp;
-        final JSONObject obj;
 
+        JSONArray objArray = new JSONArray();
+        JSONObject obj = new JSONObject();
+        Boolean responseIsJSONArray = false;
         try {
             final BufferedReader br
                     = new BufferedReader(new InputStreamReader(raw.getBody().in()));
@@ -34,10 +36,46 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response> {
             resp = new StringBuilder();
             while ((line = br.readLine()) != null) resp.append(line);
 
-            obj = new JSONObject(resp.toString());
+            if(resp.length() > 0) {
+                responseIsJSONArray = (resp.charAt(0) == '[');
+            }
+
+            if(responseIsJSONArray)
+            {
+                objArray = new JSONArray(resp.toString());
+            }
+            else
+            {
+                obj = new JSONObject(resp.toString());
+            }
+
         } catch (Exception e) {
-            throw new RuntimeException("Unable to parse API response body");
+            throw new RuntimeException("Unable to parse API response body : " + e);
         }
+
+        if(responseIsJSONArray) {
+            System.out.println("Response is JSON ARRAY");
+        }
+        else
+        {
+            System.out.println("Response is JSON OBJECT");
+        }
+
+        if(responseIsJSONArray) {
+            //if we got an array response convert it back to an object for now
+                //maybe we could support callback params with jsonobj or jsonarray?
+            try {
+
+                for (int i = 0; i < objArray.length(); i++) {
+                    System.out.println("See entry : " + objArray.getJSONObject(i).toString());
+                    obj.put(Integer.toString(i), objArray.getJSONObject(i));
+                }
+
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to convert JSONArray to JSONObject : " + e);
+            }
+        }
+
 
         if (obj.has("error") && (obj.optBoolean("error") || obj.optInt("error") == 1)) {
             final DataManager.DataManagerError err;
