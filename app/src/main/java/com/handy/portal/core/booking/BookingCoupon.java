@@ -1,7 +1,8 @@
-package com.handy.portal.core;
+package com.handy.portal.core.booking;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.core.BookingPriceInfo;
 
 import java.util.ArrayList;
 

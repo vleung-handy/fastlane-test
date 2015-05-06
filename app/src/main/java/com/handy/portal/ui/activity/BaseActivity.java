@@ -71,9 +71,6 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onStart() {
         super.onStart();
 
-
-
-
 //        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
 //            PlayServicesUtils.handleAnyPlayServicesError(this);
 //        }

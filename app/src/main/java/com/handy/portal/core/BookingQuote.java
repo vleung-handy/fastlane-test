@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.core.booking.BookingOption;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;

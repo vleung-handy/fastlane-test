@@ -14,6 +14,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.ui.widget.ProgressDialog;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -31,6 +32,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment {
     @Inject DataManagerErrorHandler dataManagerErrorHandler;
     @Inject NavigationManager navigationManager;
     @Inject GoogleService googleService;
+    @Inject Bus bus;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment {
         progressDialog.setDelay(400);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.loading));
+
+        this.bus.register(this);
     }
 
     @Override

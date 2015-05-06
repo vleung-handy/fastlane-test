@@ -2,10 +2,10 @@ package com.handy.portal.data;
 
 import android.support.v4.util.Pair;
 
-import com.handy.portal.core.Booking;
-import com.handy.portal.core.BookingCompleteTransaction;
-import com.handy.portal.core.BookingCoupon;
-import com.handy.portal.core.BookingOption;
+import com.handy.portal.core.booking.Booking;
+import com.handy.portal.core.booking.BookingCompleteTransaction;
+import com.handy.portal.core.booking.BookingCoupon;
+import com.handy.portal.core.booking.BookingOption;
 import com.handy.portal.core.BookingPostInfo;
 import com.handy.portal.core.BookingQuote;
 import com.handy.portal.core.BookingRequest;
@@ -18,7 +18,6 @@ import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
 import com.squareup.otto.Bus;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

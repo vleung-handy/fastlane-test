@@ -1,9 +1,18 @@
 package com.handy.portal.core;
 
+import com.handy.portal.core.booking.Booking;
+import com.handy.portal.core.booking.BookingCalendarDay;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.data.SecurePreferences;
+import com.handy.portal.event.AvailableBookingsRetrievedEvent;
+import com.handy.portal.event.Event;
+import com.handy.portal.event.RequestAvailableBookingsEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -16,13 +25,168 @@ public final class BookingManager implements Observer {
     private BookingPostInfo postInfo;
     private final SecurePreferences securePrefs;
     private final Bus bus;
+    private final DataManager dataManager;
+
+    //we are always providing in the context of our current user
+
+    private Map<String, Booking> cachedBookings; //booking ID to booking
+
+    //Do we really need to cache booking summaries? We're dealing with relatively small data sets
+        //Maybe the booking summaries will contain a list of ids instead of the full data
+            //and we keep our cached booking data distinct from the by day summaries which is a convenience
+    private Map<BookingCalendarDay, BookingSummary> cachedBookingSummaries;
+
+    //private List<Booking> updatedBookings; //we will need to send out a list of updated bookings after each action completes?
+
+
 
     @Inject
-    BookingManager(final Bus bus, final SecurePreferences prefs) {
+    BookingManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager) {
         this.securePrefs = prefs;
         this.bus = bus;
         this.bus.register(this);
+        this.dataManager = dataManager;
+
+        this.cachedBookings = new HashMap<String, Booking>();
+        this.cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
     }
+
+    @Subscribe
+    public void testListen(RequestAvailableBookingsEvent event)
+    {
+        System.out.println("Heard something : " + event.providerId);
+        onRequestAvailableBookings(event);
+    }
+
+
+    //all communication will be done through the bus
+    //booking manager
+    //requests and caches data about bookings
+    //responds to requests for data about bookings or lists of bookings
+    //listens and responds to requests to claim / cancel
+
+    public void onRequestBookingDetails(String bookingId)
+    {
+        if(cachedBookings.containsKey(bookingId))
+        {
+            //send out the booking details from the cache
+        }
+        else
+        {
+            //put in a web request for the booking details
+                //send out updated booking when received
+        }
+
+    }
+
+
+    public void onRequestAvailableBookings(RequestAvailableBookingsEvent event)
+    {
+        String providerId = event.providerId;
+        dataManager.getAvailableBookings(providerId, new DataManager.Callback<List<BookingSummary>>() {
+                    @Override
+                    public void onSuccess(final List<BookingSummary> bookingSummaries) {
+                        onBookingSummariesReceived(bookingSummaries);
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error) {
+                        System.err.println("Failed to get available bookings " + error);
+                    }
+                }
+        );
+    }
+
+    private void updateBookingsCache(Booking booking)
+    {
+        cachedBookings.put(booking.getId(), booking);
+    }
+
+    public void onBookingSummariesReceived(final List<BookingSummary> bookingSummaries)
+    {
+        //update the cache
+        //send out the relevant cache data to fulfill the request
+        System.out.println("Got some booking summaries in : " + bookingSummaries.size());
+
+        //cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
+
+        //extract all of the bookings and update our local cache
+        for(BookingSummary bs : bookingSummaries)
+        {
+            for(Booking b : bs.getBookings())
+            {
+                updateBookingsCache(b);
+            }
+        }
+
+
+        //update the summaries cache
+
+        updateSummariesCache(bookingSummaries);
+
+
+//        for(BookingSummary bs : bookingSummaries)
+//        {
+//            BookingCalendarDay bcd = new BookingCalendarDay(bs.getDate());
+//            System.out.println("Adding summary for : " + bcd + " : num bookings " + bs.getBookings().size());
+//            cachedBookingSummaries.put(bcd, bs);
+//        }
+
+
+        System.out.println("Send out the update event");
+
+        //just passing this through as a test
+        bus.post(new AvailableBookingsRetrievedEvent(cachedBookingSummaries));
+
+
+
+
+
+    }
+
+    private void updateSummariesCache(final List<BookingSummary> bookingSummaries)
+    {
+        cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
+        for(BookingSummary bs : bookingSummaries)
+        {
+            BookingCalendarDay bcd = new BookingCalendarDay(bs.getDate());
+            System.out.println("Adding summary for : " + bcd + " : num bookings " + bs.getBookings().size());
+            cachedBookingSummaries.put(bcd, bs);
+        }
+    }
+
+
+    public void onBookingsReceived()
+    {
+        //update the cache
+        //send out the relevant cache data to fulfill the request
+
+
+
+
+
+    }
+
+    public void onForceCacheUpdate()
+    {
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public final BookingRequest getCurrentRequest() {
         if (request != null) return request;

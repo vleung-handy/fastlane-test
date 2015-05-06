@@ -5,10 +5,10 @@ import android.support.v4.util.Pair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.handy.portal.core.Booking;
-import com.handy.portal.core.BookingCompleteTransaction;
-import com.handy.portal.core.BookingCoupon;
-import com.handy.portal.core.BookingOption;
+import com.handy.portal.core.booking.Booking;
+import com.handy.portal.core.booking.BookingCompleteTransaction;
+import com.handy.portal.core.booking.BookingCoupon;
+import com.handy.portal.core.booking.BookingOption;
 import com.handy.portal.core.BookingPostInfo;
 import com.handy.portal.core.BookingQuote;
 import com.handy.portal.core.BookingRequest;
@@ -604,9 +604,7 @@ public final class BaseDataManager extends DataManager {
                 final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
                 final List<BookingSummary> bookings = new ArrayList<BookingSummary>();
 
-                //TODO: Move this to a properties/config file
-                int DAYS_TO_DISPLAY = 7;
-                for(int i = 0; i < DAYS_TO_DISPLAY ; i++)
+                for(int i = 0; i < response.length() ; i++)
                 {
                     try
                     {
@@ -628,7 +626,7 @@ public final class BaseDataManager extends DataManager {
     @Override
     public final void getScheduledBookings(String providerId, final Callback<List<BookingSummary>> cb)
     {
-        service.getAvailableBookings(providerId, new HandyRetrofitCallback(cb) {
+        service.getScheduledBookings(providerId, new HandyRetrofitCallback(cb) {
             @Override
             void success(final JSONObject response) {
                 cb.onSuccess(null);
@@ -639,18 +637,18 @@ public final class BaseDataManager extends DataManager {
     @Override
     public final void claimBooking(String providerId, String bookingId, final Callback<List<Booking>> cb)
     {
-        service.getAvailableBookings(providerId, new HandyRetrofitCallback(cb) {
-            @Override
-            void success(final JSONObject response) {
-                cb.onSuccess(null);
-            }
-        });
+        service.claimBooking(providerId, bookingId, new HandyRetrofitCallback(cb) {
+        @Override
+        void success(final JSONObject response) {
+            cb.onSuccess(null);
+        }
+    });
     }
 
     @Override
     public final void getBookingDetails(String providerId, String bookingId, final Callback<List<Booking>> cb)
     {
-        service.getAvailableBookings(providerId, new HandyRetrofitCallback(cb) {
+        service.getBookingDetails(providerId, bookingId, new HandyRetrofitCallback(cb) {
             @Override
             void success(final JSONObject response) {
                 cb.onSuccess(null);

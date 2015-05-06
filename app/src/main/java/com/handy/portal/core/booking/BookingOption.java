@@ -1,4 +1,4 @@
-package com.handy.portal.core;
+package com.handy.portal.core.booking;
 
 import android.os.Parcel;
 import android.os.Parcelable;

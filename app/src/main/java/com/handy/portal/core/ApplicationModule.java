@@ -39,6 +39,8 @@ import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
+import com.handy.portal.event.Event;
+
 @Module(injects = {
         PortalWebViewFragment.class,
         ClaimedBookingsFragment.class,
@@ -149,8 +151,9 @@ public final class ApplicationModule {
     }
 
     @Provides @Singleton final BookingManager provideBookingManager(final Bus bus,
-                                                                    final SecurePreferences prefs) {
-        return new BookingManager(bus, prefs);
+                                                                    final SecurePreferences prefs,
+                                                                    final DataManager dataManager) {
+        return new BookingManager(bus, prefs, dataManager);
     }
 
     @Provides @Singleton final UserManager provideUserManager(final Bus bus,
