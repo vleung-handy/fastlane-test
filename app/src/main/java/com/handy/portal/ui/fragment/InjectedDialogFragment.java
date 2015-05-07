@@ -18,21 +18,28 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
-public class InjectedDialogFragment extends DialogFragment {
+public class InjectedDialogFragment extends DialogFragment
+{
     protected boolean allowCallbacks;
     protected ProgressDialog progressDialog;
     protected Toast toast;
 
-    @Inject BookingManager bookingManager;
-    @Inject UserManager userManager;
-    @Inject Mixpanel mixpanel;
-    @Inject DataManager dataManager;
-    @Inject DataManagerErrorHandler dataManagerErrorHandler;
+    @Inject
+    BookingManager bookingManager;
+    @Inject
+    UserManager userManager;
+    @Inject
+    Mixpanel mixpanel;
+    @Inject
+    DataManager dataManager;
+    @Inject
+    DataManagerErrorHandler dataManagerErrorHandler;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        ((BaseApplication)getActivity().getApplication()).inject(this);
+        ((BaseApplication) getActivity().getApplication()).inject(this);
 
         toast = Toast.makeText(getActivity(), null, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -44,24 +51,31 @@ public class InjectedDialogFragment extends DialogFragment {
     }
 
     @Override
-    public final void onDestroyView() {
+    public final void onDestroyView()
+    {
         super.onDestroyView();
         ButterKnife.reset(this);
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
         allowCallbacks = true;
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
         allowCallbacks = false;
     }
 
-    protected void disableInputs() {}
+    protected void disableInputs()
+    {
+    }
 
-    protected void enableInputs() {}
+    protected void enableInputs()
+    {
+    }
 }

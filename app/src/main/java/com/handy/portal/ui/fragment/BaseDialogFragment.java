@@ -14,13 +14,16 @@ import com.handy.portal.data.DataManager;
 
 import javax.inject.Inject;
 
-public class BaseDialogFragment extends InjectedDialogFragment {
+public class BaseDialogFragment extends InjectedDialogFragment
+{
     boolean canDismiss;
 
-    @Inject DataManager dataManager;
+    @Inject
+    DataManager dataManager;
 
     @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState)
+    {
         super.onCreateDialog(savedInstanceState);
         this.setStyle(DialogFragment.STYLE_NO_FRAME, 0);
         return new Dialog(getActivity());
@@ -28,7 +31,8 @@ public class BaseDialogFragment extends InjectedDialogFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState)
+    {
         final View view = super.onCreateView(inflater, container, savedInstanceState);
 
         getDialog().getWindow().setBackgroundDrawable(
@@ -36,10 +40,12 @@ public class BaseDialogFragment extends InjectedDialogFragment {
 
         getDialog().setCancelable(canDismiss);
         getDialog().setCanceledOnTouchOutside(canDismiss);
-        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener()
+        {
             @Override
             public boolean onKey(final DialogInterface dialog, final int keyCode,
-                                 final KeyEvent event) {
+                                 final KeyEvent event)
+            {
                 return !canDismiss;
             }
         });

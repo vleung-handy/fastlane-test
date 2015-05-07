@@ -8,66 +8,88 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Service implements Parcelable {
-    @SerializedName("id") private int id;
-    @SerializedName("name") private String name;
-    @SerializedName("uniq") private String uniq;
-    @SerializedName("order") private int order;
-    @SerializedName("parent") private int parentId;
-    @SerializedName("services") private List<Service> services;
+public final class Service implements Parcelable
+{
+    @SerializedName("id")
+    private int id;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("uniq")
+    private String uniq;
+    @SerializedName("order")
+    private int order;
+    @SerializedName("parent")
+    private int parentId;
+    @SerializedName("services")
+    private List<Service> services;
 
-    public Service() {}
+    public Service()
+    {
+    }
 
-    public final int getId() {
+    public final int getId()
+    {
         return id;
     }
 
-    public final void setId(final int id) {
+    public final void setId(final int id)
+    {
         this.id = id;
     }
 
-    public final String getName() {
+    public final String getName()
+    {
         return name;
     }
 
-    public final void setName(final String name) {
+    public final void setName(final String name)
+    {
         this.name = name;
     }
 
-    public final String getUniq() {
+    public final String getUniq()
+    {
         return uniq;
     }
 
-    public final void setUniq(final String uniq) {
+    public final void setUniq(final String uniq)
+    {
         this.uniq = uniq;
     }
 
-    public final int getOrder() {
+    public final int getOrder()
+    {
         return order;
     }
 
-    public final void setOrder(final int order) {
+    public final void setOrder(final int order)
+    {
         this.order = order;
     }
 
-    public final int getParentId() {
+    public final int getParentId()
+    {
         return parentId;
     }
 
-    public final void setParentId(final int parentId) {
+    public final void setParentId(final int parentId)
+    {
         this.parentId = parentId;
     }
 
-    public final List<Service> getServices() {
+    public final List<Service> getServices()
+    {
         if (services == null) services = new ArrayList<>();
         return services;
     }
 
-    public final void setServices(final List<Service> services) {
+    public final void setServices(final List<Service> services)
+    {
         this.services = services;
     }
 
-    private Service(final Parcel in) {
+    private Service(final Parcel in)
+    {
         final String[] stringData = new String[2];
         in.readStringArray(stringData);
         name = stringData[0];
@@ -84,22 +106,28 @@ public final class Service implements Parcelable {
     }
 
     @Override
-    public final void writeToParcel(final Parcel out, final int flags) {
-        out.writeStringArray(new String[]{ name, uniq });
-        out.writeIntArray(new int[]{ order, parentId, id });
+    public final void writeToParcel(final Parcel out, final int flags)
+    {
+        out.writeStringArray(new String[]{name, uniq});
+        out.writeIntArray(new int[]{order, parentId, id});
         out.writeTypedList(services);
     }
 
     @Override
-    public final int describeContents(){
+    public final int describeContents()
+    {
         return 0;
     }
 
-    public static final Creator CREATOR = new Creator() {
-        public Service createFromParcel(final Parcel in) {
+    public static final Creator CREATOR = new Creator()
+    {
+        public Service createFromParcel(final Parcel in)
+        {
             return new Service(in);
         }
-        public Service[] newArray(final int size) {
+
+        public Service[] newArray(final int size)
+        {
             return new Service[size];
         }
     };

@@ -19,7 +19,8 @@ import com.handy.portal.ui.widget.ProgressDialog;
 
 import javax.inject.Inject;
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity
+{
 
     protected boolean allowCallbacks;
     private OnBackPressedListener onBackPressedListener;
@@ -27,23 +28,33 @@ public abstract class BaseActivity extends FragmentActivity {
     protected Toast toast;
 
     //Public Properties
-    public boolean getAllowCallbacks() { return this.allowCallbacks; }
+    public boolean getAllowCallbacks()
+    {
+        return this.allowCallbacks;
+    }
 
-    @Inject Mixpanel mixpanel;
-    @Inject UserManager userManager;
-    @Inject DataManager dataManager;
-    @Inject DataManagerErrorHandler dataManagerErrorHandler;
-    @Inject NavigationManager navigationManager;
-    @Inject GoogleService googleService;
+    @Inject
+    Mixpanel mixpanel;
+    @Inject
+    UserManager userManager;
+    @Inject
+    DataManager dataManager;
+    @Inject
+    DataManagerErrorHandler dataManagerErrorHandler;
+    @Inject
+    NavigationManager navigationManager;
+    @Inject
+    GoogleService googleService;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         //Crashlytics.start(this);
         //Yozio.initialize(this);
 
-        ((BaseApplication)this.getApplication()).inject(this);
+        ((BaseApplication) this.getApplication()).inject(this);
 
 //        if (!BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_STAGE)
 //                && !BuildConfig.BUILD_TYPE.equals("debug")) {
@@ -54,7 +65,8 @@ public abstract class BaseActivity extends FragmentActivity {
         final Intent intent = getIntent();
         final Uri data = intent.getData();
 
-        if (data != null && data.getHost() != null && data.getHost().equals("deeplink.yoz.io")) {
+        if (data != null && data.getHost() != null && data.getHost().equals("deeplink.yoz.io"))
+        {
             //mixpanel.trackEventYozioOpen(Yozio.getMetaData(intent));
         }
 
@@ -68,7 +80,8 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
 
 //        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
@@ -79,33 +92,39 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onStop()
+    {
         super.onStop();
         allowCallbacks = false;
     }
 
     @Override
-    protected void onPostResume() {
+    protected void onPostResume()
+    {
         super.onPostResume();
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         if (onBackPressedListener != null) onBackPressedListener.onBack();
         else super.onBackPressed();
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy()
+    {
         mixpanel.flush();
         super.onDestroy();
     }
 
-    public void setOnBackPressedListener(final OnBackPressedListener onBackPressedListener) {
+    public void setOnBackPressedListener(final OnBackPressedListener onBackPressedListener)
+    {
         this.onBackPressedListener = onBackPressedListener;
     }
 
-    public interface OnBackPressedListener {
+    public interface OnBackPressedListener
+    {
         void onBack();
     }
 }

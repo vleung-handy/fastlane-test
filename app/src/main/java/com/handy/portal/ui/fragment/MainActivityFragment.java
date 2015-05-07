@@ -17,19 +17,20 @@ import butterknife.InjectView;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends InjectedFragment {
+public class MainActivityFragment extends InjectedFragment
+{
 
 
-    @InjectView(R.id.button_available_jobs)  Button availableJobsButton;
-    @InjectView(R.id.button_scheduled_jobs)  Button scheduledJobsButton;
-    @InjectView(R.id.button_profile)  Button profileButton;
-    @InjectView(R.id.button_help)  Button helpButton;
-
+    @InjectView(R.id.button_available_jobs)
+    Button availableJobsButton;
+    @InjectView(R.id.button_scheduled_jobs)
+    Button scheduledJobsButton;
+    @InjectView(R.id.button_profile)
+    Button profileButton;
+    @InjectView(R.id.button_help)
+    Button helpButton;
 
     private int currentTabFragmentId = -1;
-
-    public MainActivityFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,30 +50,38 @@ public class MainActivityFragment extends InjectedFragment {
 
     private void registerButtonListeners()
     {
-        scheduledJobsButton.setOnClickListener(new View.OnClickListener() {
+        scheduledJobsButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 onScheduledJobsClicked(v);
             }
         });
 
-        availableJobsButton.setOnClickListener(new View.OnClickListener() {
+        availableJobsButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 onAvailableJobsClicked(v);
             }
         });
 
-        profileButton.setOnClickListener(new View.OnClickListener() {
+        profileButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 onProfileClicked(v);
             }
         });
 
-        helpButton.setOnClickListener(new View.OnClickListener() {
+        helpButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 onHelpClicked(v);
             }
         });
@@ -110,10 +119,14 @@ public class MainActivityFragment extends InjectedFragment {
     {
         switch (tab)
         {
-            case AVAILABLE_BOOKINGS: return R.layout.fragment_available_bookings;
-            case CLAIMED_BOOKINGS: return R.layout.fragment_scheduled_bookings;
-            case PROFILE: return R.layout.fragment_profile;
-            case HELP: return R.layout.fragment_help;
+            case AVAILABLE_BOOKINGS:
+                return R.layout.fragment_available_bookings;
+            case CLAIMED_BOOKINGS:
+                return R.layout.fragment_scheduled_bookings;
+            case PROFILE:
+                return R.layout.fragment_profile;
+            case HELP:
+                return R.layout.fragment_help;
         }
         return -1;
     }
@@ -122,10 +135,14 @@ public class MainActivityFragment extends InjectedFragment {
     {
         switch (tab)
         {
-            case AVAILABLE_BOOKINGS: return "a";
-            case CLAIMED_BOOKINGS: return "b";
-            case PROFILE: return "c";
-            case HELP: return "d";
+            case AVAILABLE_BOOKINGS:
+                return "a";
+            case CLAIMED_BOOKINGS:
+                return "b";
+            case PROFILE:
+                return "c";
+            case HELP:
+                return "d";
         }
         return "";
     }
@@ -134,10 +151,14 @@ public class MainActivityFragment extends InjectedFragment {
     {
         switch (tab)
         {
-            case AVAILABLE_BOOKINGS: return AvailableBookingsFragment.class;
-            case CLAIMED_BOOKINGS: return ScheduledBookingsFragment.class;
-            case PROFILE: return ProfileFragment.class;
-            case HELP: return HelpFragment.class;
+            case AVAILABLE_BOOKINGS:
+                return AvailableBookingsFragment.class;
+            case CLAIMED_BOOKINGS:
+                return ScheduledBookingsFragment.class;
+            case PROFILE:
+                return ProfileFragment.class;
+            case HELP:
+                return HelpFragment.class;
         }
         return null;
     }
@@ -161,13 +182,14 @@ public class MainActivityFragment extends InjectedFragment {
 
         Class newFragmentClass = getFragmentClassForTab(tab);
 
-        if(newFragmentId != currentTabFragmentId) //don't transition to same tab, ignore the clicks
+        if (newFragmentId != currentTabFragmentId) //don't transition to same tab, ignore the clicks
         {
             //replace the existing fragment with the new fragment
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
             Fragment newFragment = null;
-            try {
+            try
+            {
                 newFragment = (Fragment) newFragmentClass.newInstance();
             } catch (Exception e)
             {
@@ -188,16 +210,7 @@ public class MainActivityFragment extends InjectedFragment {
         }
 
 
-
     }
-
-
-
-
-
-
-
-
 
 
 }

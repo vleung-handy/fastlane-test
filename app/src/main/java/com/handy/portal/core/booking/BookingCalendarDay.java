@@ -54,14 +54,10 @@ public class BookingCalendarDay
             return true;
         }
 
-        if(compare.year == this.year &&
+        return compare.year == this.year &&
                 compare.month == this.month &&
-                compare.day == this.day)
-        {
-            return true;
-        }
+                compare.day == this.day;
 
-        return false;
     }
 
     @Override

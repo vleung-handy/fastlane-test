@@ -9,14 +9,16 @@ import com.handy.portal.core.User;
 
 import butterknife.ButterKnife;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity
+{
     private static final String STATE_LAUNCHED_NEXT = "LAUNCHED_NEXT";
 
     private User user;
     private boolean launchedNext;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
@@ -41,8 +43,7 @@ public class SplashActivity extends BaseActivity {
 
             //navigationManager.handleSplashScreenLaunch(this.getIntent(), this);
             launchedNext = true;
-        }
-        else
+        } else
         {
             //openServiceCategoriesActivity();
 
@@ -51,7 +52,8 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    public void startActivity(final Intent intent) {
+    public void startActivity(final Intent intent)
+    {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         super.startActivity(intent);
@@ -61,13 +63,15 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    public void startActivityForResult(final Intent intent, final int resultCode) {
+    public void startActivityForResult(final Intent intent, final int resultCode)
+    {
         super.startActivityForResult(intent, resultCode);
         launchedNext = true;
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 //        if (resultCode == BookingDateActivity.RESULT_RESCHEDULE_NEW_DATE) {
 //            openServiceCategoriesActivity();
@@ -75,12 +79,14 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    public final void onSaveInstanceState(final Bundle outState) {
+    public final void onSaveInstanceState(final Bundle outState)
+    {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_LAUNCHED_NEXT, launchedNext);
     }
 
-    private void openMainActivity() {
+    private void openMainActivity()
+    {
         startActivity(new Intent(this, MainActivity.class));
     }
 

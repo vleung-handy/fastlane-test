@@ -20,24 +20,34 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
-public class InjectedFragment extends android.support.v4.app.Fragment {
+public class InjectedFragment extends android.support.v4.app.Fragment
+{
     protected boolean allowCallbacks;
     protected ProgressDialog progressDialog;
     protected Toast toast;
 
-    @Inject BookingManager bookingManager;
-    @Inject UserManager userManager;
-    @Inject Mixpanel mixpanel;
-    @Inject DataManager dataManager;
-    @Inject DataManagerErrorHandler dataManagerErrorHandler;
-    @Inject NavigationManager navigationManager;
-    @Inject GoogleService googleService;
-    @Inject Bus bus;
+    @Inject
+    BookingManager bookingManager;
+    @Inject
+    UserManager userManager;
+    @Inject
+    Mixpanel mixpanel;
+    @Inject
+    DataManager dataManager;
+    @Inject
+    DataManagerErrorHandler dataManagerErrorHandler;
+    @Inject
+    NavigationManager navigationManager;
+    @Inject
+    GoogleService googleService;
+    @Inject
+    Bus bus;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        ((BaseApplication)getActivity().getApplication()).inject(this);
+        ((BaseApplication) getActivity().getApplication()).inject(this);
 
         toast = Toast.makeText(getActivity(), null, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -51,24 +61,31 @@ public class InjectedFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public final void onDestroyView() {
+    public final void onDestroyView()
+    {
         super.onDestroyView();
         ButterKnife.reset(this);
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
         allowCallbacks = true;
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
         allowCallbacks = false;
     }
 
-    protected void disableInputs() {}
+    protected void disableInputs()
+    {
+    }
 
-    protected void enableInputs() {}
+    protected void enableInputs()
+    {
+    }
 }

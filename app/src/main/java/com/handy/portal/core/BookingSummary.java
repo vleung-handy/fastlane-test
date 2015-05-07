@@ -11,13 +11,18 @@ import java.util.List;
  */
 public class BookingSummary
 {
-    @SerializedName("date") private Date date;
-    @SerializedName("booking_summaries") private List<Booking> bookings;
+    @SerializedName("date")
+    private Date date;
+    @SerializedName("booking_summaries")
+    private List<Booking> bookings;
 
-    public final Date getDate() {
+    public final Date getDate()
+    {
         return date;
     }
-    public final List<Booking> getBookings() {
+
+    public final List<Booking> getBookings()
+    {
         return bookings;
     }
 }

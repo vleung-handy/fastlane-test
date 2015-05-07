@@ -15,7 +15,7 @@
     <WebView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/webViewPortal"
+        android:id="@+id/web_view_portal"
         android:layout_marginTop="62dp"
         android:minHeight="200dp"
         android:minWidth="200dp"

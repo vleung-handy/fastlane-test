@@ -22,204 +22,257 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
-public final class BookingQuote extends Observable {
-    @SerializedName("id") private int bookingId;
-    @SerializedName("service_id") private int serviceId;
-    @SerializedName("user_id") private String userId;
-    @SerializedName("hrs") private float hours;
-    @SerializedName("date_start") private Date startDate;
-    @SerializedName("zipcode") private String zipCode;
-    @SerializedName("currency_char") private String currencyChar;
-    @SerializedName("currency_suffix") private String currencySuffix;
-    @SerializedName("hourly_amount") private float hourlyAmount;
-    @SerializedName("price_table") private ArrayList<BookingPriceInfo> priceTable;
-    @SerializedName("dynamic_options") private ArrayList<PeakPriceInfo> surgePriceTable;
-    @SerializedName("stripe_key") private String stripeKey;
-    @SerializedName("phone_country_prefix") private String phonePrefix;
-    @SerializedName("special_extras_options") private BookingOption extrasOptions;
+public final class BookingQuote extends Observable
+{
+    @SerializedName("id")
+    private int bookingId;
+    @SerializedName("service_id")
+    private int serviceId;
+    @SerializedName("user_id")
+    private String userId;
+    @SerializedName("hrs")
+    private float hours;
+    @SerializedName("date_start")
+    private Date startDate;
+    @SerializedName("zipcode")
+    private String zipCode;
+    @SerializedName("currency_char")
+    private String currencyChar;
+    @SerializedName("currency_suffix")
+    private String currencySuffix;
+    @SerializedName("hourly_amount")
+    private float hourlyAmount;
+    @SerializedName("price_table")
+    private ArrayList<BookingPriceInfo> priceTable;
+    @SerializedName("dynamic_options")
+    private ArrayList<PeakPriceInfo> surgePriceTable;
+    @SerializedName("stripe_key")
+    private String stripeKey;
+    @SerializedName("phone_country_prefix")
+    private String phonePrefix;
+    @SerializedName("special_extras_options")
+    private BookingOption extrasOptions;
 
     private HashMap<Float, BookingPriceInfo> priceTableMap;
     private ArrayList<ArrayList<PeakPriceInfo>> peakPriceTable;
 
-    public final int getBookingId() {
+    public final int getBookingId()
+    {
         return bookingId;
     }
 
-    final void setBookingId(final int bookingId) {
+    final void setBookingId(final int bookingId)
+    {
         this.bookingId = bookingId;
         triggerObservers();
     }
 
-    public final int getServiceId() {
+    public final int getServiceId()
+    {
         return serviceId;
     }
 
-    final void setServiceId(final int serviceId) {
+    final void setServiceId(final int serviceId)
+    {
         this.serviceId = serviceId;
         triggerObservers();
     }
 
-    public final String getUserId() {
+    public final String getUserId()
+    {
         return userId;
     }
 
-    final void setUserId(final String userId) {
+    final void setUserId(final String userId)
+    {
         this.userId = userId;
         triggerObservers();
     }
 
-    public float getHours() {
+    public float getHours()
+    {
         return hours;
     }
 
-    public void setHours(float hours) {
+    public void setHours(float hours)
+    {
         this.hours = hours;
         triggerObservers();
     }
 
-    public final Date getStartDate() {
+    public final Date getStartDate()
+    {
         return startDate;
     }
 
-    public final void setStartDate(final Date startDate) {
+    public final void setStartDate(final Date startDate)
+    {
         this.startDate = startDate;
         triggerObservers();
     }
 
-    public final String getZipCode() {
+    public final String getZipCode()
+    {
         return zipCode;
     }
 
-    final void setZipCode(final String zipCode) {
+    final void setZipCode(final String zipCode)
+    {
         this.zipCode = zipCode;
         triggerObservers();
     }
 
-    public final String getCurrencyChar() {
+    public final String getCurrencyChar()
+    {
         return currencyChar;
     }
 
-    final void setCurrencyChar(final String currencyChar) {
+    final void setCurrencyChar(final String currencyChar)
+    {
         this.currencyChar = currencyChar;
         triggerObservers();
     }
 
-    public final String getCurrencySuffix() {
+    public final String getCurrencySuffix()
+    {
         return currencySuffix;
     }
 
-    final void setCurrencySuffix(final String currencySuffix) {
+    final void setCurrencySuffix(final String currencySuffix)
+    {
         this.currencySuffix = currencySuffix;
         triggerObservers();
     }
 
-    public final float getHourlyAmount() {
+    public final float getHourlyAmount()
+    {
         return hourlyAmount;
     }
 
-    final void setHourlyAmount(final float hourlyAmount) {
+    final void setHourlyAmount(final float hourlyAmount)
+    {
         this.hourlyAmount = hourlyAmount;
     }
 
-    public final ArrayList<BookingPriceInfo> getPriceTable() {
+    public final ArrayList<BookingPriceInfo> getPriceTable()
+    {
         return priceTable;
     }
 
-    public final void setPriceTable(final ArrayList<BookingPriceInfo> priceTable) {
+    public final void setPriceTable(final ArrayList<BookingPriceInfo> priceTable)
+    {
         this.priceTable = priceTable;
         buildPriceMap();
         triggerObservers();
     }
 
-    final HashMap<Float, BookingPriceInfo> getPriceTableMap() {
+    final HashMap<Float, BookingPriceInfo> getPriceTableMap()
+    {
         if (priceTableMap == null || priceTable.isEmpty()) buildPriceMap();
         return priceTableMap;
     }
 
-    public final ArrayList<PeakPriceInfo> getSurgePriceTable() {
+    public final ArrayList<PeakPriceInfo> getSurgePriceTable()
+    {
         return surgePriceTable;
     }
 
-    public final void setSurgePriceTable(final ArrayList<PeakPriceInfo> surgePriceTable) {
+    public final void setSurgePriceTable(final ArrayList<PeakPriceInfo> surgePriceTable)
+    {
         this.surgePriceTable = surgePriceTable;
         buildPeakPriceTable();
         triggerObservers();
     }
 
-    public final ArrayList<ArrayList<PeakPriceInfo>> getPeakPriceTable() {
+    public final ArrayList<ArrayList<PeakPriceInfo>> getPeakPriceTable()
+    {
         if (peakPriceTable == null || peakPriceTable.isEmpty()) buildPeakPriceTable();
         return peakPriceTable;
     }
 
-    final boolean hasRecurring() {
+    final boolean hasRecurring()
+    {
         final BookingPriceInfo info = this.priceTable.get(0);
         return !(info.getBiMonthlyprice() <= 0 && info.getMonthlyPrice() <= 0
                 && info.getWeeklyPrice() <= 0);
     }
 
-    public final float[] getPricing(final float hours, final int freq) {
+    public final float[] getPricing(final float hours, final int freq)
+    {
         final BookingPriceInfo info = this.getPriceTableMap().get(hours);
 
-        switch (freq) {
+        switch (freq)
+        {
             case 1:
-                return new float[]{ info.getWeeklyPrice(), info.getDiscountWeeklyPrice()};
+                return new float[]{info.getWeeklyPrice(), info.getDiscountWeeklyPrice()};
 
             case 2:
-                return new float[]{ info.getBiMonthlyprice(), info.getDiscountBiMonthlyprice()};
+                return new float[]{info.getBiMonthlyprice(), info.getDiscountBiMonthlyprice()};
 
             case 4:
-                return new float[]{ info.getMonthlyPrice(), info.getDiscountMonthlyPrice()};
+                return new float[]{info.getMonthlyPrice(), info.getDiscountMonthlyPrice()};
 
             default:
-               return new float[]{ info.getPrice(), info.getDiscountPrice()};
+                return new float[]{info.getPrice(), info.getDiscountPrice()};
         }
     }
 
-    public final String getPhonePrefix() {
+    public final String getPhonePrefix()
+    {
         return phonePrefix;
     }
 
-    final void setPhonePrefix(final String phonePrefix) {
+    final void setPhonePrefix(final String phonePrefix)
+    {
         this.phonePrefix = phonePrefix;
     }
 
-    public final String getStripeKey() {
+    public final String getStripeKey()
+    {
         return stripeKey;
     }
 
-    final void setStripeKey(final String stripeKey) {
+    final void setStripeKey(final String stripeKey)
+    {
         this.stripeKey = stripeKey;
         triggerObservers();
     }
 
-    public final BookingOption getExtrasOptions() {
+    public final BookingOption getExtrasOptions()
+    {
         return extrasOptions;
     }
 
-    public final void setExtrasOptions(final BookingOption extrasOptions) {
+    public final void setExtrasOptions(final BookingOption extrasOptions)
+    {
         this.extrasOptions = extrasOptions;
         triggerObservers();
     }
 
-    private void triggerObservers() {
+    private void triggerObservers()
+    {
         setChanged();
         notifyObservers();
     }
 
-    private void buildPriceMap() {
+    private void buildPriceMap()
+    {
         priceTableMap = new HashMap<>();
 
         if (this.priceTable == null) return;
 
-        for (final BookingPriceInfo info : this.priceTable) priceTableMap.put(info.getHours(), info);
+        for (final BookingPriceInfo info : this.priceTable)
+            priceTableMap.put(info.getHours(), info);
     }
 
-    private void buildPeakPriceTable() {
+    private void buildPeakPriceTable()
+    {
         if (this.surgePriceTable == null) return;
 
         final HashMap<Date, ArrayList<PeakPriceInfo>> peakPriceMap = new HashMap<>();
 
-        for (final PeakPriceInfo info : this.surgePriceTable) {
+        for (final PeakPriceInfo info : this.surgePriceTable)
+        {
             final Calendar dateCal = Calendar.getInstance();
             dateCal.setTime(info.getDate());
 
@@ -235,10 +288,11 @@ public final class BookingQuote extends Observable {
             final Date date = cal.getTime();
             ArrayList<PeakPriceInfo> priceList;
 
-            if ((priceList = peakPriceMap.get(date)) != null) {
+            if ((priceList = peakPriceMap.get(date)) != null)
+            {
                 priceList.add(info);
-            }
-            else {
+            } else
+            {
                 priceList = new ArrayList<>();
                 priceList.add(info);
                 peakPriceMap.put(date, priceList);
@@ -248,21 +302,25 @@ public final class BookingQuote extends Observable {
         final ArrayList<ArrayList<PeakPriceInfo>> table = new ArrayList<>();
         final ArrayList<Date> keys = new ArrayList<>(peakPriceMap.keySet());
 
-        Collections.sort(keys, new Comparator<Date>() {
+        Collections.sort(keys, new Comparator<Date>()
+        {
             @Override
-            public int compare(final Date lhs, final Date rhs) {
-                return (int)(lhs.getTime() - rhs.getTime());
+            public int compare(final Date lhs, final Date rhs)
+            {
+                return (int) (lhs.getTime() - rhs.getTime());
             }
         });
 
-        for (final Date d : keys) {
+        for (final Date d : keys)
+        {
             final ArrayList<PeakPriceInfo> list = peakPriceMap.get(d);
             table.add(list);
         }
         peakPriceTable = table;
     }
 
-    final String toJson() {
+    final String toJson()
+    {
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .setExclusionStrategies(getExclusionStrategy())
                 .registerTypeAdapter(BookingQuote.class, new BookingQuoteSerializer()).create();
@@ -270,29 +328,36 @@ public final class BookingQuote extends Observable {
         return gson.toJson(this);
     }
 
-    public static BookingQuote fromJson(final String json) {
+    public static BookingQuote fromJson(final String json)
+    {
         return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
                 .fromJson(json, BookingQuote.class);
     }
 
-    static ExclusionStrategy getExclusionStrategy() {
-        return new ExclusionStrategy() {
+    static ExclusionStrategy getExclusionStrategy()
+    {
+        return new ExclusionStrategy()
+        {
             @Override
-            public boolean shouldSkipField(final FieldAttributes f) {
+            public boolean shouldSkipField(final FieldAttributes f)
+            {
                 return false;
             }
 
             @Override
-            public boolean shouldSkipClass(final Class<?> clazz) {
+            public boolean shouldSkipClass(final Class<?> clazz)
+            {
                 return clazz.equals(Observer.class);
             }
         };
     }
 
-    static final class BookingQuoteSerializer implements JsonSerializer<BookingQuote> {
+    static final class BookingQuoteSerializer implements JsonSerializer<BookingQuote>
+    {
         @Override
         public final JsonElement serialize(final BookingQuote value, final Type type,
-                                           final JsonSerializationContext context) {
+                                           final JsonSerializationContext context)
+        {
             final JsonObject jsonObj = new JsonObject();
             jsonObj.add("id", context.serialize(value.getBookingId()));
             jsonObj.add("service_id", context.serialize(value.getServiceId()));
@@ -312,20 +377,27 @@ public final class BookingQuote extends Observable {
         }
     }
 
-    public static final class PeakPriceInfo implements Serializable {
-        @SerializedName("date") private Date date;
-        @SerializedName("price") private float price;
-        @SerializedName("type") private String type;
+    public static final class PeakPriceInfo implements Serializable
+    {
+        @SerializedName("date")
+        private Date date;
+        @SerializedName("price")
+        private float price;
+        @SerializedName("type")
+        private String type;
 
-        public final Date getDate() {
+        public final Date getDate()
+        {
             return date;
         }
 
-        public final String getType() {
+        public final String getType()
+        {
             return type;
         }
 
-        public final float getPrice() {
+        public final float getPrice()
+        {
             return price;
         }
     }

@@ -28,7 +28,7 @@ public class BookingElementView
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
-        if(booking == null)
+        if (booking == null)
         {
             System.err.println("Can not fill cell based on null booking");
             return null;
@@ -42,23 +42,23 @@ public class BookingElementView
             convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_booking_list_entry, parent, false);
         }
 
-        TextView bookingAreaTextView = (TextView) convertView.findViewById(R.id.bookingArea);
+        TextView bookingAreaTextView = (TextView) convertView.findViewById(R.id.booking_area);
         String bookingArea = booking.getAddress().getShortRegion();
 
         bookingAreaTextView.setText(bookingArea);
 
-        LinearLayout requestedIndicator  = (LinearLayout) convertView.findViewById(R.id.requested_indicator);
+        LinearLayout requestedIndicator = (LinearLayout) convertView.findViewById(R.id.requested_indicator);
         requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
         Date startDate = booking.getStartDate();
 
-        SimpleDateFormat ft = new SimpleDateFormat ("hh:mma");
+        SimpleDateFormat ft = new SimpleDateFormat("hh:mma");
 
         String formattedStartDate = ft.format(startDate);
         String formattedEndDate = ft.format(booking.getEndDate());
 
-        TextView startTimeText = (TextView) convertView.findViewById(R.id.bookingStartDate);
-        TextView endTimeText = (TextView) convertView.findViewById(R.id.bookingEndDate);
+        TextView startTimeText = (TextView) convertView.findViewById(R.id.booking_start_date);
+        TextView endTimeText = (TextView) convertView.findViewById(R.id.booking_end_date);
 
         startTimeText.setText(formattedStartDate);
         endTimeText.setText(formattedEndDate);

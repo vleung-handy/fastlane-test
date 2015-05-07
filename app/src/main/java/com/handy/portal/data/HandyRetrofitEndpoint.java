@@ -8,8 +8,13 @@ import javax.inject.Inject;
 
 import retrofit.Endpoint;
 
-public final class HandyRetrofitEndpoint implements Endpoint {
-    static enum Environment {P, S, Q1, Q2, Q3, Q4, Q6, D1, L}
+public final class HandyRetrofitEndpoint implements Endpoint
+{
+    enum Environment
+    {
+        P, S, Q1, Q2, Q3, Q4, Q6, D1, L
+    }
+
     private Environment env = Environment.S;
     private Context context;
     private final String apiEndpoint;
@@ -18,7 +23,8 @@ public final class HandyRetrofitEndpoint implements Endpoint {
     private final String baseUrlInternal;
 
     @Inject
-    public HandyRetrofitEndpoint(Context context) {
+    public HandyRetrofitEndpoint(Context context)
+    {
         final Properties config = PropertiesReader.getProperties(context, "config.properties");
         apiEndpoint = config.getProperty("api_endpoint");
         apiEndpointInternal = config.getProperty("api_endpoint_internal");
@@ -26,17 +32,21 @@ public final class HandyRetrofitEndpoint implements Endpoint {
         baseUrlInternal = config.getProperty("base_url_internal");
     }
 
-    final Environment getEnv() {
+    final Environment getEnv()
+    {
         return env;
     }
 
-    final void setEnv(Environment env) {
+    final void setEnv(Environment env)
+    {
         this.env = env;
     }
 
     @Override
-    public final String getUrl() {
-        switch (env) {
+    public final String getUrl()
+    {
+        switch (env)
+        {
             case P:
                 return apiEndpoint;
 
@@ -63,8 +73,10 @@ public final class HandyRetrofitEndpoint implements Endpoint {
         }
     }
 
-    public final String getBaseUrl() {
-        switch (env) {
+    public final String getBaseUrl()
+    {
+        switch (env)
+        {
             case P:
                 return baseUrl;
 
@@ -92,8 +104,10 @@ public final class HandyRetrofitEndpoint implements Endpoint {
     }
 
     @Override
-    public final String getName() {
-        switch (env) {
+    public final String getName()
+    {
+        switch (env)
+        {
             case P:
                 return "Prod";
 

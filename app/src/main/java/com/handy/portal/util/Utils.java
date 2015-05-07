@@ -12,27 +12,34 @@ import android.view.View;
 
 import java.util.Date;
 
-public final class Utils {
+public final class Utils
+{
 
-    public static int toDP(final float px, final Context context) {
+    public static int toDP(final float px, final Context context)
+    {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 px, context.getResources().getDisplayMetrics()));
     }
 
-    static int toDP(final int px, final Context context) {
-        return toDP((float)px, context);
+    static int toDP(final int px, final Context context)
+    {
+        return toDP((float) px, context);
     }
 
-    public static boolean isInteger(String input){
-        try {
+    public static boolean isInteger(String input)
+    {
+        try
+        {
             Integer.parseInt(input);
             return true;
-        } catch(Exception e){
+        } catch (Exception e)
+        {
             return false;
         }
     }
 
-    public static boolean equalDates(final Date date1, final Date date2) {
+    public static boolean equalDates(final Date date1, final Date date2)
+    {
         final Time time = new Time();
         time.set(date1.getTime());
 
@@ -46,24 +53,29 @@ public final class Utils {
                 && (thenMonthDay == time.monthDay);
     }
 
-    public static void extendHitArea(final View view, final View parent, final int extra) {
-        parent.post(new Runnable() {
+    public static void extendHitArea(final View view, final View parent, final int extra)
+    {
+        parent.post(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 final Rect delegateArea = new Rect();
                 view.getHitRect(delegateArea);
                 delegateArea.right += extra;
                 delegateArea.bottom += extra;
 
                 final TouchDelegate touchDelegate = new TouchDelegate(delegateArea, view);
-                if (View.class.isInstance(view.getParent())) {
-                    ((View)view.getParent()).setTouchDelegate(touchDelegate);
+                if (View.class.isInstance(view.getParent()))
+                {
+                    ((View) view.getParent()).setTouchDelegate(touchDelegate);
                 }
             }
         });
     }
 
-    public static int interpolateColor(final int color1, final int color2, final float proportion) {
+    public static int interpolateColor(final int color1, final int color2, final float proportion)
+    {
         final float[] hsva = new float[3];
         final float[] hsvb = new float[3];
 
@@ -74,12 +86,15 @@ public final class Utils {
         return Color.HSVToColor(hsvb);
     }
 
-    public static int getAppVersion(Context context) {
-        try {
+    public static int getAppVersion(Context context)
+    {
+        try
+        {
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException e)
+        {
             // should never happen
             throw new RuntimeException("Could not get package name: " + e);
         }

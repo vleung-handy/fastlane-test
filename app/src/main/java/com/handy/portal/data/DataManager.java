@@ -23,20 +23,28 @@ import java.util.List;
 
 import retrofit.mime.TypedInput;
 
-public abstract class DataManager {
-    public static enum Environment {P, S, Q1, Q2, Q3, Q4, Q6, D1}
+public abstract class DataManager
+{
+    public enum Environment
+    {
+        P, S, Q1, Q2, Q3, Q4, Q6, D1
+    }
+
     private Environment env = Environment.S;
     private final Bus bus;
 
-    DataManager(final Bus bus) {
+    DataManager(final Bus bus)
+    {
         this.bus = bus;
     }
 
-    public Environment getEnvironment() {
+    public Environment getEnvironment()
+    {
         return env;
     }
 
-    public void setEnvironment(final Environment env, final boolean notify) {
+    public void setEnvironment(final Environment env, final boolean notify)
+    {
         //if (notify) bus.post(new EnvironmentUpdatedEvent(env, this.env));
         this.env = env;
     }
@@ -86,17 +94,17 @@ public abstract class DataManager {
                                            int minute, String type, Callback<Void> cb);
 
     public abstract void getAddLaundryInfo(int bookingId, String authToken,
-                                                Callback<Booking> cb);
+                                           Callback<Booking> cb);
 
     public abstract void addLaundry(int bookingId, String authToken,
-                                           Callback<Void> cb);
+                                    Callback<Void> cb);
 
     public abstract void addBookingPostInfo(int bookingId, BookingPostInfo postInfo, Callback<Void> cb);
 
     public abstract void ratePro(int bookingId, int rating, Callback<Void> cb);
 
     public abstract void submitProRatingDetails(int bookingId, final String positiveFeedback,
-                                        Callback<Void> cb);
+                                                Callback<Void> cb);
 
     public abstract void authUser(String email, String password, Callback<User> cb);
 
@@ -115,55 +123,71 @@ public abstract class DataManager {
 
     public abstract void getHelpBookingsInfo(String nodeId, String authToken, String bookingId, Callback<HelpNode> cb);
 
-    public abstract void createHelpCase(TypedInput body,  Callback<Void> cb);
+    public abstract void createHelpCase(TypedInput body, Callback<Void> cb);
 
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
+
     public abstract void getScheduledBookings(Callback<List<BookingSummary>> cb);
+
     public abstract void claimBooking(String bookingId, Callback<List<Booking>> cb);
+
     public abstract void getBookingDetails(String bookingId, Callback<List<Booking>> cb);
 
 
     public abstract String getBaseUrl();
 
-    public static interface Callback<T> {
+    public interface Callback<T>
+    {
         void onSuccess(T response);
+
         void onError(DataManagerError error);
     }
 
-    public static interface CacheResponse<T> {
+    public interface CacheResponse<T>
+    {
         void onResponse(T response);
     }
 
-    static enum Type {OTHER, SERVER, CLIENT, NETWORK}
+    enum Type
+    {
+        OTHER, SERVER, CLIENT, NETWORK
+    }
 
-    public static final class DataManagerError {
+    public static final class DataManagerError
+    {
         private final Type type;
         private final String message;
         private String[] invalidInputs;
 
-        DataManagerError(final Type type) {
+        DataManagerError(final Type type)
+        {
             this.type = type;
             this.message = null;
         }
 
-        DataManagerError(final Type type, final String message) {
+        DataManagerError(final Type type, final String message)
+        {
             this.type = type;
             this.message = message;
         }
 
-        final String[] getInvalidInputs() {
+        final String[] getInvalidInputs()
+        {
             return invalidInputs;
         }
 
-        final void setInvalidInputs(final String[] inputs) {
+        final void setInvalidInputs(final String[] inputs)
+        {
             this.invalidInputs = inputs;
         }
 
-        final String getMessage() {
+        final String getMessage()
+        {
             return message;
         }
 
-        final Type getType() {
+        final Type getType()
+        {
             return type;
         }
     }

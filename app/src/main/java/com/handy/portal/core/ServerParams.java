@@ -2,7 +2,8 @@ package com.handy.portal.core;
 
 import android.webkit.WebSettings;
 
-public class ServerParams {
+public class ServerParams
+{
 
     //public static final String BaseUrl = "https://hbay015.localtunnel.me/"; // FOR DEVELOPMENT
 //    public static final String BaseUrl = "http://192.168.8.21:3000/"; // FOR Non-tunneled local dev

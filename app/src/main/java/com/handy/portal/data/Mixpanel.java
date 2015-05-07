@@ -21,7 +21,8 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-public class Mixpanel {
+public class Mixpanel
+{
     private MixpanelAPI mixpanel;
     private UserManager userManager;
     private BookingManager bookingManager;
@@ -30,11 +31,12 @@ public class Mixpanel {
 
     @Inject
     public Mixpanel(final Context context, final UserManager userManager,
-             final BookingManager bookingManager, final Bus bus)   {
-        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)) {
+                    final BookingManager bookingManager, final Bus bus)
+    {
+        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD))
+        {
             mixpanel = MixpanelAPI.getInstance(context, "864ccb52b900de546bb1bba717ab4fac");
-        }
-        else mixpanel = MixpanelAPI.getInstance(context, "5b31021d4a78ed7d57d9f19fd796f1cd");
+        } else mixpanel = MixpanelAPI.getInstance(context, "5b31021d4a78ed7d57d9f19fd796f1cd");
 
         this.userManager = userManager;
         this.bookingManager = bookingManager;
@@ -45,11 +47,13 @@ public class Mixpanel {
         setSuperProps();
     }
 
-    public void flush() {
-       mixpanel.flush();
-   }
+    public void flush()
+    {
+        mixpanel.flush();
+    }
 
-    private void setSuperProps() {
+    private void setSuperProps()
+    {
         mixpanel.clearSuperProperties();
 
         final JSONObject props = new JSONObject();
@@ -60,7 +64,8 @@ public class Mixpanel {
         final User user = userManager.getCurrentUser();
 
         if (user == null) addProps(props, "user_logged_in", false);
-        else {
+        else
+        {
             addProps(props, "user_logged_in", true);
             addProps(props, "name", user.getFullName());
             addProps(props, "email", user.getEmail());
@@ -69,7 +74,8 @@ public class Mixpanel {
 
             final User.Analytics analytics = user.getAnalytics();
 
-            if (analytics != null) {
+            if (analytics != null)
+            {
                 addProps(props, "last_booking_end", analytics.getLastBookingEnd());
                 addProps(props, "partner", analytics.getPartner());
                 addProps(props, "bookings", analytics.getBookings());
@@ -85,21 +91,25 @@ public class Mixpanel {
         mixpanel.registerSuperProperties(props);
     }
 
-    public void trackOnboardingShown() {
+    public void trackOnboardingShown()
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "type", "default");
         mixpanel.track("Onboarding Show", props);
     }
 
-    public void trackOnboardingActionLogin(final int page) {
+    public void trackOnboardingActionLogin(final int page)
+    {
         trackOnboardingActions("login", page);
     }
 
-    public void trackOnboardingActionSkip(final int page) {
+    public void trackOnboardingActionSkip(final int page)
+    {
         trackOnboardingActions("skip", page);
     }
 
-    private void trackOnboardingActions(final String action, final int page) {
+    private void trackOnboardingActions(final String action, final int page)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "type", "default");
         addProps(props, "action", action);
@@ -107,31 +117,37 @@ public class Mixpanel {
         mixpanel.track("Onboarding Action", props);
     }
 
-    public void trackPageLogin() {
+    public void trackPageLogin()
+    {
         mixpanel.track("log in page view", null);
     }
 
-    public void trackEventLoginSuccess(final LoginType type) {
+    public void trackEventLoginSuccess(final LoginType type)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "log_in_type", type.getValue());
         mixpanel.track("log in successful", props);
     }
 
-    public void trackEventLoginFailure(final LoginType type) {
+    public void trackEventLoginFailure(final LoginType type)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "log_in_type", type.getValue());
         mixpanel.track("log in failure", props);
     }
 
-    public void trackEventWhenPage() {
+    public void trackEventWhenPage()
+    {
         trackWhenPageEvents("when page");
     }
 
-    public void trackEventWhenPageSubmitted() {
+    public void trackEventWhenPageSubmitted()
+    {
         trackWhenPageEvents("when page submitted");
     }
 
-    public void trackEventPaymentPage() {
+    public void trackEventPaymentPage()
+    {
         final String event = "payment page";
         final Boolean called = calledMap.get(event);
         if (called != null && called) return;
@@ -143,7 +159,8 @@ public class Mixpanel {
         calledMap.put(event, true);
     }
 
-    public void trackEventSubmitPayment() {
+    public void trackEventSubmitPayment()
+    {
         final String event = "submit payment";
         final Boolean called = calledMap.get(event);
         if (called != null && called) return;
@@ -155,7 +172,8 @@ public class Mixpanel {
         calledMap.put(event, true);
     }
 
-    public void trackEventBookingMade() {
+    public void trackEventBookingMade()
+    {
         final String event = "booking made";
         final Boolean called = calledMap.get(event);
         if (called != null && called) return;
@@ -167,61 +185,71 @@ public class Mixpanel {
         calledMap.put(event, true);
     }
 
-    public void trackEventYozioInstall(final HashMap<String, Object> metaData) {
+    public void trackEventYozioInstall(final HashMap<String, Object> metaData)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, metaData);
         mixpanel.track("Yozio Install", props);
     }
 
-    public void trackEventYozioOpen(final HashMap<String, Object> metaData) {
+    public void trackEventYozioOpen(final HashMap<String, Object> metaData)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, metaData);
         mixpanel.track("Yozio Open", props);
     }
-    
-    public void trackEventFirstTimeUse() {
+
+    public void trackEventFirstTimeUse()
+    {
         mixpanel.track("first time use", null);
     }
 
-    public void trackEventAppOpened(final boolean newOpen) {
+    public void trackEventAppOpened(final boolean newOpen)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "new_open", newOpen);
         mixpanel.track("app had been opened", props);
     }
 
-    public void trackEventHelpCenterOpened() {
+    public void trackEventHelpCenterOpened()
+    {
         final JSONObject props = new JSONObject();
         mixpanel.track("ssc_open", props);
     }
 
-    public void trackEventHelpCenterNavigation(final String location) {
+    public void trackEventHelpCenterNavigation(final String location)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "selection", location);
         mixpanel.track("ssc_navigation_enter", props);
     }
 
-    public void trackEventHelpCenterLeaf(final String nodeId, final String label) {
+    public void trackEventHelpCenterLeaf(final String nodeId, final String label)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "node_id", nodeId);
         addProps(props, "label", label);
         mixpanel.track("ssc_enter_leaf", props);
     }
 
-    public void trackEventHelpCenterNeedHelpClicked(final String nodeId, final String label) {
+    public void trackEventHelpCenterNeedHelpClicked(final String nodeId, final String label)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "node_id", nodeId);
         addProps(props, "label", label);
         mixpanel.track("ssc_still_need_help_clicked", props);
     }
 
-    public void trackEventHelpCenterSubmitTicket(final String nodeId, final String label) {
+    public void trackEventHelpCenterSubmitTicket(final String nodeId, final String label)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "node_id", nodeId);
         addProps(props, "label", label);
         mixpanel.track("ssc_submit_ticket", props);
     }
 
-    public void trackEventHelpCenterDeepLinkClicked(final String nodeId, final String label) {
+    public void trackEventHelpCenterDeepLinkClicked(final String nodeId, final String label)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "node_id", nodeId);
         addProps(props, "label", label);
@@ -229,7 +257,8 @@ public class Mixpanel {
     }
 
     public void trackEventProRate(final ProRateEventType type, final int bookingId,
-                                  final String proName, final int rating) {
+                                  final String proName, final int rating)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "dialog_event", type.getValue());
         addProps(props, "booking_id", bookingId);
@@ -241,51 +270,67 @@ public class Mixpanel {
         mixpanel.track("app pro rate event", props);
     }
 
-    public void trackPageAddLaundryIntro(final LaundryEventSource source) {
+    public void trackPageAddLaundryIntro(final LaundryEventSource source)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "source", source.getValue());
         mixpanel.track("show add laundry intro page", props);
     }
 
-    public void trackPageAddLaundryConfirm(final LaundryEventSource source) {
+    public void trackPageAddLaundryConfirm(final LaundryEventSource source)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "source", source.getValue());
         mixpanel.track("show add laundry confirm page", props);
     }
 
-    public void trackEventLaundryAdded(final LaundryEventSource source) {
+    public void trackEventLaundryAdded(final LaundryEventSource source)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "source", source.getValue());
         mixpanel.track("submit add laundry confirm page", props);
     }
 
-    public void trackPageScheduleLaundry(final LaundryEventSource source, final String type) {
+    public void trackPageScheduleLaundry(final LaundryEventSource source, final String type)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "source", source.getValue());
         addProps(props, "type", type);
         mixpanel.track("show schedule laundry page", props);
     }
 
-    public void trackEventLaundryScheduled(final LaundryEventSource source, final String type) {
+    public void trackEventLaundryScheduled(final LaundryEventSource source, final String type)
+    {
         final JSONObject props = new JSONObject();
         addProps(props, "source", source.getValue());
         addProps(props, "type", type);
         mixpanel.track("submit schedule laundry page", props);
     }
 
-    private void addProps(final JSONObject object, final String key, final Object value) {
-        try { object.put(key, value); }
-        catch (final JSONException e) { throw new RuntimeException(e); }
-    }
-
-    private void addProps(final JSONObject object, final HashMap<String, Object> props) {
-        try {
-            for (final String key : props.keySet()) object.put(key, props.get(key));
+    private void addProps(final JSONObject object, final String key, final Object value)
+    {
+        try
+        {
+            object.put(key, value);
+        } catch (final JSONException e)
+        {
+            throw new RuntimeException(e);
         }
-        catch (final JSONException e) { throw new RuntimeException(e); }
     }
 
-    private void trackWhenPageEvents(final String event) {
+    private void addProps(final JSONObject object, final HashMap<String, Object> props)
+    {
+        try
+        {
+            for (final String key : props.keySet()) object.put(key, props.get(key));
+        } catch (final JSONException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void trackWhenPageEvents(final String event)
+    {
         final Boolean called = calledMap.get(event);
         if (called != null && called) return;
 
@@ -296,11 +341,13 @@ public class Mixpanel {
         calledMap.put(event, true);
     }
 
-    private void addWhenFlowProps(final JSONObject props) {
+    private void addWhenFlowProps(final JSONObject props)
+    {
         final BookingRequest request = bookingManager.getCurrentRequest();
         String service = null, zip = null;
 
-        if (request != null) {
+        if (request != null)
+        {
             service = request.getUniq();
             zip = request.getZipCode();
         }
@@ -309,7 +356,8 @@ public class Mixpanel {
         addProps(props, "booking_zipcode", zip);
     }
 
-    private void addPaymentFlowProps(final JSONObject props) {
+    private void addPaymentFlowProps(final JSONObject props)
+    {
         addWhenFlowProps(props);
 
         final BookingRequest request = bookingManager.getCurrentRequest();
@@ -323,13 +371,15 @@ public class Mixpanel {
 
         if (request != null) email = request.getEmail();
 
-        if (quote != null) {
+        if (quote != null)
+        {
             bookingId = quote.getBookingId();
             hours = quote.getHours();
             hasDynamicPricing = quote.getSurgePriceTable() != null;
         }
 
-        if (transaction != null) {
+        if (transaction != null)
+        {
             repeatFreq = transaction.getRecurringFrequency();
             isRepeat = repeatFreq > 0;
             if (quote != null) price = quote.getPricing(hours, repeatFreq)[0];
@@ -344,7 +394,8 @@ public class Mixpanel {
         if (repeatFreq > 0) addProps(props, "repeat_freq", repeatFreq);
     }
 
-    private void addSubmitPaymentFlowProps(final JSONObject props) {
+    private void addSubmitPaymentFlowProps(final JSONObject props)
+    {
         addPaymentFlowProps(props);
 
         final BookingTransaction transaction = bookingManager.getCurrentTransaction();
@@ -353,10 +404,12 @@ public class Mixpanel {
         float hours = 0;
 
 
-        if (transaction != null) {
+        if (transaction != null)
+        {
             cleaningExtras = transaction.getExtraCleaningText();
 
-            if (cleaningExtras != null) {
+            if (cleaningExtras != null)
+            {
                 final String[] extrasList = cleaningExtras.split(",");
                 if (extrasList.length > 0) cleaningExtrasSelected = true;
             }
@@ -369,7 +422,8 @@ public class Mixpanel {
         if (cleaningExtrasSelected) addProps(props, "extras", cleaningExtras);
     }
 
-    private void addBookingMadeFlowProps(final JSONObject props) {
+    private void addBookingMadeFlowProps(final JSONObject props)
+    {
         addSubmitPaymentFlowProps(props);
 
         final BookingQuote quote = bookingManager.getCurrentQuote();
@@ -380,13 +434,15 @@ public class Mixpanel {
 
         if (quote != null) hourlyPrice = quote.getHourlyAmount();
 
-        if (transaction != null) {
+        if (transaction != null)
+        {
             isRepeating = transaction.getRecurringFrequency() > 0;
 
             final float hours = transaction.getHours() + transaction.getExtraHours();
             float[] pricing = new float[]{0, 0};
 
-            if (quote != null) pricing = quote.getPricing(hours, transaction.getRecurringFrequency());
+            if (quote != null)
+                pricing = quote.getPricing(hours, transaction.getRecurringFrequency());
             if (pricing[0] == pricing[1]) totalPrice = pricing[0];
             else totalPrice = pricing[1];
         }
@@ -407,44 +463,53 @@ public class Mixpanel {
 //        setSuperProps();
 //    }
 
-    public enum LoginType {
+    public enum LoginType
+    {
         EMAIL("email/password"), FACEBOOK("facebook");
 
         private String value;
 
-        private LoginType(final String value) {
+        LoginType(final String value)
+        {
             this.value = value;
         }
 
-        String getValue() {
+        String getValue()
+        {
             return value;
         }
     }
 
-    public enum ProRateEventType {
+    public enum ProRateEventType
+    {
         SHOW("show"), SUBMIT("submit");
 
         private String value;
 
-        private ProRateEventType(final String value) {
+        ProRateEventType(final String value)
+        {
             this.value = value;
         }
 
-        String getValue() {
+        String getValue()
+        {
             return value;
         }
     }
 
-    public enum LaundryEventSource {
+    public enum LaundryEventSource
+    {
         APP_OPEN("app_open");
 
         private String value;
 
-        private LaundryEventSource(final String value) {
+        LaundryEventSource(final String value)
+        {
             this.value = value;
         }
 
-        String getValue() {
+        String getValue()
+        {
             return value;
         }
     }

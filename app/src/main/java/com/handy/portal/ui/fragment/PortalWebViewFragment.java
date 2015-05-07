@@ -13,8 +13,6 @@ import com.handy.portal.R;
 import com.handy.portal.core.PortalWebViewClient;
 import com.handy.portal.core.ServerParams;
 
-import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -22,13 +20,11 @@ import butterknife.InjectView;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PortalWebViewFragment extends InjectedFragment {
+public class PortalWebViewFragment extends InjectedFragment
+{
 
-    @InjectView(R.id.webViewPortal)
+    @InjectView(R.id.web_view_portal)
     WebView webView;
-
-    public PortalWebViewFragment() {
-    }
 
     protected String getWebParam()
     {
@@ -56,21 +52,27 @@ public class PortalWebViewFragment extends InjectedFragment {
         webView.setWebViewClient(new PortalWebViewClient(this, webView, googleService));
     }
 
-    public void openUrlWithChrome(String url){
-        webView.setWebChromeClient(new WebChromeClient() {
+    public void openUrlWithChrome(String url)
+    {
+        webView.setWebChromeClient(new WebChromeClient()
+        {
             @Override
-            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                callback.invoke(origin,  true, false);
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback)
+            {
+                callback.invoke(origin, true, false);
             }
         });
         loadUrlWithFromAppParam(url);
     }
 
-    private void loadUrlWithFromAppParam(String url){
+    private void loadUrlWithFromAppParam(String url)
+    {
         String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android";
-        if(url.contains("?")){
+        if (url.contains("?"))
+        {
             url = url + "&" + endOfUrl;
-        } else {
+        } else
+        {
             url = url + "?" + endOfUrl;
         }
 
@@ -83,9 +85,11 @@ public class PortalWebViewFragment extends InjectedFragment {
         Intent intent = getActivity().getIntent();
         CharSequence booking_id = intent.getStringExtra("booking_id");
 
-        if(booking_id != null) {
+        if (booking_id != null)
+        {
             FinalUrl = ServerParams.BaseUrl + "portal/jobs/" + booking_id + "/job_details";
-        } else {
+        } else
+        {
             FinalUrl = ServerParams.BaseUrl + "home/"; //add params here
         }
         openUrlWithChrome(FinalUrl);

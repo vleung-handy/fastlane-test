@@ -25,13 +25,14 @@ import javax.inject.Inject;
  * Created by cdavis on 4/20/15.
  */
 
-public final class NavigationManager {
+public final class NavigationManager
+{
 
     //String consts
-    private static final String WEB_AUTH_TOKEN ="slt=";
-    private static final String WEB_PARAM_TOKEN ="?";
-    private static final String WEB_ADDITIONAL_PARAM_TOKEN ="&";
-    private static final String WEB_PARAM_DISABLE_MOBILE_SPLASH="&disable_mobile_splash=1";
+    private static final String WEB_AUTH_TOKEN = "slt=";
+    private static final String WEB_PARAM_TOKEN = "?";
+    private static final String WEB_ADDITIONAL_PARAM_TOKEN = "&";
+    private static final String WEB_PARAM_DISABLE_MOBILE_SPLASH = "&disable_mobile_splash=1";
 
     //Injected params
     private UserManager userManager;
@@ -69,7 +70,9 @@ public final class NavigationManager {
 
     //Action Id to Deeplink Id Mapping
     public static final Map<String, String> ACTION_ID_TO_DEEP_LINK_ID;
-    static {
+
+    static
+    {
         Map<String, String> map = new HashMap<String, String>();
         map.put(ACTION_ID_SERVICES, DEEP_LINK_ID_SERVICES);
         map.put(ACTION_ID_GO_TO_MY_PROFILE, DEEP_LINK_ID_PROFILE);

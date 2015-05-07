@@ -6,8 +6,7 @@ import android.provider.Settings;
 import android.util.Base64;
 
 import com.google.gson.GsonBuilder;
-import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.BaseDataManagerErrorHandler;
 import com.handy.portal.data.DataManager;
@@ -17,14 +16,15 @@ import com.handy.portal.data.HandyRetrofitService;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.data.PropertiesReader;
 import com.handy.portal.data.SecurePreferences;
+import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handy.portal.BuildConfig;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
-import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
+import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -53,22 +53,30 @@ import retrofit.converter.GsonConverter;
         MainActivity.class,
         SplashActivity.class
 })
-public final class ApplicationModule {
+public final class ApplicationModule
+{
     private final Context context;
     private final Properties configs;
 
-    public ApplicationModule(final Context context) {
+    public ApplicationModule(final Context context)
+    {
         this.context = context.getApplicationContext();
         configs = PropertiesReader
                 .getProperties(context, "config.properties");
     }
 
-    @Provides @Singleton final HandyRetrofitEndpoint provideHandyEnpoint() {
+    @Provides
+    @Singleton
+    final HandyRetrofitEndpoint provideHandyEnpoint()
+    {
         return new HandyRetrofitEndpoint(context);
     }
 
-    @Provides @Singleton final HandyRetrofitService provideHandyService(
-            final HandyRetrofitEndpoint endpoint, final UserManager userManager) {
+    @Provides
+    @Singleton
+    final HandyRetrofitService provideHandyService(
+            final HandyRetrofitEndpoint endpoint, final UserManager userManager)
+    {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
@@ -82,12 +90,14 @@ public final class ApplicationModule {
         final String pwd = password;
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor() {
+                .setRequestInterceptor(new RequestInterceptor()
+                {
                     final String auth = "Basic " + Base64.encodeToString((username + ":" + pwd)
                             .getBytes(), Base64.NO_WRAP);
 
                     @Override
-                    public void intercept(RequestFacade request) {
+                    public void intercept(RequestFacade request)
+                    {
                         request.addHeader("Authorization", auth);
                         request.addHeader("Accept", "application/json");
                         request.addQueryParam("client", "android");
@@ -125,10 +135,13 @@ public final class ApplicationModule {
         return restAdapter.create(HandyRetrofitService.class);
     }
 
-    @Provides @Singleton final DataManager provideDataManager(final HandyRetrofitService service,
-                                                              final HandyRetrofitEndpoint endpoint,
-                                                              final Bus bus,
-                                                              final SecurePreferences prefs) {
+    @Provides
+    @Singleton
+    final DataManager provideDataManager(final HandyRetrofitService service,
+                                         final HandyRetrofitEndpoint endpoint,
+                                         final Bus bus,
+                                         final SecurePreferences prefs)
+    {
         final BaseDataManager dataManager = new BaseDataManager(service, endpoint, bus, prefs);
 
         if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD))
@@ -137,27 +150,41 @@ public final class ApplicationModule {
         return dataManager;
     }
 
-    @Provides final DataManagerErrorHandler provideDataManagerErrorHandler() {
+    @Provides
+    final DataManagerErrorHandler provideDataManagerErrorHandler()
+    {
         return new BaseDataManagerErrorHandler();
     }
 
-    @Provides @Singleton final Bus provideBus() {
+    @Provides
+    @Singleton
+    final Bus provideBus()
+    {
         return new MainBus();
     }
 
-    @Provides @Singleton final SecurePreferences providePrefs() {
+    @Provides
+    @Singleton
+    final SecurePreferences providePrefs()
+    {
         return new SecurePreferences(context, null,
                 configs.getProperty("secure_prefs_key"), true);
     }
 
-    @Provides @Singleton final BookingManager provideBookingManager(final Bus bus,
-                                                                    final SecurePreferences prefs,
-                                                                    final DataManager dataManager) {
+    @Provides
+    @Singleton
+    final BookingManager provideBookingManager(final Bus bus,
+                                               final SecurePreferences prefs,
+                                               final DataManager dataManager)
+    {
         return new BookingManager(bus, prefs, dataManager);
     }
 
-    @Provides @Singleton final UserManager provideUserManager(final Bus bus,
-                                                              final SecurePreferences prefs) {
+    @Provides
+    @Singleton
+    final UserManager provideUserManager(final Bus bus,
+                                         final SecurePreferences prefs)
+    {
         return new UserManager(bus, prefs);
     }
 
@@ -165,29 +192,40 @@ public final class ApplicationModule {
 //        return new ReactiveLocationProvider(context);
 //    }
 
-    @Provides @Singleton final Mixpanel provideMixpanel(final UserManager userManager,
-                                                        final BookingManager bookingManager,
-                                                        final Bus bus) {
+    @Provides
+    @Singleton
+    final Mixpanel provideMixpanel(final UserManager userManager,
+                                   final BookingManager bookingManager,
+                                   final Bus bus)
+    {
         return new Mixpanel(context, userManager, bookingManager, bus);
     }
 
-    @Provides @Singleton final NavigationManager provideNavigationManager(final UserManager userManager,
-                                                                          final DataManager dataManager,
-                                                                          final DataManagerErrorHandler dataManagerErrorHandler) {
+    @Provides
+    @Singleton
+    final NavigationManager provideNavigationManager(final UserManager userManager,
+                                                     final DataManager dataManager,
+                                                     final DataManagerErrorHandler dataManagerErrorHandler)
+    {
         return new NavigationManager(this.context, userManager, dataManager, dataManagerErrorHandler);
     }
 
-    @Provides @Singleton final GoogleService provideGoogleService() {
+    @Provides
+    @Singleton
+    final GoogleService provideGoogleService()
+    {
         return new GoogleService(this.context);
     }
 
 
-    private String getDeviceId() {
+    private String getDeviceId()
+    {
         return Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
     }
 
-    private String getDeviceName() {
+    private String getDeviceName()
+    {
         final String manufacturer = Build.MANUFACTURER;
         final String model = Build.MODEL;
 

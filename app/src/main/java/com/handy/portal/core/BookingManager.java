@@ -4,9 +4,7 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.SecurePreferences;
-import com.handy.portal.event.BookingsRetrievedEvent;
-import com.handy.portal.event.RequestAvailableBookingsEvent;
-import com.handy.portal.event.RequestScheduledBookingsEvent;
+import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -18,7 +16,8 @@ import java.util.Observer;
 
 import javax.inject.Inject;
 
-public final class BookingManager implements Observer {
+public final class BookingManager implements Observer
+{
     private BookingRequest request;
     private BookingQuote quote;
     private BookingTransaction transaction;
@@ -32,16 +31,16 @@ public final class BookingManager implements Observer {
     private Map<String, Booking> cachedBookings; //booking ID to booking
 
     //Do we really need to cache booking summaries? We're dealing with relatively small data sets
-        //Maybe the booking summaries will contain a list of ids instead of the full data
-            //and we keep our cached booking data distinct from the by day summaries which is a convenience
+    //Maybe the booking summaries will contain a list of ids instead of the full data
+    //and we keep our cached booking data distinct from the by day summaries which is a convenience
     private Map<BookingCalendarDay, BookingSummary> cachedBookingSummaries;
 
     //private List<Booking> updatedBookings; //we will need to send out a list of updated bookings after each action completes?
 
 
-
     @Inject
-    BookingManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager) {
+    BookingManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
+    {
         this.securePrefs = prefs;
         this.bus = bus;
         this.bus.register(this);
@@ -59,49 +58,55 @@ public final class BookingManager implements Observer {
 
     public void onRequestBookingDetails(String bookingId)
     {
-        if(cachedBookings.containsKey(bookingId))
+        if (cachedBookings.containsKey(bookingId))
         {
             //send out the booking details from the cache
-        }
-        else
+        } else
         {
             //put in a web request for the booking details
-                //send out updated booking when received
+            //send out updated booking when received
         }
 
     }
 
-    @Subscribe
-    public void onRequestAvailableBookings(RequestAvailableBookingsEvent event)
-    {
-        dataManager.getAvailableBookings(new DataManager.Callback<List<BookingSummary>>() {
-                    @Override
-                    public void onSuccess(final List<BookingSummary> bookingSummaries) {
-                        onBookingSummariesReceived(bookingSummaries);
-                    }
 
-                    @Override
-                    public void onError(final DataManager.DataManagerError error) {
-                        System.err.println("Failed to get available bookings " + error);
-                    }
-                }
+    @Subscribe
+    public void onRequestAvailableBookings(Event.RequestAvailableBookingsEvent event)
+    {
+        dataManager.getAvailableBookings(new DataManager.Callback<List<BookingSummary>>()
+                                         {
+                                             @Override
+                                             public void onSuccess(final List<BookingSummary> bookingSummaries)
+                                             {
+                                                 onBookingSummariesReceived(bookingSummaries);
+                                             }
+
+                                             @Override
+                                             public void onError(final DataManager.DataManagerError error)
+                                             {
+                                                 System.err.println("Failed to get available bookings " + error);
+                                             }
+                                         }
         );
     }
 
     @Subscribe
-    public void onRequestScheduledBookings(RequestScheduledBookingsEvent event)
+    public void onRequestScheduledBookings(Event.RequestScheduledBookingsEvent event)
     {
-        dataManager.getScheduledBookings(new DataManager.Callback<List<BookingSummary>>() {
-                    @Override
-                    public void onSuccess(final List<BookingSummary> bookingSummaries) {
-                        onBookingSummariesReceived(bookingSummaries);
-                    }
+        dataManager.getScheduledBookings(new DataManager.Callback<List<BookingSummary>>()
+                                         {
+                                             @Override
+                                             public void onSuccess(final List<BookingSummary> bookingSummaries)
+                                             {
+                                                 onBookingSummariesReceived(bookingSummaries);
+                                             }
 
-                    @Override
-                    public void onError(final DataManager.DataManagerError error) {
-                        System.err.println("Failed to get available bookings " + error);
-                    }
-                }
+                                             @Override
+                                             public void onError(final DataManager.DataManagerError error)
+                                             {
+                                                 System.err.println("Failed to get available bookings " + error);
+                                             }
+                                         }
         );
     }
 
@@ -112,16 +117,16 @@ public final class BookingManager implements Observer {
 
     public void onBookingSummariesReceived(final List<BookingSummary> bookingSummaries)
     {
-        if(bookingSummaries == null)
+        if (bookingSummaries == null)
         {
             System.err.println("No booking summaries from server");
             return;
         }
 
         //extract all of the bookings and update our local cache
-        for(BookingSummary bs : bookingSummaries)
+        for (BookingSummary bs : bookingSummaries)
         {
-            for(Booking b : bs.getBookings())
+            for (Booking b : bs.getBookings())
             {
                 updateBookingsCache(b);
             }
@@ -131,14 +136,14 @@ public final class BookingManager implements Observer {
         updateSummariesCache(bookingSummaries);
 
         //just passing this through as a test
-        bus.post(new BookingsRetrievedEvent(cachedBookingSummaries));
+        bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries));
     }
 
     //may get rid of the caching of summaries and just keep raw booking data?
     private void updateSummariesCache(final List<BookingSummary> bookingSummaries)
     {
         cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
-        for(BookingSummary bs : bookingSummaries)
+        for (BookingSummary bs : bookingSummaries)
         {
             BookingCalendarDay bcd = new BookingCalendarDay(bs.getDate());
             cachedBookingSummaries.put(bcd, bs);
@@ -146,20 +151,23 @@ public final class BookingManager implements Observer {
     }
 
 
-
-    public final BookingRequest getCurrentRequest() {
+    public final BookingRequest getCurrentRequest()
+    {
         if (request != null) return request;
-        else {
+        else
+        {
             if ((request = BookingRequest.fromJson(securePrefs.getString("BOOKING_REQ"))) != null)
                 request.addObserver(this);
             return request;
         }
     }
 
-    public final void setCurrentRequest(final BookingRequest newRequest) {
+    public final void setCurrentRequest(final BookingRequest newRequest)
+    {
         if (request != null) request.deleteObserver(this);
 
-        if (newRequest == null) {
+        if (newRequest == null)
+        {
             request = null;
             securePrefs.put("BOOKING_REQ", null);
             return;
@@ -170,19 +178,23 @@ public final class BookingManager implements Observer {
         securePrefs.put("BOOKING_REQ", request.toJson());
     }
 
-    public final BookingQuote getCurrentQuote() {
+    public final BookingQuote getCurrentQuote()
+    {
         if (quote != null) return quote;
-        else {
+        else
+        {
             if ((quote = BookingQuote.fromJson(securePrefs.getString("BOOKING_QUOTE"))) != null)
                 quote.addObserver(this);
             return quote;
         }
     }
 
-    public final void setCurrentQuote(final BookingQuote newQuote) {
+    public final void setCurrentQuote(final BookingQuote newQuote)
+    {
         if (quote != null) quote.deleteObserver(this);
 
-        if (newQuote == null) {
+        if (newQuote == null)
+        {
             quote = null;
             securePrefs.put("BOOKING_QUOTE", null);
             return;
@@ -193,9 +205,11 @@ public final class BookingManager implements Observer {
         securePrefs.put("BOOKING_QUOTE", quote.toJson());
     }
 
-    public final BookingTransaction getCurrentTransaction() {
+    public final BookingTransaction getCurrentTransaction()
+    {
         if (transaction != null) return transaction;
-        else {
+        else
+        {
             if ((transaction = BookingTransaction
                     .fromJson(securePrefs.getString("BOOKING_TRANS"))) != null)
                 transaction.addObserver(this);
@@ -203,10 +217,12 @@ public final class BookingManager implements Observer {
         }
     }
 
-    public final void setCurrentTransaction(final BookingTransaction newTransaction) {
+    public final void setCurrentTransaction(final BookingTransaction newTransaction)
+    {
         if (transaction != null) transaction.deleteObserver(this);
 
-        if (newTransaction == null) {
+        if (newTransaction == null)
+        {
             transaction = null;
             securePrefs.put("BOOKING_TRANS", null);
             return;
@@ -217,9 +233,11 @@ public final class BookingManager implements Observer {
         securePrefs.put("BOOKING_TRANS", transaction.toJson());
     }
 
-    public final BookingPostInfo getCurrentPostInfo() {
+    public final BookingPostInfo getCurrentPostInfo()
+    {
         if (postInfo != null) return postInfo;
-        else {
+        else
+        {
             if ((postInfo = BookingPostInfo
                     .fromJson(securePrefs.getString("BOOKING_POST"))) != null)
                 postInfo.addObserver(this);
@@ -227,10 +245,12 @@ public final class BookingManager implements Observer {
         }
     }
 
-    public final void setCurrentPostInfo(final BookingPostInfo newInfo) {
+    public final void setCurrentPostInfo(final BookingPostInfo newInfo)
+    {
         if (postInfo != null) postInfo.deleteObserver(this);
 
-        if (newInfo == null) {
+        if (newInfo == null)
+        {
             postInfo = null;
             securePrefs.put("BOOKING_POST", null);
             return;
@@ -241,27 +261,31 @@ public final class BookingManager implements Observer {
         securePrefs.put("BOOKING_POST", postInfo.toJson());
     }
 
-    public final void setPromoTabCoupon(final String code) {
+    public final void setPromoTabCoupon(final String code)
+    {
         securePrefs.put("BOOKING_PROMO_TAB_COUPON", code);
     }
 
-    public final String getPromoTabCoupon() {
+    public final String getPromoTabCoupon()
+    {
         return securePrefs.getString("BOOKING_PROMO_TAB_COUPON");
     }
 
     @Override
-    public void update(final Observable observable, final Object data) {
-        if (observable instanceof BookingRequest) setCurrentRequest((BookingRequest)observable);
-        if (observable instanceof BookingQuote) setCurrentQuote((BookingQuote)observable);
+    public void update(final Observable observable, final Object data)
+    {
+        if (observable instanceof BookingRequest) setCurrentRequest((BookingRequest) observable);
+        if (observable instanceof BookingQuote) setCurrentQuote((BookingQuote) observable);
 
         if (observable instanceof BookingTransaction)
-            setCurrentTransaction((BookingTransaction)observable);
+            setCurrentTransaction((BookingTransaction) observable);
 
         if (observable instanceof BookingPostInfo)
-            setCurrentPostInfo((BookingPostInfo)observable);
+            setCurrentPostInfo((BookingPostInfo) observable);
     }
 
-    public void clear() {
+    public void clear()
+    {
         setCurrentRequest(null);
         setCurrentQuote(null);
         setCurrentTransaction(null);
@@ -269,7 +293,9 @@ public final class BookingManager implements Observer {
         securePrefs.put("STATE_BOOKING_CLEANING_EXTRAS_SEL", null);
         //bus.post(new BookingFlowClearedEvent());
     }
-    public void clearAll() {
+
+    public void clearAll()
+    {
         securePrefs.put("BOOKING_PROMO_TAB_COUPON", null);
         clear();
     }

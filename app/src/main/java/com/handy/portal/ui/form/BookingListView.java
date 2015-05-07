@@ -16,15 +16,18 @@ import java.util.List;
  */
 public class BookingListView extends ListView
 {
-    public BookingListView(Context context) {
+    public BookingListView(Context context)
+    {
         super(context);
     }
 
-    public BookingListView(Context context, AttributeSet attrs, int defStyle) {
+    public BookingListView(Context context, AttributeSet attrs, int defStyle)
+    {
         super(context, attrs, defStyle);
     }
 
-    public BookingListView(Context context, AttributeSet attrs) {
+    public BookingListView(Context context, AttributeSet attrs)
+    {
         super(context, attrs);
     }
 
