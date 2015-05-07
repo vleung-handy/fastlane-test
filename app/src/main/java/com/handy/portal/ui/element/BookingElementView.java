@@ -30,7 +30,7 @@ public class BookingElementView
     {
         if(booking == null)
         {
-            System.err.println("The booking is null, worthless!");
+            System.err.println("Can not fill cell based on null booking");
             return null;
         }
 
@@ -39,7 +39,7 @@ public class BookingElementView
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null)
         {
-            convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_booking, parent, false);
+            convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_booking_list_entry, parent, false);
         }
 
         TextView bookingAreaTextView = (TextView) convertView.findViewById(R.id.bookingArea);

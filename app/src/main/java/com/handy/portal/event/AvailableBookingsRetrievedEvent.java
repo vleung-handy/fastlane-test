@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by cdavis on 5/6/15.
  */
-public class AvailableBookingsRetrievedEvent {
+public class AvailableBookingsRetrievedEvent extends Event {
     public Map<BookingCalendarDay, BookingSummary> bookingSummaries;
     public AvailableBookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries)
     {

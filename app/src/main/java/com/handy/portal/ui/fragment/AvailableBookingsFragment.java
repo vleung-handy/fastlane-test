@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
@@ -16,7 +15,8 @@ import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.event.AvailableBookingsRetrievedEvent;
 import com.handy.portal.event.RequestAvailableBookingsEvent;
-import com.handy.portal.ui.adapter.BookingElementAdapter;
+import com.handy.portal.event.RequestBookingDetailsEvent;
+import com.handy.portal.ui.form.BookingListView;
 import com.squareup.otto.Subscribe;
 
 import java.text.SimpleDateFormat;
@@ -35,7 +35,7 @@ public class AvailableBookingsFragment extends InjectedFragment {
     private final String HACK_HARDCODE_PROVIDER_ID = "8";
 
     @InjectView(R.id.availableJobsListView)
-    ListView availableJobsListView;
+    BookingListView availableJobsListView;
 
     @InjectView(R.id.datesScrollViewLayout)
     LinearLayout datesScrollViewLayout;
@@ -52,6 +52,7 @@ public class AvailableBookingsFragment extends InjectedFragment {
         View view = inflater.inflate(R.layout.fragment_available_bookings, null);
         ButterKnife.inject(this, view);
         requestAvailableBookings();
+        initListClickListener();
         return view;
     }
 
@@ -70,6 +71,11 @@ public class AvailableBookingsFragment extends InjectedFragment {
         bus.post(new RequestAvailableBookingsEvent(HACK_HARDCODE_PROVIDER_ID));
     }
 
+    private void requestBookingDetails()
+    {
+        bus.post(new RequestBookingDetailsEvent("foo"));
+    }
+
     private void displayActiveDayBookings() {
         List<Booking> bookings = getActiveDayBookings();
         if(bookings == null) {
@@ -77,7 +83,7 @@ public class AvailableBookingsFragment extends InjectedFragment {
             System.out.println("No bookings to display for : " + activeDay.toString());
             return;
         }
-        displayBookings(bookings);
+        availableJobsListView.populateList(bookings);
     }
 
     private List<Booking> getActiveDayBookings()
@@ -90,11 +96,8 @@ public class AvailableBookingsFragment extends InjectedFragment {
         return null;
     }
 
-    private void displayBookings(List<Booking> bookings) {
-        //create an entry for each booking
-        BookingElementAdapter itemsAdapter =
-                new BookingElementAdapter(getActivity().getApplicationContext(), bookings);
-        availableJobsListView.setAdapter(itemsAdapter);
+    private void initListClickListener()
+    {
         availableJobsListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
@@ -111,6 +114,8 @@ public class AvailableBookingsFragment extends InjectedFragment {
         displayActiveDayBookings();
     }
 
+
+    //Horiz scroll view picker with dates
     private void updateDateButtons()
     {
         Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
@@ -131,22 +136,25 @@ public class AvailableBookingsFragment extends InjectedFragment {
         //remove existing date buttons
         scrollViewLayout.removeAllViews();
 
-        Context c = getActivity().getApplicationContext();
+        Context context = getActivity().getApplicationContext();
         SimpleDateFormat ft = new SimpleDateFormat("E\nd");
 
-        for (int i = 0; i < numDaysToDisplay; i++) {
-
-            LayoutInflater.from(c).inflate(R.layout.element_date, scrollViewLayout);
+        for (int i = 0; i < numDaysToDisplay; i++)
+        {
+            LayoutInflater.from(context).inflate(R.layout.element_date_button, scrollViewLayout);
             Button dateButton = ((Button) (datesScrollViewLayout.getChildAt(i)));
             final BookingCalendarDay associatedBookingCalendarDay = new BookingCalendarDay(calendar);
+
             if(i == 0)
             {
                 this.activeDay = associatedBookingCalendarDay; //by default point to first day of data as active day
             }
+
             String formattedDate = ft.format(calendar.getTime());
             dateButton.setText(formattedDate);
 
             //TODO: Set this up mediator style so the button retains a link to associated day instead of use anon function
+                //Java does not have delegates.....
             dateButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     System.out.println("Clicked on date : " + associatedBookingCalendarDay.toString() );

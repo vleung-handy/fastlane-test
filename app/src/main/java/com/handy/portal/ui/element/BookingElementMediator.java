@@ -27,7 +27,6 @@ public class BookingElementMediator
 
         this.view = new BookingElementView(this);
         this.view.initView(parentContext, booking, convertView, parent);
-
     }
 
     public View getAssociatedView()
