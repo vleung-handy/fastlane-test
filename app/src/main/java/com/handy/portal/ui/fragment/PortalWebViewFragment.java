@@ -74,8 +74,6 @@ public class PortalWebViewFragment extends InjectedFragment {
             url = url + "?" + endOfUrl;
         }
 
-        System.out.println("Target url : " + url);
-
         webView.loadUrl(url);
     }
 

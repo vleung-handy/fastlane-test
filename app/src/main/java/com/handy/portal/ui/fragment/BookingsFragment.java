@@ -77,7 +77,6 @@ public abstract class BookingsFragment extends InjectedFragment {
         List<Booking> bookings = getActiveDayBookings();
         if(bookings == null) {
             //TODO: Some kind of loading/waiting display state
-            System.out.println("No bookings to display for : " + activeDay.toString());
             return;
         }
         getBookingListView().populateList(bookings);
@@ -134,7 +133,6 @@ public abstract class BookingsFragment extends InjectedFragment {
                 //Java does not have delegates.....
             dateButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    System.out.println("Clicked on date : " + associatedBookingCalendarDay.toString() );
                     setActiveDay(associatedBookingCalendarDay);
                 }
             });

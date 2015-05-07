@@ -54,20 +54,11 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response> {
         }
 
         if(responseIsJSONArray) {
-            System.out.println("Response is JSON ARRAY");
-        }
-        else
-        {
-            System.out.println("Response is JSON OBJECT");
-        }
-
-        if(responseIsJSONArray) {
             //if we got an array response convert it back to an object for now
                 //maybe we could support callback params with jsonobj or jsonarray?
             try {
 
                 for (int i = 0; i < objArray.length(); i++) {
-                    System.out.println("See entry : " + objArray.getJSONObject(i).toString());
                     obj.put(Integer.toString(i), objArray.getJSONObject(i));
                 }
 

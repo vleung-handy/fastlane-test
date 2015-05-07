@@ -118,12 +118,6 @@ public final class BookingManager implements Observer {
             return;
         }
 
-        //update the cache
-        //send out the relevant cache data to fulfill the request
-        System.out.println("Got some booking summaries in : " + bookingSummaries.size());
-
-        //cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
-
         //extract all of the bookings and update our local cache
         for(BookingSummary bs : bookingSummaries)
         {
@@ -133,72 +127,23 @@ public final class BookingManager implements Observer {
             }
         }
 
-
         //update the summaries cache
-
         updateSummariesCache(bookingSummaries);
-
-
-//        for(BookingSummary bs : bookingSummaries)
-//        {
-//            BookingCalendarDay bcd = new BookingCalendarDay(bs.getDate());
-//            System.out.println("Adding summary for : " + bcd + " : num bookings " + bs.getBookings().size());
-//            cachedBookingSummaries.put(bcd, bs);
-//        }
-
-
-        System.out.println("Send out the update event");
 
         //just passing this through as a test
         bus.post(new BookingsRetrievedEvent(cachedBookingSummaries));
-
-
-
-
-
     }
 
+    //may get rid of the caching of summaries and just keep raw booking data?
     private void updateSummariesCache(final List<BookingSummary> bookingSummaries)
     {
         cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
         for(BookingSummary bs : bookingSummaries)
         {
             BookingCalendarDay bcd = new BookingCalendarDay(bs.getDate());
-            System.out.println("Adding summary for : " + bcd + " : num bookings " + bs.getBookings().size());
             cachedBookingSummaries.put(bcd, bs);
         }
     }
-
-
-    public void onBookingsReceived()
-    {
-        //update the cache
-        //send out the relevant cache data to fulfill the request
-
-
-
-
-
-    }
-
-    public void onForceCacheUpdate()
-    {
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

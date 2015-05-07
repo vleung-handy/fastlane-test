@@ -68,7 +68,6 @@ public class ScheduledBookingsFragment extends BookingsFragment {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
                         Booking booking = (Booking) adapter.getItemAtPosition(position);
-                        System.out.println("clicked on booking with id " + booking.getId());
                     }
                 }
         );

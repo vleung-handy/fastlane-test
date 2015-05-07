@@ -99,7 +99,8 @@ public class PortalWebViewClient extends WebViewClient
 
         if(googleService == null)
         {
-            System.out.println("Google service fubar");
+            System.err.println("Can not contact google service");
+            return;
         }
 
         String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android";

@@ -157,18 +157,13 @@ public class MainActivityFragment extends InjectedFragment {
 
     private void switchToTab(MainViewTab tab)
     {
-        System.out.println("SWITCH TAB : " + tab);
-
         int newFragmentId = getFragmentIdForTab(tab);
 
         Class newFragmentClass = getFragmentClassForTab(tab);
 
         if(newFragmentId != currentTabFragmentId) //don't transition to same tab, ignore the clicks
         {
-            System.out.println("Going to transition to tab with id : " + newFragmentId);
-
             //replace the existing fragment with the new fragment
-
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
             Fragment newFragment = null;
