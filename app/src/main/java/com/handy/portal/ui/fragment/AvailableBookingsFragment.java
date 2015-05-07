@@ -54,7 +54,7 @@ public class AvailableBookingsFragment extends BookingsFragment
 
     protected void requestBookings()
     {
-        bus.post(new RequestAvailableBookingsEvent(HACK_HARDCODE_PROVIDER_ID));
+        bus.post(new RequestAvailableBookingsEvent());
     }
 
     protected void initListClickListener()

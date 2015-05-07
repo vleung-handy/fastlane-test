@@ -14,4 +14,8 @@ import butterknife.ButterKnife;
  * A placeholder fragment containing a simple view.
  */
 public class HelpFragment extends PortalWebViewFragment {
+    public HelpFragment()
+    {
+
+    }
 }

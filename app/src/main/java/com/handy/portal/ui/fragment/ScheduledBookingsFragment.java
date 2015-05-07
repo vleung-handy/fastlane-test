@@ -58,7 +58,7 @@ public class ScheduledBookingsFragment extends BookingsFragment {
 
     protected void requestBookings()
     {
-        bus.post(new RequestScheduledBookingsEvent(HACK_HARDCODE_PROVIDER_ID));
+        bus.post(new RequestScheduledBookingsEvent());
     }
 
     protected void initListClickListener()

@@ -117,10 +117,10 @@ public abstract class DataManager {
 
     public abstract void createHelpCase(TypedInput body,  Callback<Void> cb);
 
-    public abstract void getAvailableBookings(String providerId, Callback<List<BookingSummary>> cb);
-    public abstract void getScheduledBookings(String providerId, Callback<List<BookingSummary>> cb);
-    public abstract void claimBooking(String providerId, String bookingId, Callback<List<Booking>> cb);
-    public abstract void getBookingDetails(String providerId, String bookingId, Callback<List<Booking>> cb);
+    public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
+    public abstract void getScheduledBookings(Callback<List<BookingSummary>> cb);
+    public abstract void claimBooking(String bookingId, Callback<List<Booking>> cb);
+    public abstract void getBookingDetails(String bookingId, Callback<List<Booking>> cb);
 
 
     public abstract String getBaseUrl();

@@ -15,6 +15,7 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.event.BookingsRetrievedEvent;
 import com.handy.portal.event.RequestAvailableBookingsEvent;
+import com.handy.portal.event.RequestBookingDetailsEvent;
 import com.handy.portal.ui.form.BookingListView;
 import com.squareup.otto.Subscribe;
 
@@ -32,8 +33,6 @@ public abstract class BookingsFragment extends InjectedFragment {
 
     public BookingsFragment() {}
 
-    //Hardcoding this since we don't have an active user yet
-    protected final String HACK_HARDCODE_PROVIDER_ID = "11";
     protected BookingCalendarDay activeDay; //what day are we currently displaying bookings for?
     protected Map<BookingCalendarDay, BookingSummary> bookingSummariesByDay;
 
@@ -64,8 +63,9 @@ public abstract class BookingsFragment extends InjectedFragment {
         displayActiveDayBookings();
     }
 
-    protected void requestBookingDetails()
+    protected void requestBookingDetails(String bookingId)
     {
+        bus.post(new RequestBookingDetailsEvent(bookingId));
     }
 
     private void setActiveDay(BookingCalendarDay activeDay) {

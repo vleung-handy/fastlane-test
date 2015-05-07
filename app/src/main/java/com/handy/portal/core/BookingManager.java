@@ -74,8 +74,7 @@ public final class BookingManager implements Observer {
     @Subscribe
     public void onRequestAvailableBookings(RequestAvailableBookingsEvent event)
     {
-        String providerId = event.providerId;
-        dataManager.getAvailableBookings(providerId, new DataManager.Callback<List<BookingSummary>>() {
+        dataManager.getAvailableBookings(new DataManager.Callback<List<BookingSummary>>() {
                     @Override
                     public void onSuccess(final List<BookingSummary> bookingSummaries) {
                         onBookingSummariesReceived(bookingSummaries);
@@ -92,8 +91,7 @@ public final class BookingManager implements Observer {
     @Subscribe
     public void onRequestScheduledBookings(RequestScheduledBookingsEvent event)
     {
-        String providerId = event.providerId;
-        dataManager.getScheduledBookings(providerId, new DataManager.Callback<List<BookingSummary>>() {
+        dataManager.getScheduledBookings(new DataManager.Callback<List<BookingSummary>>() {
                     @Override
                     public void onSuccess(final List<BookingSummary> bookingSummaries) {
                         onBookingSummariesReceived(bookingSummaries);

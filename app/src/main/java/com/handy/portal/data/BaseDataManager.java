@@ -595,26 +595,21 @@ public final class BaseDataManager extends DataManager {
     }
 
     @Override
-    public final void getAvailableBookings(String providerId, final Callback<List<BookingSummary>> cb)
+    public final void getAvailableBookings(final Callback<List<BookingSummary>> cb)
     {
-        service.getAvailableBookings(providerId, new HandyRetrofitCallback(cb) {
+        service.getAvailableBookings(getProviderId(), new HandyRetrofitCallback(cb) {
             @Override
-            void success(final JSONObject response)
-            {
+            void success(final JSONObject response) {
                 final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
                 final List<BookingSummary> bookings = new ArrayList<BookingSummary>();
 
-                for(int i = 0; i < response.length() ; i++)
-                {
-                    try
-                    {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
                         BookingSummary bs = gson.fromJson((response.get(Integer.toString(i)).toString()),
                                 new TypeToken<BookingSummary>() {
                                 }.getType());
                         bookings.add(bs);
-                    }
-                    catch(Exception e)
-                    {
+                    } catch (Exception e) {
                         System.err.println("Can not parse BookingSummary " + e);
                     }
                 }
@@ -624,9 +619,9 @@ public final class BaseDataManager extends DataManager {
     }
 
     @Override
-    public final void getScheduledBookings(String providerId, final Callback<List<BookingSummary>> cb)
+    public final void getScheduledBookings(final Callback<List<BookingSummary>> cb)
     {
-        service.getScheduledBookings(providerId, new HandyRetrofitCallback(cb) {
+        service.getScheduledBookings(getProviderId(), new HandyRetrofitCallback(cb) {
             @Override
             void success(final JSONObject response) {
                 cb.onSuccess(null);
@@ -635,25 +630,31 @@ public final class BaseDataManager extends DataManager {
     }
 
     @Override
-    public final void claimBooking(String providerId, String bookingId, final Callback<List<Booking>> cb)
+    public final void claimBooking(String bookingId, final Callback<List<Booking>> cb)
     {
-        service.claimBooking(providerId, bookingId, new HandyRetrofitCallback(cb) {
-        @Override
-        void success(final JSONObject response) {
-            cb.onSuccess(null);
-        }
-    });
-    }
-
-    @Override
-    public final void getBookingDetails(String providerId, String bookingId, final Callback<List<Booking>> cb)
-    {
-        service.getBookingDetails(providerId, bookingId, new HandyRetrofitCallback(cb) {
+        service.claimBooking(getProviderId(), bookingId, new HandyRetrofitCallback(cb) {
             @Override
             void success(final JSONObject response) {
                 cb.onSuccess(null);
             }
         });
+    }
+
+    @Override
+    public final void getBookingDetails(String bookingId, final Callback<List<Booking>> cb)
+    {
+        service.getBookingDetails(getProviderId(), bookingId, new HandyRetrofitCallback(cb) {
+            @Override
+            void success(final JSONObject response) {
+                cb.onSuccess(null);
+            }
+        });
+    }
+
+    private String getProviderId()
+    {
+        //hardcode hack, will eventually point at a real user from our service with an associated ID
+        return "11";
     }
 
 
