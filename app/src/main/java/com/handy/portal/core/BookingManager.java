@@ -4,9 +4,9 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.SecurePreferences;
-import com.handy.portal.event.AvailableBookingsRetrievedEvent;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.BookingsRetrievedEvent;
 import com.handy.portal.event.RequestAvailableBookingsEvent;
+import com.handy.portal.event.RequestScheduledBookingsEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -51,14 +51,6 @@ public final class BookingManager implements Observer {
         this.cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
     }
 
-    @Subscribe
-    public void testListen(RequestAvailableBookingsEvent event)
-    {
-        System.out.println("Heard something : " + event.providerId);
-        onRequestAvailableBookings(event);
-    }
-
-
     //all communication will be done through the bus
     //booking manager
     //requests and caches data about bookings
@@ -79,11 +71,29 @@ public final class BookingManager implements Observer {
 
     }
 
-
+    @Subscribe
     public void onRequestAvailableBookings(RequestAvailableBookingsEvent event)
     {
         String providerId = event.providerId;
         dataManager.getAvailableBookings(providerId, new DataManager.Callback<List<BookingSummary>>() {
+                    @Override
+                    public void onSuccess(final List<BookingSummary> bookingSummaries) {
+                        onBookingSummariesReceived(bookingSummaries);
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error) {
+                        System.err.println("Failed to get available bookings " + error);
+                    }
+                }
+        );
+    }
+
+    @Subscribe
+    public void onRequestScheduledBookings(RequestScheduledBookingsEvent event)
+    {
+        String providerId = event.providerId;
+        dataManager.getScheduledBookings(providerId, new DataManager.Callback<List<BookingSummary>>() {
                     @Override
                     public void onSuccess(final List<BookingSummary> bookingSummaries) {
                         onBookingSummariesReceived(bookingSummaries);
@@ -104,6 +114,12 @@ public final class BookingManager implements Observer {
 
     public void onBookingSummariesReceived(final List<BookingSummary> bookingSummaries)
     {
+        if(bookingSummaries == null)
+        {
+            System.err.println("No booking summaries from server");
+            return;
+        }
+
         //update the cache
         //send out the relevant cache data to fulfill the request
         System.out.println("Got some booking summaries in : " + bookingSummaries.size());
@@ -136,7 +152,7 @@ public final class BookingManager implements Observer {
         System.out.println("Send out the update event");
 
         //just passing this through as a test
-        bus.post(new AvailableBookingsRetrievedEvent(cachedBookingSummaries));
+        bus.post(new BookingsRetrievedEvent(cachedBookingSummaries));
 
 
 

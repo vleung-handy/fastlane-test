@@ -4,9 +4,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".AvailableBookingsFragment">
+    tools:context=".ScheduledBookingsFragment">
 
-    <TextView android:text="AVAIL BOOK" android:layout_width="wrap_content"
+    <TextView android:text="Scheduled Bookings" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
         android:layout_centerVertical="true"
@@ -15,20 +15,21 @@
     <com.handy.portal.ui.form.BookingListView
         android:layout_width="wrap_content"
         android:layout_height="335dp"
-        android:id="@+id/availableJobsListView"
+        android:id="@+id/scheduledJobsListView"
         android:layout_gravity="center"
         android:dividerHeight="10dp" />
 
     <HorizontalScrollView
         android:layout_width="306dp"
         android:layout_height="65dp"
-        android:id="@+id/availableBookingsDatesScrollView"
+        android:id="@+id/scheduledBookingsDatesScrollView"
         android:layout_gravity="center_horizontal|top" >
 
         <LinearLayout
-            android:id="@+id/availableBookingsDatesScrollViewLayout"
+            android:id="@+id/scheduledBookingsDatesScrollViewLayout"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></LinearLayout>
     </HorizontalScrollView>
+
 </FrameLayout>

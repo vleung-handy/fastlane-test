@@ -9,9 +9,9 @@ import java.util.Map;
 /**
  * Created by cdavis on 5/6/15.
  */
-public class AvailableBookingsRetrievedEvent extends Event {
+public class BookingsRetrievedEvent extends Event {
     public Map<BookingCalendarDay, BookingSummary> bookingSummaries;
-    public AvailableBookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries)
+    public BookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries)
     {
         this.bookingSummaries = bookingSummaries;
     }

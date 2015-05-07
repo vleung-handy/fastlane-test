@@ -1,20 +1,14 @@
 package com.handy.portal.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.GeolocationPermissions;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.widget.Button;
 
 import com.handy.portal.R;
-import com.handy.portal.core.PortalWebViewClient;
-import com.handy.portal.core.ServerParams;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -26,8 +20,11 @@ import butterknife.InjectView;
 public class MainActivityFragment extends InjectedFragment {
 
 
-    @InjectView(R.id.button)  Button availableJobsButton;
-    @InjectView(R.id.button2)  Button myJobsButton;
+    @InjectView(R.id.button_available_jobs)  Button availableJobsButton;
+    @InjectView(R.id.button_scheduled_jobs)  Button scheduledJobsButton;
+    @InjectView(R.id.button_profile)  Button profileButton;
+    @InjectView(R.id.button_help)  Button helpButton;
+
 
     private int currentTabFragmentId = -1;
 
@@ -52,10 +49,10 @@ public class MainActivityFragment extends InjectedFragment {
 
     private void registerButtonListeners()
     {
-        myJobsButton.setOnClickListener(new View.OnClickListener() {
+        scheduledJobsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClaimedJobsClicked(v);
+                onScheduledJobsClicked(v);
             }
         });
 
@@ -65,20 +62,40 @@ public class MainActivityFragment extends InjectedFragment {
                 onAvailableJobsClicked(v);
             }
         });
+
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onProfileClicked(v);
+            }
+        });
+
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onHelpClicked(v);
+            }
+        });
     }
 
     public void onAvailableJobsClicked(View clickedView)
     {
-        System.out.println("Clicked on available jobs");
         switchToTab(MainViewTab.AVAILABLE_BOOKINGS);
-        //have a webview fragment that we can instantiate/remove depending on which button we click on
-        //have a fragment for each page
     }
 
-    public void onClaimedJobsClicked(View clickedView)
+    public void onScheduledJobsClicked(View clickedView)
     {
-        System.out.println("Clicked on claimed jobs");
+        switchToTab(MainViewTab.CLAIMED_BOOKINGS);
+    }
+
+    public void onProfileClicked(View clickedView)
+    {
         switchToTab(MainViewTab.PROFILE);
+    }
+
+    public void onHelpClicked(View clickedView)
+    {
+        switchToTab(MainViewTab.HELP);
     }
 
     enum MainViewTab
@@ -94,7 +111,7 @@ public class MainActivityFragment extends InjectedFragment {
         switch (tab)
         {
             case AVAILABLE_BOOKINGS: return R.layout.fragment_available_bookings;
-            case CLAIMED_BOOKINGS: return R.layout.fragment_claimed_bookings;
+            case CLAIMED_BOOKINGS: return R.layout.fragment_scheduled_bookings;
             case PROFILE: return R.layout.fragment_profile;
             case HELP: return R.layout.fragment_help;
         }
@@ -118,7 +135,7 @@ public class MainActivityFragment extends InjectedFragment {
         switch (tab)
         {
             case AVAILABLE_BOOKINGS: return AvailableBookingsFragment.class;
-            case CLAIMED_BOOKINGS: return ClaimedBookingsFragment.class;
+            case CLAIMED_BOOKINGS: return ScheduledBookingsFragment.class;
             case PROFILE: return ProfileFragment.class;
             case HELP: return HelpFragment.class;
         }

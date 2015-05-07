@@ -10,11 +10,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.BookingSummary;
+import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.event.BookingsRetrievedEvent;
-import com.handy.portal.event.RequestAvailableBookingsEvent;
+import com.handy.portal.event.RequestScheduledBookingsEvent;
 import com.handy.portal.ui.form.BookingListView;
 import com.squareup.otto.Subscribe;
 
@@ -28,36 +28,42 @@ import java.util.TimeZone;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class AvailableBookingsFragment extends InjectedFragment {
 
-    //Hardcoding this since we don't have an active user yet
-    private final String HACK_HARDCODE_PROVIDER_ID = "11";
+/**
+ * A placeholder fragment containing a simple view.
+ */
+public class ScheduledBookingsFragment extends InjectedFragment {
 
-    @InjectView(R.id.availableJobsListView)
-    BookingListView availableJobsListView;
-
-    @InjectView(R.id.availableBookingsDatesScrollViewLayout)
-    LinearLayout datesScrollViewLayout;
-
-    private BookingCalendarDay activeDay; //what day are we currently displaying bookings for?
-    private Map<BookingCalendarDay, BookingSummary> bookingSummariesByDay; //TODO: Move this caching to the service and talk to the service for day data
-
-    public AvailableBookingsFragment() {}
+    public ScheduledBookingsFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_available_bookings, null);
+        View view = inflater.inflate(R.layout.fragment_scheduled_bookings, null);
         ButterKnife.inject(this, view);
-        requestAvailableBookings();
+        requestClaimedBookings();
         initListClickListener();
         return view;
     }
 
+    //Hardcoding this since we don't have an active user yet
+    private final String HACK_HARDCODE_PROVIDER_ID = "11";
+
+    @InjectView(R.id.scheduledJobsListView)
+    BookingListView scheduledJobsListView;
+
+    @InjectView(R.id.scheduledBookingsDatesScrollViewLayout)
+    LinearLayout datesScrollViewLayout;
+
+    private BookingCalendarDay activeDay; //what day are we currently displaying bookings for?
+    private Map<BookingCalendarDay, BookingSummary> bookingSummariesByDay;
+
     //Event listeners
     @Subscribe
-    public void onAvailableBookingsRetrieved(BookingsRetrievedEvent event)
+    public void onBookingsRetrieved(BookingsRetrievedEvent event)
     {
         Map<BookingCalendarDay, BookingSummary> bookingSummaries = event.bookingSummaries;
         bookingSummariesByDay = bookingSummaries;
@@ -65,13 +71,9 @@ public class AvailableBookingsFragment extends InjectedFragment {
         displayActiveDayBookings();
     }
 
-    private void requestAvailableBookings()
+    private void requestClaimedBookings()
     {
-        bus.post(new RequestAvailableBookingsEvent(HACK_HARDCODE_PROVIDER_ID));
-    }
-
-    private void requestBookingDetails()
-    {
+        bus.post(new RequestScheduledBookingsEvent(HACK_HARDCODE_PROVIDER_ID));
     }
 
     private void displayActiveDayBookings() {
@@ -81,7 +83,7 @@ public class AvailableBookingsFragment extends InjectedFragment {
             System.out.println("No bookings to display for : " + activeDay.toString());
             return;
         }
-        availableJobsListView.populateList(bookings);
+        scheduledJobsListView.populateList(bookings);
     }
 
     private List<Booking> getActiveDayBookings()
@@ -96,7 +98,7 @@ public class AvailableBookingsFragment extends InjectedFragment {
 
     private void initListClickListener()
     {
-        availableJobsListView.setOnItemClickListener(
+        scheduledJobsListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
@@ -152,7 +154,7 @@ public class AvailableBookingsFragment extends InjectedFragment {
             dateButton.setText(formattedDate);
 
             //TODO: Set this up mediator style so the button retains a link to associated day instead of use anon function
-                //Java does not have delegates.....
+            //Java does not have delegates.....
             dateButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     System.out.println("Clicked on date : " + associatedBookingCalendarDay.toString() );

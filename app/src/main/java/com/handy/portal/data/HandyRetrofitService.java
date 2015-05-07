@@ -167,25 +167,32 @@ public interface HandyRetrofitService {
     //***************
     //PORTAL
     //***************
-    @GET("/portal/provider/{provider_id}/jobs")
+
+    //http://localhost:3000/api/portal/v1/providers/8/bookings                  //scheduled
+    //http://localhost:3000/api/portal/v1/providers/8/bookings?available=true   //available
+
+    final String portalVersion = "v1";
+    final String basePath = "/portal/"+portalVersion+"/provider/";
+
+    @GET(basePath + "{provider_id}/bookings?available=true")
     void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
 
-    @GET("/portal/provider/{provider_id}/schedule")
+    @GET(basePath + "{provider_id}/bookings")
     void getScheduledBookings(@Path("provider_id") String providerId,  HandyRetrofitCallback cb);
 
-    @POST("/portal/provider/{provider_id}/bookings/{booking_id}/claim")
+    @POST(basePath + "{provider_id}/bookings/{booking_id}/claim")
     void claimBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-    @GET("/portal/provider/{provider_id}/bookings/{booking_id}")
+    @GET(basePath + "{provider_id}/bookings/{booking_id}")
     void getBookingDetails(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-    @POST("/portal/provider/{provider_id}/bookings/{booking_id}/on_my_way")
+    @POST(basePath + "{provider_id}/bookings/{booking_id}/on_my_way")
     void notifyOnMyWay(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-    @POST("/portal/provider/{provider_id}/bookings/{booking_id}/check_in")
+    @POST(basePath + "{provider_id}/bookings/{booking_id}/check_in")
     void checkIn(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-    @POST("/portal/provider/{provider_id}/bookings/{booking_id}/check_out")
+    @POST(basePath + "{provider_id}/bookings/{booking_id}/check_out")
     void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
   /*
