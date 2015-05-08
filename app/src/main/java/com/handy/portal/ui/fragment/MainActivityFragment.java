@@ -19,8 +19,6 @@ import butterknife.InjectView;
  */
 public class MainActivityFragment extends InjectedFragment
 {
-
-
     @InjectView(R.id.button_available_jobs)
     Button availableJobsButton;
     @InjectView(R.id.button_scheduled_jobs)
@@ -39,12 +37,8 @@ public class MainActivityFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
-
         registerButtonListeners();
-
         switchToTab(MainViewTab.AVAILABLE_BOOKINGS);
-        //initView();
-
         return view;
     }
 
@@ -99,7 +93,8 @@ public class MainActivityFragment extends InjectedFragment
 
     public void onProfileClicked(View clickedView)
     {
-        switchToTab(MainViewTab.PROFILE);
+        //switchToTab(MainViewTab.PROFILE);
+        switchToTab(MainViewTab.DEBUG_DETAILS);
     }
 
     public void onHelpClicked(View clickedView)
@@ -112,7 +107,8 @@ public class MainActivityFragment extends InjectedFragment
         AVAILABLE_BOOKINGS,
         CLAIMED_BOOKINGS,
         PROFILE,
-        HELP
+        HELP,
+        DEBUG_DETAILS
     }
 
     private int getFragmentIdForTab(MainViewTab tab)
@@ -127,6 +123,8 @@ public class MainActivityFragment extends InjectedFragment
                 return R.layout.fragment_profile;
             case HELP:
                 return R.layout.fragment_help;
+            case DEBUG_DETAILS:
+                return R.layout.fragment_booking_detail;
         }
         return -1;
     }
@@ -159,6 +157,8 @@ public class MainActivityFragment extends InjectedFragment
                 return ProfileFragment.class;
             case HELP:
                 return HelpFragment.class;
+            case DEBUG_DETAILS:
+                return BookingDetailsFragment.class;
         }
         return null;
     }
@@ -191,9 +191,10 @@ public class MainActivityFragment extends InjectedFragment
             try
             {
                 newFragment = (Fragment) newFragmentClass.newInstance();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-                System.err.println("Error instantiating fragment class");
+                System.err.println("Error instantiating fragment class : " + e);
             }
 
             currentTabFragmentId = newFragmentId;

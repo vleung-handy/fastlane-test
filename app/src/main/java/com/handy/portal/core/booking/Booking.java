@@ -37,6 +37,7 @@ public final class Booking implements Parcelable {
     @SerializedName("frequency") private int frequency;
     @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions;
 
+    public final String getStatus(){return status;}
     public final List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}
     public final int getFrequency() { return frequency; }
     public final PaymentInfo getPaymentToProvider() { return paymentToProvider; }
@@ -222,6 +223,11 @@ public final class Booking implements Parcelable {
     public static final class PaymentInfo
     {
         private MonetaryAmount payment;
+        public MonetaryAmount getAmount()
+        {
+            return payment;
+        }
+
     }
 
     public static final class MonetaryAmount
@@ -232,6 +238,9 @@ public final class Booking implements Parcelable {
         private String currencyCode;
         @SerializedName("currency_symbol")
         private String currencySymbol;
+
+        public int getAmount() { return amount; }
+        public String getCurrencySymbol() { return currencySymbol; }
     }
 
     public static final class BookingInstruction

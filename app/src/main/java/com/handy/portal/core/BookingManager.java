@@ -56,17 +56,33 @@ public final class BookingManager implements Observer
     //responds to requests for data about bookings or lists of bookings
     //listens and responds to requests to claim / cancel
 
-    public void onRequestBookingDetails(String bookingId)
+    @Subscribe
+    public void onRequestBookingDetails(Event.RequestBookingDetailsEvent event)
     {
-        if (cachedBookings.containsKey(bookingId))
-        {
-            //send out the booking details from the cache
-        } else
-        {
-            //put in a web request for the booking details
-            //send out updated booking when received
-        }
+        System.out.println("Hear request for booking details : " + event.bookingId);
 
+        String bookingId = event.bookingId;
+
+        dataManager.getBookingDetails(bookingId, new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                System.out.println("Got booking details");
+                onBookingDetailsReceived(booking);
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                System.err.println("Failed to get booking details " + error);
+            }
+        });
+    }
+
+    private void onBookingDetailsReceived(Booking booking)
+    {
+        bus.post(new Event.BookingsDetailsRetrievedEvent(booking));
     }
 
 
@@ -78,6 +94,7 @@ public final class BookingManager implements Observer
                                              @Override
                                              public void onSuccess(final List<BookingSummary> bookingSummaries)
                                              {
+                                                 System.out.println("Got available bookings back");
                                                  onBookingSummariesReceived(bookingSummaries);
                                              }
 
@@ -98,6 +115,7 @@ public final class BookingManager implements Observer
                                              @Override
                                              public void onSuccess(final List<BookingSummary> bookingSummaries)
                                              {
+                                                 System.out.println("Got scheduled bookings back");
                                                  onBookingSummariesReceived(bookingSummaries);
                                              }
 
@@ -136,6 +154,9 @@ public final class BookingManager implements Observer
         updateSummariesCache(bookingSummaries);
 
         //just passing this through as a test
+
+        System.out.println("Posting the bookings retrieved event");
+
         bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries));
     }
 

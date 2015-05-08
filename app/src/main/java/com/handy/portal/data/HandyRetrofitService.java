@@ -188,7 +188,7 @@ public interface HandyRetrofitService
     //http://localhost:3000/api/portal/v1/providers/8/bookings?available=true   //available
 
     String PORTAL_VERSION = "v1";
-    String BASE_PATH = "/portal/" + PORTAL_VERSION + "/provider/";
+    String BASE_PATH = "/portal/" + PORTAL_VERSION + "/providers/";
 
     @GET(BASE_PATH + "{provider_id}/bookings?available=true")
     void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
@@ -196,11 +196,12 @@ public interface HandyRetrofitService
     @GET(BASE_PATH + "{provider_id}/bookings")
     void getScheduledBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
 
-    @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/claim")
-    void claimBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
-
     @GET(BASE_PATH + "{provider_id}/bookings/{booking_id}")
     void getBookingDetails(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
+    //
+    @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/claim")
+    void claimBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
     @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/on_my_way")
     void notifyOnMyWay(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);

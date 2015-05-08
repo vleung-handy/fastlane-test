@@ -129,9 +129,9 @@ public abstract class DataManager
 
     public abstract void getScheduledBookings(Callback<List<BookingSummary>> cb);
 
-    public abstract void claimBooking(String bookingId, Callback<List<Booking>> cb);
+    public abstract void claimBooking(String bookingId, Callback<Booking> cb);
 
-    public abstract void getBookingDetails(String bookingId, Callback<List<Booking>> cb);
+    public abstract void getBookingDetails(String bookingId, Callback<Booking> cb);
 
 
     public abstract String getBaseUrl();

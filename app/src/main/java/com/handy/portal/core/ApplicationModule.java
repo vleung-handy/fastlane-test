@@ -20,6 +20,7 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
@@ -41,6 +42,7 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
+        BookingDetailsFragment.class,
         PortalWebViewFragment.class,
         ScheduledBookingsFragment.class,
         ProfileFragment.class,

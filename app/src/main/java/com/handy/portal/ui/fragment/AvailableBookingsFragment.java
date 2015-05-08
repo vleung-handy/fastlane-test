@@ -8,6 +8,7 @@ import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.form.BookingListView;
+import com.squareup.otto.Subscribe;
 
 import butterknife.InjectView;
 
@@ -17,7 +18,7 @@ public class AvailableBookingsFragment extends BookingsFragment
     protected BookingListView availableJobsListView;
 
     @InjectView(R.id.available_bookings_dates_scroll_view_layout)
-    protected LinearLayout datesScrollViewLayout;
+    protected LinearLayout availableJobsDatesScrollViewLayout;
 
     protected BookingListView getBookingListView()
     {
@@ -26,7 +27,7 @@ public class AvailableBookingsFragment extends BookingsFragment
 
     protected LinearLayout getDatesLayout()
     {
-        return datesScrollViewLayout;
+        return availableJobsDatesScrollViewLayout;
     }
 
     protected int getFragmentResourceId()
@@ -51,6 +52,12 @@ public class AvailableBookingsFragment extends BookingsFragment
                     }
                 }
         );
+    }
+
+    @Subscribe
+    public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
+    {
+       handleBookingsRetrieved(event);
     }
 
 }

@@ -1,9 +1,9 @@
 package com.handy.portal.event;
 
 import com.handy.portal.core.BookingSummary;
+import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +39,15 @@ public class Event
         }
     }
 
+    public static class BookingsDetailsRetrievedEvent extends Event
+    {
+        public Booking booking;
+
+        public BookingsDetailsRetrievedEvent(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
 
 }
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageButton
+        android:layout_width="239dp"
+        android:layout_height="199dp"
+        android:id="@+id/image_placeholder_google"
+        android:layout_gravity="center"
+        android:src="@drawable/common_ic_googleplayservices" />
+</merge>

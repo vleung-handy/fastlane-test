@@ -14,7 +14,6 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.form.BookingListView;
-import com.squareup.otto.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -54,9 +53,13 @@ public abstract class BookingsFragment extends InjectedFragment
     }
 
     //Event listeners
-    @Subscribe
-    public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
+        //Can't subscribe in an abstract class?
+    public abstract void onBookingsRetrieved(Event.BookingsRetrievedEvent event);
+
+    protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
+        System.out.println("on bookings retrieved");
+
         Map<BookingCalendarDay, BookingSummary> bookingSummaries = event.bookingSummaries;
         bookingSummariesByDay = bookingSummaries;
         updateDateButtons();
@@ -80,9 +83,19 @@ public abstract class BookingsFragment extends InjectedFragment
         if (bookings == null)
         {
             //TODO: Some kind of loading/waiting display state
+            System.err.println("No bookings retrieved?");
             return;
         }
-        getBookingListView().populateList(bookings);
+
+        BookingListView bookingListView = getBookingListView();
+
+        if(bookingListView == null)
+        {
+            System.err.println("List view is null");
+            return;
+        }
+
+        bookingListView.populateList(bookings);
     }
 
     private List<Booking> getActiveDayBookings()
@@ -92,10 +105,14 @@ public abstract class BookingsFragment extends InjectedFragment
             System.err.println("No bookings data yet");
             return null;
         }
+
         if (bookingSummariesByDay.containsKey(activeDay))
         {
             return bookingSummariesByDay.get(activeDay).getBookings();
         }
+
+        System.err.println("Could not find day : " + activeDay);
+
         return null;
     }
 
@@ -105,6 +122,7 @@ public abstract class BookingsFragment extends InjectedFragment
         Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
         //today is always the default day, the server should always send us this at minimum
         int numDaysToDisplay = getNumDaysOfBookingSummaries();
+        System.out.println("Num days to display : " + numDaysToDisplay);
         refreshDateButtons(getDatesLayout(), calendar, numDaysToDisplay);
     }
 
@@ -122,6 +140,14 @@ public abstract class BookingsFragment extends InjectedFragment
     {
 
         //remove existing date buttons
+
+        if(scrollViewLayout == null)
+        {
+            System.err.println("Something bad going on with scrollview");
+            return;
+
+        }
+
         scrollViewLayout.removeAllViews();
 
         Context context = getActivity().getApplicationContext();

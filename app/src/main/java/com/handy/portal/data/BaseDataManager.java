@@ -728,7 +728,6 @@ public final class BaseDataManager extends DataManager
             {
                 final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
                 final List<BookingSummary> bookings = new ArrayList<BookingSummary>();
-
                 for (int i = 0; i < response.length(); i++)
                 {
                     try
@@ -756,33 +755,73 @@ public final class BaseDataManager extends DataManager
             @Override
             void success(final JSONObject response)
             {
-                cb.onSuccess(null);
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                final List<BookingSummary> bookings = new ArrayList<BookingSummary>();
+                for (int i = 0; i < response.length(); i++)
+                {
+                    try
+                    {
+                        BookingSummary bs = gson.fromJson((response.get(Integer.toString(i)).toString()),
+                                new TypeToken<BookingSummary>()
+                                {
+                                }.getType());
+                        bookings.add(bs);
+                    } catch (Exception e)
+                    {
+                        System.err.println("Can not parse BookingSummary " + e);
+                    }
+                }
+                cb.onSuccess(bookings);
             }
         });
     }
 
     @Override
-    public final void claimBooking(String bookingId, final Callback<List<Booking>> cb)
+    public final void claimBooking(String bookingId, final Callback<Booking> cb)
     {
         service.claimBooking(getProviderId(), bookingId, new HandyRetrofitCallback(cb)
         {
             @Override
             void success(final JSONObject response)
             {
-                cb.onSuccess(null);
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                Booking booking = null;
+                try
+                {
+                    booking = gson.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                }
+                cb.onSuccess(booking);
             }
         });
     }
 
     @Override
-    public final void getBookingDetails(String bookingId, final Callback<List<Booking>> cb)
+    public final void getBookingDetails(String bookingId, final Callback<Booking> cb)
     {
         service.getBookingDetails(getProviderId(), bookingId, new HandyRetrofitCallback(cb)
         {
             @Override
             void success(final JSONObject response)
             {
-                cb.onSuccess(null);
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                Booking booking = null;
+                try
+                {
+                    booking = gson.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                }
+                cb.onSuccess(booking);
             }
         });
     }
