@@ -43,6 +43,7 @@ public final class Booking implements Parcelable {
     public final PaymentInfo getPaymentToProvider() { return paymentToProvider; }
     public final PaymentInfo getBonusPaymentToProvider() { return bonusPayment; }
 
+
     public final boolean getIsRequested() { return isRequested;}
 
     public final String getId() {
@@ -249,8 +250,11 @@ public final class Booking implements Parcelable {
         private String description;
         @SerializedName("machine_name")
         private String machineName;
-    }
 
+        public String getDescription() { return description; }
+        public String getMachineName() { return machineName; }
+
+    }
 
     public static final class ServiceInfo implements Parcelable {
         @SerializedName("id")

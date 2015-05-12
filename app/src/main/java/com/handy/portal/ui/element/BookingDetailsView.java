@@ -12,13 +12,22 @@ import com.handy.portal.core.booking.Booking;
 public abstract class BookingDetailsView
 {
     protected ViewGroup parentViewGroup;
+    protected Context context;
 
     protected abstract int getLayoutResourceId();
     public void init(Booking booking, ViewGroup parentViewGroup, Context context)
     {
-        LayoutInflater.from(context).inflate(getLayoutResourceId(), parentViewGroup);
+
+        System.out.println("Init booking details view with resource id " + Integer.toString(getLayoutResourceId()));
+        System.out.println("to parent " + parentViewGroup.toString());
+
         this.parentViewGroup = parentViewGroup;
+        this.context = context;
+
+        LayoutInflater.from(context).inflate(getLayoutResourceId(), parentViewGroup);
+
         initFromBooking(booking);
     }
+
     protected abstract void initFromBooking(Booking booking);
 }

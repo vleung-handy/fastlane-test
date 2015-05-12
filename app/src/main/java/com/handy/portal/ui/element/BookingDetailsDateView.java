@@ -28,7 +28,7 @@ public class BookingDetailsDateView extends BookingDetailsView
 
         //String dateString =
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("E M d");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM d");
         String formattedDate = dateFormat.format(startDate);
 
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");

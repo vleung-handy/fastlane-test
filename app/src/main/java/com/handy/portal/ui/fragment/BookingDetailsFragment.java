@@ -15,6 +15,7 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionPanelView;
 import com.handy.portal.ui.element.BookingDetailsDateView;
+import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.GoogleMapView;
 import com.squareup.otto.Subscribe;
 
@@ -45,10 +46,16 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.booking_details_action_layout)
     protected RelativeLayout actionLayout;
 
+    @InjectView(R.id.booking_details_contact_layout)
+    protected RelativeLayout contactLayout;
 
+    @InjectView(R.id.booking_details_job_instructions_layout)
+    protected LinearLayout jobInstructionsLayout;
 
     //extract from the intent
     protected Booking selectedBooking;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +69,6 @@ public class BookingDetailsFragment extends InjectedFragment
         ButterKnife.inject(this, view);
 
         initBanner();
-
 
         requestBookingDetails(HACK_BOOKING_ID);
 
@@ -85,16 +91,37 @@ public class BookingDetailsFragment extends InjectedFragment
 
         this.selectedBooking = booking;
 
-        initElements(booking);
+
+        boolean showFullDisplay = false;
+
+        if(showFullDisplay)
+        {
+            initFullDisplay(booking);
+        }
+        else
+        {
+            initRestrictedDisplay(booking);
+        }
+
     }
 
-
-    //assemble the view out of the associated fragments
-
-    private void initElements(Booking booking)
+    private void initFullDisplay(Booking booking)
     {
-        //take in a booking from the intent data?
+        Context context = getActivity().getApplicationContext();
 
+        initRestrictedDisplay(booking);
+
+        //contact customer
+        //BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
+        //jobInstructionsView.init(booking, jobInstructionsLayout, context);
+
+        //additional action section
+        //Remove/cancel etc
+
+    }
+
+    private void initRestrictedDisplay(Booking booking)
+    {
         Context context = getActivity().getApplicationContext();
 
         //google maps
@@ -109,17 +136,13 @@ public class BookingDetailsFragment extends InjectedFragment
         BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
         actionPanel.init(booking, actionLayout, context);
 
-        //contact customer
-
-
         //extra details
-
-
-        //additional action section
-
-
+        //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
+        BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
+        jobInstructionsView.init(booking, jobInstructionsLayout, context);
 
     }
+
 
     private void initBanner()
     {

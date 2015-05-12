@@ -138,16 +138,7 @@ public abstract class BookingsFragment extends InjectedFragment
 
     private void refreshDateButtons(LinearLayout scrollViewLayout, Calendar calendar, int numDaysToDisplay)
     {
-
         //remove existing date buttons
-
-        if(scrollViewLayout == null)
-        {
-            System.err.println("Something bad going on with scrollview");
-            return;
-
-        }
-
         scrollViewLayout.removeAllViews();
 
         Context context = getActivity().getApplicationContext();
@@ -168,7 +159,7 @@ public abstract class BookingsFragment extends InjectedFragment
             dateButton.setText(formattedDate);
 
             //TODO: Set this up mediator style so the button retains a link to associated day instead of use anon function
-            //Java does not have delegates.....
+                //Java does not have delegates....., need to do it anon function style
             dateButton.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
