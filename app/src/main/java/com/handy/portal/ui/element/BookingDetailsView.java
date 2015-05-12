@@ -17,9 +17,8 @@ public abstract class BookingDetailsView
     protected abstract int getLayoutResourceId();
     public void init(Booking booking, ViewGroup parentViewGroup, Context context)
     {
-
-        System.out.println("Init booking details view with resource id " + Integer.toString(getLayoutResourceId()));
-        System.out.println("to parent " + parentViewGroup.toString());
+        //System.out.println("Init booking details view with resource id " + Integer.toString(getLayoutResourceId()));
+        //System.out.println("to parent " + parentViewGroup.toString());
 
         this.parentViewGroup = parentViewGroup;
         this.context = context;

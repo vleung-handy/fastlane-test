@@ -39,17 +39,17 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             }
         }
 
-//        if(booking.getExtrasInfo() != null)
-//        {
-//            for (int i = 0; i < booking.getExtrasInfo().size(); i++)
-//            {
-//                ExtraInfo extra = booking.getExtrasInfo().get(i);
-//
-//                //add a new entry to the layout and set the text for it
-//                LayoutInflater.from(context).inflate(R.layout.element_booking_details_job_instructions_entry, instructionsLayout);
-//                TextView extrasText = ((TextView) (instructionsLayout.getChildAt(i)));
-//                extrasText.setText(extra.getLabel());
-//            }
-//        }
+        if(booking.getExtrasInfo() != null)
+        {
+            for (int i = 0; i < booking.getExtrasInfo().size(); i++)
+            {
+                Booking.ExtraInfo extra = booking.getExtrasInfo().get(i);
+
+                //add a new entry to the layout and set the text for it
+                LayoutInflater.from(context).inflate(R.layout.element_booking_details_job_instructions_entry, instructionsLayout);
+                TextView extrasText = ((TextView) (instructionsLayout.getChildAt(i)));
+                extrasText.setText(extra.getLabel());
+            }
+        }
     }
 }
