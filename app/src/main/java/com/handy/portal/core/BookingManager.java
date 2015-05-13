@@ -59,8 +59,6 @@ public final class BookingManager implements Observer
     @Subscribe
     public void onRequestBookingDetails(Event.RequestBookingDetailsEvent event)
     {
-        System.out.println("Hear request for booking details : " + event.bookingId);
-
         String bookingId = event.bookingId;
 
         dataManager.getBookingDetails(bookingId, new DataManager.Callback<Booking>()
@@ -68,7 +66,6 @@ public final class BookingManager implements Observer
             @Override
             public void onSuccess(Booking booking)
             {
-                System.out.println("Got booking details");
                 onBookingDetailsReceived(booking);
             }
 
@@ -94,7 +91,6 @@ public final class BookingManager implements Observer
                                              @Override
                                              public void onSuccess(final List<BookingSummary> bookingSummaries)
                                              {
-                                                 System.out.println("Got available bookings back");
                                                  onBookingSummariesReceived(bookingSummaries);
                                              }
 
@@ -115,7 +111,6 @@ public final class BookingManager implements Observer
                                              @Override
                                              public void onSuccess(final List<BookingSummary> bookingSummaries)
                                              {
-                                                 System.out.println("Got scheduled bookings back");
                                                  onBookingSummariesReceived(bookingSummaries);
                                              }
 
@@ -153,10 +148,7 @@ public final class BookingManager implements Observer
         //update the summaries cache
         updateSummariesCache(bookingSummaries);
 
-        //just passing this through as a test
-
-        System.out.println("Posting the bookings retrieved event");
-
+        //just passing this through right now until we figure out our caching strategy
         bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries));
     }
 

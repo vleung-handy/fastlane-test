@@ -36,7 +36,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
         }
 
         //generate the appropriate button based on the status and provider status of the booking
-        Button actionButton = generateActionButton(booking);
+        //Button actionButton = generateActionButton(booking);
 
 
     }
@@ -44,9 +44,6 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     private Button generateActionButton(Booking booking)
     {
         String bookingStatus = booking.getStatus();
-
-        System.out.println("See booking status : " + bookingStatus);
-
         return null;
     }
 }

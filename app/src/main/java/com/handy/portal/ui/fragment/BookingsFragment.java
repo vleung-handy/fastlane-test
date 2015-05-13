@@ -46,7 +46,7 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
-        System.out.println("Bookings fragment being created" + view.toString());
+            //System.out.println("Bookings fragment being created" + view.toString());
         requestBookings();
         initListClickListener();
         return view;
@@ -58,8 +58,6 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
-        System.out.println("on bookings retrieved");
-
         Map<BookingCalendarDay, BookingSummary> bookingSummaries = event.bookingSummaries;
         bookingSummariesByDay = bookingSummaries;
         updateDateButtons();
@@ -122,7 +120,6 @@ public abstract class BookingsFragment extends InjectedFragment
         Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
         //today is always the default day, the server should always send us this at minimum
         int numDaysToDisplay = getNumDaysOfBookingSummaries();
-        System.out.println("Num days to display : " + numDaysToDisplay);
         refreshDateButtons(getDatesLayout(), calendar, numDaysToDisplay);
     }
 

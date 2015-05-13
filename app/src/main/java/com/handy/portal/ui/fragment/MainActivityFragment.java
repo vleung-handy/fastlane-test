@@ -119,8 +119,6 @@ public class MainActivityFragment extends InjectedFragment
         switchToTab(MainViewTab.HELP);
     }
 
-
-
     private int getFragmentIdForTab(MainViewTab tab)
     {
         switch (tab)

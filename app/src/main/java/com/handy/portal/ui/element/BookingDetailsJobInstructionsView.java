@@ -30,11 +30,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
 
                 //add a new entry to the layout and set the text for it
                 LayoutInflater.from(context).inflate(R.layout.element_booking_details_job_instructions_entry, instructionsLayout);
-
                 TextView entryText = ((TextView) (instructionsLayout.getChildAt(i)));
-
-                System.out.println("instruction : " + instruction.getDescription());
-
                 entryText.setText(instruction.getDescription());
             }
         }

@@ -85,7 +85,6 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void requestBookingDetails(String bookingId)
     {
-        System.out.println("Requesting booking details : " + bookingId);
         bus.post(new Event.RequestBookingDetailsEvent(bookingId));
     }
 
@@ -94,8 +93,6 @@ public class BookingDetailsFragment extends InjectedFragment
     public void onBookingDetailsRetrieved(Event.BookingsDetailsRetrievedEvent event)
     {
         Booking booking = event.booking;
-
-        System.out.println("Retrieved bookings details : " + booking.getId());
 
         boolean showFullDisplay = false;
 
@@ -158,8 +155,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 //go back
             }
         });
-
-        bannerText.setText("BANNER TEXT");
+        //bannerText.setText("BANNER TEXT");
     }
 
 
