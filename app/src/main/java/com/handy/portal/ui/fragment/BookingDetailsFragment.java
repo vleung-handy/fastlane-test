@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionPanelView;
@@ -25,7 +26,8 @@ import butterknife.InjectView;
 public class BookingDetailsFragment extends InjectedFragment
 {
 
-    final static String HACK_BOOKING_ID = "4"; //hardcoded, to get from intent
+
+
 
 
     //Banner
@@ -52,25 +54,31 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.booking_details_job_instructions_layout)
     protected LinearLayout jobInstructionsLayout;
 
-    //extract from the intent
-    protected Booking selectedBooking;
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        System.out.println("Creating booking details fragment");
-
         View view = inflater.inflate(R.layout.fragment_booking_detail, null);
+
         ButterKnife.inject(this, view);
+
+        //possible todo, each class has a list of required key arguments to validate on transition
+        Bundle arguments = this.getArguments();
+        String targetBookingId = "";
+        if(arguments != null && arguments.containsKey(BundleKeys.BOOKING_ID))
+        {
+            targetBookingId = arguments.getString(BundleKeys.BOOKING_ID);
+        }
+        else
+        {
+            System.err.println("Could not find a " + BundleKeys.BOOKING_ID + " in arguments");
+        }
 
         initBanner();
 
-        requestBookingDetails(HACK_BOOKING_ID);
+        requestBookingDetails(targetBookingId);
 
         return view;
     }
@@ -88,9 +96,6 @@ public class BookingDetailsFragment extends InjectedFragment
         Booking booking = event.booking;
 
         System.out.println("Retrieved bookings details : " + booking.getId());
-
-        this.selectedBooking = booking;
-
 
         boolean showFullDisplay = false;
 

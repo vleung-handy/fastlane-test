@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
 
 public abstract class BookingsFragment extends InjectedFragment
 {
-
     protected BookingCalendarDay activeDay; //what day are we currently displaying bookings for?
     protected Map<BookingCalendarDay, BookingSummary> bookingSummariesByDay;
 
@@ -47,6 +46,7 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
+        System.out.println("Bookings fragment being created" + view.toString());
         requestBookings();
         initListClickListener();
         return view;

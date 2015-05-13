@@ -1,8 +1,11 @@
 package com.handy.portal.event;
 
+import android.os.Bundle;
+
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import java.util.Map;
 
@@ -47,6 +50,24 @@ public class Event
         {
             this.booking = booking;
         }
+    }
+
+    public static class NavigateToTabEvent extends Event
+    {
+        public MainActivityFragment.MainViewTab targetTab;
+        public Bundle arguments;
+
+        public NavigateToTabEvent(MainActivityFragment.MainViewTab targetTab)
+        {
+            this.targetTab = targetTab;
+        }
+
+        public NavigateToTabEvent(MainActivityFragment.MainViewTab targetTab, Bundle arguments)
+        {
+            this.targetTab = targetTab;
+            this.arguments = arguments;
+        }
+
     }
 
 }

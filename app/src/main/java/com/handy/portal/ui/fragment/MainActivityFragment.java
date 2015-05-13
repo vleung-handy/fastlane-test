@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.handy.portal.R;
+import com.handy.portal.event.Event;
+import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -19,6 +21,15 @@ import butterknife.InjectView;
  */
 public class MainActivityFragment extends InjectedFragment
 {
+    public enum MainViewTab
+    {
+        AVAILABLE_BOOKINGS,
+        CLAIMED_BOOKINGS,
+        PROFILE,
+        HELP,
+        BOOKING_DETAILS
+    }
+
     @InjectView(R.id.button_available_jobs)
     Button availableJobsButton;
     @InjectView(R.id.button_scheduled_jobs)
@@ -40,6 +51,13 @@ public class MainActivityFragment extends InjectedFragment
         registerButtonListeners();
         switchToTab(MainViewTab.AVAILABLE_BOOKINGS);
         return view;
+    }
+
+    //Listeners
+    @Subscribe
+    public void onNavigateToTabEvent(Event.NavigateToTabEvent event)
+    {
+        switchToTab(event.targetTab, event.arguments);
     }
 
     private void registerButtonListeners()
@@ -93,8 +111,7 @@ public class MainActivityFragment extends InjectedFragment
 
     public void onProfileClicked(View clickedView)
     {
-        //switchToTab(MainViewTab.PROFILE);
-        switchToTab(MainViewTab.DEBUG_DETAILS);
+        switchToTab(MainViewTab.PROFILE);
     }
 
     public void onHelpClicked(View clickedView)
@@ -102,14 +119,7 @@ public class MainActivityFragment extends InjectedFragment
         switchToTab(MainViewTab.HELP);
     }
 
-    enum MainViewTab
-    {
-        AVAILABLE_BOOKINGS,
-        CLAIMED_BOOKINGS,
-        PROFILE,
-        HELP,
-        DEBUG_DETAILS
-    }
+
 
     private int getFragmentIdForTab(MainViewTab tab)
     {
@@ -123,7 +133,7 @@ public class MainActivityFragment extends InjectedFragment
                 return R.layout.fragment_profile;
             case HELP:
                 return R.layout.fragment_help;
-            case DEBUG_DETAILS:
+            case BOOKING_DETAILS:
                 return R.layout.fragment_booking_detail;
         }
         return -1;
@@ -157,26 +167,21 @@ public class MainActivityFragment extends InjectedFragment
                 return ProfileFragment.class;
             case HELP:
                 return HelpFragment.class;
-            case DEBUG_DETAILS:
+            case BOOKING_DETAILS:
                 return BookingDetailsFragment.class;
         }
         return null;
     }
 
 
-    private void initView()
-    {
-        // Create a new Fragment to be placed in the activity layout
-        AvailableBookingsFragment firstFragment = new AvailableBookingsFragment();
-
-        //Add the fragment to the 'fragment_container' FrameLayout
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.main_container, firstFragment).commit();
-    }
 
     //click on a button, get the fragment, check if different fragment, or if webview check associated id/link/param
-
     private void switchToTab(MainViewTab tab)
+    {
+        switchToTab(tab, null);
+    }
+
+    private void switchToTab(MainViewTab tab, Bundle argumentsBundle)
     {
         int newFragmentId = getFragmentIdForTab(tab);
 
@@ -197,11 +202,14 @@ public class MainActivityFragment extends InjectedFragment
                 System.err.println("Error instantiating fragment class : " + e);
             }
 
+            newFragment.setArguments(argumentsBundle);
+
             currentTabFragmentId = newFragmentId;
 
 // Replace whatever is in the fragment_container view with this fragment,
 // and add the transaction to the back stack so the user can navigate back
             transaction.replace(R.id.main_container, newFragment);
+
             transaction.addToBackStack(null);
 
 // Commit the transaction
