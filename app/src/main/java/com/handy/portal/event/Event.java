@@ -3,14 +3,15 @@ package com.handy.portal.event;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.BookingCalendarDay;
 
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by cdavis on 5/6/15.
  */
-public class Event
+public abstract class Event
 {
+    public boolean success;
+
     public static class BookingsRetrievedEvent extends Event
     {
         public Map<BookingCalendarDay, BookingSummary> bookingSummaries;
@@ -38,6 +39,48 @@ public class Event
             this.bookingId = bookingId;
         }
     }
+
+    public static class RequestPinCodeEvent extends Event
+    {
+        public String phoneNumber;
+
+        public RequestPinCodeEvent(String phoneNumber)
+        {
+            this.phoneNumber = phoneNumber;
+        }
+    }
+
+    public static class PinCodeRequestReceivedEvent extends Event
+    {
+        public PinCodeRequestReceivedEvent(boolean success)
+        {
+            this.success = success;
+        }
+    }
+
+    public static class RequestLoginEvent extends Event
+    {
+        public String phoneNumber;
+        public String pinCode;
+
+        public RequestLoginEvent(String phoneNumber, String pinCode)
+        {
+            this.phoneNumber = phoneNumber;
+            this.pinCode = pinCode;
+        }
+    }
+
+    public static class LoginRequestReceivedEvent extends Event
+    {
+        public String userId;
+
+        public LoginRequestReceivedEvent(String userId, boolean success)
+        {
+            this.userId = userId;
+            this.success = success;
+        }
+    }
+
 
 
 }

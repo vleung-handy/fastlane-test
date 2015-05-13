@@ -187,8 +187,8 @@ public interface HandyRetrofitService
     //http://localhost:3000/api/portal/v1/providers/8/bookings                  //scheduled
     //http://localhost:3000/api/portal/v1/providers/8/bookings?available=true   //available
 
-    String PORTAL_VERSION = "v1";
-    String BASE_PATH = "/portal/" + PORTAL_VERSION + "/provider/";
+    final String PORTAL_VERSION = "v1";
+    final String BASE_PATH = "/portal/" + PORTAL_VERSION + "/providers/";
 
     @GET(BASE_PATH + "{provider_id}/bookings?available=true")
     void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
@@ -210,6 +210,15 @@ public interface HandyRetrofitService
 
     @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/check_out")
     void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
+    @POST(BASE_PATH + "iwantapincode")
+    void requestPinCode(@Query("phone_number") String phoneNumber, HandyRetrofitCallback cb);
+
+    @POST(BASE_PATH + "iwanttologin")
+    void requestLogin(@Query("phone_number") String phoneNumber, @Query("pin_code") String pinCode, HandyRetrofitCallback cb);
+
+
+
 
     final class UserUpdateRequest
     {

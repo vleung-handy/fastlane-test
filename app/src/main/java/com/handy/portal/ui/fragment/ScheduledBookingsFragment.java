@@ -8,6 +8,7 @@ import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.form.BookingListView;
+import com.squareup.otto.Subscribe;
 
 import butterknife.InjectView;
 
@@ -56,5 +57,11 @@ public class ScheduledBookingsFragment extends BookingsFragment
                     }
                 }
         );
+    }
+
+    @Subscribe
+    public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
+    {
+        handleBookingsRetrieved(event);
     }
 }

@@ -1,7 +1,6 @@
 package com.handy.portal.ui.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.handy.portal.R;
@@ -23,32 +22,38 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
 
-        if (savedInstanceState != null)
-        {
-            launchedNext = savedInstanceState.getBoolean(STATE_LAUNCHED_NEXT, false);
-        }
+        System.out.println("Created splash");
 
-        if (!launchedNext)
-        {
-            user = userManager.getCurrentUser();
+        openLoginActivity();
 
-            final Intent intent = this.getIntent();
-            final String action = intent.getAction();
-            final Uri data = intent.getData();
 
-//            if (!action.equals("android.intent.action.VIEW") || !data.getScheme().equals("handy")) {
-//                openServiceCategoriesActivity();
-//                return;
-//            }
-
-            //navigationManager.handleSplashScreenLaunch(this.getIntent(), this);
-            launchedNext = true;
-        } else
-        {
-            //openServiceCategoriesActivity();
-
-            openMainActivity();
-        }
+//        if (savedInstanceState != null)
+//        {
+//            launchedNext = savedInstanceState.getBoolean(STATE_LAUNCHED_NEXT, false);
+//        }
+//
+//        if (!launchedNext)
+//        {
+//            user = userManager.getCurrentUser();
+//
+//            final Intent intent = this.getIntent();
+//            final String action = intent.getAction();
+//            final Uri data = intent.getData();
+//
+////            if (!action.equals("android.intent.action.VIEW") || !data.getScheme().equals("handy")) {
+////                openServiceCategoriesActivity();
+////                return;
+////            }
+//
+//            //navigationManager.handleSplashScreenLaunch(this.getIntent(), this);
+//            launchedNext = true;
+//        }
+//        else
+//        {
+//            //openServiceCategoriesActivity();
+//
+//            openLoginActivity();
+//        }
     }
 
     @Override
@@ -56,6 +61,7 @@ public class SplashActivity extends BaseActivity
     {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         super.startActivity(intent);
 
         launchedNext = true;
@@ -88,6 +94,11 @@ public class SplashActivity extends BaseActivity
     private void openMainActivity()
     {
         startActivity(new Intent(this, MainActivity.class));
+    }
+
+    private void openLoginActivity()
+    {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
 //    private void openServiceCategoriesActivity() {

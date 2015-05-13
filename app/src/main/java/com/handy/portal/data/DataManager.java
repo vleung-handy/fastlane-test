@@ -125,6 +125,9 @@ public abstract class DataManager
 
     public abstract void createHelpCase(TypedInput body, Callback<Void> cb);
 
+
+
+    //Portal
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
 
     public abstract void getScheduledBookings(Callback<List<BookingSummary>> cb);
@@ -132,6 +135,12 @@ public abstract class DataManager
     public abstract void claimBooking(String bookingId, Callback<List<Booking>> cb);
 
     public abstract void getBookingDetails(String bookingId, Callback<List<Booking>> cb);
+
+    //Login
+    public abstract void requestPinCode(String phoneNumber, Callback<String> cb);
+    public abstract void requestLogin(String phoneNumber, String pinCode, Callback<String> cb);
+
+
 
 
     public abstract String getBaseUrl();

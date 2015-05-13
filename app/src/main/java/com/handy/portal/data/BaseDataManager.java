@@ -787,11 +787,39 @@ public final class BaseDataManager extends DataManager
         });
     }
 
+    @Override
+    public final void requestPinCode(String phoneNumber, final Callback<String> cb)
+    {
+        service.requestPinCode(phoneNumber, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(final JSONObject response)
+            {
+                cb.onSuccess(null);
+            }
+        });
+    }
+
+    @Override
+    public final void requestLogin(String phoneNumber, String pinCode, final Callback<String> cb)
+    {
+        service.requestLogin(phoneNumber, pinCode, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(final JSONObject response)
+            {
+                cb.onSuccess(null);
+            }
+        });
+    }
+
     private String getProviderId()
     {
         //hardcode hack, will eventually point at a real user from our service with an associated ID
         return "11";
     }
+
+
 
 
     private void handleCreateSessionResponse(final JSONObject response, final Callback<User> cb)

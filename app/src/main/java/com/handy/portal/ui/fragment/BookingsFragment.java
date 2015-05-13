@@ -14,7 +14,6 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.form.BookingListView;
-import com.squareup.otto.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -54,8 +53,7 @@ public abstract class BookingsFragment extends InjectedFragment
     }
 
     //Event listeners
-    @Subscribe
-    public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
+    protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
         Map<BookingCalendarDay, BookingSummary> bookingSummaries = event.bookingSummaries;
         bookingSummariesByDay = bookingSummaries;
