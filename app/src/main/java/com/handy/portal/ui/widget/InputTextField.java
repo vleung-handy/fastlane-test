@@ -78,4 +78,9 @@ public abstract class InputTextField extends EditText
     }
 
     abstract boolean validate();
+
+    public String getString()
+    {
+        return this.getText().toString();
+    }
 }

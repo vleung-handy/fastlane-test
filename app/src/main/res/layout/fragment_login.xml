@@ -1,67 +1,131 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".LoginFragment">
+    tools:context=".LoginFragment"
+    >
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/back_button"
-        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"/>
-
-    <TextView
-        android:text="Professional Portal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
         />
 
-    <TextView
-        android:text="Log in with the cell phone number you registered with:"
-        android:id="@+id/login_instructions_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
 
-    <EditText
-        android:id="@+id/phone_number_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"
-        android:hint="111-111-1111"
-        android:layout_marginTop="40dp"
-        />
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/logo_spin"
+            android:contentDescription="@string/app_name" />
 
-    <EditText
-        android:id="@+id/pin_code_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberPassword"
-        android:ems="10"
-        android:hint="1111"
-        android:layout_marginTop="40dp"
-        />
+        <TextView
+            android:text="@string/professional_portal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:textColor="@color/white"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DO THE THING"
-        android:id="@+id/login_button"/>
+        <TextView
+            android:id="@+id/login_instructions_text"
+            android:text="@string/login_instructions_1_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"
+            android:textSize="20dp"
+            android:textColor="@color/white"/>
 
-    <TextView
-        android:text="You will be texted a pin code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        />
 
-</LinearLayout>
+        <RelativeLayout
+            android:id="@+id/phone_input_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            style="@style/LoginTextInputCell">
+
+            <ImageView
+                android:id="@+id/phone_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_email"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:contentDescription="icon" />
+
+            <com.handy.portal.ui.widget.PhoneInputTextView
+                android:id="@+id/phone_number_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:ems="6"
+                android:digits="1234567890"
+                android:hint="@string/phone_number_hint"
+                android:layout_marginTop="10dp"
+                android:maxLength="14"
+                android:maxLines="1"
+                android:layout_toRightOf="@id/phone_icon"
+                android:layout_toEndOf="@id/phone_icon"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pin_code_input_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            style="@style/LoginTextInputCell">
+            <com.handy.portal.ui.widget.PinCodeInputTextView
+                android:id="@+id/pin_code_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="2"
+                android:hint="@string/pin_code_hint"
+                android:layout_marginTop="10dp"
+                android:maxLength="4"
+                android:maxLines="1"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/login_button"
+            android:text="@string/request_pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/login_instructions_text_b"
+            android:text="@string/login_instructions_1_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textStyle="italic"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

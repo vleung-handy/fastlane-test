@@ -43,7 +43,6 @@ public class MainActivityFragment extends InjectedFragment
         registerButtonListeners();
 
         switchToTab(MainViewTab.AVAILABLE_BOOKINGS);
-        //initView();
 
         return view;
     }
@@ -178,6 +177,20 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab tab)
     {
+
+
+
+        //hack to always open webview
+
+        tab = MainViewTab.PROFILE;
+
+
+
+
+
+
+
+
         int newFragmentId = getFragmentIdForTab(tab);
 
         Class newFragmentClass = getFragmentClassForTab(tab);

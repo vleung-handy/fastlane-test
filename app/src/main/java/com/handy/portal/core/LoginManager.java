@@ -15,6 +15,16 @@ public final class LoginManager implements Observer
     private final Bus bus;
     private DataManager dataManager;
 
+    //Portal testing
+    private String portalPhoneNumber;
+    private String portalPinCode;
+
+    public String getLoginToken()
+    {
+        return portalPhoneNumber + portalPinCode;
+    }
+
+
     @Inject
     LoginManager(final Bus bus, final DataManager dataManager)
     {

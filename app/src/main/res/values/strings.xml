@@ -3,6 +3,16 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="phone_number_hint">123-456-7890</string>
+    <string name="pin_code_hint">1234</string>
+    <string name="request_pin">Request Pin</string>
+    <string name="professional_portal">Professional Portal</string>
+    <string name="login_instructions_1_a">Log in with the cell phone number you registered with:</string>
+    <string name="login_instructions_1_b">You will be texted a pin code</string>
+    <string name="login_instructions_2">Enter the 4-digit code that was texted to your phone:</string>
+    <string name="sending_pin">Sending Pin to Phone</string>
+    <string name="logging_in">Logging In</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>

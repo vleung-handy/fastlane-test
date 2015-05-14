@@ -1,18 +1,22 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.widget.PhoneInputTextView;
+import com.handy.portal.ui.widget.PinCodeInputTextView;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -24,26 +28,29 @@ import butterknife.InjectView;
  */
 public class LoginActivityFragment extends InjectedFragment
 {
-
     private static final boolean DEBUG_FAKE_RESPONSES = true;
-
-
-    private static final int PHONE_NUMBER_LENGTH = 10;
-    private static final int PIN_CODE_LENGTH = 4;
+    private static final boolean DEBUG_SKIP_LOGIN = false;
 
     private String storedPhoneNumber;
 
+    @InjectView(R.id.phone_input_layout)
+    RelativeLayout phoneInputLayout;
+    @InjectView(R.id.pin_code_input_layout)
+    RelativeLayout pinCodeInputLayout;
     @InjectView(R.id.phone_number_edit_text)
-    EditText phoneNumberEditText;
+    PhoneInputTextView phoneNumberEditText;
     @InjectView(R.id.pin_code_edit_text)
-    EditText pinCodeEditText;
+    PinCodeInputTextView pinCodeEditText;
     @InjectView(R.id.login_instructions_text)
     TextView instructionsText;
+    @InjectView(R.id.login_instructions_text_b)
+    TextView secondaryInstructionsText;
     @InjectView(R.id.login_button)
     Button loginButton;
     @InjectView(R.id.back_button)
     ImageButton backButton;
-
+    @InjectView(R.id.logo)
+    ImageView logo;
 
     private enum LoginPhase
     {
@@ -67,9 +74,28 @@ public class LoginActivityFragment extends InjectedFragment
 
         ButterKnife.inject(this, view);
 
-        changeState(LoginPhase.INPUTTING_PHONE_NUMBER);
+        changeState(LoginPhase.INIT);
+
+        //fancy spinning logo
+        logo.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                AnimationDrawable logoSpin = (AnimationDrawable) logo.getBackground();
+                logoSpin.stop();
+                logoSpin.start();
+            }
+        });
 
         registerControlListeners();
+
+        if(DEBUG_SKIP_LOGIN)
+        {
+            //hack in a user and pin to simulate sending
+
+            startActivity(new Intent(this.getActivity(), MainActivity.class));
+        }
 
         return view;
     }
@@ -82,44 +108,27 @@ public class LoginActivityFragment extends InjectedFragment
             @Override
             public void onClick(View v)
             {
-                System.out.println("Current login phase : " + currentLoginPhase);
-
                 switch (currentLoginPhase)
                 {
-                    case INIT:
-                    {
-
-                    }
-                    break;
                     case INPUTTING_PHONE_NUMBER:
                     {
-                        String enteredPhoneNumberText = phoneNumberEditText.getText().toString();
-                        if (validateLength(enteredPhoneNumberText, PHONE_NUMBER_LENGTH))
+                        if (phoneNumberEditText.validate())
                         {
-                            sendPhoneNumber(enteredPhoneNumberText);
-                        } else
-                        {
-                            //set warning/red on the text field
+                            sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
                         }
                     }
                     break;
                     case INPUTTING_PIN:
                     {
-                        String enteredPin = pinCodeEditText.getText().toString();
-                        if (validateLength(enteredPin, PIN_CODE_LENGTH))
+                        if (pinCodeEditText.validate())
                         {
-                            sendLoginRequest(storedPhoneNumber, enteredPin);
-                        } else
-                        {
-                            //set warning/red on the text field
+                            sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());
                         }
                     }
                     break;
-                    case COMPLETE:
+                    default:
                     {
-
                     }
-                    break;
                 }
             }
         });
@@ -142,6 +151,12 @@ public class LoginActivityFragment extends InjectedFragment
             }
         });
 
+    }
+
+    //strip out all non-numerics people might enter odd characters
+    private String formatPhoneNumber(String phoneNumber)
+    {
+        return phoneNumber.replaceAll("[^0-9]", "");
     }
 
     private void sendPhoneNumber(String phoneNumber)
@@ -223,6 +238,12 @@ public class LoginActivityFragment extends InjectedFragment
 
         updateDisplay(currentLoginPhase);
 
+
+        if(phase == LoginPhase.INIT)
+        {
+            changeState(LoginPhase.INPUTTING_PHONE_NUMBER);
+        }
+
         if(phase == LoginPhase.COMPLETE)
         {
             //transition to main activity once we have a user
@@ -245,60 +266,55 @@ public class LoginActivityFragment extends InjectedFragment
         {
             case INIT:
             {
-                instructionsText.setText("");
-                phoneNumberEditText.setVisibility(View.GONE);
-                pinCodeEditText.setVisibility(View.GONE);
+                phoneInputLayout.setVisibility(View.GONE);
+                pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
                 backButton.setVisibility(View.GONE);
             }
             break;
             case INPUTTING_PHONE_NUMBER:
             {
-                instructionsText.setText("Enter your phone number to receive a pin");
-                phoneNumberEditText.setVisibility(View.VISIBLE);
-                pinCodeEditText.setVisibility(View.GONE);
+                instructionsText.setText(R.string.login_instructions_1_a);
+                secondaryInstructionsText.setText(R.string.login_instructions_1_b);
+                phoneInputLayout.setVisibility(View.VISIBLE);
                 loginButton.setVisibility(View.VISIBLE);
-                loginButton.setText("Request PIN");
+                loginButton.setText(R.string.request_pin);
                 backButton.setVisibility(View.GONE);
             }
             break;
             case WAITING_FOR_PHONE_NUMBER_RESPONSE:
             {
-                instructionsText.setText("Sending phone number");
-                phoneNumberEditText.setVisibility(View.VISIBLE);
-                pinCodeEditText.setVisibility(View.GONE);
+                instructionsText.setText(R.string.sending_pin);
+                secondaryInstructionsText.setVisibility(View.GONE);
+                phoneInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
-                loginButton.setText("");
                 backButton.setVisibility(View.GONE);
             }
             break;
             case INPUTTING_PIN:
             {
-                instructionsText.setText("Enter the pin you received");
-                phoneNumberEditText.setVisibility(View.GONE);
-                pinCodeEditText.setVisibility(View.VISIBLE);
+                instructionsText.setText(R.string.login_instructions_2);
+                phoneInputLayout.setVisibility(View.GONE);
+                pinCodeInputLayout.setVisibility(View.VISIBLE);
                 loginButton.setVisibility(View.VISIBLE);
-                loginButton.setText("Login");
+                loginButton.setText(R.string.log_in);
                 backButton.setVisibility(View.VISIBLE);
             }
             break;
             case WAITING_FOR_LOGIN_RESPONSE:
             {
-                instructionsText.setText("Sending ping code");
-                phoneNumberEditText.setVisibility(View.VISIBLE);
-                pinCodeEditText.setVisibility(View.GONE);
+                instructionsText.setText(R.string.logging_in);
+                phoneInputLayout.setVisibility(View.GONE);
+                pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
-                loginButton.setText("");
                 backButton.setVisibility(View.GONE);
             }
             break;
             case COMPLETE:
             {
                 instructionsText.setText("");
-                phoneNumberEditText.setVisibility(View.GONE);
-                pinCodeEditText.setVisibility(View.GONE);
-                loginButton.setVisibility(View.GONE);
-                backButton.setVisibility(View.GONE);
+                phoneInputLayout.setVisibility(View.GONE);
+                pinCodeInputLayout.setVisibility(View.GONE);
             }
             break;
         }
