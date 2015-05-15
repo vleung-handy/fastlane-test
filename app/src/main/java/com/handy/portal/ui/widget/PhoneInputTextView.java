@@ -74,7 +74,7 @@ public final class PhoneInputTextView extends InputTextField
     public final boolean validate()
     {
         final String phone = this.getText().toString();
-        if (phone.replaceAll("\\D+", "").length() != PHONE_NUMBER_LENGTH)
+        if (phone.replaceAll("[^0-9]", "").length() != PHONE_NUMBER_LENGTH)
         {
             highlight();
             return false;
@@ -87,6 +87,6 @@ public final class PhoneInputTextView extends InputTextField
 
     public final String getPhoneNumber()
     {
-        return this.countryCode + this.getText().toString().replaceAll("\\D+", "");
+        return this.countryCode + this.getText().toString().replaceAll("[^0-9]", "");
     }
 }

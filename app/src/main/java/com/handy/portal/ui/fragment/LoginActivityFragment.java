@@ -133,6 +133,7 @@ public class LoginActivityFragment extends InjectedFragment
             }
         });
 
+
         backButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -151,12 +152,6 @@ public class LoginActivityFragment extends InjectedFragment
             }
         });
 
-    }
-
-    //strip out all non-numerics people might enter odd characters
-    private String formatPhoneNumber(String phoneNumber)
-    {
-        return phoneNumber.replaceAll("[^0-9]", "");
     }
 
     private void sendPhoneNumber(String phoneNumber)
@@ -277,6 +272,7 @@ public class LoginActivityFragment extends InjectedFragment
                 instructionsText.setText(R.string.login_instructions_1_a);
                 secondaryInstructionsText.setText(R.string.login_instructions_1_b);
                 phoneInputLayout.setVisibility(View.VISIBLE);
+                pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.VISIBLE);
                 loginButton.setText(R.string.request_pin);
                 backButton.setVisibility(View.GONE);

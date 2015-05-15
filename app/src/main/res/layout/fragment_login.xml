@@ -83,6 +83,7 @@
                 android:layout_toRightOf="@id/phone_icon"
                 android:layout_toEndOf="@id/phone_icon"
                 android:layout_centerVertical="true"
+                android:imeOptions="actionDone"
                 android:background="@null"
                 />
         </RelativeLayout>
