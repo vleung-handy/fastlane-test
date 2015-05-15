@@ -56,7 +56,7 @@ public class MainActivityFragment extends InjectedFragment
         webViewFragment = new PortalWebViewFragment();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_container, webViewFragment)
-                .addToBackStack(null)
+                .disallowAddToBackStack()
                 .commit();
     }
 
