@@ -1,44 +1,113 @@
 package com.handy.portal.ui.activity;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.RadioButton;
 
 import com.handy.portal.R;
+import com.handy.portal.core.ServerParams;
+import com.handy.portal.ui.fragment.PortalWebViewFragment;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends BaseActivity
 {
+    @InjectView(R.id.button_jobs)
+    RadioButton jobsButton;
+    @InjectView(R.id.button_schedule)
+    RadioButton scheduleButton;
+    @InjectView(R.id.button_profile)
+    RadioButton profileButton;
+    @InjectView(R.id.button_help)
+    RadioButton helpButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this, this);
+
+        registerButtonListeners();
+        initWebViewFragment();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected void onResume()
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
+        super.onResume();
+        if (currentTab == null)
         {
-            return true;
+            jobsButton.setChecked(true);
+            switchToTab(MainViewTab.JOBS);
+        }
+    }
+
+    private MainViewTab currentTab = null;
+    private PortalWebViewFragment webViewFragment = null;
+
+    private void initWebViewFragment()
+    {
+        webViewFragment = new PortalWebViewFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, webViewFragment)
+                .disallowAddToBackStack()
+                .commit();
+    }
+
+    private void registerButtonListeners()
+    {
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULE));
+        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.JOBS));
+        profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
+        helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
+    }
+
+    private enum MainViewTab
+    {
+        JOBS(ServerParams.Targets.AVAILABLE),
+        SCHEDULE(ServerParams.Targets.FUTURE),
+        PROFILE(ServerParams.Targets.PROFILE),
+        HELP(ServerParams.Targets.HELP);
+
+        private String target;
+
+        MainViewTab(String target)
+        {
+            this.target = target;
         }
 
-        return super.onOptionsItemSelected(item);
+        public String getTarget()
+        {
+            return target;
+        }
     }
+
+    private class TabOnClickListener implements View.OnClickListener
+    {
+        private MainViewTab tab;
+
+        TabOnClickListener(MainViewTab tab)
+        {
+            this.tab = tab;
+        }
+
+        @Override
+        public void onClick(View view)
+        {
+            switchToTab(tab);
+        }
+    }
+
+    private void switchToTab(MainViewTab tab)
+    {
+        if (currentTab != tab) //don't transition to same tab, ignore the clicks
+        {
+            webViewFragment.openPortalUrl(tab.getTarget());
+            currentTab = tab;
+        }
+    }
+
+
 }

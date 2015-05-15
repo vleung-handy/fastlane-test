@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,25 +11,14 @@ import android.webkit.WebView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.PortalWebViewClient;
-import com.handy.portal.core.ServerParams;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
 public class PortalWebViewFragment extends InjectedFragment
 {
-
     @InjectView(R.id.web_view_portal)
     WebView webView;
-
-    protected String getWebParam()
-    {
-        return "";
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +29,6 @@ public class PortalWebViewFragment extends InjectedFragment
         ButterKnife.inject(this, view);
 
         initWebView();
-        openPortalUrl();
 
         //whats in our cookie list?
         String cookies =  CookieManager.getInstance().getCookie(dataManager.getBaseUrl());
@@ -50,14 +37,7 @@ public class PortalWebViewFragment extends InjectedFragment
         return view;
     }
 
-    private void initWebView()
-    {
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setGeolocationEnabled(true);
-        webView.setWebViewClient(new PortalWebViewClient(this, webView, googleService));
-    }
-
-    public void openUrlWithChrome(String url)
+    public void openPortalUrl(String target)
     {
         webView.setWebChromeClient(new WebChromeClient()
         {
@@ -67,44 +47,20 @@ public class PortalWebViewFragment extends InjectedFragment
                 callback.invoke(origin, true, false);
             }
         });
-        loadUrlWithFromAppParam(url);
+        loadUrlWithFromAppParam(target);
+    }
+
+    private void initWebView()
+    {
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setGeolocationEnabled(true);
+        webView.setWebViewClient(new PortalWebViewClient(this, webView, googleService));
     }
 
     private void loadUrlWithFromAppParam(String url)
     {
         String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android";
-        if (url.contains("?"))
-        {
-            url = url + "&" + endOfUrl;
-        } else
-        {
-            url = url + "?" + endOfUrl;
-        }
-
-        webView.loadUrl(url);
+        String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
+        webView.loadUrl(urlWithParams);
     }
-
-    private void openPortalUrl()
-    {
-        String FinalUrl;
-        Intent intent = getActivity().getIntent();
-        CharSequence booking_id = intent.getStringExtra("booking_id");
-
-        if (booking_id != null)
-        {
-            FinalUrl = ServerParams.BaseUrl + "portal/jobs/" + booking_id + "/job_details";
-        } else
-        {
-            FinalUrl = ServerParams.BaseUrl + "home/"; //add params here
-        }
-        openUrlWithChrome(FinalUrl);
-    }
-
-    //how to go directly to a tab
-    //https://s-handybook.hbinternal.com/portal/home?goto="FOO"
-    //available
-    //future
-    //help
-    //profile
-
 }

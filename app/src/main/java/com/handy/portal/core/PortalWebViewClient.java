@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -12,17 +11,8 @@ import android.webkit.WebViewClient;
 import com.handy.portal.ui.widget.ProgressDialog;
 import com.handy.portal.util.Utils;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import javax.inject.Inject;
-
-/**
- * Created by cdavis on 4/30/15.
- */
 public class PortalWebViewClient extends WebViewClient
 {
-    //@Inject GoogleService googleService; //TODO: Get injection working here
-
     private Fragment parentFragment;
     private WebView webView;
     private ProgressDialog pd;
@@ -68,16 +58,11 @@ public class PortalWebViewClient extends WebViewClient
         return true;
     }
 
-    // Overrides the no-network page
-    //======================================================
-
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon)
     {
         super.onPageStarted(view, url, favicon);
-        // pd = new ProgressDialog(MainActivity.this);
         pd.setTitle("Please wait");
-        pd.setMessage("Page is refreshing..");
         pd.show();
     }
 
@@ -104,7 +89,6 @@ public class PortalWebViewClient extends WebViewClient
         super.onReceivedError(view, errorCode, description, failingUrl);
     }
 
-
     private void loadUrlWithFromAppParam(String url)
     {
 
@@ -124,5 +108,4 @@ public class PortalWebViewClient extends WebViewClient
         }
         webView.loadUrl(url);
     }
-
 }
