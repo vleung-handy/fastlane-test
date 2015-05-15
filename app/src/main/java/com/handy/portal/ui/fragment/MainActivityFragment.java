@@ -1,36 +1,30 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.RadioButton;
 
 import com.handy.portal.R;
+import com.handy.portal.core.ServerParams;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MainActivityFragment extends InjectedFragment
 {
-
-
-    @InjectView(R.id.button_available_jobs)
-    Button availableJobsButton;
-    @InjectView(R.id.button_scheduled_jobs)
-    Button scheduledJobsButton;
+    @InjectView(R.id.button_jobs)
+    RadioButton jobsButton;
+    @InjectView(R.id.button_schedule)
+    RadioButton scheduleButton;
     @InjectView(R.id.button_profile)
-    Button profileButton;
+    RadioButton profileButton;
     @InjectView(R.id.button_help)
-    Button helpButton;
+    RadioButton helpButton;
 
-    private int currentTabFragmentId = -1;
+    private MainViewTab currentTab = null;
+    private PortalWebViewFragment webViewFragment = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,189 +35,78 @@ public class MainActivityFragment extends InjectedFragment
         ButterKnife.inject(this, view);
 
         registerButtonListeners();
-
-        switchToTab(MainViewTab.AVAILABLE_BOOKINGS);
+        initWebViewFragment();
 
         return view;
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        jobsButton.setChecked(true);
+        switchToTab(MainViewTab.JOBS);
+    }
+
+    private void initWebViewFragment()
+    {
+        webViewFragment = new PortalWebViewFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, webViewFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     private void registerButtonListeners()
     {
-        scheduledJobsButton.setOnClickListener(new View.OnClickListener()
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULE));
+        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.JOBS));
+        profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
+        helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
+    }
+
+    private enum MainViewTab
+    {
+        JOBS(ServerParams.Targets.AVAILABLE),
+        SCHEDULE(ServerParams.Targets.FUTURE),
+        PROFILE(ServerParams.Targets.PROFILE),
+        HELP(ServerParams.Targets.HELP);
+
+        private String target;
+
+        MainViewTab(String target)
         {
-            @Override
-            public void onClick(View v)
-            {
-                onScheduledJobsClicked(v);
-            }
-        });
-
-        availableJobsButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onAvailableJobsClicked(v);
-            }
-        });
-
-        profileButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onProfileClicked(v);
-            }
-        });
-
-        helpButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onHelpClicked(v);
-            }
-        });
-    }
-
-    public void onAvailableJobsClicked(View clickedView)
-    {
-        switchToTab(MainViewTab.AVAILABLE_BOOKINGS);
-    }
-
-    public void onScheduledJobsClicked(View clickedView)
-    {
-        switchToTab(MainViewTab.CLAIMED_BOOKINGS);
-    }
-
-    public void onProfileClicked(View clickedView)
-    {
-        switchToTab(MainViewTab.PROFILE);
-    }
-
-    public void onHelpClicked(View clickedView)
-    {
-        switchToTab(MainViewTab.HELP);
-    }
-
-    enum MainViewTab
-    {
-        AVAILABLE_BOOKINGS,
-        CLAIMED_BOOKINGS,
-        PROFILE,
-        HELP
-    }
-
-    private int getFragmentIdForTab(MainViewTab tab)
-    {
-        switch (tab)
-        {
-            case AVAILABLE_BOOKINGS:
-                return R.layout.fragment_available_bookings;
-            case CLAIMED_BOOKINGS:
-                return R.layout.fragment_scheduled_bookings;
-            case PROFILE:
-                return R.layout.fragment_profile;
-            case HELP:
-                return R.layout.fragment_help;
+            this.target = target;
         }
-        return -1;
-    }
 
-    private String getParamForWebFragment(MainViewTab tab)
-    {
-        switch (tab)
+        public String getTarget()
         {
-            case AVAILABLE_BOOKINGS:
-                return "a";
-            case CLAIMED_BOOKINGS:
-                return "b";
-            case PROFILE:
-                return "c";
-            case HELP:
-                return "d";
+            return target;
         }
-        return "";
     }
 
-    private Class getFragmentClassForTab(MainViewTab tab)
+    private class TabOnClickListener implements View.OnClickListener
     {
-        switch (tab)
+        private MainViewTab tab;
+
+        TabOnClickListener(MainViewTab tab)
         {
-            case AVAILABLE_BOOKINGS:
-                return AvailableBookingsFragment.class;
-            case CLAIMED_BOOKINGS:
-                return ScheduledBookingsFragment.class;
-            case PROFILE:
-                return ProfileFragment.class;
-            case HELP:
-                return HelpFragment.class;
+            this.tab = tab;
         }
-        return null;
+
+        @Override
+        public void onClick(View view)
+        {
+            switchToTab(tab);
+        }
     }
-
-
-    private void initView()
-    {
-        // Create a new Fragment to be placed in the activity layout
-        AvailableBookingsFragment firstFragment = new AvailableBookingsFragment();
-
-        //Add the fragment to the 'fragment_container' FrameLayout
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.main_container, firstFragment).commit();
-    }
-
-    //click on a button, get the fragment, check if different fragment, or if webview check associated id/link/param
 
     private void switchToTab(MainViewTab tab)
     {
-
-
-
-        //hack to always open webview
-
-        tab = MainViewTab.PROFILE;
-
-
-
-
-
-
-
-
-        int newFragmentId = getFragmentIdForTab(tab);
-
-        Class newFragmentClass = getFragmentClassForTab(tab);
-
-        if (newFragmentId != currentTabFragmentId) //don't transition to same tab, ignore the clicks
+        if (currentTab != tab) //don't transition to same tab, ignore the clicks
         {
-            //replace the existing fragment with the new fragment
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-
-            Fragment newFragment = null;
-            try
-            {
-                newFragment = (Fragment) newFragmentClass.newInstance();
-            } catch (Exception e)
-            {
-                System.err.println("Error instantiating fragment class");
-            }
-
-            currentTabFragmentId = newFragmentId;
-
-// Replace whatever is in the fragment_container view with this fragment,
-// and add the transaction to the back stack so the user can navigate back
-            transaction.replace(R.id.main_container, newFragment);
-            transaction.addToBackStack(null);
-
-// Commit the transaction
-            transaction.commit();
-
-
+            webViewFragment.openPortalUrl(tab.getTarget());
+            currentTab = tab;
         }
-
-
     }
-
-
 }
