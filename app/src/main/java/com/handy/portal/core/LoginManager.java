@@ -15,16 +15,6 @@ public final class LoginManager implements Observer
     private final Bus bus;
     private DataManager dataManager;
 
-    //Portal testing
-    private String portalPhoneNumber;
-    private String portalPinCode;
-
-    public String getLoginToken()
-    {
-        return portalPhoneNumber + portalPinCode;
-    }
-
-
     @Inject
     LoginManager(final Bus bus, final DataManager dataManager)
     {
@@ -38,6 +28,7 @@ public final class LoginManager implements Observer
     {
         if (observable instanceof User)
         {
+
         }
     }
 
@@ -55,8 +46,7 @@ public final class LoginManager implements Observer
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        System.err.println("Failed to request pin code " + error);
-                        bus.post(new Event.PinCodeRequestReceivedEvent(false)); //need to let client know about the fail
+                        bus.post(new Event.PinCodeRequestReceivedEvent(false));
                     }
                 }
         );
@@ -65,21 +55,19 @@ public final class LoginManager implements Observer
     @Subscribe
     public void onRequestLogin(Event.RequestLoginEvent event)
     {
-        dataManager.requestLogin(event.phoneNumber, event.pinCode, new DataManager.Callback<String>()
+        dataManager.requestLogin(event.phoneNumber, event.pinCode, new DataManager.Callback<LoginDetails>()
                 {
                     @Override
-                    public void onSuccess(final String loginCode)
+                    public void onSuccess(final LoginDetails loginDetails)
                     {
-                        bus.post(new Event.LoginRequestReceivedEvent(loginCode, true));
-
-                        //TODO: Set our local user based on the return value? Provider users may be less complex than consumer users
+                        bus.post(new Event.LoginRequestReceivedEvent(loginDetails, true));
+                        //TODO: Set our local user based on the return value? Need to wait for the api version that sends back userId
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        System.err.println("Failed to login " + error);
-                        bus.post(new Event.LoginRequestReceivedEvent("", false));
+                        bus.post(new Event.LoginRequestReceivedEvent(new LoginDetails(), false));
                     }
                 }
         );

@@ -1,6 +1,7 @@
 package com.handy.portal.event;
 
 import com.handy.portal.core.BookingSummary;
+import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.booking.BookingCalendarDay;
 
 import java.util.Map;
@@ -72,11 +73,11 @@ public abstract class Event
 
     public static class LoginRequestReceivedEvent extends Event
     {
-        public String userId;
+        public LoginDetails loginDetails;
 
-        public LoginRequestReceivedEvent(String userId, boolean success)
+        public LoginRequestReceivedEvent(LoginDetails loginDetails, boolean success)
         {
-            this.userId = userId;
+            this.loginDetails = loginDetails;
             this.success = success;
         }
     }

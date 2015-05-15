@@ -13,6 +13,10 @@
     <string name="sending_pin">Sending Pin to Phone</string>
     <string name="logging_in">Logging In</string>
 
+    <string name="login_error_bad_phone">Your phone number was not recognized</string>
+    <string name="login_error_bad_login">You code not be logged in, check your phone and PIN</string>
+    <string name="login_error_connectivity">The login server could not be reached, please try again</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>

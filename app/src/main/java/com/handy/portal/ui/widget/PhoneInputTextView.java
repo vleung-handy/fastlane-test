@@ -87,6 +87,6 @@ public final class PhoneInputTextView extends InputTextField
 
     public final String getPhoneNumber()
     {
-        return this.countryCode + this.getText().toString().replaceAll("[^0-9]", "");
+        return (this.countryCode != null ? this.countryCode : "") + this.getText().toString().replaceAll("[^0-9]", "");
     }
 }

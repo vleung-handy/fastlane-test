@@ -12,8 +12,10 @@ import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedInput;
@@ -211,14 +213,15 @@ public interface HandyRetrofitService
     @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/check_out")
     void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-    @POST(BASE_PATH + "iwantapincode")
-    void requestPinCode(@Query("phone_number") String phoneNumber, HandyRetrofitCallback cb);
 
-    @POST(BASE_PATH + "iwanttologin")
-    void requestLogin(@Query("phone_number") String phoneNumber, @Query("pin_code") String pinCode, HandyRetrofitCallback cb);
+    //HACK: These are not hitting proper API endpoints and they need to hit the base url not the api url
+    @Multipart
+    @POST("/portal/session/send_pin")
+    void requestPinCode(@Part("phone") String phoneNumber, HandyRetrofitCallback cb);
 
-
-
+    @Multipart
+    @POST("/portal/session")
+    void requestLogin(@Part("phone") String phoneNumber, @Part("pin_code") String pinCode, HandyRetrofitCallback cb);
 
     final class UserUpdateRequest
     {

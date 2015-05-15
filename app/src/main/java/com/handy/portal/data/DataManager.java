@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import android.support.v4.util.Pair;
 
+import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCompleteTransaction;
 import com.handy.portal.core.booking.BookingCoupon;
@@ -132,16 +133,14 @@ public abstract class DataManager
 
     public abstract void getScheduledBookings(Callback<List<BookingSummary>> cb);
 
-    public abstract void claimBooking(String bookingId, Callback<List<Booking>> cb);
+    public abstract void claimBooking(String bookingId, Callback<Booking> cb);
 
-    public abstract void getBookingDetails(String bookingId, Callback<List<Booking>> cb);
+    public abstract void getBookingDetails(String bookingId, Callback<Booking> cb);
 
     //Login
     public abstract void requestPinCode(String phoneNumber, Callback<String> cb);
-    public abstract void requestLogin(String phoneNumber, String pinCode, Callback<String> cb);
 
-
-
+    public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
 
     public abstract String getBaseUrl();
 

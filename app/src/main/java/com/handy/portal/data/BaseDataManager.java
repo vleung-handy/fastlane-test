@@ -5,10 +5,6 @@ import android.support.v4.util.Pair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.BookingCompleteTransaction;
-import com.handy.portal.core.booking.BookingCoupon;
-import com.handy.portal.core.booking.BookingOption;
 import com.handy.portal.core.BookingPostInfo;
 import com.handy.portal.core.BookingQuote;
 import com.handy.portal.core.BookingRequest;
@@ -16,9 +12,14 @@ import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.BookingTransaction;
 import com.handy.portal.core.HelpNode;
 import com.handy.portal.core.LaundryDropInfo;
+import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PromoCode;
 import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
+import com.handy.portal.core.booking.Booking;
+import com.handy.portal.core.booking.BookingCompleteTransaction;
+import com.handy.portal.core.booking.BookingCoupon;
+import com.handy.portal.core.booking.BookingOption;
 import com.squareup.otto.Bus;
 
 import org.json.JSONArray;
@@ -654,7 +655,7 @@ public final class BaseDataManager extends DataManager
                 user.getAuthToken()), new HandyRetrofitCallback(cb)
         {
             @Override
-            void success(JSONObject response)
+            void success(final JSONObject response)
             {
                 handleUserResponse(user.getId(), user.getAuthToken(), response, cb);
             }
@@ -667,7 +668,7 @@ public final class BaseDataManager extends DataManager
         service.requestPasswordReset(email, new HandyRetrofitCallback(cb)
         {
             @Override
-            void success(JSONObject response)
+            void success(final JSONObject response)
             {
                 final JSONArray array = response.optJSONArray("messages");
                 cb.onSuccess(array != null && array.length() > 0 ?
@@ -756,33 +757,73 @@ public final class BaseDataManager extends DataManager
             @Override
             void success(final JSONObject response)
             {
-                cb.onSuccess(null);
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                final List<BookingSummary> bookings = new ArrayList<BookingSummary>();
+                for (int i = 0; i < response.length(); i++)
+                {
+                    try
+                    {
+                        BookingSummary bs = gson.fromJson((response.get(Integer.toString(i)).toString()),
+                                new TypeToken<BookingSummary>()
+                                {
+                                }.getType());
+                        bookings.add(bs);
+                    } catch (Exception e)
+                    {
+                        System.err.println("Can not parse BookingSummary " + e);
+                    }
+                }
+                cb.onSuccess(bookings);
             }
         });
     }
 
     @Override
-    public final void claimBooking(String bookingId, final Callback<List<Booking>> cb)
+    public final void claimBooking(String bookingId, final Callback<Booking> cb)
     {
         service.claimBooking(getProviderId(), bookingId, new HandyRetrofitCallback(cb)
         {
             @Override
             void success(final JSONObject response)
             {
-                cb.onSuccess(null);
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                Booking booking = null;
+                try
+                {
+                    booking = gson.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                }
+                cb.onSuccess(booking);
             }
         });
     }
 
     @Override
-    public final void getBookingDetails(String bookingId, final Callback<List<Booking>> cb)
+    public final void getBookingDetails(String bookingId, final Callback<Booking> cb)
     {
         service.getBookingDetails(getProviderId(), bookingId, new HandyRetrofitCallback(cb)
         {
             @Override
             void success(final JSONObject response)
             {
-                cb.onSuccess(null);
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                Booking booking = null;
+                try
+                {
+                    booking = gson.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                }
+                cb.onSuccess(booking);
             }
         });
     }
@@ -801,21 +842,35 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void requestLogin(String phoneNumber, String pinCode, final Callback<String> cb)
+    public final void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
     {
         service.requestLogin(phoneNumber, pinCode, new HandyRetrofitCallback(cb)
         {
             @Override
             void success(final JSONObject response)
             {
-                cb.onSuccess(null);
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                LoginDetails loginDetails = null;
+                try
+                {
+                    loginDetails = gson.fromJson((response.toString()),
+                            new TypeToken<LoginDetails>()
+                            {
+                            }.getType());
+                }
+                catch (Exception e)
+                {
+                    System.err.println("Can not parse LoginDetails " + e);
+                }
+                cb.onSuccess(loginDetails);
             }
         });
     }
 
     private String getProviderId()
     {
-        //hardcode hack, will eventually point at a real user from our service with an associated ID
+        //hack, will eventually point at a real user from our service with an associated ID
+        System.err.println("CURRENTLY HACKING USER ID TO : 11");
         return "11";
     }
 

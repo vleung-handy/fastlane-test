@@ -3,16 +3,20 @@ package com.handy.portal.ui.fragment;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.core.LoginDetails;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
@@ -28,11 +32,6 @@ import butterknife.InjectView;
  */
 public class LoginActivityFragment extends InjectedFragment
 {
-    private static final boolean DEBUG_FAKE_RESPONSES = true;
-    private static final boolean DEBUG_SKIP_LOGIN = false;
-
-    private String storedPhoneNumber;
-
     @InjectView(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
     @InjectView(R.id.pin_code_input_layout)
@@ -52,7 +51,7 @@ public class LoginActivityFragment extends InjectedFragment
     @InjectView(R.id.logo)
     ImageView logo;
 
-    private enum LoginPhase
+    private enum LoginState
     {
         INIT,
         INPUTTING_PHONE_NUMBER,
@@ -62,7 +61,8 @@ public class LoginActivityFragment extends InjectedFragment
         COMPLETE
     }
 
-    private LoginPhase currentLoginPhase;
+    private LoginState currentLoginState;
+    private String storedPhoneNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,7 +74,7 @@ public class LoginActivityFragment extends InjectedFragment
 
         ButterKnife.inject(this, view);
 
-        changeState(LoginPhase.INIT);
+        changeState(LoginState.INIT);
 
         //fancy spinning logo
         logo.setOnClickListener(new View.OnClickListener()
@@ -90,16 +90,8 @@ public class LoginActivityFragment extends InjectedFragment
 
         registerControlListeners();
 
-        if(DEBUG_SKIP_LOGIN)
-        {
-            //hack in a user and pin to simulate sending
-
-            startActivity(new Intent(this.getActivity(), MainActivity.class));
-        }
-
         return view;
     }
-
 
     private void registerControlListeners()
     {
@@ -108,7 +100,7 @@ public class LoginActivityFragment extends InjectedFragment
             @Override
             public void onClick(View v)
             {
-                switch (currentLoginPhase)
+                switch (currentLoginState)
                 {
                     case INPUTTING_PHONE_NUMBER:
                     {
@@ -126,9 +118,6 @@ public class LoginActivityFragment extends InjectedFragment
                         }
                     }
                     break;
-                    default:
-                    {
-                    }
                 }
             }
         });
@@ -139,13 +128,11 @@ public class LoginActivityFragment extends InjectedFragment
             @Override
             public void onClick(View v)
             {
-                System.out.println("Clicked back button");
-
-                switch (currentLoginPhase)
+                switch (currentLoginState)
                 {
                     case INPUTTING_PIN:
                     {
-                        changeState(LoginPhase.INPUTTING_PHONE_NUMBER);
+                        changeState(LoginState.INPUTTING_PHONE_NUMBER);
                     }
                     break;
                 }
@@ -154,36 +141,38 @@ public class LoginActivityFragment extends InjectedFragment
 
     }
 
+    //Event Sending
+
+    //Send a request for a pin code based on a phone number
     private void sendPhoneNumber(String phoneNumber)
     {
-        //sendPhoneNumber
-        //send a pin request to the server, transition to waiting for pin phase
-        System.out.println("Sending phone number : " + phoneNumber);
         storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
-        changeState(LoginPhase.WAITING_FOR_PHONE_NUMBER_RESPONSE);
-
+        changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
         bus.post(new Event.RequestPinCodeEvent(phoneNumber));
-
-        if(DEBUG_FAKE_RESPONSES)
-        {
-            bus.post(new Event.PinCodeRequestReceivedEvent(true));
-        }
-
     }
+
+    //send a login request to the server with our phoneNumber and pin
+    private void sendLoginRequest(String phoneNumber, String pinCode)
+    {
+        changeState(LoginState.WAITING_FOR_LOGIN_RESPONSE);
+        bus.post(new Event.RequestLoginEvent(phoneNumber, pinCode));
+    }
+
+    //Event Listening
 
     @Subscribe
     public void onPinCodeRequestReceived(Event.PinCodeRequestReceivedEvent event)
     {
-        if(currentLoginPhase == LoginPhase.WAITING_FOR_PHONE_NUMBER_RESPONSE)
+        if(currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
             if(event.success)
             {
-                System.out.println("User should expect a pin code");
-                changeState(LoginPhase.INPUTTING_PIN);
+                changeState(LoginState.INPUTTING_PIN);
             }
             else
             {
-                System.out.println("Something went wrong user needs to rerequest pin code");
+                showLoginError(R.string.login_error_bad_phone);
+                changeState(LoginState.INPUTTING_PHONE_NUMBER);
             }
         }
     }
@@ -191,71 +180,80 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onLoginRequestReceived(Event.LoginRequestReceivedEvent event)
     {
-        if(currentLoginPhase == LoginPhase.WAITING_FOR_LOGIN_RESPONSE)
+        if(currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
             if (event.success)
             {
-                System.out.println("User is set and logged in : " + event.userId);
-                changeState(LoginPhase.COMPLETE);
-            } else
+                if(event.loginDetails.getSuccess())
+                {
+                    beginLogin(event.loginDetails);
+                }
+                else
+                {
+                    showLoginError(R.string.login_error_bad_login);
+                    changeState(LoginState.INPUTTING_PIN);
+                }
+            }
+            else
             {
-                System.out.println("Something went wrong user needs to re login");
+                showLoginError(R.string.login_error_connectivity);
+                changeState(LoginState.INPUTTING_PIN);
             }
         }
     }
 
-    private boolean validateLength(String s, int l)
+    //Controller
+
+    private void changeState(LoginState phase)
     {
-        return (s.length() == l);
-    }
-
-    private void sendLoginRequest(String phoneNumber, String pinCode)
-    {
-        changeState(LoginPhase.WAITING_FOR_LOGIN_RESPONSE);
-
-        //send a login request to the server with our phoneNumber and pin
-        bus.post(new Event.RequestLoginEvent(phoneNumber, pinCode));
-
-        if(DEBUG_FAKE_RESPONSES)
-        {
-            bus.post(new Event.LoginRequestReceivedEvent("11", true));
-        }
-    }
-
-    private void changeState(LoginPhase phase)
-    {
-        if(currentLoginPhase == phase)
+        if(currentLoginState == phase)
         {
             return;
         }
 
-        currentLoginPhase = phase;
+        currentLoginState = phase;
 
-        updateDisplay(currentLoginPhase);
+        updateDisplay(currentLoginState);
 
-
-        if(phase == LoginPhase.INIT)
+        //TODO: Do we need to test connectivity or anything else before proceeding?
+        if (phase == LoginState.INIT)
         {
-            changeState(LoginPhase.INPUTTING_PHONE_NUMBER);
-        }
-
-        if(phase == LoginPhase.COMPLETE)
-        {
-            //transition to main activity once we have a user
-            startActivity(new Intent(this.getActivity(), MainActivity.class));
+            changeState(LoginState.INPUTTING_PHONE_NUMBER);
         }
     }
 
-    @Override
-    public void startActivity(final Intent intent)
+    private void beginLogin(LoginDetails loginDetails)
     {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        super.startActivity(intent);
+        changeState(LoginState.COMPLETE);
+
+        //Set cookies to enable seamless access in our webview
+        if(loginDetails.getHandybookSessionId() != null)
+        {
+            CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getHandybookSessionIdCookie());
+        }
+
+        if(loginDetails.getUserCredentials() != null)
+        {
+            CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
+        }
+
+        //TODO: If we have API version 21 we can use a valueCallback for setting cookies instead of hacking a sleep to sync
+        //Cookie syncing is not guaranteed to be instant, this is a hacky workaround
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        //transition to main activity
+        startActivity(new Intent(this.getActivity(), MainActivity.class));
     }
 
-
-    private void updateDisplay(LoginPhase phase)
+    //View work, to separate into a view class along with the view injections
+    private void updateDisplay(LoginState phase)
     {
         switch (phase)
         {
@@ -314,7 +312,28 @@ public class LoginActivityFragment extends InjectedFragment
             }
             break;
         }
+    }
 
+    //Helpers
+
+    private void showLoginError(int stringId)
+    {
+        showLoginError(getResources().getString(stringId));
+    }
+
+    private void showLoginError(String error)
+    {
+        toast = Toast.makeText(getActivity().getApplicationContext(), error, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
+    @Override
+    public void startActivity(final Intent intent)
+    {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        super.startActivity(intent);
     }
 
 }
