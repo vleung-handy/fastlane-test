@@ -23,7 +23,6 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
-import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
@@ -51,7 +50,6 @@ import retrofit.converter.GsonConverter;
         HelpFragment.class,
         AvailableBookingsFragment.class,
         PortalWebViewClient.class,
-        MainActivityFragment.class,
         BaseApplication.class,
         BaseActivity.class,
         MainActivity.class,
