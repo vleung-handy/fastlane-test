@@ -213,7 +213,6 @@ public interface HandyRetrofitService
     @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/check_out")
     void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-
     //HACK: These are not hitting proper API endpoints and they need to hit the base url not the api url
     @Multipart
     @POST("/portal/session/send_pin")

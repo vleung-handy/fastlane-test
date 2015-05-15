@@ -2,6 +2,7 @@ package com.handy.portal.event;
 
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.booking.BookingCalendarDay;
 
 import java.util.Map;
@@ -53,8 +54,10 @@ public abstract class Event
 
     public static class PinCodeRequestReceivedEvent extends Event
     {
-        public PinCodeRequestReceivedEvent(boolean success)
+        public PinRequestDetails pinRequestDetails;
+        public PinCodeRequestReceivedEvent(PinRequestDetails pinRequestDetails, boolean success)
         {
+            this.pinRequestDetails = pinRequestDetails;
             this.success = success;
         }
     }

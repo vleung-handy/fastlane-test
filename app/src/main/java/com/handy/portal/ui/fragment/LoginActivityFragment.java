@@ -1,7 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
+import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -48,8 +48,11 @@ public class LoginActivityFragment extends InjectedFragment
     Button loginButton;
     @InjectView(R.id.back_button)
     ImageButton backButton;
-    @InjectView(R.id.logo)
-    ImageView logo;
+    @InjectView(R.id.help_cta)
+    TextView helpCta;
+
+    private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
+    private static final String HELP_URL = "https://www.handy.com/help";
 
     private enum LoginState
     {
@@ -76,19 +79,10 @@ public class LoginActivityFragment extends InjectedFragment
 
         changeState(LoginState.INIT);
 
-        //fancy spinning logo
-        logo.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                AnimationDrawable logoSpin = (AnimationDrawable) logo.getBackground();
-                logoSpin.stop();
-                logoSpin.start();
-            }
-        });
-
         registerControlListeners();
+
+        //TODO: Prepopulate phone number with device's number? User could still edit if it fails
+
 
         return view;
     }
@@ -139,7 +133,39 @@ public class LoginActivityFragment extends InjectedFragment
             }
         });
 
+        helpCta.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                switch (currentLoginState)
+                {
+                    case INPUTTING_PHONE_NUMBER:
+                    {
+                        //not yet registered, apply now
+                        goToUrl(APPLY_NOW_URL);
+                    }
+                    break;
+
+                    case INPUTTING_PIN:
+                    {
+                        //did not get a pin code sent
+                        goToUrl(HELP_URL);
+                    }
+                    break;
+                }
+            }
+        });
+
     }
+
+    private void goToUrl(String url)
+    {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
+
 
     //Event Sending
 
@@ -163,16 +189,26 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onPinCodeRequestReceived(Event.PinCodeRequestReceivedEvent event)
     {
-        if(currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
+        if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
-            if(event.success)
+            if (event.success)
             {
-                changeState(LoginState.INPUTTING_PIN);
+                if(event.pinRequestDetails.getSuccess())
+                {
+                    changeState(LoginState.INPUTTING_PIN);
+                }
+                else
+                {
+                    showLoginError(R.string.login_error_bad_phone);
+                    changeState(LoginState.INPUTTING_PHONE_NUMBER);
+                    phoneNumberEditText.highlight();
+                }
             }
             else
             {
-                showLoginError(R.string.login_error_bad_phone);
+                showLoginError(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PHONE_NUMBER);
+                phoneNumberEditText.highlight();
             }
         }
     }
@@ -180,11 +216,11 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onLoginRequestReceived(Event.LoginRequestReceivedEvent event)
     {
-        if(currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
+        if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
             if (event.success)
             {
-                if(event.loginDetails.getSuccess())
+                if (event.loginDetails.getSuccess())
                 {
                     beginLogin(event.loginDetails);
                 }
@@ -192,9 +228,9 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     showLoginError(R.string.login_error_bad_login);
                     changeState(LoginState.INPUTTING_PIN);
+                    pinCodeEditText.highlight();
                 }
-            }
-            else
+            } else
             {
                 showLoginError(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PIN);
@@ -206,7 +242,7 @@ public class LoginActivityFragment extends InjectedFragment
 
     private void changeState(LoginState phase)
     {
-        if(currentLoginState == phase)
+        if (currentLoginState == phase)
         {
             return;
         }
@@ -227,12 +263,12 @@ public class LoginActivityFragment extends InjectedFragment
         changeState(LoginState.COMPLETE);
 
         //Set cookies to enable seamless access in our webview
-        if(loginDetails.getHandybookSessionId() != null)
+        if (loginDetails.getHandybookSessionId() != null)
         {
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getHandybookSessionIdCookie());
         }
 
-        if(loginDetails.getUserCredentials() != null)
+        if (loginDetails.getUserCredentials() != null)
         {
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
         }
@@ -242,8 +278,7 @@ public class LoginActivityFragment extends InjectedFragment
         try
         {
             Thread.sleep(1000);
-        }
-        catch (InterruptedException e)
+        } catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -263,6 +298,7 @@ public class LoginActivityFragment extends InjectedFragment
                 pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
                 backButton.setVisibility(View.GONE);
+                helpCta.setVisibility(View.GONE);
             }
             break;
             case INPUTTING_PHONE_NUMBER:
@@ -274,6 +310,8 @@ public class LoginActivityFragment extends InjectedFragment
                 loginButton.setVisibility(View.VISIBLE);
                 loginButton.setText(R.string.request_pin);
                 backButton.setVisibility(View.GONE);
+                helpCta.setVisibility(View.VISIBLE);
+                helpCta.setText(R.string.not_registered_cta);
             }
             break;
             case WAITING_FOR_PHONE_NUMBER_RESPONSE:
@@ -283,16 +321,21 @@ public class LoginActivityFragment extends InjectedFragment
                 phoneInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
                 backButton.setVisibility(View.GONE);
+                helpCta.setVisibility(View.GONE);
             }
             break;
             case INPUTTING_PIN:
             {
-                instructionsText.setText(R.string.login_instructions_2);
+                String instructionsFormat = getResources().getString(R.string.login_instructions_2);
+                String instructions = String.format(instructionsFormat, TextUtils.formatPhone(storedPhoneNumber, ""));
+                instructionsText.setText(instructions);
                 phoneInputLayout.setVisibility(View.GONE);
                 pinCodeInputLayout.setVisibility(View.VISIBLE);
                 loginButton.setVisibility(View.VISIBLE);
                 loginButton.setText(R.string.log_in);
                 backButton.setVisibility(View.VISIBLE);
+                helpCta.setVisibility(View.VISIBLE);
+                helpCta.setText(R.string.no_pin_cta);
             }
             break;
             case WAITING_FOR_LOGIN_RESPONSE:
@@ -302,13 +345,12 @@ public class LoginActivityFragment extends InjectedFragment
                 pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
                 backButton.setVisibility(View.GONE);
+                helpCta.setVisibility(View.GONE);
             }
             break;
             case COMPLETE:
             {
-                instructionsText.setText("");
-                phoneInputLayout.setVisibility(View.GONE);
-                pinCodeInputLayout.setVisibility(View.GONE);
+                instructionsText.setText(R.string.logging_in);
             }
             break;
         }

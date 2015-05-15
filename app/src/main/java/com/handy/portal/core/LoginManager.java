@@ -35,18 +35,18 @@ public final class LoginManager implements Observer
     @Subscribe
     public void onRequestPinCode(Event.RequestPinCodeEvent event)
     {
-        dataManager.requestPinCode(event.phoneNumber, new DataManager.Callback<String>()
+        dataManager.requestPinCode(event.phoneNumber, new DataManager.Callback<PinRequestDetails>()
                 {
                     @Override
-                    public void onSuccess(final String status)
+                    public void onSuccess(final PinRequestDetails pinRequestDetails)
                     {
-                        bus.post(new Event.PinCodeRequestReceivedEvent(true));
+                        bus.post(new Event.PinCodeRequestReceivedEvent(pinRequestDetails, true));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.PinCodeRequestReceivedEvent(false));
+                        bus.post(new Event.PinCodeRequestReceivedEvent(null, false));
                     }
                 }
         );

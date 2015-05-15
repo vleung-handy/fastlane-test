@@ -13,6 +13,7 @@ import com.handy.portal.core.BookingTransaction;
 import com.handy.portal.core.HelpNode;
 import com.handy.portal.core.LaundryDropInfo;
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.PromoCode;
 import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
@@ -829,14 +830,27 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void requestPinCode(String phoneNumber, final Callback<String> cb)
+    public final void requestPinCode(String phoneNumber, final Callback<PinRequestDetails> cb)
     {
         service.requestPinCode(phoneNumber, new HandyRetrofitCallback(cb)
         {
             @Override
             void success(final JSONObject response)
             {
-                cb.onSuccess(null);
+                final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                PinRequestDetails pinRequestDetails = null;
+                try
+                {
+                    pinRequestDetails = gson.fromJson((response.toString()),
+                            new TypeToken<PinRequestDetails>()
+                            {
+                            }.getType());
+                }
+                catch (Exception e)
+                {
+                    System.err.println("Can not parse PinRequestDetails " + e);
+                }
+                cb.onSuccess(pinRequestDetails);
             }
         });
     }

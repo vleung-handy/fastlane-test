@@ -3,6 +3,7 @@ package com.handy.portal.data;
 import android.support.v4.util.Pair;
 
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCompleteTransaction;
 import com.handy.portal.core.booking.BookingCoupon;
@@ -138,7 +139,7 @@ public abstract class DataManager
     public abstract void getBookingDetails(String bookingId, Callback<Booking> cb);
 
     //Login
-    public abstract void requestPinCode(String phoneNumber, Callback<String> cb);
+    public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);
 
     public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
 

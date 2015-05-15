@@ -406,7 +406,6 @@
 
     <style name="LoginTextInputCell">
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/rounded_background</item>
         <item name="android:textSize">@dimen/default_text_size</item>
         <item name="android:padding">5dp</item>
     </style>
