@@ -44,8 +44,11 @@ public class MainActivityFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        jobsButton.setChecked(true);
-        switchToTab(MainViewTab.JOBS);
+        if (currentTab == null)
+        {
+            jobsButton.setChecked(true);
+            switchToTab(MainViewTab.JOBS);
+        }
     }
 
     private void initWebViewFragment()
