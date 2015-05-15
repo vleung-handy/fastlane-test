@@ -21,14 +21,14 @@
 
         <RadioButton
             android:id="@+id/button_jobs"
-            android:drawableTop="@drawable/ic_menu_jobs"
+            android:drawableTop="@drawable/tab_button_jobs"
             android:layout_weight="1"
             style="@style/TabButton"
             android:text="@string/tab_jobs" />
 
         <RadioButton
             android:id="@+id/button_schedule"
-            android:drawableTop="@drawable/ic_menu_schedule"
+            android:drawableTop="@drawable/tab_button_schedule"
             android:layout_weight="1"
             style="@style/TabButton"
             android:text="@string/tab_schedule"
@@ -36,14 +36,14 @@
 
         <RadioButton
             android:id="@+id/button_profile"
-            android:drawableTop="@drawable/ic_menu_profile"
+            android:drawableTop="@drawable/tab_button_profile"
             android:layout_weight="1"
             style="@style/TabButton"
             android:text="@string/tab_profile" />
 
         <RadioButton
             android:id="@+id/button_help"
-            android:drawableTop="@drawable/ic_menu_help"
+            android:drawableTop="@drawable/tab_button_help"
             android:layout_weight="1"
             style="@style/TabButton"
             android:text="@string/tab_help" />
