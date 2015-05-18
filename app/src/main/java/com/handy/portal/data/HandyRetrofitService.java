@@ -189,8 +189,9 @@ public interface HandyRetrofitService
     //http://localhost:3000/api/portal/v1/providers/8/bookings                  //scheduled
     //http://localhost:3000/api/portal/v1/providers/8/bookings?available=true   //available
 
-    final String PORTAL_VERSION = "v1";
-    final String BASE_PATH = "/portal/" + PORTAL_VERSION + "/providers/";
+    String PORTAL_VERSION = "v1";
+    String BASE_PATH = "/portal/" + PORTAL_VERSION + "/providers/";
+    String SESSIONS_PATH = "/portal/" + PORTAL_VERSION + "/sessions/";
 
     @GET(BASE_PATH + "{provider_id}/bookings?available=true")
     void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
@@ -215,11 +216,11 @@ public interface HandyRetrofitService
 
     //HACK: These are not hitting proper API endpoints and they need to hit the base url not the api url
     @Multipart
-    @POST("/portal/session/send_pin")
+    @POST(SESSIONS_PATH + "request_pin")
     void requestPinCode(@Part("phone") String phoneNumber, HandyRetrofitCallback cb);
 
     @Multipart
-    @POST("/portal/session")
+    @POST(SESSIONS_PATH + "log_in")
     void requestLogin(@Part("phone") String phoneNumber, @Part("pin_code") String pinCode, HandyRetrofitCallback cb);
 
     final class UserUpdateRequest
