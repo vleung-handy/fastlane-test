@@ -51,6 +51,8 @@ public class LoginActivityFragment extends InjectedFragment
     @InjectView(R.id.help_cta)
     TextView helpCta;
 
+    private static final boolean DEBUG_SKIP_LOGIN = false;
+
     private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
     private static final String HELP_URL = "https://www.handy.com/help";
 
@@ -83,6 +85,10 @@ public class LoginActivityFragment extends InjectedFragment
 
         //TODO: Prepopulate phone number with device's number? User could still edit if it fails
 
+        if(DEBUG_SKIP_LOGIN)
+        {
+            startActivity(new Intent(this.getActivity(), MainActivity.class));
+        }
 
         return view;
     }
