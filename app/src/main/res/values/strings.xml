@@ -13,7 +13,7 @@
     <string name="sending_pin">Sending Pin to Phone</string>
     <string name="logging_in">Logging In</string>
 
-    <string name="not_registered_cta">Not registered yet? Apply Now</string>
+    <string name="not_registered_cta">Not registered yet? <B>Apply Now</B></string>
     <string name="no_pin_cta">Not receiving a pin code?</string>
 
     <string name="login_error_bad_phone">Your phone number was not recognized</string>
