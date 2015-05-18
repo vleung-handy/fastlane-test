@@ -22,38 +22,9 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
 
-        System.out.println("Created splash");
-
+        //TODO: Handle install referrers and deep links
         openLoginActivity();
 
-
-//        if (savedInstanceState != null)
-//        {
-//            launchedNext = savedInstanceState.getBoolean(STATE_LAUNCHED_NEXT, false);
-//        }
-//
-//        if (!launchedNext)
-//        {
-//            user = userManager.getCurrentUser();
-//
-//            final Intent intent = this.getIntent();
-//            final String action = intent.getAction();
-//            final Uri data = intent.getData();
-//
-////            if (!action.equals("android.intent.action.VIEW") || !data.getScheme().equals("handy")) {
-////                openServiceCategoriesActivity();
-////                return;
-////            }
-//
-//            //navigationManager.handleSplashScreenLaunch(this.getIntent(), this);
-//            launchedNext = true;
-//        }
-//        else
-//        {
-//            //openServiceCategoriesActivity();
-//
-//            openLoginActivity();
-//        }
     }
 
     @Override
@@ -79,9 +50,6 @@ public class SplashActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == BookingDateActivity.RESULT_RESCHEDULE_NEW_DATE) {
-//            openServiceCategoriesActivity();
-//        }
     }
 
     @Override
@@ -91,53 +59,8 @@ public class SplashActivity extends BaseActivity
         outState.putBoolean(STATE_LAUNCHED_NEXT, launchedNext);
     }
 
-    private void openMainActivity()
-    {
-        startActivity(new Intent(this, MainActivity.class));
-    }
-
     private void openLoginActivity()
     {
         startActivity(new Intent(this, LoginActivity.class));
     }
-
-//    private void openServiceCategoriesActivity() {
-//        //startActivity(new Intent(this, ServiceCategoriesActivity.class));
-//    }
-
-//    private void openRescheduleActivity(final String bookingId) {
-//        dataManager.getBooking(bookingId, user != null ? user.getAuthToken() : null,
-//                new DataManager.Callback<Booking>() {
-//                    @Override
-//                    public void onSuccess(final Booking booking) {
-//                        if (!allowCallbacks) return;
-//
-//                        dataManager.getPreRescheduleInfo(bookingId, new DataManager.Callback<String>() {
-//                            @Override
-//                            public void onSuccess(final String notice) {
-//                                if (!allowCallbacks) return;
-//
-//                                final Intent intent = new Intent(SplashActivity.this, BookingDateActivity.class);
-//                                intent.putExtra(BookingDateActivity.EXTRA_RESCHEDULE_BOOKING, booking);
-//                                intent.putExtra(BookingDateActivity.EXTRA_RESCHEDULE_NOTICE, notice);
-//                                startActivityForResult(intent, BookingDateActivity.RESULT_RESCHEDULE_NEW_DATE);
-//                            }
-//
-//                            @Override
-//                            public void onError(final DataManager.DataManagerError error) {
-//                                if (!allowCallbacks) return;
-//                                dataManagerErrorHandler.handleError(SplashActivity.this, error);
-//                                openServiceCategoriesActivity();
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onError(final DataManager.DataManagerError error) {
-//                        if (!allowCallbacks) return;
-//                        dataManagerErrorHandler.handleError(SplashActivity.this, error);
-//                        openServiceCategoriesActivity();
-//                    }
-//                });
-//    }
 }

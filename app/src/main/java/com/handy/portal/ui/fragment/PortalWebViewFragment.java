@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -29,10 +28,6 @@ public class PortalWebViewFragment extends InjectedFragment
         ButterKnife.inject(this, view);
 
         initWebView();
-
-        //whats in our cookie list?
-        String cookies =  CookieManager.getInstance().getCookie(dataManager.getBaseUrl());
-        System.out.println("See cookies! : " + cookies);
 
         return view;
     }
