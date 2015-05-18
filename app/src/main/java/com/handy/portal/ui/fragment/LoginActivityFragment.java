@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -42,14 +44,15 @@ public class LoginActivityFragment extends InjectedFragment
     PinCodeInputTextView pinCodeEditText;
     @InjectView(R.id.login_instructions_text)
     TextView instructionsText;
-    @InjectView(R.id.login_instructions_text_b)
-    TextView secondaryInstructionsText;
     @InjectView(R.id.login_button)
     Button loginButton;
     @InjectView(R.id.back_button)
     ImageButton backButton;
     @InjectView(R.id.help_cta)
     TextView helpCta;
+    @InjectView(R.id.login_help)
+    TextView loginHelpText;
+
 
     private static final boolean DEBUG_SKIP_LOGIN = false;
 
@@ -107,6 +110,8 @@ public class LoginActivityFragment extends InjectedFragment
                         if (phoneNumberEditText.validate())
                         {
                             sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
                         }
                     }
                     break;
@@ -115,6 +120,8 @@ public class LoginActivityFragment extends InjectedFragment
                         if (pinCodeEditText.validate())
                         {
                             sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(pinCodeEditText.getWindowToken(), 0);
                         }
                     }
                     break;
@@ -162,6 +169,20 @@ public class LoginActivityFragment extends InjectedFragment
                 }
             }
         });
+
+        loginHelpText.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto",getResources().getString(R.string.login_help_email_address), null));
+                intent.putExtra(Intent.EXTRA_SUBJECT, R.string.login_help_email_subject);
+                intent.putExtra(Intent.EXTRA_TEXT, "");
+                startActivity(Intent.createChooser(intent, getResources().getString(R.string.login_help_choose_email_client)));
+            }
+        });
+
 
     }
 
@@ -310,7 +331,6 @@ public class LoginActivityFragment extends InjectedFragment
             case INPUTTING_PHONE_NUMBER:
             {
                 instructionsText.setText(R.string.login_instructions_1_a);
-                secondaryInstructionsText.setText(R.string.login_instructions_1_b);
                 phoneInputLayout.setVisibility(View.VISIBLE);
                 pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.VISIBLE);
@@ -323,11 +343,9 @@ public class LoginActivityFragment extends InjectedFragment
             case WAITING_FOR_PHONE_NUMBER_RESPONSE:
             {
                 instructionsText.setText(R.string.sending_pin);
-                secondaryInstructionsText.setVisibility(View.GONE);
                 phoneInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
                 backButton.setVisibility(View.GONE);
-                helpCta.setVisibility(View.GONE);
             }
             break;
             case INPUTTING_PIN:
@@ -340,7 +358,6 @@ public class LoginActivityFragment extends InjectedFragment
                 loginButton.setVisibility(View.VISIBLE);
                 loginButton.setText(R.string.log_in);
                 backButton.setVisibility(View.VISIBLE);
-                helpCta.setVisibility(View.VISIBLE);
                 helpCta.setText(R.string.no_pin_cta);
             }
             break;
@@ -351,7 +368,6 @@ public class LoginActivityFragment extends InjectedFragment
                 pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
                 backButton.setVisibility(View.GONE);
-                helpCta.setVisibility(View.GONE);
             }
             break;
             case COMPLETE:
