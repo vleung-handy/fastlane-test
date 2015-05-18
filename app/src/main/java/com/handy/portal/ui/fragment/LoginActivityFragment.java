@@ -358,7 +358,7 @@ public class LoginActivityFragment extends InjectedFragment
                 loginButton.setVisibility(View.VISIBLE);
                 loginButton.setText(R.string.log_in);
                 backButton.setVisibility(View.VISIBLE);
-                helpCta.setText(R.string.no_pin_cta);
+                helpCta.setVisibility(View.INVISIBLE);
             }
             break;
             case WAITING_FOR_LOGIN_RESPONSE:
