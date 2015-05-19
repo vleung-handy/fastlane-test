@@ -26,6 +26,12 @@ public class LoginActivity extends BaseActivity
         finish();
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        moveTaskToBack(true);
+    }
+
     private void openMainActivity()
     {
         startActivity(new Intent(this, MainActivity.class));
