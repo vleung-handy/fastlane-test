@@ -3,6 +3,31 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="phone_number_hint">Cell Phone Number</string>
+    <string name="pin_code_hint">Pin Code</string>
+    <string name="request_pin">Get Pin Code</string>
+    <string name="professional_portal">Professional Portal</string>
+    <string name="login_instructions_1_a">Log in to Handy:</string>
+    <string name="login_instructions_1_b">You will be texted a pin code</string>
+    <string name="login_instructions_2">Enter the 4-digit code that was texted to %1$s:</string>
+    <string name="sending_pin">Sending Pin to Phone</string>
+    <string name="logging_in">Logging In</string>
+
+    <string name="not_registered_cta">Not registered yet? <u>Apply Now</u></string>
+
+    <string name="no_pin_cta">Not receiving a pin code?</string>
+
+    <string name="instructions">Instructions</string>
+    <string name="login_help">Use the number for this phone. It should also be the same number you registered with. If you need to update your phone number, please email <u>help@handy.com</u> </string>
+
+    <string name="login_error_bad_phone">Your phone number was not recognized</string>
+    <string name="login_error_bad_login">Your could not be logged in, check your phone and PIN</string>
+    <string name="login_error_connectivity">The login server could not be reached, please try again</string>
+
+    <string name="login_help_email_address">help@handy.com</string>
+    <string name="login_help_email_subject">Change Pro Phone Number</string>
+    <string name="login_help_choose_email_client">Choose an Email Client</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>
@@ -154,4 +179,8 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tab_jobs">Jobs</string>
+    <string name="tab_schedule">Schedule</string>
+    <string name="tab_profile">Profile</string>
+    <string name="tab_help">Help</string>
 </resources>

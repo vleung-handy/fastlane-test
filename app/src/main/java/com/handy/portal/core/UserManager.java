@@ -14,6 +14,15 @@ public final class UserManager implements Observer
     private User user;
     private final SecurePreferences securePrefs;
 
+
+
+
+
+
+
+
+
+
     @Inject
     UserManager(final Bus bus, final SecurePreferences prefs)
     {
