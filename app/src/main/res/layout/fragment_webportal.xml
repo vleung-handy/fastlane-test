@@ -5,7 +5,7 @@
     tools:context=".PortalWebViewFragment">
 
     <WebView
-        android:id="@+id/web_view_portal"
+        android:id="@+id/portal_web_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minHeight="200dp"

@@ -53,7 +53,7 @@ public class AvailableBookingsFragment extends BookingsFragment
                         Booking booking = (Booking) adapter.getItemAtPosition(position);
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-                        bus.post(new Event.NavigateToTabEvent(MainActivityFragment.MainViewTab.BOOKING_DETAILS, arguments));
+                        bus.post(new Event.NavigateToTabEvent(MainActivityFragment.MainViewTab.DETAILS, arguments));
                     }
                 }
         );

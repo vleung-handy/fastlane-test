@@ -14,6 +14,7 @@ public final class LoginManager implements Observer
 {
     private final Bus bus;
     private DataManager dataManager;
+    private LoginDetails loginDetails;
 
     @Inject
     LoginManager(final Bus bus, final DataManager dataManager)
@@ -60,8 +61,10 @@ public final class LoginManager implements Observer
                     @Override
                     public void onSuccess(final LoginDetails loginDetails)
                     {
+                        saveLoginDetails(loginDetails);
                         bus.post(new Event.LoginRequestReceivedEvent(loginDetails, true));
                         //TODO: Set our local user based on the return value? Need to wait for the api version that sends back userId
+
                     }
 
                     @Override
@@ -71,6 +74,16 @@ public final class LoginManager implements Observer
                     }
                 }
         );
+    }
+
+    private void saveLoginDetails(final LoginDetails loginDetails)
+    {
+        this.loginDetails = loginDetails;
+    }
+
+    public String getLoggedInUserId()
+    {
+        return(this.loginDetails != null ? this.loginDetails.getUserCredentialsId() : null);
     }
 
 }

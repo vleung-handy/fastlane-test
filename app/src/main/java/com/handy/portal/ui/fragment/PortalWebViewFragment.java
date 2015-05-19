@@ -9,6 +9,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.PortalWebViewClient;
 
 import butterknife.ButterKnife;
@@ -16,25 +17,44 @@ import butterknife.InjectView;
 
 public class PortalWebViewFragment extends InjectedFragment
 {
-    @InjectView(R.id.web_view_portal)
-    WebView webView;
+    @InjectView(R.id.portal_web_view)
+    WebView portalWebView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState)
     {
+        System.out.println("Web view fragment creation");
+
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_webportal, null);
         ButterKnife.inject(this, view);
 
         initWebView();
 
+        if(this.getArguments().containsKey(BundleKeys.TARGET_URL))
+        {
+            String targetUrl = this.getArguments().getString(BundleKeys.TARGET_URL);
+            if (targetUrl != null)
+            {
+                openPortalUrl(targetUrl);
+            }
+        }
+
         return view;
+    }
+
+    private void initWebView()
+    {
+        portalWebView.getSettings().setJavaScriptEnabled(true);
+        portalWebView.getSettings().setGeolocationEnabled(true);
+        portalWebView.setWebViewClient(new PortalWebViewClient(this, portalWebView, googleService));
     }
 
     public void openPortalUrl(String target)
     {
-        webView.setWebChromeClient(new WebChromeClient()
+        portalWebView.setWebChromeClient(new WebChromeClient()
         {
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback)
@@ -45,17 +65,10 @@ public class PortalWebViewFragment extends InjectedFragment
         loadUrlWithFromAppParam(target);
     }
 
-    private void initWebView()
-    {
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setGeolocationEnabled(true);
-        webView.setWebViewClient(new PortalWebViewClient(this, webView, googleService));
-    }
-
     private void loadUrlWithFromAppParam(String url)
     {
         String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android";
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
-        webView.loadUrl(urlWithParams);
+        portalWebView.loadUrl(urlWithParams);
     }
 }

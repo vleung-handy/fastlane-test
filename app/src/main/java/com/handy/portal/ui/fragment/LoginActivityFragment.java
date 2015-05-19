@@ -54,7 +54,7 @@ public class LoginActivityFragment extends InjectedFragment
     TextView loginHelpText;
 
 
-    private static final boolean DEBUG_SKIP_LOGIN = false; //bypass the native login and use the old web login
+    private static final boolean DEBUG_SKIP_LOGIN = true; //bypass the native login and use the old web login
 
     private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
     private static final String HELP_URL = "https://www.handy.com/help";

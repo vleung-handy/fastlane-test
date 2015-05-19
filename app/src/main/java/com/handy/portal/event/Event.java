@@ -49,14 +49,21 @@ public abstract class Event
     public static class BookingsDetailsRetrievedEvent extends Event
     {
         public Booking booking;
-    public static class RequestPinCodeEvent extends Event
-    {
-        public String phoneNumber;
 
         public BookingsDetailsRetrievedEvent(Booking booking)
         {
             this.booking = booking;
         }
+    }
+
+    public static class RequestPinCodeEvent extends Event
+    {
+        public String phoneNumber;
+        public RequestPinCodeEvent(String phoneNumber)
+        {
+            this.phoneNumber = phoneNumber;
+        }
+
     }
 
     public static class NavigateToTabEvent extends Event
@@ -73,13 +80,6 @@ public abstract class Event
         {
             this.targetTab = targetTab;
             this.arguments = arguments;
-        }
-
-    }
-
-        public RequestPinCodeEvent(String phoneNumber)
-        {
-            this.phoneNumber = phoneNumber;
         }
     }
 

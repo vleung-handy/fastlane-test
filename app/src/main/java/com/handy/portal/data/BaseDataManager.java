@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.handy.portal.core.BookingSummary;
+import com.handy.portal.core.BookingSummaryResponse;
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
@@ -28,6 +30,9 @@ public final class BaseDataManager extends DataManager
     private final HandyRetrofitEndpoint endpoint;
     private final SecurePreferences prefs;
     private final Gson gsonBuilder;
+
+    @Inject
+    LoginManager loginManager;
 
     @Inject
     public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
@@ -276,22 +281,24 @@ public final class BaseDataManager extends DataManager
             @Override
             void success(final JSONObject response)
             {
-                final List<BookingSummary> bookings = new ArrayList<BookingSummary>();
-
-                for (int i = 0; i < response.length(); i++)
+                List<BookingSummary> bookings = new ArrayList<BookingSummary>();
+                final BookingSummaryResponse summaryResponse;
+                try
                 {
-                    try
-                    {
-                        BookingSummary bs = gsonBuilder.fromJson((response.get(Integer.toString(i)).toString()),
-                                new TypeToken<BookingSummary>()
-                                {
-                                }.getType());
-                        bookings.add(bs);
-                    } catch (Exception e)
-                    {
-                        System.err.println("Can not parse BookingSummary " + e);
-                    }
+                    BookingSummaryResponse bsr = gsonBuilder.fromJson(
+                            (
+                                    response.toString()
+                            ),
+                            new TypeToken<BookingSummaryResponse>()
+                            {
+                            }.getType()
+                    );
+                    bookings = bsr.getBookingSummaries();
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse BookingSummary " + e);
                 }
+
                 cb.onSuccess(bookings);
             }
         });
@@ -305,21 +312,24 @@ public final class BaseDataManager extends DataManager
             @Override
             void success(final JSONObject response)
             {
-                final List<BookingSummary> bookings = new ArrayList<BookingSummary>();
-                for (int i = 0; i < response.length(); i++)
+                List<BookingSummary> bookings = new ArrayList<BookingSummary>();
+                final BookingSummaryResponse summaryResponse;
+                try
                 {
-                    try
-                    {
-                        BookingSummary bs = gsonBuilder.fromJson((response.get(Integer.toString(i)).toString()),
-                                new TypeToken<BookingSummary>()
-                                {
-                                }.getType());
-                        bookings.add(bs);
-                    } catch (Exception e)
-                    {
-                        System.err.println("Can not parse BookingSummary " + e);
-                    }
+                    BookingSummaryResponse bsr = gsonBuilder.fromJson(
+                            (
+                                    response.toString()
+                            ),
+                            new TypeToken<BookingSummaryResponse>()
+                            {
+                            }.getType()
+                    );
+                    bookings = bsr.getBookingSummaries();
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse BookingSummary " + e);
                 }
+
                 cb.onSuccess(bookings);
             }
         });
@@ -423,11 +433,22 @@ public final class BaseDataManager extends DataManager
 
     private String getProviderId()
     {
-        //hack, will eventually point at a real user from our service with an associated ID
-        System.err.println("CURRENTLY HACKING USER ID TO : 11");
-        return "11";
+        String loggedInUserId = "11"; //for quick hacky debug work
+        if(loginManager != null)
+        {
+            loggedInUserId = loginManager.getLoggedInUserId();
+            if (loggedInUserId == null)
+            {
+                System.err.println("Do not have a logged in user to use");
+                loggedInUserId = "";
+            }
+        }
+        else
+        {
+            System.err.println("getProviderId() : Using hardcoded user 11 for quick debugging");
+        }
+        return loggedInUserId;
     }
-
 
     private void handleCreateSessionResponse(final JSONObject response, final Callback<User> cb)
     {

@@ -24,6 +24,7 @@ public class ServerParams
         public static final String FUTURE = PORTAL_WEB_URL + "?goto=future&hide_nav=1";
         public static final String PROFILE = PORTAL_WEB_URL + "?goto=profile&hide_nav=1";
         public static final String HELP = PORTAL_WEB_URL + "?goto=help&hide_nav=1";
+        public static final String DETAILS = "";
     }
 
 }
