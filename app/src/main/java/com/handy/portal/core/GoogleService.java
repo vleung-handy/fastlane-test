@@ -3,8 +3,6 @@ package com.handy.portal.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -13,9 +11,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.util.Utils;
 
-/**
- * Created by cdavis on 4/30/15.
- */
 public class GoogleService
 {
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;

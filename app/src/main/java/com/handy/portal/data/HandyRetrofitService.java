@@ -12,8 +12,10 @@ import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedInput;
@@ -189,6 +191,7 @@ public interface HandyRetrofitService
 
     String PORTAL_VERSION = "v1";
     String BASE_PATH = "/portal/" + PORTAL_VERSION + "/providers/";
+    String SESSIONS_PATH = "/portal/" + PORTAL_VERSION + "/sessions/";
 
     @GET(BASE_PATH + "{provider_id}/bookings?available=true")
     void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
@@ -196,12 +199,11 @@ public interface HandyRetrofitService
     @GET(BASE_PATH + "{provider_id}/bookings")
     void getScheduledBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
 
-    @GET(BASE_PATH + "{provider_id}/bookings/{booking_id}")
-    void getBookingDetails(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
-
-    //
     @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/claim")
     void claimBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
+    @GET(BASE_PATH + "{provider_id}/bookings/{booking_id}")
+    void getBookingDetails(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
     @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/on_my_way")
     void notifyOnMyWay(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
@@ -211,6 +213,15 @@ public interface HandyRetrofitService
 
     @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/check_out")
     void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
+    //HACK: These are not hitting proper API endpoints and they need to hit the base url not the api url
+    @Multipart
+    @POST(SESSIONS_PATH + "request_pin")
+    void requestPinCode(@Part("phone") String phoneNumber, HandyRetrofitCallback cb);
+
+    @Multipart
+    @POST(SESSIONS_PATH + "log_in")
+    void requestLogin(@Part("phone") String phoneNumber, @Part("pin_code") String pinCode, HandyRetrofitCallback cb);
 
     final class UserUpdateRequest
     {

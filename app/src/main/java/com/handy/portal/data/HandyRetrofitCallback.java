@@ -48,12 +48,14 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
             if (responseIsJSONArray)
             {
                 objArray = new JSONArray(resp.toString());
-            } else
+            }
+            else
             {
                 obj = new JSONObject(resp.toString());
             }
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException("Unable to parse API response body : " + e);
         }
@@ -75,7 +77,6 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
                 throw new RuntimeException("Unable to convert JSONArray to JSONObject : " + e);
             }
         }
-
 
         if (obj.has("error") && (obj.optBoolean("error") || obj.optInt("error") == 1))
         {
@@ -102,8 +103,13 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
                 err.setInvalidInputs(inputs.toArray(new String[inputs.size()]));
             }
             callback.onError(err);
-        } else success(obj);
+        }
+        else
+        {
+            success(obj);
+        }
     }
+
 
     @Override
     public final void failure(final RetrofitError error)

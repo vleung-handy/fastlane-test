@@ -1,21 +1,13 @@
 package com.handy.portal.core;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.support.v4.util.Pair;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.PropertiesReader;
-import com.handy.portal.ui.activity.BaseActivity;
 
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,6 +30,7 @@ public final class NavigationManager
     private UserManager userManager;
     private DataManager dataManager;
     private DataManagerErrorHandler dataManagerErrorHandler;
+
 
     //Valid Action Ids
     private static final String ACTION_ID_SERVICES = "services";

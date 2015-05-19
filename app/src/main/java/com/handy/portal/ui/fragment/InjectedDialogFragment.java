@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
+import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
@@ -34,6 +35,8 @@ public class InjectedDialogFragment extends DialogFragment
     DataManager dataManager;
     @Inject
     DataManagerErrorHandler dataManagerErrorHandler;
+    @Inject
+    LoginManager loginManager;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)

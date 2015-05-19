@@ -17,11 +17,13 @@ import com.handy.portal.data.Mixpanel;
 import com.handy.portal.data.PropertiesReader;
 import com.handy.portal.data.SecurePreferences;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
+import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
@@ -43,6 +45,8 @@ import retrofit.converter.GsonConverter;
 
 @Module(injects = {
         BookingDetailsFragment.class,
+        LoginActivityFragment.class,
+        LoginActivity.class,
         PortalWebViewFragment.class,
         ScheduledBookingsFragment.class,
         ProfileFragment.class,
@@ -188,6 +192,15 @@ public final class ApplicationModule
                                          final SecurePreferences prefs)
     {
         return new UserManager(bus, prefs);
+    }
+
+
+    @Provides
+    @Singleton
+    final LoginManager provideLoginManager(final Bus bus,
+                                          final DataManager dataManager)
+    {
+        return new LoginManager(bus, dataManager);
     }
 
 //    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {

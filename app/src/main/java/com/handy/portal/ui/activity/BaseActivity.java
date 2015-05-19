@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.GoogleService;
+import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
 import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
@@ -45,6 +46,8 @@ public abstract class BaseActivity extends FragmentActivity
     NavigationManager navigationManager;
     @Inject
     GoogleService googleService;
+    @Inject
+    LoginManager loginManager;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
