@@ -8,17 +8,12 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit.RetrofitError;
-import retrofit.client.Header;
 import retrofit.client.Response;
 
 abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
 {
-    private static final String HEADER_COOKIE_IDENTIFIER="Set-Cookie";
-
-
     private final DataManager.Callback callback;
 
     HandyRetrofitCallback(DataManager.Callback callback)
@@ -111,39 +106,7 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
         }
         else
         {
-            //shove the cookies in as a temporary measure?
-                //Ideally our data just comes back as part of the JSON instead of having to extract headers
-            addCookiesFromHeaders(response, obj);
             success(obj);
-        }
-    }
-
-
-    public void addCookiesFromHeaders(final Response response, JSONObject obj)
-    {
-        try
-        {
-            List<Header> headers = response.getHeaders();
-            //List<String> cookies = new ArrayList<>();
-            if(headers != null)
-            {
-                for(Header h : headers)
-                {
-                    if(h != null && h.getName() != null && h.getName().equals(HEADER_COOKIE_IDENTIFIER))
-                    {
-                        //extract the actual name value from in front of first =
-                        String value = h.getValue();
-                        int i = value.indexOf('=');
-                        String cookieName = value.substring(0, i);
-                        String cookieValue = value.substring(i + 1);
-                        obj.put(cookieName, cookieValue);
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Unable to add extracted cookies to json : " + e);
         }
     }
 
