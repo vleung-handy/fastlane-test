@@ -65,10 +65,10 @@ public abstract class BaseActivity extends FragmentActivity
         final Intent intent = getIntent();
         final Uri data = intent.getData();
 
-        if (data != null && data.getHost() != null && data.getHost().equals("deeplink.yoz.io"))
-        {
-            //mixpanel.trackEventYozioOpen(Yozio.getMetaData(intent));
-        }
+//        if (data != null && data.getHost() != null && data.getHost().equals("deeplink.yoz.io"))
+//        {
+//            //mixpanel.trackEventYozioOpen(Yozio.getMetaData(intent));
+//        }
 
         toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);

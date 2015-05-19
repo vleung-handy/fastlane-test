@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.event.Event;
 import com.squareup.otto.Subscribe;
 
@@ -60,6 +61,15 @@ public class MainActivityFragment extends InjectedFragment
         switchToTab(event.targetTab, event.arguments);
     }
 
+
+    private void debugDetails()
+    {
+        Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.BOOKING_ID, "6");
+        bus.post(new Event.NavigateToTabEvent(MainActivityFragment.MainViewTab.BOOKING_DETAILS, arguments));
+    }
+
+
     private void registerButtonListeners()
     {
         scheduledJobsButton.setOnClickListener(new View.OnClickListener()
@@ -101,7 +111,8 @@ public class MainActivityFragment extends InjectedFragment
 
     public void onAvailableJobsClicked(View clickedView)
     {
-        switchToTab(MainViewTab.AVAILABLE_BOOKINGS);
+        //switchToTab(MainViewTab.AVAILABLE_BOOKINGS);
+        debugDetails();
     }
 
     public void onScheduledJobsClicked(View clickedView)
