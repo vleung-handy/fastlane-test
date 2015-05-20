@@ -20,11 +20,13 @@ import com.handy.portal.data.SecurePreferences;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
@@ -58,7 +60,9 @@ import retrofit.converter.GsonConverter;
         BaseApplication.class,
         BaseActivity.class,
         MainActivity.class,
-        SplashActivity.class
+        SplashActivity.class,
+        PleaseUpdateActivity.class,
+        PleaseUpdateFragment.class
 })
 public final class ApplicationModule
 {

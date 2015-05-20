@@ -183,4 +183,5 @@
     <string name="tab_schedule">Schedule</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
+    <string name="title_activity_please_update">PleaseUpdateActivity</string>
 </resources>
