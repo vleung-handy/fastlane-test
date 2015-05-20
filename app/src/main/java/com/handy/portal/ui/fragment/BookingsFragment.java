@@ -5,8 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.BookingSummary;
@@ -139,12 +140,23 @@ public abstract class BookingsFragment extends InjectedFragment
         scrollViewLayout.removeAllViews();
 
         Context context = getActivity().getApplicationContext();
-        SimpleDateFormat ft = new SimpleDateFormat("E\nd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM E d");
 
         for (int i = 0; i < numDaysToDisplay; i++)
         {
             LayoutInflater.from(context).inflate(R.layout.element_date_button, scrollViewLayout);
-            Button dateButton = ((Button) (scrollViewLayout.getChildAt(i)));
+            LinearLayout dateLayout = ((LinearLayout) (scrollViewLayout.getChildAt(i)));
+
+            TextView monthText = (TextView) dateLayout.findViewById(R.id.date_month_text);
+            TextView dayOfWeekText = (TextView)  dateLayout.findViewById(R.id.date_day_of_week_text);
+            TextView dayOfMonthText = (TextView) dateLayout.findViewById(R.id.date_day_of_month_text);
+
+            ImageView requestedIndicator = (ImageView) dateLayout.findViewById(R.id.provider_requested_indicator_image);
+            requestedIndicator.setVisibility(View.INVISIBLE);
+
+            ImageView selectedDayIndicator = (ImageView) dateLayout.findViewById(R.id.selected_day_indicator_image);
+            selectedDayIndicator.setVisibility(View.INVISIBLE);
+
             final BookingCalendarDay associatedBookingCalendarDay = new BookingCalendarDay(calendar);
 
             if (i == 0)
@@ -152,12 +164,22 @@ public abstract class BookingsFragment extends InjectedFragment
                 this.activeDay = associatedBookingCalendarDay; //by default point to first day of data as active day
             }
 
-            String formattedDate = ft.format(calendar.getTime());
-            dateButton.setText(formattedDate);
+            String[] formattedDate = dateFormat.format(calendar.getTime()).split(" ");
 
-            //TODO: Set this up mediator style so the button retains a link to associated day instead of use anon function
-                //Java does not have delegates....., need to do it anon function style
-            dateButton.setOnClickListener(new View.OnClickListener()
+            //only display month for first day in a month
+            if(Integer.parseInt(formattedDate[2]) == 1)
+            {
+                monthText.setText(formattedDate[0]);
+            }
+            else
+            {
+                monthText.setVisibility(View.INVISIBLE);
+            }
+
+            dayOfWeekText.setText(formattedDate[1]);
+            dayOfMonthText.setText(formattedDate[2]);
+
+            dateLayout.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
@@ -165,6 +187,7 @@ public abstract class BookingsFragment extends InjectedFragment
                 }
             });
 
+            //next day
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
     }
