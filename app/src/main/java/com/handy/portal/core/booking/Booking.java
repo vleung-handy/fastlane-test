@@ -39,7 +39,9 @@ public final class Booking implements Parcelable {
 
     public final String getStatus(){return status;}
     public final List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}
+
     public final int getFrequency() { return frequency; }
+
     public final PaymentInfo getPaymentToProvider() { return paymentToProvider; }
     public final PaymentInfo getBonusPaymentToProvider() { return bonusPayment; }
 
@@ -223,25 +225,21 @@ public final class Booking implements Parcelable {
 
     public static final class PaymentInfo
     {
-        private MonetaryAmount payment;
-        public MonetaryAmount getAmount()
-        {
-            return payment;
-        }
-
-    }
-
-    public static final class MonetaryAmount
-    {
         @SerializedName("amount")
         private int amount;
-        @SerializedName("currency_code")
+        @SerializedName("adjusted_amount")
+        private int adjustedAmount;
+        @SerializedName("code")
         private String currencyCode;
-        @SerializedName("currency_symbol")
+        @SerializedName("symbol")
         private String currencySymbol;
+        @SerializedName("suffix")
+        private String currencySuffix;
 
         public int getAmount() { return amount; }
+        public int getAdjustedAmount() { return adjustedAmount; }
         public String getCurrencySymbol() { return currencySymbol; }
+        public String getCurrencySuffix() { return currencySuffix; }
     }
 
     public static final class BookingInstruction

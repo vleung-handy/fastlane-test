@@ -171,7 +171,6 @@
     <string name="back">Back</string>
     <string name="contact_received">Message sent! \nWe\'ll follow up shortly.</string>
 
-
     <plurals name="hour">
         <item quantity="one">hour</item>
         <item quantity="other">hours</item>
@@ -184,4 +183,11 @@
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
     <string name="available_jobs">Available Jobs</string>
+    <string name="youre_requested">YOU\'RE REQUESTED!</string>
+    <string name="bonus_payment">+%1$s%2$d BONUS</string>
+    <string name="booking_frequency">Every %1$d weeks</string>
+    <string name="booking_frequency_every_week">Every week</string>
+    <string name="booking_frequency_non_recurring">One Time Only</string>
+
+
 </resources>

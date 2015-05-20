@@ -28,10 +28,10 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
 
         if(booking.getPaymentToProvider() != null)
         {
-            Booking.MonetaryAmount money = booking.getPaymentToProvider().getAmount();
-            if(money != null)
+            Booking.PaymentInfo paymentInfo = booking.getPaymentToProvider();
+            if(paymentInfo != null)
             {
-                paymentText.setText(money.getCurrencySymbol() + Integer.toString(money.getAmount()));
+                paymentText.setText(paymentInfo.getCurrencySymbol() + Integer.toString(paymentInfo.getAdjustedAmount()));
             }
         }
 
