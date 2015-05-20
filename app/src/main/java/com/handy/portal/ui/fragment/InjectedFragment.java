@@ -87,14 +87,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
         super.onStop();
     }
 
-    protected void disableInputs()
-    {
-    }
-
-    protected void enableInputs()
-    {
-    }
-
     //Each fragment if it requires arguments from the bundles should override this list
     protected List<String> requiredArguments()
     {

@@ -17,7 +17,7 @@ import javax.inject.Inject;
  * Created by cdavis on 4/20/15.
  */
 
-public final class NavigationManager
+public class NavigationManager
 {
 
     //String consts

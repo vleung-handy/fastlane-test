@@ -65,7 +65,6 @@ public abstract class BaseActivity extends FragmentActivity
     {
         super.onCreate(savedInstanceState);
 
-
         //Crashlytics.start(this);
         //Yozio.initialize(this);
 
@@ -89,6 +88,7 @@ public abstract class BaseActivity extends FragmentActivity
                 BaseActivity.this.onUpdateCheckReceived(event);
             }
         };
+        
     }
 
     @Override
