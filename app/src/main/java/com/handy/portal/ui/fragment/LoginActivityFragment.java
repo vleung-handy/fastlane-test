@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -292,17 +293,9 @@ public class LoginActivityFragment extends InjectedFragment
         //Set cookies to enable seamless access in our webview
         if (loginDetails.getUserCredentials() != null)
         {
+            CookieSyncManager.createInstance(getActivity());
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
-        }
-
-        //TODO: If we have API version 21 we can use a valueCallback for setting cookies instead of hacking a sleep to sync
-        //Cookie syncing is not guaranteed to be instant, this is a hacky workaround
-        try
-        {
-            Thread.sleep(1000);
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
+            CookieSyncManager.getInstance().sync();
         }
 
         //transition to main activity
