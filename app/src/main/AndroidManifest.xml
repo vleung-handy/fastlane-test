@@ -33,6 +33,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="688486cdd4f0b095424122ad0a42e5e3473e83be"/>
+
     </application>
 
 </manifest>
