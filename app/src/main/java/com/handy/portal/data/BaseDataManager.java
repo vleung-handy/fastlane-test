@@ -41,45 +41,6 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void setEnvironment(final Environment env, final boolean notify)
-    {
-        super.setEnvironment(env, notify);
-        switch (env)
-        {
-            case P:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.P);
-                break;
-
-            case Q1:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q1);
-                break;
-
-            case Q2:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q2);
-                break;
-
-            case Q3:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q3);
-                break;
-
-            case Q4:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q4);
-                break;
-
-            case Q6:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q6);
-                break;
-
-            case D1:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.D1);
-                break;
-
-            default:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.S);
-        }
-    }
-
-    @Override
     public String getBaseUrl()
     {
         return endpoint.getBaseUrl();

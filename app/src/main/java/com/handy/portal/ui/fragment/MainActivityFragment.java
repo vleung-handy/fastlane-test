@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import com.handy.portal.R;
-import com.handy.portal.core.ServerParams;
+import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -23,7 +23,7 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.button_help)
     RadioButton helpButton;
 
-    private MainViewTab currentTab = null;
+    private Target currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
     @Override
@@ -47,7 +47,7 @@ public class MainActivityFragment extends InjectedFragment
         if (currentTab == null)
         {
             jobsButton.setChecked(true);
-            switchToTab(MainViewTab.JOBS);
+            switchToTab(Target.JOBS);
         }
     }
 
@@ -62,37 +62,17 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerButtonListeners()
     {
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULE));
-        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.JOBS));
-        profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
-        helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
-    }
-
-    private enum MainViewTab
-    {
-        JOBS(ServerParams.Targets.AVAILABLE),
-        SCHEDULE(ServerParams.Targets.FUTURE),
-        PROFILE(ServerParams.Targets.PROFILE),
-        HELP(ServerParams.Targets.HELP);
-
-        private String target;
-
-        MainViewTab(String target)
-        {
-            this.target = target;
-        }
-
-        public String getTarget()
-        {
-            return target;
-        }
+        scheduleButton.setOnClickListener(new TabOnClickListener(Target.SCHEDULE));
+        jobsButton.setOnClickListener(new TabOnClickListener(Target.JOBS));
+        profileButton.setOnClickListener(new TabOnClickListener(Target.PROFILE));
+        helpButton.setOnClickListener(new TabOnClickListener(Target.HELP));
     }
 
     private class TabOnClickListener implements View.OnClickListener
     {
-        private MainViewTab tab;
+        private Target tab;
 
-        TabOnClickListener(MainViewTab tab)
+        TabOnClickListener(Target tab)
         {
             this.tab = tab;
         }
@@ -104,11 +84,11 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void switchToTab(MainViewTab tab)
+    private void switchToTab(Target tab)
     {
         if (currentTab != tab) //don't transition to same tab, ignore the clicks
         {
-            webViewFragment.openPortalUrl(tab.getTarget());
+            webViewFragment.openPortalUrl(tab);
             currentTab = tab;
         }
     }

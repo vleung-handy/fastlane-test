@@ -65,8 +65,7 @@ public final class ApplicationModule
     public ApplicationModule(final Context context)
     {
         this.context = context.getApplicationContext();
-        configs = PropertiesReader
-                .getProperties(context, "config.properties");
+        configs = PropertiesReader.getConfigProperties(context);
     }
 
     @Provides
@@ -86,17 +85,12 @@ public final class ApplicationModule
         okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
 
         final String username = configs.getProperty("api_username");
-        String password = configs.getProperty("api_password_internal");
-
-        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD))
-            password = configs.getProperty("api_password");
-
-        final String pwd = password;
+        final String password = configs.getProperty("api_password");
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
                 .setRequestInterceptor(new RequestInterceptor()
                 {
-                    final String auth = "Basic " + Base64.encodeToString((username + ":" + pwd)
+                    final String auth = "Basic " + Base64.encodeToString((username + ":" + password)
                             .getBytes(), Base64.NO_WRAP);
 
                     @Override
@@ -146,12 +140,7 @@ public final class ApplicationModule
                                          final Bus bus,
                                          final SecurePreferences prefs)
     {
-        final BaseDataManager dataManager = new BaseDataManager(service, endpoint, bus, prefs);
-
-        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD))
-            dataManager.setEnvironment(DataManager.Environment.P, false);
-
-        return dataManager;
+        return new BaseDataManager(service, endpoint, bus, prefs);
     }
 
     @Provides
@@ -196,7 +185,7 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final LoginManager provideLoginManager(final Bus bus,
-                                          final DataManager dataManager)
+                                           final DataManager dataManager)
     {
         return new LoginManager(bus, dataManager);
     }
