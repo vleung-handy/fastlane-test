@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.Mixpanel;
 
@@ -31,6 +32,7 @@ public final class BaseApplication extends Application
     public final void onCreate()
     {
         super.onCreate();
+        Crashlytics.start(this);
         graph = ObjectGraph.create(new ApplicationModule(this));
         inject(this);
 
