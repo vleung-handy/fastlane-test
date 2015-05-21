@@ -1,15 +1,14 @@
 package com.handy.portal.core;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.handy.portal.ui.widget.ProgressDialog;
-import com.handy.portal.util.Utils;
 
 public class PortalWebViewClient extends WebViewClient
 {
@@ -36,25 +35,24 @@ public class PortalWebViewClient extends WebViewClient
         if (url.substring(Math.max(0, url.length() - 10)).equals("/undefined"))
         {
             return true; // don't load the url
-        } else if (url.startsWith("tel:"))
+        }
+        else if (url.startsWith("tel:"))
         {
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
             parentFragment.startActivity(intent);
             return true;
-        } else if (url.startsWith("sms:"))
+        }
+        else if (url.startsWith("sms:"))
         {
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
             parentFragment.startActivity(intent);
             return true;
-        } else if (Utils.isInteger(splitBySlash[splitBySlash.length - 1]))
-        {
-            SharedPreferences pref = parentFragment.getActivity().getApplicationContext().getSharedPreferences("HandybookProviderApp", 0); // 0 - for private mode
-            String potentialId = pref.getString("providerId", null);
-            if (potentialId == null)
-            {
-            }
         }
-        loadUrlWithFromAppParam(url);
+
+        // changes #future to goto=future
+        String fixedUrl = url.replaceFirst("#(.*?)(?:\\?|$)", "?goto=$1&");
+
+        loadUrlWithFromAppParam(fixedUrl);
         return true;
     }
 
@@ -91,7 +89,6 @@ public class PortalWebViewClient extends WebViewClient
 
     private void loadUrlWithFromAppParam(String url)
     {
-
         if (googleService == null)
         {
             System.err.println("Can not contact google service");
@@ -99,13 +96,8 @@ public class PortalWebViewClient extends WebViewClient
         }
 
         String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1";
-        if (url.contains("?"))
-        {
-            url = url + "&" + endOfUrl;
-        } else
-        {
-            url = url + "?" + endOfUrl;
-        }
-        webView.loadUrl(url);
+        String urlWithParams = url + (url.contains("?") ? (url.endsWith("&") ? "" : "&") : "?") + endOfUrl;
+        Log.d(PortalWebViewClient.class.getSimpleName(), "Loading url: " + urlWithParams);
+        webView.loadUrl(urlWithParams);
     }
 }

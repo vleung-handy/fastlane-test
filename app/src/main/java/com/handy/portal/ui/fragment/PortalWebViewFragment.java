@@ -84,7 +84,7 @@ public class PortalWebViewFragment extends InjectedFragment
     {
         String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1";
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
-        Log.d(PortalWebViewFragment.class.getName(), "Loading url: " + urlWithParams);
+        Log.d(PortalWebViewFragment.class.getSimpleName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);
     }
 }
