@@ -140,8 +140,7 @@ public final class ApplicationModule
                         .registerTypeAdapter(User.class, new User.UserSerializer())
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
-        if (!BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)
-                || BuildConfig.BUILD_TYPE.equals("debug"))
+        if (BuildConfig.BUILD_TYPE.equals("debug"))
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
 
         return restAdapter.create(HandyRetrofitService.class);
