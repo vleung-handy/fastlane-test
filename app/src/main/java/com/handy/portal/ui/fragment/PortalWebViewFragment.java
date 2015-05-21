@@ -69,7 +69,7 @@ public class PortalWebViewFragment extends InjectedFragment
                 callback.invoke(origin, true, false);
             }
         });
-        String url = endpoint.getBaseUrl() + "/portal/home?hide_nav=1&goto=" + target.getValue();
+        String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target.getValue();
         loadUrlWithFromAppParam(url);
     }
 
@@ -82,7 +82,7 @@ public class PortalWebViewFragment extends InjectedFragment
 
     private void loadUrlWithFromAppParam(String url)
     {
-        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android";
+        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1";
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
         Log.d(PortalWebViewFragment.class.getName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);
