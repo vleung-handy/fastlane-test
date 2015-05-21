@@ -12,6 +12,7 @@ import com.handy.portal.data.BaseDataManagerErrorHandler;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.HandyRetrofitEndpoint;
+import com.handy.portal.data.HandyRetrofitFluidEndpoint;
 import com.handy.portal.data.HandyRetrofitService;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.data.PropertiesReader;
@@ -27,6 +28,8 @@ import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.data.EnvironmentSwitcher;
+import com.handy.portal.util.FlavorUtils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -70,8 +73,19 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEnpoint()
+    final EnvironmentSwitcher provideEnvironmentSwitcher()
     {
+        return new EnvironmentSwitcher();
+    }
+
+    @Provides
+    @Singleton
+    final HandyRetrofitEndpoint provideHandyEnpoint(final EnvironmentSwitcher environmentSwitcher)
+    {
+        if (FlavorUtils.isStageFlavor())
+        {
+            return new HandyRetrofitFluidEndpoint(context, environmentSwitcher);
+        }
         return new HandyRetrofitEndpoint(context);
     }
 

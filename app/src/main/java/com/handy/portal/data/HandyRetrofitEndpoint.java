@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import retrofit.Endpoint;
 
-public final class HandyRetrofitEndpoint implements Endpoint
+public class HandyRetrofitEndpoint implements Endpoint
 {
 
     private final String apiEndpoint;

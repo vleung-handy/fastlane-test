@@ -43,9 +43,13 @@ android {
     }
 
     productFlavors {
-        prod {
+        stable {
             applicationId 'com.handy.portal'
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
+        }
+        beta {
+            applicationId 'com.handy.portal.beta'
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.beta"]
         }
         stage {
             applicationId 'com.handy.portal.stage'

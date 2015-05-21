@@ -11,7 +11,9 @@ import android.webkit.WebView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.PortalWebViewClient;
-import com.handy.portal.data.PropertiesReader;
+import com.handy.portal.data.HandyRetrofitEndpoint;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -41,6 +43,9 @@ public class PortalWebViewFragment extends InjectedFragment
     @InjectView(R.id.web_view_portal)
     WebView webView;
 
+    @Inject
+    HandyRetrofitEndpoint endpoint;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -64,8 +69,7 @@ public class PortalWebViewFragment extends InjectedFragment
                 callback.invoke(origin, true, false);
             }
         });
-        String baseUrl = PropertiesReader.getConfigProperties(getActivity()).getProperty("base_url");
-        String url = baseUrl + "/portal/home?hide_nav=1&goto=" + target.getValue();
+        String url = endpoint.getBaseUrl() + "/portal/home?hide_nav=1&goto=" + target.getValue();
         loadUrlWithFromAppParam(url);
     }
 
