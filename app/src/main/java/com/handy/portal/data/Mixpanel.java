@@ -2,8 +2,6 @@ package com.handy.portal.data;
 
 import android.content.Context;
 
-import com.handy.portal.BuildConfig;
-import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
 import com.handy.portal.core.BookingQuote;
 import com.handy.portal.core.BookingRequest;
@@ -12,7 +10,6 @@ import com.handy.portal.core.User;
 import com.handy.portal.core.UserManager;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,11 +30,8 @@ public class Mixpanel
     public Mixpanel(final Context context, final UserManager userManager,
                     final BookingManager bookingManager, final Bus bus)
     {
-        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD))
-        {
-            mixpanel = MixpanelAPI.getInstance(context, "864ccb52b900de546bb1bba717ab4fac");
-        } else mixpanel = MixpanelAPI.getInstance(context, "5b31021d4a78ed7d57d9f19fd796f1cd");
-
+        String mixpanelApiKey = PropertiesReader.getConfigProperties(context).getProperty("mixpanel_api_key");
+        this.mixpanel = MixpanelAPI.getInstance(context, mixpanelApiKey);
         this.userManager = userManager;
         this.bookingManager = bookingManager;
         this.bus = bus;

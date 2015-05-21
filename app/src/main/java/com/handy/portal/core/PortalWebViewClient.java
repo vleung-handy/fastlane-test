@@ -98,7 +98,7 @@ public class PortalWebViewClient extends WebViewClient
             return;
         }
 
-        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android";
+        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1";
         if (url.contains("?"))
         {
             url = url + "&" + endOfUrl;

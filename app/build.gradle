@@ -30,6 +30,7 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -40,6 +41,31 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        stable {
+            applicationId 'com.handy.portal'
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
+        }
+        beta {
+            applicationId 'com.handy.portal.beta'
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.beta"]
+        }
+        stage {
+            applicationId 'com.handy.portal.stage'
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.stage"]
+        }
+        local {
+            applicationId 'com.handy.portal.local'
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.local"]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
 }
 
 dependencies {

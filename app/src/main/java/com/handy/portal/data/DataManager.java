@@ -12,27 +12,11 @@ import java.util.List;
 
 public abstract class DataManager
 {
-    public enum Environment
-    {
-        P, S, Q1, Q2, Q3, Q4, Q6, D1
-    }
-
-    private Environment env = Environment.S;
     private final Bus bus;
 
     DataManager(final Bus bus)
     {
         this.bus = bus;
-    }
-
-    public Environment getEnvironment()
-    {
-        return env;
-    }
-
-    public void setEnvironment(final Environment env, final boolean notify)
-    {
-        this.env = env;
     }
 
     public abstract void getServices(CacheResponse<List<Service>> cache, Callback<List<Service>> cb);
