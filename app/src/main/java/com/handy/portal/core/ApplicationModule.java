@@ -207,6 +207,14 @@ public final class ApplicationModule
         return new LoginManager(bus, dataManager);
     }
 
+    @Provides
+    @Singleton
+    final UpdateManager provideUpdateManager(final Bus bus,
+                                           final DataManager dataManager)
+    {
+        return new UpdateManager(bus, dataManager);
+    }
+
 //    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {
 //        return new ReactiveLocationProvider(context);
 //    }

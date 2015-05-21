@@ -192,7 +192,10 @@ public interface HandyRetrofitService
     String PROVIDERS_PATH = "/providers/";
     String SESSIONS_PATH = "/sessions/";
 
-    @GET(PROVIDERS_PATH + "{provider_id}/bookings?available=true")
+    @GET(BASE_PATH + "{provider_id}/check_updates")
+    void checkUpdates(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
+
+    @GET(BASE_PATH + "{provider_id}/bookings?available=true")
     void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{provider_id}/bookings")

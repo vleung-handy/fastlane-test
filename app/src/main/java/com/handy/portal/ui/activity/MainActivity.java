@@ -13,15 +13,6 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        launchPleaseUpdateActivityIfNeeded();
-    }
-
-    public void launchPleaseUpdateActivityIfNeeded()
-    {
-        if(false)
-        {
-            startActivity(new Intent(this, PleaseUpdateActivity.class));
-        }
     }
 
 }

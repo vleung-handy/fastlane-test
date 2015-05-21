@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
@@ -28,6 +29,8 @@ public abstract class DataManager
     public abstract void getUser(String email, Callback<String> cb);
 
     public abstract void updateUser(User user, Callback<User> cb);
+
+    public abstract void checkForUpdates(Callback<UpdateDetails> cb);
 
     //Portal
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);

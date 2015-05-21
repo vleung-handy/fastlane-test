@@ -21,13 +21,4 @@ public class PleaseUpdateActivity extends BaseActivity
         ButterKnife.inject(this);
     }
 
-    @Override
-    public void startActivity(final Intent intent)
-    {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        super.startActivity(intent);
-        finish();
-    }
-
 }

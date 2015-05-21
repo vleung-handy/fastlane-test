@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
@@ -357,6 +358,27 @@ public final class BaseDataManager extends DataManager
             }
         });
     }
+
+    @Override
+    public final void checkForUpdates(final Callback<UpdateDetails> cb) {
+
+        service.checkUpdates(getProviderId(), new HandyRetrofitCallback(cb) {
+            @Override
+            void success(JSONObject response) {
+                UpdateDetails updateDetails = null;
+                try {
+                    updateDetails = gsonBuilder.fromJson((response.toString()), new TypeToken<UpdateDetails>() {
+                    }.getType());
+                } catch (Exception e) {
+                    System.err.println("Can not parse UpdateDetails " + e);
+                }
+                cb.onSuccess(updateDetails);
+            }
+        });
+
+    }
+
+
 
     @Override
     public final void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
