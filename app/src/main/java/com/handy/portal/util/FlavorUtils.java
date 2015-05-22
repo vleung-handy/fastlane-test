@@ -28,4 +28,6 @@ public class FlavorUtils
     {
         return BuildConfig.FLAVOR.equals(STABLE_FLAVOR);
     }
+
+    public static String getFlavor() { return BuildConfig.FLAVOR; }
 }
