@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+              android:orientation="vertical"
+    tools:context="com.handy.portal.ui.fragment.PleaseUpdateFragment"
+              android:background="#00CDED"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/blocking_updateapp_avatar"
+        android:layout_marginTop="90dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/update_header"
+              android:gravity="center_horizontal"
+              android:layout_marginTop="10dp"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/update_copy"
+              android:gravity="center_horizontal"
+              android:layout_marginTop="20dp"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:id="@+id/download_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/update_button_label"
+        android:layout_gravity="center_horizontal"
+        android:background="#FF5C5C"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>

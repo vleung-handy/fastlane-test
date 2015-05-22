@@ -171,6 +171,10 @@
     <string name="back">Back</string>
     <string name="contact_received">Message sent! \nWe\'ll follow up shortly.</string>
 
+    <!-- TODO: Update Screen Copy -->
+    <string name="update_header">Time for an update!</string>
+    <string name="update_copy">Please download the latest app to continue using portal.</string>
+    <string name="update_button_label">Download Update</string>
 
     <plurals name="hour">
         <item quantity="one">hour</item>
@@ -183,4 +187,5 @@
     <string name="tab_schedule">Schedule</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
+    <string name="title_activity_please_update">PleaseUpdateActivity</string>
 </resources>

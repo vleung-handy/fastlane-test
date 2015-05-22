@@ -12,11 +12,15 @@ import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
+import com.handy.portal.core.UpdateManager;
 import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
+import com.handy.portal.event.Event;
 import com.handy.portal.ui.widget.ProgressDialog;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
@@ -49,10 +53,12 @@ public abstract class BaseActivity extends FragmentActivity
     @Inject
     LoginManager loginManager;
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
 
         //Crashlytics.start(this);
         //Yozio.initialize(this);
@@ -76,10 +82,7 @@ public abstract class BaseActivity extends FragmentActivity
         toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setDelay(400);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.loading));
+
     }
 
     @Override
@@ -130,4 +133,5 @@ public abstract class BaseActivity extends FragmentActivity
     {
         void onBack();
     }
+
 }
