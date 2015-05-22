@@ -1,8 +1,9 @@
 package com.handy.portal.ui.activity;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
@@ -36,6 +37,13 @@ public class LoginActivity extends BaseActivity
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        sendUpdateCheckRequest();
+    }
+
+    @Override
     public void startActivity(final Intent intent)
     {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -57,13 +65,24 @@ public class LoginActivity extends BaseActivity
 
 
     protected void sendUpdateCheckRequest() {
-        bus.post(new Event.UpdateCheckEvent());
+        PackageInfo pInfo = null;
+        try
+        {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            int versionCode = pInfo.versionCode;
+            bus.post(new Event.UpdateCheckEvent(versionCode));
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            //Do nothing for now
+        }
     }
 
     @Subscribe
     public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
     {
-        Toast.makeText(getApplicationContext(), "onUpdateCheckReceived", Toast.LENGTH_SHORT).show();
+        if(event.updateDetails.getShouldUpdate()) {
+            startActivity(new Intent(this, PleaseUpdateActivity.class));
+        }
     }
 
 }

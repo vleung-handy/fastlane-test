@@ -31,6 +31,10 @@ public abstract class Event
 
     public static class UpdateCheckEvent extends Event
     {
+        public int versionCode = 0;
+        public UpdateCheckEvent(int versionCode) {
+            this.versionCode = versionCode;
+        }
     }
 
     public static class UpdateCheckRequestReceivedEvent extends Event

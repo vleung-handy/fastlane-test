@@ -30,7 +30,7 @@ public abstract class DataManager
 
     public abstract void updateUser(User user, Callback<User> cb);
 
-    public abstract void checkForUpdates(Callback<UpdateDetails> cb);
+    public abstract void checkForUpdates(int versionCode, Callback<UpdateDetails> cb);
 
     //Portal
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);

@@ -15,6 +15,8 @@ public final class UpdateManager implements Observer
     private final Bus bus;
     private DataManager dataManager;
 
+    private String downloadURL =  "";
+
     @Inject
     UpdateManager(final Bus bus, final DataManager dataManager)
     {
@@ -32,16 +34,19 @@ public final class UpdateManager implements Observer
         }
     }
 
-
+    public String getDownloadURL() {
+        return downloadURL;
+    }
 
     @Subscribe
     public void onUpdateCheckRequest(Event.UpdateCheckEvent event)
     {
-        dataManager.checkForUpdates(new DataManager.Callback<UpdateDetails>()
+        dataManager.checkForUpdates(event.versionCode, new DataManager.Callback<UpdateDetails>()
                 {
                     @Override
                     public void onSuccess(final UpdateDetails updateDetails)
                     {
+                        downloadURL = updateDetails.getDownloadUrl();
                         bus.post(new Event.UpdateCheckRequestReceivedEvent(updateDetails, true));
                     }
 

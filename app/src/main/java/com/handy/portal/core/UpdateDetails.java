@@ -8,7 +8,10 @@ public final class UpdateDetails
         private boolean success;
         @SerializedName("should_update")
         private boolean shouldUpdate;
+        @SerializedName("download_url")
+        private String downloadURL;
 
         public final boolean getSuccess() { return success; }
         public final boolean getShouldUpdate() { return shouldUpdate; }
+        public final String getDownloadUrl() { return downloadURL; }
 }
