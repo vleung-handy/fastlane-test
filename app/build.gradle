@@ -27,8 +27,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 100
+        versionName "1.00"
     }
 
     buildTypes {
@@ -42,17 +42,39 @@ android {
         }
     }
 
+    signingConfigs {
+        stage {
+            keyAlias 'HandyStageKey'
+            keyPassword 'S0H@ndy!'
+            storeFile file('keys/handy-stage-key.keystore')
+            storePassword 'S0H@ndy!'
+        }
+        prod {
+            keyAlias 'HandyProdKey'
+            keyPassword 'S0H@ndy!'
+            storeFile file('keys/handy-prod-key.keystore')
+            storePassword 'S0H@ndy!'
+        }
+    }
+
     productFlavors {
         stable {
-            applicationId 'com.handy.portal'
+            applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
+            signingConfig signingConfigs.prod
+            versionCode 100
+            versionName '1.00'
         }
         beta {
-            applicationId 'com.handy.portal.beta'
-            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.beta"]
+            applicationId "com.handy.portal"
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
+            signingConfig signingConfigs.prod
+            versionCode 100
+            versionName '1.00b'
         }
         stage {
             applicationId 'com.handy.portal.stage'
+            signingConfig signingConfigs.stage
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.stage"]
         }
         local {
