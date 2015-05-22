@@ -86,7 +86,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             output.outputFile = new File(output.outputFile.parentFile,
-                    output.outputFile.name.replace(".apk", "-${variant.versionName.replace(".", "_")}.apk"));
+                    output.outputFile.name.replaceFirst(/app\-(.*)\.apk/, "handy-pro-\$1-${variant.versionName.replace(".", "_")}.apk"));
         }
     }
 
