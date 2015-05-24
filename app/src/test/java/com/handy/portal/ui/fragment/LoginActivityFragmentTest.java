@@ -9,10 +9,13 @@ import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.widget.InputTextField;
+import com.squareup.otto.Bus;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
@@ -24,13 +27,19 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
 
     private static final String VALID_PHONE_NUMBER = "1231231234";
 
-    private View fragmentView;
+    @Mock
+    private Bus bus;
+
+    @InjectMocks
     private LoginActivityFragment fragment;
+
+    private View fragmentView;
 
     @Before
     public void setUp() throws Exception {
@@ -38,7 +47,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
         LoginActivity activity = controller.create().get();
         fragment = (LoginActivityFragment) activity.getSupportFragmentManager().getFragments().get(0);
         fragmentView = fragment.getView();
-        reset(fragment.bus);
+
+        initMocks(this);
     }
 
     @Test
@@ -46,7 +56,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
         makePinRequest("1111111111");
 
         ArgumentCaptor<Event.RequestPinCodeEvent> argument = ArgumentCaptor.forClass(Event.RequestPinCodeEvent.class);
-        verify(fragment.bus).post(argument.capture());
+        verify(bus).post(argument.capture());
         assertThat(argument.getValue().phoneNumber, equalTo("1111111111"));
     }
 
@@ -55,7 +65,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
         makeLoginRequest("5353");
 
         ArgumentCaptor<Event.RequestLoginEvent> argument = ArgumentCaptor.forClass(Event.RequestLoginEvent.class);
-        verify(fragment.bus).post(argument.capture());
+        verify(bus).post(argument.capture());
         assertThat(argument.getValue().phoneNumber, equalTo(VALID_PHONE_NUMBER));
         assertThat(argument.getValue().pinCode, equalTo("5353"));
     }
@@ -64,14 +74,14 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     public void givenInvalidPhoneNumber_whenRequestPinButtonClicked_thenNoRequestPinCode() throws Exception {
         makePinRequest("1234");
 
-        verifyZeroInteractions(fragment.bus);
+        verifyZeroInteractions(bus);
     }
 
     @Test
     public void givenInvalidPinCode_whenLogInButtonClicked_thenNoRequestLogin() throws Exception {
         makeLoginRequest("123");
 
-        verifyZeroInteractions(fragment.bus);
+        verifyZeroInteractions(bus);
     }
 
     @Test
@@ -101,7 +111,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
 
     private void makeLoginRequest(String pinCode) {
         makePinRequest(VALID_PHONE_NUMBER); // assumes valid pin request
-        reset(fragment.bus);
+        reset(bus);
 
         Event.PinCodeRequestReceivedEvent event = mock(Event.PinCodeRequestReceivedEvent.class);
         event.success = true;
