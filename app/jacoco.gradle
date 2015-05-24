@@ -1,0 +1,35 @@
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+}
+
+def coverageSourceDirs = [
+        'src/main/java'
+]
+
+task jacocoTestReport(type: JacocoReport, dependsOn: "testLocalDebug") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    classDirectories = fileTree(
+            dir: './build/intermediates/classes/local/debug',
+            excludes: ['**/R.class',
+                       '**/R$*.class',
+                       '**/*$InjectAdapter*.class',
+                       '**/*$ModuleAdapter*.class',
+                       '**/*$ViewInjector*.class',
+                       '**/BuildConfig.class'])
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('build/jacoco/testLocalDebug.exec')
+
+    doFirst {
+        new File('app/build/intermediates/classes/').eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
+    }
+}
