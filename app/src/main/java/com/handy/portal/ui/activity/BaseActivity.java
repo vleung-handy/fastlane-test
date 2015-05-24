@@ -15,10 +15,10 @@ import com.handy.portal.core.NavigationManager;
 import com.handy.portal.core.UpdateManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
+import com.handy.portal.data.FlavorManager;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.widget.ProgressDialog;
-import com.handy.portal.util.FlavorUtils;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -57,8 +57,9 @@ public abstract class BaseActivity extends FragmentActivity
     @Inject
     UpdateManager updateManager;
     @Inject
+    FlavorManager flavorManager;
+    @Inject
     SecurePreferences prefs;
-
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
@@ -167,7 +168,7 @@ public abstract class BaseActivity extends FragmentActivity
         try
         {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            bus.post(new Event.UpdateCheckEvent(FlavorUtils.getFlavor(), pInfo.versionCode));
+            bus.post(new Event.UpdateCheckEvent(flavorManager.getFlavor(), pInfo.versionCode));
         } catch (PackageManager.NameNotFoundException e)
         {
             throw new RuntimeException();

@@ -3,7 +3,8 @@ package com.handy.portal.core;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.EnvironmentSwitcher;
+import com.handy.portal.data.EnvironmentManager;
+import com.handy.portal.data.FlavorManager;
 import com.handy.portal.data.HandyRetrofitEndpoint;
 import com.handy.portal.data.HandyRetrofitService;
 import com.handy.portal.data.Mixpanel;
@@ -94,7 +95,13 @@ public class TestApplicationModule {
 
     @Provides
     @Singleton
-    final EnvironmentSwitcher provideEnvironmentSwitcher() {
-        return mock(EnvironmentSwitcher.class);
+    final EnvironmentManager provideEnvironmentManager() {
+        return mock(EnvironmentManager.class);
+    }
+
+    @Provides
+    @Singleton
+    final FlavorManager provideFlavorManager() {
+        return mock(FlavorManager.class);
     }
 }

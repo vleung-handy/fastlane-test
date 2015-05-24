@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.core.LoginDetails;
-import com.handy.portal.data.EnvironmentSwitcher;
+import com.handy.portal.data.EnvironmentManager;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-import static com.handy.portal.data.EnvironmentSwitcher.Environment;
+import static com.handy.portal.data.EnvironmentManager.Environment;
 
 
 /**
@@ -61,7 +61,11 @@ public class LoginActivityFragment extends InjectedFragment
     TextView loginHelpText;
 
     @Inject
-    EnvironmentSwitcher environmentSwitcher;
+    EnvironmentManager environmentManager;
+
+    //TODO: Move to a config file? Maybe point to an endpoint that supplies the url?
+    private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
+    private static final String HELP_URL = "https://www.handy.com/help";
 
     private enum LoginState
     {
@@ -126,11 +130,15 @@ public class LoginActivityFragment extends InjectedFragment
         });
 
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                switch (currentLoginState) {
-                    case INPUTTING_PIN: {
+            public void onClick(View v)
+            {
+                switch (currentLoginState)
+                {
+                    case INPUTTING_PIN:
+                    {
                         changeState(LoginState.INPUTTING_PHONE_NUMBER);
                     }
                     break;
@@ -138,14 +146,43 @@ public class LoginActivityFragment extends InjectedFragment
             }
         });
 
-        loginHelpText.setOnClickListener(new View.OnClickListener() {
+        loginHelpText.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 goToUrl(HELP_CENTER_URL);
             }
         });
+    }
 
 
+    @OnClick(R.id.logo)
+    protected void onSelectEnvironment()
+    {
+        if (!BuildConfig.BUILD_TYPE.equals("debug")) return;
+
+        final Environment[] environments = Environment.values();
+        String[] environmentNames = new String[environments.length];
+        Environment currentEnvironment = environmentManager.getEnvironment();
+        for (int i = 0; i < environments.length; i++)
+        {
+            Environment environment = environments[i];
+            environmentNames[i] = environment.getName();
+            if (currentEnvironment == environment)
+            {
+                environmentNames[i] += " (selected)";
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Pick an environment")
+                .setItems(environmentNames, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        environmentManager.setEnvironment(environments[which]);
+                    }
+                });
+        builder.create().show();
     }
 
     private void goToUrl(String url)
@@ -226,36 +263,6 @@ public class LoginActivityFragment extends InjectedFragment
                 changeState(LoginState.INPUTTING_PIN);
             }
         }
-    }
-
-    @OnClick(R.id.logo)
-    protected void selectEnvironment()
-    {
-        if (!BuildConfig.BUILD_TYPE.equals("debug")) return;
-
-        final Environment[] environments = Environment.values();
-        String[] environmentNames = new String[environments.length];
-        Environment currentEnvironment = environmentSwitcher.getEnvironment();
-        for (int i = 0; i < environments.length; i++)
-        {
-            Environment environment = environments[i];
-            environmentNames[i] = environment.getName();
-            if (currentEnvironment == environment)
-            {
-                environmentNames[i] += " (selected)";
-            }
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Pick an environment")
-                .setItems(environmentNames, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        environmentSwitcher.setEnvironment(environments[which]);
-                    }
-                });
-        builder.create().show();
     }
 
     //Controller

@@ -11,7 +11,7 @@ import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.BaseDataManagerErrorHandler;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.EnvironmentSwitcher;
+import com.handy.portal.data.EnvironmentManager;
 import com.handy.portal.data.HandyRetrofitEndpoint;
 import com.handy.portal.data.HandyRetrofitFluidEndpoint;
 import com.handy.portal.data.HandyRetrofitService;
@@ -31,6 +31,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.data.FlavorManager;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -78,18 +79,25 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentSwitcher provideEnvironmentSwitcher()
+    final FlavorManager provideFlavorManager()
     {
-        return new EnvironmentSwitcher();
+        return new FlavorManager();
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEnpoint(final EnvironmentSwitcher environmentSwitcher)
+    final EnvironmentManager provideEnvironmentManager()
+    {
+        return new EnvironmentManager();
+    }
+
+    @Provides
+    @Singleton
+    final HandyRetrofitEndpoint provideHandyEnpoint(final FlavorManager flavorManager, final EnvironmentManager environmentManager)
     {
         if (BuildConfig.BUILD_TYPE.equals("debug"))
         {
-            return new HandyRetrofitFluidEndpoint(context, environmentSwitcher);
+            return new HandyRetrofitFluidEndpoint(context, environmentManager);
         }
         return new HandyRetrofitEndpoint(context);
     }
