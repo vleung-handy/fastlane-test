@@ -40,7 +40,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
-public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
+public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
+{
 
     private static final String VALID_PHONE_NUMBER = "1231231234";
 
@@ -60,8 +61,9 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     private View fragmentView;
 
     @Before
-    public void setUp() throws Exception {
-        activity = Robolectric.buildActivity(LoginActivity.class).create().visible().get();
+    public void setUp() throws Exception
+    {
+        activity = Robolectric.buildActivity(LoginActivity.class).create().get();
         fragment = (LoginActivityFragment) activity.getSupportFragmentManager().getFragments().get(0);
         fragmentView = fragment.getView();
 
@@ -69,7 +71,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenValidPhoneNumber_whenRequestPinButtonClicked_thenRequestPinCode() throws Exception {
+    public void givenValidPhoneNumber_whenRequestPinButtonClicked_thenRequestPinCode() throws Exception
+    {
         makePinRequest("1111111111");
 
         ArgumentCaptor<Event.RequestPinCodeEvent> argument = ArgumentCaptor.forClass(Event.RequestPinCodeEvent.class);
@@ -78,7 +81,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenValidPinCode_whenLogInButtonClicked_thenRequestLogin() throws Exception {
+    public void givenValidPinCode_whenLogInButtonClicked_thenRequestLogin() throws Exception
+    {
         makeLoginRequest("5353");
 
         ArgumentCaptor<Event.RequestLoginEvent> argument = ArgumentCaptor.forClass(Event.RequestLoginEvent.class);
@@ -88,7 +92,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenSetCredentialsCookie() throws Exception {
+    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenSetCredentialsCookie() throws Exception
+    {
         when(dataManager.getBaseUrl()).thenReturn("http://cats.url");
         makeLoginRequest("5353");
         receiveLoginRequest(true, "something", "credentials=something");
@@ -97,7 +102,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenGoToMainActivity() throws Exception {
+    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenGoToMainActivity() throws Exception
+    {
         makeLoginRequest("5353");
         receiveLoginRequest(true, null, null);
 
@@ -106,21 +112,24 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenInvalidPhoneNumber_whenRequestPinButtonClicked_thenNoRequestPinCode() throws Exception {
+    public void givenInvalidPhoneNumber_whenRequestPinButtonClicked_thenNoRequestPinCode() throws Exception
+    {
         makePinRequest("1234");
 
         verifyZeroInteractions(bus);
     }
 
     @Test
-    public void givenInvalidPinCode_whenLogInButtonClicked_thenNoRequestLogin() throws Exception {
+    public void givenInvalidPinCode_whenLogInButtonClicked_thenNoRequestLogin() throws Exception
+    {
         makeLoginRequest("123");
 
         verifyZeroInteractions(bus);
     }
 
     @Test
-    public void givenUnrecognizedPhoneNumber_whenPinCodeRequestDetailsReceived_thenDisplayErrorToast() throws Exception {
+    public void givenUnrecognizedPhoneNumber_whenPinCodeRequestDetailsReceived_thenDisplayErrorToast() throws Exception
+    {
         makePinRequest("7777777777"); // triggers stage change
         receivePinCodeRequest(false);
 
@@ -128,7 +137,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenWrongPinCode_whenLoginRequestDetailsReceived_thenDisplayErrorToast() throws Exception {
+    public void givenWrongPinCode_whenLoginRequestDetailsReceived_thenDisplayErrorToast() throws Exception
+    {
         makeLoginRequest("7777");
         receiveLoginRequest(false, null, null);
 
@@ -136,7 +146,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenInputtingPinCode_whenBackButtonClicked_thenGoBackToInputtingPhoneNumber() throws Exception {
+    public void givenInputtingPinCode_whenBackButtonClicked_thenGoBackToInputtingPhoneNumber() throws Exception
+    {
         makePinRequest(VALID_PHONE_NUMBER);
         receivePinCodeRequest(true);
 
@@ -155,7 +166,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenStageFlavor_whenLogoClicked_thenShowDialogForSwitchingEnvironments() throws Exception {
+    public void givenStageFlavor_whenLogoClicked_thenShowDialogForSwitchingEnvironments() throws Exception
+    {
         when(flavorManager.isStageFlavor()).thenReturn(true);
 
         fragmentView.findViewById(R.id.logo).performClick();
@@ -164,7 +176,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenNotStageFlavor_whenLogoClicked_thenDoNotShowDialogForSwitchingEnvironments() throws Exception {
+    public void givenNotStageFlavor_whenLogoClicked_thenDoNotShowDialogForSwitchingEnvironments() throws Exception
+    {
         when(flavorManager.isStageFlavor()).thenReturn(false);
 
         fragmentView.findViewById(R.id.logo).performClick();
@@ -173,7 +186,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void givenDialogForSwitchingEnvironmentsShown_whenItemClicked_thenSwitchEnvironment() throws Exception {
+    public void givenDialogForSwitchingEnvironmentsShown_whenItemClicked_thenSwitchEnvironment() throws Exception
+    {
         when(flavorManager.isStageFlavor()).thenReturn(true);
         fragmentView.findViewById(R.id.logo).performClick();
         reset(environmentManager);
@@ -185,7 +199,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
         verify(environmentManager).setEnvironment(EnvironmentManager.Environment.valueOf(secondItem));
     }
 
-    private void makeLoginRequest(String pinCode) {
+    private void makeLoginRequest(String pinCode)
+    {
         makePinRequest(VALID_PHONE_NUMBER); // assumes valid pin request
         reset(bus);
 
@@ -195,12 +210,14 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
         fragmentView.findViewById(R.id.login_button).performClick();
     }
 
-    private void makePinRequest(String phoneNumber) {
+    private void makePinRequest(String phoneNumber)
+    {
         ((InputTextField) fragmentView.findViewById(R.id.phone_number_edit_text)).setText(phoneNumber);
         fragmentView.findViewById(R.id.login_button).performClick();
     }
 
-    private void receivePinCodeRequest(boolean isValid) {
+    private void receivePinCodeRequest(boolean isValid)
+    {
         Event.PinCodeRequestReceivedEvent event = mock(Event.PinCodeRequestReceivedEvent.class);
         event.success = true;
         event.pinRequestDetails = mock(PinRequestDetails.class);
@@ -208,7 +225,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
         fragment.onPinCodeRequestReceived(event);
     }
 
-    private void receiveLoginRequest(boolean isValid, String credentials, String credentialsCookie) {
+    private void receiveLoginRequest(boolean isValid, String credentials, String credentialsCookie)
+    {
         Event.LoginRequestReceivedEvent event = mock(Event.LoginRequestReceivedEvent.class);
         event.success = true;
         event.loginDetails = mock(LoginDetails.class);

@@ -25,7 +25,8 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     private PortalWebViewFragment webViewFragmentSpy;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         activityController = Robolectric.buildActivity(MainActivity.class).create();
 
         MainActivity mainActivity = activityController.get();
