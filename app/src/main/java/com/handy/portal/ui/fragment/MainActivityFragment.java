@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.event.Event;
@@ -29,7 +30,9 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton helpButton;
 
     private MainViewTab currentTab = null;
-    private PortalWebViewFragment webViewFragment = null;
+
+    @VisibleForTesting
+    protected PortalWebViewFragment webViewFragment = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -156,11 +159,6 @@ public class MainActivityFragment extends InjectedFragment
                 }
             }
         }
-    }
-
-    private void swapFragment(Class targetClassType)
-    {
-        swapFragment(targetClassType, null);
     }
 
     private void swapFragment(Class targetClassType, Bundle argumentsBundle)
