@@ -13,6 +13,7 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.squareup.otto.Bus;
 
@@ -27,7 +28,8 @@ import static org.mockito.Mockito.mock;
         LoginActivity.class,
         MainActivityFragment.class,
         MainActivity.class,
-        PortalWebViewFragment.class
+        PortalWebViewFragment.class,
+        PleaseUpdateFragment.class
 }, library = true)
 public class TestApplicationModule {
 

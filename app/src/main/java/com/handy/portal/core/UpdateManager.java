@@ -7,7 +7,7 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public final class UpdateManager
+public class UpdateManager
 {
     private final Bus bus;
     private DataManager dataManager;
