@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by cdavis on 5/6/15.
  */
-public abstract class Event
+public class Event
 {
     public boolean success;
 
