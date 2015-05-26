@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.handy.portal.R;
-import com.handy.portal.core.BaseApplication;
 
-import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity
 {
@@ -16,9 +14,7 @@ public class LoginActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.inject(this);
 
-        ((BaseApplication) this.getApplication()).inject(this);
     }
 
     @Override
@@ -39,11 +35,6 @@ public class LoginActivity extends BaseActivity
     public void onBackPressed()
     {
         moveTaskToBack(true);
-    }
-
-    private void openMainActivity()
-    {
-        startActivity(new Intent(this, MainActivity.class));
     }
 
 }
