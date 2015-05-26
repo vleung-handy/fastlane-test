@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.data.EnvironmentSwitcher;
@@ -26,7 +27,6 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
-import com.handy.portal.util.FlavorUtils;
 import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
@@ -281,7 +281,7 @@ public class LoginActivityFragment extends InjectedFragment
     @OnClick(R.id.logo)
     protected void selectEnvironment()
     {
-        if (!FlavorUtils.isStageFlavor()) return;
+        if (!BuildConfig.BUILD_TYPE.equals("debug")) return;
 
         final Environment[] environments = Environment.values();
         String[] environmentNames = new String[environments.length];

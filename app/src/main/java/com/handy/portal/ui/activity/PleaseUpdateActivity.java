@@ -3,6 +3,7 @@ package com.handy.portal.ui.activity;
 import android.os.Bundle;
 
 import com.handy.portal.R;
+import com.handy.portal.event.Event;
 
 import butterknife.ButterKnife;
 
@@ -20,7 +21,19 @@ public class PleaseUpdateActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
+        //Do nothing
+    }
 
+    @Override
+    public void checkForUpdates()
+    {
+        //Do nothing
+    }
+
+    @Override
+    public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
+    {
+        //Do nothing
     }
 
 

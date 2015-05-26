@@ -28,10 +28,7 @@ public final class UpdateManager implements Observer
     @Override
     public void update(final Observable observable, final Object data)
     {
-        if (observable instanceof User)
-        {
 
-        }
     }
 
     public String getDownloadURL() {
@@ -41,7 +38,7 @@ public final class UpdateManager implements Observer
     @Subscribe
     public void onUpdateCheckRequest(Event.UpdateCheckEvent event)
     {
-        dataManager.checkForUpdates(event.versionCode, new DataManager.Callback<UpdateDetails>()
+        dataManager.checkForUpdates(event.appFlavor, event.versionCode, new DataManager.Callback<UpdateDetails>()
                 {
                     @Override
                     public void onSuccess(final UpdateDetails updateDetails)
