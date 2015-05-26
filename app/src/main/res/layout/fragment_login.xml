@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/back_button"
         android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-        />
+        android:background="@color/transparent"
+        android:padding="5dp"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
