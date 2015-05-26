@@ -38,7 +38,7 @@ public class LoginActivity extends BaseActivity
     @Override
     public void onResume() {
         super.onResume();
-        sendUpdateCheckRequest();
+        checkForUpdates();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class LoginActivity extends BaseActivity
     }
 
 
-    protected void sendUpdateCheckRequest() {
+    protected void checkForUpdates() {
         PackageInfo pInfo = null;
         try
         {
