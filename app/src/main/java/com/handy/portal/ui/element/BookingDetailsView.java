@@ -1,6 +1,7 @@
 package com.handy.portal.ui.element;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -15,7 +16,7 @@ public abstract class BookingDetailsView
     protected Context context;
 
     protected abstract int getLayoutResourceId();
-    public void init(Booking booking, ViewGroup parentViewGroup, Context context)
+    public void init(Booking booking, Bundle arguments, ViewGroup parentViewGroup, Context context)
     {
         //System.out.println("Init booking details view with resource id " + Integer.toString(getLayoutResourceId()));
         //System.out.println("to parent " + parentViewGroup.toString());
@@ -25,8 +26,8 @@ public abstract class BookingDetailsView
 
         LayoutInflater.from(context).inflate(getLayoutResourceId(), parentViewGroup);
 
-        initFromBooking(booking);
+        initFromBooking(booking, arguments);
     }
 
-    protected abstract void initFromBooking(Booking booking);
+    protected abstract void initFromBooking(Booking booking, Bundle arguments);
 }

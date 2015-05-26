@@ -34,6 +34,10 @@
     <string name="booking_action_error_server">The server could not be reached, please try again</string>
     <string name="booking_action_error_not_available">That job was not available to claim, please select another job</string>
 
+    <string name="customer_details">Customer Details</string>
+    <string name="customer_request">Customer Request</string>
+
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>

@@ -1,5 +1,7 @@
 package com.handy.portal.ui.element;
 
+import android.os.Bundle;
+
 import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
 
@@ -17,7 +19,7 @@ public class GoogleMapView extends BookingDetailsView
 
     //MapView map;
 
-    protected void initFromBooking(Booking booking)
+    protected void initFromBooking(Booking booking, Bundle arguments)
     {
         //use lat/long of booking to target the google map
         //initMapForBooking(booking);
