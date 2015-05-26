@@ -199,7 +199,7 @@ public interface HandyRetrofitService
     @GET(BASE_PATH + "{provider_id}/bookings")
     void getScheduledBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
 
-    @POST(BASE_PATH + "{provider_id}/bookings/{booking_id}/claim")
+    @PUT(BASE_PATH + "{provider_id}/bookings/{booking_id}/claim")
     void claimBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
     @GET(BASE_PATH + "{provider_id}/bookings/{booking_id}")
