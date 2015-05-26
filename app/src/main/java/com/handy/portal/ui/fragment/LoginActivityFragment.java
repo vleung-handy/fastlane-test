@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.EnvironmentManager;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
@@ -62,6 +63,8 @@ public class LoginActivityFragment extends InjectedFragment
 
     @Inject
     EnvironmentManager environmentManager;
+    @Inject
+    BuildConfigWrapper buildConfigWrapper;
 
     //TODO: Move to a config file? Maybe point to an endpoint that supplies the url?
     private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
@@ -160,7 +163,7 @@ public class LoginActivityFragment extends InjectedFragment
     @OnClick(R.id.logo)
     protected void onSelectEnvironment()
     {
-        if (!BuildConfig.BUILD_TYPE.equals("debug")) return;
+        if (!buildConfigWrapper.isDebug()) return;
 
         final Environment[] environments = Environment.values();
         String[] environmentNames = new String[environments.length];
@@ -177,8 +180,10 @@ public class LoginActivityFragment extends InjectedFragment
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Pick an environment")
-                .setItems(environmentNames, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                .setItems(environmentNames, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         environmentManager.setEnvironment(environments[which]);
                     }
                 });

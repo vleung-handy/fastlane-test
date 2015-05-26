@@ -11,7 +11,7 @@ import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.EnvironmentManager;
-import com.handy.portal.data.FlavorManager;
+import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.InputTextField;
@@ -48,7 +48,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @Mock
     private Bus bus;
     @Mock
-    private FlavorManager flavorManager;
+    private BuildConfigWrapper buildConfigWrapper;
     @Mock
     private EnvironmentManager environmentManager;
     @Mock
@@ -167,9 +167,9 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenStageFlavor_whenLogoClicked_thenShowDialogForSwitchingEnvironments() throws Exception
+    public void givenDebugBuildType_whenLogoClicked_thenShowDialogForSwitchingEnvironments() throws Exception
     {
-        when(flavorManager.isStageFlavor()).thenReturn(true);
+        when(buildConfigWrapper.isDebug()).thenReturn(true);
 
         fragmentView.findViewById(R.id.logo).performClick();
 
@@ -177,9 +177,9 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenNotStageFlavor_whenLogoClicked_thenDoNotShowDialogForSwitchingEnvironments() throws Exception
+    public void givenNotDebugBuildType_whenLogoClicked_thenDoNotShowDialogForSwitchingEnvironments() throws Exception
     {
-        when(flavorManager.isStageFlavor()).thenReturn(false);
+        when(buildConfigWrapper.isDebug()).thenReturn(false);
 
         fragmentView.findViewById(R.id.logo).performClick();
 
@@ -189,7 +189,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void givenDialogForSwitchingEnvironmentsShown_whenItemClicked_thenSwitchEnvironment() throws Exception
     {
-        when(flavorManager.isStageFlavor()).thenReturn(true);
+        when(buildConfigWrapper.isDebug()).thenReturn(true);
         fragmentView.findViewById(R.id.logo).performClick();
         reset(environmentManager);
 

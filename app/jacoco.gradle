@@ -6,7 +6,7 @@ def coverageSourceDirs = [
         'src/main/java'
 ]
 
-task jacocoTestReport(type: JacocoReport, dependsOn: "testLocalDebug") {
+task jacocoTestReport(type: JacocoReport, dependsOn: "testBetaDebug") {
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
     reports {
@@ -15,7 +15,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testLocalDebug") {
     }
 
     classDirectories = fileTree(
-            dir: './build/intermediates/classes/local/debug',
+            dir: './build/intermediates/classes/beta/debug',
             excludes: ['**/R.class',
                        '**/R$*.class',
                        '**/*$InjectAdapter*.class',
@@ -23,7 +23,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testLocalDebug") {
                        '**/*$ViewInjector*.class',
                        '**/BuildConfig.class'])
     sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testLocalDebug.exec')
+    executionData = files('build/jacoco/testBetaDebug.exec')
 
     doFirst {
         new File('app/build/intermediates/classes/').eachFileRecurse { file ->

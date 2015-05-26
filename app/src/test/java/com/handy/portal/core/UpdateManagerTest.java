@@ -17,6 +17,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +43,7 @@ public class UpdateManagerTest extends RobolectricGradleTestWrapper
         updateManager = new UpdateManager(bus, dataManager);
 
         updateManager.onUpdateCheckRequest(mock(Event.UpdateCheckEvent.class));
-        verify(dataManager).checkForUpdates(anyInt(), updateCheckCallbackCaptor.capture());
+        verify(dataManager).checkForUpdates(anyString(), anyInt(), updateCheckCallbackCaptor.capture());
     }
 
     @Test

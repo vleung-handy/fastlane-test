@@ -31,7 +31,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
-import com.handy.portal.data.FlavorManager;
+import com.handy.portal.data.BuildConfigWrapper;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -79,9 +79,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final FlavorManager provideFlavorManager()
+    final BuildConfigWrapper provideBuildConfigWrapper()
     {
-        return new FlavorManager();
+        return new BuildConfigWrapper();
     }
 
     @Provides
@@ -93,9 +93,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEnpoint(final FlavorManager flavorManager, final EnvironmentManager environmentManager)
+    final HandyRetrofitEndpoint provideHandyEnpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
     {
-        if (BuildConfig.BUILD_TYPE.equals("debug"))
+        if (buildConfigWrapper.isDebug())
         {
             return new HandyRetrofitFluidEndpoint(context, environmentManager);
         }
@@ -104,7 +104,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitService provideHandyService(
+    final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
             final HandyRetrofitEndpoint endpoint)
     {
 
@@ -136,7 +136,7 @@ public final class ApplicationModule
                         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
-        if (BuildConfig.BUILD_TYPE.equals("debug"))
+        if (buildConfigWrapper.isDebug())
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
 
         return restAdapter.create(HandyRetrofitService.class);

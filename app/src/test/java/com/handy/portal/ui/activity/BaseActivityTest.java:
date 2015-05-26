@@ -20,17 +20,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
-public class LoginActivityTest extends RobolectricGradleTestWrapper
+public class BaseActivityTest extends RobolectricGradleTestWrapper
 {
     private ActivityController<LoginActivity> activityController;
-    private LoginActivity activity;
+    private BaseActivity activity;
 
     @Before
     public void setUp() throws Exception
     {
+        // TODO: Test BaseActivity directly, not one of its subclasses
         activityController = Robolectric.buildActivity(LoginActivity.class).create();
         activity = activityController.get();
-
     }
 
     @Test

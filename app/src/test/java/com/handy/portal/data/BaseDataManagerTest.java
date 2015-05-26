@@ -51,7 +51,7 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     public void testSuccessfulCheckForUpdates() throws Exception
     {
         final Object[] responseCatcher = new Object[1];
-        dataManager.checkForUpdates(1, new DataManager.Callback<UpdateDetails>()
+        dataManager.checkForUpdates("yummy flavor", 1, new DataManager.Callback<UpdateDetails>()
         {
             @Override
             public void onSuccess(UpdateDetails response)
