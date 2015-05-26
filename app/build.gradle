@@ -80,6 +80,7 @@ android {
         local {
             applicationId 'com.handy.portal.local'
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.local"]
+            versionCode 1
         }
     }
 
