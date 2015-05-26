@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.robolectric.shadows.ShadowLooper;
 
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 public class MainBusTest extends RobolectricGradleTestWrapper
 {
@@ -20,7 +21,7 @@ public class MainBusTest extends RobolectricGradleTestWrapper
         final Object object = new Object()
         {
             @Subscribe
-            public void triggerEvent(Event event)
+            public void triggerEvent(Event.RequestLoginEvent event)
             {
                 eventTriggered[0] = true;
             }
@@ -40,7 +41,7 @@ public class MainBusTest extends RobolectricGradleTestWrapper
 
         ShadowLooper.idleMainLooper();
 
-        bus.post(new Event());
+        bus.post(mock(Event.RequestLoginEvent.class));
 
         assertTrue(eventTriggered[0]);
     }
