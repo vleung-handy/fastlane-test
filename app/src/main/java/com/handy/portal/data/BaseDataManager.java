@@ -433,21 +433,7 @@ public final class BaseDataManager extends DataManager
 
     private String getProviderId()
     {
-        String loggedInUserId = "11"; //for quick hacky debug work
-        if(loginManager != null)
-        {
-            loggedInUserId = loginManager.getLoggedInUserId();
-            if (loggedInUserId == null)
-            {
-                System.err.println("Do not have a logged in user to use");
-                loggedInUserId = "";
-            }
-        }
-        else
-        {
-            System.err.println("getProviderId() : Using hardcoded user 11 for quick debugging");
-        }
-        return loggedInUserId;
+        return loginManager.getLoggedInUserId();
     }
 
     private void handleCreateSessionResponse(final JSONObject response, final Callback<User> cb)

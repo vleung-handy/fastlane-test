@@ -106,7 +106,7 @@ public abstract class DataManager
             this.invalidInputs = inputs;
         }
 
-        final String getMessage()
+        public final String getMessage()
         {
             return message;
         }

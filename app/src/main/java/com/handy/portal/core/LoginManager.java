@@ -1,16 +1,14 @@
 package com.handy.portal.core;
 
+import com.handy.portal.BuildConfig;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import javax.inject.Inject;
 
-public final class LoginManager implements Observer
+public final class LoginManager
 {
     private final Bus bus;
     private DataManager dataManager;
@@ -22,15 +20,6 @@ public final class LoginManager implements Observer
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
-    }
-
-    @Override
-    public void update(final Observable observable, final Object data)
-    {
-        if (observable instanceof User)
-        {
-
-        }
     }
 
     @Subscribe
@@ -64,7 +53,6 @@ public final class LoginManager implements Observer
                         saveLoginDetails(loginDetails);
                         bus.post(new Event.LoginRequestReceivedEvent(loginDetails, true));
                         //TODO: Set our local user based on the return value? Need to wait for the api version that sends back userId
-
                     }
 
                     @Override
@@ -83,7 +71,19 @@ public final class LoginManager implements Observer
 
     public String getLoggedInUserId()
     {
-        return(this.loginDetails != null ? this.loginDetails.getUserCredentialsId() : null);
+        String loggedInUserId = "";
+
+        if(BuildConfig.BUILD_TYPE.equals("debug")) //add check using flavor to only allow this hack on debug flavors
+        {
+            loggedInUserId = "11"; //for quick hacky debug work
+        }
+
+        if(this.loginDetails != null)
+        {
+            loggedInUserId = this.loginDetails.getUserCredentialsId();
+        }
+
+        return(loggedInUserId);
     }
 
 }

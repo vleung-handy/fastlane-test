@@ -116,6 +116,26 @@ public abstract class Event
         }
     }
 
+    public static class RequestClaimJobEvent extends Event
+    {
+        public String bookingId;
+
+        public RequestClaimJobEvent(String bookingId)
+        {
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class ClaimJobRequestReceivedEvent extends Event
+    {
+        public Booking booking;
+
+        public ClaimJobRequestReceivedEvent(Booking booking, boolean success)
+        {
+            this.booking = booking;
+            this.success = success;
+        }
+    }
 
 
 }
