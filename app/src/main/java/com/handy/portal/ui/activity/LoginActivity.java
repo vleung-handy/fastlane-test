@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
+import com.handy.portal.core.UpdateManager;
 import com.handy.portal.event.Event;
 import com.handy.portal.util.FlavorUtils;
 import com.squareup.otto.Bus;
@@ -20,6 +21,8 @@ public class LoginActivity extends BaseActivity
 {
     @Inject
     Bus bus;
+    @Inject
+    UpdateManager updateManager;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
@@ -30,8 +33,6 @@ public class LoginActivity extends BaseActivity
 
         ((BaseApplication) this.getApplication()).inject(this);
         this.bus.register(this);
-
-        sendUpdateCheckRequest();
     }
 
     @Override
@@ -69,8 +70,9 @@ public class LoginActivity extends BaseActivity
             bus.post(new Event.UpdateCheckEvent(FlavorUtils.getFlavor(), pInfo.versionCode));
         } catch (PackageManager.NameNotFoundException e)
         {
-            //Do nothing for now
+            throw new RuntimeException();
         }
+
     }
 
     @Subscribe

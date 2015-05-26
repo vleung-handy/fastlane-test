@@ -15,10 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/update_header"
-        style="@style/TextView.Medium.Bold"
+        style="@style/TextView.XLarge.Bold"
         android:textColor="@color/white"
         android:gravity="center_horizontal"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -27,7 +28,7 @@
         style="@style/TextView.Medium"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"/>
 
@@ -38,5 +39,8 @@
         android:layout_height="wrap_content"
         android:text="@string/update_button_label"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="30dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:typeface="normal"/>
 </LinearLayout>
