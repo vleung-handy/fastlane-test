@@ -12,6 +12,7 @@ import com.handy.portal.data.BaseDataManagerErrorHandler;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.HandyRetrofitEndpoint;
+import com.handy.portal.data.HandyRetrofitFluidEndpoint;
 import com.handy.portal.data.HandyRetrofitService;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.data.PropertiesReader;
@@ -19,15 +20,19 @@ import com.handy.portal.data.SecurePreferences;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.data.EnvironmentSwitcher;
+import com.handy.portal.util.FlavorUtils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -57,7 +62,9 @@ import retrofit.converter.GsonConverter;
         BaseApplication.class,
         BaseActivity.class,
         MainActivity.class,
-        SplashActivity.class
+        SplashActivity.class,
+        PleaseUpdateActivity.class,
+        PleaseUpdateFragment.class
 })
 public final class ApplicationModule
 {
@@ -67,14 +74,24 @@ public final class ApplicationModule
     public ApplicationModule(final Context context)
     {
         this.context = context.getApplicationContext();
-        configs = PropertiesReader
-                .getProperties(context, "config.properties");
+        configs = PropertiesReader.getConfigProperties(context);
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEnpoint()
+    final EnvironmentSwitcher provideEnvironmentSwitcher()
     {
+        return new EnvironmentSwitcher();
+    }
+
+    @Provides
+    @Singleton
+    final HandyRetrofitEndpoint provideHandyEnpoint(final EnvironmentSwitcher environmentSwitcher)
+    {
+        if (FlavorUtils.isStageFlavor())
+        {
+            return new HandyRetrofitFluidEndpoint(context, environmentSwitcher);
+        }
         return new HandyRetrofitEndpoint(context);
     }
 
@@ -88,17 +105,12 @@ public final class ApplicationModule
         okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
 
         final String username = configs.getProperty("api_username");
-        String password = configs.getProperty("api_password_internal");
-
-        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD))
-            password = configs.getProperty("api_password");
-
-        final String pwd = password;
+        final String password = configs.getProperty("api_password");
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
                 .setRequestInterceptor(new RequestInterceptor()
                 {
-                    final String auth = "Basic " + Base64.encodeToString((username + ":" + pwd)
+                    final String auth = "Basic " + Base64.encodeToString((username + ":" + password)
                             .getBytes(), Base64.NO_WRAP);
 
                     @Override
@@ -134,8 +146,7 @@ public final class ApplicationModule
                         .registerTypeAdapter(User.class, new User.UserSerializer())
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
-        if (!BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)
-                || BuildConfig.BUILD_TYPE.equals("debug"))
+        if (BuildConfig.BUILD_TYPE.equals("debug"))
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
 
         return restAdapter.create(HandyRetrofitService.class);
@@ -146,14 +157,11 @@ public final class ApplicationModule
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
                                          final Bus bus,
-                                         final SecurePreferences prefs)
+                                         final SecurePreferences prefs,
+                                         final LoginManager loginManager
+                                        )
     {
-        final BaseDataManager dataManager = new BaseDataManager(service, endpoint, bus, prefs);
-
-        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD))
-            dataManager.setEnvironment(DataManager.Environment.P, false);
-
-        return dataManager;
+        return new BaseDataManager(service, endpoint, loginManager, bus, prefs);
     }
 
     @Provides
@@ -197,10 +205,17 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus,
-                                          final DataManager dataManager)
+    final LoginManager provideLoginManager(final Bus bus)
     {
-        return new LoginManager(bus, dataManager);
+        return new LoginManager(bus);
+    }
+
+    @Provides
+    @Singleton
+    final UpdateManager provideUpdateManager(final Bus bus,
+                                           final DataManager dataManager)
+    {
+        return new UpdateManager(bus, dataManager);
     }
 
 //    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {

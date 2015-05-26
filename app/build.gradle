@@ -27,9 +27,10 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 0
+        versionName "0.00"
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -40,6 +41,60 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    signingConfigs {
+        stage {
+            keyAlias 'HandyStageKey'
+            keyPassword 'S0H@ndy!'
+            storeFile file('keys/handy-stage-key.keystore')
+            storePassword 'S0H@ndy!'
+        }
+        prod {
+            keyAlias 'HandyProdKey'
+            keyPassword 'S0H@ndy!'
+            storeFile file('keys/handy-prod-key.keystore')
+            storePassword 'S0H@ndy!'
+        }
+    }
+
+    productFlavors {
+//        stable {
+//            applicationId "com.handy.portal"
+//            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
+//            signingConfig signingConfigs.prod
+//            versionCode 1
+//            versionName '0.01'
+//        }
+        beta {
+            applicationId "com.handy.portal"
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
+            signingConfig signingConfigs.prod
+            versionCode 1
+            versionName '0.01b'
+        }
+        stage {
+            applicationId 'com.handy.portal.stage'
+            signingConfig signingConfigs.stage
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.stage"]
+        }
+        local {
+            applicationId 'com.handy.portal.local'
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.local"]
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(output.outputFile.parentFile,
+                    output.outputFile.name.replaceFirst(/app\-(.*)\.apk/, "handy-pro-\$1-${variant.versionName.replace(".", "_")}.apk"));
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
 }
 
 dependencies {

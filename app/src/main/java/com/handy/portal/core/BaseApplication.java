@@ -14,9 +14,6 @@ import dagger.ObjectGraph;
 
 public final class BaseApplication extends Application
 {
-    public static final String FLAVOR_PROD = "prod";
-    public static final String FLAVOR_STAGE = "stage";
-
     private ObjectGraph graph;
     private int started;
     private boolean savedInstance;

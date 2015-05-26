@@ -7,6 +7,7 @@ import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.BookingSummaryResponse;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.LoginManager;
+import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
@@ -31,11 +32,11 @@ public final class BaseDataManager extends DataManager
     private final SecurePreferences prefs;
     private final Gson gsonBuilder;
 
-    @Inject
+    //@Inject
     LoginManager loginManager;
 
     @Inject
-    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
+    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint, final LoginManager loginManager,
                            final Bus bus, final SecurePreferences prefs)
     {
         super(bus);
@@ -43,45 +44,8 @@ public final class BaseDataManager extends DataManager
         this.endpoint = endpoint;
         this.prefs = prefs;
         this.gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
-    }
-
-    @Override
-    public void setEnvironment(final Environment env, final boolean notify)
-    {
-        super.setEnvironment(env, notify);
-        switch (env)
-        {
-            case P:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.P);
-                break;
-
-            case Q1:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q1);
-                break;
-
-            case Q2:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q2);
-                break;
-
-            case Q3:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q3);
-                break;
-
-            case Q4:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q4);
-                break;
-
-            case Q6:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.Q6);
-                break;
-
-            case D1:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.D1);
-                break;
-
-            default:
-                endpoint.setEnv(HandyRetrofitEndpoint.Environment.S);
-        }
+        this.loginManager = loginManager;
+        this.loginManager.setDataManager(this); //This is an ugly way to resolve the dependency cycle, I did not immediately see a good solution in the Dagger docs
     }
 
     @Override
@@ -408,6 +372,32 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
+    public final void checkForUpdates(int versionCode ,final Callback<UpdateDetails> cb) {
+
+        service.checkUpdates(versionCode, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(JSONObject response)
+            {
+                UpdateDetails updateDetails = null;
+                try
+                {
+                    updateDetails = gsonBuilder.fromJson((response.toString()), new TypeToken<UpdateDetails>()
+                    {
+                    }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse UpdateDetails " + e);
+                }
+                cb.onSuccess(updateDetails);
+            }
+        });
+
+    }
+
+
+
+    @Override
     public final void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
     {
         service.requestLogin(phoneNumber, pinCode, new HandyRetrofitCallback(cb)
@@ -433,7 +423,15 @@ public final class BaseDataManager extends DataManager
 
     private String getProviderId()
     {
-        return loginManager.getLoggedInUserId();
+        if(loginManager == null)
+        {
+            System.err.println("Login Manager not inited yet");
+            return null;
+        }
+        else
+        {
+            return loginManager.getLoggedInUserId();
+        }
     }
 
     private void handleCreateSessionResponse(final JSONObject response, final Callback<User> cb)

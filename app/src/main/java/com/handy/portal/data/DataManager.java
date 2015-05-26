@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.Service;
 import com.handy.portal.core.User;
@@ -12,27 +13,11 @@ import java.util.List;
 
 public abstract class DataManager
 {
-    public enum Environment
-    {
-        P, S, Q1, Q2, Q3, Q4, Q6, D1
-    }
-
-    private Environment env = Environment.S;
     private final Bus bus;
 
     DataManager(final Bus bus)
     {
         this.bus = bus;
-    }
-
-    public Environment getEnvironment()
-    {
-        return env;
-    }
-
-    public void setEnvironment(final Environment env, final boolean notify)
-    {
-        this.env = env;
     }
 
     public abstract void getServices(CacheResponse<List<Service>> cache, Callback<List<Service>> cb);
@@ -44,6 +29,8 @@ public abstract class DataManager
     public abstract void getUser(String email, Callback<String> cb);
 
     public abstract void updateUser(User user, Callback<User> cb);
+
+    public abstract void checkForUpdates(int versionCode, Callback<UpdateDetails> cb);
 
     //Portal
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);

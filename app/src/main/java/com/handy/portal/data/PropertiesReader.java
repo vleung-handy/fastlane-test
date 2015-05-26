@@ -3,6 +3,8 @@ package com.handy.portal.data;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import com.handy.portal.BuildConfig;
+
 import java.util.Properties;
 
 public final class PropertiesReader
@@ -19,5 +21,10 @@ public final class PropertiesReader
             throw new RuntimeException("Error loading properties file: " + fileName);
         }
         return properties;
+    }
+
+    public static Properties getConfigProperties(Context context)
+    {
+        return getProperties(context, "config." + BuildConfig.FLAVOR + ".properties");
     }
 }

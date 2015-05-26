@@ -6,6 +6,7 @@ import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
+import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 
@@ -30,6 +31,23 @@ public abstract class Event
 
     public static class RequestAvailableBookingsEvent extends Event
     {
+    }
+
+    public static class UpdateCheckEvent extends Event
+    {
+        public int versionCode = 0;
+        public UpdateCheckEvent(int versionCode) {
+            this.versionCode = versionCode;
+        }
+    }
+
+    public static class UpdateCheckRequestReceivedEvent extends Event
+    {
+        public UpdateDetails updateDetails;
+        public UpdateCheckRequestReceivedEvent(UpdateDetails updateDetails, boolean success) {
+            this.updateDetails = updateDetails;
+            this.success = success;
+        }
     }
 
     public static class RequestScheduledBookingsEvent extends Event

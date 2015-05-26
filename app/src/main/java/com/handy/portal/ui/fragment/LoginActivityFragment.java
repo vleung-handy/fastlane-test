@@ -1,6 +1,8 @@
 package com.handy.portal.ui.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -16,15 +19,22 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.LoginDetails;
+import com.handy.portal.data.EnvironmentSwitcher;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
+import com.handy.portal.util.FlavorUtils;
 import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
+
+import static com.handy.portal.data.EnvironmentSwitcher.Environment;
 
 
 /**
@@ -51,6 +61,8 @@ public class LoginActivityFragment extends InjectedFragment
     @InjectView(R.id.login_help)
     TextView loginHelpText;
 
+    @Inject
+    EnvironmentSwitcher environmentSwitcher;
 
     private static final boolean DEBUG_SKIP_LOGIN = false; //bypass the native login and use the old web login
 
@@ -86,7 +98,7 @@ public class LoginActivityFragment extends InjectedFragment
 
         //TODO: Prepopulate phone number with device's number? User could still edit if it fails
 
-        if(DEBUG_SKIP_LOGIN)
+        if (DEBUG_SKIP_LOGIN)
         {
             startActivity(new Intent(this.getActivity(), MainActivity.class));
         }
@@ -174,7 +186,7 @@ public class LoginActivityFragment extends InjectedFragment
             public void onClick(View v)
             {
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto",getResources().getString(R.string.login_help_email_address), null));
+                        "mailto", getResources().getString(R.string.login_help_email_address), null));
                 intent.putExtra(Intent.EXTRA_SUBJECT, R.string.login_help_email_subject);
                 intent.putExtra(Intent.EXTRA_TEXT, "");
                 startActivity(Intent.createChooser(intent, getResources().getString(R.string.login_help_choose_email_client)));
@@ -218,7 +230,7 @@ public class LoginActivityFragment extends InjectedFragment
         {
             if (event.success)
             {
-                if(event.pinRequestDetails.getSuccess())
+                if (event.pinRequestDetails.getSuccess())
                 {
                     changeState(LoginState.INPUTTING_PIN);
                 }
@@ -255,12 +267,43 @@ public class LoginActivityFragment extends InjectedFragment
                     changeState(LoginState.INPUTTING_PIN);
                     pinCodeEditText.highlight();
                 }
-            } else
+            }
+            else
             {
                 showErrorToast(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PIN);
             }
         }
+    }
+
+    @OnClick(R.id.logo)
+    protected void selectEnvironment()
+    {
+        if (!FlavorUtils.isStageFlavor()) return;
+
+        final Environment[] environments = Environment.values();
+        String[] environmentNames = new String[environments.length];
+        Environment currentEnvironment = environmentSwitcher.getEnvironment();
+        for (int i = 0; i < environments.length; i++)
+        {
+            Environment environment = environments[i];
+            environmentNames[i] = environment.getName();
+            if (currentEnvironment == environment)
+            {
+                environmentNames[i] += " (selected)";
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Pick an environment")
+                .setItems(environmentNames, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        environmentSwitcher.setEnvironment(environments[which]);
+                    }
+                });
+        builder.create().show();
     }
 
     //Controller
@@ -290,17 +333,9 @@ public class LoginActivityFragment extends InjectedFragment
         //Set cookies to enable seamless access in our webview
         if (loginDetails.getUserCredentials() != null)
         {
+            CookieSyncManager.createInstance(getActivity());
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
-        }
-
-        //TODO: If we have API version 21 we can use a valueCallback for setting cookies instead of hacking a sleep to sync
-        //Cookie syncing is not guaranteed to be instant, this is a hacky workaround
-        try
-        {
-            Thread.sleep(1000);
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
+            CookieSyncManager.getInstance().sync();
         }
 
         //transition to main activity

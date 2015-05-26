@@ -10,8 +10,8 @@ import android.widget.RadioButton;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.core.ServerParams;
 import com.handy.portal.event.Event;
+import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -65,13 +65,13 @@ public class MainActivityFragment extends InjectedFragment
         switchToTab(event.targetTab, event.arguments);
     }
 
-    private void initWebViewFragment(String urlTarget)
+    private void initWebViewFragment(Target urlTarget)
     {
         webViewFragment = new PortalWebViewFragment();
 
         //pass along the target
         Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.TARGET_URL, urlTarget);
+        arguments.putString(BundleKeys.TARGET_URL, urlTarget.getValue());
         webViewFragment.setArguments(arguments);
 
         getActivity().getSupportFragmentManager().beginTransaction()
@@ -90,23 +90,23 @@ public class MainActivityFragment extends InjectedFragment
 
     public enum MainViewTab
     {
-        JOBS(ServerParams.Targets.AVAILABLE, AvailableBookingsFragment.class),
-        SCHEDULE(ServerParams.Targets.FUTURE, ScheduledBookingsFragment.class),
-        PROFILE(ServerParams.Targets.PROFILE, null),
-        HELP(ServerParams.Targets.HELP, null),
-        DETAILS(ServerParams.Targets.DETAILS, BookingDetailsFragment.class),
+        JOBS(Target.JOBS, AvailableBookingsFragment.class),
+        SCHEDULE(Target.SCHEDULE, ScheduledBookingsFragment.class),
+        PROFILE(Target.PROFILE, null),
+        HELP(Target.HELP, null),
+        DETAILS(Target.PROFILE, BookingDetailsFragment.class),
         ;
 
-        private String target;
+        private Target target;
         private Class classType;
 
-        MainViewTab(String target, Class classType)
+        MainViewTab(Target target, Class classType)
         {
             this.target = target;
             this.classType = classType;
         }
 
-        public String getTarget()
+        public Target getTarget()
         {
             return target;
         }
@@ -175,9 +175,13 @@ public class MainActivityFragment extends InjectedFragment
         catch (Exception e)
         {
             System.err.println("Error instantiating fragment class : " + e);
+            return;
         }
 
-        newFragment.setArguments(argumentsBundle);
+        if(newFragment != null && argumentsBundle != null)
+        {
+            newFragment.setArguments(argumentsBundle);
+        }
 
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back

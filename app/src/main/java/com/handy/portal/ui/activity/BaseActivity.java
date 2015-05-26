@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
@@ -49,10 +48,12 @@ public abstract class BaseActivity extends FragmentActivity
     @Inject
     LoginManager loginManager;
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
 
         //Crashlytics.start(this);
         //Yozio.initialize(this);
@@ -75,11 +76,6 @@ public abstract class BaseActivity extends FragmentActivity
 
         toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setDelay(400);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.loading));
     }
 
     @Override
@@ -130,4 +126,5 @@ public abstract class BaseActivity extends FragmentActivity
     {
         void onBack();
     }
+
 }

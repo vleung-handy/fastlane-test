@@ -121,7 +121,15 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
                 err = new DataManager.DataManagerError(DataManager.Type.NETWORK);
             else
             {
-                final int resp = error.getResponse().getStatus();
+                int resp = 0;
+                if(error != null)
+                {
+                    if(error.getResponse() != null)
+                    {
+                        resp = error.getResponse().getStatus();
+                    }
+                }
+
                 if (resp >= 400 && resp < 500)
                 {
                     if (error.getResponse().getBody().mimeType().contains("json"))

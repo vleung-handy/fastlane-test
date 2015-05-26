@@ -93,7 +93,7 @@ public final class NavigationManager
     @Inject
     public NavigationManager(Context context, UserManager userManager, DataManager dataManager, DataManagerErrorHandler dataManagerErrorHandler)
     {
-        this.config = PropertiesReader.getProperties(context, "config.properties");
+        this.config = PropertiesReader.getConfigProperties(context);
         this.context = context;
         this.userManager = userManager;
         this.dataManager = dataManager;
