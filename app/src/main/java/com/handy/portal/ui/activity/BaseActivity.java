@@ -119,7 +119,6 @@ public abstract class BaseActivity extends FragmentActivity
     @Override
     public void onResume() {
         super.onResume();
-
         this.bus.register(busEventListener);
         checkForUpdates();
     }
@@ -134,6 +133,7 @@ public abstract class BaseActivity extends FragmentActivity
     @Override
     public void onPause() {
         bus.unregister(busEventListener);
+        super.onPause();
     }
 
     @Override

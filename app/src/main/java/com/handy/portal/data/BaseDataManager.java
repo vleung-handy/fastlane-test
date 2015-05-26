@@ -362,7 +362,7 @@ public final class BaseDataManager extends DataManager
     @Override
     public final void checkForUpdates(String appFlavor, int versionCode ,final Callback<UpdateDetails> cb) {
 
-        service.checkUpdates(getProviderId(), appFlavor, versionCode, new HandyRetrofitCallback(cb) {
+        service.checkUpdates(appFlavor, versionCode, new HandyRetrofitCallback(cb) {
             @Override
             void success(JSONObject response) {
                 UpdateDetails updateDetails = null;
