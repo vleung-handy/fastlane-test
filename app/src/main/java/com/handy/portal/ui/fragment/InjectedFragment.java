@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
 import com.handy.portal.core.GoogleService;
@@ -51,13 +50,20 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
         toast = Toast.makeText(getActivity(), null, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
+    }
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setDelay(400);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.loading));
-
+    @Override
+    public void onResume()
+    {
+        super.onResume();
         this.bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        this.bus.unregister(this);
     }
 
     @Override
@@ -65,7 +71,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     {
         super.onDestroyView();
         ButterKnife.reset(this);
-        this.bus.unregister(this);
     }
 
     @Override
@@ -88,5 +93,18 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
     protected void enableInputs()
     {
+    }
+
+    //Helpers
+    protected void showErrorToast(int stringId)
+    {
+        showErrorToast(getResources().getString(stringId));
+    }
+
+    protected void showErrorToast(String error)
+    {
+        toast = Toast.makeText(getActivity().getApplicationContext(), error, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }

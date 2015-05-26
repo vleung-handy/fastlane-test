@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.core.LoginDetails;
@@ -54,7 +52,7 @@ public class LoginActivityFragment extends InjectedFragment
     TextView loginHelpText;
 
 
-    private static final boolean DEBUG_SKIP_LOGIN = true; //bypass the native login and use the old web login
+    private static final boolean DEBUG_SKIP_LOGIN = false; //bypass the native login and use the old web login
 
     private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
     private static final String HELP_URL = "https://www.handy.com/help";
@@ -226,14 +224,14 @@ public class LoginActivityFragment extends InjectedFragment
                 }
                 else
                 {
-                    showLoginError(R.string.login_error_bad_phone);
+                    showErrorToast(R.string.login_error_bad_phone);
                     changeState(LoginState.INPUTTING_PHONE_NUMBER);
                     phoneNumberEditText.highlight();
                 }
             }
             else
             {
-                showLoginError(R.string.login_error_connectivity);
+                showErrorToast(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PHONE_NUMBER);
                 phoneNumberEditText.highlight();
             }
@@ -253,13 +251,13 @@ public class LoginActivityFragment extends InjectedFragment
                 }
                 else
                 {
-                    showLoginError(R.string.login_error_bad_login);
+                    showErrorToast(R.string.login_error_bad_login);
                     changeState(LoginState.INPUTTING_PIN);
                     pinCodeEditText.highlight();
                 }
             } else
             {
-                showLoginError(R.string.login_error_connectivity);
+                showErrorToast(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PIN);
             }
         }
@@ -371,20 +369,6 @@ public class LoginActivityFragment extends InjectedFragment
             }
             break;
         }
-    }
-
-    //Helpers
-
-    private void showLoginError(int stringId)
-    {
-        showLoginError(getResources().getString(stringId));
-    }
-
-    private void showLoginError(String error)
-    {
-        toast = Toast.makeText(getActivity().getApplicationContext(), error, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
     }
 
     @Override
