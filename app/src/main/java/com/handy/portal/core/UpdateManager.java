@@ -41,7 +41,7 @@ public class UpdateManager
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.UpdateCheckRequestReceivedEvent(new UpdateDetails(), false));
+                        bus.post(new Event.UpdateCheckRequestReceivedEvent(null, false));
                     }
                 }
         );
