@@ -87,6 +87,12 @@
         <item name="android:background">@drawable/button_green_round</item>
     </style>
 
+    <style name="Button.SalmonRound">
+        <item name="android:textColor">@drawable/button_text_white</item>
+        <item name="android:background">@drawable/button_salmon_round</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
     <style name="Button.White">
         <item name="android:background">@drawable/button_white</item>
         <item name="android:textColor">@color/black</item>
