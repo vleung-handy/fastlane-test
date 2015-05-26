@@ -6,8 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.GoogleService;
@@ -32,7 +30,6 @@ public abstract class BaseActivity extends FragmentActivity
     protected boolean allowCallbacks;
     private OnBackPressedListener onBackPressedListener;
     protected ProgressDialog progressDialog;
-    protected Toast toast;
 
     //Public Properties
     public boolean getAllowCallbacks()
@@ -85,9 +82,6 @@ public abstract class BaseActivity extends FragmentActivity
             //mixpanel.trackEventYozioOpen(Yozio.getMetaData(intent));
         }
 
-        toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-
         busEventListener = new Object() {
             @Subscribe
             public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
@@ -95,7 +89,6 @@ public abstract class BaseActivity extends FragmentActivity
                 BaseActivity.this.onUpdateCheckReceived(event);
             }
         };
-        this.bus.register(busEventListener);
     }
 
     @Override
@@ -126,6 +119,8 @@ public abstract class BaseActivity extends FragmentActivity
     @Override
     public void onResume() {
         super.onResume();
+
+        this.bus.register(busEventListener);
         checkForUpdates();
     }
 
@@ -137,10 +132,14 @@ public abstract class BaseActivity extends FragmentActivity
     }
 
     @Override
+    public void onPause() {
+        bus.unregister(busEventListener);
+    }
+
+    @Override
     protected void onDestroy()
     {
         mixpanel.flush();
-        bus.unregister(busEventListener);
         super.onDestroy();
     }
 
