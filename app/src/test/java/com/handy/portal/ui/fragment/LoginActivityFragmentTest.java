@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -12,7 +13,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.EnvironmentManager;
 import com.handy.portal.data.FlavorManager;
 import com.handy.portal.event.Event;
-import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.InputTextField;
 import com.squareup.otto.Bus;
@@ -22,10 +22,10 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowCookieManager;
 import org.robolectric.shadows.ShadowToast;
+import org.robolectric.util.SupportFragmentTestUtil;
 
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
@@ -57,15 +57,16 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @InjectMocks
     private LoginActivityFragment fragment;
 
-    private LoginActivity activity;
+    private FragmentActivity activity;
     private View fragmentView;
 
     @Before
     public void setUp() throws Exception
     {
-        activity = Robolectric.buildActivity(LoginActivity.class).create().get();
-        fragment = (LoginActivityFragment) activity.getSupportFragmentManager().getFragments().get(0);
+        fragment = new LoginActivityFragment();
+        SupportFragmentTestUtil.startFragment(fragment);
         fragmentView = fragment.getView();
+        activity = fragment.getActivity();
 
         initMocks(this);
     }

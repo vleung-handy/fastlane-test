@@ -27,6 +27,7 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        // TODO: Test fragment in isolation. Right now, it relies on its container activity.
         activityController = Robolectric.buildActivity(MainActivity.class).create();
 
         MainActivity mainActivity = activityController.get();
