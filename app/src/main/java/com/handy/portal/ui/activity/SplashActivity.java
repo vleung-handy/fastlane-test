@@ -3,6 +3,7 @@ package com.handy.portal.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import com.handy.portal.R;
 
@@ -26,6 +27,7 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
 
+        CookieSyncManager.createInstance(this);
         String cookie = CookieManager.getInstance().getCookie(dataManager.getBaseUrl());
         boolean isUserLoggedIn = cookie != null && USER_CREDENTIALS_PATTERN.matcher(cookie).find();
         if (isUserLoggedIn)
