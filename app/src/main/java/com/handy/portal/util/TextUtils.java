@@ -19,9 +19,9 @@ import java.util.Hashtable;
 public final class TextUtils
 {
     public static final class Fonts {
-        public static final String CIRCULAR_BOLD = "CircularStd-Bold.otf";
-        public static final String CIRCULAR_BOOK = "CircularStd-Book.otf";
-        public static final String CIRCULAR_MEDIUM = "CircularStd-Medium.otf";
+        public static final String CIRCULAR_BOLD = "fonts/CircularStd-Bold.otf";
+        public static final String CIRCULAR_BOOK = "fonts/CircularStd-Book.otf";
+        public static final String CIRCULAR_MEDIUM = "fonts/CircularStd-Medium.otf";
     }
 
     private static final Hashtable<String, Typeface> cache = new Hashtable<>();
@@ -32,8 +32,7 @@ public final class TextUtils
         {
             if (!cache.containsKey(name))
             {
-                final Typeface t = Typeface.createFromAsset(c.getAssets(),
-                        String.format("fonts/%s", name));
+                final Typeface t = Typeface.createFromAsset(c.getAssets(), name);
                 cache.put(name, t);
             }
             return cache.get(name);

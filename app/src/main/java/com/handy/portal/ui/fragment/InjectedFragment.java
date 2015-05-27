@@ -63,8 +63,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Override
     public final void onDestroyView()
     {
-        super.onDestroyView();
         ButterKnife.reset(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -77,15 +77,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Override
     public void onStop()
     {
-        super.onStop();
         allowCallbacks = false;
+        super.onStop();
     }
 
-    protected void disableInputs()
-    {
-    }
-
-    protected void enableInputs()
-    {
-    }
 }
