@@ -8,7 +8,6 @@ import android.widget.RadioButton;
 
 import com.handy.portal.R;
 import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
-import com.handy.portal.util.TextUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -34,11 +33,6 @@ public class MainActivityFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
-
-        jobsButton.setTypeface(TextUtils.get(getActivity(), TextUtils.Fonts.CIRCULAR_BOOK));
-        scheduleButton.setTypeface(TextUtils.get(getActivity(), TextUtils.Fonts.CIRCULAR_BOOK));
-        profileButton.setTypeface(TextUtils.get(getActivity(), TextUtils.Fonts.CIRCULAR_BOOK));
-        helpButton.setTypeface(TextUtils.get(getActivity(), TextUtils.Fonts.CIRCULAR_BOOK));
 
         registerButtonListeners();
         initWebViewFragment();

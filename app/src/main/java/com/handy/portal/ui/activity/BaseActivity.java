@@ -1,5 +1,6 @@
 package com.handy.portal.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,6 +24,8 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends FragmentActivity
 {
@@ -82,7 +85,8 @@ public abstract class BaseActivity extends FragmentActivity
             //mixpanel.trackEventYozioOpen(Yozio.getMetaData(intent));
         }
 
-        busEventListener = new Object() {
+        busEventListener = new Object()
+        {
             @Subscribe
             public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
             {
@@ -117,10 +121,17 @@ public abstract class BaseActivity extends FragmentActivity
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         this.bus.register(busEventListener);
         checkForUpdates();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase)
+    {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
@@ -131,7 +142,8 @@ public abstract class BaseActivity extends FragmentActivity
     }
 
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         bus.unregister(busEventListener);
         super.onPause();
     }
@@ -153,7 +165,8 @@ public abstract class BaseActivity extends FragmentActivity
         void onBack();
     }
 
-    public void checkForUpdates() {
+    public void checkForUpdates()
+    {
         PackageInfo pInfo = null;
         try
         {
@@ -168,11 +181,10 @@ public abstract class BaseActivity extends FragmentActivity
 
     public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
     {
-        if(event.updateDetails.getShouldUpdate()) {
+        if (event.updateDetails.getShouldUpdate())
+        {
             startActivity(new Intent(this, PleaseUpdateActivity.class));
         }
     }
-
-
 
 }

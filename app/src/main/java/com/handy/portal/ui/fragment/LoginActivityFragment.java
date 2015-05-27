@@ -44,6 +44,8 @@ import static com.handy.portal.data.EnvironmentSwitcher.Environment;
  */
 public class LoginActivityFragment extends InjectedFragment
 {
+    private static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
+
     @InjectView(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
     @InjectView(R.id.pin_code_input_layout)
@@ -58,8 +60,6 @@ public class LoginActivityFragment extends InjectedFragment
     Button loginButton;
     @InjectView(R.id.back_button)
     ImageButton backButton;
-    @InjectView(R.id.help_cta)
-    TextView helpCta;
     @InjectView(R.id.login_help)
     TextView loginHelpText;
 
@@ -67,9 +67,6 @@ public class LoginActivityFragment extends InjectedFragment
     EnvironmentSwitcher environmentSwitcher;
 
     private static final boolean DEBUG_SKIP_LOGIN = false; //bypass the native login and use the old web login
-
-    private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
-    private static final String HELP_URL = "https://www.handy.com/help";
 
     private enum LoginState
     {
@@ -142,15 +139,11 @@ public class LoginActivityFragment extends InjectedFragment
         });
 
 
-        backButton.setOnClickListener(new View.OnClickListener()
-        {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                switch (currentLoginState)
-                {
-                    case INPUTTING_PIN:
-                    {
+            public void onClick(View v) {
+                switch (currentLoginState) {
+                    case INPUTTING_PIN: {
                         changeState(LoginState.INPUTTING_PHONE_NUMBER);
                     }
                     break;
@@ -158,40 +151,10 @@ public class LoginActivityFragment extends InjectedFragment
             }
         });
 
-        helpCta.setOnClickListener(new View.OnClickListener()
-        {
+        loginHelpText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                switch (currentLoginState)
-                {
-                    case INPUTTING_PHONE_NUMBER:
-                    {
-                        //not yet registered, apply now
-                        goToUrl(APPLY_NOW_URL);
-                    }
-                    break;
-
-                    case INPUTTING_PIN:
-                    {
-                        //did not get a pin code sent
-                        goToUrl(HELP_URL);
-                    }
-                    break;
-                }
-            }
-        });
-
-        loginHelpText.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", getResources().getString(R.string.login_help_email_address), null));
-                intent.putExtra(Intent.EXTRA_SUBJECT, R.string.login_help_email_subject);
-                intent.putExtra(Intent.EXTRA_TEXT, "");
-                startActivity(Intent.createChooser(intent, getResources().getString(R.string.login_help_choose_email_client)));
+            public void onClick(View v) {
+                goToUrl(HELP_CENTER_URL);
             }
         });
 
@@ -355,7 +318,6 @@ public class LoginActivityFragment extends InjectedFragment
                 pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.GONE);
                 backButton.setVisibility(View.GONE);
-                helpCta.setVisibility(View.GONE);
             }
             break;
             case INPUTTING_PHONE_NUMBER:
@@ -366,8 +328,6 @@ public class LoginActivityFragment extends InjectedFragment
                 loginButton.setVisibility(View.VISIBLE);
                 loginButton.setText(R.string.request_pin);
                 backButton.setVisibility(View.GONE);
-                helpCta.setVisibility(View.VISIBLE);
-                helpCta.setText(R.string.not_registered_cta);
             }
             break;
             case WAITING_FOR_PHONE_NUMBER_RESPONSE:
@@ -388,7 +348,6 @@ public class LoginActivityFragment extends InjectedFragment
                 loginButton.setVisibility(View.VISIBLE);
                 loginButton.setText(R.string.log_in);
                 backButton.setVisibility(View.VISIBLE);
-                helpCta.setVisibility(View.INVISIBLE);
             }
             break;
             case WAITING_FOR_LOGIN_RESPONSE:
