@@ -98,7 +98,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     //Helpers
     protected void showErrorToast(int stringId)
     {
-        showErrorToast(getResources().getString(stringId));
+        showErrorToast(getString(stringId));
     }
 
     protected void showErrorToast(String error)

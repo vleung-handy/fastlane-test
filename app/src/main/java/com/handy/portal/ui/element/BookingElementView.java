@@ -103,15 +103,15 @@ public class BookingElementView
 
         if(frequency == 0)
         {
-            bookingFrequencyFormat = parentContext.getResources().getString(R.string.booking_frequency_non_recurring);
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_non_recurring);
         }
         else if(frequency == 1)
         {
-            bookingFrequencyFormat = parentContext.getResources().getString(R.string.booking_frequency_every_week);
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_every_week);
         }
         else
         {
-            bookingFrequencyFormat = parentContext.getResources().getString(R.string.booking_frequency);
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency);
         }
 
         String bookingFrequency = String.format(bookingFrequencyFormat, frequency);

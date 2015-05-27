@@ -342,7 +342,7 @@ public class LoginActivityFragment extends InjectedFragment
             break;
             case INPUTTING_PIN:
             {
-                String instructionsFormat = getResources().getString(R.string.login_instructions_2);
+                String instructionsFormat = getString(R.string.login_instructions_2);
                 String instructions = String.format(instructionsFormat, TextUtils.formatPhone(storedPhoneNumber, ""));
                 instructionsText.setText(instructions);
                 phoneInputLayout.setVisibility(View.GONE);
