@@ -31,23 +31,25 @@ android {
         versionName "0.00"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
     signingConfigs {
         prod {
             keyAlias 'HandyProdKey'
             keyPassword 'S0H@ndy!'
             storeFile file('keys/handy-prod-key.keystore')
             storePassword 'S0H@ndy!'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.prod
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.prod
         }
     }
 
@@ -62,7 +64,6 @@ android {
         beta {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            signingConfig signingConfigs.prod
             versionCode 1
             versionName '0.01b'
         }
