@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import com.handy.portal.core.booking.Booking;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by cdavis on 5/8/15.
  */
@@ -25,6 +27,8 @@ public abstract class BookingDetailsView
         this.context = context;
 
         LayoutInflater.from(context).inflate(getLayoutResourceId(), parentViewGroup);
+
+        ButterKnife.inject(this, parentViewGroup);
 
         initFromBooking(booking, arguments);
     }

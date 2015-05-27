@@ -12,11 +12,23 @@ import com.handy.portal.R;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by cdavis on 5/8/15.
  */
 public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
 {
+    @InjectView(R.id.booking_details_job_instructions_section_title_text)
+    protected TextView sectionTitleText;
+
+    @InjectView(R.id.booking_details_job_instructions_section_title_icon)
+    protected ImageView sectionIcon;
+
+    @InjectView(R.id.booking_details_job_instructions_section_entries_layout)
+    protected LinearLayout entriesLayout;
+
     public BookingDetailsJobInstructionsSectionView(final Context context)
     {
         super(context);
@@ -33,22 +45,16 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
     }
     public void init(String sectionTitle, int sectionIconId, List<String> entries, boolean bulleted)
     {
-        TextView sectionTitleText =(TextView) findViewById(R.id.booking_details_job_instructions_section_title_text);
+        ButterKnife.inject(this);
+
         sectionTitleText.setText(sectionTitle);
-
-        ImageView sectionIcon = (ImageView) findViewById(R.id.booking_details_job_instructions_section_title_icon);
         sectionIcon.setImageResource(sectionIconId);
-
-        LinearLayout entriesLayout = (LinearLayout) findViewById(R.id.booking_details_job_instructions_section_entries_layout);
 
         for(int i = 0; i < entries.size(); i++)
         {
             LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_entry, entriesLayout);
-            RelativeLayout layout = ((RelativeLayout) (entriesLayout.getChildAt(i)));
-            ImageView bulletPoint = (ImageView) layout.findViewById(R.id.booking_details_job_instructions_entry_icon);
-            bulletPoint.setVisibility(bulleted ? VISIBLE : GONE);
-            TextView entryText = (TextView) layout.findViewById(R.id.booking_details_job_instructions_entry_text);
-            entryText.setText(entries.get(i));
+            BookingDetailsJobInstructionsSectionEntryView entryView = ((BookingDetailsJobInstructionsSectionEntryView) (entriesLayout.getChildAt(i)));
+            entryView.init(entries.get(i), bulleted);
         }
     }
 

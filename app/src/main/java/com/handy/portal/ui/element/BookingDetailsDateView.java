@@ -9,14 +9,21 @@ import com.handy.portal.core.booking.Booking;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import butterknife.InjectView;
+
 /**
  * Created by cdavis on 5/8/15.
  */
 public class BookingDetailsDateView extends BookingDetailsView
 {
+    @InjectView(R.id.booking_details_time_text)
+    protected TextView timeText;
+
+    @InjectView(R.id.booking_details_date_text)
+    protected TextView dateText;
+
     private static final String DATE_FORMAT = "E MMM d";
     private static final String TIME_FORMAT = "h:mm a";
-
 
     protected int getLayoutResourceId()
     {
@@ -25,9 +32,6 @@ public class BookingDetailsDateView extends BookingDetailsView
 
     protected void initFromBooking(Booking booking, Bundle arguments)
     {
-        TextView timeText = (TextView) parentViewGroup.findViewById(R.id.booking_details_time_text);
-        TextView dateText = (TextView) parentViewGroup.findViewById(R.id.booking_details_date_text);
-
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
 

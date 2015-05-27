@@ -13,11 +13,16 @@ import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.InjectView;
+
 /**
  * Created by cdavis on 5/8/15.
  */
 public class BookingDetailsJobInstructionsView extends BookingDetailsView
 {
+    @InjectView(R.id.booking_details_job_instructions_list_layout)
+    protected LinearLayout instructionsLayout;
+
     protected int getLayoutResourceId()
     {
         return R.layout.element_booking_details_job_instructions;
@@ -31,8 +36,6 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
         {
             fullDetails = true;
         }
-
-        LinearLayout instructionsLayout = (LinearLayout) parentViewGroup.findViewById(R.id.booking_details_job_instructions_list_layout);
 
         //Booking instructions
         if (fullDetails)

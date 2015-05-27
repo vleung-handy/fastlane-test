@@ -10,14 +10,30 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.util.UIUtils;
 
+import butterknife.InjectView;
+
 /**
  * Created by cdavis on 5/8/15.
  */
 public class BookingDetailsActionPanelView extends BookingDetailsView
 {
+    @InjectView(R.id.booking_details_location_text)
+    protected TextView locationText;
+
+    @InjectView(R.id.booking_details_frequency_text)
+    protected TextView frequencyText;
+
+    @InjectView(R.id.booking_details_payment_text)
+    protected TextView paymentText;
+
+    @InjectView(R.id.booking_details_payment_bonus_text)
+    protected TextView paymentBonusText;
+
+    @InjectView(R.id.booking_details_action_button)
+    protected Button actionButton;
+
     public Button getActionButton()
     {
-        Button actionButton = (Button) parentViewGroup.findViewById(R.id.booking_details_action_button);
         return actionButton;
     }
 
@@ -30,19 +46,12 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     {
         BookingDetailsFragment.BookingStatus bookingStatus = (BookingDetailsFragment.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
 
-        TextView locationText = (TextView) parentViewGroup.findViewById(R.id.booking_details_location_text);
-        TextView frequencyText = (TextView) parentViewGroup.findViewById(R.id.booking_details_frequency_text);
-        TextView paymentText = (TextView) parentViewGroup.findViewById(R.id.booking_details_payment_text);
-        TextView paymentBonusText = (TextView) parentViewGroup.findViewById(R.id.booking_details_payment_bonus_text);
-
         locationText.setText(booking.getAddress().getShortRegion());
 
         UIUtils.setFrequencyInfo(booking, frequencyText, context);
 
         UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider());
         UIUtils.setPaymentInfo(paymentBonusText, booking.getBonusPaymentToProvider());
-
-        Button actionButton = (Button) parentViewGroup.findViewById(R.id.booking_details_action_button);
 
         initButtonDisplayForStatus(actionButton, bookingStatus);
     }
