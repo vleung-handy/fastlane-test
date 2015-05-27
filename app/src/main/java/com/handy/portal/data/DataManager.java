@@ -19,7 +19,7 @@ public abstract class DataManager
     }
 
     //Portal
-    public abstract void checkForUpdates(int versionCode, Callback<UpdateDetails> cb);
+    public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
 
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
 

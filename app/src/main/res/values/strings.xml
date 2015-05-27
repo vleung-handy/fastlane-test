@@ -13,15 +13,13 @@
     <string name="sending_pin">Sending Pin to Phone</string>
     <string name="logging_in">Logging In</string>
 
-    <string name="not_registered_cta">Not registered yet? <u>Apply Now</u></string>
-
     <string name="no_pin_cta">Not receiving a pin code?</string>
 
     <string name="instructions">Instructions</string>
-    <string name="login_help">Use the number for this phone. It should also be the same number you registered with. If you need to update your phone number, please email <u>help@handy.com</u> </string>
+    <string name="login_help">Phone number entered must match the number registered to your account. If you are experiencing difficulty, please go visit our <a href="#">Help Center</a>.</string>
 
     <string name="login_error_bad_phone">Your phone number was not recognized</string>
-    <string name="login_error_bad_login">Your could not be logged in, check your phone and PIN</string>
+    <string name="login_error_bad_login">Login failed. Please make sure your phone and PIN code are correct.</string>
     <string name="login_error_connectivity">The login server could not be reached, please try again</string>
 
     <string name="login_help_email_address">help@handy.com</string>

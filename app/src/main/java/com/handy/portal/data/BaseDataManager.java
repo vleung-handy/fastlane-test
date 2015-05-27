@@ -182,9 +182,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void checkForUpdates(int versionCode ,final Callback<UpdateDetails> cb) {
-
-        service.checkUpdates(versionCode, new HandyRetrofitCallback(cb)
+    public final void checkForUpdates(String appFlavor, int versionCode, final Callback<UpdateDetails> cb)
+    {
+        service.checkUpdates(appFlavor, versionCode, new HandyRetrofitCallback(cb)
         {
             @Override
             void success(JSONObject response)
@@ -230,12 +230,11 @@ public final class BaseDataManager extends DataManager
 
     private String getProviderId()
     {
-        if(loginManager == null)
+        if (loginManager == null)
         {
             System.err.println("Login Manager not inited yet");
             return null;
-        }
-        else
+        } else
         {
             return loginManager.getLoggedInUserId();
         }

@@ -5,12 +5,15 @@ import android.app.Application;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.R;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.Mixpanel;
+import com.handy.portal.util.TextUtils;
 
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public final class BaseApplication extends Application
 {
@@ -32,6 +35,11 @@ public final class BaseApplication extends Application
         Crashlytics.start(this);
         graph = ObjectGraph.create(new ApplicationModule(this));
         inject(this);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(TextUtils.Fonts.CIRCULAR_BOOK)
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
 //        final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
 //        options.inProduction = BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD);

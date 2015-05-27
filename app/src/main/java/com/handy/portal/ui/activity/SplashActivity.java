@@ -2,17 +2,22 @@ package com.handy.portal.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import com.handy.portal.R;
-import com.handy.portal.core.User;
+
+import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity
 {
+
+    private static final Pattern USER_CREDENTIALS_PATTERN = Pattern.compile("(?:^|;)\\s*user_credentials=[^\\s]+\\s*;?");
+
     private static final String STATE_LAUNCHED_NEXT = "LAUNCHED_NEXT";
 
-    private User user;
     private boolean launchedNext;
 
     @Override
@@ -22,9 +27,18 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
 
-        //TODO: Handle install referrers and deep links
-        openLoginActivity();
-
+        CookieSyncManager.createInstance(this);
+        String cookie = CookieManager.getInstance().getCookie(dataManager.getBaseUrl());
+        boolean isUserLoggedIn = cookie != null && USER_CREDENTIALS_PATTERN.matcher(cookie).find();
+        if (isUserLoggedIn)
+        {
+            openMainActivity();
+        }
+        else
+        {
+            //TODO: Handle install referrers and deep links
+            openLoginActivity();
+        }
     }
 
     @Override
@@ -62,5 +76,10 @@ public class SplashActivity extends BaseActivity
     private void openLoginActivity()
     {
         startActivity(new Intent(this, LoginActivity.class));
+    }
+
+    private void openMainActivity()
+    {
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

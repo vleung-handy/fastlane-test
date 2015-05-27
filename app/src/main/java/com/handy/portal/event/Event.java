@@ -37,8 +37,10 @@ public abstract class Event
     public static class UpdateCheckEvent extends Event
     {
         public int versionCode = 0;
-        public UpdateCheckEvent(int versionCode) {
+        public String appFlavor = "";
+        public UpdateCheckEvent(String appFlavor, int versionCode) {
             this.versionCode = versionCode;
+            this.appFlavor = appFlavor;
         }
     }
 

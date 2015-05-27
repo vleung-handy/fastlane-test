@@ -1,31 +1,38 @@
 package com.handy.portal.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
+import com.handy.portal.core.UpdateManager;
 import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
+import com.handy.portal.event.Event;
 import com.handy.portal.ui.widget.ProgressDialog;
+import com.handy.portal.util.FlavorUtils;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public abstract class BaseActivity extends FragmentActivity
 {
-
+    private Object busEventListener;
     protected boolean allowCallbacks;
     private OnBackPressedListener onBackPressedListener;
     protected ProgressDialog progressDialog;
-    protected Toast toast;
 
     //Public Properties
     public boolean getAllowCallbacks()
@@ -35,6 +42,8 @@ public abstract class BaseActivity extends FragmentActivity
 
     @Inject
     Mixpanel mixpanel;
+    @Inject
+    Bus bus;
     @Inject
     UserManager userManager;
     @Inject
@@ -47,6 +56,8 @@ public abstract class BaseActivity extends FragmentActivity
     GoogleService googleService;
     @Inject
     LoginManager loginManager;
+    @Inject
+    UpdateManager updateManager;
 
 
     @Override
@@ -74,8 +85,14 @@ public abstract class BaseActivity extends FragmentActivity
 //            //mixpanel.trackEventYozioOpen(Yozio.getMetaData(intent));
 //        }
 
-        toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
+        busEventListener = new Object()
+        {
+            @Subscribe
+            public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
+            {
+                BaseActivity.this.onUpdateCheckReceived(event);
+            }
+        };
     }
 
     @Override
@@ -104,10 +121,31 @@ public abstract class BaseActivity extends FragmentActivity
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        this.bus.register(busEventListener);
+        checkForUpdates();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase)
+    {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     public void onBackPressed()
     {
         if (onBackPressedListener != null) onBackPressedListener.onBack();
         else super.onBackPressed();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(busEventListener);
+        super.onPause();
     }
 
     @Override
@@ -125,6 +163,28 @@ public abstract class BaseActivity extends FragmentActivity
     public interface OnBackPressedListener
     {
         void onBack();
+    }
+
+    public void checkForUpdates()
+    {
+        PackageInfo pInfo = null;
+        try
+        {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            bus.post(new Event.UpdateCheckEvent(FlavorUtils.getFlavor(), pInfo.versionCode));
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            throw new RuntimeException();
+        }
+
+    }
+
+    public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
+    {
+        if (event.updateDetails.getShouldUpdate())
+        {
+            startActivity(new Intent(this, PleaseUpdateActivity.class));
+        }
     }
 
 }

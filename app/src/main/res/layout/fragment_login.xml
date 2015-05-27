@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/back_button"
         android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-        />
+        android:background="@color/transparent"
+        android:padding="5dp"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -75,7 +76,7 @@
                 android:layout_centerVertical="true"
                 android:imeOptions="actionDone"
                 android:gravity="center_horizontal"
-                android:textColor="@color/very_light_grey"
+                android:textColor="@color/white"
                 android:backgroundTint="@color/very_light_grey"
                 android:textColorHint="@color/very_light_grey"
                 android:clickable="false"
@@ -103,7 +104,7 @@
                 android:maxLines="1"
                 android:layout_centerVertical="true"
                 android:gravity="center_horizontal"
-                android:textColor="@color/very_light_grey"
+                android:textColor="@color/white"
                 android:backgroundTint="@color/very_light_grey"
                 android:textColorHint="@color/very_light_grey"
                 />
@@ -141,30 +142,24 @@
         android:gravity="center_horizontal"
         android:layout_alignRight="@+id/login_help"
         android:layout_alignEnd="@+id/login_help"
-        android:textSize="15dp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/login_help"
         android:text="@string/login_help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textColor="@color/very_light_grey"
-        android:layout_above="@+id/help_cta"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"/>
-
-    <TextView
-        android:id="@+id/help_cta"
-        android:text="@string/not_registered_cta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:linksClickable="true"
+        android:textColorLink="@color/handy_blue"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textSize="16sp"/>
 
 </RelativeLayout>
