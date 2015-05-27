@@ -27,6 +27,8 @@ import butterknife.ButterKnife;
 
 public abstract class BookingsFragment extends InjectedFragment
 {
+    private static final String DATE_FORMAT = "MMM E d";
+
     protected BookingCalendarDay activeDay; //what day are we currently displaying bookings for?
     protected Map<BookingCalendarDay, BookingSummary> bookingSummariesByDay;
 
@@ -59,10 +61,17 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
-        Map<BookingCalendarDay, BookingSummary> bookingSummaries = event.bookingSummaries;
-        bookingSummariesByDay = bookingSummaries;
-        updateDateButtons();
-        displayActiveDayBookings();
+        if(event.success)
+        {
+            Map<BookingCalendarDay, BookingSummary> bookingSummaries = event.bookingSummaries;
+            bookingSummariesByDay = bookingSummaries;
+            updateDateButtons();
+            displayActiveDayBookings();
+        }
+        else
+        {
+            //TODO: Handle a failed state? A resend / restart button?
+        }
     }
 
     protected void requestBookingDetails(String bookingId)
@@ -140,7 +149,7 @@ public abstract class BookingsFragment extends InjectedFragment
         scrollViewLayout.removeAllViews();
 
         Context context = getActivity().getApplicationContext();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM E d");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
         for (int i = 0; i < numDaysToDisplay; i++)
         {

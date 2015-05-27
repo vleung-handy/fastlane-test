@@ -14,6 +14,10 @@ import java.util.Date;
  */
 public class BookingDetailsDateView extends BookingDetailsView
 {
+    private static final String DATE_FORMAT = "E MMM d";
+    private static final String TIME_FORMAT = "h:mm a";
+
+
     protected int getLayoutResourceId()
     {
         return R.layout.element_booking_details_date;
@@ -27,10 +31,10 @@ public class BookingDetailsDateView extends BookingDetailsView
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("E MMM d");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         String formattedDate = dateFormat.format(startDate);
 
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
         String formattedTime = timeFormat.format(startDate) + " - " + timeFormat.format(endDate);
 
         dateText.setText(formattedDate);

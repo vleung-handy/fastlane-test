@@ -23,9 +23,10 @@ public abstract class Event
     {
         public Map<BookingCalendarDay, BookingSummary> bookingSummaries;
 
-        public BookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries)
+        public BookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries, boolean success)
         {
             this.bookingSummaries = bookingSummaries;
+            this.success = success;
         }
     }
 
@@ -68,9 +69,10 @@ public abstract class Event
     {
         public Booking booking;
 
-        public BookingsDetailsRetrievedEvent(Booking booking)
+        public BookingsDetailsRetrievedEvent(Booking booking, boolean success)
         {
             this.booking = booking;
+            this.success = success;
         }
     }
 

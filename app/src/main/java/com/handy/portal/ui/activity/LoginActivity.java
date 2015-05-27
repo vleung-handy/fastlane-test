@@ -63,7 +63,6 @@ public class LoginActivity extends BaseActivity
         startActivity(new Intent(this, MainActivity.class));
     }
 
-
     protected void sendUpdateCheckRequest() {
         PackageInfo pInfo = null;
         try
@@ -73,7 +72,7 @@ public class LoginActivity extends BaseActivity
             bus.post(new Event.UpdateCheckEvent(versionCode));
         } catch (PackageManager.NameNotFoundException e)
         {
-            //Do nothing for now
+            System.err.println("Update Check Exception : " + e);
         }
     }
 

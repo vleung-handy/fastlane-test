@@ -66,21 +66,21 @@ public final class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                onBookingDetailsReceived(booking);
+                bus.post(new Event.BookingsDetailsRetrievedEvent(booking, true));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
                 System.err.println("Failed to get booking details " + error);
-                //TODO: Throw a failed event
+                bus.post(new Event.BookingsDetailsRetrievedEvent(null, false));
             }
         });
     }
 
     private void onBookingDetailsReceived(Booking booking)
     {
-        bus.post(new Event.BookingsDetailsRetrievedEvent(booking));
+
     }
 
 
@@ -88,20 +88,20 @@ public final class BookingManager
     public void onRequestAvailableBookings(Event.RequestAvailableBookingsEvent event)
     {
         dataManager.getAvailableBookings(new DataManager.Callback<List<BookingSummary>>()
-                                         {
-                                             @Override
-                                             public void onSuccess(final List<BookingSummary> bookingSummaries)
-                                             {
-                                                 onBookingSummariesReceived(bookingSummaries);
-                                             }
+             {
+                 @Override
+                 public void onSuccess(final List<BookingSummary> bookingSummaries)
+                 {
+                     onBookingSummariesReceived(bookingSummaries);
+                 }
 
-                                             @Override
-                                             public void onError(final DataManager.DataManagerError error)
-                                             {
-                                                 System.err.println("Failed to get available bookings " + error);
-                                                 //TODO: Throw a failed event
-                                             }
-                                         }
+                 @Override
+                 public void onError(final DataManager.DataManagerError error)
+                 {
+                     System.err.println("Failed to get available bookings " + error);
+                     bus.post(new Event.BookingsRetrievedEvent(null, false));
+                 }
+             }
         );
     }
 
@@ -109,20 +109,20 @@ public final class BookingManager
     public void onRequestScheduledBookings(Event.RequestScheduledBookingsEvent event)
     {
         dataManager.getScheduledBookings(new DataManager.Callback<List<BookingSummary>>()
-                                         {
-                                             @Override
-                                             public void onSuccess(final List<BookingSummary> bookingSummaries)
-                                             {
-                                                 onBookingSummariesReceived(bookingSummaries);
-                                             }
+             {
+                 @Override
+                 public void onSuccess(final List<BookingSummary> bookingSummaries)
+                 {
+                     onBookingSummariesReceived(bookingSummaries);
+                 }
 
-                                             @Override
-                                             public void onError(final DataManager.DataManagerError error)
-                                             {
-                                                 System.err.println("Failed to get scheduled bookings " + error);
-                                                 //TODO: Throw a failed event
-                                             }
-                                         }
+                 @Override
+                 public void onError(final DataManager.DataManagerError error)
+                 {
+                     System.err.println("Failed to get scheduled bookings " + error);
+                     bus.post(new Event.BookingsRetrievedEvent(null, false));
+                 }
+             }
         );
     }
 
@@ -178,7 +178,7 @@ public final class BookingManager
         updateSummariesCache(bookingSummaries);
 
         //just passing this through right now until we figure out our caching strategy
-        bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries));
+        bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries, true));
     }
 
     //may get rid of the caching of summaries and just keep raw booking data?

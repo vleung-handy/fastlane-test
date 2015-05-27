@@ -66,6 +66,7 @@ public class LoginActivityFragment extends InjectedFragment
 
     private static final boolean DEBUG_SKIP_LOGIN = false; //bypass the native login and use the old web login
 
+    //TODO: Move to a config file? Maybe point to an endpoint that supplies the url?
     private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
     private static final String HELP_URL = "https://www.handy.com/help";
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,13 +25,10 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class BookingDetailsFragment extends InjectedFragment
 {
-    //Banner
-    @InjectView(R.id.booking_details_back_button)
-    protected ImageButton backButton;
-
     @InjectView(R.id.booking_details_banner_text)
     protected TextView bannerText;
 
@@ -77,6 +73,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         ButterKnife.inject(this, view);
 
+        //TODO: Auto validate arguments per class on a fragment basis
         Bundle arguments = this.getArguments();
         String targetBookingId = "";
         if(arguments != null && arguments.containsKey(BundleKeys.BOOKING_ID))
@@ -88,8 +85,7 @@ public class BookingDetailsFragment extends InjectedFragment
             System.err.println("Could not find a " + BundleKeys.BOOKING_ID + " in arguments");
         }
 
-        initBanner();
-
+        bannerText.setText("");
         requestBookingDetails(targetBookingId);
 
         return view;
@@ -99,8 +95,14 @@ public class BookingDetailsFragment extends InjectedFragment
     @Subscribe
     public void onBookingDetailsRetrieved(Event.BookingsDetailsRetrievedEvent event)
     {
-        Booking booking = event.booking;
-        updateDisplayForBooking(booking);
+        if(event.success)
+        {
+            updateDisplayForBooking(event.booking);
+        }
+        else
+        {
+            //TODO: Show a display state that involves re-requesting booking details
+        }
     }
 
     @Subscribe
@@ -133,10 +135,6 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new Event.RequestClaimJobEvent(bookingId));
     }
 
-
-
-
-
     //Display
     private void updateDisplayForBooking(Booking booking)
     {
@@ -154,10 +152,6 @@ public class BookingDetailsFragment extends InjectedFragment
             {
                 vg.removeAllViews();
             }
-            else
-            {
-                System.out.println("See a non view group immediate child beneath details parent layout");
-            }
         }
     }
 
@@ -168,6 +162,9 @@ public class BookingDetailsFragment extends InjectedFragment
         BookingStatus bookingStatus = inferBookingStatus(booking, loginManager.getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
+
+        //Banner
+        setBannerText(bookingStatus);
 
         //google maps
         GoogleMapView gmv = new GoogleMapView();
@@ -188,15 +185,32 @@ public class BookingDetailsFragment extends InjectedFragment
         jobInstructionsView.init(booking, arguments, jobInstructionsLayout, context);
     }
 
-    private void initBanner()
+    private void setBannerText(BookingStatus bookingStatus)
     {
-        backButton.setOnClickListener(new View.OnClickListener()
+        switch(bookingStatus)
         {
-            public void onClick(View v)
+            case AVAILABLE:
             {
-                //go back
+                bannerText.setText(R.string.available);
             }
-        });
+            break;
+            case CLAIMED:
+            {
+                bannerText.setText(R.string.claimed);
+            }
+            break;
+            case UNAVAILABLE:
+            {
+                bannerText.setText(R.string.unavailable);
+            }
+            break;
+        }
+    }
+
+    @OnClick(R.id.booking_details_back_button)
+    public void onBackButtonClick(View v)
+    {
+        getActivity().onBackPressed();
     }
 
     private void initActionButtonListener(Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)

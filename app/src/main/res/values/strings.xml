@@ -29,6 +29,7 @@
     <string name="login_help_choose_email_client">Choose an Email Client</string>
 
     <string name="claim">Claim</string>
+    <string name="claimed">Claimed</string>
     <string name="on_my_way">On My Way</string>
 
     <string name="booking_action_error_server">The server could not be reached, please try again</string>

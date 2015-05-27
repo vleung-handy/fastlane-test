@@ -17,6 +17,8 @@ public class GoogleMapView extends BookingDetailsView
         return R.layout.element_map;
     }
 
+    //TODO: Waiting on access to google developer console so we can get our API key and make actual calls
+
     //MapView map;
 
     protected void initFromBooking(Booking booking, Bundle arguments)

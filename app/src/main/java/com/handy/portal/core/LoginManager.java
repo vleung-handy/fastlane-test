@@ -10,6 +10,8 @@ import javax.inject.Inject;
 
 public final class LoginManager
 {
+    private static final String DEBUG_USER_ID = "11"; //for quick development by bypassing the login procedure
+
     private final Bus bus;
     private DataManager dataManager;
     private LoginDetails loginDetails;
@@ -19,7 +21,6 @@ public final class LoginManager
     {
         this.bus = bus;
         this.bus.register(this);
-
     }
 
     //Dagger doesn't have a good way to resolve cyclical injection dependencies from what I can tell
@@ -59,13 +60,12 @@ public final class LoginManager
                     {
                         saveLoginDetails(loginDetails);
                         bus.post(new Event.LoginRequestReceivedEvent(loginDetails, true));
-                        //TODO: Set our local user based on the return value? Need to wait for the api version that sends back userId
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.LoginRequestReceivedEvent(new LoginDetails(), false));
+                        bus.post(new Event.LoginRequestReceivedEvent(null, false));
                     }
                 }
         );
@@ -80,9 +80,9 @@ public final class LoginManager
     {
         String loggedInUserId = "";
 
-        if(BuildConfig.BUILD_TYPE.equals("debug")) //add check using flavor to only allow this hack on debug flavors
+        if(BuildConfig.BUILD_TYPE.equals("debug"))
         {
-            loggedInUserId = "11"; //for quick hacky debug work
+            loggedInUserId = DEBUG_USER_ID; //for quick hacky debug work allows us to bypass the login screen
         }
 
         if(this.loginDetails != null)

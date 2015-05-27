@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
  */
 public class BookingElementView
 {
+    private static final String DATE_FORMAT = "h:mma";
+
     private BookingElementMediator mediator;
     public View associatedView;
 
@@ -65,8 +67,8 @@ public class BookingElementView
         LinearLayout requestedIndicator = (LinearLayout) convertView.findViewById(R.id.booking_entry_requested_indicator_layout);
         requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
-        //Date
-        SimpleDateFormat timeOfDayFormat = new SimpleDateFormat("h:mma");
+        //Date and Time
+        SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);
         String formattedStartDate = timeOfDayFormat.format(booking.getStartDate());
         String formattedEndDate = timeOfDayFormat.format(booking.getEndDate());
         TextView startTimeText = (TextView) convertView.findViewById(R.id.booking_entry_start_date_text);

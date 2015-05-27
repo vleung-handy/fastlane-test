@@ -50,7 +50,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     private void initButtonDisplayForStatus(Button button, final BookingDetailsFragment.BookingStatus bookingStatus)
     {
         button.setText(getDisplayTextForBookingStatus(bookingStatus));
-        //more stuff like color and functionality changes
+        //TODO: more stuff like color and functionality changes
 
         //Color
         switch(bookingStatus)

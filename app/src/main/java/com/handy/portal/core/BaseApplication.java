@@ -78,7 +78,6 @@ public final class BaseApplication extends Application
                 {
                     if (!savedInstance) mixpanel.trackEventAppOpened(true);
                     else mixpanel.trackEventAppOpened(false);
-                    updateUser();
                 }
             }
 
@@ -115,25 +114,4 @@ public final class BaseApplication extends Application
         graph.inject(object);
     }
 
-    private void updateUser()
-    {
-        final User user = userManager.getCurrentUser();
-
-        if (user != null)
-        {
-            dataManager.getUser(user.getId(), user.getAuthToken(), new DataManager.Callback<User>()
-            {
-                @Override
-                public void onSuccess(final User updatedUser)
-                {
-                    userManager.setCurrentUser(updatedUser);
-                }
-
-                @Override
-                public void onError(final DataManager.DataManagerError error)
-                {
-                }
-            });
-        }
-    }
 }
