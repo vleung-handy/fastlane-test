@@ -105,6 +105,9 @@ public abstract class Event
         }
     }
 
+    public static class LoginError extends Event {}
+
+    public static class LoginSuccess extends Event {}
 
 
 }
