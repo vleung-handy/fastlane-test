@@ -20,6 +20,7 @@ public class PleaseUpdateActivity extends BaseActivity
 
     @Override
     public void onResume() {
+        super.onResume();
         mixpanel.track("portal app update blocking screen shown");
     }
 
