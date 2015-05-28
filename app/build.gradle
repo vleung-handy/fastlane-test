@@ -27,8 +27,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 0
-        versionName "0.00"
+        versionCode 1
+        versionName "0.1.0"
     }
 
     signingConfigs {
@@ -54,25 +54,23 @@ android {
     }
 
     productFlavors {
-//        stable {
-//            applicationId "com.handy.portal"
-//            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-//            signingConfig signingConfigs.prod
-//            versionCode 1
-//            versionName '0.01'
-//        }
+        stable {
+            applicationId "com.handy.portal"
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
+            versionName "0.1.0"
+        }
         beta {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionCode 1
-            versionName '0.01b'
+            versionName "0.1.0b"
         }
-    }
 
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.outputFile = new File(output.outputFile.parentFile,
-                    output.outputFile.name.replaceFirst(/app\-(.*)\.apk/, "handy-pro-\$1-${variant.versionName.replace(".", "_")}.apk"));
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def buildType = variant.buildType.name == 'release' ? '' : '-' + variant.buildType.name;
+                output.outputFile = new File(output.outputFile.parentFile,
+                        "handy-pro${buildType}-${variant.versionName}.apk");
+            }
         }
     }
 
