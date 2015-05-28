@@ -19,6 +19,11 @@ public class PleaseUpdateActivity extends BaseActivity
     }
 
     @Override
+    public void onResume() {
+        mixpanel.track("portal app update blocking screen shown");
+    }
+
+    @Override
     public void onBackPressed()
     {
         //Do nothing
