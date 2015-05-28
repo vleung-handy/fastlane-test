@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import com.handy.portal.R;
+import com.handy.portal.event.Event;
 import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
 
 import butterknife.ButterKnife;
@@ -88,6 +89,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         if (currentTab != tab) //don't transition to same tab, ignore the clicks
         {
+            bus.post(new Event.Navigation(tab.getValue()));
             webViewFragment.openPortalUrl(tab);
             currentTab = tab;
         }

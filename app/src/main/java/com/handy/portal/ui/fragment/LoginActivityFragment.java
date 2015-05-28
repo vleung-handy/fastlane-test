@@ -201,14 +201,14 @@ public class LoginActivityFragment extends InjectedFragment
                 }
                 else
                 {
-                    showLoginError(R.string.login_error_bad_phone);
+                    showLoginError(R.string.login_error_bad_phone, "phone number");
                     changeState(LoginState.INPUTTING_PHONE_NUMBER);
                     phoneNumberEditText.highlight();
                 }
             }
             else
             {
-                showLoginError(R.string.login_error_connectivity);
+                showLoginError(R.string.login_error_connectivity, "server");
                 changeState(LoginState.INPUTTING_PHONE_NUMBER);
                 phoneNumberEditText.highlight();
             }
@@ -228,14 +228,14 @@ public class LoginActivityFragment extends InjectedFragment
                 }
                 else
                 {
-                    showLoginError(R.string.login_error_bad_login);
+                    showLoginError(R.string.login_error_bad_login, "pin code");
                     changeState(LoginState.INPUTTING_PIN);
                     pinCodeEditText.highlight();
                 }
             }
             else
             {
-                showLoginError(R.string.login_error_connectivity);
+                showLoginError(R.string.login_error_connectivity, "server");
                 changeState(LoginState.INPUTTING_PIN);
             }
         }
@@ -304,7 +304,6 @@ public class LoginActivityFragment extends InjectedFragment
         }
 
         //transition to main activity
-        bus.post(new Event.LoginSuccess());
         startActivity(new Intent(this.getActivity(), MainActivity.class));
     }
 
@@ -370,15 +369,14 @@ public class LoginActivityFragment extends InjectedFragment
 
     //Helpers
 
-    private void showLoginError(int stringId)
+    private void showLoginError(int stringId, String source)
     {
-        bus.post(new Event.LoginError());
-        showLoginError(getResources().getString(stringId));
+        showLoginError(getResources().getString(stringId), source);
     }
 
-    private void showLoginError(String error)
+    private void showLoginError(String error, String source)
     {
-        bus.post(new Event.LoginError());
+        bus.post(new Event.LoginError(source));
         toast = Toast.makeText(getActivity().getApplicationContext(), error, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();

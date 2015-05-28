@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import android.content.Context;
 
+import com.handy.portal.BuildConfig;
 import com.handy.portal.event.Event;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.otto.Bus;
@@ -18,14 +19,21 @@ public class Mixpanel
 {
     private MixpanelAPI mixpanel;
 
-    private final static String EVENT_PREFIX = "android_portal_";
-
     @Inject
     public Mixpanel(final Context context, final Bus bus)
     {
         String mixpanelApiKey = PropertiesReader.getConfigProperties(context).getProperty("mixpanel_api_key");
         this.mixpanel = MixpanelAPI.getInstance(context, mixpanelApiKey);
+        setupBaseProperties();
         bus.register(this);
+    }
+
+    private void setupBaseProperties() {
+        final JSONObject baseProps = new JSONObject();
+        addProps(baseProps, "device", "android");
+        addProps(baseProps, "app version", BuildConfig.VERSION_NAME);
+        addProps(baseProps, "app flavor", BuildConfig.FLAVOR);
+        mixpanel.registerSuperProperties(baseProps);
     }
 
     public void flush()
@@ -33,38 +41,42 @@ public class Mixpanel
         mixpanel.flush();
     }
 
-    @Subscribe
-    public void onLoginSuccess(Event.LoginSuccess event)
-    {
-        trackSimpleBusEvent(event);
+    public void track(String eventName) {
+        mixpanel.track(eventName, null);
     }
 
     @Subscribe
-    public void onLoginSuccess(Event.LoginError event)
+    public void onRequestPinCode(Event.RequestPinCodeEvent event) {
+        mixpanel.track("portal login submitted - phone number", null);
+    }
+
+    @Subscribe
+    public void onRequestLoginEvent(Event.RequestLoginEvent event) {
+        mixpanel.track("portal login submitted - pin code", null);
+    }
+
+    @Subscribe
+    public void onNavigation(Event.Navigation event) {
+        final JSONObject props = new JSONObject();
+        addProps(props, "page", event.page);
+        mixpanel.track("portal navigation", props);
+    }
+
+    @Subscribe
+    public void onLoginError(Event.LoginError event)
     {
-        trackSimpleBusEvent(event);
+        final JSONObject props = new JSONObject();
+        addProps(props, "source", event.source);
+        mixpanel.track("portal login error", props);
     }
 
     public void trackEventAppOpened(final boolean newOpen)
     {
-        String event_name = "app_open";
+        String event_name = "provider portal";
         final JSONObject props = new JSONObject();
         addProps(props, "new_open", newOpen);
-        mixpanel.track(EVENT_PREFIX + event_name, props);
+        mixpanel.track(event_name, props);
     }
-
-//    public void trackEventLaundryAdded(final LaundryEventSource source)
-//    {
-//        final JSONObject props = new JSONObject();
-//        addProps(props, "source", source.getValue());
-//        mixpanel.track("submit add laundry confirm page", props);
-//    }
-
-    private void trackSimpleBusEvent(Event event) {
-        String event_name = EVENT_PREFIX + event.getClass().getSimpleName();
-        mixpanel.track(event_name, null);
-    }
-
 
     private void addProps(final JSONObject object, final String key, final Object value)
     {
