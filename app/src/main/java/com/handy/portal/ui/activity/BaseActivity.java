@@ -77,10 +77,6 @@ public abstract class BaseActivity extends FragmentActivity
         final Intent intent = getIntent();
         final Uri data = intent.getData();
 
-        if (data != null && data.getHost() != null && data.getHost().equals("deeplink.yoz.io"))
-        {
-            //mixpanel.trackEventYozioOpen(Yozio.getMetaData(intent));
-        }
 
         busEventListener = new Object() {
             @Subscribe

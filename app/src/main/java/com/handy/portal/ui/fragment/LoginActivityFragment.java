@@ -341,6 +341,7 @@ public class LoginActivityFragment extends InjectedFragment
         }
 
         //transition to main activity
+        bus.post(new Event.LoginSuccess());
         startActivity(new Intent(this.getActivity(), MainActivity.class));
     }
 
@@ -412,11 +413,13 @@ public class LoginActivityFragment extends InjectedFragment
 
     private void showLoginError(int stringId)
     {
+        bus.post(new Event.LoginError());
         showLoginError(getResources().getString(stringId));
     }
 
     private void showLoginError(String error)
     {
+        bus.post(new Event.LoginError());
         toast = Toast.makeText(getActivity().getApplicationContext(), error, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
