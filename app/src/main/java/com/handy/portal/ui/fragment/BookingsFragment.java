@@ -5,18 +5,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.event.Event;
+import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.form.BookingListView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -113,6 +111,11 @@ public abstract class BookingsFragment extends InjectedFragment
 
     private Map<BookingListType, List<Booking>> getActiveDayBookings()
     {
+        return getBookingsForDay(activeDay);
+    }
+
+    private Map<BookingListType, List<Booking>> getBookingsForDay(BookingCalendarDay day)
+    {
         Map<BookingListType, List<Booking>> activeDayBookings = new HashMap<>();
 
         if (bookingSummariesByDay == null)
@@ -121,10 +124,10 @@ public abstract class BookingsFragment extends InjectedFragment
             return null;
         }
 
-        if (bookingSummariesByDay.containsKey(activeDay))
+        if (bookingSummariesByDay.containsKey(day))
         {
             //Filter the bookings into two lists, a requested and non-requested list and sort those bookings by time
-            List<Booking> unrequestedBookings = bookingSummariesByDay.get(activeDay).getBookings();
+            List<Booking> unrequestedBookings = new ArrayList(bookingSummariesByDay.get(day).getBookings());
             List<Booking> requestedBookings = new ArrayList<>();
 
             //Remove all requested bookings from unrequested and add them to requested
@@ -147,7 +150,7 @@ public abstract class BookingsFragment extends InjectedFragment
             return activeDayBookings;
         }
 
-        System.err.println("Could not find day : " + activeDay);
+        System.err.println("Could not find day : " + day);
         return null;
     }
 
@@ -177,46 +180,21 @@ public abstract class BookingsFragment extends InjectedFragment
         scrollViewLayout.removeAllViews();
 
         Context context = getActivity().getApplicationContext();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
         for (int i = 0; i < numDaysToDisplay; i++)
         {
             LayoutInflater.from(context).inflate(R.layout.element_date_button, scrollViewLayout);
-            LinearLayout dateLayout = ((LinearLayout) (scrollViewLayout.getChildAt(i)));
-
-            TextView monthText = (TextView) dateLayout.findViewById(R.id.date_month_text);
-            TextView dayOfWeekText = (TextView)  dateLayout.findViewById(R.id.date_day_of_week_text);
-            TextView dayOfMonthText = (TextView) dateLayout.findViewById(R.id.date_day_of_month_text);
-
-            ImageView requestedIndicator = (ImageView) dateLayout.findViewById(R.id.provider_requested_indicator_image);
-            requestedIndicator.setVisibility(View.INVISIBLE);
-
-            ImageView selectedDayIndicator = (ImageView) dateLayout.findViewById(R.id.selected_day_indicator_image);
-            selectedDayIndicator.setVisibility(View.INVISIBLE);
+            final DateButtonView dateButtonView = ((DateButtonView) (scrollViewLayout.getChildAt(i)));
 
             final BookingCalendarDay associatedBookingCalendarDay = new BookingCalendarDay(calendar);
-
             if (i == 0)
             {
                 this.activeDay = associatedBookingCalendarDay; //by default point to first day of data as active day
             }
 
-            String[] formattedDate = dateFormat.format(calendar.getTime()).split(" ");
-
-            //only display month for first day in a month
-            if(Integer.parseInt(formattedDate[2]) == 1)
-            {
-                monthText.setText(formattedDate[0]);
-            }
-            else
-            {
-                monthText.setVisibility(View.INVISIBLE);
-            }
-
-            dayOfWeekText.setText(formattedDate[1]);
-            dayOfMonthText.setText(formattedDate[2]);
-
-            dateLayout.setOnClickListener(new View.OnClickListener()
+            boolean requestedJobsThisDay = getBookingsForDay(associatedBookingCalendarDay).get(BookingListType.REQUESTED).size() > 0;
+            dateButtonView.init(calendar, requestedJobsThisDay);
+            dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
