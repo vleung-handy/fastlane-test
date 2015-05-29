@@ -21,6 +21,9 @@ import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.GoogleMapView;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -73,22 +76,22 @@ public class BookingDetailsFragment extends InjectedFragment
 
         ButterKnife.inject(this, view);
 
-        //TODO: Auto validate arguments per class on a fragment basis
-        Bundle arguments = this.getArguments();
-        String targetBookingId = "";
-        if(arguments != null && arguments.containsKey(BundleKeys.BOOKING_ID))
-        {
-            targetBookingId = arguments.getString(BundleKeys.BOOKING_ID);
-        }
-        else
-        {
-            System.err.println("Could not find a " + BundleKeys.BOOKING_ID + " in arguments");
-        }
-
         bannerText.setText("");
-        requestBookingDetails(targetBookingId);
+
+        if(validateRequiredArguments())
+        {
+            requestBookingDetails(this.getArguments().getString(BundleKeys.BOOKING_ID));
+        }
 
         return view;
+    }
+
+    @Override
+    protected List<String> requiredArguments()
+    {
+        List<String> requiredArguments = new ArrayList<>();
+        requiredArguments.add(BundleKeys.BOOKING_ID);
+        return requiredArguments;
     }
 
     //Events and Event Handling

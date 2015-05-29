@@ -10,8 +10,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.PortalWebViewClient;
 import com.handy.portal.data.HandyRetrofitEndpoint;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -57,10 +61,28 @@ public class PortalWebViewFragment extends InjectedFragment
 
         initWebView();
 
+        if(validateRequiredArguments())
+        {
+            openPortalUrl(getArguments().getString(BundleKeys.TARGET_URL));
+        }
+
         return view;
     }
 
+    @Override
+    protected List<String> requiredArguments()
+    {
+        List<String> requiredArguments = new ArrayList<>();
+        requiredArguments.add(BundleKeys.TARGET_URL);
+        return requiredArguments;
+    }
+
     public void openPortalUrl(Target target)
+    {
+        openPortalUrl(target.getValue());
+    }
+
+    public void openPortalUrl(String target)
     {
         webView.setWebChromeClient(new WebChromeClient()
         {
@@ -70,7 +92,7 @@ public class PortalWebViewFragment extends InjectedFragment
                 callback.invoke(origin, true, false);
             }
         });
-        String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target.getValue();
+        String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target;
         loadUrlWithFromAppParam(url);
     }
 

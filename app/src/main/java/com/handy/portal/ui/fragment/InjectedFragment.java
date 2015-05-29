@@ -14,6 +14,9 @@ import com.handy.portal.data.Mixpanel;
 import com.handy.portal.ui.widget.ProgressDialog;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -90,6 +93,47 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
     protected void enableInputs()
     {
+    }
+
+    //Each fragment if it requires arguments from the bundles should override this list
+    protected List<String> requiredArguments()
+    {
+        return new ArrayList<String>();
+    }
+
+    protected boolean validateRequiredArguments()
+    {
+        boolean validated = true;
+
+        Bundle suppliedArguments = this.getArguments();
+        List<String> requiredArguments = requiredArguments();
+        String errorDetails = "";
+        for (String requiredArgument : requiredArguments)
+        {
+            if (!suppliedArguments.containsKey(requiredArgument)
+                    || suppliedArguments.getString(requiredArgument) == null)
+            {
+                validated = false;
+
+                if (!validated)
+                {
+                    errorDetails += "Missing required argument : " + requiredArgument + "\n";
+                }
+            }
+        }
+
+        try
+        {
+            if (!validated)
+            {
+                throw new Exception(errorDetails);
+            }
+        } catch (Exception e)
+        {
+            System.err.println(e.toString());
+        }
+
+        return validated;
     }
 
     //Helpers
