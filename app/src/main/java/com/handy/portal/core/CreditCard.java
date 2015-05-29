@@ -1,5 +1,9 @@
 package com.handy.portal.core;
 
-public class CreditCard {
-    public enum Type {OTHER, AMEX, DISCOVER, MASTERCARD, VISA}
+public class CreditCard
+{
+    public enum Type
+    {
+        OTHER, AMEX, DISCOVER, MASTERCARD, VISA
+    }
 }

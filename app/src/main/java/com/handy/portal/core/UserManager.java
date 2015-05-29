@@ -8,31 +8,46 @@ import java.util.Observer;
 
 import javax.inject.Inject;
 
-public final class UserManager implements Observer {
+public final class UserManager implements Observer
+{
     private final Bus bus;
     private User user;
     private final SecurePreferences securePrefs;
 
+
+
+
+
+
+
+
+
+
     @Inject
-    UserManager(final Bus bus, final SecurePreferences prefs) {
+    UserManager(final Bus bus, final SecurePreferences prefs)
+    {
         this.securePrefs = prefs;
         this.bus = bus;
         this.bus.register(this);
     }
 
-    public final User getCurrentUser() {
+    public final User getCurrentUser()
+    {
         if (user != null) return user;
-        else {
+        else
+        {
             if ((user = User.fromJson(securePrefs.getString("USER_OBJ"))) != null)
                 user.addObserver(this);
             return user;
         }
     }
 
-    public final void setCurrentUser(final User newUser) {
+    public final void setCurrentUser(final User newUser)
+    {
         if (user != null) user.deleteObserver(this);
 
-        if (newUser == null || newUser.getAuthToken() == null || newUser.getId() == null) {
+        if (newUser == null || newUser.getAuthToken() == null || newUser.getId() == null)
+        {
             user = null;
             securePrefs.put("USER_OBJ", null);
             //bus.post(new UserLoggedInEvent(false));
@@ -49,8 +64,9 @@ public final class UserManager implements Observer {
     }
 
     @Override
-    public void update(final Observable observable, final Object data) {
-        if (observable instanceof User) setCurrentUser((User)observable);
+    public void update(final Observable observable, final Object data)
+    {
+        if (observable instanceof User) setCurrentUser((User) observable);
     }
 
 //    @Subscribe

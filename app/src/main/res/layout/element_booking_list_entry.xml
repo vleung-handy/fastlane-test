@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minHeight="75dp"
+    >
+
+    <TextView
+        android:id="@+id/booking_start_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:00a"
+        android:layout_alignTop="@+id/requested_indicator"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/booking_end_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1:00p"
+        android:textColor="@color/dark_grey"
+        android:layout_alignBaseline="@+id/booking_payment_bonus"
+        android:layout_alignBottom="@+id/booking_payment_bonus"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:id="@+id/requested_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/booking_job_type"
+        android:layout_alignStart="@+id/booking_job_type">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You&apos;re Requested!" />
+
+    </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/booking_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Union Square"
+            android:layout_below="@+id/requested_indicator"
+            android:layout_alignRight="@+id/booking_job_type"
+            android:layout_alignEnd="@+id/booking_job_type" />
+
+        <TextView
+            android:id="@+id/booking_job_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home Cleaning"
+            android:layout_marginLeft="26dp"
+            android:layout_marginStart="26dp"
+            android:layout_below="@+id/booking_area"
+            android:layout_toRightOf="@+id/booking_start_date"
+            android:layout_toEndOf="@+id/booking_start_date" />
+
+    <TextView
+        android:id="@+id/booking_payment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$45"
+        android:textSize="50dp"
+        android:layout_alignBaseline="@+id/booking_job_type"
+        android:layout_alignBottom="@+id/booking_job_type"
+        android:layout_toLeftOf="@+id/image_view_2"
+        android:layout_toStartOf="@+id/image_view_2" />
+
+    <TextView
+        android:id="@+id/booking_payment_bonus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+$5 Bonus"
+        android:layout_below="@+id/booking_job_type"
+        android:layout_alignLeft="@+id/booking_payment"
+        android:layout_alignStart="@+id/booking_payment" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/abc_btn_check_to_on_mtrl_015"
+        android:layout_above="@+id/booking_area"
+        android:layout_toLeftOf="@+id/requested_indicator"
+        android:layout_toStartOf="@+id/requested_indicator" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_view_2"
+        android:src="@drawable/abc_ic_menu_cut_mtrl_alpha"
+        android:layout_below="@+id/requested_indicator"
+        android:layout_alignParentRight="true"
+        />
+
+
+</RelativeLayout>

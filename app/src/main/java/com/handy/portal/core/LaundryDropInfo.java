@@ -11,30 +11,42 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public final class LaundryDropInfo implements Parcelable {
-    @SerializedName("type") private String type;
-    @SerializedName("title") private String title;
-    @SerializedName("subtitle") private String subtitle;
-    @SerializedName("max_date") private Date maxDate;
-    @SerializedName("min_date") private Date minDate;
-    @SerializedName("times") private DropTimes dropTimes;
+public final class LaundryDropInfo implements Parcelable
+{
+    @SerializedName("type")
+    private String type;
+    @SerializedName("title")
+    private String title;
+    @SerializedName("subtitle")
+    private String subtitle;
+    @SerializedName("max_date")
+    private Date maxDate;
+    @SerializedName("min_date")
+    private Date minDate;
+    @SerializedName("times")
+    private DropTimes dropTimes;
 
     private ArrayList<Date> dates;
 
-    public final String getType() {
+    public final String getType()
+    {
         return type;
     }
 
-    public final String getTitle() {
+    public final String getTitle()
+    {
         return title;
     }
 
-    public final String getSubtitle() {
+    public final String getSubtitle()
+    {
         return subtitle;
     }
 
-    public final List<Date> getDates() {
-        if (dates == null) {
+    public final List<Date> getDates()
+    {
+        if (dates == null)
+        {
             dates = new ArrayList<>();
 
             final Calendar start = Calendar.getInstance();
@@ -43,9 +55,11 @@ public final class LaundryDropInfo implements Parcelable {
             final Calendar end = Calendar.getInstance();
             end.setTime(maxDate);
 
-            while(!start.after(end)){
+            while (!start.after(end))
+            {
                 final List<DropTime> times = getDropTimes(start.getTime());
-                if (times != null && times.size() > 0) {
+                if (times != null && times.size() > 0)
+                {
                     dates.add(start.getTime());
                 }
                 start.add(Calendar.DATE, 1);
@@ -54,13 +68,15 @@ public final class LaundryDropInfo implements Parcelable {
         return dates;
     }
 
-    public final List<DropTime> getDropTimes(final Date date) {
+    public final List<DropTime> getDropTimes(final Date date)
+    {
         final Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
         final int day = cal.get(Calendar.DAY_OF_WEEK);
 
-        switch (day) {
+        switch (day)
+        {
             case Calendar.MONDAY:
                 return dropTimes.getMonday();
 
@@ -85,7 +101,8 @@ public final class LaundryDropInfo implements Parcelable {
         return null;
     }
 
-    private LaundryDropInfo(final Parcel in) {
+    private LaundryDropInfo(final Parcel in)
+    {
         final String[] stringData = new String[3];
         in.readStringArray(stringData);
         type = stringData[0];
@@ -99,7 +116,8 @@ public final class LaundryDropInfo implements Parcelable {
     }
 
     @Override
-    public final void writeToParcel(final Parcel out, final int flags) {
+    public final void writeToParcel(final Parcel out, final int flags)
+    {
         out.writeStringArray(new String[]{type, title, subtitle});
         out.writeLong(maxDate.getTime());
         out.writeLong(minDate.getTime());
@@ -107,62 +125,84 @@ public final class LaundryDropInfo implements Parcelable {
     }
 
     @Override
-    public final int describeContents(){
+    public final int describeContents()
+    {
         return 0;
     }
 
-    public static final Creator CREATOR = new Creator() {
-        public LaundryDropInfo createFromParcel(final Parcel in) {
+    public static final Creator CREATOR = new Creator()
+    {
+        public LaundryDropInfo createFromParcel(final Parcel in)
+        {
             return new LaundryDropInfo(in);
         }
-        public LaundryDropInfo[] newArray(final int size) {
+
+        public LaundryDropInfo[] newArray(final int size)
+        {
             return new LaundryDropInfo[size];
         }
     };
 
-    public static LaundryDropInfo fromJson(final String json) {
+    public static LaundryDropInfo fromJson(final String json)
+    {
         return new GsonBuilder().setDateFormat("MM/dd/yyyy").create()
                 .fromJson(json, LaundryDropInfo.class);
     }
 
-    public static final class DropTimes implements Parcelable {
-        @SerializedName("monday") private ArrayList<DropTime> monday;
-        @SerializedName("tuesday") private ArrayList<DropTime> tuesday;
-        @SerializedName("wednesday") private ArrayList<DropTime> wednesday;
-        @SerializedName("thursday") private ArrayList<DropTime> thursday;
-        @SerializedName("friday") private ArrayList<DropTime> friday;
-        @SerializedName("saturday") private ArrayList<DropTime> saturday;
-        @SerializedName("sunday") private ArrayList<DropTime> sunday;
+    public static final class DropTimes implements Parcelable
+    {
+        @SerializedName("monday")
+        private ArrayList<DropTime> monday;
+        @SerializedName("tuesday")
+        private ArrayList<DropTime> tuesday;
+        @SerializedName("wednesday")
+        private ArrayList<DropTime> wednesday;
+        @SerializedName("thursday")
+        private ArrayList<DropTime> thursday;
+        @SerializedName("friday")
+        private ArrayList<DropTime> friday;
+        @SerializedName("saturday")
+        private ArrayList<DropTime> saturday;
+        @SerializedName("sunday")
+        private ArrayList<DropTime> sunday;
 
-        public final ArrayList<DropTime> getMonday() {
+        public final ArrayList<DropTime> getMonday()
+        {
             return monday;
         }
 
-        public final ArrayList<DropTime> getTuesday() {
+        public final ArrayList<DropTime> getTuesday()
+        {
             return tuesday;
         }
 
-        public final ArrayList<DropTime> getWednesday() {
+        public final ArrayList<DropTime> getWednesday()
+        {
             return wednesday;
         }
 
-        public final ArrayList<DropTime> getThursday() {
+        public final ArrayList<DropTime> getThursday()
+        {
             return thursday;
         }
 
-        public final ArrayList<DropTime> getFriday() {
+        public final ArrayList<DropTime> getFriday()
+        {
             return friday;
         }
 
-        public final ArrayList<DropTime> getSaturday() {
+        public final ArrayList<DropTime> getSaturday()
+        {
             return saturday;
         }
 
-        public final ArrayList<DropTime> getSunday() {
+        public final ArrayList<DropTime> getSunday()
+        {
             return sunday;
         }
 
-        private DropTimes(final Parcel in) {
+        private DropTimes(final Parcel in)
+        {
             monday = new ArrayList<DropTime>();
             tuesday = new ArrayList<DropTime>();
             wednesday = new ArrayList<DropTime>();
@@ -181,7 +221,8 @@ public final class LaundryDropInfo implements Parcelable {
         }
 
         @Override
-        public final void writeToParcel(final Parcel out, final int flags) {
+        public final void writeToParcel(final Parcel out, final int flags)
+        {
             out.writeTypedList(monday);
             out.writeTypedList(tuesday);
             out.writeTypedList(wednesday);
@@ -192,38 +233,51 @@ public final class LaundryDropInfo implements Parcelable {
         }
 
         @Override
-        public final int describeContents(){
+        public final int describeContents()
+        {
             return 0;
         }
 
-        public static final Creator CREATOR = new Creator() {
-            public DropTimes createFromParcel(final Parcel in) {
+        public static final Creator CREATOR = new Creator()
+        {
+            public DropTimes createFromParcel(final Parcel in)
+            {
                 return new DropTimes(in);
             }
-            public DropTimes[] newArray(final int size) {
+
+            public DropTimes[] newArray(final int size)
+            {
                 return new DropTimes[size];
             }
         };
     }
 
-    public static final class DropTime implements Parcelable {
-        @SerializedName("hour") private int hour;
-        @SerializedName("minute") private int minute;
-        @SerializedName("display_string") private String displayTime;
+    public static final class DropTime implements Parcelable
+    {
+        @SerializedName("hour")
+        private int hour;
+        @SerializedName("minute")
+        private int minute;
+        @SerializedName("display_string")
+        private String displayTime;
 
-        public final int getHour() {
+        public final int getHour()
+        {
             return hour;
         }
 
-        public final int getMinute() {
+        public final int getMinute()
+        {
             return minute;
         }
 
-        public final String getDisplayTime() {
+        public final String getDisplayTime()
+        {
             return displayTime;
         }
 
-        private DropTime(final Parcel in) {
+        private DropTime(final Parcel in)
+        {
             final int[] intData = new int[2];
             in.readIntArray(intData);
             hour = intData[0];
@@ -235,21 +289,27 @@ public final class LaundryDropInfo implements Parcelable {
         }
 
         @Override
-        public final void writeToParcel(final Parcel out, final int flags) {
+        public final void writeToParcel(final Parcel out, final int flags)
+        {
             out.writeIntArray(new int[]{hour, minute});
             out.writeStringArray(new String[]{displayTime});
         }
 
         @Override
-        public final int describeContents(){
+        public final int describeContents()
+        {
             return 0;
         }
 
-        public static final Creator CREATOR = new Creator() {
-            public DropTime createFromParcel(final Parcel in) {
+        public static final Creator CREATOR = new Creator()
+        {
+            public DropTime createFromParcel(final Parcel in)
+            {
                 return new DropTime(in);
             }
-            public DropTime[] newArray(final int size) {
+
+            public DropTime[] newArray(final int size)
+            {
                 return new DropTime[size];
             }
         };

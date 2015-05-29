@@ -3,8 +3,6 @@ package com.handy.portal.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -13,12 +11,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.util.Utils;
 
-/**
- * Created by cdavis on 4/30/15.
- */
 public class GoogleService
 {
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST= 9000;
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static final String PROPERTY_REG_ID = "69696969qqq"; // I'm not sure what to put here
     private static final String PROPERTY_APP_VERSION = "1.0";
 
@@ -34,8 +29,10 @@ public class GoogleService
 
     public GoogleCloudMessaging getCloudMessaging(Activity targetActivity)
     {
-        if(gcm == null) {
-            if (checkPlayServices(targetActivity)) {
+        if (gcm == null)
+        {
+            if (checkPlayServices(targetActivity))
+            {
                 gcm = GoogleCloudMessaging.getInstance(targetActivity);
                 regId = getRegistrationId(context);
             }
@@ -51,8 +48,7 @@ public class GoogleService
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode))
             {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, targetActivity, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            }
-            else
+            } else
             {
                 targetActivity.finish();
             }
@@ -64,16 +60,18 @@ public class GoogleService
 
     /**
      * Gets the current registration ID for application on GCM service.
-     * <p>
+     * <p/>
      * If result is empty, the app needs to register.
      *
      * @return registration ID, or empty string if there is no existing
-     *         registration ID.
+     * registration ID.
      */
-    private String getRegistrationId(Context context) {
+    private String getRegistrationId(Context context)
+    {
         final SharedPreferences prefs = getGCMPreferences(context);
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-        if (registrationId.isEmpty()) {
+        if (registrationId.isEmpty())
+        {
             return "";
         }
         // Check if app was updated; if so, it must clear the registration ID
@@ -81,7 +79,8 @@ public class GoogleService
         // app version.
         int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = Utils.getAppVersion(context);
-        if (registeredVersion != currentVersion) {
+        if (registeredVersion != currentVersion)
+        {
             return "";
         }
         return registrationId;
@@ -90,17 +89,22 @@ public class GoogleService
     /**
      * @return Application's {@code SharedPreferences}.
      */
-    private SharedPreferences getGCMPreferences(Context context) {
+    private SharedPreferences getGCMPreferences(Context context)
+    {
         // This sample app persists the registration ID in shared preferences, but
         // how you store the regID in your app is up to you.
         return context.getSharedPreferences(MainActivity.class.getSimpleName(),
-                                                    Context.MODE_PRIVATE);
+                Context.MODE_PRIVATE);
     }
 
-    public String getOrSetDeviceId(){
-        new AsyncTask<Void, Void, String>() {
-            protected String doInBackground(Void... params){
-                try {
+    public String getOrSetDeviceId()
+    {
+        new AsyncTask<Void, Void, String>()
+        {
+            protected String doInBackground(Void... params)
+            {
+                try
+                {
                     if (gcm == null)
                     {
                         gcm = GoogleCloudMessaging.getInstance(context);
@@ -110,7 +114,8 @@ public class GoogleService
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("deviceId", regId);
                     editor.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                 }
                 return "";
             }

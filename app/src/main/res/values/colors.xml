@@ -3,6 +3,7 @@
     <color name="handy_blue">#00CDED</color>
     <color name="handy_blue_pressed">#00ABC6</color>
     <color name="handy_green">#8CC63f</color>
+    <color name="handy_salmon">#FF5C5C</color>
     <color name="handy_green_pressed">#71A230</color>
     <color name="handy_teal">#39D2B8</color>
     <color name="handy_yellow">#FFB600</color>
@@ -12,13 +13,14 @@
     <color name="disabled">#E5EAEC</color>
     <color name="nav_bg">#1D1D1D</color>
     <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
     <color name="white_trans">#7EFFFFFF</color>
     <color name="white_pressed">#E0E0E0</color>
     <color name="black">#434343</color>
     <color name="black_pressed">#A1A1A1</color>
     <color name="nav_sep">#B1B1B1</color>
-    <color name="light_grey">#C1CAD0</color>
-    <color name="dark_grey">#B1B1B1</color>
+    <color name="light_grey">#606060</color>
+    <color name="dark_grey">#4A4A4A</color>
     <color name="dark_grey_pressed">#949494</color>
     <color name="xdark_grey">#434343</color>
     <color name="steel">#8B9BA6</color>
@@ -30,4 +32,6 @@
     <color name="price_green">#ACC63F</color>
     <color name="facebook">#246BAB</color>
     <color name="facebook_pressed">#1C4B76</color>
+    <color name="very_light_grey">#9F9794</color>
+
 </resources>

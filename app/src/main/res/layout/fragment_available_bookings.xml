@@ -6,11 +6,23 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".AvailableBookingsFragment">
 
-    <TextView android:text="AVAIL BOOK" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+    <com.handy.portal.ui.form.BookingListView
+        android:layout_width="wrap_content"
+        android:layout_height="335dp"
+        android:id="@+id/available_jobs_list_view"
+        android:layout_gravity="center"
+        android:dividerHeight="10dp" />
 
+    <HorizontalScrollView
+        android:layout_width="306dp"
+        android:layout_height="65dp"
+        android:id="@+id/available_bookings_dates_scroll_view"
+        android:layout_gravity="center_horizontal|top" >
 
+        <LinearLayout
+            android:id="@+id/available_bookings_dates_scroll_view_layout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></LinearLayout>
+    </HorizontalScrollView>
 </FrameLayout>

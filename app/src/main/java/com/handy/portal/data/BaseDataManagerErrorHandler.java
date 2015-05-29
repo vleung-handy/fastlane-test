@@ -10,14 +10,17 @@ import com.handy.portal.ui.widget.InputTextField;
 
 import java.util.Map;
 
-public final class BaseDataManagerErrorHandler implements DataManagerErrorHandler {
+public final class BaseDataManagerErrorHandler implements DataManagerErrorHandler
+{
     private Toast toast;
 
     public final void handleError(final Context context, final DataManager.DataManagerError error,
-                            final Map<String, InputTextField> inputMap) {
+                                  final Map<String, InputTextField> inputMap)
+    {
         String message = context.getString(R.string.default_error_string);
 
-        switch (error.getType()) {
+        switch (error.getType())
+        {
             case NETWORK:
                 message = "Unable to connect. Please try again.";
                 break;
@@ -25,8 +28,10 @@ public final class BaseDataManagerErrorHandler implements DataManagerErrorHandle
                 final String[] inputs = error.getInvalidInputs();
                 if (error.getMessage() != null) message = error.getMessage();
 
-                if (inputs != null && inputMap != null) {
-                    for (String input : inputs) {
+                if (inputs != null && inputMap != null)
+                {
+                    for (String input : inputs)
+                    {
                         final InputTextField textField;
                         if ((textField = inputMap.get(input)) != null) textField.highlight();
                     }
@@ -40,7 +45,8 @@ public final class BaseDataManagerErrorHandler implements DataManagerErrorHandle
 
         }
 
-        if (toast == null) {
+        if (toast == null)
+        {
             toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
         }
@@ -49,7 +55,8 @@ public final class BaseDataManagerErrorHandler implements DataManagerErrorHandle
         toast.show();
     }
 
-    public final void handleError(final Context context, final DataManager.DataManagerError error) {
+    public final void handleError(final Context context, final DataManager.DataManagerError error)
+    {
         handleError(context, error, null);
     }
 }

@@ -1,7 +1,7 @@
 package com.handy.portal.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,27 +11,40 @@ import android.webkit.WebView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.PortalWebViewClient;
-import com.handy.portal.core.ServerParams;
+import com.handy.portal.data.HandyRetrofitEndpoint;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+public class PortalWebViewFragment extends InjectedFragment
+{
+    public enum Target
+    {
+        JOBS("available"),
+        SCHEDULE("future"),
+        PROFILE("profile"),
+        HELP("help");
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class PortalWebViewFragment extends InjectedFragment {
+        private String value;
 
-    @InjectView(R.id.webViewPortal)
+        Target(String value)
+        {
+            this.value = value;
+        }
+
+        public String getValue()
+        {
+            return value;
+        }
+    }
+
+    @InjectView(R.id.web_view_portal)
     WebView webView;
 
-    public PortalWebViewFragment() {
-    }
-
-    protected String getWebParam()
-    {
-        return "";
-    }
+    @Inject
+    HandyRetrofitEndpoint endpoint;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,9 +55,22 @@ public class PortalWebViewFragment extends InjectedFragment {
         ButterKnife.inject(this, view);
 
         initWebView();
-        openPortalUrl();
 
         return view;
+    }
+
+    public void openPortalUrl(Target target)
+    {
+        webView.setWebChromeClient(new WebChromeClient()
+        {
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback)
+            {
+                callback.invoke(origin, true, false);
+            }
+        });
+        String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target.getValue();
+        loadUrlWithFromAppParam(url);
     }
 
     private void initWebView()
@@ -54,41 +80,11 @@ public class PortalWebViewFragment extends InjectedFragment {
         webView.setWebViewClient(new PortalWebViewClient(this, webView, googleService));
     }
 
-    public void openUrlWithChrome(String url){
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                callback.invoke(origin,  true, false);
-            }
-        });
-        loadUrlWithFromAppParam(url);
-    }
-
-    private void loadUrlWithFromAppParam(String url){
-        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android";
-        if(url.contains("?")){
-            url = url + "&" + endOfUrl;
-        } else {
-            url = url + "?" + endOfUrl;
-        }
-
-        System.out.println("Target url : " + url);
-
-        webView.loadUrl(url);
-    }
-
-    private void openPortalUrl()
+    private void loadUrlWithFromAppParam(String url)
     {
-        String FinalUrl;
-        Intent intent = getActivity().getIntent();
-        CharSequence booking_id = intent.getStringExtra("booking_id");
-
-        if(booking_id != null) {
-            FinalUrl = ServerParams.BaseUrl + "portal/jobs/" + booking_id + "/job_details";
-        } else {
-            FinalUrl = ServerParams.BaseUrl + "professional";
-        }
-        openUrlWithChrome(FinalUrl);
+        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1";
+        String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
+        Log.d(PortalWebViewFragment.class.getSimpleName(), "Loading url: " + urlWithParams);
+        webView.loadUrl(urlWithParams);
     }
-
 }

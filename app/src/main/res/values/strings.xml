@@ -3,6 +3,29 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="phone_number_hint">Cell Phone Number</string>
+    <string name="pin_code_hint">Pin Code</string>
+    <string name="request_pin">Get Pin Code</string>
+    <string name="professional_portal">Professional Portal</string>
+    <string name="login_instructions_1_a">Log in to Handy:</string>
+    <string name="login_instructions_1_b">You will be texted a pin code</string>
+    <string name="login_instructions_2">Enter the 4-digit code that was texted to %1$s:</string>
+    <string name="sending_pin">Sending Pin to Phone</string>
+    <string name="logging_in">Logging In</string>
+
+    <string name="no_pin_cta">Not receiving a pin code?</string>
+
+    <string name="instructions">Instructions</string>
+    <string name="login_help">Phone number entered must match the number registered to your account. If you are experiencing difficulty, please go visit our <a href="#">Help Center</a>.</string>
+
+    <string name="login_error_bad_phone">Your phone number was not recognized</string>
+    <string name="login_error_bad_login">Login failed. Please make sure your phone and PIN code are correct.</string>
+    <string name="login_error_connectivity">The login server could not be reached, please try again</string>
+
+    <string name="login_help_email_address">help@handy.com</string>
+    <string name="login_help_email_subject">Change Pro Phone Number</string>
+    <string name="login_help_choose_email_client">Choose an Email Client</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>
@@ -146,6 +169,10 @@
     <string name="back">Back</string>
     <string name="contact_received">Message sent! \nWe\'ll follow up shortly.</string>
 
+    <!-- TODO: Update Screen Copy -->
+    <string name="update_header">Time for an update!</string>
+    <string name="update_copy">Please download the latest app to continue using portal.</string>
+    <string name="update_button_label">Download Update</string>
 
     <plurals name="hour">
         <item quantity="one">hour</item>
@@ -154,4 +181,9 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tab_jobs">Jobs</string>
+    <string name="tab_schedule">Schedule</string>
+    <string name="tab_profile">Profile</string>
+    <string name="tab_help">Help</string>
+    <string name="title_activity_please_update">PleaseUpdateActivity</string>
 </resources>

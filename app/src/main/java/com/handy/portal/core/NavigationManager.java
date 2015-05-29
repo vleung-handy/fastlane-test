@@ -1,21 +1,13 @@
 package com.handy.portal.core;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.support.v4.util.Pair;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.PropertiesReader;
-import com.handy.portal.ui.activity.BaseActivity;
 
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -25,18 +17,20 @@ import javax.inject.Inject;
  * Created by cdavis on 4/20/15.
  */
 
-public final class NavigationManager {
+public final class NavigationManager
+{
 
     //String consts
-    private static final String WEB_AUTH_TOKEN ="slt=";
-    private static final String WEB_PARAM_TOKEN ="?";
-    private static final String WEB_ADDITIONAL_PARAM_TOKEN ="&";
-    private static final String WEB_PARAM_DISABLE_MOBILE_SPLASH="&disable_mobile_splash=1";
+    private static final String WEB_AUTH_TOKEN = "slt=";
+    private static final String WEB_PARAM_TOKEN = "?";
+    private static final String WEB_ADDITIONAL_PARAM_TOKEN = "&";
+    private static final String WEB_PARAM_DISABLE_MOBILE_SPLASH = "&disable_mobile_splash=1";
 
     //Injected params
     private UserManager userManager;
     private DataManager dataManager;
     private DataManagerErrorHandler dataManagerErrorHandler;
+
 
     //Valid Action Ids
     private static final String ACTION_ID_SERVICES = "services";
@@ -69,7 +63,9 @@ public final class NavigationManager {
 
     //Action Id to Deeplink Id Mapping
     public static final Map<String, String> ACTION_ID_TO_DEEP_LINK_ID;
-    static {
+
+    static
+    {
         Map<String, String> map = new HashMap<String, String>();
         map.put(ACTION_ID_SERVICES, DEEP_LINK_ID_SERVICES);
         map.put(ACTION_ID_GO_TO_MY_PROFILE, DEEP_LINK_ID_PROFILE);
@@ -97,7 +93,7 @@ public final class NavigationManager {
     @Inject
     public NavigationManager(Context context, UserManager userManager, DataManager dataManager, DataManagerErrorHandler dataManagerErrorHandler)
     {
-        this.config = PropertiesReader.getProperties(context, "config.properties");
+        this.config = PropertiesReader.getConfigProperties(context);
         this.context = context;
         this.userManager = userManager;
         this.dataManager = dataManager;
