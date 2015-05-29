@@ -97,7 +97,7 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final HandyRetrofitService provideHandyService(
-            final HandyRetrofitEndpoint endpoint, final UserManager userManager)
+            final HandyRetrofitEndpoint endpoint)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -123,26 +123,9 @@ public final class ApplicationModule
                         request.addQueryParam("app_device_id", getDeviceId());
                         request.addQueryParam("app_device_model", getDeviceName());
                         request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
-
-                        final User user = userManager.getCurrentUser();
-                        if (user != null) request.addQueryParam("app_user_id", user.getId());
                     }
                 }).setConverter(new GsonConverter(new GsonBuilder()
                         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                        .setExclusionStrategies(BookingRequest.getExclusionStrategy())
-                        .registerTypeAdapter(BookingRequest.class,
-                                new BookingRequest.BookingRequestSerializer())
-                        .setExclusionStrategies(BookingQuote.getExclusionStrategy())
-                        .registerTypeAdapter(BookingQuote.class,
-                                new BookingQuote.BookingQuoteSerializer())
-                        .setExclusionStrategies(BookingPostInfo.getExclusionStrategy())
-                        .registerTypeAdapter(BookingPostInfo.class,
-                                new BookingPostInfo.BookingPostInfoSerializer())
-                        .setExclusionStrategies(BookingTransaction.getExclusionStrategy())
-                        .registerTypeAdapter(BookingTransaction.class,
-                                new BookingTransaction.BookingTransactionSerializer())
-                        .setExclusionStrategies(User.getExclusionStrategy())
-                        .registerTypeAdapter(User.class, new User.UserSerializer())
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (BuildConfig.BUILD_TYPE.equals("debug"))
@@ -195,15 +178,6 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final UserManager provideUserManager(final Bus bus,
-                                         final SecurePreferences prefs)
-    {
-        return new UserManager(bus, prefs);
-    }
-
-
-    @Provides
-    @Singleton
     final LoginManager provideLoginManager(final Bus bus)
     {
         return new LoginManager(bus);
@@ -230,11 +204,10 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final NavigationManager provideNavigationManager(final UserManager userManager,
-                                                     final DataManager dataManager,
+    final NavigationManager provideNavigationManager(final DataManager dataManager,
                                                      final DataManagerErrorHandler dataManagerErrorHandler)
     {
-        return new NavigationManager(this.context, userManager, dataManager, dataManagerErrorHandler);
+        return new NavigationManager(this.context, dataManager, dataManagerErrorHandler);
     }
 
     @Provides

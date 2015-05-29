@@ -16,10 +16,6 @@ import javax.inject.Inject;
 
 public final class BookingManager
 {
-    private BookingRequest request;
-    private BookingQuote quote;
-    private BookingTransaction transaction;
-    private BookingPostInfo postInfo;
     private final SecurePreferences securePrefs;
     private final Bus bus;
     private final DataManager dataManager;

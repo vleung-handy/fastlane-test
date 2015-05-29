@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
+import com.handy.portal.consts.DebugOnlyHacks;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.data.EnvironmentSwitcher;
 import com.handy.portal.event.Event;
@@ -64,8 +65,6 @@ public class LoginActivityFragment extends InjectedFragment
     @Inject
     EnvironmentSwitcher environmentSwitcher;
 
-    private static final boolean DEBUG_SKIP_LOGIN = false; //bypass the native login and use the old web login
-
     //TODO: Move to a config file? Maybe point to an endpoint that supplies the url?
     private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
     private static final String HELP_URL = "https://www.handy.com/help";
@@ -99,7 +98,7 @@ public class LoginActivityFragment extends InjectedFragment
 
         //TODO: Prepopulate phone number with device's number? User could still edit if it fails
 
-        if (DEBUG_SKIP_LOGIN)
+        if (DebugOnlyHacks.canSkipLogin())
         {
             startActivity(new Intent(this.getActivity(), MainActivity.class));
         }
@@ -309,7 +308,7 @@ public class LoginActivityFragment extends InjectedFragment
         startActivity(new Intent(this.getActivity(), MainActivity.class));
     }
 
-    //View work, to separate into a view class along with the view injections
+    //TODO: View work, to separate into a view class along with the view injections
     private void updateDisplay(LoginState phase)
     {
         switch (phase)

@@ -8,7 +8,6 @@ import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.NavigationManager;
-import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
@@ -27,8 +26,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
     @Inject
     BookingManager bookingManager;
-    @Inject
-    UserManager userManager;
     @Inject
     Mixpanel mixpanel;
     @Inject

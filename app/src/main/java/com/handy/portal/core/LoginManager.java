@@ -1,6 +1,6 @@
 package com.handy.portal.core;
 
-import com.handy.portal.BuildConfig;
+import com.handy.portal.consts.DebugOnlyHacks;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 public final class LoginManager
 {
-    private static final String DEBUG_USER_ID = "11"; //for quick development by bypassing the login procedure
+
 
     private final Bus bus;
     private DataManager dataManager;
@@ -80,9 +80,9 @@ public final class LoginManager
     {
         String loggedInUserId = "";
 
-        if(BuildConfig.BUILD_TYPE.equals("debug"))
+        if(DebugOnlyHacks.canSkipLogin())
         {
-            loggedInUserId = DEBUG_USER_ID; //for quick hacky debug work allows us to bypass the login screen
+            loggedInUserId = DebugOnlyHacks.getSkippedLoginUserId(); //for quick hacky debug work allows us to bypass the login screen
         }
 
         if(this.loginDetails != null)

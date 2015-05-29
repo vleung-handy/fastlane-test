@@ -8,7 +8,6 @@ import android.widget.Toast;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
 import com.handy.portal.core.LoginManager;
-import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
@@ -26,8 +25,6 @@ public class InjectedDialogFragment extends DialogFragment
 
     @Inject
     BookingManager bookingManager;
-    @Inject
-    UserManager userManager;
     @Inject
     Mixpanel mixpanel;
     @Inject

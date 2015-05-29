@@ -13,7 +13,6 @@ import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
 import com.handy.portal.core.UpdateManager;
-import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
@@ -44,8 +43,6 @@ public abstract class BaseActivity extends FragmentActivity
     Mixpanel mixpanel;
     @Inject
     Bus bus;
-    @Inject
-    UserManager userManager;
     @Inject
     DataManager dataManager;
     @Inject

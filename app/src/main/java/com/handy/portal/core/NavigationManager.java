@@ -27,10 +27,8 @@ public final class NavigationManager
     private static final String WEB_PARAM_DISABLE_MOBILE_SPLASH = "&disable_mobile_splash=1";
 
     //Injected params
-    private UserManager userManager;
     private DataManager dataManager;
     private DataManagerErrorHandler dataManagerErrorHandler;
-
 
     //Valid Action Ids
     private static final String ACTION_ID_SERVICES = "services";
@@ -91,11 +89,10 @@ public final class NavigationManager
     ///////
 
     @Inject
-    public NavigationManager(Context context, UserManager userManager, DataManager dataManager, DataManagerErrorHandler dataManagerErrorHandler)
+    public NavigationManager(Context context, DataManager dataManager, DataManagerErrorHandler dataManagerErrorHandler)
     {
         this.config = PropertiesReader.getConfigProperties(context);
         this.context = context;
-        this.userManager = userManager;
         this.dataManager = dataManager;
         this.dataManagerErrorHandler = dataManagerErrorHandler;
     }

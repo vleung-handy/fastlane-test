@@ -22,8 +22,6 @@ public final class BaseApplication extends Application
     private boolean savedInstance;
 
     @Inject
-    UserManager userManager;
-    @Inject
     DataManager dataManager;
     @Inject
     Mixpanel mixpanel;

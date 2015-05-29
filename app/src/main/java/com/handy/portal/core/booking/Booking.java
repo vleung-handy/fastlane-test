@@ -541,6 +541,8 @@ public final class Booking implements Parcelable, Comparable<Booking>
             return name;
         }
 
+        //cleaning supplies are in their own category apart from all other extras
+        public static final String TYPE_CLEANING_SUPPLIES = "cleaning_supplies";
     }
 
     public enum LaundryStatus {
