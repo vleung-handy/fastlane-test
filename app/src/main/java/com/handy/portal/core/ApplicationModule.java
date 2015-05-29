@@ -223,11 +223,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final Mixpanel provideMixpanel(final UserManager userManager,
-                                   final BookingManager bookingManager,
-                                   final Bus bus)
+    final Mixpanel provideMixpanel(final Bus bus)
     {
-        return new Mixpanel(context, userManager, bookingManager, bus);
+        return new Mixpanel(context, bus);
     }
 
     @Provides

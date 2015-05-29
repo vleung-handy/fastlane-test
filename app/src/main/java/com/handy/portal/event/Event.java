@@ -137,8 +137,8 @@ public abstract class Event
             this.success = success;
         }
     }
-
-    public static class RequestClaimJobEvent extends Event
+	
+	public static class RequestClaimJobEvent extends Event
     {
         public String bookingId;
 
@@ -158,6 +158,23 @@ public abstract class Event
             this.success = success;
         }
     }
+
+	public static class LoginError extends Event {
+        public String source = "";
+
+        public LoginError(String source) {
+            this.source = source;
+        }
+    }
+
+    public static class Navigation extends Event {
+        public String page = "";
+
+        public Navigation(String page) {
+            this.page = page;
+        }
+    }
+
 
 
 }

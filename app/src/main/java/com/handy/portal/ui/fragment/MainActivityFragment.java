@@ -137,6 +137,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         if (currentTab != tab) //don't transition to same tab, ignore the clicks
         {
+            bus.post(new Event.Navigation(tab.getTarget().getValue()));
             currentTab = tab;
             if(isNativeTab(currentTab))
             {

@@ -52,6 +52,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     public void doDownloadApk(String apkurl){
+        mixpanel.track("portal app update blocking screen clicked");
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(apkurl));
         startActivity(i);
