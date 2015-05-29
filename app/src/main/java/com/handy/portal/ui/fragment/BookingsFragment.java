@@ -17,8 +17,12 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.form.BookingListView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -34,13 +38,20 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract int getFragmentResourceId();
 
-    protected abstract BookingListView getBookingListView();
+    protected abstract BookingListView getRequestedBookingListView();
+    protected abstract BookingListView getUnrequestedBookingListView();
 
     protected abstract LinearLayout getDatesLayout();
 
     protected abstract void requestBookings();
 
     protected abstract void initListClickListener();
+
+    public enum BookingListType
+    {
+        REQUESTED,
+        UNREQUESTED
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,8 +74,7 @@ public abstract class BookingsFragment extends InjectedFragment
     {
         if(event.success)
         {
-            Map<BookingCalendarDay, BookingSummary> bookingSummaries = event.bookingSummaries;
-            bookingSummariesByDay = bookingSummaries;
+            bookingSummariesByDay = event.bookingSummaries;
             updateDateButtons();
             displayActiveDayBookings();
         }
@@ -87,27 +97,24 @@ public abstract class BookingsFragment extends InjectedFragment
 
     private void displayActiveDayBookings()
     {
-        List<Booking> bookings = getActiveDayBookings();
+        Map<BookingListType,List<Booking>> bookings = getActiveDayBookings();
+
         if (bookings == null)
         {
-            //TODO: Some kind of loading/waiting display state
+            //TODO: Some kind of loading/waiting/please try again display state
             System.err.println("No bookings retrieved?");
             return;
         }
 
-        BookingListView bookingListView = getBookingListView();
+        getRequestedBookingListView().populateList(bookings.get(BookingListType.REQUESTED));
 
-        if(bookingListView == null)
-        {
-            System.err.println("List view is null");
-            return;
-        }
-
-        bookingListView.populateList(bookings);
+        getUnrequestedBookingListView().populateList(bookings.get(BookingListType.UNREQUESTED));
     }
 
-    private List<Booking> getActiveDayBookings()
+    private Map<BookingListType, List<Booking>> getActiveDayBookings()
     {
+        Map<BookingListType, List<Booking>> activeDayBookings = new HashMap<>();
+
         if (bookingSummariesByDay == null)
         {
             System.err.println("No bookings data yet");
@@ -116,13 +123,34 @@ public abstract class BookingsFragment extends InjectedFragment
 
         if (bookingSummariesByDay.containsKey(activeDay))
         {
-            return bookingSummariesByDay.get(activeDay).getBookings();
+            //Filter the bookings into two lists, a requested and non-requested list and sort those bookings by time
+            List<Booking> unrequestedBookings = bookingSummariesByDay.get(activeDay).getBookings();
+            List<Booking> requestedBookings = new ArrayList<>();
+
+            //Remove all requested bookings from unrequested and add them to requested
+            Iterator<Booking> bookingsIterator = unrequestedBookings.iterator();
+            while (bookingsIterator.hasNext()) {
+                Booking b = bookingsIterator.next();
+                if (b.getIsRequested())
+                {
+                    requestedBookings.add(b);
+                    bookingsIterator.remove();
+                }
+            }
+
+            Collections.sort(requestedBookings);
+            Collections.sort(unrequestedBookings);
+
+            activeDayBookings.put(BookingListType.REQUESTED, requestedBookings);
+            activeDayBookings.put(BookingListType.UNREQUESTED, unrequestedBookings);
+
+            return activeDayBookings;
         }
 
         System.err.println("Could not find day : " + activeDay);
-
         return null;
     }
+
 
     //Horiz scroll view picker with dates
     protected void updateDateButtons()

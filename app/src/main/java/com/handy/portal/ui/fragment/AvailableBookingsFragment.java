@@ -16,15 +16,23 @@ import butterknife.InjectView;
 
 public class AvailableBookingsFragment extends BookingsFragment
 {
-    @InjectView(R.id.available_jobs_list_view)
-    protected BookingListView availableJobsListView;
+    @InjectView(R.id.available_jobs_requested_list_view)
+    protected BookingListView availableJobsRequestedListView;
+
+    @InjectView(R.id.available_jobs_unrequested_list_view)
+    protected BookingListView availableJobsUnrequestedListView;
 
     @InjectView(R.id.available_bookings_dates_scroll_view_layout)
     protected LinearLayout availableJobsDatesScrollViewLayout;
 
-    protected BookingListView getBookingListView()
+    protected BookingListView getRequestedBookingListView()
     {
-        return availableJobsListView;
+        return availableJobsRequestedListView;
+    }
+
+    protected BookingListView getUnrequestedBookingListView()
+    {
+        return availableJobsUnrequestedListView;
     }
 
     protected LinearLayout getDatesLayout()
@@ -44,7 +52,21 @@ public class AvailableBookingsFragment extends BookingsFragment
 
     protected void initListClickListener()
     {
-        availableJobsListView.setOnItemClickListener(
+        availableJobsRequestedListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener()
+                {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
+                    {
+                        Booking booking = (Booking) adapter.getItemAtPosition(position);
+                        Bundle arguments = new Bundle();
+                        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+                        bus.post(new Event.NavigateToTabEvent(MainActivityFragment.MainViewTab.DETAILS, arguments));
+                    }
+                }
+        );
+
+        availableJobsUnrequestedListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener()
                 {
                     @Override

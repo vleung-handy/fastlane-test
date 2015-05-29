@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:minHeight="75dp"
-                android:background="@color/white">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/booking_entry_start_date_text"
@@ -107,6 +107,18 @@
         android:layout_alignEnd="@+id/booking_entry_payment_text"
         android:layout_marginTop="15dp"
         android:textSize="10dp"/>
+
+    <ImageView
+        android:layout_width="5dp"
+        android:layout_height="75dp"
+        android:id="@+id/booking_entry_requested_indicator"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/rectangle_green"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:visibility="invisible"
+        />
 
 
 </RelativeLayout>

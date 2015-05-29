@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public final class Booking implements Parcelable {
+public final class Booking implements Parcelable, Comparable<Booking>
+{
     @SerializedName("id") private String id;
     @SerializedName("booking_status") private int isPast;
     @SerializedName("service_name") private String service;
@@ -37,6 +38,19 @@ public final class Booking implements Parcelable {
     @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions;
     @SerializedName("description") private String description;
     @SerializedName("provider_id") private String providerId;
+
+    public int compareTo(Booking b)
+    {
+        return startDate.compareTo(b.startDate);
+    }
+
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof Booking))
+            return false;
+        Booking b = (Booking) o;
+        return b.id.equals(id);
+    }
 
     public final String getStatus(){return status;}
     public final List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}

@@ -27,13 +27,35 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <com.handy.portal.ui.form.BookingListView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/available_jobs_list_view"
-        android:dividerHeight="10dp"
-        />
+        android:orientation="vertical"
+        >
+        <com.handy.portal.ui.form.BookingListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/available_jobs_requested_list_view"
+            android:dividerHeight="2dp"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:id="@+id/section_spacer"/>
+
+        <com.handy.portal.ui.form.BookingListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/available_jobs_unrequested_list_view"
+            android:dividerHeight="2dp"
+            />
+
+    </LinearLayout>
+
+
+
 
 
 </LinearLayout>

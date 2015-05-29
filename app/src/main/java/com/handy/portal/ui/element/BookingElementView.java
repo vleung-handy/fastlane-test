@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,11 +14,38 @@ import com.handy.portal.util.TextUtils;
 
 import java.text.SimpleDateFormat;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by cdavis on 5/6/15.
  */
 public class BookingElementView
 {
+    @InjectView(R.id.booking_entry_payment_text)
+    protected TextView paymentText;
+
+    @InjectView(R.id.booking_entry_payment_bonus_text)
+    protected TextView bonusPaymentText;
+
+    @InjectView(R.id.booking_entry_area_text)
+    protected TextView bookingAreaTextView;
+
+    @InjectView(R.id.booking_entry_frequency_text)
+    protected TextView frequencyTextView;
+
+    @InjectView(R.id.booking_entry_requested_indicator)
+    protected ImageView requestedIndicator;
+
+    @InjectView(R.id.booking_entry_requested_indicator_layout)
+    protected LinearLayout requestedIndicatorLayout;
+
+    @InjectView(R.id.booking_entry_start_date_text)
+    protected TextView startTimeText;
+
+    @InjectView(R.id.booking_entry_end_date_text)
+    protected TextView endTimeText;
+
     private static final String DATE_FORMAT = "h:mma";
 
     private BookingElementMediator mediator;
@@ -44,35 +72,28 @@ public class BookingElementView
             convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_booking_list_entry, parent, false);
         }
 
+        ButterKnife.inject(this, convertView);
+
         //Payment
-        TextView paymentText = (TextView) convertView.findViewById(R.id.booking_entry_payment_text);
-        Booking.PaymentInfo paymentInfo = booking.getPaymentToProvider();
-        setPaymentInfo(paymentText, paymentInfo);
+        setPaymentInfo(paymentText, booking.getPaymentToProvider());
 
         //Bonus Payment
-        TextView bonusPaymentText = (TextView) convertView.findViewById(R.id.booking_entry_payment_bonus_text);
-        Booking.PaymentInfo bonusPaymentInfo = booking.getBonusPaymentToProvider();
-        setPaymentInfo(bonusPaymentText, bonusPaymentInfo);
+        setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider());
 
         //Area
-        TextView bookingAreaTextView = (TextView) convertView.findViewById(R.id.booking_entry_area_text);
-        String bookingArea = booking.getAddress().getShortRegion();
-        bookingAreaTextView.setText(bookingArea);
+        bookingAreaTextView.setText(booking.getAddress().getShortRegion());
 
         //Frequency
-        TextView frequencyTextView = (TextView) convertView.findViewById(R.id.booking_entry_frequency_text);
         setFrequencyInfo(booking, frequencyTextView, parentContext);
 
         //Requested Provider
-        LinearLayout requestedIndicator = (LinearLayout) convertView.findViewById(R.id.booking_entry_requested_indicator_layout);
         requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+        requestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
         //Date and Time
         SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);
         String formattedStartDate = timeOfDayFormat.format(booking.getStartDate());
         String formattedEndDate = timeOfDayFormat.format(booking.getEndDate());
-        TextView startTimeText = (TextView) convertView.findViewById(R.id.booking_entry_start_date_text);
-        TextView endTimeText = (TextView) convertView.findViewById(R.id.booking_entry_end_date_text);
         startTimeText.setText(formattedStartDate);
         endTimeText.setText(formattedEndDate);
 
