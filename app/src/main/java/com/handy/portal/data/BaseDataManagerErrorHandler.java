@@ -26,7 +26,10 @@ public final class BaseDataManagerErrorHandler implements DataManagerErrorHandle
                 break;
             case CLIENT:
                 final String[] inputs = error.getInvalidInputs();
-                if (error.getMessage() != null) message = error.getMessage();
+                if (error.getMessage() != null)
+                {
+                    message = error.getMessage();
+                }
 
                 if (inputs != null && inputMap != null)
                 {

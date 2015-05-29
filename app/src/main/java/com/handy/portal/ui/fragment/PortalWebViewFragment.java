@@ -25,7 +25,8 @@ public class PortalWebViewFragment extends InjectedFragment
         JOBS("available"),
         SCHEDULE("future"),
         PROFILE("profile"),
-        HELP("help");
+        HELP("help"),
+        DETAILS("details");
 
         private String value;
 
@@ -40,7 +41,7 @@ public class PortalWebViewFragment extends InjectedFragment
         }
     }
 
-    @InjectView(R.id.web_view_portal)
+    @InjectView(R.id.portal_web_view)
     WebView webView;
 
     @Inject

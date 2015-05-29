@@ -24,6 +24,7 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
@@ -47,6 +48,7 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
+        BookingDetailsFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
         PortalWebViewFragment.class,
@@ -154,9 +156,11 @@ public final class ApplicationModule
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
                                          final Bus bus,
-                                         final SecurePreferences prefs)
+                                         final SecurePreferences prefs,
+                                         final LoginManager loginManager
+                                        )
     {
-        return new BaseDataManager(service, endpoint, bus, prefs);
+        return new BaseDataManager(service, endpoint, loginManager, bus, prefs);
     }
 
     @Provides
@@ -200,10 +204,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus,
-                                           final DataManager dataManager)
+    final LoginManager provideLoginManager(final Bus bus)
     {
-        return new LoginManager(bus, dataManager);
+        return new LoginManager(bus);
     }
 
     @Provides

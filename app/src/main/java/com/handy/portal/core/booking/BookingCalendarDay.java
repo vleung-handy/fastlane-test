@@ -48,15 +48,15 @@ public class BookingCalendarDay
             return false;
         }
 
-        BookingCalendarDay compare = (BookingCalendarDay) obj;
+        BookingCalendarDay other = (BookingCalendarDay) obj;
 
-        if (obj == this) {
+        if (other == this) {
             return true;
         }
 
-        return compare.year == this.year &&
-                compare.month == this.month &&
-                compare.day == this.day;
+        return other.year == this.year &&
+                other.month == this.month &&
+                other.day == this.day;
 
     }
 

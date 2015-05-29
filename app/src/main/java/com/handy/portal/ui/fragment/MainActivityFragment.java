@@ -1,14 +1,18 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
+import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -24,7 +28,7 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.button_help)
     RadioButton helpButton;
 
-    private Target currentTab = null;
+    private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
     @Override
@@ -36,7 +40,9 @@ public class MainActivityFragment extends InjectedFragment
         ButterKnife.inject(this, view);
 
         registerButtonListeners();
-        initWebViewFragment();
+
+        jobsButton.setChecked(true);
+        switchToTab(MainViewTab.JOBS);
 
         return view;
     }
@@ -48,13 +54,26 @@ public class MainActivityFragment extends InjectedFragment
         if (currentTab == null)
         {
             jobsButton.setChecked(true);
-            switchToTab(Target.JOBS);
+            switchToTab(MainViewTab.JOBS);
         }
     }
 
-    private void initWebViewFragment()
+    //Listeners
+    @Subscribe
+    public void onNavigateToTabEvent(Event.NavigateToTabEvent event)
+    {
+        switchToTab(event.targetTab, event.arguments);
+    }
+
+    private void initWebViewFragment(Target urlTarget)
     {
         webViewFragment = new PortalWebViewFragment();
+
+        //pass along the target
+        Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.TARGET_URL, urlTarget.getValue());
+        webViewFragment.setArguments(arguments);
+
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_container, webViewFragment)
                 .disallowAddToBackStack()
@@ -63,17 +82,41 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerButtonListeners()
     {
-        scheduleButton.setOnClickListener(new TabOnClickListener(Target.SCHEDULE));
-        jobsButton.setOnClickListener(new TabOnClickListener(Target.JOBS));
-        profileButton.setOnClickListener(new TabOnClickListener(Target.PROFILE));
-        helpButton.setOnClickListener(new TabOnClickListener(Target.HELP));
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULE));
+        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.JOBS));
+        profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
+        helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
+    }
+
+    public enum MainViewTab
+    {
+        JOBS(Target.JOBS, AvailableBookingsFragment.class),
+        SCHEDULE(Target.SCHEDULE, ScheduledBookingsFragment.class),
+        PROFILE(Target.PROFILE, null),
+        HELP(Target.HELP, null),
+        DETAILS(Target.PROFILE, BookingDetailsFragment.class),
+        ;
+
+        private Target target;
+        private Class classType;
+
+        MainViewTab(Target target, Class classType)
+        {
+            this.target = target;
+            this.classType = classType;
+        }
+
+        public Target getTarget()
+        {
+            return target;
+        }
     }
 
     private class TabOnClickListener implements View.OnClickListener
     {
-        private Target tab;
+        private MainViewTab tab;
 
-        TabOnClickListener(Target tab)
+        TabOnClickListener(MainViewTab tab)
         {
             this.tab = tab;
         }
@@ -85,13 +128,76 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void switchToTab(Target tab)
+    private void switchToTab(MainViewTab tab)
+    {
+        switchToTab(tab, null);
+    }
+
+    private void switchToTab(MainViewTab tab, Bundle argumentsBundle)
     {
         if (currentTab != tab) //don't transition to same tab, ignore the clicks
         {
-            bus.post(new Event.Navigation(tab.getValue()));
-            webViewFragment.openPortalUrl(tab);
+            bus.post(new Event.Navigation(tab.getTarget().getValue()));
             currentTab = tab;
+            if(isNativeTab(currentTab))
+            {
+                swapFragment(currentTab.classType, argumentsBundle);
+                webViewFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
+            }
+            else
+            {
+                if(webViewFragment == null)
+                {
+                    initWebViewFragment(currentTab.getTarget());
+                }
+                else
+                {
+                    webViewFragment.openPortalUrl(currentTab.getTarget());
+                }
+            }
         }
     }
+
+    private void swapFragment(Class targetClassType)
+    {
+        swapFragment(targetClassType, null);
+    }
+
+    private void swapFragment(Class targetClassType, Bundle argumentsBundle)
+    {
+        //replace the existing fragment with the new fragment
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+        Fragment newFragment = null;
+        try
+        {
+            newFragment = (Fragment) targetClassType.newInstance();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error instantiating fragment class : " + e);
+            return;
+        }
+
+        if(newFragment != null && argumentsBundle != null)
+        {
+            newFragment.setArguments(argumentsBundle);
+        }
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.main_container, newFragment);
+
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    //Eventually all tabs will be native tabs
+    private boolean isNativeTab(MainViewTab tab)
+    {
+        return(tab.classType != null);
+    }
+
 }

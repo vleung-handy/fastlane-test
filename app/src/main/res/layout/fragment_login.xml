@@ -79,7 +79,9 @@
                 android:textColor="@color/white"
                 android:backgroundTint="@color/very_light_grey"
                 android:textColorHint="@color/very_light_grey"
-                />
+                android:clickable="false"
+                android:editable="true"
+                android:enabled="true"/>
         </RelativeLayout>
 
         <RelativeLayout

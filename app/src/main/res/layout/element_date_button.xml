@@ -1,10 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="date button"
-        android:id="@+id/date_button" />
-</merge>
+<com.handy.portal.ui.element.DateButtonView xmlns:android="http://schemas.android.com/apk/res/android"
+       android:orientation="vertical" android:layout_width="60dp"
+       android:layout_height="70dp" android:background="@color/very_light_grey">
+
+    <TextView
+            android:id="@+id/date_month_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SEPT"
+            android:textColor="@color/white"
+            android:background="@color/very_light_grey"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/date_day_of_week_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sat"
+            android:textColor="@color/white"
+            android:background="@color/very_light_grey"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/date_day_of_month_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30"
+            android:textColor="@color/white"
+            android:background="@color/very_light_grey"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center"/>
+
+        <ImageView
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:id="@+id/provider_requested_indicator_image"
+            android:src="@drawable/circle_green"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:id="@+id/selected_day_indicator_image"
+            android:src="#ff00fffe"
+            android:layout_gravity="center_horizontal"
+            />
+
+
+</com.handy.portal.ui.element.DateButtonView>

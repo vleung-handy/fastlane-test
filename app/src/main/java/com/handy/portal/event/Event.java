@@ -1,10 +1,14 @@
 package com.handy.portal.event;
 
+import android.os.Bundle;
+
 import com.handy.portal.core.BookingSummary;
+import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.BookingCalendarDay;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import java.util.Map;
 
@@ -19,9 +23,10 @@ public abstract class Event
     {
         public Map<BookingCalendarDay, BookingSummary> bookingSummaries;
 
-        public BookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries)
+        public BookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries, boolean success)
         {
             this.bookingSummaries = bookingSummaries;
+            this.success = success;
         }
     }
 
@@ -62,13 +67,41 @@ public abstract class Event
         }
     }
 
+    public static class BookingsDetailsRetrievedEvent extends Event
+    {
+        public Booking booking;
+
+        public BookingsDetailsRetrievedEvent(Booking booking, boolean success)
+        {
+            this.booking = booking;
+            this.success = success;
+        }
+    }
+
     public static class RequestPinCodeEvent extends Event
     {
         public String phoneNumber;
-
         public RequestPinCodeEvent(String phoneNumber)
         {
             this.phoneNumber = phoneNumber;
+        }
+
+    }
+
+    public static class NavigateToTabEvent extends Event
+    {
+        public MainActivityFragment.MainViewTab targetTab;
+        public Bundle arguments;
+
+        public NavigateToTabEvent(MainActivityFragment.MainViewTab targetTab)
+        {
+            this.targetTab = targetTab;
+        }
+
+        public NavigateToTabEvent(MainActivityFragment.MainViewTab targetTab, Bundle arguments)
+        {
+            this.targetTab = targetTab;
+            this.arguments = arguments;
         }
     }
 
@@ -104,8 +137,29 @@ public abstract class Event
             this.success = success;
         }
     }
+	
+	public static class RequestClaimJobEvent extends Event
+    {
+        public String bookingId;
 
-    public static class LoginError extends Event {
+        public RequestClaimJobEvent(String bookingId)
+        {
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class ClaimJobRequestReceivedEvent extends Event
+    {
+        public Booking booking;
+
+        public ClaimJobRequestReceivedEvent(Booking booking, boolean success)
+        {
+            this.booking = booking;
+            this.success = success;
+        }
+    }
+
+	public static class LoginError extends Event {
         public String source = "";
 
         public LoginError(String source) {

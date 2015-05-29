@@ -4,20 +4,50 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
+import com.handy.portal.util.TextUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by cdavis on 5/6/15.
  */
 public class BookingElementView
 {
+    @InjectView(R.id.booking_entry_payment_text)
+    protected TextView paymentText;
+
+    @InjectView(R.id.booking_entry_payment_bonus_text)
+    protected TextView bonusPaymentText;
+
+    @InjectView(R.id.booking_entry_area_text)
+    protected TextView bookingAreaTextView;
+
+    @InjectView(R.id.booking_entry_frequency_text)
+    protected TextView frequencyTextView;
+
+    @InjectView(R.id.booking_entry_requested_indicator)
+    protected ImageView requestedIndicator;
+
+    @InjectView(R.id.booking_entry_requested_indicator_layout)
+    protected LinearLayout requestedIndicatorLayout;
+
+    @InjectView(R.id.booking_entry_start_date_text)
+    protected TextView startTimeText;
+
+    @InjectView(R.id.booking_entry_end_date_text)
+    protected TextView endTimeText;
+
+    private static final String DATE_FORMAT = "h:mma";
+
     private BookingElementMediator mediator;
     public View associatedView;
 
@@ -42,24 +72,28 @@ public class BookingElementView
             convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_booking_list_entry, parent, false);
         }
 
-        TextView bookingAreaTextView = (TextView) convertView.findViewById(R.id.booking_area);
-        String bookingArea = booking.getAddress().getShortRegion();
+        ButterKnife.inject(this, convertView);
 
-        bookingAreaTextView.setText(bookingArea);
+        //Payment
+        setPaymentInfo(paymentText, booking.getPaymentToProvider());
 
-        LinearLayout requestedIndicator = (LinearLayout) convertView.findViewById(R.id.requested_indicator);
+        //Bonus Payment
+        setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider());
+
+        //Area
+        bookingAreaTextView.setText(booking.getAddress().getShortRegion());
+
+        //Frequency
+        setFrequencyInfo(booking, frequencyTextView, parentContext);
+
+        //Requested Provider
         requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+        requestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
-        Date startDate = booking.getStartDate();
-
-        SimpleDateFormat ft = new SimpleDateFormat("hh:mma");
-
-        String formattedStartDate = ft.format(startDate);
-        String formattedEndDate = ft.format(booking.getEndDate());
-
-        TextView startTimeText = (TextView) convertView.findViewById(R.id.booking_start_date);
-        TextView endTimeText = (TextView) convertView.findViewById(R.id.booking_end_date);
-
+        //Date and Time
+        SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);
+        String formattedStartDate = timeOfDayFormat.format(booking.getStartDate());
+        String formattedEndDate = timeOfDayFormat.format(booking.getEndDate());
         startTimeText.setText(formattedStartDate);
         endTimeText.setText(formattedEndDate);
 
@@ -67,4 +101,42 @@ public class BookingElementView
 
         return convertView;
     }
+
+    private void setPaymentInfo(TextView textView, Booking.PaymentInfo paymentInfo)
+    {
+        if(paymentInfo != null && paymentInfo.getAdjustedAmount() > 0)
+        {
+            String paymentString = TextUtils.formatPrice(paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol(), paymentInfo.getCurrencySuffix());
+            textView.setText(paymentString);
+        }
+        else
+        {
+            textView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void setFrequencyInfo(Booking booking, TextView textView, Context parentContext)
+    {
+        //Frequency
+        //Valid values : 1,2,4 every X weeks, 0 = non-recurring
+        int frequency = booking.getFrequency();
+        String bookingFrequencyFormat;
+
+        if(frequency == 0)
+        {
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_non_recurring);
+        }
+        else if(frequency == 1)
+        {
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_every_week);
+        }
+        else
+        {
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency);
+        }
+
+        String bookingFrequency = String.format(bookingFrequencyFormat, frequency);
+        textView.setText(bookingFrequency);
+    }
+
 }

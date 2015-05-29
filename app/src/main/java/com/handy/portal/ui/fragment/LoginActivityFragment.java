@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
@@ -67,6 +65,10 @@ public class LoginActivityFragment extends InjectedFragment
     EnvironmentSwitcher environmentSwitcher;
 
     private static final boolean DEBUG_SKIP_LOGIN = false; //bypass the native login and use the old web login
+
+    //TODO: Move to a config file? Maybe point to an endpoint that supplies the url?
+    private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
+    private static final String HELP_URL = "https://www.handy.com/help";
 
     private enum LoginState
     {
@@ -201,14 +203,14 @@ public class LoginActivityFragment extends InjectedFragment
                 }
                 else
                 {
-                    showLoginError(R.string.login_error_bad_phone, "phone number");
+                    showErrorToast(R.string.login_error_bad_phone);
                     changeState(LoginState.INPUTTING_PHONE_NUMBER);
                     phoneNumberEditText.highlight();
                 }
             }
             else
             {
-                showLoginError(R.string.login_error_connectivity, "server");
+                showErrorToast(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PHONE_NUMBER);
                 phoneNumberEditText.highlight();
             }
@@ -228,14 +230,14 @@ public class LoginActivityFragment extends InjectedFragment
                 }
                 else
                 {
-                    showLoginError(R.string.login_error_bad_login, "pin code");
+                    showErrorToast(R.string.login_error_bad_login);
                     changeState(LoginState.INPUTTING_PIN);
                     pinCodeEditText.highlight();
                 }
             }
             else
             {
-                showLoginError(R.string.login_error_connectivity, "server");
+                showErrorToast(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PIN);
             }
         }
@@ -340,7 +342,7 @@ public class LoginActivityFragment extends InjectedFragment
             break;
             case INPUTTING_PIN:
             {
-                String instructionsFormat = getResources().getString(R.string.login_instructions_2);
+                String instructionsFormat = getString(R.string.login_instructions_2);
                 String instructions = String.format(instructionsFormat, TextUtils.formatPhone(storedPhoneNumber, ""));
                 instructionsText.setText(instructions);
                 phoneInputLayout.setVisibility(View.GONE);
@@ -365,21 +367,6 @@ public class LoginActivityFragment extends InjectedFragment
             }
             break;
         }
-    }
-
-    //Helpers
-
-    private void showLoginError(int stringId, String source)
-    {
-        showLoginError(getResources().getString(stringId), source);
-    }
-
-    private void showLoginError(String error, String source)
-    {
-        bus.post(new Event.LoginError(source));
-        toast = Toast.makeText(getActivity().getApplicationContext(), error, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
     }
 
     @Override

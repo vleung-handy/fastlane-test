@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Sun, Sept 2"
+        android:id="@+id/booking_details_date_text"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="4:00 PM - 6:00PM"
+        android:id="@+id/booking_details_time_text"
+        android:textSize="20dp"
+        android:textIsSelectable="true"
+        android:elegantTextHeight="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/black"/>
+</RelativeLayout>
