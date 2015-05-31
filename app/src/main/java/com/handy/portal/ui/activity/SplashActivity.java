@@ -7,15 +7,10 @@ import android.webkit.CookieSyncManager;
 
 import com.handy.portal.R;
 
-import java.util.regex.Pattern;
-
 import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity
 {
-
-    private static final Pattern USER_CREDENTIALS_PATTERN = Pattern.compile("(?:^|;)\\s*user_credentials=[^\\s]+\\s*;?");
-
     private static final String STATE_LAUNCHED_NEXT = "LAUNCHED_NEXT";
 
     private boolean launchedNext;
@@ -27,10 +22,7 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
 
-        CookieSyncManager.createInstance(this);
-        String cookie = CookieManager.getInstance().getCookie(dataManager.getBaseUrl());
-        boolean isUserLoggedIn = cookie != null && USER_CREDENTIALS_PATTERN.matcher(cookie).find();
-        if (isUserLoggedIn)
+        if (loginManager.getLoggedInUserId() != null)
         {
             openMainActivity();
         }

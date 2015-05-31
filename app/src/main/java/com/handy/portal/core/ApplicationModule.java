@@ -17,7 +17,6 @@ import com.handy.portal.data.HandyRetrofitFluidEndpoint;
 import com.handy.portal.data.HandyRetrofitService;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.data.PropertiesReader;
-import com.handy.portal.data.SecurePreferences;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -32,6 +31,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -139,11 +139,10 @@ public final class ApplicationModule
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
                                          final Bus bus,
-                                         final SecurePreferences prefs,
-                                         final LoginManager loginManager
+                                         final SecurePreferences prefs
                                         )
     {
-        return new BaseDataManager(service, endpoint, loginManager, bus, prefs);
+        return new BaseDataManager(service, endpoint, bus, prefs);
     }
 
     @Provides
@@ -163,24 +162,23 @@ public final class ApplicationModule
     @Singleton
     final SecurePreferences providePrefs()
     {
-        return new SecurePreferences(context, null,
-                configs.getProperty("secure_prefs_key"), true);
+        return new SecurePreferences(context,
+                configs.getProperty("secure_prefs_key"), "prefs.xml");
     }
 
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final Bus bus,
-                                               final SecurePreferences prefs,
                                                final DataManager dataManager)
     {
-        return new BookingManager(bus, prefs, dataManager);
+        return new BookingManager(bus, dataManager);
     }
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus)
+    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs)
     {
-        return new LoginManager(bus);
+        return new LoginManager(bus, prefs);
     }
 
     @Provides

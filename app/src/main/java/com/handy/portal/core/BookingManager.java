@@ -3,7 +3,6 @@ package com.handy.portal.core;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.data.SecurePreferences;
 import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -16,7 +15,6 @@ import javax.inject.Inject;
 
 public final class BookingManager
 {
-    private final SecurePreferences securePrefs;
     private final Bus bus;
     private final DataManager dataManager;
 
@@ -30,9 +28,8 @@ public final class BookingManager
     private Map<BookingCalendarDay, BookingSummary> cachedBookingSummaries;
 
     @Inject
-    BookingManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
+    BookingManager(final Bus bus, final DataManager dataManager)
     {
-        this.securePrefs = prefs;
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
