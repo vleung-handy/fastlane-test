@@ -17,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.handy.portal.BuildConfig;
+import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.data.BuildConfigWrapper;
@@ -36,13 +36,10 @@ import butterknife.OnClick;
 
 import static com.handy.portal.data.EnvironmentManager.Environment;
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
 public class LoginActivityFragment extends InjectedFragment
 {
-    private static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
+    @VisibleForTesting
+    protected static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
 
     @InjectView(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
@@ -65,10 +62,6 @@ public class LoginActivityFragment extends InjectedFragment
     EnvironmentManager environmentManager;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
-
-    //TODO: Move to a config file? Maybe point to an endpoint that supplies the url?
-    private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
-    private static final String HELP_URL = "https://www.handy.com/help";
 
     private enum LoginState
     {

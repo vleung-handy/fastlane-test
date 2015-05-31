@@ -1,20 +1,22 @@
 package com.handy.portal.core;
 
 
+import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.EnvironmentManager;
-import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.HandyRetrofitEndpoint;
 import com.handy.portal.data.HandyRetrofitService;
 import com.handy.portal.data.Mixpanel;
-import com.handy.portal.data.SecurePreferences;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
+import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
 import dagger.Module;
@@ -29,7 +31,9 @@ import static org.mockito.Mockito.mock;
         MainActivityFragment.class,
         MainActivity.class,
         PortalWebViewFragment.class,
-        PleaseUpdateFragment.class
+        PleaseUpdateFragment.class,
+        AvailableBookingsFragment.class,
+        ScheduledBookingsFragment.class
 }, library = true)
 public class TestApplicationModule {
 
@@ -66,11 +70,6 @@ public class TestApplicationModule {
     @Provides
     public BookingManager provideBookingManager() {
         return mock(BookingManager.class);
-    }
-
-    @Provides
-    public UserManager provideUserManager() {
-        return mock(UserManager.class);
     }
 
     @Provides

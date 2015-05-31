@@ -3,10 +3,12 @@ package com.handy.portal.core;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
+import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -25,6 +27,8 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
 {
     @Mock
     private Bus bus;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private SecurePreferences prefs;
     @Mock
     private DataManager dataManager;
 
@@ -44,7 +48,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        loginManager = new LoginManager(bus, dataManager);
+        loginManager = new LoginManager(bus, prefs, dataManager);
     }
 
     @Test

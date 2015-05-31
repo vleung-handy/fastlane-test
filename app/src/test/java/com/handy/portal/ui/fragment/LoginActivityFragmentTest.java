@@ -113,14 +113,6 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenInvalidPhoneNumber_whenRequestPinButtonClicked_thenNoRequestPinCode() throws Exception
-    {
-        makePinRequest("1234");
-
-        verifyZeroInteractions(bus);
-    }
-
-    @Test
     public void givenInvalidPinCode_whenLogInButtonClicked_thenNoRequestLogin() throws Exception
     {
         makeLoginRequest("123");

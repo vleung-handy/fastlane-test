@@ -47,9 +47,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     {
         super.onCreate(savedInstanceState);
         ((BaseApplication) getActivity().getApplication()).inject(this);
-
-        toast = Toast.makeText(getActivity(), null, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
     }
 
     @Override
