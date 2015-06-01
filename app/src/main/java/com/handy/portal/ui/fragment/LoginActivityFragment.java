@@ -27,7 +27,6 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
-import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -116,12 +115,9 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     case INPUTTING_PHONE_NUMBER:
                     {
-                        if (phoneNumberEditText.validate())
-                        {
-                            sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
-                        }
+                        sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
                     }
                     break;
                     case INPUTTING_PIN:
@@ -341,7 +337,7 @@ public class LoginActivityFragment extends InjectedFragment
             case INPUTTING_PIN:
             {
                 String instructionsFormat = getResources().getString(R.string.login_instructions_2);
-                String instructions = String.format(instructionsFormat, TextUtils.formatPhone(storedPhoneNumber, ""));
+                String instructions = String.format(instructionsFormat, storedPhoneNumber);
                 instructionsText.setText(instructions);
                 phoneInputLayout.setVisibility(View.GONE);
                 pinCodeInputLayout.setVisibility(View.VISIBLE);
