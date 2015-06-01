@@ -2,10 +2,9 @@ package com.handy.portal.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 
 import com.handy.portal.R;
+import com.handy.portal.core.LoginManager;
 
 import butterknife.ButterKnife;
 
@@ -22,7 +21,8 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
 
-        if (loginManager.getLoggedInUserId() != null)
+        String loggedInUserId = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
+        if (loggedInUserId != null)
         {
             openMainActivity();
         }

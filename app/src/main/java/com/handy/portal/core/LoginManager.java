@@ -77,9 +77,4 @@ public final class LoginManager
         prefs.edit().putString(USER_CREDENTIALS_ID_KEY, loginDetails.getUserCredentialsId()).apply();
     }
 
-    public String getLoggedInUserId()
-    {
-        return prefs.getString(USER_CREDENTIALS_ID_KEY, null);
-    }
-
 }

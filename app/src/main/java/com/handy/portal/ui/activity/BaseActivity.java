@@ -19,6 +19,7 @@ import com.handy.portal.data.Mixpanel;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.widget.ProgressDialog;
 import com.handy.portal.util.FlavorUtils;
+import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -55,6 +56,8 @@ public abstract class BaseActivity extends FragmentActivity
     LoginManager loginManager;
     @Inject
     UpdateManager updateManager;
+    @Inject
+    SecurePreferences prefs;
 
 
     @Override
