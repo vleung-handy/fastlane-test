@@ -27,8 +27,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
-        versionName "0.1.0"
+        versionCode 2
+        versionName "0.1.1"
     }
 
     signingConfigs {
@@ -57,12 +57,12 @@ android {
         stable {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.1.0"
+            versionName "0.1.1"
         }
         beta {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.1.0b"
+            versionName "0.1.1b"
         }
 
         applicationVariants.all { variant ->
