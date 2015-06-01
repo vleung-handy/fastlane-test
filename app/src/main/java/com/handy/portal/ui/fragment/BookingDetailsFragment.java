@@ -19,6 +19,7 @@ import com.handy.portal.ui.element.BookingDetailsActionPanelView;
 import com.handy.portal.ui.element.BookingDetailsDateView;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.GoogleMapView;
+import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class BookingDetailsFragment extends InjectedFragment
     protected LinearLayout jobInstructionsLayout;
 
     @Inject
-    LoginManager loginManager;
+    SecurePreferences prefs;
 
     private static final String NO_PROVIDER_ASSIGNED = "0";
 
@@ -115,7 +116,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         if(event.success)
         {
-            if(event.booking.getProviderId().equals(loginManager.getLoggedInUserId()))
+            if(event.booking.getProviderId().equals(getLoggedInUserId()))
             {
                 updateDisplayForBooking(event.booking);
             }
@@ -162,7 +163,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         Context context = getActivity().getApplicationContext();
 
-        BookingStatus bookingStatus = inferBookingStatus(booking, loginManager.getLoggedInUserId());
+        BookingStatus bookingStatus = inferBookingStatus(booking, getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
 
@@ -180,7 +181,7 @@ public class BookingDetailsFragment extends InjectedFragment
         //action section
         BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
         actionPanel.init(booking, arguments, actionLayout, context);
-        initActionButtonListener(actionPanel.getActionButton(), bookingStatus, loginManager.getLoggedInUserId(), booking.getId());
+        initActionButtonListener(actionPanel.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
 
         //extra details
         //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
@@ -264,6 +265,10 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             return BookingStatus.UNAVAILABLE;
         }
+    }
+
+    private String getLoggedInUserId() {
+        return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
     }
 
 }

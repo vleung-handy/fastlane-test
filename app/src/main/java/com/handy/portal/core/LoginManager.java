@@ -1,8 +1,8 @@
 package com.handy.portal.core;
 
-import com.handy.portal.consts.DebugOnlyHacks;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
+import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -10,16 +10,17 @@ import javax.inject.Inject;
 
 public final class LoginManager
 {
-
-
+    public static final String USER_CREDENTIALS_ID_KEY = "user_credentials_id";
     private final Bus bus;
+    private SecurePreferences prefs;
     private DataManager dataManager;
-    private LoginDetails loginDetails;
 
     @Inject
-    LoginManager(final Bus bus)
+    LoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
     {
         this.bus = bus;
+        this.prefs = prefs;
+        this.dataManager = dataManager;
         this.bus.register(this);
     }
 
@@ -73,24 +74,7 @@ public final class LoginManager
 
     private void saveLoginDetails(final LoginDetails loginDetails)
     {
-        this.loginDetails = loginDetails;
-    }
-
-    public String getLoggedInUserId()
-    {
-        String loggedInUserId = "";
-
-        if(DebugOnlyHacks.canSkipLogin())
-        {
-            loggedInUserId = DebugOnlyHacks.getSkippedLoginUserId(); //for quick hacky debug work allows us to bypass the login screen
-        }
-
-        if(this.loginDetails != null)
-        {
-            loggedInUserId = this.loginDetails.getUserCredentialsId();
-        }
-
-        return(loggedInUserId);
+        prefs.edit().putString(USER_CREDENTIALS_ID_KEY, loginDetails.getUserCredentialsId()).apply();
     }
 
 }
