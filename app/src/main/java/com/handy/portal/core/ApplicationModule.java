@@ -176,9 +176,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs)
+    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final  DataManager dataManager)
     {
-        return new LoginManager(bus, prefs);
+        return new LoginManager(bus, prefs, dataManager);
     }
 
     @Provides

@@ -16,10 +16,11 @@ public final class LoginManager
     private DataManager dataManager;
 
     @Inject
-    LoginManager(final Bus bus, SecurePreferences prefs)
+    LoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
     {
         this.bus = bus;
         this.prefs = prefs;
+        this.dataManager = dataManager;
         this.bus.register(this);
     }
 
