@@ -10,6 +10,7 @@ import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
+import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
 import org.json.JSONObject;
@@ -26,10 +27,8 @@ public final class BaseDataManager extends DataManager
     private final SecurePreferences prefs;
     private final Gson gsonBuilder;
 
-    private LoginManager loginManager;
-
     @Inject
-    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint, final LoginManager loginManager,
+    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
                            final Bus bus, final SecurePreferences prefs)
     {
         super(bus);
@@ -37,8 +36,6 @@ public final class BaseDataManager extends DataManager
         this.endpoint = endpoint;
         this.prefs = prefs;
         this.gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
-        this.loginManager = loginManager;
-        this.loginManager.setDataManager(this); //This is an ugly way to resolve the dependency cycle, I did not immediately see a good solution in the Dagger docs
     }
 
     @Override
@@ -230,13 +227,11 @@ public final class BaseDataManager extends DataManager
 
     private String getProviderId()
     {
-        if (loginManager == null)
+        String id = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
+        if (id == null)
         {
-            System.err.println("Login Manager not inited yet");
-            return null;
-        } else
-        {
-            return loginManager.getLoggedInUserId();
+            System.err.println("ID not found");
         }
+        return id;
     }
 }

@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
-import com.handy.portal.consts.DebugOnlyHacks;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.data.EnvironmentSwitcher;
 import com.handy.portal.event.Event;
@@ -92,11 +91,6 @@ public class LoginActivityFragment extends InjectedFragment
         registerControlListeners();
 
         //TODO: Prepopulate phone number with device's number? User could still edit if it fails
-
-        if (DebugOnlyHacks.canSkipLogin())
-        {
-            startActivity(new Intent(this.getActivity(), MainActivity.class));
-        }
 
         return view;
     }
