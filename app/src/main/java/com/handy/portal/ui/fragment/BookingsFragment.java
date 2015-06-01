@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
@@ -45,6 +46,8 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract void initListClickListener();
 
+    protected int defaultActiveDayOfYear;
+
     public enum BookingListType
     {
         REQUESTED,
@@ -58,7 +61,19 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
-            //System.out.println("Bookings fragment being created" + view.toString());
+        //System.out.println("Bookings fragment being created" + view.toString());
+
+        //Optional param, needs to be validated
+        if(getArguments() != null && getArguments().containsKey(BundleKeys.ACTIVE_DAY_OF_YEAR))
+        {
+            int defaultActiveDay = getArguments().getInt(BundleKeys.ACTIVE_DAY_OF_YEAR);
+            this.defaultActiveDayOfYear = defaultActiveDay;
+        }
+        else
+        {
+            this.defaultActiveDayOfYear = -1;
+        }
+
         requestBookings();
         initListClickListener();
         return view;
@@ -187,7 +202,8 @@ public abstract class BookingsFragment extends InjectedFragment
             final DateButtonView dateButtonView = ((DateButtonView) (scrollViewLayout.getChildAt(i)));
 
             final BookingCalendarDay associatedBookingCalendarDay = new BookingCalendarDay(calendar);
-            if (i == 0)
+            if (i == 0
+                || this.defaultActiveDayOfYear == associatedBookingCalendarDay.getDayOfYear())
             {
                 this.activeDay = associatedBookingCalendarDay; //by default point to first day of data as active day
             }

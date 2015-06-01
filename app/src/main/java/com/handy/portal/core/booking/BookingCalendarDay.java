@@ -16,24 +16,23 @@ public class BookingCalendarDay
         this.year = calendar.get(Calendar.YEAR);
         this.month = calendar.get(Calendar.MONTH);
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
+        this.dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
     }
 
-    public BookingCalendarDay(Calendar calendar) {
+    public BookingCalendarDay(Calendar calendar)
+    {
         this.year = calendar.get(Calendar.YEAR);
         this.month = calendar.get(Calendar.MONTH);
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
-    }
-
-    public BookingCalendarDay(int year, int month, int day)
-    {
-        this.year = year;
-        this.month = month;
-        this.day = day;
+        this.dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
     }
 
     int year;
     int month;
     int day;
+    int dayOfYear;
+
+    public int getDayOfYear() {return dayOfYear;}
 
     @Override
     public int hashCode()
@@ -56,7 +55,8 @@ public class BookingCalendarDay
 
         return other.year == this.year &&
                 other.month == this.month &&
-                other.day == this.day;
+                other.day == this.day &&
+                other.dayOfYear == this.dayOfYear;
 
     }
 

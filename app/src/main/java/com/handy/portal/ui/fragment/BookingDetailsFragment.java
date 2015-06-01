@@ -22,6 +22,7 @@ import com.handy.portal.ui.element.GoogleMapView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -117,7 +118,21 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             if(event.booking.getProviderId().equals(loginManager.getLoggedInUserId()))
             {
-                updateDisplayForBooking(event.booking);
+                //TODO: Turn this back on when finished implementing skinning the "claimed" state of booking details, for now open relevant web view
+                if(false)
+                {
+                    updateDisplayForBooking(event.booking);
+                }
+                else
+                {
+                    Bundle arguments = new Bundle();
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(event.booking.getStartDate());
+                    int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
+                    arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
+                    //Return to available jobs on that day
+                    bus.post(new Event.NavigateToTabEvent(MainActivityFragment.MainViewTab.JOBS, arguments));
+                }
             }
             else
             {

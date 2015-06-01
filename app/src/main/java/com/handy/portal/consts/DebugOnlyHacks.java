@@ -7,7 +7,7 @@ import com.handy.portal.BuildConfig;
  */
 public class DebugOnlyHacks
 {
-    private static final boolean SKIP_LOGIN = true; //bypass the native login and use the old web login
+    private static final boolean SKIP_LOGIN = false; //bypass the native login and use the old web login
     private static final String SKIP_LOGIN_USER_ID = "11"; //for quick development by bypassing the login procedure
 
     private static boolean areHacksAllowed()
