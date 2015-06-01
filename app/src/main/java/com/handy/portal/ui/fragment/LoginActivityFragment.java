@@ -26,7 +26,6 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
-import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -64,10 +63,6 @@ public class LoginActivityFragment extends InjectedFragment
 
     @Inject
     EnvironmentSwitcher environmentSwitcher;
-
-    //TODO: Move to a config file? Maybe point to an endpoint that supplies the url?
-    private static final String APPLY_NOW_URL = "https://www.handy.com/apply";
-    private static final String HELP_URL = "https://www.handy.com/help";
 
     private enum LoginState
     {
@@ -117,12 +112,9 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     case INPUTTING_PHONE_NUMBER:
                     {
-                        if (phoneNumberEditText.validate())
-                        {
-                            sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
-                        }
+                        sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
                     }
                     break;
                     case INPUTTING_PIN:
@@ -341,8 +333,8 @@ public class LoginActivityFragment extends InjectedFragment
             break;
             case INPUTTING_PIN:
             {
-                String instructionsFormat = getString(R.string.login_instructions_2);
-                String instructions = String.format(instructionsFormat, TextUtils.formatPhone(storedPhoneNumber, ""));
+                String instructionsFormat = getResources().getString(R.string.login_instructions_2);
+                String instructions = String.format(instructionsFormat, storedPhoneNumber);
                 instructionsText.setText(instructions);
                 phoneInputLayout.setVisibility(View.GONE);
                 pinCodeInputLayout.setVisibility(View.VISIBLE);
