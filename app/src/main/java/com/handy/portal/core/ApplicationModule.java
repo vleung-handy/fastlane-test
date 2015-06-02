@@ -11,7 +11,7 @@ import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.BaseDataManagerErrorHandler;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.EnvironmentSwitcher;
+import com.handy.portal.data.EnvironmentManager;
 import com.handy.portal.data.HandyRetrofitEndpoint;
 import com.handy.portal.data.HandyRetrofitFluidEndpoint;
 import com.handy.portal.data.HandyRetrofitService;
@@ -31,6 +31,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.data.BuildConfigWrapper;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -78,25 +79,32 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentSwitcher provideEnvironmentSwitcher()
+    final BuildConfigWrapper provideBuildConfigWrapper()
     {
-        return new EnvironmentSwitcher();
+        return new BuildConfigWrapper();
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEnpoint(final EnvironmentSwitcher environmentSwitcher)
+    final EnvironmentManager provideEnvironmentManager()
     {
-        if (BuildConfig.BUILD_TYPE.equals("debug"))
+        return new EnvironmentManager();
+    }
+
+    @Provides
+    @Singleton
+    final HandyRetrofitEndpoint provideHandyEnpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
+    {
+        if (buildConfigWrapper.isDebug())
         {
-            return new HandyRetrofitFluidEndpoint(context, environmentSwitcher);
+            return new HandyRetrofitFluidEndpoint(context, environmentManager);
         }
         return new HandyRetrofitEndpoint(context);
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitService provideHandyService(
+    final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
             final HandyRetrofitEndpoint endpoint)
     {
 
@@ -128,7 +136,7 @@ public final class ApplicationModule
                         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
-        if (BuildConfig.BUILD_TYPE.equals("debug"))
+        if (buildConfigWrapper.isDebug())
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
 
         return restAdapter.create(HandyRetrofitService.class);

@@ -8,7 +8,7 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public final class LoginManager
+public class LoginManager
 {
     public static final String USER_CREDENTIALS_ID_KEY = "user_credentials_id";
     private final Bus bus;

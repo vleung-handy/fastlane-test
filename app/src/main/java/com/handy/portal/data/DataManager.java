@@ -53,7 +53,7 @@ public abstract class DataManager
         OTHER, SERVER, CLIENT, NETWORK
     }
 
-    public static final class DataManagerError
+    public static class DataManagerError
     {
         private final Type type;
         private final String message;

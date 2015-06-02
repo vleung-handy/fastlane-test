@@ -6,12 +6,12 @@ import java.text.MessageFormat;
 
 public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint
 {
-    private final EnvironmentSwitcher environmentSwitcher;
+    private final EnvironmentManager environmentManager;
 
-    public HandyRetrofitFluidEndpoint(Context context, EnvironmentSwitcher environmentSwitcher)
+    public HandyRetrofitFluidEndpoint(Context context, EnvironmentManager environmentManager)
     {
         super(context);
-        this.environmentSwitcher = environmentSwitcher;
+        this.environmentManager = environmentManager;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint
     @Override
     public String getName()
     {
-        return environmentSwitcher.getEnvironment().getName();
+        return environmentManager.getEnvironment().getName();
     }
 
     @Override
@@ -34,6 +34,6 @@ public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint
 
     private String formatUrl(String url)
     {
-        return MessageFormat.format(url, environmentSwitcher.getEnvironment().getPrefix());
+        return MessageFormat.format(url, environmentManager.getEnvironment().getPrefix());
     }
 }

@@ -7,7 +7,7 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public final class UpdateManager
+public class UpdateManager
 {
     private final Bus bus;
     private DataManager dataManager;
@@ -41,7 +41,7 @@ public final class UpdateManager
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.UpdateCheckRequestReceivedEvent(new UpdateDetails(), false));
+                        bus.post(new Event.UpdateCheckRequestReceivedEvent(null, false));
                     }
                 }
         );

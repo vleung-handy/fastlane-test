@@ -5,8 +5,6 @@ import android.os.Bundle;
 import com.handy.portal.R;
 import com.handy.portal.event.Event;
 
-import butterknife.ButterKnife;
-
 public class PleaseUpdateActivity extends BaseActivity
 {
 
@@ -15,7 +13,6 @@ public class PleaseUpdateActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_please_update);
-        ButterKnife.inject(this);
     }
 
     @Override

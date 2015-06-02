@@ -158,11 +158,6 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void swapFragment(Class targetClassType)
-    {
-        swapFragment(targetClassType, null);
-    }
-
     private void swapFragment(Class targetClassType, Bundle argumentsBundle)
     {
         //replace the existing fragment with the new fragment

@@ -1,6 +1,6 @@
 package com.handy.portal.data;
 
-public class EnvironmentSwitcher
+public class EnvironmentManager
 {
     private Environment environment = Environment.S;
 
