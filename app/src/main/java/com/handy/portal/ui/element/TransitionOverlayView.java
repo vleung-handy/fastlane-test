@@ -42,6 +42,7 @@ public class TransitionOverlayView extends RelativeLayout
     public void init()
     {
         ButterKnife.inject(this);
+        this.setVisibility(INVISIBLE);
     }
 
     public void setText(int textId)
@@ -61,10 +62,10 @@ public class TransitionOverlayView extends RelativeLayout
 
     public void showThenHideOverlay()
     {
+        this.setVisibility(VISIBLE);
         Animation showThenHide = AnimationUtils.loadAnimation(getContext(), R.anim.overlay_fade_in_then_out);
         this.startAnimation(showThenHide);
     }
-
 
 
 

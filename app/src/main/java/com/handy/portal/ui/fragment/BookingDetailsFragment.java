@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
+import com.handy.portal.consts.MainViewTab;
+import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
@@ -119,7 +121,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             if(event.booking.getProviderId().equals(getLoggedInUserId()))
             {
-                //TODO: Turn this back on when finished implementing skinning the "claimed" state of booking details, for now open relevant web view
+                //TODO: Turn this back on when finished implementing skinning the "claimed" state of booking details, for now opening the available jobs tab again
                 if(false)
                 {
                     updateDisplayForBooking(event.booking);
@@ -132,13 +134,19 @@ public class BookingDetailsFragment extends InjectedFragment
                     int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
                     arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
                     //Return to available jobs on that day
-                    bus.post(new Event.NavigateToTabEvent(MainActivityFragment.MainViewTab.JOBS, arguments));
+                    bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, TransitionStyle.JOB_CLAIM_SUCCESS));
                 }
             }
             else
             {
-                showErrorToast(R.string.booking_action_error_not_available);
-                updateDisplayForBooking(event.booking);
+                //Return to available jobs on failure
+                Bundle arguments = new Bundle();
+                Calendar c = Calendar.getInstance();
+                c.setTime(event.booking.getStartDate());
+                int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
+                arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
+                //Return to available jobs on that day
+                bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, TransitionStyle.JOB_CLAIM_FAIL));
             }
         }
         //the base error handle pops up a toast with the error message if the event itself fails

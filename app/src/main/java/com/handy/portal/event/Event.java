@@ -2,13 +2,14 @@ package com.handy.portal.event;
 
 import android.os.Bundle;
 
+import com.handy.portal.consts.MainViewTab;
+import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.BookingSummary;
-import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
+import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
-import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import java.util.Map;
 
@@ -90,18 +91,26 @@ public abstract class Event
 
     public static class NavigateToTabEvent extends Event
     {
-        public MainActivityFragment.MainViewTab targetTab;
+        public MainViewTab targetTab;
         public Bundle arguments;
+        public TransitionStyle transitionStyleOverride;
 
-        public NavigateToTabEvent(MainActivityFragment.MainViewTab targetTab)
+        public NavigateToTabEvent(MainViewTab targetTab)
         {
             this.targetTab = targetTab;
         }
 
-        public NavigateToTabEvent(MainActivityFragment.MainViewTab targetTab, Bundle arguments)
+        public NavigateToTabEvent(MainViewTab targetTab, Bundle arguments)
         {
             this.targetTab = targetTab;
             this.arguments = arguments;
+        }
+
+        public NavigateToTabEvent(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyleOverride)
+        {
+            this.targetTab = targetTab;
+            this.arguments = arguments;
+            this.transitionStyleOverride = transitionStyleOverride;
         }
     }
 

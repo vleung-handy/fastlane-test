@@ -56,7 +56,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/dark_grey"
-        android:alpha="0">
+        android:visibility="invisible">
         <ImageView
             android:id="@+id/transition_overlay_image"
             android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:text="@string/job_claim_success"
             android:layout_gravity="center"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:layout_below="@id/transition_overlay_image"
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"
