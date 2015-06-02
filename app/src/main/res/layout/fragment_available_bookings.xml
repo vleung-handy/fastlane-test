@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AvailableBookingsFragment"
-    android:orientation="vertical"
-    >
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".AvailableBookingsFragment">
 
     <TextView
         android:id="@+id/available_bookings_banner_text"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/available_jobs_requested_list_view"
-            android:dividerHeight="2dp"
+            android:dividerHeight="1dp"
             />
 
         <ImageView
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/available_jobs_unrequested_list_view"
-            android:dividerHeight="2dp"
+            android:dividerHeight="1dp"
             />
 
     </LinearLayout>

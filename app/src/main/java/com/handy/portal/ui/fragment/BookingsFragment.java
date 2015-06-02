@@ -35,6 +35,7 @@ public abstract class BookingsFragment extends InjectedFragment
     protected abstract int getFragmentResourceId();
 
     protected abstract BookingListView getRequestedBookingListView();
+
     protected abstract BookingListView getUnrequestedBookingListView();
 
     protected abstract LinearLayout getDatesLayout();
@@ -56,19 +57,18 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
-            //System.out.println("Bookings fragment being created" + view.toString());
         requestBookings();
         initListClickListener();
         return view;
     }
 
     //Event listeners
-        //Can't subscribe in an abstract class?
+    //Can't subscribe in an abstract class?
     public abstract void onBookingsRetrieved(Event.BookingsRetrievedEvent event);
 
     protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
-        if(event.success)
+        if (event.success)
         {
             bookingSummariesByDay = event.bookingSummaries;
             updateDateButtons();
@@ -80,11 +80,6 @@ public abstract class BookingsFragment extends InjectedFragment
         }
     }
 
-    protected void requestBookingDetails(String bookingId)
-    {
-        bus.post(new Event.RequestBookingDetailsEvent(bookingId));
-    }
-
     private void setActiveDay(BookingCalendarDay activeDay)
     {
         this.activeDay = activeDay;
@@ -93,7 +88,7 @@ public abstract class BookingsFragment extends InjectedFragment
 
     private void displayActiveDayBookings()
     {
-        Map<BookingListType,List<Booking>> bookings = getActiveDayBookings();
+        Map<BookingListType, List<Booking>> bookings = getActiveDayBookings();
 
         if (bookings == null)
         {
@@ -130,7 +125,8 @@ public abstract class BookingsFragment extends InjectedFragment
 
             //Remove all requested bookings from unrequested and add them to requested
             Iterator<Booking> bookingsIterator = unrequestedBookings.iterator();
-            while (bookingsIterator.hasNext()) {
+            while (bookingsIterator.hasNext())
+            {
                 Booking b = bookingsIterator.next();
                 if (b.getIsRequested())
                 {

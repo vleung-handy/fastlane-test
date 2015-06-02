@@ -2,8 +2,6 @@ package com.handy.portal.ui.form;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.handy.portal.core.booking.Booking;
@@ -11,9 +9,6 @@ import com.handy.portal.ui.adapter.BookingElementAdapter;
 
 import java.util.List;
 
-/**
- * Created by cdavis on 5/6/15.
- */
 public class BookingListView extends ListView
 {
     public BookingListView(Context context)
@@ -34,7 +29,7 @@ public class BookingListView extends ListView
     public void populateList(List<Booking> bookings)
     {
         BookingElementAdapter itemsAdapter =
-                new BookingElementAdapter(getContext().getApplicationContext(), bookings);
+                new BookingElementAdapter(getContext(), bookings);
         setAdapter(itemsAdapter);
     }
 

@@ -36,5 +36,8 @@
     <color name="bg_inactive_grey">#9CABB5</color>
     <color name="bg_active_grey">#8A969E</color>
     <color name="text_light_grey">#CCCCCC</color>
+    <color name="title_grey">#666666</color>
+    <color name="subtitle_grey">#9CABB5</color>
+    <color name="requested_green">#8BC53E</color>
 
 </resources>
