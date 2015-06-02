@@ -33,5 +33,8 @@
     <color name="facebook">#246BAB</color>
     <color name="facebook_pressed">#1C4B76</color>
     <color name="very_light_grey">#9F9794</color>
+    <color name="bg_inactive_grey">#9CABB5</color>
+    <color name="bg_active_grey">#8A969E</color>
+    <color name="text_light_grey">#CCCCCC</color>
 
 </resources>

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
@@ -30,8 +29,6 @@ import butterknife.ButterKnife;
 
 public abstract class BookingsFragment extends InjectedFragment
 {
-    private static final String DATE_FORMAT = "MMM E d";
-
     protected BookingCalendarDay activeDay; //what day are we currently displaying bookings for?
     protected Map<BookingCalendarDay, BookingSummary> bookingSummariesByDay;
 
@@ -46,8 +43,6 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract void initListClickListener();
 
-    protected int defaultActiveDayOfYear;
-
     public enum BookingListType
     {
         REQUESTED,
@@ -61,18 +56,7 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
-
-        //Optional param, needs to be validated
-        if(getArguments() != null && getArguments().containsKey(BundleKeys.ACTIVE_DAY_OF_YEAR))
-        {
-            int defaultActiveDay = getArguments().getInt(BundleKeys.ACTIVE_DAY_OF_YEAR);
-            this.defaultActiveDayOfYear = defaultActiveDay;
-        }
-        else
-        {
-            this.defaultActiveDayOfYear = -1;
-        }
-
+            //System.out.println("Bookings fragment being created" + view.toString());
         requestBookings();
         initListClickListener();
         return view;
@@ -188,12 +172,15 @@ public abstract class BookingsFragment extends InjectedFragment
         return bookingSummariesByDay.size();
     }
 
+    private DateButtonView selectedDateButtonView;
+
     private void refreshDateButtons(LinearLayout scrollViewLayout, Calendar calendar, int numDaysToDisplay)
     {
         //remove existing date buttons
         scrollViewLayout.removeAllViews();
+        selectedDateButtonView = null;
 
-        Context context = getActivity().getApplicationContext();
+        Context context = getActivity();
 
         for (int i = 0; i < numDaysToDisplay; i++)
         {
@@ -201,11 +188,6 @@ public abstract class BookingsFragment extends InjectedFragment
             final DateButtonView dateButtonView = ((DateButtonView) (scrollViewLayout.getChildAt(i)));
 
             final BookingCalendarDay associatedBookingCalendarDay = new BookingCalendarDay(calendar);
-            if (i == 0
-                || this.defaultActiveDayOfYear == associatedBookingCalendarDay.getDayOfYear())
-            {
-                this.activeDay = associatedBookingCalendarDay; //by default point to first day of data as active day
-            }
 
             boolean requestedJobsThisDay = getBookingsForDay(associatedBookingCalendarDay).get(BookingListType.REQUESTED).size() > 0;
             dateButtonView.init(calendar, requestedJobsThisDay);
@@ -213,12 +195,33 @@ public abstract class BookingsFragment extends InjectedFragment
             {
                 public void onClick(View v)
                 {
+                    selectDate(dateButtonView);
                     setActiveDay(associatedBookingCalendarDay);
                 }
             });
+
+            if (i == 0)
+            {
+                this.activeDay = associatedBookingCalendarDay; //by default point to first day of data as active day
+                selectDate(dateButtonView);
+            }
 
             //next day
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
     }
+
+    private void selectDate(DateButtonView dateButtonView)
+    {
+        if (selectedDateButtonView != dateButtonView)
+        {
+            if (selectedDateButtonView != null)
+            {
+                selectedDateButtonView.setChecked(false);
+            }
+            dateButtonView.setChecked(true);
+            selectedDateButtonView = dateButtonView;
+        }
+    }
+
 }

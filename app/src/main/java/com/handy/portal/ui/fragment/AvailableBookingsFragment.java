@@ -53,33 +53,20 @@ public class AvailableBookingsFragment extends BookingsFragment
 
     protected void initListClickListener()
     {
-        availableJobsRequestedListView.setOnItemClickListener(
-                new AdapterView.OnItemClickListener()
-                {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
-                    {
-                        Booking booking = (Booking) adapter.getItemAtPosition(position);
-                        Bundle arguments = new Bundle();
-                        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-                        bus.post(new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments));
-                    }
-                }
-        );
+        availableJobsRequestedListView.setOnItemClickListener(new OnBookingItemClickedListener());
+        availableJobsUnrequestedListView.setOnItemClickListener(new OnBookingItemClickedListener());
+    }
 
-        availableJobsUnrequestedListView.setOnItemClickListener(
-                new AdapterView.OnItemClickListener()
-                {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
-                    {
-                        Booking booking = (Booking) adapter.getItemAtPosition(position);
-                        Bundle arguments = new Bundle();
-                        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-                        bus.post(new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments));
-                    }
-                }
-        );
+    private class OnBookingItemClickedListener implements AdapterView.OnItemClickListener
+    {
+        @Override
+        public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
+        {
+            Booking booking = (Booking) adapter.getItemAtPosition(position);
+            Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+            bus.post(new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments));
+        }
     }
 
     @Subscribe

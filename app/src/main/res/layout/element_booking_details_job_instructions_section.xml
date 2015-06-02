@@ -20,7 +20,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_toRightOf="@id/booking_details_job_instructions_section_title_icon"
         android:layout_toEndOf="@id/booking_details_job_instructions_section_title_icon"
-        android:text="xxtextgoesherexx"
         android:textSize="30sp"
         android:textColor="@color/very_light_grey"/>
 
@@ -30,6 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/booking_details_job_instructions_section_title_text"
+        android:layout_alignLeft="@id/booking_details_job_instructions_section_title_text"
         android:layout_below="@id/booking_details_job_instructions_section_title_text"
         >
     </LinearLayout>
