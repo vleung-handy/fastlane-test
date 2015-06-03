@@ -30,16 +30,6 @@ public class ScheduledBookingsFragment extends BookingsFragment
     @InjectView(R.id.scheduled_bookings_dates_scroll_view_layout)
     protected LinearLayout scheduledJobsDatesScrollViewLayout;
 
-    protected BookingListView getRequestedBookingListView()
-    {
-        return scheduledJobsRequestedListView;
-    }
-
-    protected BookingListView getUnrequestedBookingListView()
-    {
-        return scheduledJobsUnrequestedListView;
-    }
-
     protected LinearLayout getDatesLayout()
     {
         return scheduledJobsDatesScrollViewLayout;
@@ -48,6 +38,12 @@ public class ScheduledBookingsFragment extends BookingsFragment
     protected int getFragmentResourceId()
     {
         return (R.layout.fragment_scheduled_bookings);
+    }
+
+    @Override
+    protected BookingListView getBookingListView()
+    {
+        return scheduledJobsUnrequestedListView;
     }
 
     protected void requestBookings()

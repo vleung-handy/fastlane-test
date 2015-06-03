@@ -3,11 +3,8 @@ package com.handy.portal.core.booking;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by cdavis on 5/6/15.
- */
 //Comparing Dates is error prone, this reclassifies based on a given day
-public class BookingCalendarDay
+public class BookingCalendarDay implements Comparable<BookingCalendarDay>
 {
     public BookingCalendarDay(Date date)
     {
@@ -16,23 +13,11 @@ public class BookingCalendarDay
         this.year = calendar.get(Calendar.YEAR);
         this.month = calendar.get(Calendar.MONTH);
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        this.dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
     }
 
-    public BookingCalendarDay(Calendar calendar)
-    {
-        this.year = calendar.get(Calendar.YEAR);
-        this.month = calendar.get(Calendar.MONTH);
-        this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        this.dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
-    }
-
-    int year;
-    int month;
-    int day;
-    int dayOfYear;
-
-    public int getDayOfYear() {return dayOfYear;}
+    public final int year;
+    public final int month;
+    public final int day;
 
     @Override
     public int hashCode()
@@ -42,21 +27,23 @@ public class BookingCalendarDay
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof BookingCalendarDay)) {
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof BookingCalendarDay))
+        {
             return false;
         }
 
         BookingCalendarDay other = (BookingCalendarDay) obj;
 
-        if (other == this) {
+        if (other == this)
+        {
             return true;
         }
 
         return other.year == this.year &&
                 other.month == this.month &&
-                other.day == this.day &&
-                other.dayOfYear == this.dayOfYear;
+                other.day == this.day;
 
     }
 
@@ -64,5 +51,20 @@ public class BookingCalendarDay
     public String toString()
     {
         return (Integer.toString(year) + "/" + Integer.toString(month) + "/" + Integer.toString(day));
+    }
+
+    @Override
+    public int compareTo(BookingCalendarDay other)
+    {
+        Calendar calendar = this.toCalendar();
+        Calendar otherCalendar = other.toCalendar();
+        return calendar.compareTo(otherCalendar);
+    }
+
+    public Calendar toCalendar()
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(this.year, this.month, this.day);
+        return calendar;
     }
 }

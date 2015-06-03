@@ -10,6 +10,7 @@ import com.squareup.otto.Subscribe;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -177,7 +178,7 @@ public class BookingManager
     //may get rid of the caching of summaries and just keep raw booking data?
     private void updateSummariesCache(final List<BookingSummary> bookingSummaries)
     {
-        cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
+        cachedBookingSummaries = new TreeMap<>();
         for (BookingSummary bs : bookingSummaries)
         {
             BookingCalendarDay bcd = new BookingCalendarDay(bs.getDate());

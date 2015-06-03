@@ -17,23 +17,15 @@ import butterknife.InjectView;
 
 public class AvailableBookingsFragment extends BookingsFragment
 {
-    @InjectView(R.id.available_jobs_requested_list_view)
-    protected BookingListView availableJobsRequestedListView;
-
-    @InjectView(R.id.available_jobs_unrequested_list_view)
-    protected BookingListView availableJobsUnrequestedListView;
+    @InjectView(R.id.available_jobs_list_view)
+    protected BookingListView availableJobsListView;
 
     @InjectView(R.id.available_bookings_dates_scroll_view_layout)
     protected LinearLayout availableJobsDatesScrollViewLayout;
 
-    protected BookingListView getRequestedBookingListView()
+    protected BookingListView getBookingListView()
     {
-        return availableJobsRequestedListView;
-    }
-
-    protected BookingListView getUnrequestedBookingListView()
-    {
-        return availableJobsUnrequestedListView;
+        return availableJobsListView;
     }
 
     protected LinearLayout getDatesLayout()
@@ -53,20 +45,20 @@ public class AvailableBookingsFragment extends BookingsFragment
 
     protected void initListClickListener()
     {
-        availableJobsRequestedListView.setOnItemClickListener(new OnBookingItemClickedListener());
-        availableJobsUnrequestedListView.setOnItemClickListener(new OnBookingItemClickedListener());
-    }
-
-    private class OnBookingItemClickedListener implements AdapterView.OnItemClickListener
-    {
-        @Override
-        public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
+        availableJobsListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
-            Booking booking = (Booking) adapter.getItemAtPosition(position);
-            Bundle arguments = new Bundle();
-            arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-            bus.post(new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments));
-        }
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
+            {
+                Booking booking = (Booking) adapter.getItemAtPosition(position);
+                if (booking != null)
+                {
+                    Bundle arguments = new Bundle();
+                    arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+                    bus.post(new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments));
+                }
+            }
+        });
     }
 
     @Subscribe
