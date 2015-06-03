@@ -1,55 +1,69 @@
 package com.handy.portal.ui.element;
 
+import android.app.Fragment;
 import android.os.Bundle;
 
-import com.handy.portal.R;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.core.booking.Booking;
 
 /**
  * Created by cdavis on 5/8/15.
  */
-public class GoogleMapView extends BookingDetailsView
+public class GoogleMapView extends BookingDetailsViewFragmentContainer implements OnMapReadyCallback
 {
     private static int DEFAULT_ZOOM_LEVEL = 15;
 
-    protected int getLayoutResourceId()
+    GoogleMap googleMap;
+    Booking booking;
+
+    @Override
+    protected Class getFragmentClass()
     {
-        return R.layout.element_map;
+        return MapFragment.class;
     }
 
-    //TODO: Waiting on access to google developer console so we can get our API key and make actual calls
+    @Override
+    protected void onFragmentCreated(Fragment fragment)
+    {
+        MapFragment mapFragment = (MapFragment) fragment;
+        mapFragment.getMapAsync(this);
+    }
 
-    //MapView map;
-
+    @Override
     protected void initFromBooking(Booking booking, Bundle arguments)
     {
-        //use lat/long of booking to target the google map
-        //initMapForBooking(booking);
+        //booking stuff
+        //store and wait for on map ready
+        this.booking = booking;
     }
 
-//    private void initMapForBooking(Booking booking)
-//    {
-//        MapView map = (MapView) parentViewGroup.findViewById(R.id.map);
-//        GoogleMap googleMap = map.getMap();
-//
-//        float latitude = booking.getAddress().getLatitude();
-//        float longitude = booking.getAddress().getLongitude();
-//        LatLng target = new LatLng(latitude, longitude);
-//
-//        focusMap(googleMap, target, DEFAULT_ZOOM_LEVEL);
-//    }
-//
-//    private void focusMap(GoogleMap googleMap, LatLng target, int zoomLevel)
-//    {
-//        CameraPosition targetCameraPosition = new CameraPosition.Builder().
-//                target(target).
-//                zoom(DEFAULT_ZOOM_LEVEL).
-//                build();
-//        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
-//        googleMap.animateCamera(cameraUpdate);
-//    }
+    @Override
+    public void onMapReady(GoogleMap map)
+    {
+        this.googleMap = map;
+        if(booking != null)
+        {
+            float latitude = booking.getAddress().getLatitude();
+            float longitude = booking.getAddress().getLongitude();
+            LatLng target = new LatLng(latitude, longitude);
+            focusMap(googleMap, target);
+        }
+    }
 
-
-
-
+    private void focusMap(GoogleMap map, LatLng target)
+    {
+        CameraPosition targetCameraPosition = new CameraPosition.Builder().
+                target(target).
+                zoom(DEFAULT_ZOOM_LEVEL).
+                build();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
+        System.out.println("Zooming to target " + target.toString());
+        map.animateCamera(cameraUpdate);
+    }
 }

@@ -1,6 +1,6 @@
 package com.handy.portal.ui.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -176,7 +176,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void initBookingDisplayElements(Booking booking)
     {
-        Context context = getActivity().getApplicationContext();
+        Activity activity = getActivity();
 
         BookingStatus bookingStatus = inferBookingStatus(booking, getLoggedInUserId());
         Bundle arguments = new Bundle();
@@ -187,21 +187,22 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //google maps
         GoogleMapView gmv = new GoogleMapView();
-        gmv.init(booking, new Bundle(), mapLayout, context);
+        gmv.init(booking, new Bundle(), mapLayout, activity);
+        //initMap();
 
         //date banner
         BookingDetailsDateView dateView = new BookingDetailsDateView();
-        dateView.init(booking, new Bundle(), dateLayout,context );
+        dateView.init(booking, new Bundle(), dateLayout, activity );
 
         //action section
         BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
-        actionPanel.init(booking, arguments, actionLayout, context);
+        actionPanel.init(booking, arguments, actionLayout, activity);
         initActionButtonListener(actionPanel.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
 
         //extra details
         //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
         BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
-        jobInstructionsView.init(booking, arguments, jobInstructionsLayout, context);
+        jobInstructionsView.init(booking, arguments, jobInstructionsLayout, activity);
     }
 
     private void setBannerText(BookingStatus bookingStatus)
