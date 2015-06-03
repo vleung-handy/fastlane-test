@@ -47,6 +47,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     public void onMapReady(GoogleMap map)
     {
         this.googleMap = map;
+        this.googleMap.getUiSettings().setAllGesturesEnabled(false); //disable all controls, we just want to see the image for now
         if(booking != null)
         {
             float latitude = booking.getAddress().getLatitude();
