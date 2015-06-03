@@ -2,12 +2,15 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.BookingCalendarDay;
@@ -32,8 +35,6 @@ public abstract class BookingsFragment extends InjectedFragment
     protected abstract LinearLayout getDatesLayout();
 
     protected abstract void requestBookings();
-
-    protected abstract void initListClickListener();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,6 +119,22 @@ public abstract class BookingsFragment extends InjectedFragment
         initListClickListener();
     }
 
+    private void initListClickListener()
+    {
+        getBookingListView().setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
+            {
+                Booking booking = (Booking) adapter.getItemAtPosition(position);
+                if (booking != null)
+                {
+                    showBookingDetails(booking);
+                }
+            }
+        });
+    }
+
     private void insertSeparator(List<Booking> bookings)
     {
         for (int i = 1; i < bookings.size(); i++)
@@ -131,6 +148,18 @@ public abstract class BookingsFragment extends InjectedFragment
                 return;
             }
         }
+    }
+
+    private void showBookingDetails(Booking booking)
+    {
+        Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        BookingDetailsFragment bookingDetailsFragment = new BookingDetailsFragment();
+        bookingDetailsFragment.setArguments(arguments);
+
+        transaction.replace(R.id.main_container, bookingDetailsFragment).addToBackStack(null).commit();
     }
 
 }

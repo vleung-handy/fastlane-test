@@ -37,11 +37,6 @@ public class MainActivityFragment extends InjectedFragment
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
-    public MainActivityFragment()
-    {
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -232,9 +227,4 @@ public class MainActivityFragment extends InjectedFragment
 
     }
 
-
-
 }
-
-
-
