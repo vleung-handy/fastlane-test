@@ -36,11 +36,12 @@ public enum MainViewTab
     //If this gets back and complex setup a basic state machine for tab transitions with the relevant overlays and anims along the transitions
     public int[] getTransitionAnimationIds(MainViewTab targetTab)
     {
-        int[] transitionAnimationIds = null;
+        int[] transitionAnimationIds = new int[2];
+        transitionAnimationIds[TransitionAnimationIndex.INCOMING] = R.anim.none;
+        transitionAnimationIds[TransitionAnimationIndex.OUTGOING] = R.anim.none;
 
         if (this.equals(MainViewTab.JOBS) && targetTab.equals(MainViewTab.DETAILS))
         {
-            transitionAnimationIds = new int[2];
             transitionAnimationIds[TransitionAnimationIndex.INCOMING] = R.anim.slide_out_left;
             transitionAnimationIds[TransitionAnimationIndex.OUTGOING] = R.anim.slide_in_right;
         }

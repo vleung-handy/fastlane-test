@@ -152,15 +152,10 @@ public class MainActivityFragment extends InjectedFragment
                 if (currentTab != null)
                 {
                     swapFragmentArguments.transitionAnimationIds = currentTab.getTransitionAnimationIds(targetTab);
+
                     if (overrideTransitionStyle != null)
                     {
                         int[] overrideAnimationIds = overrideTransitionStyle.getAnimationsIds();
-
-                        if (swapFragmentArguments.transitionAnimationIds == null)
-                        {
-                            swapFragmentArguments.transitionAnimationIds = new int[2];
-                        }
-
                         if (overrideAnimationIds[TransitionAnimationIndex.INCOMING] != 0)
                         {
                             swapFragmentArguments.transitionAnimationIds[TransitionAnimationIndex.INCOMING]
