@@ -64,7 +64,6 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
                 zoom(DEFAULT_ZOOM_LEVEL).
                 build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
-        System.out.println("Zooming to target " + target.toString());
         map.animateCamera(cameraUpdate);
     }
 }

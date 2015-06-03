@@ -23,9 +23,6 @@ public abstract class BookingDetailsView
 
     public void init(Booking booking, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
     {
-        //System.out.println("Init booking details view with resource id " + Integer.toString(getLayoutResourceId()));
-        //System.out.println("to parent " + parentViewGroup.toString());
-
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
         this.applicationContext = activity.getApplicationContext();
