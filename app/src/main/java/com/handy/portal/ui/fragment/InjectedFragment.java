@@ -47,9 +47,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     {
         super.onCreate(savedInstanceState);
         ((BaseApplication) getActivity().getApplication()).inject(this);
-
-        toast = Toast.makeText(getActivity(), null, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
     }
 
     @Override
@@ -85,14 +82,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     {
         allowCallbacks = false;
         super.onStop();
-    }
-
-    protected void disableInputs()
-    {
-    }
-
-    protected void enableInputs()
-    {
     }
 
     //Each fragment if it requires arguments from the bundles should override this list

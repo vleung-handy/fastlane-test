@@ -13,7 +13,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public final class BookingManager
+public class BookingManager
 {
     private final Bus bus;
     private final DataManager dataManager;

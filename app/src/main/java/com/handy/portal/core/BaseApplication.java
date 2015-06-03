@@ -15,9 +15,9 @@ import javax.inject.Inject;
 import dagger.ObjectGraph;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public final class BaseApplication extends Application
+public class BaseApplication extends Application
 {
-    private ObjectGraph graph;
+    protected ObjectGraph graph;
     private int started;
     private boolean savedInstance;
 
@@ -30,8 +30,8 @@ public final class BaseApplication extends Application
     public final void onCreate()
     {
         super.onCreate();
-        Crashlytics.start(this);
-        graph = ObjectGraph.create(new ApplicationModule(this));
+        startCrashlytics();
+        createObjectGraph();
         inject(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -113,6 +113,16 @@ public final class BaseApplication extends Application
             {
             }
         });
+    }
+
+    protected void startCrashlytics()
+    {
+        Crashlytics.start(this);
+    }
+
+    protected void createObjectGraph()
+    {
+        graph = ObjectGraph.create(new ApplicationModule(this));
     }
 
     public final void inject(final Object object)

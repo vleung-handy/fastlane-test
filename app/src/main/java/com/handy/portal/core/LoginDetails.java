@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by cdavis on 5/15/15.
  */
-public final class LoginDetails
+public class LoginDetails
 {
         @SerializedName("success")
         private boolean success;
@@ -14,9 +14,9 @@ public final class LoginDetails
         @SerializedName("user_credentials_id")
         private String userCredentialsId;
 
-        public final boolean getSuccess() { return success; }
-        public final String getUserCredentials() { return userCredentials; }
-        public final String getUserCredentialsCookie() { return "user_credentials="+ getUserCredentials();}
+        public boolean getSuccess() { return success; }
+        public String getUserCredentials() { return userCredentials; }
+        public String getUserCredentialsCookie() { return "user_credentials="+ getUserCredentials();}
 
-        public final String getUserCredentialsId() { return userCredentialsId; }
+        public String getUserCredentialsId() { return userCredentialsId; }
 }

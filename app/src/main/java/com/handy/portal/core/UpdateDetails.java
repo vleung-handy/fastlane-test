@@ -2,7 +2,7 @@ package com.handy.portal.core;
 
 import com.google.gson.annotations.SerializedName;
 
-public final class UpdateDetails
+public class UpdateDetails
 {
         @SerializedName("success")
         private boolean success;
@@ -11,7 +11,7 @@ public final class UpdateDetails
         @SerializedName("download_url")
         private String downloadURL;
 
-        public final boolean getSuccess() { return success; }
-        public final boolean getShouldUpdate() { return shouldUpdate; }
-        public final String getDownloadUrl() { return downloadURL; }
+        public boolean getSuccess() { return success; }
+        public boolean getShouldUpdate() { return shouldUpdate; }
+        public String getDownloadUrl() { return downloadURL; }
 }
