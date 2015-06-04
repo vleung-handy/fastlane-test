@@ -48,7 +48,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
 
         locationText.setText(booking.getAddress().getShortRegion());
 
-        UIUtils.setFrequencyInfo(booking, frequencyText, context);
+        UIUtils.setFrequencyInfo(booking, frequencyText, activity);
 
         UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider());
         UIUtils.setPaymentInfo(paymentBonusText, booking.getBonusPaymentToProvider());
@@ -64,8 +64,8 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
         //Color
         switch(bookingStatus)
         {
-            case AVAILABLE: { button.setBackgroundColor(context.getResources().getColor(R.color.handy_green)); } break;
-            case CLAIMED: { button.setBackgroundColor(context.getResources().getColor(R.color.handy_purple)); } break;
+            case AVAILABLE: { button.setBackgroundColor(activity.getResources().getColor(R.color.handy_green)); } break;
+            case CLAIMED: { button.setBackgroundColor(activity.getResources().getColor(R.color.handy_purple)); } break;
         }
     }
 
@@ -73,8 +73,8 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     {
         switch(bookingStatus)
         {
-            case AVAILABLE: { return context.getString(R.string.claim); }
-            case CLAIMED: { return context.getString(R.string.on_my_way); }
+            case AVAILABLE: { return activity.getString(R.string.claim); }
+            case CLAIMED: { return activity.getString(R.string.on_my_way); }
         }
         return "";
     }

@@ -1,6 +1,6 @@
 package com.handy.portal.ui.element;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -15,18 +15,16 @@ import butterknife.ButterKnife;
 public abstract class BookingDetailsView
 {
     protected ViewGroup parentViewGroup;
-    protected Context context;
+    protected Activity activity;
 
     protected abstract int getLayoutResourceId();
-    public void init(Booking booking, Bundle arguments, ViewGroup parentViewGroup, Context context)
+
+    public void init(Booking booking, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
     {
-        //System.out.println("Init booking details view with resource id " + Integer.toString(getLayoutResourceId()));
-        //System.out.println("to parent " + parentViewGroup.toString());
-
         this.parentViewGroup = parentViewGroup;
-        this.context = context;
+        this.activity = activity;
 
-        LayoutInflater.from(context).inflate(getLayoutResourceId(), parentViewGroup);
+        LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
 
         ButterKnife.inject(this, parentViewGroup);
 

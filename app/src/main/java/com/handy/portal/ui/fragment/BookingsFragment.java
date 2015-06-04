@@ -61,7 +61,6 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
-        //System.out.println("Bookings fragment being created" + view.toString());
 
         //Optional param, needs to be validated
         if(getArguments() != null && getArguments().containsKey(BundleKeys.ACTIVE_DAY_OF_YEAR))

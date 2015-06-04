@@ -53,7 +53,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
                 }
 
                 //TODO: Hardcoding string and icon, we need to get this data from the booking info
-                sectionView.init(context.getString(R.string.customer_details), R.drawable.circle_green, entries, true);
+                sectionView.init(activity.getString(R.string.customer_details), R.drawable.circle_green, entries, true);
             }
         }
 
@@ -70,7 +70,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             }
 
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(context.getString(R.string.extras), R.drawable.circle_green, entries, true);
+            sectionView.init(activity.getString(R.string.extras), R.drawable.circle_green, entries, true);
         }
 
         //Note to pro
@@ -86,13 +86,13 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             }
 
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(context.getString(R.string.customer_request), R.drawable.circle_green, entries, false);
+            sectionView.init(activity.getString(R.string.customer_request), R.drawable.circle_green, entries, false);
         }
     }
 
     private BookingDetailsJobInstructionsSectionView addSection(LinearLayout instructionsLayout)
     {
-        LayoutInflater.from(context).inflate(R.layout.element_booking_details_job_instructions_section, instructionsLayout);
+        LayoutInflater.from(activity).inflate(R.layout.element_booking_details_job_instructions_section, instructionsLayout);
         BookingDetailsJobInstructionsSectionView sectionView = ((BookingDetailsJobInstructionsSectionView) (instructionsLayout.getChildAt(instructionsLayout.getChildCount() - 1)));
         return sectionView;
     }
