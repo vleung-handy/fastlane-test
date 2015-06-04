@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
@@ -38,6 +39,13 @@ public class ScheduledBookingsFragment extends BookingsFragment
     protected BookingListView getBookingListView()
     {
         return scheduledJobsUnrequestedListView;
+    }
+
+    // TODO: Implement
+    @Override
+    protected ViewGroup getNoBookingsView()
+    {
+        return null;
     }
 
     protected void requestBookings()

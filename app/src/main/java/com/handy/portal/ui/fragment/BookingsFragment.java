@@ -29,6 +29,8 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract BookingListView getBookingListView();
 
+    protected abstract ViewGroup getNoBookingsView();
+
     protected abstract LinearLayout getDatesLayout();
 
     protected abstract void requestBookings();
@@ -119,6 +121,7 @@ public abstract class BookingsFragment extends InjectedFragment
     {
         getBookingListView().populateList(bookings);
         initListClickListener();
+        getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     private void initListClickListener()

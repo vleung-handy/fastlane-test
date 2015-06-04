@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
@@ -17,9 +18,18 @@ public class AvailableBookingsFragment extends BookingsFragment
     @InjectView(R.id.available_bookings_dates_scroll_view_layout)
     protected LinearLayout availableJobsDatesScrollViewLayout;
 
+    @InjectView(R.id.available_bookings_empty)
+    protected ViewGroup noAvailableBookingsLayout;
+
     protected BookingListView getBookingListView()
     {
         return availableJobsListView;
+    }
+
+    @Override
+    protected ViewGroup getNoBookingsView()
+    {
+        return noAvailableBookingsLayout;
     }
 
     protected LinearLayout getDatesLayout()
