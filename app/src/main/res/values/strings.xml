@@ -200,6 +200,8 @@
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
     <string name="youre_requested">YOU\'RE REQUESTED!</string>
+    <string name="payment_value">%s</string>
+    <string name="bonus_payment_value">+ %s BONUS</string>
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
     <string name="booking_frequency_non_recurring">One Time Only</string>

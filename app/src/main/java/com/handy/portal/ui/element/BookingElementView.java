@@ -67,10 +67,10 @@ public class BookingElementView
         ButterKnife.inject(this, convertView);
 
         //Payment
-        setPaymentInfo(paymentText, booking.getPaymentToProvider(), "%s");
+        setPaymentInfo(paymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));
 
         //Bonus Payment
-        setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider(), "+ %s BONUS");
+        setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
 
         //Area
         bookingAreaTextView.setText(booking.getAddress().getShortRegion());

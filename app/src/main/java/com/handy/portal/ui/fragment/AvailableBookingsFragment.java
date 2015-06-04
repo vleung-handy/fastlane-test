@@ -40,7 +40,7 @@ public class AvailableBookingsFragment extends BookingsFragment
     @Subscribe
     public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
-       handleBookingsRetrieved(event);
+        handleBookingsRetrieved(event);
     }
 
 }
