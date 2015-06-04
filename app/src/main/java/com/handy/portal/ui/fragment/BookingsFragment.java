@@ -13,15 +13,12 @@ import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.form.BookingListView;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 
@@ -43,8 +40,14 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
-        requestBookings();
         return view;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        requestBookings();
     }
 
     //Event listeners
@@ -55,7 +58,7 @@ public abstract class BookingsFragment extends InjectedFragment
     {
         if (event.success)
         {
-            Map<BookingCalendarDay, BookingSummary> bookingSummaries = event.bookingSummaries;
+            List<BookingSummary> bookingSummaries = event.bookingSummaries;
             initDateButtons(bookingSummaries);
 
             if (getDatesLayout().getChildCount() > 0)
@@ -69,7 +72,7 @@ public abstract class BookingsFragment extends InjectedFragment
         }
     }
 
-    private void initDateButtons(Map<BookingCalendarDay, BookingSummary> bookingSummaries)
+    private void initDateButtons(List<BookingSummary> bookingSummaries)
     {
         LinearLayout datesLayout = getDatesLayout();
 
@@ -79,19 +82,18 @@ public abstract class BookingsFragment extends InjectedFragment
 
         Context context = getActivity();
 
-        for (final Map.Entry<BookingCalendarDay, BookingSummary> bookingSummariesEntry : bookingSummaries.entrySet())
+        for (final BookingSummary bookingSummary : bookingSummaries)
         {
             LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
             final DateButtonView dateButtonView = (DateButtonView) datesLayout.getChildAt(datesLayout.getChildCount() - 1);
 
-            final List<Booking> bookingsForDay = bookingSummariesEntry.getValue().getBookings();
+            final List<Booking> bookingsForDay = bookingSummary.getBookings();
 
             Collections.sort(bookingsForDay);
             insertSeparator(bookingsForDay);
 
             boolean requestedJobsThisDay = bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
-            final Calendar calendarDay = bookingSummariesEntry.getKey().toCalendar();
-            dateButtonView.init(calendarDay, requestedJobsThisDay);
+            dateButtonView.init(bookingSummary.getDate(), requestedJobsThisDay);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -49,7 +49,7 @@ public class DateButtonView extends LinearLayout
         super(context, attrs, defStyle);
     }
 
-    public void init(Calendar calendar, boolean requestedJobsThisDay)
+    public void init(Date date, boolean requestedJobsThisDay)
     {
         ButterKnife.inject(this);
 
@@ -57,7 +57,7 @@ public class DateButtonView extends LinearLayout
         selectedDayIndicator.setVisibility(View.INVISIBLE);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        String[] formattedDate = dateFormat.format(calendar.getTime()).split(" ");
+        String[] formattedDate = dateFormat.format(date.getTime()).split(" ");
 
         //only display month for first day in a month
         if (Integer.parseInt(formattedDate[2]) == 1)

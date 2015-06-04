@@ -59,8 +59,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Override
     public void onPause()
     {
-        super.onPause();
         this.bus.unregister(this);
+        super.onPause();
     }
 
     @Override

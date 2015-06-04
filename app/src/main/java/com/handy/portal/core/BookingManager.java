@@ -1,7 +1,8 @@
 package com.handy.portal.core;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
@@ -10,7 +11,7 @@ import com.squareup.otto.Subscribe;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -23,10 +24,10 @@ public class BookingManager
 
     private Map<String, Booking> cachedBookings; //booking ID to booking
 
-    //Do we really need to cache booking summaries? We're dealing with relatively small data sets
-    //Maybe the booking summaries will contain a list of ids instead of the full data
-    //and we keep our cached booking data distinct from the by day summaries which is a convenience
-    private Map<BookingCalendarDay, BookingSummary> cachedBookingSummaries;
+    // will change type when we want access to bookings for a specific day, right now, we're just dumping all
+    private final Cache<String, List<BookingSummary>> bookingSummariesCache;
+    private static final String AVAILABLE_BOOKINGS_CACHE_KEY = "available_bookings";
+    private static final String SCHEDULED_BOOKINGS_CACHE_KEY = "scheduled_summaries";
 
     @Inject
     BookingManager(final Bus bus, final DataManager dataManager)
@@ -36,7 +37,11 @@ public class BookingManager
         this.dataManager = dataManager;
 
         this.cachedBookings = new HashMap<String, Booking>();
-        this.cachedBookingSummaries = new HashMap<BookingCalendarDay, BookingSummary>();
+
+        this.bookingSummariesCache = CacheBuilder.newBuilder()
+                .maximumSize(10000)
+                .expireAfterWrite(1, TimeUnit.MINUTES)
+                .build();
     }
 
     private void updateBookingsCache(Booking booking)
@@ -72,51 +77,57 @@ public class BookingManager
         });
     }
 
-    private void onBookingDetailsReceived(Booking booking)
-    {
-
-    }
-
-
     @Subscribe
     public void onRequestAvailableBookings(Event.RequestAvailableBookingsEvent event)
     {
-        dataManager.getAvailableBookings(new DataManager.Callback<List<BookingSummary>>()
-             {
-                 @Override
-                 public void onSuccess(final List<BookingSummary> bookingSummaries)
-                 {
-                     onBookingSummariesReceived(bookingSummaries);
-                 }
+        final List<BookingSummary> cachedBookingSummaries = bookingSummariesCache.getIfPresent(AVAILABLE_BOOKINGS_CACHE_KEY);
+        if (cachedBookingSummaries != null)
+        {
+            bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries, true));
+        }
+        else
+        {
+            dataManager.getAvailableBookings(
+                    new DataManager.Callback<List<BookingSummary>>()
+                    {
+                        @Override
+                        public void onSuccess(final List<BookingSummary> bookingSummaries)
+                        {
+                            bookingSummariesCache.put(AVAILABLE_BOOKINGS_CACHE_KEY, bookingSummaries);
+                            bus.post(new Event.BookingsRetrievedEvent(bookingSummaries, true));
+                        }
 
-                 @Override
-                 public void onError(final DataManager.DataManagerError error)
-                 {
-                     System.err.println("Failed to get available bookings " + error);
-                     bus.post(new Event.BookingsRetrievedEvent(null, false));
-                 }
-             }
-        );
+                        @Override
+                        public void onError(final DataManager.DataManagerError error)
+                        {
+                            System.err.println("Failed to get available bookings " + error);
+                            bus.post(new Event.BookingsRetrievedEvent(null, false));
+                        }
+                    }
+            );
+        }
     }
 
     @Subscribe
     public void onRequestScheduledBookings(Event.RequestScheduledBookingsEvent event)
     {
-        dataManager.getScheduledBookings(new DataManager.Callback<List<BookingSummary>>()
-             {
-                 @Override
-                 public void onSuccess(final List<BookingSummary> bookingSummaries)
-                 {
-                     onBookingSummariesReceived(bookingSummaries);
-                 }
+        dataManager.getScheduledBookings(
+                new DataManager.Callback<List<BookingSummary>>()
+                {
+                    @Override
+                    public void onSuccess(final List<BookingSummary> bookingSummaries)
+                    {
+                        bookingSummariesCache.put(SCHEDULED_BOOKINGS_CACHE_KEY, bookingSummaries);
+                        bus.post(new Event.BookingsRetrievedEvent(bookingSummaries, true));
+                    }
 
-                 @Override
-                 public void onError(final DataManager.DataManagerError error)
-                 {
-                     System.err.println("Failed to get scheduled bookings " + error);
-                     bus.post(new Event.BookingsRetrievedEvent(null, false));
-                 }
-             }
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        System.err.println("Failed to get scheduled bookings " + error);
+                        bus.post(new Event.BookingsRetrievedEvent(null, false));
+                    }
+                }
         );
     }
 
@@ -150,39 +161,4 @@ public class BookingManager
         bus.post(new Event.ClaimJobRequestReceivedEvent(booking, true));
     }
 
-
-    public void onBookingSummariesReceived(final List<BookingSummary> bookingSummaries)
-    {
-        if (bookingSummaries == null)
-        {
-            System.err.println("No booking summaries from server");
-            return;
-        }
-
-        //extract all of the bookings and update our local cache
-        for (BookingSummary bs : bookingSummaries)
-        {
-            for (Booking b : bs.getBookings())
-            {
-                updateBookingsCache(b);
-            }
-        }
-
-        //update the summaries cache
-        updateSummariesCache(bookingSummaries);
-
-        //just passing this through right now until we figure out our caching strategy
-        bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries, true));
-    }
-
-    //may get rid of the caching of summaries and just keep raw booking data?
-    private void updateSummariesCache(final List<BookingSummary> bookingSummaries)
-    {
-        cachedBookingSummaries = new TreeMap<>();
-        for (BookingSummary bs : bookingSummaries)
-        {
-            BookingCalendarDay bcd = new BookingCalendarDay(bs.getDate());
-            cachedBookingSummaries.put(bcd, bs);
-        }
-    }
 }

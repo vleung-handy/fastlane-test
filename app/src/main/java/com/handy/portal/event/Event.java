@@ -9,22 +9,18 @@ import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.BookingCalendarDay;
 
-import java.util.Map;
+import java.util.List;
 
-/**
- * Created by cdavis on 5/6/15.
- */
 public abstract class Event
 {
     public boolean success;
 
     public static class BookingsRetrievedEvent extends Event
     {
-        public Map<BookingCalendarDay, BookingSummary> bookingSummaries;
+        public List<BookingSummary> bookingSummaries;
 
-        public BookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries, boolean success)
+        public BookingsRetrievedEvent(List<BookingSummary> bookingSummaries, boolean success)
         {
             this.bookingSummaries = bookingSummaries;
             this.success = success;
