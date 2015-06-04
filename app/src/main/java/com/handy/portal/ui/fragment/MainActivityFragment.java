@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,11 +37,6 @@ public class MainActivityFragment extends InjectedFragment
 
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
-
-    public MainActivityFragment()
-    {
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,49 +125,63 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle)
     {
-        if (currentTab != targetTab) //don't transition to same tab, ignore the clicks
+        clearFragmentBackStack();
+
+        //analytics event
+        String analyticsPageData;
+        if (targetTab.isNativeTab())
         {
-            //analytics event
-            String analyticsPageData = "";
-            if (targetTab.isNativeTab())
+            analyticsPageData = targetTab.getClassType().toString();
+        }
+        else
+        {
+            analyticsPageData = targetTab.getTarget().getValue();
+        }
+        bus.post(new Event.Navigation(analyticsPageData));
+
+        if (targetTab.isNativeTab())
+        {
+            webViewFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
+
+            SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
+
+            //don't use transition if don't have anything to transition from
+            if (currentTab != null)
             {
-                analyticsPageData = targetTab.getClassType().toString();
-            } else
-            {
-                analyticsPageData = targetTab.getTarget().getValue();
-            }
-            bus.post(new Event.Navigation(analyticsPageData));
-
-            if (targetTab.isNativeTab())
-            {
-                webViewFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
-
-                SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
-
-                //don't use transition if don't have anything to transition from
-                if(currentTab != null)
-                {
-                    swapFragmentArguments.transitionStyle = (overrideTransitionStyle != null ? overrideTransitionStyle : currentTab.getDefaultTransitionStyle(targetTab));
-                }
-
-                swapFragmentArguments.targetClassType = targetTab.getClassType();
-                swapFragmentArguments.argumentsBundle = argumentsBundle;
-                swapFragmentArguments.addToBackStack = true;
-
-                swapFragment(swapFragmentArguments);
-
-            } else
-            {
-                if (webViewFragment == null)
-                {
-                    initWebViewFragment(currentTab.getTarget());
-                } else
-                {
-                    webViewFragment.openPortalUrl(currentTab.getTarget());
-                }
+                swapFragmentArguments.transitionStyle = (overrideTransitionStyle != null ? overrideTransitionStyle : currentTab.getDefaultTransitionStyle(targetTab));
             }
 
+            swapFragmentArguments.targetClassType = targetTab.getClassType();
+            swapFragmentArguments.argumentsBundle = argumentsBundle;
+            swapFragmentArguments.addToBackStack = targetTab == MainViewTab.DETAILS;
+
+            swapFragment(swapFragmentArguments);
+
+        }
+        else
+        {
+            if (webViewFragment == null)
+            {
+                initWebViewFragment(targetTab.getTarget());
+            }
+            else
+            {
+                webViewFragment.openPortalUrl(targetTab.getTarget());
+            }
+        }
+
+        if (targetTab != MainViewTab.DETAILS)
+        {
             currentTab = targetTab;
+        }
+    }
+
+    private void clearFragmentBackStack()
+    {
+        FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
+        for (int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
+        {
+            supportFragmentManager.popBackStack();
         }
     }
 
@@ -179,6 +189,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         //replace the existing fragment with the new fragment
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
         Fragment newFragment = null;
         if (swapArguments.targetClassType != null)
         {
@@ -203,7 +214,7 @@ public class MainActivityFragment extends InjectedFragment
         }
 
         //Animate the transition, animations must come before the .replace call
-        if(swapArguments.transitionStyle != null)
+        if (swapArguments.transitionStyle != null)
         {
             transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
 
@@ -222,7 +233,8 @@ public class MainActivityFragment extends InjectedFragment
         if (swapArguments.addToBackStack)
         {
             transaction.addToBackStack(null);
-        } else
+        }
+        else
         {
             transaction.disallowAddToBackStack();
         }
@@ -232,9 +244,4 @@ public class MainActivityFragment extends InjectedFragment
 
     }
 
-
-
 }
-
-
-

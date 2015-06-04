@@ -10,14 +10,10 @@ import android.widget.TextView;
 import com.handy.portal.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
-/**
- * Created by cdavis on 5/29/15.
- */
 
 public class DateButtonView extends LinearLayout
 {
@@ -52,18 +48,19 @@ public class DateButtonView extends LinearLayout
     {
         super(context, attrs, defStyle);
     }
-    public void init(Calendar calendar, boolean requestedJobsThisDay)
+
+    public void init(Date date, boolean requestedJobsThisDay)
     {
         ButterKnife.inject(this);
 
         requestedIndicator.setVisibility(requestedJobsThisDay ? View.VISIBLE : View.INVISIBLE);
-        selectedDayIndicator.setVisibility(View.INVISIBLE); //todo: need to get radio button group working to remove this field
+        selectedDayIndicator.setVisibility(View.INVISIBLE);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        String[] formattedDate = dateFormat.format(calendar.getTime()).split(" ");
+        String[] formattedDate = dateFormat.format(date.getTime()).split(" ");
 
         //only display month for first day in a month
-        if(Integer.parseInt(formattedDate[2]) == 1)
+        if (Integer.parseInt(formattedDate[2]) == 1)
         {
             monthText.setText(formattedDate[0]);
         }
@@ -74,5 +71,11 @@ public class DateButtonView extends LinearLayout
 
         dayOfWeekText.setText(formattedDate[1]);
         dayOfMonthText.setText(formattedDate[2]);
+    }
+
+    public void setChecked(boolean checked)
+    {
+        selectedDayIndicator.setVisibility(checked ? View.VISIBLE : View.INVISIBLE);
+        setBackgroundColor(getResources().getColor(checked ? R.color.bg_active_grey : R.color.bg_inactive_grey));
     }
 }

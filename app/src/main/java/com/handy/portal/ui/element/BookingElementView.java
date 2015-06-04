@@ -17,9 +17,6 @@ import java.text.SimpleDateFormat;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-/**
- * Created by cdavis on 5/6/15.
- */
 public class BookingElementView
 {
     @InjectView(R.id.booking_entry_payment_text)
@@ -46,28 +43,23 @@ public class BookingElementView
     @InjectView(R.id.booking_entry_end_date_text)
     protected TextView endTimeText;
 
-    private static final String DATE_FORMAT = "h:mma";
+    private static final String DATE_FORMAT = "h:mm a";
 
-    private BookingElementMediator mediator;
     public View associatedView;
-
-    public BookingElementView(BookingElementMediator mediator)
-    {
-        this.mediator = mediator;
-    }
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
         if (booking == null)
         {
-            System.err.println("Can not fill cell based on null booking");
-            return null;
+            View separator = LayoutInflater.from(parentContext).inflate(R.layout.element_booking_list_entry_separator, parent, false);
+            this.associatedView = separator;
+            return separator;
         }
 
         boolean isRequested = booking.getIsRequested();
 
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null)
+        if (convertView == null || convertView.getId() == R.id.booking_list_entry_separator)
         {
             convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_booking_list_entry, parent, false);
         }
@@ -75,10 +67,10 @@ public class BookingElementView
         ButterKnife.inject(this, convertView);
 
         //Payment
-        setPaymentInfo(paymentText, booking.getPaymentToProvider());
+        setPaymentInfo(paymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));
 
         //Bonus Payment
-        setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider());
+        setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
 
         //Area
         bookingAreaTextView.setText(booking.getAddress().getShortRegion());
@@ -87,27 +79,27 @@ public class BookingElementView
         setFrequencyInfo(booking, frequencyTextView, parentContext);
 
         //Requested Provider
-        requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+        requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.INVISIBLE);
         requestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
         //Date and Time
         SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);
         String formattedStartDate = timeOfDayFormat.format(booking.getStartDate());
         String formattedEndDate = timeOfDayFormat.format(booking.getEndDate());
-        startTimeText.setText(formattedStartDate);
-        endTimeText.setText(formattedEndDate);
+        startTimeText.setText(formattedStartDate.toLowerCase());
+        endTimeText.setText(formattedEndDate.toLowerCase());
 
         this.associatedView = convertView;
 
         return convertView;
     }
 
-    private void setPaymentInfo(TextView textView, Booking.PaymentInfo paymentInfo)
+    private void setPaymentInfo(TextView textView, Booking.PaymentInfo paymentInfo, String format)
     {
-        if(paymentInfo != null && paymentInfo.getAdjustedAmount() > 0)
+        if (paymentInfo != null && paymentInfo.getAdjustedAmount() > 0)
         {
             String paymentString = TextUtils.formatPrice(paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol(), paymentInfo.getCurrencySuffix());
-            textView.setText(paymentString);
+            textView.setText(String.format(format, paymentString));
         }
         else
         {
@@ -122,11 +114,11 @@ public class BookingElementView
         int frequency = booking.getFrequency();
         String bookingFrequencyFormat;
 
-        if(frequency == 0)
+        if (frequency == 0)
         {
             bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_non_recurring);
         }
-        else if(frequency == 1)
+        else if (frequency == 1)
         {
             bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_every_week);
         }

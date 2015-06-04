@@ -1,63 +1,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AvailableBookingsFragment"
-    android:orientation="vertical"
-    >
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".AvailableBookingsFragment">
 
     <TextView
         android:id="@+id/available_bookings_banner_text"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/available_jobs"
-        android:textColor="@color/white"
-        android:background="@color/handy_blue"
-        android:gravity="center_vertical"/>
+        style="@style/Banner"
+        android:text="@string/available_jobs"/>
 
     <HorizontalScrollView
+        android:id="@+id/available_bookings_dates_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/available_bookings_dates_scroll_view">
+        android:scrollbars="none">
+
         <LinearLayout
             android:id="@+id/available_bookings_dates_scroll_view_layout"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
         </LinearLayout>
     </HorizontalScrollView>
 
-
-
-    <LinearLayout
+    <com.handy.portal.ui.form.BookingListView
+        android:id="@+id/available_jobs_list_view"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        >
-        <com.handy.portal.ui.form.BookingListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/available_jobs_requested_list_view"
-            android:dividerHeight="2dp"
-            />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="15dp"
-            android:id="@+id/section_spacer"/>
-
-        <com.handy.portal.ui.form.BookingListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/available_jobs_unrequested_list_view"
-            android:dividerHeight="2dp"
-            />
-
-    </LinearLayout>
-
-
-
-
+        android:layout_height="wrap_content"
+        android:divider="@color/white_trans"
+        android:dividerHeight="1dp"/>
 
 </LinearLayout>

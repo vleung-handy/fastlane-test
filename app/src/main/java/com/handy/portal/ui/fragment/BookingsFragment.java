@@ -5,54 +5,33 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
+import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.BookingCalendarDay;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.form.BookingListView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 import butterknife.ButterKnife;
 
 public abstract class BookingsFragment extends InjectedFragment
 {
-    private static final String DATE_FORMAT = "MMM E d";
-
-    protected BookingCalendarDay activeDay; //what day are we currently displaying bookings for?
-    protected Map<BookingCalendarDay, BookingSummary> bookingSummariesByDay;
 
     protected abstract int getFragmentResourceId();
 
-    protected abstract BookingListView getRequestedBookingListView();
-    protected abstract BookingListView getUnrequestedBookingListView();
+    protected abstract BookingListView getBookingListView();
 
     protected abstract LinearLayout getDatesLayout();
 
     protected abstract void requestBookings();
-
-    protected abstract void initListClickListener();
-
-    protected int defaultActiveDayOfYear;
-
-    public enum BookingListType
-    {
-        REQUESTED,
-        UNREQUESTED
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,34 +40,31 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
-
-        //Optional param, needs to be validated
-        if(getArguments() != null && getArguments().containsKey(BundleKeys.ACTIVE_DAY_OF_YEAR))
-        {
-            int defaultActiveDay = getArguments().getInt(BundleKeys.ACTIVE_DAY_OF_YEAR);
-            this.defaultActiveDayOfYear = defaultActiveDay;
-        }
-        else
-        {
-            this.defaultActiveDayOfYear = -1;
-        }
-
-        requestBookings();
-        initListClickListener();
         return view;
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        requestBookings();
+    }
+
     //Event listeners
-        //Can't subscribe in an abstract class?
+    //Can't subscribe in an abstract class?
     public abstract void onBookingsRetrieved(Event.BookingsRetrievedEvent event);
 
     protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
-        if(event.success)
+        if (event.success)
         {
-            bookingSummariesByDay = event.bookingSummaries;
-            updateDateButtons();
-            displayActiveDayBookings();
+            List<BookingSummary> bookingSummaries = event.bookingSummaries;
+            initDateButtons(bookingSummaries);
+
+            if (getDatesLayout().getChildCount() > 0)
+            {
+                getDatesLayout().getChildAt(0).performClick();
+            }
         }
         else
         {
@@ -96,129 +72,94 @@ public abstract class BookingsFragment extends InjectedFragment
         }
     }
 
-    protected void requestBookingDetails(String bookingId)
+    private void initDateButtons(List<BookingSummary> bookingSummaries)
     {
-        bus.post(new Event.RequestBookingDetailsEvent(bookingId));
-    }
+        LinearLayout datesLayout = getDatesLayout();
 
-    private void setActiveDay(BookingCalendarDay activeDay)
-    {
-        this.activeDay = activeDay;
-        displayActiveDayBookings();
-    }
-
-    private void displayActiveDayBookings()
-    {
-        Map<BookingListType,List<Booking>> bookings = getActiveDayBookings();
-
-        if (bookings == null)
-        {
-            //TODO: Some kind of loading/waiting/please try again display state
-            System.err.println("No bookings retrieved?");
-            return;
-        }
-
-        getRequestedBookingListView().populateList(bookings.get(BookingListType.REQUESTED));
-
-        getUnrequestedBookingListView().populateList(bookings.get(BookingListType.UNREQUESTED));
-    }
-
-    private Map<BookingListType, List<Booking>> getActiveDayBookings()
-    {
-        return getBookingsForDay(activeDay);
-    }
-
-    private Map<BookingListType, List<Booking>> getBookingsForDay(BookingCalendarDay day)
-    {
-        Map<BookingListType, List<Booking>> activeDayBookings = new HashMap<>();
-
-        if (bookingSummariesByDay == null)
-        {
-            System.err.println("No bookings data yet");
-            return null;
-        }
-
-        if (bookingSummariesByDay.containsKey(day))
-        {
-            //Filter the bookings into two lists, a requested and non-requested list and sort those bookings by time
-            List<Booking> unrequestedBookings = new ArrayList(bookingSummariesByDay.get(day).getBookings());
-            List<Booking> requestedBookings = new ArrayList<>();
-
-            //Remove all requested bookings from unrequested and add them to requested
-            Iterator<Booking> bookingsIterator = unrequestedBookings.iterator();
-            while (bookingsIterator.hasNext()) {
-                Booking b = bookingsIterator.next();
-                if (b.getIsRequested())
-                {
-                    requestedBookings.add(b);
-                    bookingsIterator.remove();
-                }
-            }
-
-            Collections.sort(requestedBookings);
-            Collections.sort(unrequestedBookings);
-
-            activeDayBookings.put(BookingListType.REQUESTED, requestedBookings);
-            activeDayBookings.put(BookingListType.UNREQUESTED, unrequestedBookings);
-
-            return activeDayBookings;
-        }
-
-        System.err.println("Could not find day : " + day);
-        return null;
-    }
-
-
-    //Horiz scroll view picker with dates
-    protected void updateDateButtons()
-    {
-        Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
-        //today is always the default day, the server should always send us this at minimum
-        int numDaysToDisplay = getNumDaysOfBookingSummaries();
-        refreshDateButtons(getDatesLayout(), calendar, numDaysToDisplay);
-    }
-
-    private int getNumDaysOfBookingSummaries()
-    {
-        if (bookingSummariesByDay == null)
-        {
-            System.err.println("No bookings data yet");
-            return 0;
-        }
-        return bookingSummariesByDay.size();
-    }
-
-    private void refreshDateButtons(LinearLayout scrollViewLayout, Calendar calendar, int numDaysToDisplay)
-    {
         //remove existing date buttons
-        scrollViewLayout.removeAllViews();
+        datesLayout.removeAllViews();
+        selectedDateButtonView = null;
 
-        Context context = getActivity().getApplicationContext();
+        Context context = getActivity();
 
-        for (int i = 0; i < numDaysToDisplay; i++)
+        for (final BookingSummary bookingSummary : bookingSummaries)
         {
-            LayoutInflater.from(context).inflate(R.layout.element_date_button, scrollViewLayout);
-            final DateButtonView dateButtonView = ((DateButtonView) (scrollViewLayout.getChildAt(i)));
+            LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
+            final DateButtonView dateButtonView = (DateButtonView) datesLayout.getChildAt(datesLayout.getChildCount() - 1);
 
-            final BookingCalendarDay associatedBookingCalendarDay = new BookingCalendarDay(calendar);
-            if (i == 0
-                || this.defaultActiveDayOfYear == associatedBookingCalendarDay.getDayOfYear())
-            {
-                this.activeDay = associatedBookingCalendarDay; //by default point to first day of data as active day
-            }
+            final List<Booking> bookingsForDay = bookingSummary.getBookings();
 
-            boolean requestedJobsThisDay = getBookingsForDay(associatedBookingCalendarDay).get(BookingListType.REQUESTED).size() > 0;
-            dateButtonView.init(calendar, requestedJobsThisDay);
+            Collections.sort(bookingsForDay);
+            insertSeparator(bookingsForDay);
+
+            boolean requestedJobsThisDay = bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
+            dateButtonView.init(bookingSummary.getDate(), requestedJobsThisDay);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
-                    setActiveDay(associatedBookingCalendarDay);
+                    if (selectedDateButtonView != dateButtonView)
+                    {
+                        if (selectedDateButtonView != null)
+                        {
+                            selectedDateButtonView.setChecked(false);
+                        }
+                        dateButtonView.setChecked(true);
+                        selectedDateButtonView = dateButtonView;
+                        displayBookings(bookingsForDay);
+                    }
                 }
             });
-
-            //next day
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
     }
+
+    private DateButtonView selectedDateButtonView;
+
+    private void displayBookings(List<Booking> bookings)
+    {
+        getBookingListView().populateList(bookings);
+        initListClickListener();
+    }
+
+    private void initListClickListener()
+    {
+        getBookingListView().setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
+            {
+                Booking booking = (Booking) adapter.getItemAtPosition(position);
+                if (booking != null)
+                {
+                    showBookingDetails(booking);
+                }
+            }
+        });
+    }
+
+    private void insertSeparator(List<Booking> bookings)
+    {
+        for (int i = 1; i < bookings.size(); i++)
+        {
+            Booking previousBooking = bookings.get(i - 1);
+            Booking booking = bookings.get(i);
+
+            if (previousBooking.getIsRequested() && !booking.getIsRequested())
+            {
+                bookings.add(i, null);
+                return;
+            }
+        }
+    }
+
+    private void showBookingDetails(Booking booking)
+    {
+        Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+
+        Event.NavigateToTabEvent event = new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments);
+
+        bus.post(event);
+    }
+
 }

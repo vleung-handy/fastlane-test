@@ -13,6 +13,23 @@
         -->
     </style>
 
+    <style name="Banner">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/handy_blue</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="DateTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="TabButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">fill_parent</item>

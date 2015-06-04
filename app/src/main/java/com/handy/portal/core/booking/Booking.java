@@ -39,9 +39,17 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("description") private String description;
     @SerializedName("provider_id") private String providerId;
 
-    public int compareTo(Booking b)
+    public int compareTo(Booking other)
     {
-        return startDate.compareTo(b.startDate);
+        if (this.getIsRequested() && !other.getIsRequested())
+        {
+            return -1;
+        }
+        if (!this.getIsRequested() && other.getIsRequested())
+        {
+            return 1;
+        }
+        return startDate.compareTo(other.startDate);
     }
 
     public boolean equals(Object o)
