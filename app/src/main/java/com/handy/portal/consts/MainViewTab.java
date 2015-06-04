@@ -1,7 +1,5 @@
 package com.handy.portal.consts;
 
-import com.handy.portal.R;
-import com.handy.portal.ui.element.TransitionOverlayView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
@@ -33,49 +31,36 @@ public enum MainViewTab
     }
     public Class getClassType() { return classType; }
 
-    //If this gets back and complex setup a basic state machine for tab transitions with the relevant overlays and anims along the transitions
-    public int[] getTransitionAnimationIds(MainViewTab targetTab)
-    {
-        int[] transitionAnimationIds = new int[2];
-        transitionAnimationIds[TransitionAnimationIndex.INCOMING] = R.anim.none;
-        transitionAnimationIds[TransitionAnimationIndex.OUTGOING] = R.anim.none;
-
-        if (this.equals(MainViewTab.JOBS) && targetTab.equals(MainViewTab.DETAILS))
-        {
-            transitionAnimationIds[TransitionAnimationIndex.INCOMING] = R.anim.slide_out_left;
-            transitionAnimationIds[TransitionAnimationIndex.OUTGOING] = R.anim.slide_in_right;
-        }
-
-        return transitionAnimationIds;
-    }
-
-    //If this gets back and complex setup a basic state machine for tab transitions with the relevant overlays and anims along the transitions
-
-    public boolean setupOverlay(MainViewTab targetTab, TransitionOverlayView transitionOverlayView)
-    {
-        return setupOverlay(targetTab, transitionOverlayView, null);
-    }
-
-    public boolean setupOverlay(MainViewTab targetTab, TransitionOverlayView transitionOverlayView, TransitionStyle overrideTransitionStyle)
-    {
-        boolean shouldShowOverlay = false;
-
-        //TODO: Are there any defaults that should be in here based on basic tab to tab transitions?
-
-        if (overrideTransitionStyle != null)
-        {
-            shouldShowOverlay = true;
-            transitionOverlayView.setText(overrideTransitionStyle.getOverlayStringId());
-            transitionOverlayView.setImage(overrideTransitionStyle.getOverlayImageId());
-        }
-
-        return shouldShowOverlay;
-    }
-
     //Eventually all tabs will be native tabs
     public boolean isNativeTab()
     {
         return (this.classType != null);
+    }
+
+    //If this gets complex setup small state machines to have a transition for each to/from tab
+    public TransitionStyle getDefaultTransitionStyle(MainViewTab targetTab)
+    {
+        if(this.equals(MainViewTab.JOBS) && targetTab.equals(MainViewTab.DETAILS))
+        {
+            return TransitionStyle.JOB_LIST_TO_DETAILS;
+        }
+
+        if(this.isNativeTab() && targetTab.isNativeTab())
+        {
+            return TransitionStyle.NATIVE_TO_NATIVE;
+        }
+
+        if(this.isNativeTab() && !targetTab.isNativeTab())
+        {
+            return TransitionStyle.NATIVE_TO_WEBVIEW;
+        }
+
+        if(!this.isNativeTab() && targetTab.isNativeTab())
+        {
+            return TransitionStyle.WEBVIEW_TO_NATIVE;
+        }
+
+        return TransitionStyle.NONE;
     }
 
 }

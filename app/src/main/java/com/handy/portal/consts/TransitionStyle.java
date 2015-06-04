@@ -11,6 +11,12 @@ public enum TransitionStyle
 {
     JOB_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, R.string.job_claim_success, R.drawable.circle_green),
     JOB_CLAIM_FAIL(R.anim.fade_in, R.anim.fade_and_shrink_away, R.string.booking_action_error_not_available, R.drawable.circle_teal),
+    TAB_TO_TAB(R.anim.fade_in, R.anim.fade_out,  -1, -1),
+    JOB_LIST_TO_DETAILS(R.anim.fade_in, R.anim.fade_out,  -1, -1),
+    NATIVE_TO_NATIVE(R.anim.slide_in_left, R.anim.slide_out_left,  -1, -1),
+    NATIVE_TO_WEBVIEW(R.anim.fade_in, R.anim.fade_out,  -1, -1),
+    WEBVIEW_TO_NATIVE(R.anim.fade_in, R.anim.fade_out,  -1, -1),
+    NONE(R.anim.none, R.anim.none, -1, -1)
     ;
 
     private int incomingAnimId;
@@ -26,22 +32,17 @@ public enum TransitionStyle
         this.overlayImageId = overlayImageId;
     }
 
-    public int[] getAnimationsIds()
+    public boolean shouldShowOverlay()
     {
-        int[] animationIds = new int[2];
-        if(incomingAnimId != 0)
-        {
-            animationIds[TransitionAnimationIndex.INCOMING] = incomingAnimId;
-        }
-        if(outgoingAnimId != 0)
-        {
-            animationIds[TransitionAnimationIndex.OUTGOING] = outgoingAnimId;
-        }
-        return animationIds;
+        return(overlayStringId != -1 || overlayImageId != -1);
     }
 
     public int getOverlayStringId() { return overlayStringId; }
     public int getOverlayImageId() { return overlayImageId; }
+    public int getIncomingAnimId() { return incomingAnimId; }
+    public int getOutgoingAnimId() { return outgoingAnimId; }
+
+
 
 }
 

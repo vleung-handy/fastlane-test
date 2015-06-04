@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.TransitionStyle;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -65,6 +66,32 @@ public class TransitionOverlayView extends RelativeLayout
         this.setVisibility(VISIBLE);
         Animation showThenHide = AnimationUtils.loadAnimation(getContext(), R.anim.overlay_fade_in_then_out);
         this.startAnimation(showThenHide);
+    }
+
+    //If this gets back and complex setup a basic state machine for tab transitions with the relevant overlays and anims along the transitions
+    public void setupOverlay()
+    {
+        setupOverlay(null);
+    }
+
+    public void setupOverlay(TransitionStyle transitionStyle)
+    {
+        setText("");
+        setImage(android.R.color.transparent);
+        if(transitionStyle != null)
+        {
+            if(transitionStyle.shouldShowOverlay())
+            {
+                if(transitionStyle.getOverlayStringId() != -1)
+                {
+                    setText(transitionStyle.getOverlayStringId());
+                }
+                if(transitionStyle.getOverlayImageId() != -1)
+                {
+                    setImage(transitionStyle.getOverlayImageId());
+                }
+            }
+        }
     }
 
 

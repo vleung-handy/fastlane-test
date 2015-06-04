@@ -11,7 +11,6 @@ import android.widget.RadioButton;
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
-import com.handy.portal.consts.TransitionAnimationIndex;
 import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.SwapFragmentArguments;
 import com.handy.portal.event.Event;
@@ -149,25 +148,10 @@ public class MainActivityFragment extends InjectedFragment
 
                 SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
 
-                if (currentTab != null)
+                //don't use transition if don't have anything to transition from
+                if(currentTab != null)
                 {
-                    swapFragmentArguments.transitionAnimationIds = currentTab.getTransitionAnimationIds(targetTab);
-
-                    if (overrideTransitionStyle != null)
-                    {
-                        int[] overrideAnimationIds = overrideTransitionStyle.getAnimationsIds();
-                        if (overrideAnimationIds[TransitionAnimationIndex.INCOMING] != 0)
-                        {
-                            swapFragmentArguments.transitionAnimationIds[TransitionAnimationIndex.INCOMING]
-                                    = overrideAnimationIds[TransitionAnimationIndex.INCOMING];
-                        }
-                        if (overrideAnimationIds[TransitionAnimationIndex.OUTGOING] != 0)
-                        {
-                            swapFragmentArguments.transitionAnimationIds[TransitionAnimationIndex.OUTGOING]
-                                    = overrideAnimationIds[TransitionAnimationIndex.OUTGOING];
-                        }
-                    }
-                    swapFragmentArguments.showOverlay = currentTab.setupOverlay(targetTab, transitionOverlayView, overrideTransitionStyle);
+                    swapFragmentArguments.transitionStyle = (overrideTransitionStyle != null ? overrideTransitionStyle : currentTab.getDefaultTransitionStyle(targetTab));
                 }
 
                 swapFragmentArguments.targetClassType = targetTab.getClassType();
@@ -219,18 +203,16 @@ public class MainActivityFragment extends InjectedFragment
         }
 
         //Animate the transition, animations must come before the .replace call
-        if (swapArguments.transitionAnimationIds != null)
+        if(swapArguments.transitionStyle != null)
         {
-            transaction.setCustomAnimations(
-                    swapArguments.transitionAnimationIds[TransitionAnimationIndex.INCOMING],
-                    swapArguments.transitionAnimationIds[TransitionAnimationIndex.OUTGOING]
-            );
-        }
+            transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
 
-        //Runs async, covers the transition
-        if (swapArguments.showOverlay)
-        {
-            transitionOverlayView.showThenHideOverlay();
+            //Runs async, covers the transition
+            if (swapArguments.transitionStyle.shouldShowOverlay())
+            {
+                transitionOverlayView.setupOverlay(swapArguments.transitionStyle);
+                transitionOverlayView.showThenHideOverlay();
+            }
         }
 
         // Replace whatever is in the fragment_container view with this fragment,
