@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
+import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.form.BookingListView;
@@ -65,7 +66,7 @@ public class ScheduledBookingsFragment extends BookingsFragment
                         Booking booking = (Booking) adapter.getItemAtPosition(position);
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-                        bus.post(new Event.NavigateToTabEvent(MainActivityFragment.MainViewTab.DETAILS, arguments));
+                        bus.post(new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments));
                     }
                 }
         );
@@ -79,7 +80,7 @@ public class ScheduledBookingsFragment extends BookingsFragment
                         Booking booking = (Booking) adapter.getItemAtPosition(position);
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-                        bus.post(new Event.NavigateToTabEvent(MainActivityFragment.MainViewTab.DETAILS, arguments));
+                        bus.post(new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments));
                     }
                 }
         );

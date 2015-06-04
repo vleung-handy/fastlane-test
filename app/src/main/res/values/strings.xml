@@ -36,6 +36,7 @@
     <string name="customer_details">Customer Details</string>
     <string name="customer_request">Customer Request</string>
 
+    <string name="job_claim_success">Success! Job claimed!</string>
 
     <string name="home">Home</string>
     <string name="help">Help</string>
