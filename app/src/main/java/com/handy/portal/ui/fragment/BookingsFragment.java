@@ -21,9 +21,16 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public abstract class BookingsFragment extends InjectedFragment
 {
+
+    @InjectView(R.id.loading_view)
+    protected View loadingView;
+
+    @InjectView(R.id.bookings_content)
+    protected View bookingsContentView;
 
     protected abstract int getFragmentResourceId();
 
@@ -63,6 +70,8 @@ public abstract class BookingsFragment extends InjectedFragment
             List<BookingSummary> bookingSummaries = event.bookingSummaries;
             initDateButtons(bookingSummaries);
 
+            showContent();
+
             if (getDatesLayout().getChildCount() > 0)
             {
                 getDatesLayout().getChildAt(0).performClick();
@@ -72,6 +81,12 @@ public abstract class BookingsFragment extends InjectedFragment
         {
             //TODO: Handle a failed state? A resend / restart button?
         }
+    }
+
+    private void showContent()
+    {
+        loadingView.setVisibility(View.GONE);
+        bookingsContentView.setVisibility(View.VISIBLE);
     }
 
     private void initDateButtons(List<BookingSummary> bookingSummaries)
