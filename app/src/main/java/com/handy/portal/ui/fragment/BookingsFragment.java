@@ -2,7 +2,6 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
+import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
@@ -157,11 +157,9 @@ public abstract class BookingsFragment extends InjectedFragment
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
 
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        BookingDetailsFragment bookingDetailsFragment = new BookingDetailsFragment();
-        bookingDetailsFragment.setArguments(arguments);
+        Event.NavigateToTabEvent event = new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments);
 
-        transaction.replace(R.id.main_container, bookingDetailsFragment).addToBackStack(null).commit();
+        bus.post(event);
     }
 
 }

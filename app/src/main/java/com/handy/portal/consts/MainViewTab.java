@@ -3,15 +3,11 @@ package com.handy.portal.consts;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
-import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 
-/**
- * Created by cdavis on 6/2/15.
- */
 public enum MainViewTab
 {
-    JOBS(PortalWebViewFragment.Target.JOBS, AvailableBookingsFragment.class),
-    SCHEDULE(PortalWebViewFragment.Target.SCHEDULE, ScheduledBookingsFragment.class),
+    JOBS(null, AvailableBookingsFragment.class),
+    SCHEDULE(PortalWebViewFragment.Target.SCHEDULE, null),
     PROFILE(PortalWebViewFragment.Target.PROFILE, null),
     HELP(PortalWebViewFragment.Target.HELP, null),
     DETAILS(null, BookingDetailsFragment.class),;
