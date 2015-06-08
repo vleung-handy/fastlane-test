@@ -18,6 +18,7 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.form.BookingListView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -119,7 +120,7 @@ public abstract class BookingsFragment extends InjectedFragment
             LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
             final DateButtonView dateButtonView = (DateButtonView) datesLayout.getChildAt(datesLayout.getChildCount() - 1);
 
-            final List<Booking> bookingsForDay = bookingSummary.getBookings();
+            final List<Booking> bookingsForDay = new ArrayList<>(bookingSummary.getBookings());
 
             Collections.sort(bookingsForDay);
             insertSeparator(bookingsForDay);

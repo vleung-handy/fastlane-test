@@ -3,6 +3,7 @@ package com.handy.portal.core;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.core.booking.Booking;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,6 @@ public class BookingSummary
 
     public final List<Booking> getBookings()
     {
-        return bookings;
+        return Collections.unmodifiableList(bookings);
     }
 }
