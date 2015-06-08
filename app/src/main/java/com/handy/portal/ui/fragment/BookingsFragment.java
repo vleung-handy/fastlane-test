@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -56,6 +57,8 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract void requestBookings();
 
+    private int previousDatesScrollPosition;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -99,17 +102,32 @@ public abstract class BookingsFragment extends InjectedFragment
             if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
             {
                 dateButtonMap.get(selectedDay).performClick();
+                scrollDatesToPreviousPosition();
             }
             else if (getDatesLayout().getChildCount() > 0)
             {
                 getDatesLayout().getChildAt(0).performClick();
             }
+
         }
         else
         {
             errorText.setText(getErrorTextResId());
             fetchErrorView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void scrollDatesToPreviousPosition()
+    {
+        final HorizontalScrollView scrollView = (HorizontalScrollView) getDatesLayout().getParent();
+        scrollView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                scrollView.scrollTo(previousDatesScrollPosition, 0);
+            }
+        });
     }
 
     private void initDateButtons(List<BookingSummary> bookingSummaries)
@@ -180,6 +198,7 @@ public abstract class BookingsFragment extends InjectedFragment
                 Booking booking = (Booking) adapter.getItemAtPosition(position);
                 if (booking != null)
                 {
+                    previousDatesScrollPosition = ((HorizontalScrollView) getDatesLayout().getParent()).getScrollX();
                     showBookingDetails(booking);
                 }
             }
