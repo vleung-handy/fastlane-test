@@ -133,6 +133,7 @@ public class BookingManager
             public void onSuccess(Booking booking)
             {
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new Event.ClaimJobRequestReceivedEvent(booking, true));
             }
 
