@@ -7,11 +7,11 @@
 
     <ImageView
         android:id="@+id/booking_details_job_instructions_section_title_icon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:src="@drawable/circle_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_details_extras"
         android:cropToPadding="false"
-        android:paddingTop="3dp"/>
+        />
 
     <TextView
         android:id="@+id/booking_details_job_instructions_section_title_text"
@@ -22,7 +22,8 @@
         android:layout_toEndOf="@id/booking_details_job_instructions_section_title_icon"
         android:textSize="16sp"
         android:textColor="@color/bg_inactive_grey"
-        android:text="Extras"/>
+        android:text="Extras"
+        android:paddingTop="2dp"/>
 
     <LinearLayout
         android:id="@+id/booking_details_job_instructions_section_entries_layout"

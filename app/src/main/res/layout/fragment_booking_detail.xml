@@ -32,7 +32,8 @@
             android:id="@+id/booking_details_banner_text"
             android:textSize="18sp"
             android:gravity="center_vertical"
-            android:layout_marginLeft="40dp"/>
+            android:layout_marginLeft="40dp"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 
