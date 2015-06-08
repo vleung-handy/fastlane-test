@@ -10,25 +10,39 @@
         style="@style/Banner"
         android:text="@string/available_jobs"/>
 
-    <HorizontalScrollView
-        android:id="@+id/available_bookings_dates_scroll_view"
+    <include layout="@layout/layout_loading"/>
+
+    <include layout="@layout/layout_fetch_error"/>
+
+    <LinearLayout
+        android:id="@+id/bookings_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <LinearLayout
-            android:id="@+id/available_bookings_dates_scroll_view_layout"
+        <HorizontalScrollView
+            android:id="@+id/available_bookings_dates_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/available_bookings_dates_scroll_view_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <include layout="@layout/layout_available_bookings_empty"/>
+
+        <com.handy.portal.ui.form.BookingListView
+            android:id="@+id/available_jobs_list_view"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <com.handy.portal.ui.form.BookingListView
-        android:id="@+id/available_jobs_list_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:divider="@color/white_trans"
-        android:dividerHeight="1dp"/>
+            android:layout_height="wrap_content"
+            android:divider="@color/white_trans"
+            android:dividerHeight="1dp"/>
+    </LinearLayout>
 
 </LinearLayout>

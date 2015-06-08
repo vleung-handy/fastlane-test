@@ -8,9 +8,7 @@ import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -20,14 +18,13 @@ public class BookingManager
     private final Bus bus;
     private final DataManager dataManager;
 
-    //we are always providing in the context of our current user
-
-    private Map<String, Booking> cachedBookings; //booking ID to booking
-
     // will change type when we want access to bookings for a specific day, right now, we're just dumping all
-    private final Cache<String, List<BookingSummary>> bookingSummariesCache;
-    private static final String AVAILABLE_BOOKINGS_CACHE_KEY = "available_bookings";
-    private static final String SCHEDULED_BOOKINGS_CACHE_KEY = "scheduled_summaries";
+    private final Cache<CacheKey, List<BookingSummary>> bookingsCache;
+
+    private enum CacheKey {
+        AVAILABLE_BOOKINGS,
+        SCHEDULED_BOOKINGS
+    }
 
     @Inject
     BookingManager(final Bus bus, final DataManager dataManager)
@@ -36,17 +33,11 @@ public class BookingManager
         this.bus.register(this);
         this.dataManager = dataManager;
 
-        this.cachedBookings = new HashMap<String, Booking>();
-
-        this.bookingSummariesCache = CacheBuilder.newBuilder()
+        this.bookingsCache = CacheBuilder.newBuilder()
+                .weakKeys()
                 .maximumSize(10000)
                 .expireAfterWrite(1, TimeUnit.MINUTES)
                 .build();
-    }
-
-    private void updateBookingsCache(Booking booking)
-    {
-        cachedBookings.put(booking.getId(), booking);
     }
 
     //all communication will be done through the bus
@@ -80,7 +71,7 @@ public class BookingManager
     @Subscribe
     public void onRequestAvailableBookings(Event.RequestAvailableBookingsEvent event)
     {
-        final List<BookingSummary> cachedBookingSummaries = bookingSummariesCache.getIfPresent(AVAILABLE_BOOKINGS_CACHE_KEY);
+        final List<BookingSummary> cachedBookingSummaries = bookingsCache.getIfPresent(CacheKey.AVAILABLE_BOOKINGS);
         if (cachedBookingSummaries != null)
         {
             bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries, true));
@@ -93,7 +84,7 @@ public class BookingManager
                         @Override
                         public void onSuccess(final List<BookingSummary> bookingSummaries)
                         {
-                            bookingSummariesCache.put(AVAILABLE_BOOKINGS_CACHE_KEY, bookingSummaries);
+                            bookingsCache.put(CacheKey.AVAILABLE_BOOKINGS, bookingSummaries);
                             bus.post(new Event.BookingsRetrievedEvent(bookingSummaries, true));
                         }
 
@@ -117,7 +108,7 @@ public class BookingManager
                     @Override
                     public void onSuccess(final List<BookingSummary> bookingSummaries)
                     {
-                        bookingSummariesCache.put(SCHEDULED_BOOKINGS_CACHE_KEY, bookingSummaries);
+                        bookingsCache.put(CacheKey.SCHEDULED_BOOKINGS, bookingSummaries);
                         bus.post(new Event.BookingsRetrievedEvent(bookingSummaries, true));
                     }
 
@@ -141,7 +132,9 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                onClaimBookingsReceived(booking);
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.ClaimJobRequestReceivedEvent(booking, true));
             }
 
             @Override
@@ -151,14 +144,6 @@ public class BookingManager
                 bus.post(new Event.ClaimJobRequestReceivedEvent(null, false));
             }
         });
-    }
-
-    private void onClaimBookingsReceived(Booking booking)
-    {
-        updateBookingsCache(booking);
-
-        //just passing this through right now until we figure out our caching strategy
-        bus.post(new Event.ClaimJobRequestReceivedEvent(booking, true));
     }
 
 }

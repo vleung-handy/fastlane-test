@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
@@ -17,19 +18,38 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.form.BookingListView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 public abstract class BookingsFragment extends InjectedFragment
 {
+
+    @InjectView(R.id.loading_view)
+    protected View loadingView;
+
+    @InjectView(R.id.bookings_content)
+    protected View bookingsContentView;
+
+    @InjectView(R.id.fetch_error_view)
+    protected View fetchErrorView;
+
+    @InjectView(R.id.fetch_error_text)
+    protected TextView errorText;
 
     protected abstract int getFragmentResourceId();
 
     protected abstract BookingListView getBookingListView();
 
+    protected abstract ViewGroup getNoBookingsView();
+
     protected abstract LinearLayout getDatesLayout();
+
+    protected abstract int getErrorTextResId();
 
     protected abstract void requestBookings();
 
@@ -50,16 +70,28 @@ public abstract class BookingsFragment extends InjectedFragment
         requestBookings();
     }
 
+    @OnClick(R.id.try_again_button)
+    public void doRequestBookingsAgain()
+    {
+        fetchErrorView.setVisibility(View.GONE);
+        loadingView.setVisibility(View.VISIBLE);
+        requestBookings();
+    }
+
+
     //Event listeners
     //Can't subscribe in an abstract class?
     public abstract void onBookingsRetrieved(Event.BookingsRetrievedEvent event);
 
     protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
+        loadingView.setVisibility(View.GONE);
         if (event.success)
         {
             List<BookingSummary> bookingSummaries = event.bookingSummaries;
             initDateButtons(bookingSummaries);
+
+            bookingsContentView.setVisibility(View.VISIBLE);
 
             if (getDatesLayout().getChildCount() > 0)
             {
@@ -68,7 +100,8 @@ public abstract class BookingsFragment extends InjectedFragment
         }
         else
         {
-            //TODO: Handle a failed state? A resend / restart button?
+            errorText.setText(getErrorTextResId());
+            fetchErrorView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -87,7 +120,7 @@ public abstract class BookingsFragment extends InjectedFragment
             LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
             final DateButtonView dateButtonView = (DateButtonView) datesLayout.getChildAt(datesLayout.getChildCount() - 1);
 
-            final List<Booking> bookingsForDay = bookingSummary.getBookings();
+            final List<Booking> bookingsForDay = new ArrayList<>(bookingSummary.getBookings());
 
             Collections.sort(bookingsForDay);
             insertSeparator(bookingsForDay);
@@ -119,6 +152,7 @@ public abstract class BookingsFragment extends InjectedFragment
     {
         getBookingListView().populateList(bookings);
         initListClickListener();
+        getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     private void initListClickListener()
