@@ -20,7 +20,10 @@ import com.handy.portal.ui.form.BookingListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -93,7 +96,11 @@ public abstract class BookingsFragment extends InjectedFragment
 
             bookingsContentView.setVisibility(View.VISIBLE);
 
-            if (getDatesLayout().getChildCount() > 0)
+            if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
+            {
+                dateButtonMap.get(selectedDay).performClick();
+            }
+            else if (getDatesLayout().getChildCount() > 0)
             {
                 getDatesLayout().getChildAt(0).performClick();
             }
@@ -111,7 +118,8 @@ public abstract class BookingsFragment extends InjectedFragment
 
         //remove existing date buttons
         datesLayout.removeAllViews();
-        selectedDateButtonView = null;
+
+        dateButtonMap = new HashMap<>(bookingSummaries.size());
 
         Context context = getActivity();
 
@@ -126,27 +134,34 @@ public abstract class BookingsFragment extends InjectedFragment
             insertSeparator(bookingsForDay);
 
             boolean requestedJobsThisDay = bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
-            dateButtonView.init(bookingSummary.getDate(), requestedJobsThisDay);
+            final Date day = bookingSummary.getDate();
+            dateButtonView.init(day, requestedJobsThisDay);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
-                    if (selectedDateButtonView != dateButtonView)
-                    {
-                        if (selectedDateButtonView != null)
-                        {
-                            selectedDateButtonView.setChecked(false);
-                        }
-                        dateButtonView.setChecked(true);
-                        selectedDateButtonView = dateButtonView;
-                        displayBookings(bookingsForDay);
-                    }
+                    selectDay(day);
+                    displayBookings(bookingsForDay);
                 }
             });
+
+            dateButtonMap.put(day, dateButtonView);
         }
     }
 
-    private DateButtonView selectedDateButtonView;
+    private void selectDay(Date day)
+    {
+        DateButtonView selectedDateButtonView = dateButtonMap.get(selectedDay);
+        if (selectedDateButtonView != null)
+        {
+            selectedDateButtonView.setChecked(false);
+        }
+        dateButtonMap.get(day).setChecked(true);
+        selectedDay = day;
+    }
+
+    private Map<Date, DateButtonView> dateButtonMap;
+    private Date selectedDay;
 
     private void displayBookings(List<Booking> bookings)
     {
