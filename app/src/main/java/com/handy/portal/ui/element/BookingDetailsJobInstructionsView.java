@@ -53,7 +53,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
                 }
 
                 //TODO: Hardcoding string and icon, we need to get this data from the booking info
-                sectionView.init(activity.getString(R.string.customer_details), R.drawable.circle_black, entries, true);
+                sectionView.init(activity.getString(R.string.customer_details), R.drawable.ic_details_extras, entries, true);
             }
         }
 
@@ -70,7 +70,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             }
 
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(activity.getString(R.string.extras), R.drawable.circle_black, entries, true);
+            sectionView.init(activity.getString(R.string.extras), R.drawable.ic_details_extras, entries, true);
         }
 
         //Note to pro
@@ -86,7 +86,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             }
 
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(activity.getString(R.string.customer_request), R.drawable.circle_black, entries, false);
+            sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
         }
     }
 
