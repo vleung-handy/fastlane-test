@@ -21,6 +21,7 @@ import com.handy.portal.core.booking.Booking;
 public class GoogleMapView extends BookingDetailsViewFragmentContainer implements OnMapReadyCallback
 {
     private static int DEFAULT_ZOOM_LEVEL = 15;
+    private static float OVERLAY_RADIUS_METERS = 500f;
 
     GoogleMap googleMap;
     Booking booking;
@@ -75,7 +76,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     {
         GroundOverlayOptions groundOverlay = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_radius))
-                .position(target, 500f);
+                .position(target, OVERLAY_RADIUS_METERS);
         map.addGroundOverlay(groundOverlay);
     }
 }

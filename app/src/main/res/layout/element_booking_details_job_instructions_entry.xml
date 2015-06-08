@@ -15,7 +15,6 @@
         android:id="@+id/booking_details_job_instructions_entry_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_toRightOf="@id/booking_details_job_instructions_entry_icon"
         android:layout_toEndOf="@id/booking_details_job_instructions_entry_icon"
         android:text="xxentry textxx"

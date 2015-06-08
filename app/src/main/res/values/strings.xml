@@ -32,7 +32,8 @@
     <string name="claim_job">Claim Job</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
-    <string name="claim_disclaimer">Claiming will add all instances to your schedule. You can remove jobs or series with 24 hour notice.</string>
+    <string name="disclaimer_series">Claiming will add all instances to your schedule.</string>
+    <string name="disclaimer_cancel">You can remove jobs or series with 24 hour notice.</string>
 
     <string name="booking_action_error_server">The server could not be reached, please try again</string>
     <string name="booking_action_error_not_available">That job was not available to claim, please select another job</string>

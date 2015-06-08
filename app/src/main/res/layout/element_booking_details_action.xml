@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
-                android:background="@color/white"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+    android:layout_height="wrap_content"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:background="@color/white"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
 
     <TextView
         android:id="@+id/booking_details_partner_text"
@@ -68,23 +68,33 @@
     <Button
         android:id="@+id/booking_details_action_button"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:text="xxACTIONxx"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_below="@+id/booking_details_frequency_text"
         android:layout_marginTop="10dp"
         android:textColor="@color/white"
-        android:theme="@style/Button.Green.Round"
         android:textSize="15sp"
-        android:background="@color/handy_green"/>
+        android:background="@color/handy_green"
+        />
 
     <TextView
-        android:id="@+id/booking_details_action_disclaimer_text"
+        android:id="@+id/booking_details_action_disclaimer_series_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/claim_disclaimer"
+        android:text="@string/disclaimer_series"
         android:layout_below="@+id/booking_details_action_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/booking_details_action_disclaimer_cancel_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/disclaimer_cancel"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="false"
+        android:layout_below="@+id/booking_details_action_disclaimer_series_text"/>
+
 </RelativeLayout>

@@ -61,7 +61,7 @@
             android:id="@+id/transition_overlay_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:background="@color/transparent"
             android:src="@drawable/circle_green"
             android:layout_gravity="center"
             android:layout_centerInParent="true"/>

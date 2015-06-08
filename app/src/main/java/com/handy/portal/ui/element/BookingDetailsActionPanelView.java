@@ -33,8 +33,11 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     @InjectView(R.id.booking_details_action_button)
     protected Button actionButton;
 
-    @InjectView(R.id.booking_details_action_disclaimer_text)
-    protected TextView disclaimerText;
+    @InjectView(R.id.booking_details_action_disclaimer_series_text)
+    protected TextView disclaimerSeriesText;
+
+    @InjectView(R.id.booking_details_action_disclaimer_cancel_text)
+    protected TextView disclaimerCancelText;
 
     @InjectView(R.id.booking_details_partner_text)
     protected TextView partnerText;
@@ -64,7 +67,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
 
         initButtonDisplayForStatus(actionButton, bookingStatus, booking);
 
-        disclaimerText.setVisibility(booking.getFrequency() > 0 ? View.VISIBLE : View.GONE);
+        disclaimerSeriesText.setVisibility(booking.getFrequency() > 0 ? View.VISIBLE : View.GONE);
 
         partnerText.setVisibility(booking.getPartnerId() != null && booking.getPartnerId().equals(AIRBNB_PARTNER_ID) ? View.VISIBLE : View.GONE);
     }
