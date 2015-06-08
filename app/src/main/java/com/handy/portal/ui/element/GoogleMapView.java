@@ -8,8 +8,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
 
 /**
@@ -65,5 +68,14 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
                 build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
         map.animateCamera(cameraUpdate);
+        showRangeOverlay(map, target);
+    }
+
+    private void showRangeOverlay(GoogleMap map, LatLng target)
+    {
+        GroundOverlayOptions groundOverlay = new GroundOverlayOptions()
+                .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_radius))
+                .position(target, 500f);
+        map.addGroundOverlay(groundOverlay);
     }
 }

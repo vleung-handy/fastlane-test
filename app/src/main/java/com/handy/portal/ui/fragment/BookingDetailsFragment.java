@@ -199,7 +199,6 @@ public class BookingDetailsFragment extends InjectedFragment
         //google maps
         GoogleMapView gmv = new GoogleMapView();
         gmv.init(booking, new Bundle(), mapLayout, activity);
-        //initMap();
 
         //date banner
         BookingDetailsDateView dateView = new BookingDetailsDateView();
