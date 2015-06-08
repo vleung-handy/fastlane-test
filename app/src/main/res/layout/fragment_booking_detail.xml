@@ -20,16 +20,19 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:id="@+id/booking_details_back_button"
-            android:src="@drawable/com_mixpanel_android_arrowleft"
-            android:layout_gravity="center_vertical"/>
+            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:layout_marginLeft="16dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Available Job"
+            android:text="@string/available_job"
             android:id="@+id/booking_details_banner_text"
-            android:textSize="20dp"
-            android:gravity="center_vertical"/>
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="40dp"/>
 
     </LinearLayout>
 
@@ -50,45 +53,70 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/booking_details_layout"
+                android:id="@+id/wrapper_for_details_disclaimer"
                 >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:id="@+id/booking_details_map_layout"
-                    />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/booking_details_date_layout">
+                    android:id="@+id/booking_details_layout"
+                    >
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:id="@+id/booking_details_map_layout"
+                        />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/booking_details_date_layout"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp">
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/booking_details_action_layout"
+                        android:layout_marginBottom="8dp">
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/booking_details_contact_layout"
+                        >
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/booking_details_job_instructions_layout">
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/booking_details_full_details_notice_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/booking_details_action_layout"
-                    >
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/booking_details_contact_layout"
-                    >
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/booking_details_job_instructions_layout">
-                </LinearLayout>
+                    android:text="@string/full_details_after_claim"
+                    android:textColor="@color/black_pressed"
+                    android:textSize="14sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="15dp"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
+
+
 
         </ScrollView>
 

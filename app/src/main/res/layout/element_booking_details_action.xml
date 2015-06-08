@@ -4,60 +4,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
                 android:paddingTop="15dp"
-                android:paddingBottom="15dp">
+                android:paddingBottom="15dp"
+                android:background="@color/white"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+    <TextView
+        android:id="@+id/booking_details_partner_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/airbnb"
+        android:textColor="@color/partner_blue"
+        android:textSize="14sp"
+        android:textAppearance="@style/TextView.Bold"
+        />
+
     <TextView
         android:id="@+id/booking_details_location_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Herald Square"
-        android:layout_marginLeft="10dp"
+        android:text="@string/location"
         android:textColor="@color/black"
-        android:textSize="20dp"/>
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextView.Bold"
+        android:layout_below="@+id/booking_details_partner_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
     <TextView
         android:id="@+id/booking_details_frequency_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Every 2 weeks"
-        android:layout_below="@+id/booking_details_location_text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/very_light_grey"/>
+        android:text="@string/booking_frequency_every_week"
+        android:textColor="@color/very_light_grey"
+        android:textSize="16sp"
+        android:layout_below="@+id/booking_details_payment_text"
+        />
+
     <TextView
         android:id="@+id/booking_details_payment_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="@style/TextView.Bold"
         android:text="$30"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@id/booking_details_location_text"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
-        android:textSize="30dp"
-        android:textColor="@color/black"/>
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
     <TextView
         android:id="@+id/booking_details_payment_bonus_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="+$5 Bonus"
-        android:layout_below="@+id/booking_details_payment_text"
+        android:layout_alignBottom="@+id/booking_details_frequency_text"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:textColor="@color/very_light_grey"/>
+        android:textColor="@color/very_light_grey"
+        android:textSize="12sp"/>
     <Button
         android:id="@+id/booking_details_action_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="xxACTIONxx"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_below="@+id/booking_details_frequency_text"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@color/handy_green"
         android:textColor="@color/white"
-        android:theme="@style/Button.Green.Round"/>
+        android:theme="@style/Button.Green.Round"
+        android:textSize="15sp"
+        android:background="@color/handy_green"/>
+
+    <TextView
+        android:id="@+id/booking_details_action_disclaimer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/claim_disclaimer"
+        android:layout_below="@+id/booking_details_action_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
 </RelativeLayout>

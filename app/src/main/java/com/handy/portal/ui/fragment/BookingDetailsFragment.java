@@ -58,6 +58,9 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.booking_details_job_instructions_layout)
     protected LinearLayout jobInstructionsLayout;
 
+    @InjectView(R.id.booking_details_full_details_notice_text)
+    protected TextView fullDetailsNoticeText;
+
     @Inject
     SecurePreferences prefs;
 
@@ -211,6 +214,9 @@ public class BookingDetailsFragment extends InjectedFragment
         //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
         BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
         jobInstructionsView.init(booking, arguments, jobInstructionsLayout, activity);
+
+        //Full details notice
+        fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
     private void setBannerText(BookingStatus bookingStatus)
@@ -219,17 +225,17 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             case AVAILABLE:
             {
-                bannerText.setText(R.string.available);
+                bannerText.setText(R.string.available_job);
             }
             break;
             case CLAIMED:
             {
-                bannerText.setText(R.string.claimed);
+                bannerText.setText(R.string.claimed_job);
             }
             break;
             case UNAVAILABLE:
             {
-                bannerText.setText(R.string.unavailable);
+                bannerText.setText(R.string.unavailable_job);
             }
             break;
         }
@@ -291,7 +297,8 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
-    private String getLoggedInUserId() {
+    private String getLoggedInUserId()
+    {
         return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
     }
 

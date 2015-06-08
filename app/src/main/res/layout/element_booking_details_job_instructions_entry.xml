@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionEntryView android:layout_width="wrap_content" android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android">
+<com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionEntryView android:layout_width="wrap_content" android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android"
+                                                                           android:background="@color/white">
 
     <ImageView
         android:id="@+id/booking_details_job_instructions_entry_icon"
-        android:layout_width="5dp"
-        android:layout_height="5dp"
-        android:src="@drawable/circle_green"
+        android:layout_width="3dp"
+        android:layout_height="3dp"
+        android:src="@drawable/circle_black"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
@@ -18,7 +19,7 @@
         android:layout_toRightOf="@id/booking_details_job_instructions_entry_icon"
         android:layout_toEndOf="@id/booking_details_job_instructions_entry_icon"
         android:text="xxentry textxx"
-        android:textSize="30dp"
+        android:textSize="16sp"
         android:layout_marginLeft="5dp"
         android:textColor="@color/black"/>
 
