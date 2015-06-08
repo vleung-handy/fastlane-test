@@ -215,7 +215,9 @@
     <string name="booking_frequency_non_recurring">One Time Only</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="full_details_after_claim">Full details will be revealed after claiming</string>
-    <string name="no_available_jobs">Sorry, there aren\'t any available jobs left for today</string>
+    <string name="no_available_jobs">Sorry, there aren\'t any available jobs left for this day</string>
+    <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
+    <string name="try_again">Try Again</string>
 
 
 </resources>

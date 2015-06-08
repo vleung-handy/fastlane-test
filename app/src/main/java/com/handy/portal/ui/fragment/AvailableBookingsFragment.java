@@ -37,6 +37,12 @@ public class AvailableBookingsFragment extends BookingsFragment
         return availableJobsDatesScrollViewLayout;
     }
 
+    @Override
+    protected int getErrorTextResId()
+    {
+        return R.string.error_fetching_available_jobs;
+    }
+
     protected int getFragmentResourceId()
     {
         return (R.layout.fragment_available_bookings);

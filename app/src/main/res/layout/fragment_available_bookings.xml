@@ -10,7 +10,9 @@
         style="@style/Banner"
         android:text="@string/available_jobs"/>
 
-    <include layout="@layout/loading_layout"/>
+    <include layout="@layout/layout_loading"/>
+
+    <include layout="@layout/layout_fetch_error"/>
 
     <LinearLayout
         android:id="@+id/bookings_content"
@@ -33,26 +35,7 @@
             </LinearLayout>
         </HorizontalScrollView>
 
-        <LinearLayout
-            android:id="@+id/available_bookings_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="50dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginStart="50dp"
-                android:gravity="center_horizontal"
-                android:text="@string/no_available_jobs"
-                android:textColor="@color/subtitle_grey"
-                android:textSize="20sp"/>
-        </LinearLayout>
+        <include layout="@layout/layout_available_bookings_empty"/>
 
         <com.handy.portal.ui.form.BookingListView
             android:id="@+id/available_jobs_list_view"
