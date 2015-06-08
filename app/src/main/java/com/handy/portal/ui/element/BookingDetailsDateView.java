@@ -22,7 +22,7 @@ public class BookingDetailsDateView extends BookingDetailsView
     @InjectView(R.id.booking_details_date_text)
     protected TextView dateText;
 
-    private static final String DATE_FORMAT = "E MMM d";
+    private static final String DATE_FORMAT = "E, MMM d";
     private static final String TIME_FORMAT = "h:mm a";
 
     protected int getLayoutResourceId()
@@ -41,8 +41,8 @@ public class BookingDetailsDateView extends BookingDetailsView
         SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
         String formattedTime = timeFormat.format(startDate) + " - " + timeFormat.format(endDate);
 
-        dateText.setText(formattedDate);
-        timeText.setText(formattedTime);
+        dateText.setText(formattedDate.toUpperCase());
+        timeText.setText(formattedTime.toUpperCase());
     }
 
 }

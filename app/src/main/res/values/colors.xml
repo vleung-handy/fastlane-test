@@ -39,5 +39,7 @@
     <color name="title_grey">#666666</color>
     <color name="subtitle_grey">#9CABB5</color>
     <color name="requested_green">#8BC53E</color>
+    <color name="partner_blue">#0BB8E3</color>
+    <color name="border_grey">#EEEEEE</color>
 
 </resources>

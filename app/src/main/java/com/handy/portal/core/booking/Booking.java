@@ -38,6 +38,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions;
     @SerializedName("description") private String description;
     @SerializedName("provider_id") private String providerId;
+    @SerializedName("partner_id") private String partnerId;
 
     public int compareTo(Booking other)
     {
@@ -64,6 +65,8 @@ public final class Booking implements Parcelable, Comparable<Booking>
     public final List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}
 
     public final int getFrequency() { return frequency; }
+
+    public final String getPartnerId() { return partnerId; }
 
     public final PaymentInfo getPaymentToProvider() { return paymentToProvider; }
     public final PaymentInfo getBonusPaymentToProvider() { return bonusPayment; }
