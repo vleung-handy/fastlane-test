@@ -34,6 +34,9 @@ public class BookingElementView
     @InjectView(R.id.booking_entry_requested_indicator)
     protected ImageView requestedIndicator;
 
+    @InjectView(R.id.booking_entry_partner_text)
+    protected TextView partnerText;
+
     @InjectView(R.id.booking_entry_requested_indicator_layout)
     protected LinearLayout requestedIndicatorLayout;
 
@@ -82,6 +85,9 @@ public class BookingElementView
         requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.INVISIBLE);
         requestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
+        //Partner
+        setPartnerText(booking.getPartnerId());
+
         //Date and Time
         SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);
         String formattedStartDate = timeOfDayFormat.format(booking.getStartDate());
@@ -92,6 +98,18 @@ public class BookingElementView
         this.associatedView = convertView;
 
         return convertView;
+    }
+
+    private void setPartnerText(String partnerId)
+    {
+        if (partnerId != null && partnerId.equalsIgnoreCase("Airbnb"))
+        {
+            partnerText.setText(partnerId);
+        }
+        else
+        {
+            partnerText.setVisibility(View.GONE);
+        }
     }
 
     private void setPaymentInfo(TextView textView, Booking.PaymentInfo paymentInfo, String format)
