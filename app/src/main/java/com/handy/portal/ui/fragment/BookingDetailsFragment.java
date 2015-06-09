@@ -143,7 +143,7 @@ public class BookingDetailsFragment extends InjectedFragment
             else
             {
                 //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
-                handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
+                handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error_generic, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
             }
         }
         else
@@ -314,8 +314,6 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
     }
-
-
 
     //Handle Claiming Errors
     private void handleBookingClaimError(final Event.ClaimJobRequestReceivedEvent event)
