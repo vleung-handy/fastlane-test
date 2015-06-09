@@ -86,7 +86,7 @@ public class BookingElementView
         requestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
         //Partner
-        setPartnerText(booking.getPartnerId());
+        setPartnerText(booking.getPartner());
 
         //Date and Time
         SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);

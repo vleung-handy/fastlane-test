@@ -69,7 +69,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
 
         disclaimerSeriesText.setVisibility(booking.getFrequency() > 0 ? View.VISIBLE : View.GONE);
 
-        partnerText.setVisibility(booking.getPartnerId() != null && booking.getPartnerId().equals(AIRBNB_PARTNER_ID) ? View.VISIBLE : View.GONE);
+        partnerText.setVisibility(booking.getPartner() != null && booking.getPartner().equals(AIRBNB_PARTNER_ID) ? View.VISIBLE : View.GONE);
     }
 
     private void initButtonDisplayForStatus(Button button, final BookingDetailsFragment.BookingStatus bookingStatus, Booking booking)
