@@ -140,8 +140,10 @@ public class BookingManager
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                System.err.println("Failed to get claim booking response " + error);
-                bus.post(new Event.ClaimJobRequestReceivedEvent(null, false));
+                //still need to invalidate so we don't allow them to click on same booking
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.ClaimJobRequestReceivedEvent(null, false, error.getMessage()));
             }
         });
     }

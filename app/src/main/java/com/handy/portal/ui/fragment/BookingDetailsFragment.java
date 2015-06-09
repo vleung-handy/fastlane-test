@@ -1,6 +1,8 @@
 package com.handy.portal.ui.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -66,6 +69,8 @@ public class BookingDetailsFragment extends InjectedFragment
     SecurePreferences prefs;
 
     private static final String NO_PROVIDER_ASSIGNED = "0";
+
+    private Booking associatedBooking; //used to return to correct date on jobs tab if a claim job fails and the returned booking is null
 
     public enum BookingStatus
     {
@@ -108,6 +113,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         if(event.success)
         {
+            this.associatedBooking = event.booking;
             updateDisplayForBooking(event.booking);
         }
         else
@@ -118,7 +124,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
 
     @Subscribe
-    public void onClaimJobRequestReceived(Event.ClaimJobRequestReceivedEvent event)
+    public void onClaimJobRequestReceived(final Event.ClaimJobRequestReceivedEvent event)
     {
         Booking booking = event.booking;
 
@@ -128,46 +134,31 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             if(event.booking.getProviderId().equals(getLoggedInUserId()))
             {
-                //TODO: Turn this back on when finished implementing skinning the "claimed" state of booking details, for now opening the available jobs tab again
-                if(false)
-                {
-                    updateDisplayForBooking(event.booking);
-                }
-                else
-                {
-                    //Return to available jobs with success
-                    Bundle arguments = new Bundle();
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(event.booking.getStartDate());
-                    int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
-                    arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
-                    //Return to available jobs on that day
-                    bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, TransitionStyle.JOB_CLAIM_SUCCESS));
-                }
-            }
-            else
-            {
-                //Return to available jobs on failure with failure transition
-                Bundle arguments = new Bundle();
+                //Return to available jobs with success
                 Calendar c = Calendar.getInstance();
                 c.setTime(event.booking.getStartDate());
                 int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
-                arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
-
-                //TODO: show an alert dialog with the fail reason
-
-                //Return to available jobs on that day
-                bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, TransitionStyle.JOB_CLAIM_FAIL));
+                returnToAvailableBookings(dayOfYear, TransitionStyle.JOB_CLAIM_SUCCESS);
+            }
+            else
+            {
+                //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
+                handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
             }
         }
         else
         {
-            //show a toast about connectivity issues
-            showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
-            //re-enable the button so they can try again for network errors
-            getActionButton().setEnabled(true);
+            handleBookingClaimError(event);
         }
+    }
 
+    private void returnToAvailableBookings(int dayOfYear, TransitionStyle transitionStyle)
+    {
+        //Return to available jobs with success
+        Bundle arguments = new Bundle();
+        arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
+        //Return to available jobs on that day
+        bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, transitionStyle));
     }
 
     private void requestBookingDetails(String bookingId)
@@ -322,6 +313,63 @@ public class BookingDetailsFragment extends InjectedFragment
     private String getLoggedInUserId()
     {
         return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
+    }
+
+
+
+    //Handle Claiming Errors
+    private void handleBookingClaimError(final Event.ClaimJobRequestReceivedEvent event)
+    {
+        //used for onclick closure
+        handleBookingClaimError(event.errorMessage, R.string.job_claim_error, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
+    }
+
+    private void handleBookingClaimError(String errorMessage, int titleId, int option1Id, Date returnDate)
+    {
+        handleBookingClaimError(errorMessage, getString(titleId), getString(option1Id), returnDate);
+    }
+
+    private void handleBookingClaimError(String errorMessage, String title, String option1, Date returnDate)
+    {
+        //Day to return to on available bookings
+        Calendar c = Calendar.getInstance();
+        c.setTime(returnDate);
+        final int returnDateDayOfYear = c.get(Calendar.DAY_OF_YEAR);
+
+        if(errorMessage != null)
+        {
+            //specific booking error, show an alert dialog
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+            // set title
+            alertDialogBuilder.setTitle(title);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage(errorMessage)
+                    .setCancelable(false)
+                    .setPositiveButton(option1, new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            //Return to available jobs, don't need overlay transition after alert dialog
+                            returnToAvailableBookings(returnDateDayOfYear, TransitionStyle.REFRESH_TAB);
+                        }
+                    })
+            ;
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            // show it
+            alertDialog.show();
+        }
+        else
+        {
+            //generic network problem
+            //show a toast about connectivity issues
+            showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
+            //re-enable the button so they can try again for network errors
+            getActionButton().setEnabled(true);
+        }
     }
 
 }

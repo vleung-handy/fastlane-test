@@ -15,6 +15,7 @@ import java.util.List;
 public abstract class Event
 {
     public boolean success;
+    public String errorMessage;
 
     public static class BookingsRetrievedEvent extends Event
     {
@@ -161,6 +162,13 @@ public abstract class Event
         {
             this.booking = booking;
             this.success = success;
+        }
+
+        public ClaimJobRequestReceivedEvent(Booking booking, boolean success, String errorMessage)
+        {
+            this.booking = booking;
+            this.success = success;
+            this.errorMessage = errorMessage;
         }
     }
 
