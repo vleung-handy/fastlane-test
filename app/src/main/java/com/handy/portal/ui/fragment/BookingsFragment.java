@@ -28,11 +28,7 @@ import butterknife.OnClick;
 
 public abstract class BookingsFragment extends InjectedFragment
 {
-
-    @InjectView(R.id.loading_view)
-    protected View loadingView;
-
-    @InjectView(R.id.bookings_content)
+     @InjectView(R.id.bookings_content)
     protected View bookingsContentView;
 
     @InjectView(R.id.fetch_error_view)
@@ -74,7 +70,7 @@ public abstract class BookingsFragment extends InjectedFragment
     public void doRequestBookingsAgain()
     {
         fetchErrorView.setVisibility(View.GONE);
-        loadingView.setVisibility(View.VISIBLE);
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         requestBookings();
     }
 
@@ -85,7 +81,7 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
-        loadingView.setVisibility(View.GONE);
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
         if (event.success)
         {
             List<BookingSummary> bookingSummaries = event.bookingSummaries;

@@ -43,7 +43,7 @@ public class TransitionOverlayView extends RelativeLayout
     public void init()
     {
         ButterKnife.inject(this);
-        this.setVisibility(INVISIBLE);
+        this.setVisibility(GONE);
     }
 
     public void setText(int textId)

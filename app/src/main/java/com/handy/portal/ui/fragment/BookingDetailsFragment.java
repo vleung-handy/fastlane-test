@@ -115,10 +115,13 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+
     @Subscribe
     public void onClaimJobRequestReceived(Event.ClaimJobRequestReceivedEvent event)
     {
         Booking booking = event.booking;
+
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
 
         if(event.success)
         {
@@ -131,6 +134,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 }
                 else
                 {
+                    //Return to available jobs with success
                     Bundle arguments = new Bundle();
                     Calendar c = Calendar.getInstance();
                     c.setTime(event.booking.getStartDate());
@@ -142,7 +146,7 @@ public class BookingDetailsFragment extends InjectedFragment
             }
             else
             {
-                //Return to available jobs on failure
+                //Return to available jobs on failure with failure transition
                 Bundle arguments = new Bundle();
                 Calendar c = Calendar.getInstance();
                 c.setTime(event.booking.getStartDate());
@@ -152,7 +156,13 @@ public class BookingDetailsFragment extends InjectedFragment
                 bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, TransitionStyle.JOB_CLAIM_FAIL));
             }
         }
-        //the base error handle pops up a toast with the error message if the event itself fails
+        else
+        {
+            //the base error handle pops up a toast with the error message if the event itself fails, no need for additional popup
+            //re-enable the button so they can try again for network errors
+            getActionButton().setEnabled(true);
+        }
+
     }
 
     private void requestBookingDetails(String bookingId)
@@ -162,6 +172,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void requestClaimJob(String bookingId)
     {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         bus.post(new Event.RequestClaimJobEvent(bookingId));
     }
 
@@ -246,7 +257,12 @@ public class BookingDetailsFragment extends InjectedFragment
         getActivity().onBackPressed();
     }
 
-    private void initActionButtonListener(Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
+    private Button getActionButton()
+    {
+        return ((Button) getView().findViewById(R.id.booking_details_action_button));
+    }
+
+    private void initActionButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
     {
         button.setOnClickListener(new View.OnClickListener()
         {
@@ -267,6 +283,8 @@ public class BookingDetailsFragment extends InjectedFragment
 
                     //TODO: more status actions
                 }
+
+                button.setEnabled(false); //prevent multi clicks, turn off button when an action is taken, if action fails re-enable butotn
 
             }
         });

@@ -10,8 +10,6 @@
         style="@style/Banner"
         android:text="@string/available_jobs"/>
 
-    <include layout="@layout/layout_loading"/>
-
     <include layout="@layout/layout_fetch_error"/>
 
     <LinearLayout
@@ -33,6 +31,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
             </LinearLayout>
+
         </HorizontalScrollView>
 
         <include layout="@layout/layout_available_bookings_empty"/>
@@ -43,6 +42,7 @@
             android:layout_height="wrap_content"
             android:divider="@color/white_trans"
             android:dividerHeight="1dp"/>
+
     </LinearLayout>
 
 </LinearLayout>
