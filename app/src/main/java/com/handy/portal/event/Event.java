@@ -221,7 +221,20 @@ public abstract class Event
         @TrackField("type")
         private String type;
 
-        public DateClickedEvent(String type){
+        public DateClickedEvent(String type)
+        {
+            this.type = type;
+        }
+    }
+
+    @Track("booking detail selected")
+    public static class BookingSelectedEvent extends Event
+    {
+        @TrackField("type")
+        private String type;
+
+        public BookingSelectedEvent(String type)
+        {
             this.type = type;
         }
     }
