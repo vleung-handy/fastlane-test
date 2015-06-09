@@ -61,7 +61,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             }
         }
 
-        //Extras
+        //Special section for "Supplies" extras
         if (booking.getExtrasInfo() != null && booking.getExtrasInfo().size() > 0)
         {
             removeSection = false;
@@ -72,9 +72,32 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             for (int i = 0; i < booking.getExtrasInfo().size(); i++)
             {
                 Booking.ExtraInfo extra = booking.getExtrasInfo().get(i).getExtraInfo();
-                entries.add(extra.getName());
+                if(extra.getMachineName().equals(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES))
+                {
+                    entries.add(extra.getName());
+                }
             }
 
+            //TODO: Hardcoding string and icon, we need to get this data from the booking info
+            sectionView.init(activity.getString(R.string.supplies), R.drawable.ic_details_extras, entries, true);
+        }
+
+        //Extras - excluding Supplies instructions
+        if (booking.getExtrasInfo() != null && booking.getExtrasInfo().size() > 0)
+        {
+            removeSection = false;
+
+            BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
+            List<String> entries = new ArrayList<>();
+
+            for (int i = 0; i < booking.getExtrasInfo().size(); i++)
+            {
+                Booking.ExtraInfo extra = booking.getExtrasInfo().get(i).getExtraInfo();
+                if(!extra.getMachineName().equals(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES))
+                {
+                    entries.add(extra.getName());
+                }
+            }
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
             sectionView.init(activity.getString(R.string.extras), R.drawable.ic_details_extras, entries, true);
         }
