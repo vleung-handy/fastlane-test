@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.util.UIUtils;
 
 import java.text.SimpleDateFormat;
 
@@ -67,16 +67,16 @@ public class BookingElementView
         ButterKnife.inject(this, convertView);
 
         //Payment
-        setPaymentInfo(paymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));
+        UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));
 
         //Bonus Payment
-        setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
+        UIUtils.setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
 
         //Area
         bookingAreaTextView.setText(booking.getAddress().getShortRegion());
 
         //Frequency
-        setFrequencyInfo(booking, frequencyTextView, parentContext);
+        UIUtils.setFrequencyInfo(booking, frequencyTextView, parentContext);
 
         //Requested Provider
         requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.INVISIBLE);
@@ -93,42 +93,4 @@ public class BookingElementView
 
         return convertView;
     }
-
-    private void setPaymentInfo(TextView textView, Booking.PaymentInfo paymentInfo, String format)
-    {
-        if (paymentInfo != null && paymentInfo.getAdjustedAmount() > 0)
-        {
-            String paymentString = TextUtils.formatPrice(paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol(), paymentInfo.getCurrencySuffix());
-            textView.setText(String.format(format, paymentString));
-        }
-        else
-        {
-            textView.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    private void setFrequencyInfo(Booking booking, TextView textView, Context parentContext)
-    {
-        //Frequency
-        //Valid values : 1,2,4 every X weeks, 0 = non-recurring
-        int frequency = booking.getFrequency();
-        String bookingFrequencyFormat;
-
-        if (frequency == 0)
-        {
-            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_non_recurring);
-        }
-        else if (frequency == 1)
-        {
-            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_every_week);
-        }
-        else
-        {
-            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency);
-        }
-
-        String bookingFrequency = String.format(bookingFrequencyFormat, frequency);
-        textView.setText(bookingFrequency);
-    }
-
 }
