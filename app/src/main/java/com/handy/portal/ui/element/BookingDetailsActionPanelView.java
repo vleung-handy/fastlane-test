@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
+import com.handy.portal.consts.PartnerNames;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.util.UIUtils;
@@ -42,8 +43,6 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     @InjectView(R.id.booking_details_partner_text)
     protected TextView partnerText;
 
-    private static final String AIRBNB_PARTNER_ID = "Airbnb";
-
     public Button getActionButton()
     {
         return actionButton;
@@ -69,7 +68,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
 
         disclaimerSeriesText.setVisibility(booking.getFrequency() > 0 ? View.VISIBLE : View.GONE);
 
-        partnerText.setVisibility(booking.getPartner() != null && booking.getPartner().equals(AIRBNB_PARTNER_ID) ? View.VISIBLE : View.GONE);
+        partnerText.setVisibility(booking.getPartner() != null && booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ? View.VISIBLE : View.GONE);
     }
 
     private void initButtonDisplayForStatus(Button button, final BookingDetailsFragment.BookingStatus bookingStatus, Booking booking)

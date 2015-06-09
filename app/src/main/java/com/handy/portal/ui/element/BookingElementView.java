@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.PartnerNames;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.util.TextUtils;
 
@@ -100,11 +101,11 @@ public class BookingElementView
         return convertView;
     }
 
-    private void setPartnerText(String partnerId)
+    private void setPartnerText(String partner)
     {
-        if (partnerId != null && partnerId.equalsIgnoreCase("Airbnb"))
+        if (partner != null && partner.equalsIgnoreCase(PartnerNames.AIRBNB))
         {
-            partnerText.setText(partnerId);
+            partnerText.setText(partner);
         }
         else
         {
