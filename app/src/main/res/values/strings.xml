@@ -186,7 +186,7 @@
     <string name="contact_form_hint">Tell us how we can help</string>
     <string name="please_login">Please log in</string>
     <string name="back">Back</string>
-    <string name="contact_received">Message sent! \nWe\'ll follow up shortly.</string>
+    <string name="contact_received">Message sent! \nWe\u2019ll follow up shortly.</string>
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
@@ -207,7 +207,7 @@
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
     <string name="available_job">Available Job</string>
-    <string name="youre_requested">YOU\'RE REQUESTED!</string>
+    <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
     <string name="payment_value">%s</string>
     <string name="bonus_payment_value">+ %s BONUS</string>
     <string name="booking_frequency">Every %1$d weeks</string>
@@ -215,7 +215,7 @@
     <string name="booking_frequency_non_recurring">One Time Only</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="full_details_after_claim">Full details will be revealed after claiming</string>
-    <string name="no_available_jobs">Sorry, there aren\'t any available jobs left for this day</string>
+    <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="try_again">Try Again</string>
 
