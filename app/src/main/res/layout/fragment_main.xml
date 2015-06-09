@@ -56,13 +56,23 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/dark_grey"
-        android:visibility="invisible">
+        android:visibility="gone"
+        android:clickable="false"
+        >
+        <ImageView
+            android:id="@+id/transition_overlay_image_backing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:src="@drawable/circle_green"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"/>
         <ImageView
             android:id="@+id/transition_overlay_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:src="@drawable/circle_green"
+            android:src="@drawable/ic_check"
             android:layout_gravity="center"
             android:layout_centerInParent="true"/>
         <TextView
@@ -75,7 +85,22 @@
             android:layout_below="@id/transition_overlay_image"
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="20dp"/>
     </com.handy.portal.ui.element.TransitionOverlayView>
+
+    <com.handy.portal.ui.element.LoadingOverlayView
+        android:id="@+id/loading_overlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white_trans"
+        android:visibility="gone"
+        android:clickable="true"
+        android:gravity="center">
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/progress_ring"/>
+    </com.handy.portal.ui.element.LoadingOverlayView>
 
 </RelativeLayout>

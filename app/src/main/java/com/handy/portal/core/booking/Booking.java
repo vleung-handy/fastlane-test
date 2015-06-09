@@ -304,6 +304,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         @SerializedName("latitude") private float latitude;
         @SerializedName("longitude") private float longitude;
         @SerializedName("short_region") private String shortRegion;
+        @SerializedName("region_id") private int regionId;
 
         public final float getLatitude() { return latitude;}
         public final float getLongitude() { return longitude;}
@@ -348,6 +349,20 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
         final void setZip(final String zip) {
             this.zip = zip;
+        }
+
+        private static final int [] UK_REGION_IDS = {36, 39, 40, 41, 42, 43};
+
+        public boolean isUKRegion()
+        {
+            for(int i : UK_REGION_IDS)
+            {
+                if(i == this.regionId)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private Address(final Parcel in) {

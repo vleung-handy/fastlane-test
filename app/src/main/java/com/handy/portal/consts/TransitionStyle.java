@@ -9,40 +9,41 @@ import com.handy.portal.R;
 //
 public enum TransitionStyle
 {
-    JOB_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, R.string.job_claim_success, R.drawable.circle_green),
-    JOB_CLAIM_FAIL(R.anim.fade_in, R.anim.fade_and_shrink_away, R.string.booking_action_error_not_available, R.drawable.circle_teal),
-    TAB_TO_TAB(R.anim.fade_in, R.anim.fade_out,  -1, -1),
-    JOB_LIST_TO_DETAILS(R.anim.fade_in, R.anim.fade_out,  -1, -1),
-    NATIVE_TO_NATIVE(R.anim.slide_in_left, R.anim.slide_out_left,  -1, -1),
-    NATIVE_TO_WEBVIEW(R.anim.fade_in, R.anim.fade_out,  -1, -1),
-    WEBVIEW_TO_NATIVE(R.anim.fade_in, R.anim.fade_out,  -1, -1),
-    NONE(R.anim.none, R.anim.none, -1, -1)
+    JOB_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, R.string.job_claim_success, R.drawable.ic_check, R.drawable.circle_green),
+    JOB_CLAIM_FAIL(R.anim.fade_in, R.anim.fade_and_shrink_away, R.string.booking_action_error_not_available,R.drawable.ic_x, R.drawable.circle_red),
+    TAB_TO_TAB(R.anim.fade_in, R.anim.fade_out,  -1, -1, -1),
+    JOB_LIST_TO_DETAILS(R.anim.fade_in, R.anim.fade_out,  -1, -1, -1),
+    NATIVE_TO_NATIVE(R.anim.slide_in_left, R.anim.slide_out_left,  -1, -1, -1),
+    NATIVE_TO_WEBVIEW(R.anim.fade_in, R.anim.fade_out,  -1, -1, -1),
+    WEBVIEW_TO_NATIVE(R.anim.fade_in, R.anim.fade_out,  -1, -1, -1),
+    REFRESH_TAB(R.anim.fade_in, R.anim.fade_out,  -1, -1, -1),
+    NONE(R.anim.none, R.anim.none, -1, -1, -1)
     ;
 
     private int incomingAnimId;
     private int outgoingAnimId;
     private int overlayStringId;
     private int overlayImageId;
+    private int overlayBackingImageId;
 
-    TransitionStyle(int incomingAnimId, int outgoingAnimId, int overlayStringId, int overlayImageId)
+    TransitionStyle(int incomingAnimId, int outgoingAnimId, int overlayStringId, int overlayImageId, int overlayBackingImageId)
     {
         this.incomingAnimId = incomingAnimId;
         this.outgoingAnimId = outgoingAnimId;
         this.overlayStringId = overlayStringId;
         this.overlayImageId = overlayImageId;
+        this.overlayBackingImageId = overlayBackingImageId;
     }
 
     public boolean shouldShowOverlay()
     {
-        return(overlayStringId != -1 || overlayImageId != -1);
+        return(overlayStringId != -1 || overlayImageId != -1 || overlayBackingImageId != -1);
     }
 
     public int getOverlayStringId() { return overlayStringId; }
     public int getOverlayImageId() { return overlayImageId; }
+    public int getOverlayBackingImageId() { return overlayBackingImageId; }
     public int getIncomingAnimId() { return incomingAnimId; }
     public int getOutgoingAnimId() { return outgoingAnimId; }
-
-
-
 }
 

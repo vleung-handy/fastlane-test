@@ -180,4 +180,13 @@ public abstract class Event
         }
     }
 
+    public static class SetLoadingOverlayVisibilityEvent extends Event
+    {
+        public boolean isVisible;
+        public SetLoadingOverlayVisibilityEvent(boolean isVisible)
+        {
+            this.isVisible = isVisible;
+        }
+    }
+
 }

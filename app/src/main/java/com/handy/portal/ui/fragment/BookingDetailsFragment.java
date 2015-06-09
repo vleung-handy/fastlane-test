@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
@@ -115,10 +116,13 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+
     @Subscribe
     public void onClaimJobRequestReceived(Event.ClaimJobRequestReceivedEvent event)
     {
         Booking booking = event.booking;
+
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
 
         if(event.success)
         {
@@ -131,6 +135,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 }
                 else
                 {
+                    //Return to available jobs with success
                     Bundle arguments = new Bundle();
                     Calendar c = Calendar.getInstance();
                     c.setTime(event.booking.getStartDate());
@@ -142,17 +147,27 @@ public class BookingDetailsFragment extends InjectedFragment
             }
             else
             {
-                //Return to available jobs on failure
+                //Return to available jobs on failure with failure transition
                 Bundle arguments = new Bundle();
                 Calendar c = Calendar.getInstance();
                 c.setTime(event.booking.getStartDate());
                 int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
                 arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
+
+                //TODO: show an alert dialog with the fail reason
+
                 //Return to available jobs on that day
                 bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, TransitionStyle.JOB_CLAIM_FAIL));
             }
         }
-        //the base error handle pops up a toast with the error message if the event itself fails
+        else
+        {
+            //show a toast about connectivity issues
+            showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
+            //re-enable the button so they can try again for network errors
+            getActionButton().setEnabled(true);
+        }
+
     }
 
     private void requestBookingDetails(String bookingId)
@@ -162,6 +177,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void requestClaimJob(String bookingId)
     {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         bus.post(new Event.RequestClaimJobEvent(bookingId));
     }
 
@@ -198,7 +214,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //google maps
         GoogleMapView gmv = new GoogleMapView();
-        gmv.init(booking, new Bundle(), mapLayout, activity);
+        gmv.init(booking, arguments, mapLayout, activity);
 
         //date banner
         BookingDetailsDateView dateView = new BookingDetailsDateView();
@@ -246,7 +262,12 @@ public class BookingDetailsFragment extends InjectedFragment
         getActivity().onBackPressed();
     }
 
-    private void initActionButtonListener(Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
+    private Button getActionButton()
+    {
+        return ((Button) getView().findViewById(R.id.booking_details_action_button));
+    }
+
+    private void initActionButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
     {
         button.setOnClickListener(new View.OnClickListener()
         {
@@ -267,6 +288,8 @@ public class BookingDetailsFragment extends InjectedFragment
 
                     //TODO: more status actions
                 }
+
+                button.setEnabled(false); //prevent multi clicks, turn off button when an action is taken, if action fails re-enable butotn
 
             }
         });

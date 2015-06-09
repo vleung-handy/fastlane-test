@@ -15,6 +15,7 @@ import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.SwapFragmentArguments;
 import com.handy.portal.event.Event;
+import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
 import com.squareup.otto.Subscribe;
@@ -34,6 +35,8 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton helpButton;
     @InjectView(R.id.transition_overlay)
     TransitionOverlayView transitionOverlayView;
+    @InjectView(R.id.loading_overlay)
+    LoadingOverlayView loadingOverlayView;
 
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
@@ -52,6 +55,7 @@ public class MainActivityFragment extends InjectedFragment
         switchToTab(MainViewTab.JOBS);
 
         transitionOverlayView.init();
+        loadingOverlayView.init();
 
         return view;
     }
@@ -72,6 +76,12 @@ public class MainActivityFragment extends InjectedFragment
     public void onNavigateToTabEvent(Event.NavigateToTabEvent event)
     {
         switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride);
+    }
+
+    @Subscribe
+    public void onShowLoadingOverlay(Event.SetLoadingOverlayVisibilityEvent event)
+    {
+        loadingOverlayView.setOverlayVisibility(event.isVisible);
     }
 
     private void initWebViewFragment(Target urlTarget)
@@ -153,10 +163,9 @@ public class MainActivityFragment extends InjectedFragment
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
             swapFragmentArguments.argumentsBundle = argumentsBundle;
-            swapFragmentArguments.addToBackStack = targetTab == MainViewTab.DETAILS;
+            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS);
 
             swapFragment(swapFragmentArguments);
-
         }
         else
         {

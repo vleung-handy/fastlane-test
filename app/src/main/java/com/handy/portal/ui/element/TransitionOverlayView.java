@@ -25,6 +25,9 @@ public class TransitionOverlayView extends RelativeLayout
     @InjectView(R.id.transition_overlay_image)
     protected ImageView overlayImage;
 
+    @InjectView(R.id.transition_overlay_image_backing)
+    protected ImageView overlayImageBacking;
+
     public TransitionOverlayView(final Context context)
     {
         super(context);
@@ -43,7 +46,7 @@ public class TransitionOverlayView extends RelativeLayout
     public void init()
     {
         ButterKnife.inject(this);
-        this.setVisibility(INVISIBLE);
+        this.setVisibility(GONE);
     }
 
     public void setText(int textId)
@@ -59,6 +62,11 @@ public class TransitionOverlayView extends RelativeLayout
     public void setImage(int imageResourceId)
     {
         overlayImage.setImageResource(imageResourceId);
+    }
+
+    public void setBackingImage(int imageResourceId)
+    {
+        overlayImageBacking.setImageResource(imageResourceId);
     }
 
     public void showThenHideOverlay()
@@ -78,6 +86,8 @@ public class TransitionOverlayView extends RelativeLayout
     {
         setText("");
         setImage(android.R.color.transparent);
+        setBackingImage(android.R.color.transparent);
+
         if(transitionStyle != null)
         {
             if(transitionStyle.shouldShowOverlay())
@@ -89,6 +99,10 @@ public class TransitionOverlayView extends RelativeLayout
                 if(transitionStyle.getOverlayImageId() != -1)
                 {
                     setImage(transitionStyle.getOverlayImageId());
+                }
+                if(transitionStyle.getOverlayBackingImageId() != -1)
+                {
+                    setBackingImage(transitionStyle.getOverlayBackingImageId());
                 }
             }
         }

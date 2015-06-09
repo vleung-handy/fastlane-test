@@ -61,8 +61,8 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
 
         UIUtils.setFrequencyInfo(booking, frequencyText, activity);
 
-        UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider());
-        UIUtils.setPaymentInfo(paymentBonusText, booking.getBonusPaymentToProvider());
+        UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider(), activity.getString(R.string.payment_value));
+        UIUtils.setPaymentInfo(paymentBonusText, booking.getBonusPaymentToProvider(), activity.getString(R.string.bonus_payment_value));
 
         initButtonDisplayForStatus(actionButton, bookingStatus, booking);
 
