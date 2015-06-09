@@ -134,6 +134,8 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             if(event.booking.getProviderId().equals(getLoggedInUserId()))
             {
+                bus.post(new Event.ClaimJobSuccessEvent());
+
                 //Return to available jobs with success
                 Calendar c = Calendar.getInstance();
                 c.setTime(event.booking.getStartDate());
@@ -336,6 +338,8 @@ public class BookingDetailsFragment extends InjectedFragment
 
         if(errorMessage != null)
         {
+            bus.post(new Event.ClaimJobErrorEvent(errorMessage));
+
             //specific booking error, show an alert dialog
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 

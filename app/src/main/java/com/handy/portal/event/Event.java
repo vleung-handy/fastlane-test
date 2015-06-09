@@ -239,4 +239,21 @@ public abstract class Event
         }
     }
 
+    @Track("claim job")
+    public static class ClaimJobSuccessEvent extends Event
+    {
+    }
+
+    @Track("claim job error")
+    public static class ClaimJobErrorEvent extends Event
+    {
+        @TrackField("message")
+        private String message;
+
+        public ClaimJobErrorEvent(String message)
+        {
+            this.message = message;
+        }
+    }
+
 }
