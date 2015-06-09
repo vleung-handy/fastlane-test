@@ -60,6 +60,12 @@ public class ScheduledBookingsFragment extends BookingsFragment
         bus.post(new Event.RequestScheduledBookingsEvent());
     }
 
+    @Override
+    protected void trackDateClicked()
+    {
+        bus.post(new Event.DateClickedEvent("scheduled job"));
+    }
+
     @Subscribe
     public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {

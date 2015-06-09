@@ -53,6 +53,12 @@ public class AvailableBookingsFragment extends BookingsFragment
         bus.post(new Event.RequestAvailableBookingsEvent());
     }
 
+    @Override
+    protected void trackDateClicked()
+    {
+        bus.post(new Event.DateClickedEvent("available job"));
+    }
+
     @Subscribe
     public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {

@@ -53,6 +53,8 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract void requestBookings();
 
+    protected abstract void trackDateClicked();
+
     private int previousDatesScrollPosition;
 
     @Override
@@ -165,6 +167,7 @@ public abstract class BookingsFragment extends InjectedFragment
 
     private void selectDay(Date day)
     {
+        trackDateClicked();
         DateButtonView selectedDateButtonView = dateButtonMap.get(selectedDay);
         if (selectedDateButtonView != null)
         {

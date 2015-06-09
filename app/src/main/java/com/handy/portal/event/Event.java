@@ -215,4 +215,15 @@ public abstract class Event
         }
     }
 
+    @Track("date scroller date selected")
+    public static class DateClickedEvent extends Event
+    {
+        @TrackField("type")
+        private String type;
+
+        public DateClickedEvent(String type){
+            this.type = type;
+        }
+    }
+
 }
