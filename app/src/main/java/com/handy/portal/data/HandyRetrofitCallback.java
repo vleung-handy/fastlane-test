@@ -118,7 +118,9 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
         {
             final DataManager.DataManagerError err;
             if (error.isNetworkError())
+            {
                 err = new DataManager.DataManagerError(DataManager.Type.NETWORK);
+            }
             else
             {
                 int resp = 0;

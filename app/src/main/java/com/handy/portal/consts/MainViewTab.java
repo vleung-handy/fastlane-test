@@ -36,6 +36,11 @@ public enum MainViewTab
     //If this gets complex setup small state machines to have a transition for each to/from tab
     public TransitionStyle getDefaultTransitionStyle(MainViewTab targetTab)
     {
+        if(this.equals(targetTab))
+        {
+            return TransitionStyle.REFRESH_TAB;
+        }
+
         if(this.equals(MainViewTab.JOBS) && targetTab.equals(MainViewTab.DETAILS))
         {
             return TransitionStyle.JOB_LIST_TO_DETAILS;

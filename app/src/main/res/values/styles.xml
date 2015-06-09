@@ -111,6 +111,7 @@
 
     <style name="Button.Green.Round">
         <item name="android:background">@drawable/button_green_round</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
     </style>
 
     <style name="Button.SalmonRound">
