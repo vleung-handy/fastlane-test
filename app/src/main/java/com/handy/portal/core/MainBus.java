@@ -3,11 +3,18 @@ package com.handy.portal.core;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.handy.portal.data.Mixpanel;
 import com.squareup.otto.Bus;
 
 final class MainBus extends Bus
 {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private Mixpanel mixpanel;
+
+    public MainBus(final Mixpanel mixpanel)
+    {
+        this.mixpanel = mixpanel;
+    }
 
     @Override
     public final void register(final Object object)
@@ -25,4 +32,13 @@ final class MainBus extends Bus
             });
         }
     }
+
+    @Override
+    public void post(Object event)
+    {
+        mixpanel.trackEvent(event); // side effect
+        super.post(event);
+    }
+
+
 }
