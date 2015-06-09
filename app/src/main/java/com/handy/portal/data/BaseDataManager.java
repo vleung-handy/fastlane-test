@@ -121,7 +121,8 @@ public final class BaseDataManager extends DataManager
                             new TypeToken<Booking>()
                             {
                             }.getType());
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     System.err.println("Can not parse Booking" + e);
                 }

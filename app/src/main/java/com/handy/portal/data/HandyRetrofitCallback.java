@@ -48,14 +48,12 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
             if (responseIsJSONArray)
             {
                 objArray = new JSONArray(resp.toString());
-            }
-            else
+            } else
             {
                 obj = new JSONObject(resp.toString());
             }
 
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new RuntimeException("Unable to parse API response body : " + e);
         }
@@ -103,8 +101,7 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
                 err.setInvalidInputs(inputs.toArray(new String[inputs.size()]));
             }
             callback.onError(err);
-        }
-        else
+        } else
         {
             success(obj);
         }
@@ -124,31 +121,49 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
             else
             {
                 int resp = 0;
-                if(error != null)
+                if (error != null)
                 {
-                    if(error.getResponse() != null)
+                    if (error.getResponse() != null)
                     {
                         resp = error.getResponse().getStatus();
                     }
                 }
 
-                if (resp >= 400 && resp < 500)
+                if (resp >= 400 && resp <= 500)
                 {
                     if (error.getResponse().getBody().mimeType().contains("json"))
                     {
                         RestError restError = (RestError) error.getBodyAs(RestError.class);
                         String[] messages;
 
-                        if ((messages = restError.messages) != null && messages.length > 0)
+                        if (restError.message != null)
+                        {
+                            err = new DataManager.DataManagerError(DataManager.Type.CLIENT, restError.message);
+                        }
+                        else if ((messages = restError.messages) != null && messages.length > 0)
                         {
                             err = new DataManager.DataManagerError(DataManager.Type.CLIENT, messages[0]);
-                        } else err = new DataManager.DataManagerError(DataManager.Type.CLIENT);
+                        }
+                        else
+                        {
+                            err = new DataManager.DataManagerError(DataManager.Type.CLIENT);
+                        }
+
                         err.setInvalidInputs(restError.invalidInputs);
-                    } else err = new DataManager.DataManagerError(DataManager.Type.CLIENT);
-                } else if (resp >= 500 && resp < 600)
+                    }
+                    else
+                    {
+                        err = new DataManager.DataManagerError(DataManager.Type.CLIENT);
+                    }
+                }
+                else if (resp > 500 && resp < 600)
                 {
                     err = new DataManager.DataManagerError(DataManager.Type.SERVER);
-                } else err = new DataManager.DataManagerError(DataManager.Type.OTHER);
+                }
+                else
+                {
+                    err = new DataManager.DataManagerError(DataManager.Type.OTHER);
+                }
             }
             callback.onError(err);
         }
@@ -156,6 +171,8 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
 
     private final class RestError
     {
+        @SerializedName("message")
+        private String message;
         @SerializedName("messages")
         private String[] messages;
         @SerializedName("invalid_inputs")

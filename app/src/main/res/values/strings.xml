@@ -223,5 +223,10 @@
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="try_again">Try Again</string>
 
+    <string name="return_to_available_jobs">"Return to Jobs"</string>
+    <string name="job_claim_error">"Error Claiming Job"</string>
+    <string name="job_claim_error_generic">"This job is no longer available"</string>
+
+
 
 </resources>
