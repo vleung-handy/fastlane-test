@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
@@ -152,13 +153,17 @@ public class BookingDetailsFragment extends InjectedFragment
                 c.setTime(event.booking.getStartDate());
                 int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
                 arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
+
+                //TODO: show an alert dialog with the fail reason
+
                 //Return to available jobs on that day
                 bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, TransitionStyle.JOB_CLAIM_FAIL));
             }
         }
         else
         {
-            //the base error handle pops up a toast with the error message if the event itself fails, no need for additional popup
+            //show a toast about connectivity issues
+            showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
             //re-enable the button so they can try again for network errors
             getActionButton().setEnabled(true);
         }
