@@ -57,9 +57,9 @@
         android:layout_marginLeft="14dp"
         android:layout_marginStart="14dp"
         android:layout_toEndOf="@+id/booking_entry_time_layout"
+        android:layout_toLeftOf="@+id/booking_entry_payment_layout"
         android:layout_toRightOf="@+id/booking_entry_time_layout"
         android:layout_toStartOf="@+id/booking_entry_payment_layout"
-        android:layout_toLeftOf="@+id/booking_entry_payment_layout"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -85,7 +85,17 @@
                 android:textAllCaps="true"
                 android:textColor="@color/requested_green"
                 android:textSize="12sp"/>
+
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/booking_entry_partner_text"
+            style="@style/TextView.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="@color/partner_blue"
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/booking_entry_area_text"
