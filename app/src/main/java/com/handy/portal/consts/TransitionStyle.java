@@ -10,6 +10,7 @@ import com.handy.portal.R;
 public enum TransitionStyle
 {
     JOB_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_CLAIM_SUCCESS),
+    SERIES_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.SERIES_CLAIM_SUCCESS),
     JOB_CLAIM_FAIL(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_CLAIM_FAIL),
     TAB_TO_TAB(R.anim.fade_in, R.anim.fade_out),
     JOB_LIST_TO_DETAILS(R.anim.fade_in, R.anim.fade_out),

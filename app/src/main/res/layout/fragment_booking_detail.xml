@@ -18,23 +18,25 @@
 
         <ImageButton
             android:id="@+id/booking_details_back_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:background="@color/transparent"
-            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"/>
+            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+            android:scaleType="fitXY"
+            />
 
         <TextView
             android:id="@+id/booking_details_banner_text"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="30dp"
             android:gravity="center_vertical"
             android:text="@string/available_job"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="20sp"/>
 
     </LinearLayout>
 

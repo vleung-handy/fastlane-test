@@ -134,7 +134,8 @@ public class BookingDetailsFragment extends InjectedFragment
             if(event.booking.getProviderId().equals(getLoggedInUserId()))
             {
                 bus.post(new Event.ClaimJobSuccessEvent());
-                returnToAvailableBookings(event.booking.getStartDate().getTime(), TransitionStyle.JOB_CLAIM_SUCCESS);
+                TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
+                returnToAvailableBookings(event.booking.getStartDate().getTime(), transitionStyle);
             }
             else
             {

@@ -67,17 +67,18 @@
         android:layout_alignParentRight="true"
         android:textColor="@color/very_light_grey"
         android:textSize="12sp"/>
+
     <Button
         android:id="@+id/booking_details_action_button"
+        android:text="@string/claim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="xxACTIONxx"
-        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="center_vertical|center_horizontal"
         android:layout_below="@+id/booking_details_frequency_text"
+        style="@style/Button.Green.Round"
         android:layout_marginTop="10dp"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:background="@color/handy_green"
+        android:textAllCaps="false"
+        android:textSize="20sp"
         />
 
     <TextView
@@ -88,7 +89,8 @@
         android:text="@string/disclaimer_series"
         android:layout_below="@+id/booking_details_action_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"/>
     <TextView
         android:id="@+id/booking_details_action_disclaimer_cancel_text"
         android:layout_width="wrap_content"
@@ -97,6 +99,7 @@
         android:text="@string/disclaimer_cancel"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="false"
-        android:layout_below="@+id/booking_details_action_disclaimer_series_text"/>
+        android:layout_below="@+id/booking_details_action_disclaimer_series_text"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

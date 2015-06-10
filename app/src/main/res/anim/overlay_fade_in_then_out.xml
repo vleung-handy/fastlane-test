@@ -13,7 +13,7 @@
 
     <!-- Animate Out -->
     <alpha
-        android:startOffset="600"
+        android:startOffset="1200"
         android:duration="300"
         android:fromAlpha="1.0"
         android:interpolator="@android:anim/accelerate_interpolator"
