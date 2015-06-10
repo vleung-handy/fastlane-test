@@ -2,6 +2,8 @@ package com.handy.portal.event;
 
 import android.os.Bundle;
 
+import com.handy.portal.annotations.Track;
+import com.handy.portal.annotations.TrackField;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.BookingSummary;
@@ -10,6 +12,7 @@ import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 
+import java.util.Date;
 import java.util.List;
 
 public abstract class Event
@@ -36,7 +39,9 @@ public abstract class Event
     {
         public int versionCode = 0;
         public String appFlavor = "";
-        public UpdateCheckEvent(String appFlavor, int versionCode) {
+
+        public UpdateCheckEvent(String appFlavor, int versionCode)
+        {
             this.versionCode = versionCode;
             this.appFlavor = appFlavor;
         }
@@ -45,7 +50,9 @@ public abstract class Event
     public static class UpdateCheckRequestReceivedEvent extends Event
     {
         public UpdateDetails updateDetails;
-        public UpdateCheckRequestReceivedEvent(UpdateDetails updateDetails, boolean success) {
+
+        public UpdateCheckRequestReceivedEvent(UpdateDetails updateDetails, boolean success)
+        {
             this.updateDetails = updateDetails;
             this.success = success;
         }
@@ -76,9 +83,11 @@ public abstract class Event
         }
     }
 
+    @Track("portal login submitted - phone number")
     public static class RequestPinCodeEvent extends Event
     {
         public String phoneNumber;
+
         public RequestPinCodeEvent(String phoneNumber)
         {
             this.phoneNumber = phoneNumber;
@@ -114,6 +123,7 @@ public abstract class Event
     public static class PinCodeRequestReceivedEvent extends Event
     {
         public PinRequestDetails pinRequestDetails;
+
         public PinCodeRequestReceivedEvent(PinRequestDetails pinRequestDetails, boolean success)
         {
             this.pinRequestDetails = pinRequestDetails;
@@ -121,6 +131,7 @@ public abstract class Event
         }
     }
 
+    @Track("portal login submitted - pin code")
     public static class RequestLoginEvent extends Event
     {
         public String phoneNumber;
@@ -143,8 +154,8 @@ public abstract class Event
             this.success = success;
         }
     }
-	
-	public static class RequestClaimJobEvent extends Event
+
+    public static class RequestClaimJobEvent extends Event
     {
         public String bookingId;
 
@@ -172,18 +183,26 @@ public abstract class Event
         }
     }
 
-	public static class LoginError extends Event {
-        public String source = "";
+    @Track("portal login error")
+    public static class LoginError extends Event
+    {
+        @TrackField("source")
+        private String source;
 
-        public LoginError(String source) {
+        public LoginError(String source)
+        {
             this.source = source;
         }
     }
 
-    public static class Navigation extends Event {
-        public String page = "";
+    @Track("portal navigation")
+    public static class Navigation extends Event
+    {
+        @TrackField("page")
+        private String page;
 
-        public Navigation(String page) {
+        public Navigation(String page)
+        {
             this.page = page;
         }
     }
@@ -194,6 +213,53 @@ public abstract class Event
         public SetLoadingOverlayVisibilityEvent(boolean isVisible)
         {
             this.isVisible = isVisible;
+        }
+    }
+
+    @Track("date scroller date selected")
+    public static class DateClickedEvent extends Event
+    {
+        @TrackField("type")
+        private String type;
+        @TrackField("date")
+        private Date date;
+
+        public DateClickedEvent(String type, Date date)
+        {
+            this.type = type;
+            this.date = date;
+        }
+    }
+
+    @Track("booking detail selected")
+    public static class BookingSelectedEvent extends Event
+    {
+        @TrackField("type")
+        private String type;
+        @TrackField("booking_id")
+        private String bookingId;
+
+        public BookingSelectedEvent(String type, String bookingId)
+        {
+            this.type = type;
+            this.bookingId = bookingId;
+        }
+    }
+
+    @Track("claim job")
+    public static class ClaimJobSuccessEvent extends Event
+    {
+    }
+
+    @Track("claim job error")
+    public static class ClaimJobErrorEvent extends Event
+    {
+        @TrackField("message")
+        private String message;
+
+        public ClaimJobErrorEvent(String message)
+        {
+            this.message = message;
         }
     }
 

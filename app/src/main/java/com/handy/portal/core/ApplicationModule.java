@@ -161,9 +161,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final Bus provideBus()
+    final Bus provideBus(final Mixpanel mixpanel)
     {
-        return new MainBus();
+        return new MainBus(mixpanel);
     }
 
     @Provides
@@ -203,9 +203,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final Mixpanel provideMixpanel(final Bus bus)
+    final Mixpanel provideMixpanel()
     {
-        return new Mixpanel(context, bus);
+        return new Mixpanel(context);
     }
 
     @Provides

@@ -43,6 +43,7 @@ public class AvailableBookingsFragment extends BookingsFragment
         return R.string.error_fetching_available_jobs;
     }
 
+    @Override
     protected int getFragmentResourceId()
     {
         return (R.layout.fragment_available_bookings);
@@ -51,6 +52,12 @@ public class AvailableBookingsFragment extends BookingsFragment
     protected void requestBookings()
     {
         bus.post(new Event.RequestAvailableBookingsEvent());
+    }
+
+    @Override
+    protected String getTrackingType()
+    {
+        return "available job";
     }
 
     @Subscribe

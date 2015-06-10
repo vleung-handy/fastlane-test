@@ -53,6 +53,8 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract void requestBookings();
 
+    protected abstract String getTrackingType();
+
     private int previousDatesScrollPosition;
 
     @Override
@@ -154,6 +156,7 @@ public abstract class BookingsFragment extends InjectedFragment
             {
                 public void onClick(View v)
                 {
+                    bus.post(new Event.DateClickedEvent(getTrackingType(), day));
                     selectDay(day);
                     displayBookings(bookingsForDay);
                 }
@@ -194,6 +197,7 @@ public abstract class BookingsFragment extends InjectedFragment
                 Booking booking = (Booking) adapter.getItemAtPosition(position);
                 if (booking != null)
                 {
+                    bus.post(new Event.BookingSelectedEvent(getTrackingType(), booking.getId()));
                     previousDatesScrollPosition = ((HorizontalScrollView) getDatesLayout().getParent()).getScrollX();
                     showBookingDetails(booking);
                 }
