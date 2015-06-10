@@ -80,7 +80,12 @@ public class BookingElementView
         bookingAreaTextView.setText(booking.getAddress().getShortRegion());
 
         //Frequency
-        UIUtils.setFrequencyInfo(booking, frequencyTextView, parentContext);
+        String frequencyInfo = UIUtils.getFrequencyInfo(booking, parentContext);
+        if (booking.getAddress().isUKRegion() && booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES).size() > 0)
+        {
+            frequencyInfo += " \u22C5 " + parentContext.getString(R.string.supplies);
+        }
+        frequencyTextView.setText(frequencyInfo);
 
         //Requested Provider
         requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.INVISIBLE);
@@ -101,7 +106,7 @@ public class BookingElementView
         return convertView;
     }
 
-	private void setPartnerText(String partner)
+    private void setPartnerText(String partner)
     {
         if (partner != null && partner.equalsIgnoreCase(PartnerNames.AIRBNB))
         {

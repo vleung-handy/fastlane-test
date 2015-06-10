@@ -3,10 +3,13 @@ package com.handy.portal.core.booking;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -159,6 +162,24 @@ public final class Booking implements Parcelable, Comparable<Booking>
     public final ArrayList<ExtraInfoWrapper> getExtrasInfo() {
         return extrasInfo;
     }
+
+    public final List<ExtraInfoWrapper> getExtrasInfoByMachineName(final String machineName)
+    {
+        ArrayList<Booking.ExtraInfoWrapper> extrasInfo = getExtrasInfo();
+        if (extrasInfo != null)
+        {
+            return new ArrayList<>(Collections2.filter(extrasInfo, new Predicate<ExtraInfoWrapper>()
+            {
+                @Override
+                public boolean apply(Booking.ExtraInfoWrapper input)
+                {
+                    return machineName.equals(input.getExtraInfo().getMachineName());
+                }
+            }));
+        }
+        return Collections.emptyList();
+    }
+
 
     private Booking(final Parcel in) {
         final String[] stringData = new String[8];
