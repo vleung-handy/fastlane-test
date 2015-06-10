@@ -12,6 +12,7 @@ import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 
+import java.util.Date;
 import java.util.List;
 
 public abstract class Event
@@ -220,10 +221,13 @@ public abstract class Event
     {
         @TrackField("type")
         private String type;
+        @TrackField("date")
+        private Date date;
 
-        public DateClickedEvent(String type)
+        public DateClickedEvent(String type, Date date)
         {
             this.type = type;
+            this.date = date;
         }
     }
 
@@ -232,10 +236,13 @@ public abstract class Event
     {
         @TrackField("type")
         private String type;
+        @TrackField("booking_id")
+        private String bookingId;
 
-        public BookingSelectedEvent(String type)
+        public BookingSelectedEvent(String type, String bookingId)
         {
             this.type = type;
+            this.bookingId = bookingId;
         }
     }
 
