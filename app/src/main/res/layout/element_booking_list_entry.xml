@@ -19,8 +19,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_gravity="start"
-            android:paddingBottom="1dp"
-            android:paddingTop="1dp"
             android:src="@drawable/rectangle_green"/>
 
         <LinearLayout

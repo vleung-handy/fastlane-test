@@ -40,6 +40,7 @@
             android:id="@+id/available_jobs_list_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="1dp"
             android:divider="@color/white_trans"
             android:dividerHeight="1dp"/>
 
