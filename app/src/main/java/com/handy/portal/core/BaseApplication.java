@@ -25,6 +25,8 @@ public class BaseApplication extends Application
     DataManager dataManager;
     @Inject
     Mixpanel mixpanel;
+    @Inject
+    GoogleService googleService;
 
     @Override
     public final void onCreate()

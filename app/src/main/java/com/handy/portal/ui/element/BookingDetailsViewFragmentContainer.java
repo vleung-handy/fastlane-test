@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -15,10 +14,6 @@ import com.handy.portal.core.booking.Booking;
  */
 public abstract class BookingDetailsViewFragmentContainer extends BookingDetailsView
 {
-    protected ViewGroup parentViewGroup;
-    protected Context applicationContext;
-    protected Activity activity;
-
     protected int getLayoutResourceId() { return 0;}
     protected abstract Class getFragmentClass();
 
@@ -27,7 +22,6 @@ public abstract class BookingDetailsViewFragmentContainer extends BookingDetails
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
-        this.applicationContext = activity.getApplicationContext();
 
         initFromBooking(booking, arguments);
 

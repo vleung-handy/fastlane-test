@@ -6,7 +6,6 @@ import com.handy.portal.R;
 
 public class MainActivity extends BaseActivity
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
