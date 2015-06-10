@@ -76,6 +76,13 @@ public class DateButtonView extends LinearLayout
     public void setChecked(boolean checked)
     {
         selectedDayIndicator.setVisibility(checked ? View.VISIBLE : View.INVISIBLE);
-        setBackgroundColor(getResources().getColor(checked ? R.color.bg_active_grey : R.color.bg_inactive_grey));
+        if (checked)
+        {
+            setBackgroundColor(getResources().getColor(R.color.bg_active_grey));
+        }
+        else
+        {
+            setBackgroundResource(R.drawable.bg_inactive_with_shadow);
+        }
     }
 }
