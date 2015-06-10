@@ -28,7 +28,6 @@ import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -135,12 +134,7 @@ public class BookingDetailsFragment extends InjectedFragment
             if(event.booking.getProviderId().equals(getLoggedInUserId()))
             {
                 bus.post(new Event.ClaimJobSuccessEvent());
-
-                //Return to available jobs with success
-                Calendar c = Calendar.getInstance();
-                c.setTime(event.booking.getStartDate());
-                int dayOfYear = c.get(Calendar.DAY_OF_YEAR);
-                returnToAvailableBookings(dayOfYear, TransitionStyle.JOB_CLAIM_SUCCESS);
+                returnToAvailableBookings(event.booking.getStartDate().getTime(), TransitionStyle.JOB_CLAIM_SUCCESS);
             }
             else
             {
@@ -154,11 +148,11 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
-    private void returnToAvailableBookings(int dayOfYear, TransitionStyle transitionStyle)
+    private void returnToAvailableBookings(long epochTime, TransitionStyle transitionStyle)
     {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
-        arguments.putInt(BundleKeys.ACTIVE_DAY_OF_YEAR, dayOfYear);
+        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
         bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, transitionStyle));
     }
@@ -331,10 +325,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void handleBookingClaimError(String errorMessage, String title, String option1, Date returnDate)
     {
-        //Day to return to on available bookings
-        Calendar c = Calendar.getInstance();
-        c.setTime(returnDate);
-        final int returnDateDayOfYear = c.get(Calendar.DAY_OF_YEAR);
+        final long returnDateEpochTime = returnDate.getTime();
 
         if(errorMessage != null)
         {
@@ -355,7 +346,7 @@ public class BookingDetailsFragment extends InjectedFragment
                         public void onClick(DialogInterface dialog, int id)
                         {
                             //Return to available jobs, don't need overlay transition after alert dialog
-                            returnToAvailableBookings(returnDateDayOfYear, TransitionStyle.REFRESH_TAB);
+                            returnToAvailableBookings(returnDateEpochTime, TransitionStyle.REFRESH_TAB);
                         }
                     })
             ;

@@ -8,5 +8,5 @@ public class BundleKeys
     public static final String BOOKING_ID = "booking_id";
     public static final String TARGET_URL = "target_url";
     public static final String BOOKING_STATUS = "booking_status";
-    public static final String ACTIVE_DAY_OF_YEAR = "active_day_of_year";
+    public static final String DATE_EPOCH_TIME = "date_epoch_time";
 }
