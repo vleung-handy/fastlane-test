@@ -92,7 +92,7 @@ public class BookingManager
                         public void onError(final DataManager.DataManagerError error)
                         {
                             System.err.println("Failed to get available bookings " + error);
-                            bus.post(new Event.BookingsRetrievedEvent(null, false));
+                            bus.post(new Event.RequestAvailableBookingsErrorEvent(error));
                         }
                     }
             );

@@ -11,7 +11,6 @@ import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 import com.securepreferences.SecurePreferences;
-import com.squareup.otto.Bus;
 
 import org.json.JSONObject;
 
@@ -28,10 +27,8 @@ public final class BaseDataManager extends DataManager
     private final Gson gsonBuilder;
 
     @Inject
-    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
-                           final Bus bus, final SecurePreferences prefs)
+    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint, final SecurePreferences prefs)
     {
-        super(bus);
         this.service = service;
         this.endpoint = endpoint;
         this.prefs = prefs;

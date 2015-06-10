@@ -11,6 +11,7 @@ import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
+import com.handy.portal.data.DataManager;
 
 import java.util.Date;
 import java.util.List;
@@ -263,4 +264,13 @@ public abstract class Event
         }
     }
 
+    public static class RequestAvailableBookingsErrorEvent
+    {
+        public final DataManager.DataManagerError error;
+
+        public RequestAvailableBookingsErrorEvent(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 }

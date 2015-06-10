@@ -50,8 +50,6 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract LinearLayout getDatesLayout();
 
-    protected abstract int getErrorTextResId();
-
     protected abstract String getTrackingType();
 
     protected abstract Event getRequestEvent();
@@ -107,28 +105,19 @@ public abstract class BookingsFragment extends InjectedFragment
     protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
-        if (event.success)
+        List<BookingSummary> bookingSummaries = event.bookingSummaries;
+        initDateButtons(bookingSummaries);
+
+        bookingsContentView.setVisibility(View.VISIBLE);
+
+        if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
         {
-            List<BookingSummary> bookingSummaries = event.bookingSummaries;
-            initDateButtons(bookingSummaries);
-
-            bookingsContentView.setVisibility(View.VISIBLE);
-
-            if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
-            {
-                dateButtonMap.get(selectedDay).performClick();
-                scrollDatesToPreviousPosition();
-            }
-            else if (getDatesLayout().getChildCount() > 0)
-            {
-                getDatesLayout().getChildAt(0).performClick();
-            }
-
+            dateButtonMap.get(selectedDay).performClick();
+            scrollDatesToPreviousPosition();
         }
-        else
+        else if (getDatesLayout().getChildCount() > 0)
         {
-            errorText.setText(getErrorTextResId());
-            fetchErrorView.setVisibility(View.VISIBLE);
+            getDatesLayout().getChildAt(0).performClick();
         }
     }
 
