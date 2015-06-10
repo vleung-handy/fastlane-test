@@ -95,7 +95,8 @@ public class PortalWebViewClient extends WebViewClient
             return;
         }
 
-        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1";
+        //TODO: This code seems to be duplicated in the PortalWebViewFragment
+        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1&hide_pro_request=1";
         String urlWithParams = url + (url.contains("?") ? (url.endsWith("&") ? "" : "&") : "?") + endOfUrl;
         Log.d(PortalWebViewClient.class.getSimpleName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);
