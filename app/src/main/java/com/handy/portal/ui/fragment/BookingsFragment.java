@@ -51,9 +51,9 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract int getErrorTextResId();
 
-    protected abstract void requestBookings();
-
     protected abstract String getTrackingType();
+
+    protected abstract Event getRequestEvent();
 
     private int previousDatesScrollPosition;
 
@@ -77,11 +77,15 @@ public abstract class BookingsFragment extends InjectedFragment
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        fetchErrorView.setVisibility(View.GONE);
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         requestBookings();
     }
 
+    protected void requestBookings()
+    {
+        fetchErrorView.setVisibility(View.GONE);
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(getRequestEvent());
+    }
 
     //Event listeners
     //Can't subscribe in an abstract class?
