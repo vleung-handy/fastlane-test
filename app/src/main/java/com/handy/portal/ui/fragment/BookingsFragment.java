@@ -33,7 +33,7 @@ import butterknife.OnClick;
 
 public abstract class BookingsFragment extends InjectedFragment
 {
-     @InjectView(R.id.bookings_content)
+    @InjectView(R.id.bookings_content)
     protected View bookingsContentView;
 
     @InjectView(R.id.fetch_error_view)
