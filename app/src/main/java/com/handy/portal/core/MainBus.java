@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import com.handy.portal.data.Mixpanel;
 import com.squareup.otto.Bus;
+import com.squareup.otto.DeadEvent;
 
 final class MainBus extends Bus
 {
@@ -36,9 +37,11 @@ final class MainBus extends Bus
     @Override
     public void post(Object event)
     {
-        mixpanel.trackEvent(event); // side effect
+        if (!(event instanceof DeadEvent))
+        {
+            mixpanel.trackEvent(event); // side effect
+        }
         super.post(event);
     }
-
 
 }
