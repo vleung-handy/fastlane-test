@@ -4,12 +4,15 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
 
-/**
- * Created by cdavis on 5/21/15.
- */
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 public final class UIUtils
 {
     public static void setPaymentInfo(TextView textView, Booking.PaymentInfo paymentInfo, String format)
@@ -49,6 +52,11 @@ public final class UIUtils
             else
             {
                 bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_recurring_generic);
+
+            }
+            if (filterExtrasByMachineName(booking, Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES).size() > 0)
+            {
+                bookingFrequencyFormat += " \u22C5 " + parentContext.getString(R.string.supplies);
             }
         }
         else
@@ -68,4 +76,23 @@ public final class UIUtils
         }
         return bookingFrequencyFormat;
     }
+
+    private static Collection<Booking.ExtraInfoWrapper> filterExtrasByMachineName(Booking booking, final String machineName)
+    {
+        ArrayList<Booking.ExtraInfoWrapper> extrasInfo = booking.getExtrasInfo();
+        if (extrasInfo != null)
+        {
+            return Collections2.filter(extrasInfo, new Predicate<Booking.ExtraInfoWrapper>()
+            {
+                @Override
+                public boolean apply(Booking.ExtraInfoWrapper input)
+                {
+                    return machineName.equals(input.getExtraInfo().getMachineName());
+                }
+            });
+
+        }
+        return Collections.emptyList();
+    }
+
 }
