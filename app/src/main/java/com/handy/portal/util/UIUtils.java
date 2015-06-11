@@ -44,32 +44,18 @@ public final class UIUtils
         int frequency = booking.getFrequency();
         String bookingFrequencyFormat = null;
         //UK style regions show "One Time/Recurring" they do not specify the weeks interval
-        if(booking.getAddress().isUKRegion())
-        {
-            if (frequency == 0)
-            {
-                bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_non_recurring);
-            }
-            else
-            {
-                bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_recurring_generic);
 
-            }
+        if (frequency == 0)
+        {
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_non_recurring);
+        }
+        else if (frequency == 1)
+        {
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_every_week);
         }
         else
         {
-            if (frequency == 0)
-            {
-                bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_non_recurring);
-            }
-            else if (frequency == 1)
-            {
-                bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_every_week);
-            }
-            else
-            {
-                bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency);
-            }
+            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency);
         }
         return bookingFrequencyFormat;
     }
