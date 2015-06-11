@@ -33,13 +33,13 @@ public class BookingElementView
     protected TextView frequencyTextView;
 
     @InjectView(R.id.booking_entry_requested_indicator)
-    protected ImageView requestedIndicator;
+    protected ImageView requestedIndicatorCircle;
 
     @InjectView(R.id.booking_entry_partner_text)
     protected TextView partnerText;
 
     @InjectView(R.id.booking_entry_requested_indicator_layout)
-    protected LinearLayout requestedIndicatorLayout;
+    protected LinearLayout requestedIndicatorText;
 
     @InjectView(R.id.booking_entry_start_date_text)
     protected TextView startTimeText;
@@ -88,8 +88,8 @@ public class BookingElementView
         frequencyTextView.setText(frequencyInfo);
 
         //Requested Provider
-        requestedIndicator.setVisibility(isRequested ? View.VISIBLE : View.INVISIBLE);
-        requestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+        requestedIndicatorCircle.setVisibility(isRequested ? View.VISIBLE : View.INVISIBLE);
+        requestedIndicatorText.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
         //Partner
         setPartnerText(booking.getPartner());
@@ -112,6 +112,9 @@ public class BookingElementView
         {
             partnerText.setText(partner);
             partnerText.setVisibility(View.VISIBLE);
+
+            // if the partner text is present, "you're requested" should not show up
+            requestedIndicatorText.setVisibility(View.GONE);
         }
         else
         {
