@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
@@ -32,7 +34,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
     {
         BookingDetailsFragment.BookingStatus bookingStatus = (BookingDetailsFragment.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         boolean fullDetails = false;
-        if(bookingStatus == BookingDetailsFragment.BookingStatus.CLAIMED)
+        if (bookingStatus == BookingDetailsFragment.BookingStatus.CLAIMED)
         {
             fullDetails = true;
         }
@@ -61,22 +63,24 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             }
         }
 
-        //Special section for "Supplies" extras
-        if (booking.getExtrasInfo() != null && booking.getExtrasInfo().size() > 0)
+        //Special section for "Supplies" extras (UK only)
+        List<Booking.ExtraInfoWrapper> cleaningSuppliesExtrasInfo = booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES);
+        if (booking.getAddress().isUKRegion() && cleaningSuppliesExtrasInfo.size() > 0)
         {
             removeSection = false;
 
             BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
-            List<String> entries = new ArrayList<>();
 
-            for (int i = 0; i < booking.getExtrasInfo().size(); i++)
-            {
-                Booking.ExtraInfo extra = booking.getExtrasInfo().get(i).getExtraInfo();
-                if(extra.getMachineName().equals(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES))
-                {
-                    entries.add(extra.getName());
-                }
-            }
+            List<String> entries = new ArrayList<>(
+                    Collections2.transform(cleaningSuppliesExtrasInfo, new Function<Booking.ExtraInfoWrapper, String>()
+                    {
+                        @Override
+                        public String apply(Booking.ExtraInfoWrapper input)
+                        {
+                            return input.getExtraInfo().getName();
+                        }
+                    })
+            );
 
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
             sectionView.init(activity.getString(R.string.supplies), R.drawable.ic_details_extras, entries, true);
@@ -93,7 +97,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             for (int i = 0; i < booking.getExtrasInfo().size(); i++)
             {
                 Booking.ExtraInfo extra = booking.getExtrasInfo().get(i).getExtraInfo();
-                if(!extra.getMachineName().equals(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES))
+                if (!extra.getMachineName().equals(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES))
                 {
                     entries.add(extra.getName());
                 }
@@ -120,7 +124,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
         }
 
-        if(removeSection)
+        if (removeSection)
         {
             this.parentViewGroup.removeAllViews();
         }
