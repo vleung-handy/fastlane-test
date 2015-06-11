@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="65dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_inactive_with_shadow"
+    android:background="@drawable/date_button_background"
     android:orientation="vertical">
 
     <TextView

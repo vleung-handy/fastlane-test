@@ -3,6 +3,7 @@ package com.handy.portal.ui.element;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ import java.util.Date;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class DateButtonView extends LinearLayout
+public class DateButtonView extends LinearLayout implements Checkable
 {
     @InjectView(R.id.date_month_text)
     protected TextView monthText;
@@ -33,6 +34,8 @@ public class DateButtonView extends LinearLayout
     protected ImageView selectedDayIndicator;
 
     private static final String DATE_FORMAT = "MMM E d";
+
+    private boolean isChecked;
 
     public DateButtonView(final Context context)
     {
@@ -73,16 +76,35 @@ public class DateButtonView extends LinearLayout
         dayOfMonthText.setText(formattedDate[2]);
     }
 
+    private static int[] DRAWABLE_STATE_CHECKED = {android.R.attr.state_checked};
+
+    @Override
+    protected int[] onCreateDrawableState(int extraSpace)
+    {
+        int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
+        if (isChecked())
+        {
+            mergeDrawableStates(drawableState, DRAWABLE_STATE_CHECKED);
+        }
+        return drawableState;
+    }
+
+    @Override
     public void setChecked(boolean checked)
     {
+        isChecked = checked;
+        refreshDrawableState();
         selectedDayIndicator.setVisibility(checked ? View.VISIBLE : View.INVISIBLE);
-        if (checked)
-        {
-            setBackgroundColor(getResources().getColor(R.color.bg_active_grey));
-        }
-        else
-        {
-            setBackgroundResource(R.drawable.bg_inactive_with_shadow);
-        }
+    }
+
+    @Override
+    public boolean isChecked()
+    {
+        return isChecked;
+    }
+
+    @Override
+    public void toggle()
+    {
     }
 }
