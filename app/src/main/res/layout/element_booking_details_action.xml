@@ -38,9 +38,8 @@
         android:id="@+id/booking_details_frequency_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/booking_frequency_every_week"
-        android:textColor="@color/very_light_grey"
+        android:textColor="@color/subtitle_grey"
         android:textSize="16sp"
         android:layout_below="@+id/booking_details_location_text"
         />
@@ -49,23 +48,21 @@
         android:id="@+id/booking_details_payment_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextView.Bold"
         android:text="$30"
         android:layout_alignTop="@id/booking_details_location_text"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textSize="30sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"/>
+        android:textColor="@color/black"/>
     <TextView
         android:id="@+id/booking_details_payment_bonus_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="+$5 Bonus"
         android:layout_alignBottom="@+id/booking_details_frequency_text"
         android:layout_alignParentRight="true"
-        android:textColor="@color/very_light_grey"
+        style="@style/TextView.Bold"
+        android:textColor="@color/subtitle_grey"
         android:textSize="12sp"/>
 
     <Button

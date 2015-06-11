@@ -18,7 +18,7 @@
         android:id="@+id/booking_details_job_instructions_section_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        style="@style/TextView.Bold"
         android:layout_toRightOf="@id/booking_details_job_instructions_section_title_icon"
         android:layout_toEndOf="@id/booking_details_job_instructions_section_title_icon"
         android:textSize="16sp"
