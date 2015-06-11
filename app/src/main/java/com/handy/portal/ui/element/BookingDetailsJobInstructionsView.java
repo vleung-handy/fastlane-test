@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
@@ -71,16 +69,8 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
 
             BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
 
-            List<String> entries = new ArrayList<>(
-                    Collections2.transform(cleaningSuppliesExtrasInfo, new Function<Booking.ExtraInfoWrapper, String>()
-                    {
-                        @Override
-                        public String apply(Booking.ExtraInfoWrapper input)
-                        {
-                            return input.getExtraInfo().getName();
-                        }
-                    })
-            );
+            List<String> entries = new ArrayList<>();
+            entries.add(activity.getString(R.string.bring_cleaning_supplies));
 
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
             sectionView.init(activity.getString(R.string.supplies), R.drawable.ic_details_extras, entries, true);

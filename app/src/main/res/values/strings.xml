@@ -228,6 +228,7 @@
     <string name="return_to_available_jobs">"Return to Jobs"</string>
     <string name="job_claim_error">"Error Claiming Job"</string>
     <string name="job_claim_error_generic">"This job is no longer available"</string>
+    <string name="bring_cleaning_supplies">Bring cleaning supplies to this job</string>
 
 
 </resources>
