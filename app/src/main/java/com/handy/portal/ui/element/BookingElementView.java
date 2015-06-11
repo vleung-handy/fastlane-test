@@ -111,6 +111,7 @@ public class BookingElementView
         if (partner != null && partner.equalsIgnoreCase(PartnerNames.AIRBNB))
         {
             partnerText.setText(partner);
+            partnerText.setVisibility(View.VISIBLE);
         }
         else
         {
