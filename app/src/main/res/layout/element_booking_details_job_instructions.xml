@@ -30,8 +30,7 @@
         android:id="@+id/booking_details_job_instructions_list_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="25dp">
+        android:orientation="vertical">
     </LinearLayout>
 
 </LinearLayout>
