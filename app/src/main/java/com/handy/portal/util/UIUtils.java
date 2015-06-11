@@ -7,9 +7,6 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
 
-/**
- * Created by cdavis on 5/21/15.
- */
 public final class UIUtils
 {
     public static void setPaymentInfo(TextView textView, Booking.PaymentInfo paymentInfo, String format)
@@ -18,6 +15,7 @@ public final class UIUtils
         {
             String paymentString = TextUtils.formatPrice(paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol(), paymentInfo.getCurrencySuffix());
             textView.setText(String.format(format, paymentString));
+            textView.setVisibility(View.VISIBLE);
         }
         else
         {
@@ -25,13 +23,19 @@ public final class UIUtils
         }
     }
 
-    public static void setFrequencyInfo(Booking booking, TextView textView, Context parentContext)
+    public static String getFrequencyInfo(Booking booking, Context parentContext)
     {
         //Frequency
         //Valid values : 1,2,4 every X weeks, 0 = non-recurring
         int frequency = booking.getFrequency();
         String bookingFrequencyFormat = getFrequencyFormatString(booking, parentContext);
         String bookingFrequency = String.format(bookingFrequencyFormat, frequency);
+        return bookingFrequency;
+    }
+
+    public static void setFrequencyInfo(Booking booking, TextView textView, Context parentContext)
+    {
+        String bookingFrequency = getFrequencyInfo(booking, parentContext);
         textView.setText(bookingFrequency);
     }
 
@@ -49,6 +53,7 @@ public final class UIUtils
             else
             {
                 bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_recurring_generic);
+
             }
         }
         else
@@ -68,4 +73,5 @@ public final class UIUtils
         }
         return bookingFrequencyFormat;
     }
+
 }

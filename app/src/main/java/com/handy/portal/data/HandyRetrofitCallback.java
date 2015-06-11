@@ -1,6 +1,7 @@
 package com.handy.portal.data;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.data.DataManager.DataManagerError;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -78,16 +79,16 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
 
         if (obj.has("error") && (obj.optBoolean("error") || obj.optInt("error") == 1))
         {
-            final DataManager.DataManagerError err;
+            final DataManagerError err;
             final JSONArray messages = obj.optJSONArray("messages");
 
             if (messages != null && messages.length() > 0)
             {
-                err = new DataManager.DataManagerError(DataManager.Type.CLIENT,
+                err = new DataManagerError(DataManagerError.Type.CLIENT,
                         messages.isNull(0) ? null : messages.optString(0));
             } else
             {
-                err = new DataManager.DataManagerError(DataManager.Type.CLIENT);
+                err = new DataManagerError(DataManagerError.Type.CLIENT);
             }
 
             final JSONArray invalidInputs = obj.optJSONArray("invalid_inputs");
@@ -113,10 +114,10 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
     {
         if (callback != null)
         {
-            final DataManager.DataManagerError err;
+            final DataManagerError err;
             if (error.isNetworkError())
             {
-                err = new DataManager.DataManagerError(DataManager.Type.NETWORK);
+                err = new DataManagerError(DataManagerError.Type.NETWORK);
             }
             else
             {
@@ -138,31 +139,31 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
 
                         if (restError.message != null)
                         {
-                            err = new DataManager.DataManagerError(DataManager.Type.CLIENT, restError.message);
+                            err = new DataManagerError(DataManagerError.Type.CLIENT, restError.message);
                         }
                         else if ((messages = restError.messages) != null && messages.length > 0)
                         {
-                            err = new DataManager.DataManagerError(DataManager.Type.CLIENT, messages[0]);
+                            err = new DataManagerError(DataManagerError.Type.CLIENT, messages[0]);
                         }
                         else
                         {
-                            err = new DataManager.DataManagerError(DataManager.Type.CLIENT);
+                            err = new DataManagerError(DataManagerError.Type.CLIENT);
                         }
 
                         err.setInvalidInputs(restError.invalidInputs);
                     }
                     else
                     {
-                        err = new DataManager.DataManagerError(DataManager.Type.CLIENT);
+                        err = new DataManagerError(DataManagerError.Type.CLIENT);
                     }
                 }
                 else if (resp > 500 && resp < 600)
                 {
-                    err = new DataManager.DataManagerError(DataManager.Type.SERVER);
+                    err = new DataManagerError(DataManagerError.Type.SERVER);
                 }
                 else
                 {
-                    err = new DataManager.DataManagerError(DataManager.Type.OTHER);
+                    err = new DataManagerError(DataManagerError.Type.OTHER);
                 }
             }
             callback.onError(err);

@@ -30,13 +30,6 @@ public class ScheduledBookingsFragment extends BookingsFragment
         return scheduledJobsDatesScrollViewLayout;
     }
 
-    // TODO: Implement
-    @Override
-    protected int getErrorTextResId()
-    {
-        return 0;
-    }
-
     protected int getFragmentResourceId()
     {
         return (R.layout.fragment_scheduled_bookings);

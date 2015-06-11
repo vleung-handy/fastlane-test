@@ -5,19 +5,11 @@ import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
-import com.squareup.otto.Bus;
 
 import java.util.List;
 
 public abstract class DataManager
 {
-    private final Bus bus;
-
-    DataManager(final Bus bus)
-    {
-        this.bus = bus;
-    }
-
     //Portal
     public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
 
@@ -48,13 +40,13 @@ public abstract class DataManager
         void onResponse(T response);
     }
 
-    enum Type
-    {
-        OTHER, SERVER, CLIENT, NETWORK
-    }
-
     public static class DataManagerError
     {
+        public enum Type
+        {
+            OTHER, SERVER, CLIENT, NETWORK
+        }
+
         private final Type type;
         private final String message;
         private String[] invalidInputs;
@@ -86,7 +78,7 @@ public abstract class DataManager
             return message;
         }
 
-        final Type getType()
+        public final Type getType()
         {
             return type;
         }

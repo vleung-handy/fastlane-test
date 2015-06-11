@@ -146,11 +146,10 @@ public final class ApplicationModule
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
-                                         final Bus bus,
                                          final SecurePreferences prefs
                                         )
     {
-        return new BaseDataManager(service, endpoint, bus, prefs);
+        return new BaseDataManager(service, endpoint, prefs);
     }
 
     @Provides

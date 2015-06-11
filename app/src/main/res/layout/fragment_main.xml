@@ -99,8 +99,7 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:indeterminateDrawable="@drawable/progress_ring"/>
+                android:indeterminate="true"/>
     </com.handy.portal.ui.element.LoadingOverlayView>
 
 </RelativeLayout>
