@@ -113,6 +113,16 @@
         <item name="android:textColor">@drawable/button_text_white</item>
     </style>
 
+    <style name="Button.Purple">
+        <item name="android:background">@drawable/button_purple</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
+    </style>
+
+    <style name="Button.Purple.Round">
+        <item name="android:background">@drawable/button_purple_round</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
+    </style>
+
     <style name="Button.SalmonRound">
         <item name="android:textColor">@drawable/button_text_white</item>
         <item name="android:background">@drawable/button_salmon_round</item>

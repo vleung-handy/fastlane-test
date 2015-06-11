@@ -82,8 +82,8 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
         //Color
         switch(bookingStatus)
         {
-            case AVAILABLE: { button.setBackgroundColor(activity.getResources().getColor(R.color.handy_green)); } break;
-            case CLAIMED: { button.setBackgroundColor(activity.getResources().getColor(R.color.handy_purple)); } break;
+            case AVAILABLE: { button.setBackground(activity.getResources().getDrawable(R.drawable.button_green_round)); } break;
+            case CLAIMED: { button.setBackground(activity.getResources().getDrawable(R.drawable.button_purple_round)); } break;
         }
     }
 
