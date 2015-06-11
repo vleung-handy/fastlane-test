@@ -63,9 +63,10 @@
 -keepattributes SourceFile,LineNumberTable
 
 #GSON
--keepclassmembers class com.handybook.handybook.** {
+-keepclassmembers class com.handy.portal.** {
     <fields>;
 }
+-dontwarn com.google.common.**
 
 #Urban Airship
 -keepnames class * implements android.os.Parcelable {
