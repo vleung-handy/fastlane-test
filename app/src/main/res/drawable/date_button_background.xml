@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <color android:color="@color/bg_active_grey"/>
+    </item>
+    <item android:state_checked="false">
+        <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/shadow_grey"/>
+                </shape>
+            </item>
+            <item android:bottom="2dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/bg_inactive_grey"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

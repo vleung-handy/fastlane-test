@@ -1,0 +1,117 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".BookingDetailsFragment">
+
+    <LinearLayout
+        android:id="@+id/booking_details_banner_layout"
+        style="@style/Banner"
+        android:paddingLeft="0dp"
+        android:paddingStart="0dp"
+        android:background="@color/handy_blue"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/booking_details_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:background="@color/transparent"
+            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"/>
+
+        <TextView
+            android:id="@+id/booking_details_banner_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/available_job"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/booking_details_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <ScrollView
+            android:id="@+id/booking_details_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <LinearLayout
+                android:id="@+id/wrapper_for_details_disclaimer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:id="@+id/booking_details_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/booking_details_map_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:orientation="vertical"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/booking_details_date_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:orientation="horizontal">
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/booking_details_action_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp">
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/booking_details_contact_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/booking_details_job_instructions_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/booking_details_full_details_notice_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/full_details_after_claim"
+                    android:textColor="@color/black_pressed"
+                    android:textSize="14sp"
+                    android:visibility="invisible"/>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

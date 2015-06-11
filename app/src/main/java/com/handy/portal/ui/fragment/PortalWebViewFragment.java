@@ -10,8 +10,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.PortalWebViewClient;
 import com.handy.portal.data.HandyRetrofitEndpoint;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -25,7 +29,8 @@ public class PortalWebViewFragment extends InjectedFragment
         JOBS("available"),
         SCHEDULE("future"),
         PROFILE("profile"),
-        HELP("help");
+        HELP("help"),
+        DETAILS("details");
 
         private String value;
 
@@ -40,7 +45,7 @@ public class PortalWebViewFragment extends InjectedFragment
         }
     }
 
-    @InjectView(R.id.web_view_portal)
+    @InjectView(R.id.portal_web_view)
     WebView webView;
 
     @Inject
@@ -56,10 +61,28 @@ public class PortalWebViewFragment extends InjectedFragment
 
         initWebView();
 
+        if(validateRequiredArguments())
+        {
+            openPortalUrl(getArguments().getString(BundleKeys.TARGET_URL));
+        }
+
         return view;
     }
 
+    @Override
+    protected List<String> requiredArguments()
+    {
+        List<String> requiredArguments = new ArrayList<>();
+        requiredArguments.add(BundleKeys.TARGET_URL);
+        return requiredArguments;
+    }
+
     public void openPortalUrl(Target target)
+    {
+        openPortalUrl(target.getValue());
+    }
+
+    public void openPortalUrl(String target)
     {
         webView.setWebChromeClient(new WebChromeClient()
         {
@@ -69,7 +92,7 @@ public class PortalWebViewFragment extends InjectedFragment
                 callback.invoke(origin, true, false);
             }
         });
-        String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target.getValue();
+        String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target;
         loadUrlWithFromAppParam(url);
     }
 
@@ -82,7 +105,8 @@ public class PortalWebViewFragment extends InjectedFragment
 
     private void loadUrlWithFromAppParam(String url)
     {
-        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1";
+
+        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1&hide_pro_request=1";
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
         Log.d(PortalWebViewFragment.class.getSimpleName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);

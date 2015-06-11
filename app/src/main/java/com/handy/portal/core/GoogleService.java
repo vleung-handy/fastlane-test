@@ -40,7 +40,7 @@ public class GoogleService
         return new GoogleCloudMessaging();
     }
 
-    private boolean checkPlayServices(Activity targetActivity)
+    public boolean checkPlayServices(Activity targetActivity)
     {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(targetActivity);
         if (resultCode != ConnectionResult.SUCCESS)
@@ -48,7 +48,8 @@ public class GoogleService
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode))
             {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, targetActivity, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else
+            }
+            else
             {
                 targetActivity.finish();
             }

@@ -10,6 +10,7 @@ import android.util.TypedValue;
 import android.view.TouchDelegate;
 import android.view.View;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public final class Utils
@@ -51,6 +52,17 @@ public final class Utils
 
         return (thenYear == time.year) && (thenMonth == time.month)
                 && (thenMonthDay == time.monthDay);
+    }
+
+    public static Date getDateWithoutTime(final Date date)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 
     public static void extendHitArea(final View view, final View parent, final int extra)

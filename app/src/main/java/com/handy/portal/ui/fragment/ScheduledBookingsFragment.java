@@ -1,11 +1,9 @@
 package com.handy.portal.ui.fragment;
 
-import android.view.View;
-import android.widget.AdapterView;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.form.BookingListView;
 import com.squareup.otto.Subscribe;
@@ -18,21 +16,18 @@ import butterknife.InjectView;
  */
 public class ScheduledBookingsFragment extends BookingsFragment
 {
+    @InjectView(R.id.scheduled_jobs_requested_list_view)
+    protected BookingListView scheduledJobsRequestedListView;
 
-    @InjectView(R.id.scheduled_jobs_list_view)
-    protected BookingListView scheduledJobsListView;
+    @InjectView(R.id.scheduled_jobs_unrequested_list_view)
+    protected BookingListView scheduledJobsUnrequestedListView;
 
     @InjectView(R.id.scheduled_bookings_dates_scroll_view_layout)
-    protected LinearLayout datesScrollViewLayout;
-
-    protected BookingListView getBookingListView()
-    {
-        return scheduledJobsListView;
-    }
+    protected LinearLayout scheduledJobsDatesScrollViewLayout;
 
     protected LinearLayout getDatesLayout()
     {
-        return datesScrollViewLayout;
+        return scheduledJobsDatesScrollViewLayout;
     }
 
     protected int getFragmentResourceId()
@@ -40,23 +35,29 @@ public class ScheduledBookingsFragment extends BookingsFragment
         return (R.layout.fragment_scheduled_bookings);
     }
 
-    protected void requestBookings()
+    @Override
+    protected BookingListView getBookingListView()
     {
-        bus.post(new Event.RequestScheduledBookingsEvent());
+        return scheduledJobsUnrequestedListView;
     }
 
-    protected void initListClickListener()
+    // TODO: Implement
+    @Override
+    protected ViewGroup getNoBookingsView()
     {
-        scheduledJobsListView.setOnItemClickListener(
-                new AdapterView.OnItemClickListener()
-                {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
-                    {
-                        Booking booking = (Booking) adapter.getItemAtPosition(position);
-                    }
-                }
-        );
+        return null;
+    }
+
+    @Override
+    protected Event getRequestEvent()
+    {
+        return new Event.RequestScheduledBookingsEvent();
+    }
+
+    @Override
+    protected String getTrackingType()
+    {
+        return "scheduled job";
     }
 
     @Subscribe

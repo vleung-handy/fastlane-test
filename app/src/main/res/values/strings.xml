@@ -26,6 +26,26 @@
     <string name="login_help_email_subject">Change Pro Phone Number</string>
     <string name="login_help_choose_email_client">Choose an Email Client</string>
 
+    <string name="error_connectivity">The server could not be reached, please ensure you have a data connection and try again</string>
+
+    <string name="claim">Claim</string>
+    <string name="claimed">Claimed</string>
+    <string name="claimed_job">Claimed Job</string>
+    <string name="claim_job">Claim Job</string>
+    <string name="claim_series">Claim Series</string>
+    <string name="on_my_way">On My Way</string>
+    <string name="disclaimer_series">Claiming will add all instances to your schedule.</string>
+    <string name="disclaimer_cancel">You can remove jobs or series with 24 hour notice.</string>
+
+    <string name="booking_action_error_server">The server could not be reached, please try again</string>
+    <string name="booking_action_error_not_available">That job was not available to claim, please select another job</string>
+
+    <string name="customer_details">Customer Details</string>
+    <string name="customer_request">Customer Request</string>
+
+    <string name="job_claim_success">Success! Job claimed!</string>
+    <string name="series_claim_success">Success! Series claimed!</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>
@@ -67,6 +87,7 @@
     <string name="professional">Professional</string>
     <string name="next">Next</string>
     <string name="location">Location</string>
+    <string name="airbnb">AIRBNB</string>
     <string name="where_located">Okay, where are you located?</string>
     <string name="zip_code">ZIP Code</string>
     <string name="details">Details</string>
@@ -91,6 +112,7 @@
     <string name="peak_price_info">Due to high demand, peak pricing is in \neffect at this time. If you’d like, you can \npick a different time.</string>
     <string name="peak_price_info_recur">Due to high demand, \nwe don’t have availability at that time. \nPlease select a different time.</string>
     <string name="unavailable">Unavailable</string>
+    <string name="unavailable_job">Unavailable Job</string>
     <string name="confirmation">Confirmation</string>
     <string name="payment_confirmed">Your payment has been confirmed.\nHow will your professional get in?</string>
     <string name="will_be_home">I’ll be home</string>
@@ -167,7 +189,7 @@
     <string name="contact_form_hint">Tell us how we can help</string>
     <string name="please_login">Please log in</string>
     <string name="back">Back</string>
-    <string name="contact_received">Message sent! \nWe\'ll follow up shortly.</string>
+    <string name="contact_received">Message sent! \nWe\u2019ll follow up shortly.</string>
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
@@ -186,4 +208,27 @@
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
+    <string name="available_jobs">Available Jobs</string>
+    <string name="available_job">Available Job</string>
+    <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
+    <string name="payment_value">%s</string>
+    <string name="bonus_payment_value">+ %s BONUS</string>
+    <string name="booking_frequency">Every %1$d weeks</string>
+    <string name="booking_frequency_every_week">Every week</string>
+    <string name="booking_frequency_non_recurring">One Time Only</string>
+    <string name="booking_frequency_recurring_generic">Recurring</string>
+    <string name="supplies">Supplies</string>
+    <string name="job_instructions">JOB INSTRUCTIONS</string>
+    <string name="full_details_after_claim">Additional details will be displayed after claiming</string>
+    <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
+    <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
+    <string name="error_fetching_connectivity_issue">Oops! There was an error with your internet connection</string>
+    <string name="try_again">Try Again</string>
+
+    <string name="return_to_available_jobs">"Return to Jobs"</string>
+    <string name="job_claim_error">"Error Claiming Job"</string>
+    <string name="job_claim_error_generic">"This job is no longer available"</string>
+    <string name="bring_cleaning_supplies">Bring cleaning supplies to this job</string>
+
+
 </resources>

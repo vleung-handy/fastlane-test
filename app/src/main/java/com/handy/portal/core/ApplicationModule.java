@@ -9,21 +9,22 @@ import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.BaseDataManagerErrorHandler;
+import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.EnvironmentSwitcher;
+import com.handy.portal.data.EnvironmentManager;
 import com.handy.portal.data.HandyRetrofitEndpoint;
 import com.handy.portal.data.HandyRetrofitFluidEndpoint;
 import com.handy.portal.data.HandyRetrofitService;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.data.PropertiesReader;
-import com.handy.portal.data.SecurePreferences;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
@@ -31,6 +32,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -47,6 +49,7 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
+        BookingDetailsFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
         PortalWebViewFragment.class,
@@ -76,26 +79,33 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentSwitcher provideEnvironmentSwitcher()
+    final BuildConfigWrapper provideBuildConfigWrapper()
     {
-        return new EnvironmentSwitcher();
+        return new BuildConfigWrapper();
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEnpoint(final EnvironmentSwitcher environmentSwitcher)
+    final EnvironmentManager provideEnvironmentManager()
     {
-        if (BuildConfig.BUILD_TYPE.equals("debug"))
+        return new EnvironmentManager();
+    }
+
+    @Provides
+    @Singleton
+    final HandyRetrofitEndpoint provideHandyEnpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
+    {
+        if (buildConfigWrapper.isDebug())
         {
-            return new HandyRetrofitFluidEndpoint(context, environmentSwitcher);
+            return new HandyRetrofitFluidEndpoint(context, environmentManager);
         }
         return new HandyRetrofitEndpoint(context);
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitService provideHandyService(
-            final HandyRetrofitEndpoint endpoint, final UserManager userManager)
+    final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
+            final HandyRetrofitEndpoint endpoint)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -121,29 +131,12 @@ public final class ApplicationModule
                         request.addQueryParam("app_device_id", getDeviceId());
                         request.addQueryParam("app_device_model", getDeviceName());
                         request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
-
-                        final User user = userManager.getCurrentUser();
-                        if (user != null) request.addQueryParam("app_user_id", user.getId());
                     }
                 }).setConverter(new GsonConverter(new GsonBuilder()
                         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                        .setExclusionStrategies(BookingRequest.getExclusionStrategy())
-                        .registerTypeAdapter(BookingRequest.class,
-                                new BookingRequest.BookingRequestSerializer())
-                        .setExclusionStrategies(BookingQuote.getExclusionStrategy())
-                        .registerTypeAdapter(BookingQuote.class,
-                                new BookingQuote.BookingQuoteSerializer())
-                        .setExclusionStrategies(BookingPostInfo.getExclusionStrategy())
-                        .registerTypeAdapter(BookingPostInfo.class,
-                                new BookingPostInfo.BookingPostInfoSerializer())
-                        .setExclusionStrategies(BookingTransaction.getExclusionStrategy())
-                        .registerTypeAdapter(BookingTransaction.class,
-                                new BookingTransaction.BookingTransactionSerializer())
-                        .setExclusionStrategies(User.getExclusionStrategy())
-                        .registerTypeAdapter(User.class, new User.UserSerializer())
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
-        if (BuildConfig.BUILD_TYPE.equals("debug"))
+        if (buildConfigWrapper.isDebug())
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
 
         return restAdapter.create(HandyRetrofitService.class);
@@ -153,10 +146,10 @@ public final class ApplicationModule
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
-                                         final Bus bus,
-                                         final SecurePreferences prefs)
+                                         final SecurePreferences prefs
+                                        )
     {
-        return new BaseDataManager(service, endpoint, bus, prefs);
+        return new BaseDataManager(service, endpoint, prefs);
     }
 
     @Provides
@@ -167,43 +160,32 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final Bus provideBus()
+    final Bus provideBus(final Mixpanel mixpanel)
     {
-        return new MainBus();
+        return new MainBus(mixpanel);
     }
 
     @Provides
     @Singleton
     final SecurePreferences providePrefs()
     {
-        return new SecurePreferences(context, null,
-                configs.getProperty("secure_prefs_key"), true);
+        return new SecurePreferences(context,
+                configs.getProperty("secure_prefs_key"), "prefs.xml");
     }
 
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final Bus bus,
-                                               final SecurePreferences prefs,
                                                final DataManager dataManager)
     {
-        return new BookingManager(bus, prefs, dataManager);
+        return new BookingManager(bus, dataManager);
     }
 
     @Provides
     @Singleton
-    final UserManager provideUserManager(final Bus bus,
-                                         final SecurePreferences prefs)
+    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final  DataManager dataManager)
     {
-        return new UserManager(bus, prefs);
-    }
-
-
-    @Provides
-    @Singleton
-    final LoginManager provideLoginManager(final Bus bus,
-                                           final DataManager dataManager)
-    {
-        return new LoginManager(bus, dataManager);
+        return new LoginManager(bus, prefs, dataManager);
     }
 
     @Provides
@@ -220,18 +202,17 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final Mixpanel provideMixpanel(final Bus bus)
+    final Mixpanel provideMixpanel()
     {
-        return new Mixpanel(context, bus);
+        return new Mixpanel(context);
     }
 
     @Provides
     @Singleton
-    final NavigationManager provideNavigationManager(final UserManager userManager,
-                                                     final DataManager dataManager,
+    final NavigationManager provideNavigationManager(final DataManager dataManager,
                                                      final DataManagerErrorHandler dataManagerErrorHandler)
     {
-        return new NavigationManager(this.context, userManager, dataManager, dataManagerErrorHandler);
+        return new NavigationManager(this.context, dataManager, dataManagerErrorHandler);
     }
 
     @Provides

@@ -2,37 +2,17 @@ package com.handy.portal.data;
 
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
-import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.PinRequestDetails;
-import com.handy.portal.core.Service;
-import com.handy.portal.core.User;
+import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
-import com.squareup.otto.Bus;
 
 import java.util.List;
 
 public abstract class DataManager
 {
-    private final Bus bus;
-
-    DataManager(final Bus bus)
-    {
-        this.bus = bus;
-    }
-
-    public abstract void getServices(CacheResponse<List<Service>> cache, Callback<List<Service>> cb);
-
-    public abstract void authUser(String email, String password, Callback<User> cb);
-
-    public abstract void getUser(String userId, String authToken, Callback<User> cb);
-
-    public abstract void getUser(String email, Callback<String> cb);
-
-    public abstract void updateUser(User user, Callback<User> cb);
-
+    //Portal
     public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
 
-    //Portal
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
 
     public abstract void getScheduledBookings(Callback<List<BookingSummary>> cb);
@@ -60,13 +40,13 @@ public abstract class DataManager
         void onResponse(T response);
     }
 
-    enum Type
+    public static class DataManagerError
     {
-        OTHER, SERVER, CLIENT, NETWORK
-    }
+        public enum Type
+        {
+            OTHER, SERVER, CLIENT, NETWORK
+        }
 
-    public static final class DataManagerError
-    {
         private final Type type;
         private final String message;
         private String[] invalidInputs;
@@ -93,12 +73,12 @@ public abstract class DataManager
             this.invalidInputs = inputs;
         }
 
-        final String getMessage()
+        public final String getMessage()
         {
             return message;
         }
 
-        final Type getType()
+        public final Type getType()
         {
             return type;
         }

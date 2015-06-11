@@ -15,25 +15,25 @@ import javax.inject.Inject;
 import dagger.ObjectGraph;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public final class BaseApplication extends Application
+public class BaseApplication extends Application
 {
-    private ObjectGraph graph;
+    protected ObjectGraph graph;
     private int started;
     private boolean savedInstance;
 
     @Inject
-    UserManager userManager;
-    @Inject
     DataManager dataManager;
     @Inject
     Mixpanel mixpanel;
+    @Inject
+    GoogleService googleService;
 
     @Override
     public final void onCreate()
     {
         super.onCreate();
-        Crashlytics.start(this);
-        graph = ObjectGraph.create(new ApplicationModule(this));
+        startCrashlytics();
+        createObjectGraph();
         inject(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -86,7 +86,6 @@ public final class BaseApplication extends Application
                 {
                     if (!savedInstance) mixpanel.trackEventAppOpened(true);
                     else mixpanel.trackEventAppOpened(false);
-                    updateUser();
                 }
             }
 
@@ -118,30 +117,19 @@ public final class BaseApplication extends Application
         });
     }
 
+    protected void startCrashlytics()
+    {
+        Crashlytics.start(this);
+    }
+
+    protected void createObjectGraph()
+    {
+        graph = ObjectGraph.create(new ApplicationModule(this));
+    }
+
     public final void inject(final Object object)
     {
         graph.inject(object);
     }
 
-    private void updateUser()
-    {
-        final User user = userManager.getCurrentUser();
-
-        if (user != null)
-        {
-            dataManager.getUser(user.getId(), user.getAuthToken(), new DataManager.Callback<User>()
-            {
-                @Override
-                public void onSuccess(final User updatedUser)
-                {
-                    userManager.setCurrentUser(updatedUser);
-                }
-
-                @Override
-                public void onError(final DataManager.DataManagerError error)
-                {
-                }
-            });
-        }
-    }
 }

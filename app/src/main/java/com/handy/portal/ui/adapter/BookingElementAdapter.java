@@ -10,9 +10,6 @@ import com.handy.portal.ui.element.BookingElementMediator;
 
 import java.util.List;
 
-/**
- * Created by cdavis on 5/6/15.
- */
 public class BookingElementAdapter extends ArrayAdapter<Booking>
 {
     public BookingElementAdapter(Context context, List<Booking> bookings)

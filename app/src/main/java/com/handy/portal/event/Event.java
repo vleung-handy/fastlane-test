@@ -1,27 +1,34 @@
 package com.handy.portal.event;
 
+import android.os.Bundle;
+
+import com.handy.portal.annotations.Track;
+import com.handy.portal.annotations.TrackField;
+import com.handy.portal.consts.MainViewTab;
+import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.UpdateDetails;
-import com.handy.portal.core.booking.BookingCalendarDay;
+import com.handy.portal.core.booking.Booking;
+import com.handy.portal.data.DataManager;
 
-import java.util.Map;
+import java.util.Date;
+import java.util.List;
 
-/**
- * Created by cdavis on 5/6/15.
- */
 public abstract class Event
 {
     public boolean success;
+    public String errorMessage;
 
     public static class BookingsRetrievedEvent extends Event
     {
-        public Map<BookingCalendarDay, BookingSummary> bookingSummaries;
+        public List<BookingSummary> bookingSummaries;
 
-        public BookingsRetrievedEvent(Map<BookingCalendarDay, BookingSummary> bookingSummaries)
+        public BookingsRetrievedEvent(List<BookingSummary> bookingSummaries, boolean success)
         {
             this.bookingSummaries = bookingSummaries;
+            this.success = success;
         }
     }
 
@@ -33,7 +40,9 @@ public abstract class Event
     {
         public int versionCode = 0;
         public String appFlavor = "";
-        public UpdateCheckEvent(String appFlavor, int versionCode) {
+
+        public UpdateCheckEvent(String appFlavor, int versionCode)
+        {
             this.versionCode = versionCode;
             this.appFlavor = appFlavor;
         }
@@ -42,7 +51,9 @@ public abstract class Event
     public static class UpdateCheckRequestReceivedEvent extends Event
     {
         public UpdateDetails updateDetails;
-        public UpdateCheckRequestReceivedEvent(UpdateDetails updateDetails, boolean success) {
+
+        public UpdateCheckRequestReceivedEvent(UpdateDetails updateDetails, boolean success)
+        {
             this.updateDetails = updateDetails;
             this.success = success;
         }
@@ -62,6 +73,18 @@ public abstract class Event
         }
     }
 
+    public static class BookingsDetailsRetrievedEvent extends Event
+    {
+        public Booking booking;
+
+        public BookingsDetailsRetrievedEvent(Booking booking, boolean success)
+        {
+            this.booking = booking;
+            this.success = success;
+        }
+    }
+
+    @Track("portal login submitted - phone number")
     public static class RequestPinCodeEvent extends Event
     {
         public String phoneNumber;
@@ -70,11 +93,38 @@ public abstract class Event
         {
             this.phoneNumber = phoneNumber;
         }
+
+    }
+
+    public static class NavigateToTabEvent extends Event
+    {
+        public MainViewTab targetTab;
+        public Bundle arguments;
+        public TransitionStyle transitionStyleOverride;
+
+        public NavigateToTabEvent(MainViewTab targetTab)
+        {
+            this.targetTab = targetTab;
+        }
+
+        public NavigateToTabEvent(MainViewTab targetTab, Bundle arguments)
+        {
+            this.targetTab = targetTab;
+            this.arguments = arguments;
+        }
+
+        public NavigateToTabEvent(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyleOverride)
+        {
+            this.targetTab = targetTab;
+            this.arguments = arguments;
+            this.transitionStyleOverride = transitionStyleOverride;
+        }
     }
 
     public static class PinCodeRequestReceivedEvent extends Event
     {
         public PinRequestDetails pinRequestDetails;
+
         public PinCodeRequestReceivedEvent(PinRequestDetails pinRequestDetails, boolean success)
         {
             this.pinRequestDetails = pinRequestDetails;
@@ -82,6 +132,7 @@ public abstract class Event
         }
     }
 
+    @Track("portal login submitted - pin code")
     public static class RequestLoginEvent extends Event
     {
         public String phoneNumber;
@@ -105,24 +156,121 @@ public abstract class Event
         }
     }
 
-    public static class LoginError extends Event {
-        public String source = "";
+    public static class RequestClaimJobEvent extends Event
+    {
+        public String bookingId;
 
-        public LoginError(String source) {
+        public RequestClaimJobEvent(String bookingId)
+        {
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class ClaimJobRequestReceivedEvent extends Event
+    {
+        public Booking booking;
+
+        public ClaimJobRequestReceivedEvent(Booking booking, boolean success)
+        {
+            this.booking = booking;
+            this.success = success;
+        }
+
+        public ClaimJobRequestReceivedEvent(Booking booking, boolean success, String errorMessage)
+        {
+            this.booking = booking;
+            this.success = success;
+            this.errorMessage = errorMessage;
+        }
+    }
+
+    @Track("portal login error")
+    public static class LoginError extends Event
+    {
+        @TrackField("source")
+        private String source;
+
+        public LoginError(String source)
+        {
             this.source = source;
         }
     }
 
-    public static class Navigation extends Event {
-        public String page = "";
+    @Track("portal navigation")
+    public static class Navigation extends Event
+    {
+        @TrackField("page")
+        private String page;
 
-        public Navigation(String page) {
+        public Navigation(String page)
+        {
             this.page = page;
         }
     }
 
+    public static class SetLoadingOverlayVisibilityEvent extends Event
+    {
+        public boolean isVisible;
+        public SetLoadingOverlayVisibilityEvent(boolean isVisible)
+        {
+            this.isVisible = isVisible;
+        }
+    }
 
+    @Track("date scroller date selected")
+    public static class DateClickedEvent extends Event
+    {
+        @TrackField("type")
+        private String type;
+        @TrackField("date")
+        private Date date;
 
+        public DateClickedEvent(String type, Date date)
+        {
+            this.type = type;
+            this.date = date;
+        }
+    }
+
+    @Track("booking detail selected")
+    public static class BookingSelectedEvent extends Event
+    {
+        @TrackField("type")
+        private String type;
+        @TrackField("booking_id")
+        private String bookingId;
+
+        public BookingSelectedEvent(String type, String bookingId)
+        {
+            this.type = type;
+            this.bookingId = bookingId;
+        }
+    }
+
+    @Track("claim job")
+    public static class ClaimJobSuccessEvent extends Event
+    {
+    }
+
+    @Track("claim job error")
+    public static class ClaimJobErrorEvent extends Event
+    {
+        @TrackField("message")
+        private String message;
+
+        public ClaimJobErrorEvent(String message)
+        {
+            this.message = message;
+        }
+    }
+
+    public static class RequestAvailableBookingsErrorEvent
+    {
+        public final DataManager.DataManagerError error;
+
+        public RequestAvailableBookingsErrorEvent(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 }
-
-

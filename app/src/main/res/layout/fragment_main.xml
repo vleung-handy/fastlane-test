@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivityFragment">
+    tools:context=".MainActivityFragment"
+    >
 
     <FrameLayout
         android:id="@+id/main_container"
@@ -49,5 +50,56 @@
             android:text="@string/tab_help" />
 
     </RadioGroup>
+
+    <com.handy.portal.ui.element.LoadingOverlayView
+        android:id="@+id/loading_overlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white_trans"
+        android:visibility="gone"
+        android:clickable="true"
+        android:gravity="center">
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
+    </com.handy.portal.ui.element.LoadingOverlayView>
+
+    <com.handy.portal.ui.element.TransitionOverlayView
+        android:id="@+id/transition_overlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/dark_grey"
+        android:visibility="gone"
+        android:clickable="false"
+        >
+        <ImageView
+            android:id="@+id/transition_overlay_image_backing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:src="@drawable/circle_green"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"/>
+        <ImageView
+            android:id="@+id/transition_overlay_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_check"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:id="@+id/transition_overlay_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/job_claim_success"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:layout_below="@id/transition_overlay_image"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"/>
+    </com.handy.portal.ui.element.TransitionOverlayView>
 
 </RelativeLayout>

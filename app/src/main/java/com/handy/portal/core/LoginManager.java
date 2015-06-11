@@ -2,34 +2,33 @@ package com.handy.portal.core;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
+import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import javax.inject.Inject;
 
-public final class LoginManager implements Observer
+public class LoginManager
 {
+    public static final String USER_CREDENTIALS_ID_KEY = "user_credentials_id";
     private final Bus bus;
+    private SecurePreferences prefs;
     private DataManager dataManager;
 
     @Inject
-    LoginManager(final Bus bus, final DataManager dataManager)
+    LoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
     {
         this.bus = bus;
-        this.bus.register(this);
+        this.prefs = prefs;
         this.dataManager = dataManager;
+        this.bus.register(this);
     }
 
-    @Override
-    public void update(final Observable observable, final Object data)
+    //Dagger doesn't have a good way to resolve cyclical injection dependencies from what I can tell
+    //Hopefully there is some elegant solution that can be found with more googling
+    public void setDataManager(DataManager dataManager)
     {
-        if (observable instanceof User)
-        {
-
-        }
+        this.dataManager = dataManager;
     }
 
     @Subscribe
@@ -60,17 +59,22 @@ public final class LoginManager implements Observer
                     @Override
                     public void onSuccess(final LoginDetails loginDetails)
                     {
+                        saveLoginDetails(loginDetails);
                         bus.post(new Event.LoginRequestReceivedEvent(loginDetails, true));
-                        //TODO: Set our local user based on the return value? Need to wait for the api version that sends back userId
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.LoginRequestReceivedEvent(new LoginDetails(), false));
+                        bus.post(new Event.LoginRequestReceivedEvent(null, false));
                     }
                 }
         );
+    }
+
+    private void saveLoginDetails(final LoginDetails loginDetails)
+    {
+        prefs.edit().putString(USER_CREDENTIALS_ID_KEY, loginDetails.getUserCredentialsId()).apply();
     }
 
 }

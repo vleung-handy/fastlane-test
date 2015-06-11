@@ -13,13 +13,13 @@ import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
 import com.handy.portal.core.UpdateManager;
-import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
+import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.widget.ProgressDialog;
-import com.handy.portal.util.FlavorUtils;
+import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -45,8 +45,6 @@ public abstract class BaseActivity extends FragmentActivity
     @Inject
     Bus bus;
     @Inject
-    UserManager userManager;
-    @Inject
     DataManager dataManager;
     @Inject
     DataManagerErrorHandler dataManagerErrorHandler;
@@ -58,28 +56,20 @@ public abstract class BaseActivity extends FragmentActivity
     LoginManager loginManager;
     @Inject
     UpdateManager updateManager;
-
+    @Inject
+    SecurePreferences prefs;
+    @Inject
+    BuildConfigWrapper buildConfigWrapper;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-
-        //Crashlytics.start(this);
-        //Yozio.initialize(this);
-
         ((BaseApplication) this.getApplication()).inject(this);
-
-//        if (!BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_STAGE)
-//                && !BuildConfig.BUILD_TYPE.equals("debug")) {
-//            setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//            //Yozio.YOZIO_ENABLE_LOGGING = false;
-//        }
 
         final Intent intent = getIntent();
         final Uri data = intent.getData();
-
 
         busEventListener = new Object()
         {
@@ -95,11 +85,6 @@ public abstract class BaseActivity extends FragmentActivity
     protected void onStart()
     {
         super.onStart();
-
-//        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
-//            PlayServicesUtils.handleAnyPlayServicesError(this);
-//        }
-
         allowCallbacks = true;
     }
 
@@ -167,17 +152,16 @@ public abstract class BaseActivity extends FragmentActivity
         try
         {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            bus.post(new Event.UpdateCheckEvent(FlavorUtils.getFlavor(), pInfo.versionCode));
+            bus.post(new Event.UpdateCheckEvent(buildConfigWrapper.getFlavor(), pInfo.versionCode));
         } catch (PackageManager.NameNotFoundException e)
         {
             throw new RuntimeException();
         }
-
     }
 
     public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
     {
-        if (event.updateDetails.getShouldUpdate())
+        if (event.updateDetails != null && event.updateDetails.getShouldUpdate())
         {
             startActivity(new Intent(this, PleaseUpdateActivity.class));
         }

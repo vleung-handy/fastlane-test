@@ -5,11 +5,9 @@ import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
 import com.handy.portal.core.LoginManager;
-import com.handy.portal.core.UserManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
@@ -28,8 +26,6 @@ public class InjectedDialogFragment extends DialogFragment
     @Inject
     BookingManager bookingManager;
     @Inject
-    UserManager userManager;
-    @Inject
     Mixpanel mixpanel;
     @Inject
     DataManager dataManager;
@@ -46,11 +42,6 @@ public class InjectedDialogFragment extends DialogFragment
 
         toast = Toast.makeText(getActivity(), null, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
-
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setDelay(400);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.loading));
     }
 
     @Override

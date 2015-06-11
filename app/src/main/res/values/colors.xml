@@ -15,7 +15,7 @@
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="white_trans">#7EFFFFFF</color>
-    <color name="white_pressed">#E0E0E0</color>
+    <color name="white_pressed">#F4F4F4</color>
     <color name="black">#434343</color>
     <color name="black_pressed">#A1A1A1</color>
     <color name="nav_sep">#B1B1B1</color>
@@ -33,5 +33,14 @@
     <color name="facebook">#246BAB</color>
     <color name="facebook_pressed">#1C4B76</color>
     <color name="very_light_grey">#9F9794</color>
+    <color name="bg_inactive_grey">#9CABB5</color>
+    <color name="bg_active_grey">#8A969E</color>
+    <color name="text_light_grey">#CCCCCC</color>
+    <color name="title_grey">#666666</color>
+    <color name="subtitle_grey">#9CABB5</color>
+    <color name="requested_green">#8BC53E</color>
+    <color name="partner_blue">#0BB8E3</color>
+    <color name="border_grey">#EEEEEE</color>
+    <color name="shadow_grey">#9CA7B2</color>
 
 </resources>
