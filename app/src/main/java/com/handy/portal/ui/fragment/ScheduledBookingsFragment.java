@@ -55,9 +55,10 @@ public class ScheduledBookingsFragment extends BookingsFragment
         return null;
     }
 
-    protected void requestBookings()
+    @Override
+    protected Event getRequestEvent()
     {
-        bus.post(new Event.RequestScheduledBookingsEvent());
+        return new Event.RequestScheduledBookingsEvent();
     }
 
     @Override

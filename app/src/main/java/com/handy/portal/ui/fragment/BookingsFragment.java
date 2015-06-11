@@ -18,6 +18,7 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.form.BookingListView;
+import com.handy.portal.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,11 +52,15 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract int getErrorTextResId();
 
-    protected abstract void requestBookings();
-
     protected abstract String getTrackingType();
 
+    protected abstract Event getRequestEvent();
+
     private int previousDatesScrollPosition;
+
+    //should use date without time for these entries, see Utils.getDateWithoutTime
+    private Map<Date, DateButtonView> dateButtonMap;
+    private Date selectedDay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +69,14 @@ public abstract class BookingsFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.inject(this, view);
+
+        //Optional param, needs to be validated
+        if(getArguments() != null && getArguments().containsKey(BundleKeys.DATE_EPOCH_TIME))
+        {
+            this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
+            this.selectedDay = Utils.getDateWithoutTime(this.selectedDay);
+        }
+
         return view;
     }
 
@@ -77,11 +90,15 @@ public abstract class BookingsFragment extends InjectedFragment
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        fetchErrorView.setVisibility(View.GONE);
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         requestBookings();
     }
 
+    protected void requestBookings()
+    {
+        fetchErrorView.setVisibility(View.GONE);
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(getRequestEvent());
+    }
 
     //Event listeners
     //Can't subscribe in an abstract class?
@@ -162,7 +179,7 @@ public abstract class BookingsFragment extends InjectedFragment
                 }
             });
 
-            dateButtonMap.put(day, dateButtonView);
+            dateButtonMap.put(Utils.getDateWithoutTime(day), dateButtonView);
         }
     }
 
@@ -176,9 +193,6 @@ public abstract class BookingsFragment extends InjectedFragment
         dateButtonMap.get(day).setChecked(true);
         selectedDay = day;
     }
-
-    private Map<Date, DateButtonView> dateButtonMap;
-    private Date selectedDay;
 
     private void displayBookings(List<Booking> bookings)
     {

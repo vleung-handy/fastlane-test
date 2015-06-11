@@ -21,10 +21,6 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("end_date") private Date endDate;
     @SerializedName("hours") private float hours;
     @SerializedName("price") private float price;
-    @SerializedName("recurring") private int isRecurring;
-    @SerializedName("recurring_string") private String recurringInfo;
-    @SerializedName("getin_string") private String entryInfo;
-    @SerializedName("getintxt") private String extraEntryInfo;
     @SerializedName("msg_to_pro") private String proNote;
     @SerializedName("laundry_status") private LaundryStatus laundryStatus;
     @SerializedName("address") private Address address;
@@ -93,19 +89,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     }
 
     public final boolean isRecurring() {
-        return isRecurring == 1;
-    }
-
-    public final String getRecurringInfo() {
-        return recurringInfo;
-    }
-
-    public final String getEntryInfo() {
-        return entryInfo;
-    }
-
-    public final String getExtraEntryInfo() {
-        return extraEntryInfo;
+        return frequency > 0;
     }
 
     public final String getProNote() {
@@ -185,16 +169,12 @@ public final class Booking implements Parcelable, Comparable<Booking>
         try { laundryStatus = LaundryStatus.valueOf(stringData[2]); }
         catch (IllegalArgumentException x) { laundryStatus = null; }
 
-        recurringInfo = stringData[3];
-        entryInfo = stringData[4];
-        extraEntryInfo = stringData[5];
-        proNote = stringData[6];
-        billedStatus = stringData[7];
+        proNote = stringData[3];
+        billedStatus = stringData[4];
 
-        final int[] intData = new int[2];
+        final int[] intData = new int[1];
         in.readIntArray(intData);
         isPast = intData[0];
-        isRecurring = intData[1];
 
         final float[] floatData = new float[2];
         in.readFloatArray(floatData);
@@ -219,10 +199,10 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @Override
     public final void writeToParcel(final Parcel out, final int flags) {
         out.writeStringArray(new String[]{id, service, laundryStatus != null
-                ? laundryStatus.name() : "", recurringInfo, entryInfo, extraEntryInfo, proNote,
+                ? laundryStatus.name() : "", proNote,
                 billedStatus});
 
-        out.writeIntArray(new int[]{isPast, isRecurring});
+        out.writeIntArray(new int[]{isPast});
         out.writeFloatArray(new float[]{hours, price});
         out.writeLong(startDate.getTime());
         out.writeParcelable(address, 0);

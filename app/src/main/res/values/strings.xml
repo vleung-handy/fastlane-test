@@ -44,6 +44,7 @@
     <string name="customer_request">Customer Request</string>
 
     <string name="job_claim_success">Success! Job claimed!</string>
+    <string name="series_claim_success">Success! Series claimed!</string>
 
     <string name="home">Home</string>
     <string name="help">Help</string>
@@ -218,7 +219,7 @@
     <string name="booking_frequency_recurring_generic">Recurring</string>
     <string name="supplies">Supplies</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
-    <string name="full_details_after_claim">Full details will be revealed after claiming</string>
+    <string name="full_details_after_claim">Additional details will be revealed after claiming</string>
     <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="try_again">Try Again</string>

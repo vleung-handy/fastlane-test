@@ -66,20 +66,10 @@ public abstract class BaseActivity extends FragmentActivity
     {
         super.onCreate(savedInstanceState);
 
-        //Crashlytics.start(this);
-        //Yozio.initialize(this);
-
         ((BaseApplication) this.getApplication()).inject(this);
-
-//        if (!BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_STAGE)
-//                && !BuildConfig.BUILD_TYPE.equals("debug")) {
-//            setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//            //Yozio.YOZIO_ENABLE_LOGGING = false;
-//        }
 
         final Intent intent = getIntent();
         final Uri data = intent.getData();
-
 
         busEventListener = new Object()
         {
@@ -89,18 +79,12 @@ public abstract class BaseActivity extends FragmentActivity
                 BaseActivity.this.onUpdateCheckReceived(event);
             }
         };
-        
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
-
-//        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
-//            PlayServicesUtils.handleAnyPlayServicesError(this);
-//        }
-
         allowCallbacks = true;
     }
 
@@ -173,7 +157,6 @@ public abstract class BaseActivity extends FragmentActivity
         {
             throw new RuntimeException();
         }
-
     }
 
     public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)

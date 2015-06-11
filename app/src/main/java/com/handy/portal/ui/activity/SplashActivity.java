@@ -21,6 +21,8 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
 
+        googleService.checkPlayServices(this);
+
         String loggedInUserId = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
         if (loggedInUserId != null)
         {

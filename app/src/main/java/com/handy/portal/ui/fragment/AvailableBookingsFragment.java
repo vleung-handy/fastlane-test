@@ -38,6 +38,12 @@ public class AvailableBookingsFragment extends BookingsFragment
     }
 
     @Override
+    protected Event getRequestEvent()
+    {
+        return new Event.RequestAvailableBookingsEvent();
+    }
+
+    @Override
     protected int getErrorTextResId()
     {
         return R.string.error_fetching_available_jobs;
@@ -47,11 +53,6 @@ public class AvailableBookingsFragment extends BookingsFragment
     protected int getFragmentResourceId()
     {
         return (R.layout.fragment_available_bookings);
-    }
-
-    protected void requestBookings()
-    {
-        bus.post(new Event.RequestAvailableBookingsEvent());
     }
 
     @Override

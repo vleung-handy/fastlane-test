@@ -2,8 +2,11 @@ package com.handy.portal.ui.element;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,8 +47,20 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     @Override
     protected void onFragmentCreated(Fragment fragment)
     {
-        MapFragment mapFragment = (MapFragment) fragment;
-        mapFragment.getMapAsync(this);
+        //right now erring on side of caution and requiring play and maps since I haven't been able to test having maps installed without google play, not sure if possible
+        //if play is installed but not maps it will prompt the user to install maps
+            //in future may be able to remove the && mapsInstalled check but that is a product decision
+        if(isGooglePlayInstalled() && isGoogleMapsInstalled())
+        {
+            MapFragment mapFragment = (MapFragment) fragment;
+            mapFragment.getMapAsync(this);
+        }
+        else
+        {
+            //clear out the map child if maps is not installed
+            this.parentViewGroup.removeAllViews();
+            this.parentViewGroup.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -66,6 +81,13 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     @Override
     public void onMapReady(GoogleMap map)
     {
+        if(!isGoogleMapsInstalled())
+        {
+            //clear out the map child if maps is not installed
+            this.parentViewGroup.removeAllViews();
+            return;
+        }
+
         this.googleMap = map;
 
         if(booking != null)
@@ -137,5 +159,32 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
                 target.latitude, target.longitude, DEFAULT_ZOOM_LEVEL, target.latitude, target.longitude, R.string.location);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         activity.startActivity(intent);
+    }
+
+//
+    public boolean isGoogleMapsInstalled()
+    {
+        try
+        {
+            ApplicationInfo info = this.activity.getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+            return true;
+        }
+        catch(PackageManager.NameNotFoundException e)
+        {
+            return false;
+        }
+    }
+
+    public boolean isGooglePlayInstalled()
+    {
+        try
+        {
+            ApplicationInfo info = this.activity.getPackageManager().getApplicationInfo("com.google.android.gms", 0 );
+            return true;
+        }
+        catch(PackageManager.NameNotFoundException e)
+        {
+            return false;
+        }
     }
 }

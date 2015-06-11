@@ -66,7 +66,10 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
 
         initButtonDisplayForStatus(actionButton, bookingStatus, booking);
 
-        disclaimerSeriesText.setVisibility(booking.getFrequency() > 0 ? View.VISIBLE : View.GONE);
+        //disclaimer turned off for next week
+        //disclaimerSeriesText.setVisibility(booking.getFrequency() > 0 ? View.VISIBLE : View.GONE);
+        disclaimerSeriesText.setVisibility(View.INVISIBLE);
+        disclaimerCancelText.setVisibility(View.INVISIBLE);
 
         partnerText.setVisibility(booking.getPartner() != null && booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ? View.VISIBLE : View.GONE);
     }
@@ -90,7 +93,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
         {
             case AVAILABLE:
             {
-                if(booking.getFrequency() > 0)
+                if(booking.isRecurring())
                 {
                     return activity.getString(R.string.claim_series);
                 }
