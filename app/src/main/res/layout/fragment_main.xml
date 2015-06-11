@@ -51,6 +51,20 @@
 
     </RadioGroup>
 
+    <com.handy.portal.ui.element.LoadingOverlayView
+        android:id="@+id/loading_overlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white_trans"
+        android:visibility="gone"
+        android:clickable="true"
+        android:gravity="center">
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
+    </com.handy.portal.ui.element.LoadingOverlayView>
+
     <com.handy.portal.ui.element.TransitionOverlayView
         android:id="@+id/transition_overlay"
         android:layout_width="fill_parent"
@@ -87,19 +101,5 @@
             android:textColor="@color/white"
             android:layout_marginTop="20dp"/>
     </com.handy.portal.ui.element.TransitionOverlayView>
-
-    <com.handy.portal.ui.element.LoadingOverlayView
-        android:id="@+id/loading_overlay"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/white_trans"
-        android:visibility="gone"
-        android:clickable="true"
-        android:gravity="center">
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"/>
-    </com.handy.portal.ui.element.LoadingOverlayView>
 
 </RelativeLayout>
