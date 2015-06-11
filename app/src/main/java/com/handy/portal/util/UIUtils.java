@@ -15,6 +15,7 @@ public final class UIUtils
         {
             String paymentString = TextUtils.formatPrice(paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol(), paymentInfo.getCurrencySuffix());
             textView.setText(String.format(format, paymentString));
+            textView.setVisibility(View.VISIBLE);
         }
         else
         {
