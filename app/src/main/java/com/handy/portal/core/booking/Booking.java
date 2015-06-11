@@ -38,6 +38,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("description") private String description;
     @SerializedName("provider_id") private String providerId;
     @SerializedName("partner") private String partner;
+    @SerializedName("country") private String country;
 
     public int compareTo(Booking other)
     {
@@ -180,6 +181,10 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return Collections.emptyList();
     }
 
+    public final boolean isUK()
+    {
+        return "GB".equalsIgnoreCase(country);
+    }
 
     private Booking(final Parcel in) {
         final String[] stringData = new String[8];
@@ -350,20 +355,6 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
         final void setZip(final String zip) {
             this.zip = zip;
-        }
-
-        private static final int [] UK_REGION_IDS = {36, 39, 40, 41, 42, 43};
-
-        public boolean isUKRegion()
-        {
-            for(int i : UK_REGION_IDS)
-            {
-                if(i == this.regionId)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private Address(final Parcel in) {

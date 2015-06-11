@@ -81,7 +81,7 @@ public class BookingElementView
 
         //Frequency
         String frequencyInfo = UIUtils.getFrequencyInfo(booking, parentContext);
-        if (booking.getAddress().isUKRegion() && booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES).size() > 0)
+        if (booking.isUK() && booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES).size() > 0)
         {
             frequencyInfo += " \u22C5 " + parentContext.getString(R.string.supplies);
         }

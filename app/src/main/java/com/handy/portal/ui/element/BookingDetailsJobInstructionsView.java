@@ -63,7 +63,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
 
         //Special section for "Supplies" extras (UK only)
         List<Booking.ExtraInfoWrapper> cleaningSuppliesExtrasInfo = booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES);
-        if (booking.getAddress().isUKRegion() && cleaningSuppliesExtrasInfo.size() > 0)
+        if (booking.isUK() && cleaningSuppliesExtrasInfo.size() > 0)
         {
             removeSection = false;
 
