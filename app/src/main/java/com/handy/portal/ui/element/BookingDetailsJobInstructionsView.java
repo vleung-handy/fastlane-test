@@ -79,11 +79,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
         //Extras - excluding Supplies instructions
         if (booking.getExtrasInfo() != null && booking.getExtrasInfo().size() > 0)
         {
-            removeSection = false;
-
-            BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
             List<String> entries = new ArrayList<>();
-
             for (int i = 0; i < booking.getExtrasInfo().size(); i++)
             {
                 Booking.ExtraInfo extra = booking.getExtrasInfo().get(i).getExtraInfo();
@@ -92,8 +88,16 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
                     entries.add(extra.getName());
                 }
             }
-            //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(activity.getString(R.string.extras), R.drawable.ic_details_extras, entries, true);
+
+            if (entries.size() > 0)
+            {
+                removeSection = false;
+
+                BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
+
+                //TODO: Hardcoding string and icon, we need to get this data from the booking info
+                sectionView.init(activity.getString(R.string.extras), R.drawable.ic_details_extras, entries, true);
+            }
         }
 
         //Note to pro
