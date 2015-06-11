@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,9 +27,6 @@ import com.handy.portal.ui.fragment.BookingDetailsFragment;
 
 import java.util.Locale;
 
-/**
- * Created by cdavis on 5/8/15.
- */
 public class GoogleMapView extends BookingDetailsViewFragmentContainer implements OnMapReadyCallback
 {
     private static int DEFAULT_ZOOM_LEVEL = 15;
@@ -49,8 +48,8 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     {
         //right now erring on side of caution and requiring play and maps since I haven't been able to test having maps installed without google play, not sure if possible
         //if play is installed but not maps it will prompt the user to install maps
-            //in future may be able to remove the && mapsInstalled check but that is a product decision
-        if(isGooglePlayInstalled() && isGoogleMapsInstalled())
+        //in future may be able to remove the && mapsInstalled check but that is a product decision
+        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(fragment.getActivity()))
         {
             MapFragment mapFragment = (MapFragment) fragment;
             mapFragment.getMapAsync(this);
@@ -68,7 +67,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     {
         BookingDetailsFragment.BookingStatus bookingStatus = (BookingDetailsFragment.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         this.useRestrictedView = true;
-        if(bookingStatus == BookingDetailsFragment.BookingStatus.CLAIMED)
+        if (bookingStatus == BookingDetailsFragment.BookingStatus.CLAIMED)
         {
             this.useRestrictedView = false;
         }
@@ -81,7 +80,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     @Override
     public void onMapReady(GoogleMap map)
     {
-        if(!isGoogleMapsInstalled())
+        if (!isGoogleMapsInstalled())
         {
             //clear out the map child if maps is not installed
             this.parentViewGroup.removeAllViews();
@@ -90,7 +89,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
 
         this.googleMap = map;
 
-        if(booking != null)
+        if (booking != null)
         {
             float latitude = booking.getAddress().getLatitude();
             float longitude = booking.getAddress().getLongitude();
@@ -98,7 +97,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
             focusMap(googleMap, target);
         }
 
-        if(this.useRestrictedView)
+        if (this.useRestrictedView)
         {
             this.googleMap.getUiSettings().setAllGesturesEnabled(false); //disable all controls, we just want to see the image for now
         }
@@ -126,7 +125,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
                 build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
         map.moveCamera(cameraUpdate);
-        if(this.useRestrictedView)
+        if (this.useRestrictedView)
         {
             showRangeOverlay(map, target);
         }
@@ -148,8 +147,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     {
         MarkerOptions marker = new MarkerOptions()
                 .position(target)
-                .draggable(false)
-                ;
+                .draggable(false);
         map.addMarker(marker);
     }
 
@@ -167,19 +165,6 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
         try
         {
             ApplicationInfo info = this.activity.getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
-            return true;
-        }
-        catch(PackageManager.NameNotFoundException e)
-        {
-            return false;
-        }
-    }
-
-    public boolean isGooglePlayInstalled()
-    {
-        try
-        {
-            ApplicationInfo info = this.activity.getPackageManager().getApplicationInfo("com.google.android.gms", 0 );
             return true;
         }
         catch(PackageManager.NameNotFoundException e)

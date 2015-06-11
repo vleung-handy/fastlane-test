@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 
 import com.handy.portal.core.booking.Booking;
 
-/**
- * Created by cdavis on 5/8/15.
- */
 public abstract class BookingDetailsViewFragmentContainer extends BookingDetailsView
 {
     protected int getLayoutResourceId() { return 0;}
