@@ -43,7 +43,7 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     public void whenScheduleButtonClicked_thenLoadScheduledBookingsFragment() throws Exception
     {
         activityFragmentView.findViewById(R.id.button_schedule).performClick();
-        assertThat(getScreenFragment(), instanceOf(ScheduledBookingsFragment.class));
+        assertThat(getScreenFragment(), instanceOf(PortalWebViewFragment.class));
     }
 
     @Test
