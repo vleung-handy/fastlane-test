@@ -168,7 +168,7 @@ public abstract class BookingsFragment extends InjectedFragment
                 }
             });
 
-            dateButtonMap.put(Utils.getDateWithoutTime(day), dateButtonView);
+            dateButtonMap.put(day, dateButtonView);
         }
     }
 
