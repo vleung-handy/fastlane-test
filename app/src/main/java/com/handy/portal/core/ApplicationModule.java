@@ -23,6 +23,7 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
+import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
@@ -64,7 +65,8 @@ import retrofit.converter.GsonConverter;
         MainActivity.class,
         SplashActivity.class,
         PleaseUpdateActivity.class,
-        PleaseUpdateFragment.class
+        PleaseUpdateFragment.class,
+        TermsActivity.class
 })
 public final class ApplicationModule
 {

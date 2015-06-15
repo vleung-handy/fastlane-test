@@ -26,12 +26,12 @@ public class SplashActivity extends BaseActivity
         String loggedInUserId = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
         if (loggedInUserId != null)
         {
-            openMainActivity();
+            checkForTerms();
         }
         else
         {
             //TODO: Handle install referrers and deep links
-            openLoginActivity();
+            launchActivity(LoginActivity.class);
         }
     }
 
@@ -67,13 +67,21 @@ public class SplashActivity extends BaseActivity
         outState.putBoolean(STATE_LAUNCHED_NEXT, launchedNext);
     }
 
-    private void openLoginActivity()
+    private void checkForTerms()
     {
-        startActivity(new Intent(this, LoginActivity.class));
+        boolean termsAccepted = false;
+        if (termsAccepted)
+        {
+            launchActivity(MainActivity.class);
+        }
+        else
+        {
+            launchActivity(TermsActivity.class);
+        }
     }
 
-    private void openMainActivity()
+    private void launchActivity(Class<? extends BaseActivity> activityClass)
     {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, activityClass));
     }
 }

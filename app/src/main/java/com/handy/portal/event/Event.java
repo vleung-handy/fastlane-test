@@ -273,4 +273,12 @@ public abstract class Event
             this.error = error;
         }
     }
+
+    public static class CheckTermsRequestEvent
+    {
+    }
+
+    public static class CheckTermsResponseEvent
+    {
+    }
 }
