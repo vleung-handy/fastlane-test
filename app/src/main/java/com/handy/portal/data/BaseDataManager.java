@@ -225,6 +225,19 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
+    public void acceptTerms(String termsCode, final Callback<Void> cb)
+    {
+        service.acceptTerms(getProviderId(), termsCode, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(JSONObject response)
+            {
+                cb.onSuccess(null);
+            }
+        });
+    }
+
+    @Override
     public final void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
     {
         service.requestLogin(phoneNumber, pinCode, new HandyRetrofitCallback(cb)

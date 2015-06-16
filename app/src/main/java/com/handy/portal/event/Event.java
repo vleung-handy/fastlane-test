@@ -292,4 +292,22 @@ public abstract class Event
     public static class CheckTermsErrorEvent
     {
     }
+
+    public static class AcceptTermsEvent
+    {
+        public final TermsDetails termsDetails;
+
+        public AcceptTermsEvent(TermsDetails termsDetails)
+        {
+            this.termsDetails = termsDetails;
+        }
+    }
+
+    public static class AcceptTermsSuccessEvent
+    {
+    }
+
+    public static class AcceptTermsErrorEvent
+    {
+    }
 }

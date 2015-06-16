@@ -47,4 +47,24 @@ public class TermsManager
                     }
                 });
     }
+
+    @Subscribe
+    public void onAcceptTerms(Event.AcceptTermsEvent event)
+    {
+        dataManager.acceptTerms(event.termsDetails.getCode(),
+                new DataManager.Callback<Void>()
+                {
+                    @Override
+                    public void onSuccess(Void response)
+                    {
+                        bus.post(new Event.AcceptTermsSuccessEvent());
+                    }
+
+                    @Override
+                    public void onError(DataManager.DataManagerError error)
+                    {
+                        bus.post(new Event.AcceptTermsErrorEvent());
+                    }
+                });
+    }
 }

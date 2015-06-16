@@ -16,6 +16,8 @@ public abstract class DataManager
 
     public abstract void checkForTerms(Callback<TermsDetails> cb);
 
+    public abstract void acceptTerms(String termsCode, Callback<Void> cb);
+
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
 
     public abstract void getScheduledBookings(Callback<List<BookingSummary>> cb);
