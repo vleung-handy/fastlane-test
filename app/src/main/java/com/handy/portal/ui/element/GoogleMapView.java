@@ -151,6 +151,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
         map.addMarker(marker);
     }
 
+    //TODO: This is failing on emulator, no activity to handle the intent
     private void openNativeMap(LatLng target)
     {
         String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=%d&q=%f,%f (%s)",

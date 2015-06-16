@@ -114,8 +114,11 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
                 entries.add(booking.getProNote());
             }
 
-            //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
+            if(entries.size() > 0)
+            {
+                //TODO: Hardcoding string and icon, we need to get this data from the booking info
+                sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
+            }
         }
 
         if (removeSection)

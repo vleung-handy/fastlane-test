@@ -30,6 +30,9 @@ public class DateButtonView extends LinearLayout implements Checkable
     @InjectView(R.id.provider_requested_indicator_image)
     protected ImageView requestedIndicator;
 
+    @InjectView(R.id.claimed_job_exists_indicator_image)
+    protected ImageView claimedJobExistsIndicator;
+
     @InjectView(R.id.selected_day_indicator_image)
     protected ImageView selectedDayIndicator;
 
@@ -52,11 +55,12 @@ public class DateButtonView extends LinearLayout implements Checkable
         super(context, attrs, defStyle);
     }
 
-    public void init(Date date, boolean requestedJobsThisDay)
+    public void init(Date date, boolean requestedJobsThisDay, boolean claimedJobsThisDay)
     {
         ButterKnife.inject(this);
 
-        requestedIndicator.setVisibility(requestedJobsThisDay ? View.VISIBLE : View.INVISIBLE);
+        requestedIndicator.setVisibility(requestedJobsThisDay ? View.VISIBLE : View.GONE);
+        claimedJobExistsIndicator.setVisibility(claimedJobsThisDay ? View.VISIBLE : View.GONE);
         selectedDayIndicator.setVisibility(View.INVISIBLE);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);

@@ -54,6 +54,10 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract Event getRequestEvent();
 
+    protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
+
+    protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
+
     private int previousDatesScrollPosition;
 
     //should use date without time for these entries, see Utils.getDateWithoutTime
@@ -155,9 +159,11 @@ public abstract class BookingsFragment extends InjectedFragment
             Collections.sort(bookingsForDay);
             insertSeparator(bookingsForDay);
 
-            boolean requestedJobsThisDay = bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
+            boolean requestedJobsThisDay = showRequestedIndicator(bookingsForDay);
+            boolean claimedJobsThisDay = showClaimedIndicator(bookingsForDay);
+
             final Date day = bookingSummary.getDate();
-            dateButtonView.init(day, requestedJobsThisDay);
+            dateButtonView.init(day, requestedJobsThisDay, claimedJobsThisDay);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
@@ -171,6 +177,7 @@ public abstract class BookingsFragment extends InjectedFragment
             dateButtonMap.put(day, dateButtonView);
         }
     }
+
 
     private void selectDay(Date day)
     {

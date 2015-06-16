@@ -273,4 +273,14 @@ public abstract class Event
             this.error = error;
         }
     }
+
+    public static class RequestScheduledBookingsErrorEvent
+    {
+        public final DataManager.DataManagerError error;
+
+        public RequestScheduledBookingsErrorEvent(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 }
