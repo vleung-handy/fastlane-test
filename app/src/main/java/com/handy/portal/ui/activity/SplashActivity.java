@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.core.LoginManager;
-
-import butterknife.ButterKnife;
+import com.handy.portal.event.Event;
+import com.squareup.otto.Subscribe;
 
 public class SplashActivity extends BaseActivity
 {
@@ -19,9 +19,6 @@ public class SplashActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        ButterKnife.inject(this);
-
-        googleService.checkPlayServices(this);
 
         String loggedInUserId = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
         if (loggedInUserId != null)
@@ -48,6 +45,20 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
+    }
+
+    @Override
     public void startActivityForResult(final Intent intent, final int resultCode)
     {
         super.startActivityForResult(intent, resultCode);
@@ -69,8 +80,13 @@ public class SplashActivity extends BaseActivity
 
     private void checkForTerms()
     {
-        boolean termsAccepted = false;
-        if (termsAccepted)
+        bus.post(new Event.CheckTermsRequestEvent());
+    }
+
+    @Subscribe
+    public void onCheckTermsResponse(Event.CheckTermsResponseEvent event)
+    {
+        if (event.termsDetails.getCode() == null)
         {
             launchActivity(MainActivity.class);
         }
@@ -78,6 +94,12 @@ public class SplashActivity extends BaseActivity
         {
             launchActivity(TermsActivity.class);
         }
+    }
+
+    @Subscribe
+    public void onCheckTermsError(Event.CheckTermsErrorEvent event)
+    {
+        // TODO: handle check terms error
     }
 
     private void launchActivity(Class<? extends BaseActivity> activityClass)

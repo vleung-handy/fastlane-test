@@ -9,6 +9,7 @@ import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
+import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
@@ -279,6 +280,16 @@ public abstract class Event
     }
 
     public static class CheckTermsResponseEvent
+    {
+        public final TermsDetails termsDetails;
+
+        public CheckTermsResponseEvent(TermsDetails termsDetails)
+        {
+            this.termsDetails = termsDetails;
+        }
+    }
+
+    public static class CheckTermsErrorEvent
     {
     }
 }

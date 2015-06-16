@@ -107,7 +107,7 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
-            final HandyRetrofitEndpoint endpoint)
+                                                   final HandyRetrofitEndpoint endpoint)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -126,7 +126,6 @@ public final class ApplicationModule
                     public void intercept(RequestFacade request)
                     {
                         request.addHeader("Authorization", auth);
-                        request.addHeader("Accept", "application/json");
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
                         request.addQueryParam("apiver", "1");
@@ -149,7 +148,7 @@ public final class ApplicationModule
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
                                          final SecurePreferences prefs
-                                        )
+    )
     {
         return new BaseDataManager(service, endpoint, prefs);
     }
@@ -185,7 +184,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final  DataManager dataManager)
+    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
     {
         return new LoginManager(bus, prefs, dataManager);
     }
@@ -193,14 +192,18 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final UpdateManager provideUpdateManager(final Bus bus,
-                                           final DataManager dataManager)
+                                             final DataManager dataManager)
     {
         return new UpdateManager(bus, dataManager);
     }
 
-//    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {
-//        return new ReactiveLocationProvider(context);
-//    }
+    @Provides
+    @Singleton
+    final TermsManager provideTermsManager(final Bus bus,
+                                           final DataManager dataManager)
+    {
+        return new TermsManager(bus, dataManager);
+    }
 
     @Provides
     @Singleton

@@ -8,6 +8,7 @@ import com.handy.portal.core.BookingSummaryResponse;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.PinRequestDetails;
+import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 import com.securepreferences.SecurePreferences;
@@ -195,6 +196,30 @@ public final class BaseDataManager extends DataManager
                     System.err.println("Can not parse UpdateDetails " + e);
                 }
                 cb.onSuccess(updateDetails);
+            }
+        });
+    }
+
+    @Override
+    public void checkForTerms(final Callback<TermsDetails> cb)
+    {
+        service.checkTerms(getProviderId(), new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(JSONObject response)
+            {
+                TermsDetails termsDetails = null;
+                try
+                {
+                    termsDetails = gsonBuilder.fromJson((response.toString()), new TypeToken<TermsDetails>()
+                    {
+                    }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse TermsDetails " + e);
+                }
+
+                cb.onSuccess(termsDetails);
             }
         });
     }
