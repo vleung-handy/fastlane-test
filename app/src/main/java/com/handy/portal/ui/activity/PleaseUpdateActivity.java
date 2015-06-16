@@ -34,7 +34,7 @@ public class PleaseUpdateActivity extends BaseActivity
     }
 
     @Override
-    public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
+    public void onUpdateAvailable(Event.UpdateAvailable event)
     {
         //Do nothing
     }

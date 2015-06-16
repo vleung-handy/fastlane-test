@@ -1,5 +1,6 @@
 package com.handy.portal.event;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -40,25 +41,15 @@ public abstract class Event
 
     public static class UpdateCheckEvent extends Event
     {
-        public int versionCode = 0;
-        public String appFlavor = "";
-
-        public UpdateCheckEvent(String appFlavor, int versionCode)
+        public Activity sender = null;
+        public UpdateCheckEvent(Activity sender)
         {
-            this.versionCode = versionCode;
-            this.appFlavor = appFlavor;
+            this.sender = sender;
         }
     }
 
-    public static class UpdateCheckRequestReceivedEvent extends Event
+    public static class UpdateAvailable extends Event
     {
-        public UpdateDetails updateDetails;
-
-        public UpdateCheckRequestReceivedEvent(UpdateDetails updateDetails, boolean success)
-        {
-            this.updateDetails = updateDetails;
-            this.success = success;
-        }
     }
 
     public static class RequestScheduledBookingsEvent extends Event

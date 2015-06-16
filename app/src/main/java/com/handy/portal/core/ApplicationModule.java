@@ -194,9 +194,10 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final UpdateManager provideUpdateManager(final Bus bus,
-                                             final DataManager dataManager)
+                                             final DataManager dataManager,
+                                             final BuildConfigWrapper buildConfigWrapper)
     {
-        return new UpdateManager(bus, dataManager);
+        return new UpdateManager(bus, dataManager, buildConfigWrapper);
     }
 
     @Provides

@@ -2,8 +2,6 @@ package com.handy.portal.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -77,9 +75,9 @@ public abstract class BaseActivity extends FragmentActivity
         busEventListener = new Object()
         {
             @Subscribe
-            public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
+            public void onUpdateCheckReceived(Event.UpdateAvailable event)
             {
-                BaseActivity.this.onUpdateCheckReceived(event);
+                BaseActivity.this.onUpdateAvailable(event);
             }
         };
     }
@@ -151,23 +149,12 @@ public abstract class BaseActivity extends FragmentActivity
 
     public void checkForUpdates()
     {
-        PackageInfo pInfo = null;
-        try
-        {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            bus.post(new Event.UpdateCheckEvent(buildConfigWrapper.getFlavor(), pInfo.versionCode));
-        } catch (PackageManager.NameNotFoundException e)
-        {
-            throw new RuntimeException();
-        }
+        bus.post(new Event.UpdateCheckEvent(this));
     }
 
-    public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
+    public void onUpdateAvailable(Event.UpdateAvailable event)
     {
-        if (event.updateDetails != null && event.updateDetails.getShouldUpdate())
-        {
-            startActivity(new Intent(this, PleaseUpdateActivity.class));
-        }
+        startActivity(new Intent(this, PleaseUpdateActivity.class));
     }
 
 }
