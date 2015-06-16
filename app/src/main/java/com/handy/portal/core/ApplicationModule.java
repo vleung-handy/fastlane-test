@@ -33,6 +33,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.TermsFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -66,7 +67,8 @@ import retrofit.converter.GsonConverter;
         SplashActivity.class,
         PleaseUpdateActivity.class,
         PleaseUpdateFragment.class,
-        TermsActivity.class
+        TermsActivity.class,
+        TermsFragment.class
 })
 public final class ApplicationModule
 {
