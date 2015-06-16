@@ -1,44 +1,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ScheduledBookingsFragment"
-    android:orientation="vertical"
-    >
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scheduled_bookings_dates_scroll_view"
-        >
-        <LinearLayout
-            android:id="@+id/scheduled_bookings_dates_scroll_view_layout"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </HorizontalScrollView>
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".ScheduledBookingsFragment">
+
+    <TextView
+        android:id="@+id/scheduled_bookings_banner_text"
+        style="@style/Banner"
+        android:text="@string/scheduled_jobs"/>
+
+    <include layout="@layout/layout_fetch_error"/>
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:id="@+id/bookings_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        >
-        <com.handy.portal.ui.form.BookingListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/scheduled_jobs_requested_list_view"
-            android:dividerHeight="2dp"
-            />
+        android:visibility="gone">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="15dp"
-            android:id="@+id/section_spacer"/>
+        <HorizontalScrollView
+            android:id="@+id/scheduled_bookings_dates_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/scheduled_bookings_dates_scroll_view_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <include layout="@layout/layout_scheduled_bookings_empty"/>
 
         <com.handy.portal.ui.form.BookingListView
-            android:layout_width="wrap_content"
+            android:id="@+id/scheduled_jobs_list_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/scheduled_jobs_unrequested_list_view"
-            android:dividerHeight="2dp"
-            />
+            android:paddingTop="1dp"
+            android:divider="@color/white_trans"
+            android:dividerHeight="1dp"/>
 
     </LinearLayout>
 
