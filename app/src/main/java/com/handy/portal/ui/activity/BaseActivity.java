@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.handy.portal.core.ApplicationOnResumeWatcher;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
@@ -57,6 +58,7 @@ public abstract class BaseActivity extends FragmentActivity
     UpdateManager updateManager;
     @Inject
     TermsManager termsManager;
+    ApplicationOnResumeWatcher applicationOnResumeWatcher;
     @Inject
     SecurePreferences prefs;
     @Inject
@@ -108,6 +110,7 @@ public abstract class BaseActivity extends FragmentActivity
         super.onResume();
         this.bus.register(busEventListener);
         checkForUpdates();
+        postActivityResumeEvent(); //do not disable this
     }
 
     @Override
@@ -150,6 +153,11 @@ public abstract class BaseActivity extends FragmentActivity
     public void checkForUpdates()
     {
         bus.post(new Event.UpdateCheckEvent(this));
+    }
+
+    public void postActivityResumeEvent()
+    {
+        bus.post(new Event.ActivityResumed(this));
     }
 
     public void onUpdateAvailable(Event.UpdateAvailable event)

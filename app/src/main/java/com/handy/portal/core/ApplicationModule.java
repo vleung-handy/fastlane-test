@@ -210,6 +210,17 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final ApplicationOnResumeWatcher provideApplicationOnResumeWatcher(final Bus bus)
+    {
+        return new ApplicationOnResumeWatcher(bus);
+    }
+
+//    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {
+//        return new ReactiveLocationProvider(context);
+//    }
+
+    @Provides
+    @Singleton
     final Mixpanel provideMixpanel()
     {
         return new Mixpanel(context);
