@@ -131,6 +131,8 @@ public class TermsFragment extends InjectedFragment
 
             String htmlContent = wrapContent(newestTermsDetails.getContent());
             termsWebview.loadDataWithBaseURL(ASSETS_BASE_URL, htmlContent, "text/html", UTF_8, null);
+
+            bus.post(new Event.TermsDisplayedEvent(newestTermsDetails.getCode()));
         }
         else
         {

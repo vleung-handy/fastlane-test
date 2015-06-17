@@ -289,13 +289,30 @@ public abstract class Event
         }
     }
 
+    @Track("portal use terms displayed")
+    public static class TermsDisplayedEvent
+    {
+        @TrackField("terms code")
+        private String code;
+
+        public TermsDisplayedEvent(String code)
+        {
+            this.code = code;
+        }
+    }
+
+    @Track("portal use terms accepted")
     public static class AcceptTermsEvent
     {
+        @TrackField("terms code")
+        private String code;
+
         public final TermsDetails termsDetails;
 
         public AcceptTermsEvent(TermsDetails termsDetails)
         {
             this.termsDetails = termsDetails;
+            this.code = termsDetails.getCode();
         }
     }
 
@@ -303,7 +320,10 @@ public abstract class Event
     {
     }
 
+    @Track("portal use terms error")
     public static class AcceptTermsErrorEvent
     {
+        @TrackField("terms code")
+        private String code;
     }
 }
