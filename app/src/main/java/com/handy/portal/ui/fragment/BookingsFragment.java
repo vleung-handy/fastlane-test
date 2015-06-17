@@ -54,11 +54,17 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract Event getRequestEvent();
 
+    protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
+
+    protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
+
+    protected abstract void setupCTAButton(List<Booking> bookingsForDay);
+
     private int previousDatesScrollPosition;
 
     //should use date without time for these entries, see Utils.getDateWithoutTime
     private Map<Date, DateButtonView> dateButtonMap;
-    private Date selectedDay;
+    protected Date selectedDay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -155,9 +161,11 @@ public abstract class BookingsFragment extends InjectedFragment
             Collections.sort(bookingsForDay);
             insertSeparator(bookingsForDay);
 
-            boolean requestedJobsThisDay = bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
+            boolean requestedJobsThisDay = showRequestedIndicator(bookingsForDay);
+            boolean claimedJobsThisDay = showClaimedIndicator(bookingsForDay);
+
             final Date day = bookingSummary.getDate();
-            dateButtonView.init(day, requestedJobsThisDay);
+            dateButtonView.init(day, requestedJobsThisDay, claimedJobsThisDay);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
@@ -171,6 +179,7 @@ public abstract class BookingsFragment extends InjectedFragment
             dateButtonMap.put(day, dateButtonView);
         }
     }
+
 
     private void selectDay(Date day)
     {
@@ -188,6 +197,7 @@ public abstract class BookingsFragment extends InjectedFragment
         getBookingListView().populateList(bookings);
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
+        setupCTAButton(bookings);
     }
 
     private void initListClickListener()

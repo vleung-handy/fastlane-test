@@ -40,7 +40,6 @@ public class PleaseUpdateFragment extends InjectedFragment
 
     private void registerControlListeners()
     {
-
         downloadButton.setOnClickListener(new View.OnClickListener()
         {
             @Override

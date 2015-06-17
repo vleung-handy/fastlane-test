@@ -73,8 +73,6 @@ public class BookingDetailsFragment extends InjectedFragment
     @Inject
     SecurePreferences prefs;
 
-    private static final String NO_PROVIDER_ASSIGNED = "0";
-
     private Booking associatedBooking; //used to return to correct date on jobs tab if a claim job fails and the returned booking is null
 
     public enum BookingStatus
@@ -204,7 +202,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         Activity activity = getActivity();
 
-        BookingStatus bookingStatus = inferBookingStatus(booking, getLoggedInUserId());
+        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
 
