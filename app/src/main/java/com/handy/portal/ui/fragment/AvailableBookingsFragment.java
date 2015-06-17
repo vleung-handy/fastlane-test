@@ -73,6 +73,13 @@ public class AvailableBookingsFragment extends BookingsFragment
         return false;
     }
 
+    @Override
+    protected void setupCTAButton(List<Booking> bookingsForDay)
+    {
+        //do nothing, no ctas on this page, yet, maybe a refresh button
+            //we should track how often pros see 0 jobs available
+    }
+
     @Subscribe
     public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {

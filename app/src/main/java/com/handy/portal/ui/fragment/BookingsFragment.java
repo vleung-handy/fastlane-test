@@ -58,11 +58,13 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
 
+    protected abstract void setupCTAButton(List<Booking> bookingsForDay);
+
     private int previousDatesScrollPosition;
 
     //should use date without time for these entries, see Utils.getDateWithoutTime
     private Map<Date, DateButtonView> dateButtonMap;
-    private Date selectedDay;
+    protected Date selectedDay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -195,6 +197,7 @@ public abstract class BookingsFragment extends InjectedFragment
         getBookingListView().populateList(bookings);
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
+        setupCTAButton(bookings);
     }
 
     private void initListClickListener()

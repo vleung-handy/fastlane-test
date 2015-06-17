@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Checkable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -16,7 +16,7 @@ import java.util.Date;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class DateButtonView extends LinearLayout implements Checkable
+public class DateButtonView extends RelativeLayout implements Checkable
 {
     @InjectView(R.id.date_month_text)
     protected TextView monthText;
@@ -61,6 +61,7 @@ public class DateButtonView extends LinearLayout implements Checkable
 
         requestedIndicator.setVisibility(requestedJobsThisDay ? View.VISIBLE : View.GONE);
         claimedJobExistsIndicator.setVisibility(claimedJobsThisDay ? View.VISIBLE : View.GONE);
+
         selectedDayIndicator.setVisibility(View.INVISIBLE);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);

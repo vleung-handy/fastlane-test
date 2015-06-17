@@ -2,7 +2,7 @@
 <com.handy.portal.ui.element.DateButtonView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="65dp"
-    android:layout_height="wrap_content"
+    android:layout_height="69dp"
     android:background="@drawable/date_button_background"
     android:orientation="vertical">
 
@@ -13,21 +13,32 @@
         android:layout_marginTop="1dp"
         android:textAllCaps="true"
         android:textColor="@color/text_light_grey"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        android:layout_centerHorizontal="true"
+        android:text="zzzzz"
+        />
 
     <TextView
         android:id="@+id/date_day_of_week_text"
         style="@style/DateTextView"
         android:layout_height="14sp"
         android:layout_marginTop="1dp"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:text="zzzz"
+        android:layout_below="@id/date_month_text"
+        android:layout_centerHorizontal="true"
+        />
 
     <TextView
         android:id="@+id/date_day_of_month_text"
         style="@style/DateTextView"
         android:layout_height="24sp"
         android:textSize="24sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:text="zzzzz"
+        android:layout_below="@id/date_day_of_week_text"
+        android:layout_centerHorizontal="true"
+        />
 
     <ImageView
         android:id="@+id/provider_requested_indicator_image"
@@ -35,7 +46,10 @@
         android:layout_height="5dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"
-        android:src="@drawable/circle_green"/>
+        android:src="@drawable/circle_green"
+        android:layout_below="@id/date_day_of_month_text"
+        android:layout_centerHorizontal="true"
+        />
 
     <ImageView
         android:id="@+id/claimed_job_exists_indicator_image"
@@ -43,13 +57,19 @@
         android:layout_height="5dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"
-        android:src="@drawable/circle_claimed_blue"/>
+        android:src="@drawable/circle_claimed_blue"
+        android:layout_below="@id/date_day_of_month_text"
+        android:layout_centerHorizontal="true"
+        />
 
     <ImageView
         android:id="@+id/selected_day_indicator_image"
         android:layout_width="fill_parent"
         android:layout_height="4dp"
         android:layout_marginTop="4dp"
-        android:src="@drawable/rectangle_blue"/>
+        android:src="@drawable/rectangle_blue"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
 
 </com.handy.portal.ui.element.DateButtonView>

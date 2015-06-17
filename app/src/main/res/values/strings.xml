@@ -225,11 +225,13 @@
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_connectivity_issue">Oops! There was an error with your internet connection</string>
     <string name="try_again">Try Again</string>
-    <string name="no_scheduled_jobs">You have no claimed any jobs for this day</string>
+    <string name="no_scheduled_jobs">You have not claimed any jobs for this day</string>
     <string name="return_to_available_jobs">"Return to Jobs"</string>
     <string name="job_claim_error">"Error Claiming Job"</string>
     <string name="job_claim_error_generic">"This job is no longer available"</string>
     <string name="bring_cleaning_supplies">Bring cleaning supplies to this job</string>
     <string name="completed">Completed</string>
+    <string name="cta_find_jobs_for_this_day">Find Jobs For This Day</string>
+
 
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -24,4 +24,14 @@
         android:text="@string/no_scheduled_jobs"
         android:textColor="@color/subtitle_grey"
         android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/find_jobs_for_day_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cta_find_jobs_for_this_day"
+        android:layout_gravity="center_horizontal"
+        style="@style/Button.Green.Round"
+        />
+
 </LinearLayout>
