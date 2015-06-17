@@ -42,5 +42,6 @@
     <color name="partner_blue">#0BB8E3</color>
     <color name="border_grey">#EEEEEE</color>
     <color name="shadow_grey">#9CA7B2</color>
+    <color name="claimed_blue">#43D1B8</color>
 
 </resources>

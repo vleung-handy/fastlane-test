@@ -37,14 +37,14 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             fullDetails = true;
         }
 
-        boolean removeSection = true;
+        boolean removeJobInstructionsSection = true;
 
         //Booking instructions
         if (fullDetails)
         {
             if (booking.getBookingInstructions() != null && booking.getBookingInstructions().size() > 0)
             {
-                removeSection = false;
+                removeJobInstructionsSection = false;
 
                 //New Section
                 BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
@@ -65,7 +65,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
         List<Booking.ExtraInfoWrapper> cleaningSuppliesExtrasInfo = booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES);
         if (booking.isUK() && cleaningSuppliesExtrasInfo.size() > 0)
         {
-            removeSection = false;
+            removeJobInstructionsSection = false;
 
             BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
 
@@ -91,7 +91,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
 
             if (entries.size() > 0)
             {
-                removeSection = false;
+                removeJobInstructionsSection = false;
 
                 BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
 
@@ -103,22 +103,29 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
         //Note to pro
         if (fullDetails)
         {
-            removeSection = false;
+            removeJobInstructionsSection = false;
 
             BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
             List<String> entries = new ArrayList<>();
-            entries.add(booking.getDescription());
+
+            if(booking.getDescription() != null && !booking.getDescription().isEmpty())
+            {
+                entries.add(booking.getDescription());
+            }
 
             if (booking.getProNote() != null && !booking.getProNote().isEmpty())
             {
                 entries.add(booking.getProNote());
             }
 
-            //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
+            if(entries.size() > 0)
+            {
+                //TODO: Hardcoding string and icon, we need to get this data from the booking info
+                sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
+            }
         }
 
-        if (removeSection)
+        if (removeJobInstructionsSection)
         {
             this.parentViewGroup.removeAllViews();
         }

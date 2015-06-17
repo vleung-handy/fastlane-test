@@ -137,17 +137,9 @@ public class MainActivityFragment extends InjectedFragment
     {
         clearFragmentBackStack();
 
-        //analytics event
-        String analyticsPageData;
-        if (targetTab.isNativeTab())
-        {
-            analyticsPageData = targetTab.getClassType().toString();
-        }
-        else
-        {
-            analyticsPageData = targetTab.getTarget().getValue();
-        }
-        bus.post(new Event.Navigation(analyticsPageData));
+        trackSwitchToTab(targetTab);
+
+        updateSelectedTabButton(targetTab);
 
         if (targetTab.isNativeTab())
         {
@@ -191,6 +183,37 @@ public class MainActivityFragment extends InjectedFragment
         for (int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
         {
             supportFragmentManager.popBackStack();
+        }
+    }
+
+    //analytics event
+    private void trackSwitchToTab(MainViewTab targetTab)
+    {
+        String analyticsPageData;
+        if (targetTab.isNativeTab())
+        {
+            analyticsPageData = targetTab.getClassType().toString();
+        }
+        else
+        {
+            analyticsPageData = targetTab.getTarget().getValue();
+        }
+        bus.post(new Event.Navigation(analyticsPageData));
+    }
+
+    //Update the visuals to show the correct selected button
+    private void updateSelectedTabButton(MainViewTab targetTab)
+    {
+        //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
+        if (targetTab != MainViewTab.DETAILS)
+        {
+            switch(targetTab)
+            {
+                case JOBS: { jobsButton.toggle();} break;
+                case SCHEDULE: { scheduleButton.toggle();} break;
+                case PROFILE: { profileButton.toggle();} break;
+                case HELP: { helpButton.toggle();} break;
+            }
         }
     }
 

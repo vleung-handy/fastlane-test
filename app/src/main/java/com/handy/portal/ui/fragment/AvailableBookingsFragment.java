@@ -5,10 +5,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.form.BookingListView;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
 
 import butterknife.InjectView;
 
@@ -55,6 +58,26 @@ public class AvailableBookingsFragment extends BookingsFragment
     protected String getTrackingType()
     {
         return "available job";
+    }
+
+    @Override
+    protected boolean showRequestedIndicator(List<Booking> bookingsForDay)
+    {
+        //Bookings are sorted such that the requested bookings show up first so we just need to check the first one
+        return bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
+    }
+
+    @Override
+    protected boolean showClaimedIndicator(List<Booking> bookingsForDay)
+    {
+        return false;
+    }
+
+    @Override
+    protected void setupCTAButton(List<Booking> bookingsForDay)
+    {
+        //do nothing, no ctas on this page, yet, maybe a refresh button
+            //we should track how often pros see 0 jobs available
     }
 
     @Subscribe

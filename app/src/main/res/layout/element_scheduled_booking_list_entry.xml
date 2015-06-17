@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="95dp"
                 android:background="@drawable/booking_entry_background"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
     <RelativeLayout
         android:id="@+id/booking_entry_time_layout"
@@ -11,15 +15,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-
-        <ImageView
-            android:id="@+id/booking_entry_requested_indicator"
-            android:layout_width="5dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="start"
-            android:src="@drawable/rectangle_green"/>
 
         <LinearLayout
             android:id="@+id/booking_entry_date_layout"
@@ -48,6 +43,17 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/booking_entry_completed_indicator"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_check_complete"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"/>
+
     <LinearLayout
         android:id="@+id/booking_entry_details_layout"
         android:layout_width="wrap_content"
@@ -55,36 +61,9 @@
         android:layout_marginLeft="14dp"
         android:layout_marginStart="14dp"
         android:layout_toEndOf="@+id/booking_entry_time_layout"
-        android:layout_toLeftOf="@+id/booking_entry_payment_layout"
         android:layout_toRightOf="@+id/booking_entry_time_layout"
-        android:layout_toStartOf="@+id/booking_entry_payment_layout"
         android:gravity="center_vertical"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/booking_entry_requested_indicator_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/circle_green"/>
-
-            <TextView
-                style="@style/TextView.Bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/youre_requested"
-                android:textAllCaps="true"
-                android:textColor="@color/requested_green"
-                android:textSize="12sp"/>
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/booking_entry_claimed_indicator_layout"
@@ -112,16 +91,17 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/booking_entry_partner_text"
+            android:id="@+id/booking_entry_completed_text"
             style="@style/TextView.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/completed"
             android:textAllCaps="true"
-            android:textColor="@color/partner_blue"
+            android:textColor="@color/black_pressed"
             android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/booking_entry_area_text"
+            android:id="@+id/booking_entry_address_text"
             style="@style/TextView.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -132,40 +112,12 @@
             android:textSize="18sp"/>
 
         <TextView
-            android:id="@+id/booking_entry_frequency_text"
+            android:id="@+id/booking_entry_region_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/subtitle_grey"
             android:textSize="16sp"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/booking_entry_payment_layout"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:gravity="center_vertical|end"
-        android:orientation="vertical"
-        android:paddingEnd="20dp"
-        android:paddingRight="20dp">
-
-        <TextView
-            android:id="@+id/booking_entry_payment_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/title_grey"
-            android:textSize="30sp"/>
-
-        <TextView
-            android:id="@+id/booking_entry_payment_bonus_text"
-            style="@style/TextView.Bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="true"
-            android:textColor="@color/subtitle_grey"
-            android:textSize="12sp"/>
     </LinearLayout>
 
 </RelativeLayout>

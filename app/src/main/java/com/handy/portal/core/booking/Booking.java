@@ -7,8 +7,10 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.ui.fragment.BookingDetailsFragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +18,6 @@ import java.util.List;
 public final class Booking implements Parcelable, Comparable<Booking>
 {
     @SerializedName("id") private String id;
-    @SerializedName("booking_status") private int isPast;
     @SerializedName("service_name") private String service;
     @SerializedName("service") private ServiceInfo serviceInfo;
     @SerializedName("start_date") private Date startDate;
@@ -83,13 +84,18 @@ public final class Booking implements Parcelable, Comparable<Booking>
         this.id = id;
     }
 
-    public final boolean isPast() {
-        return isPast == 1;
-    }
+    public boolean isInPast()
+    {
+        boolean isInPast = false;
 
-    final void setIsPast(final boolean isPast) {
-        if (isPast) this.isPast = 1;
-        else this.isPast = 0;
+        Date currentTime = Calendar.getInstance().getTime();
+
+        if(getEndDate().compareTo(currentTime) < 0)
+        {
+            isInPast = true;
+        }
+
+        return isInPast;
     }
 
     public final boolean isRecurring() {
@@ -186,6 +192,37 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return "GB".equalsIgnoreCase(country);
     }
 
+    private static final String NO_PROVIDER_ASSIGNED = "0";
+
+    //providerId = 0, no one assigned can claim, otherwise is already claimed
+    //going to add providerstatus to track coming going etc
+
+    public BookingDetailsFragment.BookingStatus inferBookingStatus()
+    {
+        return inferBookingStatus("-1notavalidid");
+    }
+
+    public BookingDetailsFragment.BookingStatus inferBookingStatus(String userId)
+    {
+        if(isInPast())
+        {
+            return BookingDetailsFragment.BookingStatus.UNAVAILABLE;
+        }
+        else if(getProviderId().equals(NO_PROVIDER_ASSIGNED))
+        {
+            return BookingDetailsFragment.BookingStatus.AVAILABLE;
+        }
+        else if(getProviderId().equals(userId))
+        {
+            //TODO: Depending on time to booking change status
+            return BookingDetailsFragment.BookingStatus.CLAIMED;
+        }
+        else
+        {
+            return BookingDetailsFragment.BookingStatus.UNAVAILABLE;
+        }
+    }
+
     private Booking(final Parcel in) {
         final String[] stringData = new String[8];
         in.readStringArray(stringData);
@@ -198,9 +235,9 @@ public final class Booking implements Parcelable, Comparable<Booking>
         proNote = stringData[3];
         billedStatus = stringData[4];
 
-        final int[] intData = new int[1];
-        in.readIntArray(intData);
-        isPast = intData[0];
+        //final int[] intData = new int[1];
+        //in.readIntArray(intData);
+
 
         final float[] floatData = new float[2];
         in.readFloatArray(floatData);
@@ -228,7 +265,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
                 ? laundryStatus.name() : "", proNote,
                 billedStatus});
 
-        out.writeIntArray(new int[]{isPast});
+        out.writeIntArray(new int[]{});
         out.writeFloatArray(new float[]{hours, price});
         out.writeLong(startDate.getTime());
         out.writeParcelable(address, 0);
