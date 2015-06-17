@@ -61,8 +61,7 @@ public class ScheduledBookingElementView extends BookingElementView
         ButterKnife.inject(this, convertView);
 
         //Address
-        String displayAddress = booking.getAddress().getAddress1() + (booking.getAddress().getAddress2() != null ? booking.getAddress().getAddress2() : "");
-        addressTextView.setText(displayAddress);
+        addressTextView.setText(booking.getAddress().getCompleteAddress());
 
         //Area
         bookingRegionText.setText(booking.getAddress().getShortRegion());

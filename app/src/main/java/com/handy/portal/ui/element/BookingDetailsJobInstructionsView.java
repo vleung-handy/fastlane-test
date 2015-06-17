@@ -8,7 +8,7 @@ import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingInstruction;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.core.booking.Booking.BookingStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +30,9 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
 
     protected void initFromBooking(Booking booking, Bundle arguments)
     {
-        BookingDetailsFragment.BookingStatus bookingStatus = (BookingDetailsFragment.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
+        BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         boolean fullDetails = false;
-        if (bookingStatus == BookingDetailsFragment.BookingStatus.CLAIMED)
+        if (bookingStatus == BookingStatus.CLAIMED)
         {
             fullDetails = true;
         }
@@ -44,11 +44,6 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
         {
             if (booking.getBookingInstructions() != null && booking.getBookingInstructions().size() > 0)
             {
-                removeJobInstructionsSection = false;
-
-                //New Section
-                BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
-
                 List<String> entries = new ArrayList<>();
                 for (int i = 0; i < booking.getBookingInstructions().size(); i++)
                 {
@@ -56,8 +51,13 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
                     entries.add(instruction.getDescription());
                 }
 
-                //TODO: Hardcoding string and icon, we need to get this data from the booking info
-                sectionView.init(activity.getString(R.string.customer_details), R.drawable.ic_details_extras, entries, true);
+                if(entries.size() > 0)
+                {
+                    removeJobInstructionsSection = false;
+                    BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
+                    //TODO: Hardcoding string and icon, we need to get this data from the booking info
+                    sectionView.init(activity.getString(R.string.customer_details), R.drawable.ic_details_extras, entries, true);
+                }
             }
         }
 
@@ -65,13 +65,11 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
         List<Booking.ExtraInfoWrapper> cleaningSuppliesExtrasInfo = booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES);
         if (booking.isUK() && cleaningSuppliesExtrasInfo.size() > 0)
         {
-            removeJobInstructionsSection = false;
-
-            BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
-
             List<String> entries = new ArrayList<>();
             entries.add(activity.getString(R.string.bring_cleaning_supplies));
 
+            removeJobInstructionsSection = false;
+            BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
             sectionView.init(activity.getString(R.string.supplies), R.drawable.ic_details_extras, entries, true);
         }
@@ -92,9 +90,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
             if (entries.size() > 0)
             {
                 removeJobInstructionsSection = false;
-
                 BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
-
                 //TODO: Hardcoding string and icon, we need to get this data from the booking info
                 sectionView.init(activity.getString(R.string.extras), R.drawable.ic_details_extras, entries, true);
             }
@@ -103,9 +99,6 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
         //Note to pro
         if (fullDetails)
         {
-            removeJobInstructionsSection = false;
-
-            BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
             List<String> entries = new ArrayList<>();
 
             if(booking.getDescription() != null && !booking.getDescription().isEmpty())
@@ -120,6 +113,8 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
 
             if(entries.size() > 0)
             {
+                removeJobInstructionsSection = false;
+                BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
                 //TODO: Hardcoding string and icon, we need to get this data from the booking info
                 sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
             }

@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.core.booking.Booking.BookingStatus;
 
 import java.util.Locale;
 
@@ -65,9 +65,9 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
     @Override
     protected void initFromBooking(Booking booking, Bundle arguments)
     {
-        BookingDetailsFragment.BookingStatus bookingStatus = (BookingDetailsFragment.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
+        BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         this.useRestrictedView = true;
-        if (bookingStatus == BookingDetailsFragment.BookingStatus.CLAIMED)
+        if (bookingStatus == BookingStatus.CLAIMED)
         {
             this.useRestrictedView = false;
         }

@@ -2,13 +2,12 @@ package com.handy.portal.ui.element;
 
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.core.booking.Booking.BookingStatus;
 
 import butterknife.InjectView;
 
@@ -22,9 +21,6 @@ public class BookingDetailsContactPanelView extends BookingDetailsView
 
     @InjectView(R.id.booking_details_contact_text_button)
     protected Button textButton;
-
-    @InjectView(R.id.booking_details_contact_profile_image)
-    protected ImageView profileImage;
 
     @InjectView(R.id.booking_details_contact_profile_text)
     protected TextView profileText;
@@ -46,19 +42,26 @@ public class BookingDetailsContactPanelView extends BookingDetailsView
 
     protected void initFromBooking(Booking booking, Bundle arguments)
     {
-        BookingDetailsFragment.BookingStatus bookingStatus = (BookingDetailsFragment.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
+        BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
 
-        Booking.User bookingUser = booking.getUser();
-        profileText.setText(bookingUser.getAbbreviatedName());
+        if(bookingStatus == Booking.BookingStatus.CLAIMED_WITHIN_DAY
+                || bookingStatus == Booking.BookingStatus.CLAIMED_WITHIN_HOUR
+                || bookingStatus == Booking.BookingStatus.CLAIMED_IN_PROGRESS)
+        {
+            Booking.User bookingUser = booking.getUser();
+            profileText.setText(bookingUser.getAbbreviatedName());
 
-        //TODO: How will we populate this image?
-        //profileImage
-
-        initButtonDisplayForStatus(callButton, bookingStatus, booking);
-        initButtonDisplayForStatus(textButton, bookingStatus, booking);
+            initButtonDisplayForStatus(callButton, bookingStatus, booking);
+            initButtonDisplayForStatus(textButton, bookingStatus, booking);
+        }
+        else
+        {
+            //remove the section
+            parentViewGroup.removeAllViews();
+        }
     }
 
-    private void initButtonDisplayForStatus(Button button, final BookingDetailsFragment.BookingStatus bookingStatus, Booking booking)
+    private void initButtonDisplayForStatus(Button button, final BookingStatus bookingStatus, Booking booking)
     {
         switch(bookingStatus)
         {

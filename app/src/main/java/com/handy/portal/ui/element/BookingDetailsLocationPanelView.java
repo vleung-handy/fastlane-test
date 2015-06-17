@@ -2,13 +2,14 @@ package com.handy.portal.ui.element;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.PartnerNames;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.util.UIUtils;
 
 import butterknife.InjectView;
@@ -33,6 +34,9 @@ public class BookingDetailsLocationPanelView extends BookingDetailsView
     @InjectView(R.id.booking_details_partner_text)
     protected TextView partnerText;
 
+    @InjectView(R.id.booking_details_requested_indicator_layout)
+    protected LinearLayout requestedLayout;
+
     protected int getLayoutResourceId()
     {
         return R.layout.element_booking_details_location;
@@ -40,16 +44,39 @@ public class BookingDetailsLocationPanelView extends BookingDetailsView
 
     protected void initFromBooking(Booking booking, Bundle arguments)
     {
-        BookingDetailsFragment.BookingStatus bookingStatus = (BookingDetailsFragment.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
+        BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
 
-        locationText.setText(booking.getAddress().getShortRegion());
+        if(bookingStatus == BookingStatus.AVAILABLE)
+        {
+            locationText.setText(booking.getAddress().getShortRegion());
+        }
+        else
+        {
+            //TODO: More fine grained depending on status
+            locationText.setText(booking.getAddress().getCompleteAddress());
+        }
 
         UIUtils.setFrequencyInfo(booking, frequencyText, activity);
 
         UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider(), activity.getString(R.string.payment_value));
         UIUtils.setPaymentInfo(paymentBonusText, booking.getBonusPaymentToProvider(), activity.getString(R.string.bonus_payment_value));
 
-        partnerText.setVisibility(booking.getPartner() != null && booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ? View.VISIBLE : View.GONE);
+        //Partner takes priority over requested
+        if(booking.getPartner() != null)
+        {
+            partnerText.setVisibility(booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ? View.VISIBLE : View.GONE);
+            requestedLayout.setVisibility(View.GONE);
+        }
+        else if(booking.getIsRequested())
+        {
+            partnerText.setVisibility(View.GONE);
+            requestedLayout.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            partnerText.setVisibility(View.GONE);
+            requestedLayout.setVisibility(View.GONE);
+        }
 
     }
 }

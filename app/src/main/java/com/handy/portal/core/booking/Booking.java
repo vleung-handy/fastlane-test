@@ -7,7 +7,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -111,10 +110,6 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return service;
     }
 
-    final void setService(final String service) {
-        this.service = service;
-    }
-
     public final Date getStartDate() {
         return startDate;
     }
@@ -123,32 +118,12 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return endDate;
     }
 
-    public final void setStartDate(final Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public final float getHours() {
-        return hours;
-    }
-
-    final void setHours(float hours) {
-        this.hours = hours;
-    }
-
     public final float getPrice() {
         return price;
     }
 
-    final void setPrice(float price) {
-        this.price = price;
-    }
-
     public final Address getAddress() {
         return address;
-    }
-
-    final void setAddress(final Address address) {
-        this.address = address;
     }
 
     public final String getProviderId() {
@@ -203,29 +178,96 @@ public final class Booking implements Parcelable, Comparable<Booking>
     //providerId = 0, no one assigned can claim, otherwise is already claimed
     //going to add providerstatus to track coming going etc
 
-    public BookingDetailsFragment.BookingStatus inferBookingStatus()
+    public enum BookingStatus
+    {
+        AVAILABLE,
+        CLAIMED,
+        CLAIMED_WITHIN_DAY,
+        CLAIMED_WITHIN_HOUR,
+        CLAIMED_IN_PROGRESS,
+        CLAIMED_IN_PROGRESS_CHECKED_IN,
+        CLAIMED_PAST,
+        UNAVAILABLE,
+    }
+
+    public BookingStatus inferBookingStatus()
     {
         return inferBookingStatus("-1notavalidid");
     }
 
-    public BookingDetailsFragment.BookingStatus inferBookingStatus(String userId)
+    //TODO: I don't like having all this business logic in the client, we should get authoritative statuses from the server
+    public BookingStatus inferBookingStatus(String userId)
     {
-        if(isInPast())
+        String assignedProvider = getProviderId();
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+        boolean bookingIsInPast = isInPast();
+
+        boolean bookingWithinOneHour = false;
+
+        Date bookingStartDate = getStartDate();
+        long diffMinutes = ((bookingStartDate.getTime() - (currentTime.getTime()) / (60 * 1000)));
+        if(diffMinutes <= 60 && diffMinutes >= 0)
         {
-            return BookingDetailsFragment.BookingStatus.UNAVAILABLE;
+            bookingWithinOneHour = true;
         }
-        else if(getProviderId().equals(NO_PROVIDER_ASSIGNED))
+
+        boolean bookingWithinOneDay = false;
+        long diffHours = ((bookingStartDate.getTime() - currentTime.getTime()) / (60 * 60 * 1000));
+        if(diffHours <= 24 && diffHours >= 0)
         {
-            return BookingDetailsFragment.BookingStatus.AVAILABLE;
+            bookingWithinOneDay = true;
+        }
+
+        boolean bookingInProgress = false;
+        if( currentTime.getTime() > getStartDate().getTime() &&
+                currentTime.getTime() < getEndDate().getTime())
+        {
+            bookingInProgress = true;
+        }
+
+        if(assignedProvider.equals(NO_PROVIDER_ASSIGNED))
+        {
+            //TODO: If booking is in the past change status
+
+            if(bookingIsInPast)
+            {
+                return BookingStatus.UNAVAILABLE;
+            }
+            else
+            {
+                return BookingStatus.AVAILABLE;
+            }
         }
         else if(getProviderId().equals(userId))
         {
             //TODO: Depending on time to booking change status
-            return BookingDetailsFragment.BookingStatus.CLAIMED;
+
+            if(bookingIsInPast)
+            {
+                return BookingStatus.CLAIMED_PAST;
+            }
+            else if(bookingInProgress)
+            {
+                return BookingStatus.CLAIMED_IN_PROGRESS;
+            }
+            else if(bookingWithinOneHour)
+            {
+                return BookingStatus.CLAIMED_WITHIN_HOUR;
+            }
+            else if(bookingWithinOneDay)
+            {
+                return BookingStatus.CLAIMED_WITHIN_DAY;
+            }
+            else
+            {
+                return BookingStatus.CLAIMED;
+            }
         }
         else
         {
-            return BookingDetailsFragment.BookingStatus.UNAVAILABLE;
+            return BookingStatus.UNAVAILABLE;
         }
     }
 
@@ -403,40 +445,25 @@ public final class Booking implements Parcelable, Comparable<Booking>
             return address1;
         }
 
-        final void setAddress1(final String address1) {
-            this.address1 = address1;
-        }
-
         public final String getAddress2() {
             return address2;
-        }
-
-        final void setAddress2(final String address2) {
-            this.address2 = address2;
         }
 
         public final String getCity() {
             return city;
         }
 
-        final void setCity(final String city) {
-            this.city = city;
-        }
-
         public final String getState() {
             return state;
-        }
-
-        final void setState(final String state) {
-            this.state = state;
         }
 
         public final String getZip() {
             return zip;
         }
 
-        final void setZip(final String zip) {
-            this.zip = zip;
+        public final String getCompleteAddress()
+        {
+            return (getAddress1() + (getAddress2() != null ? " " + getAddress2() : ""));
         }
 
         private Address(final Parcel in) {

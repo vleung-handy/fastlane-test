@@ -44,9 +44,7 @@ public class BookingDetailsDateView extends BookingDetailsView
         SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
         String formattedTime = timeFormat.format(startDate) + " - " + timeFormat.format(endDate);
 
-        String prepend = getPrependByStartDate(startDate);
-
-        dateText.setText(prepend + formattedDate.toUpperCase());
+        dateText.setText(getPrependByStartDate(startDate) + formattedDate.toUpperCase());
         timeText.setText(formattedTime.toUpperCase());
     }
 
@@ -55,18 +53,20 @@ public class BookingDetailsDateView extends BookingDetailsView
     {
         String prepend = "";
 
-        Date currentTime = Calendar.getInstance().getTime();
+        Calendar calendar = Calendar.getInstance();
+
+        Date currentTime = calendar.getTime();
 
         if(Utils.equalCalendarDates(currentTime, bookingStartDate))
         {
-            prepend = activity.getString(R.string.today) + INTERPUNCT;
+            prepend = (activity.getString(R.string.today) + " " + INTERPUNCT + " ").toUpperCase();
         }
 
-        Calendar.getInstance().add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorrowTime = Calendar.getInstance().getTime();
+        calendar.add(Calendar.DATE, 1);
+        Date tomorrowTime = calendar.getTime();
         if(Utils.equalCalendarDates(tomorrowTime, bookingStartDate))
         {
-            prepend = activity.getString(R.string.tomorrow) + INTERPUNCT;
+            prepend = (activity.getString(R.string.tomorrow) + " " + INTERPUNCT + " ").toUpperCase();
         }
 
         return prepend;
