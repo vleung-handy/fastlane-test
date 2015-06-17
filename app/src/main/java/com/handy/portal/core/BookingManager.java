@@ -101,23 +101,31 @@ public class BookingManager
     @Subscribe
     public void onRequestScheduledBookings(Event.RequestScheduledBookingsEvent event)
     {
-        dataManager.getScheduledBookings(
-                new DataManager.Callback<List<BookingSummary>>()
-                {
-                    @Override
-                    public void onSuccess(final List<BookingSummary> bookingSummaries)
+        final List<BookingSummary> cachedBookingSummaries = bookingsCache.getIfPresent(CacheKey.SCHEDULED_BOOKINGS);
+        if (cachedBookingSummaries != null)
+        {
+            bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries, true));
+        }
+        else
+        {
+            dataManager.getScheduledBookings(
+                    new DataManager.Callback<List<BookingSummary>>()
                     {
-                        bookingsCache.put(CacheKey.SCHEDULED_BOOKINGS, bookingSummaries);
-                        bus.post(new Event.BookingsRetrievedEvent(bookingSummaries, true));
-                    }
+                        @Override
+                        public void onSuccess(final List<BookingSummary> bookingSummaries)
+                        {
+                            bookingsCache.put(CacheKey.SCHEDULED_BOOKINGS, bookingSummaries);
+                            bus.post(new Event.BookingsRetrievedEvent(bookingSummaries, true));
+                        }
 
-                    @Override
-                    public void onError(final DataManager.DataManagerError error)
-                    {
-                        bus.post(new Event.RequestScheduledBookingsErrorEvent(error));
+                        @Override
+                        public void onError(final DataManager.DataManagerError error)
+                        {
+                            bus.post(new Event.RequestScheduledBookingsErrorEvent(error));
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     @Subscribe
