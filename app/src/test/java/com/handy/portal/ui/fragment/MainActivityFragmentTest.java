@@ -6,6 +6,7 @@ import android.view.View;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     public void whenScheduleButtonClicked_thenLoadScheduledBookingsFragment() throws Exception
     {
         activityFragmentView.findViewById(R.id.button_schedule).performClick();
-        assertThat(getScreenFragment(), instanceOf(PortalWebViewFragment.class));
+        assertThat(getScreenFragment(), instanceOf(ScheduledBookingsFragment.class));
     }
 
     @Test
@@ -64,7 +65,6 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void whenJobsButtonClicked_thenLoadAvailableBookingsFragment() throws Exception
     {
-        activityFragmentView.findViewById(R.id.button_schedule).performClick();
         activityFragmentView.findViewById(R.id.button_jobs).performClick();
 
         assertThat(getScreenFragment(), instanceOf(AvailableBookingsFragment.class));
