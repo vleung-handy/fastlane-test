@@ -14,6 +14,10 @@
         android:glEsVersion="0x00020000"
         android:required="true"/>
 
+    <!--Contact permissions -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
     <application
         android:name=".core.BaseApplication"
         android:allowBackup="true"

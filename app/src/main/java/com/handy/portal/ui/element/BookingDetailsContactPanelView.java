@@ -44,9 +44,9 @@ public class BookingDetailsContactPanelView extends BookingDetailsView
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
 
-        if(bookingStatus == Booking.BookingStatus.CLAIMED_WITHIN_DAY
-                || bookingStatus == Booking.BookingStatus.CLAIMED_WITHIN_HOUR
-                || bookingStatus == Booking.BookingStatus.CLAIMED_IN_PROGRESS)
+        if(bookingStatus == BookingStatus.CLAIMED_WITHIN_DAY
+                || bookingStatus == BookingStatus.CLAIMED_WITHIN_HOUR
+                || bookingStatus == BookingStatus.CLAIMED_IN_PROGRESS)
         {
             Booking.User bookingUser = booking.getUser();
             profileText.setText(bookingUser.getAbbreviatedName());

@@ -2,7 +2,10 @@ package com.handy.portal.ui.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
+import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionPanelView;
 import com.handy.portal.ui.element.BookingDetailsContactPanelView;
@@ -86,7 +90,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         bannerText.setText("");
 
-        if(validateRequiredArguments())
+        if (validateRequiredArguments())
         {
             requestBookingDetails(this.getArguments().getString(BundleKeys.BOOKING_ID));
         }
@@ -106,12 +110,11 @@ public class BookingDetailsFragment extends InjectedFragment
     @Subscribe
     public void onBookingDetailsRetrieved(Event.BookingsDetailsRetrievedEvent event)
     {
-        if(event.success)
+        if (event.success)
         {
             this.associatedBooking = event.booking;
             updateDisplayForBooking(event.booking);
-        }
-        else
+        } else
         {
             //TODO: Show a display state that involves re-requesting booking details
         }
@@ -125,21 +128,19 @@ public class BookingDetailsFragment extends InjectedFragment
 
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
 
-        if(event.success)
+        if (event.success)
         {
-            if(event.booking.getProviderId().equals(getLoggedInUserId()))
+            if (event.booking.getProviderId().equals(getLoggedInUserId()))
             {
                 bus.post(new Event.ClaimJobSuccessEvent());
                 TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
                 returnToAvailableBookings(event.booking.getStartDate().getTime(), transitionStyle);
-            }
-            else
+            } else
             {
                 //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
                 handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error_generic, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
             }
-        }
-        else
+        } else
         {
             handleBookingClaimError(event);
         }
@@ -175,10 +176,10 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void clearLayouts()
     {
-        for(int i = 0; i < detailsParentLayout.getChildCount(); i++)
+        for (int i = 0; i < detailsParentLayout.getChildCount(); i++)
         {
             ViewGroup vg = (ViewGroup) detailsParentLayout.getChildAt(i);
-            if(vg != null)
+            if (vg != null)
             {
                 vg.removeAllViews();
             }
@@ -189,7 +190,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         Activity activity = getActivity();
 
-        Booking.BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
+        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
 
@@ -202,7 +203,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //date banner
         BookingDetailsDateView dateView = new BookingDetailsDateView();
-        dateView.init(booking, new Bundle(), dateLayout, activity );
+        dateView.init(booking, new Bundle(), dateLayout, activity);
 
         //Location panel
         BookingDetailsLocationPanelView locationPanel = new BookingDetailsLocationPanelView();
@@ -216,7 +217,7 @@ public class BookingDetailsFragment extends InjectedFragment
         //customer contact section
         BookingDetailsContactPanelView contactPanel = new BookingDetailsContactPanelView();
         contactPanel.init(booking, arguments, contactLayout, activity);
-        //initContactButtonListeners(contactPanel.getCallButton(), contactPanel.getTextButton(), bookingStatus, getLoggedInUserId(), booking.getId());
+        initContactButtonListeners(contactPanel.getCallButton(), contactPanel.getTextButton(), booking.getUser().getPhoneNumberString());
 
         //extra details
         //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
@@ -224,12 +225,12 @@ public class BookingDetailsFragment extends InjectedFragment
         jobInstructionsView.init(booking, arguments, jobInstructionsLayout, activity);
 
         //Full details notice
-        fullDetailsNoticeText.setVisibility(bookingStatus == Booking.BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
+        fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
-    private void setBannerText(Booking.BookingStatus bookingStatus)
+    private void setBannerText(BookingStatus bookingStatus)
     {
-        switch(bookingStatus)
+        switch (bookingStatus)
         {
             case AVAILABLE:
             {
@@ -260,7 +261,7 @@ public class BookingDetailsFragment extends InjectedFragment
         return ((Button) getView().findViewById(R.id.booking_details_action_button));
     }
 
-    private void initActionButtonListener(final Button button, final Booking.BookingStatus bookingStatus, final String userId, final String bookingId)
+    private void initActionButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
     {
         button.setOnClickListener(new View.OnClickListener()
         {
@@ -271,7 +272,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 //on my way
                 //check in
                 //check out
-                switch(bookingStatus)
+                switch (bookingStatus)
                 {
                     case AVAILABLE:
                     {
@@ -281,6 +282,41 @@ public class BookingDetailsFragment extends InjectedFragment
                     //TODO: more status actions
                 }
                 button.setEnabled(false); //prevent multi clicks, turn off button when an action is taken, if action fails re-enable butotn
+            }
+        });
+    }
+
+    private void initContactButtonListeners(final Button callButton, final Button textButton, final String phoneNumber)
+    {
+        callButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                try
+                {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                    startActivity(callIntent);
+                }
+                catch (ActivityNotFoundException activityException)
+                {
+                    System.err.println("Calling a Phone Number failed" + activityException);
+                }
+            }
+        });
+
+        textButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
+                }
+                catch (ActivityNotFoundException activityException)
+                {
+                    System.err.println("Texting a Phone Number failed" + activityException);
+                }
             }
         });
     }
@@ -306,7 +342,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         final long returnDateEpochTime = returnDate.getTime();
 
-        if(errorMessage != null)
+        if (errorMessage != null)
         {
             bus.post(new Event.ClaimJobErrorEvent(errorMessage));
 
@@ -333,8 +369,7 @@ public class BookingDetailsFragment extends InjectedFragment
             AlertDialog alertDialog = alertDialogBuilder.create();
             // show it
             alertDialog.show();
-        }
-        else
+        } else
         {
             //generic network problem
             //show a toast about connectivity issues
