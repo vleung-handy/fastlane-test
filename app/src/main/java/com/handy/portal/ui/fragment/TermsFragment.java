@@ -16,7 +16,8 @@ import com.handy.portal.R;
 import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.TermsManager;
 import com.handy.portal.event.Event;
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.SplashActivity;
+import com.handy.portal.ui.element.LoadingOverlayView;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -33,6 +34,11 @@ import butterknife.OnClick;
 public class TermsFragment extends InjectedFragment
 {
     private static final String ASSETS_BASE_URL = "file:///android_asset/";
+    private static final String TERMS_TEMPLATE_HTML = "terms_template.html";
+    private static final String UTF_8 = "UTF-8";
+
+    @InjectView(R.id.loading_overlay)
+    protected LoadingOverlayView loadingOverlay;
 
     @InjectView(R.id.terms_webview)
     protected WebView termsWebview;
@@ -45,6 +51,15 @@ public class TermsFragment extends InjectedFragment
 
     @InjectView(R.id.instructions)
     protected TextView instructionsText;
+
+    @InjectView(R.id.terms_layout)
+    protected ViewGroup termsLayout;
+
+    @InjectView(R.id.fetch_error_view)
+    protected ViewGroup errorLayout;
+
+    @InjectView(R.id.fetch_error_text)
+    protected TextView errorText;
 
     @Inject
     TermsManager termsManager;
@@ -67,12 +82,19 @@ public class TermsFragment extends InjectedFragment
     {
         if (acceptCheckbox.isChecked())
         {
+            loadingOverlay.setOverlayVisibility(true);
             bus.post(new Event.AcceptTermsEvent(termsManager.getNewestTermsDetails()));
         }
         else
         {
             acceptCheckbox.setTextColor(getResources().getColor(R.color.error_red));
         }
+    }
+
+    @OnClick(R.id.try_again_button)
+    protected void doCheckForTermsAgain()
+    {
+        startActivity(new Intent(this.getActivity(), SplashActivity.class));
     }
 
     @OnCheckedChanged(R.id.accept_checkbox)
@@ -87,25 +109,35 @@ public class TermsFragment extends InjectedFragment
     @Subscribe
     public void onAcceptTermsSuccess(Event.AcceptTermsSuccessEvent event)
     {
-        startActivity(new Intent(this.getActivity(), MainActivity.class));
+        startActivity(new Intent(this.getActivity(), SplashActivity.class));
     }
 
     @Subscribe
     public void onAcceptTermsError(Event.AcceptTermsErrorEvent event)
     {
-        // TODO: error state for accept terms
+        loadingOverlay.setOverlayVisibility(false);
+        showErrorToast(R.string.error_accepting_terms);
     }
 
     private void initView()
     {
         TermsDetails newestTermsDetails = termsManager.getNewestTermsDetails();
 
-        acceptButton.setText(newestTermsDetails.getAction());
+        if (newestTermsDetails != null)
+        {
+            acceptButton.setText(newestTermsDetails.getAction());
 
-        instructionsText.setText(newestTermsDetails.getInstructions());
+            instructionsText.setText(newestTermsDetails.getInstructions());
 
-        String htmlContent = wrapContent(newestTermsDetails.getContent());
-        termsWebview.loadDataWithBaseURL(ASSETS_BASE_URL, htmlContent, "text/html", "utf-8", null);
+            String htmlContent = wrapContent(newestTermsDetails.getContent());
+            termsWebview.loadDataWithBaseURL(ASSETS_BASE_URL, htmlContent, "text/html", UTF_8, null);
+        }
+        else
+        {
+            termsLayout.setVisibility(View.GONE);
+            errorLayout.setVisibility(View.VISIBLE);
+            errorText.setText(R.string.error_loading);
+        }
     }
 
     private String wrapContent(String content)
@@ -113,8 +145,8 @@ public class TermsFragment extends InjectedFragment
         String template = "%s"; // fall back to just displaying without html wrapping
         try
         {
-            InputStream stream = getActivity().getAssets().open("terms_template.html");
-            template = CharStreams.toString(new InputStreamReader(stream, "UTF-8"));
+            InputStream stream = getActivity().getAssets().open(TERMS_TEMPLATE_HTML);
+            template = CharStreams.toString(new InputStreamReader(stream, UTF_8));
         } catch (IOException e)
         {
             e.printStackTrace();

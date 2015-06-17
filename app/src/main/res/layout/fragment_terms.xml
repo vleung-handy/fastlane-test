@@ -1,69 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/handy_bg"
+              android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/layout_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/handy_green"
-        android:orientation="vertical"
-        android:padding="14dp">
+    <include layout="@layout/merge_loading"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:text="@string/important"
-            android:textColor="@color/white"
-            android:textSize="18sp"/>
+    <include layout="@layout/layout_fetch_error"/>
 
-        <TextView
-            android:id="@+id/instructions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white_trans"
-            android:textSize="14sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/handy_bg"
-        android:orientation="vertical"
-        android:padding="14dp">
-
-        <CheckBox
-            android:id="@+id/accept_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/i_agree"
-            android:textColor="@color/black"
-            android:checked="false"/>
-
-        <Button
-            android:id="@+id/accept_button"
-            style="@style/Button.Green.Round"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginBottom="2dp"
-            android:textAllCaps="false"
-            android:textSize="20sp"/>
-    </LinearLayout>
-
-    <WebView
-        android:id="@+id/terms_webview"
+    <RelativeLayout
+        android:id="@+id/terms_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/layout_footer"
-        android:layout_below="@id/layout_header"/>
+        android:background="@color/white"
+        android:orientation="vertical">
 
-</RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/handy_green"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="@string/important"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/instructions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_trans"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/handy_bg"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <CheckBox
+                android:id="@+id/accept_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:checked="false"
+                android:text="@string/i_agree"
+                android:textColor="@color/black"/>
+
+            <Button
+                android:id="@+id/accept_button"
+                style="@style/Button.Green.Round"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <WebView
+            android:id="@+id/terms_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/layout_footer"
+            android:layout_below="@id/layout_header"/>
+
+    </RelativeLayout>
+</LinearLayout>

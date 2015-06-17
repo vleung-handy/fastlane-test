@@ -231,6 +231,8 @@
     <string name="bring_cleaning_supplies">Bring cleaning supplies to this job</string>
     <string name="important">Important</string>
     <string name="i_agree">I agree to the Service Professional Agreement</string>
+    <string name="error_accepting_terms">There was an error accepting the terms. Please try again.</string>
+    <string name="error_loading">There was a loading error. Please click below to try again.</string>
 
 
 </resources>

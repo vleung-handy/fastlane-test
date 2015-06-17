@@ -289,10 +289,6 @@ public abstract class Event
         }
     }
 
-    public static class CheckTermsErrorEvent
-    {
-    }
-
     public static class AcceptTermsEvent
     {
         public final TermsDetails termsDetails;
