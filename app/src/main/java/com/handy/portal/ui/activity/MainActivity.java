@@ -5,10 +5,16 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.event.Event;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 public class MainActivity extends BaseActivity
 {
+    @Inject
+    Bus bus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -20,7 +26,15 @@ public class MainActivity extends BaseActivity
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         checkForTerms();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void checkForTerms()
