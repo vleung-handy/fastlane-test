@@ -86,7 +86,7 @@ public class SplashActivity extends BaseActivity
     @Subscribe
     public void onCheckTermsResponse(Event.CheckTermsResponseEvent event)
     {
-        if (event.termsDetails == null || event.termsDetails.getCode() != null)
+        if (event.termsDetails.getCode() != null)
         {
             launchActivity(TermsActivity.class);
         }
@@ -94,6 +94,12 @@ public class SplashActivity extends BaseActivity
         {
             launchActivity(MainActivity.class);
         }
+    }
+
+    @Subscribe
+    public void onCheckTermsError(Event.CheckTermsErrorEvent event)
+    {
+        launchActivity(TermsActivity.class);
     }
 
     private void launchActivity(Class<? extends BaseActivity> activityClass)

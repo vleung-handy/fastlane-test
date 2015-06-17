@@ -45,9 +45,15 @@ public class MainActivity extends BaseActivity
     @Subscribe
     public void onCheckTermsResponse(Event.CheckTermsResponseEvent event)
     {
-        if (event.termsDetails == null || event.termsDetails.getCode() != null)
+        if (event.termsDetails.getCode() != null)
         {
             startActivity(new Intent(this, TermsActivity.class));
         }
+    }
+
+    @Subscribe
+    public void onCheckTermsError(Event.CheckTermsErrorEvent event)
+    {
+        startActivity(new Intent(this, TermsActivity.class));
     }
 }

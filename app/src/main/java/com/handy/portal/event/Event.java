@@ -1,6 +1,7 @@
 package com.handy.portal.event;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.handy.portal.annotations.Track;
 import com.handy.portal.annotations.TrackField;
@@ -283,10 +284,14 @@ public abstract class Event
     {
         public final TermsDetails termsDetails;
 
-        public CheckTermsResponseEvent(TermsDetails termsDetails)
+        public CheckTermsResponseEvent(@NonNull TermsDetails termsDetails)
         {
             this.termsDetails = termsDetails;
         }
+    }
+
+    public static class CheckTermsErrorEvent
+    {
     }
 
     @Track("portal use terms displayed")
