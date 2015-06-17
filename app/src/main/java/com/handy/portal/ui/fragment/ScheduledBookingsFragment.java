@@ -55,7 +55,6 @@ public class ScheduledBookingsFragment extends BookingsFragment
         return scheduledJobsListView;
     }
 
-    // TODO: Implement
     @Override
     protected ViewGroup getNoBookingsView()
     {
