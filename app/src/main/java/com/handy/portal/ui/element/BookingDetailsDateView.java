@@ -5,8 +5,10 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
+import com.handy.portal.util.Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.InjectView;
@@ -24,6 +26,7 @@ public class BookingDetailsDateView extends BookingDetailsView
 
     private static final String DATE_FORMAT = "E, MMM d";
     private static final String TIME_FORMAT = "h:mm a";
+    private static final String INTERPUNCT = "\u00B7";
 
     protected int getLayoutResourceId()
     {
@@ -41,8 +44,32 @@ public class BookingDetailsDateView extends BookingDetailsView
         SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
         String formattedTime = timeFormat.format(startDate) + " - " + timeFormat.format(endDate);
 
-        dateText.setText(formattedDate.toUpperCase());
+        String prepend = getPrependByStartDate(startDate);
+
+        dateText.setText(prepend + formattedDate.toUpperCase());
         timeText.setText(formattedTime.toUpperCase());
+    }
+
+    //returns a today or tomorrow prepend as needed
+    private String getPrependByStartDate(Date bookingStartDate)
+    {
+        String prepend = "";
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+        if(Utils.equalCalendarDates(currentTime, bookingStartDate))
+        {
+            prepend = activity.getString(R.string.today) + INTERPUNCT;
+        }
+
+        Calendar.getInstance().add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorrowTime = Calendar.getInstance().getTime();
+        if(Utils.equalCalendarDates(tomorrowTime, bookingStartDate))
+        {
+            prepend = activity.getString(R.string.tomorrow) + INTERPUNCT;
+        }
+
+        return prepend;
     }
 
 }

@@ -56,8 +56,11 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
                     entries.add(instruction.getDescription());
                 }
 
-                //TODO: Hardcoding string and icon, we need to get this data from the booking info
-                sectionView.init(activity.getString(R.string.customer_details), R.drawable.ic_details_extras, entries, true);
+                if(entries.size() > 0)
+                {
+                    //TODO: Hardcoding string and icon, we need to get this data from the booking info
+                    sectionView.init(activity.getString(R.string.customer_details), R.drawable.ic_details_extras, entries, true);
+                }
             }
         }
 
@@ -107,15 +110,23 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
 
             BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
             List<String> entries = new ArrayList<>();
-            entries.add(booking.getDescription());
+
+            if(booking.getDescription() != null && !booking.getDescription().isEmpty())
+            {
+                entries.add(booking.getDescription());
+            }
 
             if (booking.getProNote() != null && !booking.getProNote().isEmpty())
             {
                 entries.add(booking.getProNote());
             }
 
-            //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
+            if(entries.size() > 0)
+            {
+                //TODO: Hardcoding string and icon, we need to get this data from the booking info
+                sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
+            }
+
         }
 
         if (removeSection)

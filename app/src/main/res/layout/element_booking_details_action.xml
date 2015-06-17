@@ -9,62 +9,6 @@
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
-    <TextView
-        android:id="@+id/booking_details_partner_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/airbnb"
-        android:textColor="@color/partner_blue"
-        android:textSize="14sp"
-        android:textAppearance="@style/TextView.Bold"
-        />
-
-    <TextView
-        android:id="@+id/booking_details_location_text"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="@string/location"
-        android:textColor="@color/black"
-        android:textSize="23sp"
-        android:textStyle="bold"
-        android:textAppearance="@style/TextView.Bold"
-        android:layout_below="@+id/booking_details_partner_text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:scrollHorizontally="false"
-        />
-
-    <TextView
-        android:id="@+id/booking_details_frequency_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/booking_frequency_every_week"
-        android:textColor="@color/subtitle_grey"
-        android:textSize="16sp"
-        android:layout_below="@+id/booking_details_location_text"
-        />
-
-    <TextView
-        android:id="@+id/booking_details_payment_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$30"
-        android:layout_alignTop="@id/booking_details_location_text"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textSize="30sp"
-        android:textColor="@color/black"/>
-    <TextView
-        android:id="@+id/booking_details_payment_bonus_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+$5 Bonus"
-        android:layout_alignBottom="@+id/booking_details_frequency_text"
-        android:layout_alignParentRight="true"
-        style="@style/TextView.Bold"
-        android:textColor="@color/subtitle_grey"
-        android:textSize="12sp"/>
-
     <Button
         android:id="@+id/booking_details_action_button"
         android:text="@string/claim"

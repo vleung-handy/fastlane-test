@@ -7,10 +7,8 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.consts.PartnerNames;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
-import com.handy.portal.util.UIUtils;
 
 import butterknife.InjectView;
 
@@ -19,18 +17,6 @@ import butterknife.InjectView;
  */
 public class BookingDetailsActionPanelView extends BookingDetailsView
 {
-    @InjectView(R.id.booking_details_location_text)
-    protected TextView locationText;
-
-    @InjectView(R.id.booking_details_frequency_text)
-    protected TextView frequencyText;
-
-    @InjectView(R.id.booking_details_payment_text)
-    protected TextView paymentText;
-
-    @InjectView(R.id.booking_details_payment_bonus_text)
-    protected TextView paymentBonusText;
-
     @InjectView(R.id.booking_details_action_button)
     protected Button actionButton;
 
@@ -40,8 +26,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     @InjectView(R.id.booking_details_action_disclaimer_cancel_text)
     protected TextView disclaimerCancelText;
 
-    @InjectView(R.id.booking_details_partner_text)
-    protected TextView partnerText;
+    //TODO: Support multiple action buttons in a panel, ex , "Check In" and "Update Customer on Arrival Time"
 
     public Button getActionButton()
     {
@@ -57,21 +42,12 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     {
         BookingDetailsFragment.BookingStatus bookingStatus = (BookingDetailsFragment.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
 
-        locationText.setText(booking.getAddress().getShortRegion());
-
-        UIUtils.setFrequencyInfo(booking, frequencyText, activity);
-
-        UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider(), activity.getString(R.string.payment_value));
-        UIUtils.setPaymentInfo(paymentBonusText, booking.getBonusPaymentToProvider(), activity.getString(R.string.bonus_payment_value));
-
         initButtonDisplayForStatus(actionButton, bookingStatus, booking);
 
         //disclaimer turned off for next week
         //disclaimerSeriesText.setVisibility(booking.getFrequency() > 0 ? View.VISIBLE : View.GONE);
         disclaimerSeriesText.setVisibility(View.INVISIBLE);
         disclaimerCancelText.setVisibility(View.INVISIBLE);
-
-        partnerText.setVisibility(booking.getPartner() != null && booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ? View.VISIBLE : View.GONE);
     }
 
     private void initButtonDisplayForStatus(Button button, final BookingDetailsFragment.BookingStatus bookingStatus, Booking booking)
@@ -82,8 +58,46 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
         //Color
         switch(bookingStatus)
         {
-            case AVAILABLE: { button.setBackground(activity.getResources().getDrawable(R.drawable.button_green_round)); } break;
-            case CLAIMED: { button.setBackground(activity.getResources().getDrawable(R.drawable.button_purple_round)); } break;
+            case AVAILABLE:
+            {
+                button.setBackground(activity.getResources().getDrawable(R.drawable.button_green_round));
+            }
+            break;
+            case CLAIMED:
+            {
+                button.setBackground(activity.getResources().getDrawable(R.drawable.button_purple_round));
+                //on my way is only available/active starting 1 hour before booking
+                button.setEnabled(false);
+            }
+            break;
+            case CLAIMED_SOON:
+            {
+                button.setBackground(activity.getResources().getDrawable(R.drawable.button_purple_round));
+                //on my way is only available/active starting 1 hour before booking
+                button.setEnabled(true);
+            }
+            break;
+            case CLAIMED_IN_PROGRESS:
+            {
+                button.setBackground(activity.getResources().getDrawable(R.drawable.button_purple_round));
+                //on my way is only available/active starting 1 hour before booking
+                button.setEnabled(true);
+            }
+            break;
+            case CLAIMED_IN_PROGRESS_CHECKED_IN:
+            {
+                button.setBackground(activity.getResources().getDrawable(R.drawable.button_purple_round));
+                //on my way is only available/active starting 1 hour before booking
+                button.setEnabled(false);
+            }
+            break;
+            case CLAIMED_PAST:
+            {
+                button.setBackground(activity.getResources().getDrawable(R.drawable.button_purple_round));
+                //on my way is only available/active starting 1 hour before booking
+                button.setEnabled(false);
+            }
+            break;
         }
     }
 
@@ -99,7 +113,10 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
                 }
                 return activity.getString(R.string.claim_job);
             }
-            case CLAIMED: { return activity.getString(R.string.on_my_way); }
+            case CLAIMED:
+            {
+                return activity.getString(R.string.on_my_way);
+            }
         }
         return "";
     }

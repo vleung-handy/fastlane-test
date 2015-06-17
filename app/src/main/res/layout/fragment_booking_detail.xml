@@ -77,6 +77,13 @@
                     </LinearLayout>
 
                     <RelativeLayout
+                        android:id="@+id/booking_details_location_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp">
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/booking_details_action_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

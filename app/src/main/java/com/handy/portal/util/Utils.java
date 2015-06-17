@@ -39,7 +39,7 @@ public final class Utils
         }
     }
 
-    public static boolean equalDates(final Date date1, final Date date2)
+    public static boolean equalCalendarDates(final Date date1, final Date date2)
     {
         final Time time = new Time();
         time.set(date1.getTime());

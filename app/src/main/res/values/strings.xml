@@ -28,6 +28,7 @@
 
     <string name="error_connectivity">The server could not be reached, please ensure you have a data connection and try again</string>
 
+    <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
     <string name="claimed_job">Claimed Job</string>
@@ -229,6 +230,7 @@
     <string name="job_claim_error">"Error Claiming Job"</string>
     <string name="job_claim_error_generic">"This job is no longer available"</string>
     <string name="bring_cleaning_supplies">Bring cleaning supplies to this job</string>
-
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 
 </resources>

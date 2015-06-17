@@ -23,11 +23,13 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionPanelView;
 import com.handy.portal.ui.element.BookingDetailsDateView;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
+import com.handy.portal.ui.element.BookingDetailsLocationPanelView;
 import com.handy.portal.ui.element.GoogleMapView;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +54,9 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.booking_details_date_layout)
     protected LinearLayout dateLayout;
 
+    @InjectView(R.id.booking_details_location_layout)
+    protected RelativeLayout locationLayout;
+
     @InjectView(R.id.booking_details_action_layout)
     protected RelativeLayout actionLayout;
 
@@ -75,7 +80,11 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         AVAILABLE,
         CLAIMED,
-        UNAVAILABLE
+        CLAIMED_SOON,
+        CLAIMED_IN_PROGRESS,
+        CLAIMED_IN_PROGRESS_CHECKED_IN,
+        CLAIMED_PAST,
+        UNAVAILABLE,
     }
 
     @Override
@@ -208,6 +217,10 @@ public class BookingDetailsFragment extends InjectedFragment
         BookingDetailsDateView dateView = new BookingDetailsDateView();
         dateView.init(booking, new Bundle(), dateLayout, activity );
 
+        //Location panel
+        BookingDetailsLocationPanelView locationPanel = new BookingDetailsLocationPanelView();
+        locationPanel.init(booking, arguments, locationLayout, activity);
+
         //action section
         BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
         actionPanel.init(booking, arguments, actionLayout, activity);
@@ -233,7 +246,7 @@ public class BookingDetailsFragment extends InjectedFragment
             break;
             case CLAIMED:
             {
-                bannerText.setText(R.string.claimed_job);
+                bannerText.setText(R.string.your_job);
             }
             break;
             case UNAVAILABLE:
@@ -284,22 +297,80 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     //Helpers
-
+//MOVE TO BOOKING.JAVA
     //providerId = 0, no one assigned can claim, otherwise is already claimed
     //going to add providerstatus to track coming going etc
-    private BookingStatus inferBookingStatus(Booking booking, String userId)
+    private static BookingStatus inferBookingStatus(Booking booking, String userId)
     {
         String assignedProvider = booking.getProviderId();
+
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+        boolean bookingIsInPast = false;
+        if(currentTime.getTime() > booking.getEndDate().getTime())
+        {
+            bookingIsInPast = true;
+        }
+
+
+
+
+        boolean bookingWithinOneHour = false;
+
+
+        Date bookingStartDate = booking.getStartDate();
+        long diffMinutes = ((currentTime.getTime() - bookingStartDate.getTime()) / (60 * 1000)) % 60;
+        if(diffMinutes <= 60 && diffMinutes > 0)
+        {
+            bookingWithinOneHour = true;
+        }
+
+        //button.setEnabled(bookingWithinOneHour);
+
+        Date bookingEndDate = booking.getEndDate();
+        boolean bookingInProgress = false;
+        diffMinutes = ((bookingEndDate.getTime() - currentTime.getTime()) / (60 * 1000)) % 60;
+
+        if( currentTime.getTime() > booking.getStartDate().getTime() &&
+                currentTime.getTime() < booking.getEndDate().getTime())
+        {
+            bookingInProgress = true;
+        }
 
         if(assignedProvider.equals(NO_PROVIDER_ASSIGNED))
         {
             //TODO: If booking is in the past change status
-            return BookingStatus.AVAILABLE;
+
+            if(bookingIsInPast)
+            {
+                return BookingStatus.UNAVAILABLE;
+            }
+            else
+            {
+                return BookingStatus.AVAILABLE;
+            }
         }
         else if(booking.getProviderId().equals(userId))
         {
             //TODO: Depending on time to booking change status
-            return BookingStatus.CLAIMED;
+
+            if(bookingIsInPast)
+            {
+                return BookingStatus.CLAIMED_PAST;
+            }
+            else if(bookingWithinOneHour)
+            {
+                return BookingStatus.CLAIMED_SOON;
+            }
+            else if(bookingInProgress)
+            {
+                return BookingStatus.CLAIMED_IN_PROGRESS;
+            }
+            else
+            {
+                return BookingStatus.CLAIMED;
+            }
         }
         else
         {
