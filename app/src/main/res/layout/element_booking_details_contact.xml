@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:background="@color/white"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <ImageView
+        android:id="@+id/booking_details_contact_profile_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/blocking_updateapp_avatar"
+        />
+
+    <TextView
+        android:id="@+id/booking_details_contact_profile_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="CUSTOMER N."
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@id/booking_details_contact_profile_image"
+        android:textColor="@color/black"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/booking_details_contact_profile_image"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/booking_details_contact_call_button"
+            android:text="@string/call"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/Button.White.Round"
+            android:layout_marginTop="10dp"
+            android:textAllCaps="true"
+            android:textSize="20sp"
+            android:layout_marginStart="10dp"/>
+
+        <Button
+            android:id="@+id/booking_details_contact_text_button"
+            android:text="@string/text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/Button.White.Round"
+            android:layout_marginTop="10dp"
+            android:textAllCaps="true"
+            android:textSize="20sp"
+            android:layout_marginStart="10dp"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

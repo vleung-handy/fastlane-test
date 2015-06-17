@@ -39,6 +39,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("provider_id") private String providerId;
     @SerializedName("partner") private String partner;
     @SerializedName("country") private String country;
+    @SerializedName("user") private User user;
 
     public int compareTo(Booking other)
     {
@@ -164,6 +165,11 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return extrasInfo;
     }
 
+    public User getUser()
+    {
+        return user;
+    }
+
     public final List<ExtraInfoWrapper> getExtrasInfoByMachineName(final String machineName)
     {
         ArrayList<Booking.ExtraInfoWrapper> extrasInfo = getExtrasInfo();
@@ -249,6 +255,45 @@ public final class Booking implements Parcelable, Comparable<Booking>
             return new Booking[size];
         }
     };
+
+    public static final class User
+    {
+        @SerializedName("email")
+        private String email;
+        @SerializedName("first_name")
+        private String firstName;
+        @SerializedName("last_name")
+        private String lastName;
+        //TODO: We are currently receiving the real phone number which we don't want to expose, we should make sure we are getting twillo or nothing
+        @SerializedName("phone_str")
+        private String phoneNumberString;
+
+        public String getEmail()
+        {
+            return email;
+        }
+
+        public String getFirstName()
+        {
+            return firstName;
+        }
+
+        public String getLastName()
+        {
+            return lastName;
+        }
+
+        public String getPhoneNumberString()
+        {
+            return phoneNumberString;
+        }
+
+        public String getAbbreviatedName()
+        {
+            return firstName + (lastName.isEmpty() ? "" : " " + lastName.charAt(0) +".");
+        }
+
+    }
 
     public static final class PaymentInfo
     {

@@ -70,7 +70,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
                 button.setEnabled(false);
             }
             break;
-            case CLAIMED_SOON:
+            case CLAIMED_WITHIN_HOUR:
             {
                 button.setBackground(activity.getResources().getDrawable(R.drawable.button_purple_round));
                 //on my way is only available/active starting 1 hour before booking

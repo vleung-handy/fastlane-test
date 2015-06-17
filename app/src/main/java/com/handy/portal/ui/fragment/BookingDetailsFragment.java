@@ -21,6 +21,7 @@ import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionPanelView;
+import com.handy.portal.ui.element.BookingDetailsContactPanelView;
 import com.handy.portal.ui.element.BookingDetailsDateView;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.BookingDetailsLocationPanelView;
@@ -80,7 +81,8 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         AVAILABLE,
         CLAIMED,
-        CLAIMED_SOON,
+        CLAIMED_WITHIN_DAY,
+        CLAIMED_WITHIN_HOUR,
         CLAIMED_IN_PROGRESS,
         CLAIMED_IN_PROGRESS_CHECKED_IN,
         CLAIMED_PAST,
@@ -226,6 +228,11 @@ public class BookingDetailsFragment extends InjectedFragment
         actionPanel.init(booking, arguments, actionLayout, activity);
         initActionButtonListener(actionPanel.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
 
+        //customer contact section
+        BookingDetailsContactPanelView contactPanel = new BookingDetailsContactPanelView();
+        contactPanel.init(booking, arguments, actionLayout, activity);
+        //initContactButtonListeners(actionPanel.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
+
         //extra details
         //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
         BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
@@ -326,7 +333,13 @@ public class BookingDetailsFragment extends InjectedFragment
             bookingWithinOneHour = true;
         }
 
-        //button.setEnabled(bookingWithinOneHour);
+        boolean bookingWithinOneDay = false;
+
+        long diffHours = ((currentTime.getTime() - bookingStartDate.getTime()) / (60 * 60 * 1000));
+        if(diffHours <= 24 && diffHours > 0)
+        {
+            bookingWithinOneDay = true;
+        }
 
         Date bookingEndDate = booking.getEndDate();
         boolean bookingInProgress = false;
@@ -359,13 +372,17 @@ public class BookingDetailsFragment extends InjectedFragment
             {
                 return BookingStatus.CLAIMED_PAST;
             }
-            else if(bookingWithinOneHour)
-            {
-                return BookingStatus.CLAIMED_SOON;
-            }
             else if(bookingInProgress)
             {
                 return BookingStatus.CLAIMED_IN_PROGRESS;
+            }
+            else if(bookingWithinOneHour)
+            {
+                return BookingStatus.CLAIMED_WITHIN_HOUR;
+            }
+            else if(bookingWithinOneDay)
+            {
+                return BookingStatus.CLAIMED_WITHIN_DAY;
             }
             else
             {
