@@ -10,6 +10,8 @@ import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 public class UpdateManager
@@ -58,6 +60,36 @@ public class UpdateManager
                     //TODO: ERROR MESSAGE
                 }
             }
+        );
+    }
+
+    @Subscribe
+    public void onApplicationResumed(Event.ApplicationResumed event) {
+
+        PackageInfo pInfo = getPackageInfoFromActivity(event.sender);
+
+        HashMap<String, String> info = new HashMap<>();
+        info.put("app_flavor",buildConfigWrapper.getFlavor());
+        info.put("app_version", Integer.toString(pInfo.versionCode));
+        info.put("pro_id", dataManager.getProviderId());
+        info.put("device", "android");
+        info.put("os_version_string", android.os.Build.VERSION.RELEASE);
+        info.put("os_version_int", Integer.toString(android.os.Build.VERSION.SDK_INT));
+
+        dataManager.sendVersionInformation(info, new DataManager.Callback<SimpleResponse>()
+                {
+                    @Override
+                    public void onSuccess(final SimpleResponse updateDetails)
+                    {
+                        //Do nothing
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        //Do nothing
+                    }
+                }
         );
     }
 

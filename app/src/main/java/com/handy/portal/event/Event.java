@@ -52,6 +52,26 @@ public abstract class Event
     {
     }
 
+    public static class ActivityPaused extends Event
+    {
+    }
+
+    public static class ActivityResumed extends Event
+    {
+        public Activity sender;
+        public ActivityResumed(Activity sender){
+            this.sender = sender;
+        }
+    }
+
+    public static class ApplicationResumed extends Event
+    {
+        public Activity sender;
+        public ApplicationResumed(Activity sender){
+            this.sender = sender;
+        }
+    }
+
     public static class RequestScheduledBookingsEvent extends Event
     {
     }

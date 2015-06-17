@@ -9,6 +9,7 @@ import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.TermsDetails;
+import com.handy.portal.core.SimpleResponse;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 import com.securepreferences.SecurePreferences;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -119,8 +121,7 @@ public final class BaseDataManager extends DataManager
                             new TypeToken<Booking>()
                             {
                             }.getType());
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     System.err.println("Can not parse Booking" + e);
                 }
@@ -237,6 +238,31 @@ public final class BaseDataManager extends DataManager
         });
     }
 
+
+        public final void sendVersionInformation(Map<String,String> versionInfo, final Callback<SimpleResponse> cb)
+        {
+            service.sendVersionInformation(versionInfo, new HandyRetrofitCallback(cb) {
+
+                @Override
+                void success(JSONObject response)
+                {
+                    SimpleResponse simpleResponse = null;
+                    try
+                    {
+                        simpleResponse = gsonBuilder.fromJson((response.toString()), new TypeToken<SimpleResponse>()
+                        {
+                        }.getType());
+                    } catch (Exception e)
+                    {
+                        System.err.println("Can not parse response " + e);
+                    }
+                    cb.onSuccess(simpleResponse);
+            }
+
+        });
+    }
+
+
     @Override
     public final void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
     {
@@ -261,7 +287,7 @@ public final class BaseDataManager extends DataManager
         });
     }
 
-    private String getProviderId()
+    public String getProviderId()
     {
         String id = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
         if (id == null)
