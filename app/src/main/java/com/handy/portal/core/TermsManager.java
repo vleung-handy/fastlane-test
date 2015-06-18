@@ -43,6 +43,7 @@ public class TermsManager
                     @Override
                     public void onError(DataManager.DataManagerError error)
                     {
+                        newestTermsDetails = null;
                         bus.post(new Event.CheckTermsErrorEvent());
                     }
                 });
