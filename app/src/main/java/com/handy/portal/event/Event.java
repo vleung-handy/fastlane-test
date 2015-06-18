@@ -54,6 +54,10 @@ public abstract class Event
 
     public static class ActivityPaused extends Event
     {
+        public Activity sender;
+        public ActivityPaused(Activity sender){
+            this.sender = sender;
+        }
     }
 
     public static class ActivityResumed extends Event

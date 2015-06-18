@@ -13,7 +13,7 @@ public class ApplicationOnResumeWatcher
     private final Bus bus;
 
     private Date lastOnPause = null;
-    private final static long TRANSITION_THRESHOLD = 1000;
+    private final static long TRANSITION_THRESHOLD = 3000;
 
     @Inject
     ApplicationOnResumeWatcher(final Bus bus)

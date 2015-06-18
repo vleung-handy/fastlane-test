@@ -69,12 +69,14 @@ public class UpdateManager
         PackageInfo pInfo = getPackageInfoFromActivity(event.sender);
 
         HashMap<String, String> info = new HashMap<>();
+        info.put("user_id", dataManager.getProviderId());
+        info.put("platform", "android");
+        info.put("app_identifier", event.sender.getPackageName());
+        info.put("app_version", pInfo.versionName);
+        info.put("app_version_code", Integer.toString(pInfo.versionCode));
         info.put("app_flavor",buildConfigWrapper.getFlavor());
-        info.put("app_version", Integer.toString(pInfo.versionCode));
-        info.put("pro_id", dataManager.getProviderId());
-        info.put("device", "android");
-        info.put("os_version_string", android.os.Build.VERSION.RELEASE);
-        info.put("os_version_int", Integer.toString(android.os.Build.VERSION.SDK_INT));
+        info.put("os_version", android.os.Build.VERSION.RELEASE);
+        info.put("os_version_code", Integer.toString(android.os.Build.VERSION.SDK_INT));
 
         dataManager.sendVersionInformation(info, new DataManager.Callback<SimpleResponse>()
                 {

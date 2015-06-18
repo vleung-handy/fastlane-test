@@ -49,7 +49,7 @@ public interface HandyRetrofitService
     void acceptTerms(@Path("provider_id") String providerId, @Part("code") String termsCode, HandyRetrofitCallback handyRetrofitCallback);
 
     @FormUrlEncoded
-    @POST("/send_version_info")
+    @POST("/log_version_info")
     void sendVersionInformation(@FieldMap Map<String,String> params, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{provider_id}/bookings?available=true")

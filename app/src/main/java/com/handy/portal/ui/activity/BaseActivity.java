@@ -129,6 +129,7 @@ public abstract class BaseActivity extends FragmentActivity
     @Override
     public void onPause()
     {
+        postActivityPauseEvent();
         bus.unregister(busEventListener);
         super.onPause();
     }
@@ -158,6 +159,11 @@ public abstract class BaseActivity extends FragmentActivity
     public void postActivityResumeEvent()
     {
         bus.post(new Event.ActivityResumed(this));
+    }
+
+    public void postActivityPauseEvent()
+    {
+        bus.post(new Event.ActivityPaused(this));
     }
 
     public void onUpdateAvailable(Event.UpdateAvailable event)
