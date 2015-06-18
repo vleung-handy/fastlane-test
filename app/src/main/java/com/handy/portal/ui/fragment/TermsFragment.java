@@ -1,12 +1,14 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -131,6 +133,7 @@ public class TermsFragment extends InjectedFragment
 
             String htmlContent = wrapContent(newestTermsDetails.getContent());
             termsWebview.loadDataWithBaseURL(ASSETS_BASE_URL, htmlContent, "text/html", UTF_8, null);
+            overrideTermsWebviewUrlLoading();
 
             bus.post(new Event.TermsDisplayedEvent(newestTermsDetails.getCode()));
         }
@@ -140,6 +143,25 @@ public class TermsFragment extends InjectedFragment
             errorLayout.setVisibility(View.VISIBLE);
             errorText.setText(R.string.error_loading);
         }
+    }
+
+    private void overrideTermsWebviewUrlLoading()
+    {
+        termsWebview.setWebViewClient(new WebViewClient()
+        {
+            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            {
+                if (url != null)
+                {
+                    view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        });
     }
 
     private String wrapContent(String content)
