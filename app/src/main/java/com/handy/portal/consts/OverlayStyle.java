@@ -11,7 +11,10 @@ public enum OverlayStyle
 {
     JOB_CLAIM_SUCCESS(R.string.job_claim_success, R.drawable.ic_check, R.drawable.circle_green),
     SERIES_CLAIM_SUCCESS(R.string.series_claim_success, R.drawable.ic_check, R.drawable.circle_green),
-    JOB_CLAIM_FAIL(R.string.booking_action_error_not_available,R.drawable.ic_x, R.drawable.circle_red),
+    JOB_REMOVE_SUCCESS(R.string.job_remove_success, R.drawable.ic_check, R.drawable.circle_green),
+    SERIES_REMOVE_SUCCESS(R.string.series_remove_success, R.drawable.ic_check, R.drawable.circle_green),
+    JOB_CLAIM_FAIL(R.string.claim_action_error_not_available,R.drawable.ic_x, R.drawable.circle_red),
+    JOB_REMOVE_FAIL(R.string.remove_action_error_not_available,R.drawable.ic_x, R.drawable.circle_red),
     NONE(-1, -1, -1)
     ;
 

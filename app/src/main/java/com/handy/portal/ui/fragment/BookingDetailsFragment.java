@@ -25,6 +25,7 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionPanelView;
+import com.handy.portal.ui.element.BookingDetailsActionRemovePanelView;
 import com.handy.portal.ui.element.BookingDetailsContactPanelView;
 import com.handy.portal.ui.element.BookingDetailsDateView;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
@@ -70,13 +71,16 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.booking_details_job_instructions_layout)
     protected LinearLayout jobInstructionsLayout;
 
+    @InjectView(R.id.booking_details_remove_job_layout)
+    protected LinearLayout removeJobLayout;
+
     @InjectView(R.id.booking_details_full_details_notice_text)
     protected TextView fullDetailsNoticeText;
 
     @Inject
     SecurePreferences prefs;
 
-    private Booking associatedBooking; //used to return to correct date on jobs tab if a claim job fails and the returned booking is null
+    private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,18 +118,16 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             this.associatedBooking = event.booking;
             updateDisplayForBooking(event.booking);
-        } else
+        }
+        else
         {
             //TODO: Show a display state that involves re-requesting booking details
         }
     }
 
-
     @Subscribe
     public void onClaimJobRequestReceived(final Event.ClaimJobRequestReceivedEvent event)
     {
-        Booking booking = event.booking;
-
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
 
         if (event.success)
@@ -135,14 +137,41 @@ public class BookingDetailsFragment extends InjectedFragment
                 bus.post(new Event.ClaimJobSuccessEvent());
                 TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
                 returnToAvailableBookings(event.booking.getStartDate().getTime(), transitionStyle);
-            } else
+            }
+            else
             {
                 //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
                 handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error_generic, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
             }
-        } else
+        }
+        else
         {
             handleBookingClaimError(event);
+        }
+    }
+
+    @Subscribe
+    public void onRemoveJobRequestReceived(final Event.RemoveJobRequestReceivedEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+
+        if (event.success)
+        {
+            if (event.booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
+            {
+                bus.post(new Event.RemoveJobSuccessEvent());
+                TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_REMOVE_SUCCESS : TransitionStyle.JOB_REMOVE_SUCCESS);
+                returnToAvailableBookings(event.booking.getStartDate().getTime(), transitionStyle);
+            }
+            else
+            {
+                //Something has gone very wrong, show a generic error and return to date based on original associated booking
+                handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic, R.string.return_to_schedule, this.associatedBooking.getStartDate());
+            }
+        }
+        else
+        {
+            handleBookingRemoveError(event);
         }
     }
 
@@ -164,6 +193,12 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         bus.post(new Event.RequestClaimJobEvent(bookingId));
+    }
+
+    private void requestRemoveJob(String bookingId)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestRemoveJobEvent(bookingId));
     }
 
     //Display
@@ -224,6 +259,11 @@ public class BookingDetailsFragment extends InjectedFragment
         BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
         jobInstructionsView.init(booking, arguments, jobInstructionsLayout, activity);
 
+        //Remove job action panel
+        BookingDetailsActionRemovePanelView removeJobView = new BookingDetailsActionRemovePanelView();
+        removeJobView.init(booking, arguments, removeJobLayout, activity);
+        initActionRemoveButtonListener(removeJobView.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
+
         //Full details notice
         fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
@@ -237,11 +277,18 @@ public class BookingDetailsFragment extends InjectedFragment
                 bannerText.setText(R.string.available_job);
             }
             break;
+
             case CLAIMED:
+            case CLAIMED_WITHIN_HOUR:
+            case CLAIMED_WITHIN_DAY:
+            case CLAIMED_PAST:
+            case CLAIMED_IN_PROGRESS_CHECKED_IN:
+            case CLAIMED_IN_PROGRESS:
             {
                 bannerText.setText(R.string.your_job);
             }
             break;
+
             case UNAVAILABLE:
             {
                 bannerText.setText(R.string.unavailable_job);
@@ -258,7 +305,12 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private Button getActionButton()
     {
-        return ((Button) getView().findViewById(R.id.booking_details_action_button));
+        return ((Button) actionLayout.findViewById(R.id.booking_details_action_button));
+    }
+
+    private Button getActionRemoveButton()
+    {
+        return ((Button) removeJobLayout.findViewById(R.id.booking_details_action_button));
     }
 
     private void initActionButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
@@ -285,6 +337,20 @@ public class BookingDetailsFragment extends InjectedFragment
             }
         });
     }
+
+    private void initActionRemoveButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
+    {
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                requestRemoveJob(bookingId);
+                button.setEnabled(false); //prevent multi clicks, turn off button when an action is taken, if action fails re-enable butotn
+            }
+        });
+    }
+
+
 
     private void initContactButtonListeners(final Button callButton, final Button textButton, final String phoneNumber)
     {
@@ -369,13 +435,68 @@ public class BookingDetailsFragment extends InjectedFragment
             AlertDialog alertDialog = alertDialogBuilder.create();
             // show it
             alertDialog.show();
-        } else
+        }
+        else
         {
             //generic network problem
             //show a toast about connectivity issues
             showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
             //re-enable the button so they can try again for network errors
             getActionButton().setEnabled(true);
+        }
+    }
+
+    //Handle Removing Errors
+    private void handleBookingRemoveError(final Event.RemoveJobRequestReceivedEvent event)
+    {
+        //used for onclick closure
+        handleBookingClaimError(event.errorMessage, R.string.job_remove_error, R.string.return_to_schedule, this.associatedBooking.getStartDate());
+    }
+
+    private void handleBookingRemoveError(String errorMessage, int titleId, int option1Id, Date returnDate)
+    {
+        handleBookingClaimError(errorMessage, getString(titleId), getString(option1Id), returnDate);
+    }
+
+    private void handleBookingRemoveError(String errorMessage, String title, String option1, Date returnDate)
+    {
+        final long returnDateEpochTime = returnDate.getTime();
+
+        if (errorMessage != null)
+        {
+            bus.post(new Event.ClaimJobErrorEvent(errorMessage));
+
+            //specific booking error, show an alert dialog
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+            // set title
+            alertDialogBuilder.setTitle(title);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage(errorMessage)
+                    .setCancelable(false)
+                    .setPositiveButton(option1, new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            //Return to available jobs, don't need overlay transition after alert dialog
+                            returnToAvailableBookings(returnDateEpochTime, TransitionStyle.REFRESH_TAB);
+                        }
+                    })
+            ;
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            // show it
+            alertDialog.show();
+        }
+        else
+        {
+            //generic network problem
+            //show a toast about connectivity issues
+            showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
+            //re-enable the button so they can try again for network errors
+            getActionRemoveButton().setEnabled(true);
         }
     }
 

@@ -118,10 +118,34 @@ public final class BaseDataManager extends DataManager
                             new TypeToken<Booking>()
                             {
                             }.getType());
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     System.err.println("Can not parse Booking" + e);
+                }
+                cb.onSuccess(booking);
+            }
+        });
+    }
+
+    @Override
+    public final void removeBooking(String bookingId, final Callback<Booking> cb)
+    {
+        service.removeBooking(getProviderId(), bookingId, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(final JSONObject response)
+            {
+                Booking booking = null;
+                try
+                {
+                    booking = gsonBuilder.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                    cb.onError(new DataManagerError(DataManagerError.Type.OTHER));
                 }
                 cb.onSuccess(booking);
             }

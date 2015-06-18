@@ -184,6 +184,34 @@ public abstract class Event
         }
     }
 
+    public static class RequestRemoveJobEvent extends Event
+    {
+        public String bookingId;
+
+        public RequestRemoveJobEvent(String bookingId)
+        {
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class RemoveJobRequestReceivedEvent extends Event
+    {
+        public Booking booking;
+
+        public RemoveJobRequestReceivedEvent(Booking booking, boolean success)
+        {
+            this.booking = booking;
+            this.success = success;
+        }
+
+        public RemoveJobRequestReceivedEvent(Booking booking, boolean success, String errorMessage)
+        {
+            this.booking = booking;
+            this.success = success;
+            this.errorMessage = errorMessage;
+        }
+    }
+
     @Track("portal login error")
     public static class LoginError extends Event
     {
@@ -249,6 +277,11 @@ public abstract class Event
 
     @Track("claim job")
     public static class ClaimJobSuccessEvent extends Event
+    {
+    }
+
+    @Track("remove job")
+    public static class RemoveJobSuccessEvent extends Event
     {
     }
 

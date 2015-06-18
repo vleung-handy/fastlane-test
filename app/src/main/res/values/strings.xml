@@ -39,13 +39,17 @@
     <string name="disclaimer_cancel">You can remove jobs or series with 24 hour notice.</string>
 
     <string name="booking_action_error_server">The server could not be reached, please try again</string>
-    <string name="booking_action_error_not_available">That job was not available to claim, please select another job</string>
+    <string name="claim_action_error_not_available">That job was not available to claim, please select another job</string>
+    <string name="remove_action_error_not_available">That job could not be removed</string>
 
     <string name="customer_details">Customer Details</string>
     <string name="customer_request">Customer Request</string>
 
     <string name="job_claim_success">Success! Job claimed!</string>
     <string name="series_claim_success">Success! Series claimed!</string>
+
+    <string name="job_remove_success">Success! Job removed!</string>
+    <string name="series_remove_success">Success! Series removed!</string>
 
     <string name="home">Home</string>
     <string name="help">Help</string>
@@ -228,6 +232,7 @@
     <string name="try_again">Try Again</string>
     <string name="no_scheduled_jobs">You have not claimed any jobs for this day</string>
     <string name="return_to_available_jobs">"Return to Jobs"</string>
+    <string name="return_to_schedule">"Return to Schedule"</string>
     <string name="job_claim_error">"Error Claiming Job"</string>
     <string name="job_claim_error_generic">"This job is no longer available"</string>
     <string name="bring_cleaning_supplies">Bring cleaning supplies to this job</string>
@@ -242,6 +247,8 @@
     <string name="check_out">Check Out</string>
     <string name="update_arrival_time">Update Customer on Arrival Time</string>
     <string name="disclaimer_on_my_way">Button activates 1 hour before booking</string>
-
+    <string name="remove_job">Remove Job</string>
+    <string name="job_remove_error">"Error Removing Job"</string>
+    <string name="job_remove_error_generic">"This job could not be removed"</string>
 
 </resources>

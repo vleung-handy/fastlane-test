@@ -158,7 +158,7 @@ public abstract class BookingsFragment extends InjectedFragment
 
             final List<Booking> bookingsForDay = new ArrayList<>(bookingSummary.getBookings());
 
-            Collections.sort(bookingsForDay);
+            Collections.sort(bookingsForDay); //date, ascending
             insertSeparator(bookingsForDay);
 
             boolean requestedJobsThisDay = showRequestedIndicator(bookingsForDay);

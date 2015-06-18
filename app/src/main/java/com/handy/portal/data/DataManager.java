@@ -21,6 +21,8 @@ public abstract class DataManager
 
     public abstract void getBookingDetails(String bookingId, Callback<Booking> cb);
 
+    public abstract void removeBooking(String bookingId, Callback<Booking> cb);
+
     //Login
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);
 

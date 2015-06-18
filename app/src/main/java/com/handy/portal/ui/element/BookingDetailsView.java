@@ -3,6 +3,7 @@ package com.handy.portal.ui.element;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.core.booking.Booking;
@@ -32,4 +33,10 @@ public abstract class BookingDetailsView
     }
 
     protected abstract void initFromBooking(Booking booking, Bundle arguments);
+
+    protected void removeView()
+    {
+        parentViewGroup.removeAllViews();
+        parentViewGroup.setVisibility(View.GONE);
+    }
 }

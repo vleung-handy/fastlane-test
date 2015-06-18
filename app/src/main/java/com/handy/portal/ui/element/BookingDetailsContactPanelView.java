@@ -44,9 +44,13 @@ public class BookingDetailsContactPanelView extends BookingDetailsView
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
 
-        if(bookingStatus == BookingStatus.CLAIMED_WITHIN_DAY
-                || bookingStatus == BookingStatus.CLAIMED_WITHIN_HOUR
-                || bookingStatus == BookingStatus.CLAIMED_IN_PROGRESS)
+        //TODO : Replacing this ugly status stuff with allowed actions from server
+
+        if(bookingStatus == BookingStatus.AVAILABLE || bookingStatus == BookingStatus.UNAVAILABLE)
+        {
+            removeView();
+        }
+        else
         {
             Booking.User bookingUser = booking.getUser();
             profileText.setText(bookingUser.getAbbreviatedName());
@@ -54,18 +58,15 @@ public class BookingDetailsContactPanelView extends BookingDetailsView
             initButtonDisplayForStatus(callButton, bookingStatus, booking);
             initButtonDisplayForStatus(textButton, bookingStatus, booking);
         }
-        else
-        {
-            //remove the section
-            parentViewGroup.removeAllViews();
-        }
     }
 
     private void initButtonDisplayForStatus(Button button, final BookingStatus bookingStatus, Booking booking)
     {
         switch(bookingStatus)
         {
+            //TODO : Replacing this ugly status stuff with allowed actions from server
             case CLAIMED_WITHIN_DAY:
+            case CLAIMED_WITHIN_HOUR:
             case CLAIMED_IN_PROGRESS:
             case CLAIMED_IN_PROGRESS_CHECKED_IN:
             {

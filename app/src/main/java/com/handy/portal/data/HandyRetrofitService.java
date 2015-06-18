@@ -66,4 +66,7 @@ public interface HandyRetrofitService
     @POST(SESSIONS_PATH + "log_in")
     void requestLogin(@Part("phone") String phoneNumber, @Part("pin_code") String pinCode, HandyRetrofitCallback cb);
 
+    @PUT(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/remove")
+    void removeBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
 }

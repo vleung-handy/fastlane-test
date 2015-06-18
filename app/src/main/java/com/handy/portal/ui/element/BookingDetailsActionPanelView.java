@@ -41,17 +41,14 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
     protected void initFromBooking(Booking booking, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
-
-        System.out.println("Action panel booking status : " + bookingStatus);
-
         initButtonDisplayForStatus(actionButton, bookingStatus, booking);
         initDisclaimerText(booking, bookingStatus);
     }
 
-    private void initDisclaimerText(Booking booking, BookingStatus bookingStatus)
+    protected void initDisclaimerText(Booking booking, BookingStatus bookingStatus)
     {
-        disclaimer1Text.setVisibility(View.INVISIBLE);
-        disclaimer2Text.setVisibility(View.INVISIBLE);
+        disclaimer1Text.setVisibility(View.GONE);
+        disclaimer2Text.setVisibility(View.GONE);
 
         switch(bookingStatus)
         {
@@ -80,8 +77,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
         }
     }
 
-
-    private void initButtonDisplayForStatus(Button button, final BookingStatus bookingStatus, Booking booking)
+    protected void initButtonDisplayForStatus(Button button, final BookingStatus bookingStatus, Booking booking)
     {
         button.setText(getDisplayTextForBookingStatus(bookingStatus, booking));
         //TODO: more stuff like color and functionality changes
@@ -115,7 +111,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
         }
     }
 
-    private String getDisplayTextForBookingStatus(BookingStatus bookingStatus, Booking booking)
+    protected String getDisplayTextForBookingStatus(BookingStatus bookingStatus, Booking booking)
     {
         switch(bookingStatus)
         {

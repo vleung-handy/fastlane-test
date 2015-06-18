@@ -173,7 +173,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return "GB".equalsIgnoreCase(country);
     }
 
-    private static final String NO_PROVIDER_ASSIGNED = "0";
+    public static final String NO_PROVIDER_ASSIGNED = "0";
 
     //providerId = 0, no one assigned can claim, otherwise is already claimed
     //going to add providerstatus to track coming going etc
@@ -240,6 +240,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
                 return BookingStatus.AVAILABLE;
             }
         }
+
         else if(getProviderId().equals(userId))
         {
             //TODO: Depending on time to booking change status

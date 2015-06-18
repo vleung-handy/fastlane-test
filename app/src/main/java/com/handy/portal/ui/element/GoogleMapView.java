@@ -6,7 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -57,8 +56,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
         else
         {
             //clear out the map child if maps is not installed
-            this.parentViewGroup.removeAllViews();
-            this.parentViewGroup.setVisibility(View.GONE);
+            removeView();
         }
     }
 
@@ -83,7 +81,7 @@ public class GoogleMapView extends BookingDetailsViewFragmentContainer implement
         if (!isGoogleMapsInstalled())
         {
             //clear out the map child if maps is not installed
-            this.parentViewGroup.removeAllViews();
+            removeView();
             return;
         }
 

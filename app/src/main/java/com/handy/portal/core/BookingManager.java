@@ -154,4 +154,30 @@ public class BookingManager
         });
     }
 
+    @Subscribe
+    public void onRequestRemoveJob(Event.RequestRemoveJobEvent event)
+    {
+        String bookingId = event.bookingId;
+
+        dataManager.removeBooking(bookingId, new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.RemoveJobRequestReceivedEvent(booking, true));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                //still need to invalidate so we don't allow them to click on same booking
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.RemoveJobRequestReceivedEvent(null, false, error.getMessage()));
+            }
+        });
+    }
+
 }

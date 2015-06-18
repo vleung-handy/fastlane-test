@@ -122,7 +122,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
 
         if (removeJobInstructionsSection)
         {
-            this.parentViewGroup.removeAllViews();
+            removeView();
         }
     }
 
