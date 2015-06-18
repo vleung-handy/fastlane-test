@@ -83,7 +83,6 @@ public class AvailableBookingsFragment extends BookingsFragment<Event.AvailableB
     @Subscribe
     public void onBookingsRetrieved(Event.AvailableBookingsRetrievedEvent event)
     {
-        System.out.println("ON BOOKINGS RETRIEVED!");
         handleBookingsRetrieved(event);
     }
 
