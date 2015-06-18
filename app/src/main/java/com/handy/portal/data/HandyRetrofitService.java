@@ -37,6 +37,13 @@ public interface HandyRetrofitService
     @GET("/check_updates")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
 
+    @GET(PROVIDERS_PATH + "{provider_id}/check_terms")
+    void checkTerms(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
+
+    @Multipart
+    @POST(PROVIDERS_PATH + "{provider_id}/accept_terms")
+    void acceptTerms(@Path("provider_id") String providerId, @Part("code") String termsCode, HandyRetrofitCallback handyRetrofitCallback);
+
     @GET(PROVIDERS_PATH + "{provider_id}/bookings?available=true")
     void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
 

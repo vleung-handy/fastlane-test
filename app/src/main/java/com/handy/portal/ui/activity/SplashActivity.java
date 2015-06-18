@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.core.LoginManager;
-
-import butterknife.ButterKnife;
+import com.handy.portal.event.Event;
+import com.squareup.otto.Subscribe;
 
 public class SplashActivity extends BaseActivity
 {
@@ -19,19 +19,16 @@ public class SplashActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        ButterKnife.inject(this);
-
-        googleService.checkPlayServices(this);
 
         String loggedInUserId = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
         if (loggedInUserId != null)
         {
-            openMainActivity();
+            checkForTerms();
         }
         else
         {
             //TODO: Handle install referrers and deep links
-            openLoginActivity();
+            launchActivity(LoginActivity.class);
         }
     }
 
@@ -45,6 +42,20 @@ public class SplashActivity extends BaseActivity
 
         launchedNext = true;
         finish();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Override
@@ -67,13 +78,32 @@ public class SplashActivity extends BaseActivity
         outState.putBoolean(STATE_LAUNCHED_NEXT, launchedNext);
     }
 
-    private void openLoginActivity()
+    private void checkForTerms()
     {
-        startActivity(new Intent(this, LoginActivity.class));
+        bus.post(new Event.CheckTermsRequestEvent());
     }
 
-    private void openMainActivity()
+    @Subscribe
+    public void onCheckTermsResponse(Event.CheckTermsResponseEvent event)
     {
-        startActivity(new Intent(this, MainActivity.class));
+        if (event.termsDetails.getCode() != null)
+        {
+            launchActivity(TermsActivity.class);
+        }
+        else
+        {
+            launchActivity(MainActivity.class);
+        }
+    }
+
+    @Subscribe
+    public void onCheckTermsError(Event.CheckTermsErrorEvent event)
+    {
+        launchActivity(TermsActivity.class);
+    }
+
+    private void launchActivity(Class<? extends BaseActivity> activityClass)
+    {
+        startActivity(new Intent(this, activityClass));
     }
 }

@@ -1,6 +1,7 @@
 package com.handy.portal.event;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.handy.portal.annotations.Track;
 import com.handy.portal.annotations.TrackField;
@@ -9,6 +10,7 @@ import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
+import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
@@ -272,5 +274,61 @@ public abstract class Event
         {
             this.error = error;
         }
+    }
+
+    public static class CheckTermsRequestEvent
+    {
+    }
+
+    public static class CheckTermsResponseEvent
+    {
+        public final TermsDetails termsDetails;
+
+        public CheckTermsResponseEvent(@NonNull TermsDetails termsDetails)
+        {
+            this.termsDetails = termsDetails;
+        }
+    }
+
+    public static class CheckTermsErrorEvent
+    {
+    }
+
+    @Track("portal use terms displayed")
+    public static class TermsDisplayedEvent
+    {
+        @TrackField("terms code")
+        private String code;
+
+        public TermsDisplayedEvent(String code)
+        {
+            this.code = code;
+        }
+    }
+
+    @Track("portal use terms accepted")
+    public static class AcceptTermsEvent
+    {
+        @TrackField("terms code")
+        private String code;
+
+        public final TermsDetails termsDetails;
+
+        public AcceptTermsEvent(TermsDetails termsDetails)
+        {
+            this.termsDetails = termsDetails;
+            this.code = termsDetails.getCode();
+        }
+    }
+
+    public static class AcceptTermsSuccessEvent
+    {
+    }
+
+    @Track("portal use terms error")
+    public static class AcceptTermsErrorEvent
+    {
+        @TrackField("terms code")
+        private String code;
     }
 }

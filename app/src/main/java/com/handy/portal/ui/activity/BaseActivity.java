@@ -12,10 +12,11 @@ import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
+import com.handy.portal.core.TermsManager;
 import com.handy.portal.core.UpdateManager;
+import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.Mixpanel;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.widget.ProgressDialog;
@@ -56,6 +57,8 @@ public abstract class BaseActivity extends FragmentActivity
     LoginManager loginManager;
     @Inject
     UpdateManager updateManager;
+    @Inject
+    TermsManager termsManager;
     @Inject
     SecurePreferences prefs;
     @Inject

@@ -3,6 +3,7 @@ package com.handy.portal.data;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
+import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 
@@ -12,6 +13,10 @@ public abstract class DataManager
 {
     //Portal
     public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
+
+    public abstract void checkForTerms(Callback<TermsDetails> cb);
+
+    public abstract void acceptTerms(String termsCode, Callback<Void> cb);
 
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
 
