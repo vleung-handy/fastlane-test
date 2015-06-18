@@ -58,6 +58,7 @@ public abstract class BaseActivity extends FragmentActivity
     UpdateManager updateManager;
     @Inject
     TermsManager termsManager;
+    @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
     @Inject
     SecurePreferences prefs;
