@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public abstract class BookingsFragment extends InjectedFragment
+public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> extends InjectedFragment
 {
     @InjectView(R.id.bookings_content)
     protected View bookingsContentView;
@@ -59,6 +59,9 @@ public abstract class BookingsFragment extends InjectedFragment
     protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
 
     protected abstract void setupCTAButton(List<Booking> bookingsForDay);
+
+    //Event listeners
+    public abstract void onBookingsRetrieved(T event);
 
     private int previousDatesScrollPosition;
 
@@ -103,10 +106,6 @@ public abstract class BookingsFragment extends InjectedFragment
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         bus.post(getRequestEvent());
     }
-
-    //Event listeners
-    //Can't subscribe in an abstract class?
-    public abstract void onBookingsRetrieved(Event.BookingsRetrievedEvent event);
 
     protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
     {

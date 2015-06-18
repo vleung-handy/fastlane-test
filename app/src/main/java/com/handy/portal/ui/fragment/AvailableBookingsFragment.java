@@ -15,7 +15,7 @@ import java.util.List;
 
 import butterknife.InjectView;
 
-public class AvailableBookingsFragment extends BookingsFragment
+public class AvailableBookingsFragment extends BookingsFragment<Event.AvailableBookingsRetrievedEvent>
 {
     @InjectView(R.id.available_jobs_list_view)
     protected BookingListView availableJobsListView;
@@ -81,8 +81,9 @@ public class AvailableBookingsFragment extends BookingsFragment
     }
 
     @Subscribe
-    public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
+    public void onBookingsRetrieved(Event.AvailableBookingsRetrievedEvent event)
     {
+        System.out.println("ON BOOKINGS RETRIEVED!");
         handleBookingsRetrieved(event);
     }
 

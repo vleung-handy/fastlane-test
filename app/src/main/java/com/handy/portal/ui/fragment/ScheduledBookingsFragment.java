@@ -25,7 +25,7 @@ import butterknife.OnClick;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ScheduledBookingsFragment extends BookingsFragment
+public class ScheduledBookingsFragment extends BookingsFragment<Event.ScheduledBookingsRetrievedEvent>
 {
     @InjectView(R.id.scheduled_jobs_list_view)
     protected BookingListView scheduledJobsListView;
@@ -74,7 +74,7 @@ public class ScheduledBookingsFragment extends BookingsFragment
     }
 
     @Subscribe
-    public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
+    public void onBookingsRetrieved(Event.ScheduledBookingsRetrievedEvent event)
     {
         handleBookingsRetrieved(event);
     }

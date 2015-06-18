@@ -21,9 +21,18 @@ public abstract class Event
     public boolean success;
     public String errorMessage;
 
-    public static class BookingsRetrievedEvent extends Event
+    public static class RequestAvailableBookingsEvent extends Event
+    {
+    }
+
+    public static class RequestScheduledBookingsEvent extends Event
+    {
+    }
+
+    public static abstract class BookingsRetrievedEvent extends Event
     {
         public List<BookingSummary> bookingSummaries;
+        public BookingsRetrievedEvent() {}
 
         public BookingsRetrievedEvent(List<BookingSummary> bookingSummaries, boolean success)
         {
@@ -32,8 +41,22 @@ public abstract class Event
         }
     }
 
-    public static class RequestAvailableBookingsEvent extends Event
+    public static class AvailableBookingsRetrievedEvent extends BookingsRetrievedEvent
     {
+        public AvailableBookingsRetrievedEvent(List<BookingSummary> bookingSummaries, boolean success)
+        {
+            this.bookingSummaries = bookingSummaries;
+            this.success = success;
+        }
+    }
+
+    public static class ScheduledBookingsRetrievedEvent extends BookingsRetrievedEvent
+    {
+        public ScheduledBookingsRetrievedEvent(List<BookingSummary> bookingSummaries, boolean success)
+        {
+            this.bookingSummaries = bookingSummaries;
+            this.success = success;
+        }
     }
 
     public static class UpdateCheckEvent extends Event
@@ -57,10 +80,6 @@ public abstract class Event
             this.updateDetails = updateDetails;
             this.success = success;
         }
-    }
-
-    public static class RequestScheduledBookingsEvent extends Event
-    {
     }
 
     public static class RequestBookingDetailsEvent extends Event
@@ -297,7 +316,7 @@ public abstract class Event
         }
     }
 
-    public static class RequestAvailableBookingsErrorEvent
+    public static class RequestAvailableBookingsErrorEvent extends Event
     {
         public final DataManager.DataManagerError error;
 
@@ -307,7 +326,7 @@ public abstract class Event
         }
     }
 
-    public static class RequestScheduledBookingsErrorEvent
+    public static class RequestScheduledBookingsErrorEvent extends Event
     {
         public final DataManager.DataManagerError error;
 

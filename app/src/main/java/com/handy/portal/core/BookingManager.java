@@ -74,7 +74,7 @@ public class BookingManager
         final List<BookingSummary> cachedBookingSummaries = bookingsCache.getIfPresent(CacheKey.AVAILABLE_BOOKINGS);
         if (cachedBookingSummaries != null)
         {
-            bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries, true));
+            bus.post(new Event.AvailableBookingsRetrievedEvent(cachedBookingSummaries, true));
         }
         else
         {
@@ -85,7 +85,7 @@ public class BookingManager
                         public void onSuccess(final List<BookingSummary> bookingSummaries)
                         {
                             bookingsCache.put(CacheKey.AVAILABLE_BOOKINGS, bookingSummaries);
-                            bus.post(new Event.BookingsRetrievedEvent(bookingSummaries, true));
+                            bus.post(new Event.AvailableBookingsRetrievedEvent(bookingSummaries, true));
                         }
 
                         @Override
@@ -104,7 +104,7 @@ public class BookingManager
         final List<BookingSummary> cachedBookingSummaries = bookingsCache.getIfPresent(CacheKey.SCHEDULED_BOOKINGS);
         if (cachedBookingSummaries != null)
         {
-            bus.post(new Event.BookingsRetrievedEvent(cachedBookingSummaries, true));
+            bus.post(new Event.ScheduledBookingsRetrievedEvent(cachedBookingSummaries, true));
         }
         else
         {
@@ -115,7 +115,7 @@ public class BookingManager
                         public void onSuccess(final List<BookingSummary> bookingSummaries)
                         {
                             bookingsCache.put(CacheKey.SCHEDULED_BOOKINGS, bookingSummaries);
-                            bus.post(new Event.BookingsRetrievedEvent(bookingSummaries, true));
+                            bus.post(new Event.ScheduledBookingsRetrievedEvent(bookingSummaries, true));
                         }
 
                         @Override
