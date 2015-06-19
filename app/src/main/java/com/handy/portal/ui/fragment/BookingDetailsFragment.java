@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +30,7 @@ import com.handy.portal.ui.element.BookingDetailsDateView;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.BookingDetailsLocationPanelView;
 import com.handy.portal.ui.element.GoogleMapView;
+import com.handy.portal.ui.widget.BookingActionButton;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
@@ -49,7 +49,8 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.booking_details_banner_text)
     protected TextView bannerText;
 
-    //Layouts points for fragment, the various element are childed to these
+    //Layouts points for fragment, the various elements are childed to these
+
     @InjectView(R.id.booking_details_layout)
     protected LinearLayout detailsParentLayout;
 
@@ -82,6 +83,16 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
 
+    public void setAssociatedBooking(Booking b)
+    {
+        this.associatedBooking = b;
+    }
+
+    public Booking getAssociatedBooking()
+    {
+        return this.associatedBooking;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -110,7 +121,245 @@ public class BookingDetailsFragment extends InjectedFragment
         return requiredArguments;
     }
 
-    //Events and Event Handling
+    private String getLoggedInUserId()
+    {
+        return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
+    }
+
+
+
+
+
+    private void requestBookingDetails(String bookingId)
+    {
+        bus.post(new Event.RequestBookingDetailsEvent(bookingId));
+    }
+
+
+
+//Display
+    private void updateDisplayForBooking(Booking booking)
+    {
+        //clear existing elements out of our fragment's display
+        clearLayouts();
+        initBookingDisplayElements(booking);
+        processAllowedActions(booking.getAllowedActions());
+    }
+
+    private void clearLayouts()
+    {
+        for (int i = 0; i < detailsParentLayout.getChildCount(); i++)
+        {
+            ViewGroup vg = (ViewGroup) detailsParentLayout.getChildAt(i);
+            if (vg != null)
+            {
+                vg.removeAllViews();
+            }
+        }
+    }
+
+    private void initBookingDisplayElements(Booking booking)
+    {
+        Activity activity = getActivity();
+
+        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
+
+        //Banner
+        setBannerTextByBookingStatus(bookingStatus);
+
+        //google maps
+        GoogleMapView gmv = new GoogleMapView();
+        gmv.init(booking, arguments, mapLayout, activity);
+
+        //date banner
+        BookingDetailsDateView dateView = new BookingDetailsDateView();
+        dateView.init(booking, new Bundle(), dateLayout, activity);
+
+        //Location panel
+        BookingDetailsLocationPanelView locationPanel = new BookingDetailsLocationPanelView();
+        locationPanel.init(booking, arguments, locationLayout, activity);
+
+        //action section
+        BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
+        actionPanel.init(booking, arguments, actionLayout, activity);
+
+        //customer contact section
+        BookingDetailsContactPanelView contactPanel = new BookingDetailsContactPanelView();
+        contactPanel.init(booking, arguments, contactLayout, activity);
+
+        //extra details
+        //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
+        BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
+        jobInstructionsView.init(booking, arguments, jobInstructionsLayout, activity);
+
+        //Remove job action panel
+        BookingDetailsActionRemovePanelView removeJobView = new BookingDetailsActionRemovePanelView();
+        removeJobView.init(booking, arguments, removeJobLayout, activity);
+
+        //Full details notice
+        fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
+    }
+
+    private void setBannerTextByBookingStatus(BookingStatus bookingStatus)
+    {
+        switch (bookingStatus)
+        {
+            case AVAILABLE:
+            {
+                bannerText.setText(R.string.available_job);
+            }
+            break;
+
+            case CLAIMED:
+            {
+                bannerText.setText(R.string.your_job);
+            }
+            break;
+
+            case UNAVAILABLE:
+            {
+                bannerText.setText(R.string.unavailable_job);
+            }
+            break;
+        }
+    }
+
+    //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
+    private void processAllowedActions(List<Booking.ActionButtonData> allowedActions)
+    {
+
+        for(Booking.ActionButtonData data : allowedActions)
+        {
+            if(data.getAssociatedActionType() == null)
+            {
+                System.err.println("Received an unsupported action type : " + data.getActionName());
+                continue;
+            }
+
+            //the client will need to know what layout to insert a given button into
+            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(data.getAssociatedActionType());
+
+            if(buttonParentLayout == null)
+            {
+                System.err.println("Could not find parent layout for " + data.getAssociatedActionType().getActionName());
+            }
+            else
+            {
+                int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
+                BookingActionButton bookingActionButton = (BookingActionButton)
+                        ((ViewGroup) getActivity().getLayoutInflater().inflate(data.getAssociatedActionType().getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
+                bookingActionButton.init(this, data); //not sure if this is the better way or to have buttons dispatch specifc events the fragment catches, for now this will suffice
+                bookingActionButton.setEnabled(data.isEnabled());
+            }
+        }
+    }
+
+    private ViewGroup getParentLayoutForButtonActionType(Booking.ButtonActionType bat)
+    {
+        switch(bat)
+        {
+            case CLAIM: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            case ON_MY_WAY: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            case CHECK_IN: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            case UPDATE_ARRIVAL_TIME: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
+            case CONTACT_PHONE: { return  (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
+            case CONTACT_TEXT: { return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
+            case REMOVE: { return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            default:
+            {
+                return null;
+            }
+        }
+    }
+
+//Click Actions
+
+    @OnClick(R.id.booking_details_back_button)
+    public void onBackButtonClick(View v)
+    {
+        getActivity().onBackPressed();
+    }
+
+    //The button onclick tells us what action to look up in our booking for additional data
+    //The associated booking remains the supreme data source for us
+    public void onActionButtonClick(Booking.ButtonActionType actionType)
+    {
+        switch(actionType)
+        {
+            case CLAIM:
+            {
+                requestClaimJob(this.associatedBooking.getId());
+            }
+            break;
+
+            case REMOVE:
+            {
+                requestRemoveJob(this.associatedBooking.getId());
+            }
+            break;
+
+            case CONTACT_PHONE:
+            {
+                callPhoneNumber(this.associatedBooking.getUser().getPhoneNumberString());
+            }
+            break;
+
+            case CONTACT_TEXT:
+            {
+                textPhoneNumber(this.associatedBooking.getUser().getPhoneNumberString());
+            }
+            break;
+
+            default:
+            {
+                System.err.println("Could not find associated behavior for : " + actionType.getActionName());
+            }
+        }
+    }
+
+    private void requestClaimJob(String bookingId)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestClaimJobEvent(bookingId));
+    }
+
+    private void requestRemoveJob(String bookingId)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestRemoveJobEvent(bookingId));
+    }
+
+    private void callPhoneNumber(final String phoneNumber)
+    {
+        try
+        {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phoneNumber));
+            startActivity(callIntent);
+        }
+        catch (ActivityNotFoundException activityException)
+        {
+            System.err.println("Calling a Phone Number failed" + activityException);
+        }
+    }
+
+    private void textPhoneNumber(final String phoneNumber)
+    {
+        try
+        {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
+        }
+        catch (ActivityNotFoundException activityException)
+        {
+            System.err.println("Calling a Phone Number failed" + activityException);
+        }
+    }
+
+//Event Subscription and Handling
+
     @Subscribe
     public void onBookingDetailsRetrieved(Event.BookingsDetailsRetrievedEvent event)
     {
@@ -121,7 +370,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
         else
         {
-            //TODO: Show a display state that involves re-requesting booking details
+            //TODO: Show a display state that involves re-requesting booking details, could have been a network error or other?
         }
     }
 
@@ -184,215 +433,9 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, transitionStyle));
     }
 
-    private void requestBookingDetails(String bookingId)
-    {
-        bus.post(new Event.RequestBookingDetailsEvent(bookingId));
-    }
 
-    private void requestClaimJob(String bookingId)
-    {
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
-        bus.post(new Event.RequestClaimJobEvent(bookingId));
-    }
+//Handle Action Response Errors
 
-    private void requestRemoveJob(String bookingId)
-    {
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
-        bus.post(new Event.RequestRemoveJobEvent(bookingId));
-    }
-
-    //Display
-    private void updateDisplayForBooking(Booking booking)
-    {
-        //clear existing elements out of our fragment's display
-        clearLayouts();
-        initBookingDisplayElements(booking);
-    }
-
-    private void clearLayouts()
-    {
-        for (int i = 0; i < detailsParentLayout.getChildCount(); i++)
-        {
-            ViewGroup vg = (ViewGroup) detailsParentLayout.getChildAt(i);
-            if (vg != null)
-            {
-                vg.removeAllViews();
-            }
-        }
-    }
-
-    private void initBookingDisplayElements(Booking booking)
-    {
-        Activity activity = getActivity();
-
-        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
-
-        //Banner
-        setBannerText(bookingStatus);
-
-        //google maps
-        GoogleMapView gmv = new GoogleMapView();
-        gmv.init(booking, arguments, mapLayout, activity);
-
-        //date banner
-        BookingDetailsDateView dateView = new BookingDetailsDateView();
-        dateView.init(booking, new Bundle(), dateLayout, activity);
-
-        //Location panel
-        BookingDetailsLocationPanelView locationPanel = new BookingDetailsLocationPanelView();
-        locationPanel.init(booking, arguments, locationLayout, activity);
-
-        //action section
-        BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
-        actionPanel.init(booking, arguments, actionLayout, activity);
-        initActionButtonListener(actionPanel.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
-
-        //customer contact section
-        BookingDetailsContactPanelView contactPanel = new BookingDetailsContactPanelView();
-        contactPanel.init(booking, arguments, contactLayout, activity);
-        initContactButtonListeners(contactPanel.getCallButton(), contactPanel.getTextButton(), booking.getUser().getPhoneNumberString());
-
-        //extra details
-        //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
-        BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
-        jobInstructionsView.init(booking, arguments, jobInstructionsLayout, activity);
-
-        //Remove job action panel
-        BookingDetailsActionRemovePanelView removeJobView = new BookingDetailsActionRemovePanelView();
-        removeJobView.init(booking, arguments, removeJobLayout, activity);
-        initActionRemoveButtonListener(removeJobView.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
-
-        //Full details notice
-        fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
-    }
-
-    private void setBannerText(BookingStatus bookingStatus)
-    {
-        switch (bookingStatus)
-        {
-            case AVAILABLE:
-            {
-                bannerText.setText(R.string.available_job);
-            }
-            break;
-
-            case CLAIMED:
-            case CLAIMED_WITHIN_HOUR:
-            case CLAIMED_WITHIN_DAY:
-            case CLAIMED_PAST:
-            case CLAIMED_IN_PROGRESS_CHECKED_IN:
-            case CLAIMED_IN_PROGRESS:
-            {
-                bannerText.setText(R.string.your_job);
-            }
-            break;
-
-            case UNAVAILABLE:
-            {
-                bannerText.setText(R.string.unavailable_job);
-            }
-            break;
-        }
-    }
-
-    @OnClick(R.id.booking_details_back_button)
-    public void onBackButtonClick(View v)
-    {
-        getActivity().onBackPressed();
-    }
-
-    private Button getActionButton()
-    {
-        return ((Button) actionLayout.findViewById(R.id.booking_details_action_button));
-    }
-
-    private Button getActionRemoveButton()
-    {
-        return ((Button) removeJobLayout.findViewById(R.id.booking_details_action_button));
-    }
-
-    private void initActionButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
-    {
-        button.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                //TODO: can take various actions based on booking status
-                //claim
-                //on my way
-                //check in
-                //check out
-                switch (bookingStatus)
-                {
-                    case AVAILABLE:
-                    {
-                        requestClaimJob(bookingId);
-                    }
-                    break;
-                    //TODO: more status actions
-                }
-                button.setEnabled(false); //prevent multi clicks, turn off button when an action is taken, if action fails re-enable butotn
-            }
-        });
-    }
-
-    private void initActionRemoveButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
-    {
-        button.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                requestRemoveJob(bookingId);
-                button.setEnabled(false); //prevent multi clicks, turn off button when an action is taken, if action fails re-enable butotn
-            }
-        });
-    }
-
-
-
-    private void initContactButtonListeners(final Button callButton, final Button textButton, final String phoneNumber)
-    {
-        callButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                try
-                {
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + phoneNumber));
-                    startActivity(callIntent);
-                }
-                catch (ActivityNotFoundException activityException)
-                {
-                    System.err.println("Calling a Phone Number failed" + activityException);
-                }
-            }
-        });
-
-        textButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                try
-                {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
-                }
-                catch (ActivityNotFoundException activityException)
-                {
-                    System.err.println("Texting a Phone Number failed" + activityException);
-                }
-            }
-        });
-    }
-
-    private String getLoggedInUserId()
-    {
-        return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
-    }
-
-    //Handle Claiming Errors
     private void handleBookingClaimError(final Event.ClaimJobRequestReceivedEvent event)
     {
         //used for onclick closure
@@ -406,98 +449,83 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void handleBookingClaimError(String errorMessage, String title, String option1, Date returnDate)
     {
-        final long returnDateEpochTime = returnDate.getTime();
-
         if (errorMessage != null)
         {
             bus.post(new Event.ClaimJobErrorEvent(errorMessage));
-
-            //specific booking error, show an alert dialog
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-
-            // set title
-            alertDialogBuilder.setTitle(title);
-
-            // set dialog message
-            alertDialogBuilder
-                    .setMessage(errorMessage)
-                    .setCancelable(false)
-                    .setPositiveButton(option1, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            //Return to available jobs, don't need overlay transition after alert dialog
-                            returnToAvailableBookings(returnDateEpochTime, TransitionStyle.REFRESH_TAB);
-                        }
-                    })
-            ;
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            // show it
-            alertDialog.show();
+            showReturnToAvailableErrorDialog(errorMessage, title, option1, returnDate.getTime());
         }
         else
         {
-            //generic network problem
-            //show a toast about connectivity issues
-            showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
-            //re-enable the button so they can try again for network errors
-            getActionButton().setEnabled(true);
+            handleNetworkError();
         }
     }
 
-    //Handle Removing Errors
     private void handleBookingRemoveError(final Event.RemoveJobRequestReceivedEvent event)
     {
-        //used for onclick closure
-        handleBookingClaimError(event.errorMessage, R.string.job_remove_error, R.string.return_to_schedule, this.associatedBooking.getStartDate());
+        handleBookingRemoveError(event.errorMessage, R.string.job_remove_error, R.string.return_to_schedule, this.associatedBooking.getStartDate());
     }
 
     private void handleBookingRemoveError(String errorMessage, int titleId, int option1Id, Date returnDate)
     {
-        handleBookingClaimError(errorMessage, getString(titleId), getString(option1Id), returnDate);
+        handleBookingRemoveError(errorMessage, getString(titleId), getString(option1Id), returnDate);
     }
 
     private void handleBookingRemoveError(String errorMessage, String title, String option1, Date returnDate)
     {
-        final long returnDateEpochTime = returnDate.getTime();
-
         if (errorMessage != null)
         {
-            bus.post(new Event.ClaimJobErrorEvent(errorMessage));
-
-            //specific booking error, show an alert dialog
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-
-            // set title
-            alertDialogBuilder.setTitle(title);
-
-            // set dialog message
-            alertDialogBuilder
-                    .setMessage(errorMessage)
-                    .setCancelable(false)
-                    .setPositiveButton(option1, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            //Return to available jobs, don't need overlay transition after alert dialog
-                            returnToAvailableBookings(returnDateEpochTime, TransitionStyle.REFRESH_TAB);
-                        }
-                    })
-            ;
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            // show it
-            alertDialog.show();
+            bus.post(new Event.RemoveJobErrorEvent(errorMessage));
+            showReturnToAvailableErrorDialog(errorMessage, title, option1, returnDate.getTime());
         }
         else
         {
-            //generic network problem
-            //show a toast about connectivity issues
-            showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
-            //re-enable the button so they can try again for network errors
-            getActionRemoveButton().setEnabled(true);
+            handleNetworkError();
         }
+    }
+
+    private void showReturnToAvailableErrorDialog(String title, String errorMessage, String option1, final long returnDateEpochTime)
+    {
+        //specific booking error, show an alert dialog
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+        // set title
+        alertDialogBuilder.setTitle(title);
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(errorMessage)
+                .setCancelable(false)
+                .setPositiveButton(option1, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        //Return to available jobs, don't need overlay transition after alert dialog
+                        returnToAvailableBookings(returnDateEpochTime, TransitionStyle.REFRESH_TAB);
+                    }
+                })
+        ;
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
+    }
+
+    private void handleNetworkError()
+    {
+        //generic network problem
+        //show a toast about connectivity issues
+        showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
+        //re-enable the button so they can try again for network errors
+        //buttonToReactivate.setEnabled(true);
+
+        //todo: turn relevant buttons back on
+        reenableButtons();
+    }
+
+    //todo: turn relevant buttons back on if a network call fails
+    private void reenableButtons()
+    {
+        System.err.println("Still need to fix, in the event of a network error re-enable relevant buttons");
     }
 
 }

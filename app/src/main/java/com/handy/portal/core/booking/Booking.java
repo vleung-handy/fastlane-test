@@ -7,6 +7,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,6 +41,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("partner") private String partner;
     @SerializedName("country") private String country;
     @SerializedName("user") private User user;
+    @SerializedName("action_buttons") private List<ActionButtonData> actionButtonData;
 
     public int compareTo(Booking other)
     {
@@ -182,12 +184,134 @@ public final class Booking implements Parcelable, Comparable<Booking>
     {
         AVAILABLE,
         CLAIMED,
-        CLAIMED_WITHIN_DAY,
-        CLAIMED_WITHIN_HOUR,
-        CLAIMED_IN_PROGRESS,
-        CLAIMED_IN_PROGRESS_CHECKED_IN,
-        CLAIMED_PAST,
         UNAVAILABLE,
+    }
+
+    public List<ActionButtonData> getAllowedActions()
+    {
+        List<ActionButtonData> allowedActions = new ArrayList<>();
+
+        //hack hack , does not need to be used in reality since we will get this list of actions
+        String hackUserId = "7462";
+
+        BookingStatus inferredBookingStatus = inferBookingStatus(hackUserId);
+
+        System.out.println("inferred booking status : " + inferredBookingStatus);
+
+        if(inferredBookingStatus == BookingStatus.AVAILABLE)
+        {
+            allowedActions.add(new ActionButtonData("claim","", true));
+        }
+        else if(inferredBookingStatus == BookingStatus.CLAIMED)
+        {
+            allowedActions.add(new ActionButtonData("on_my_way","Button activates 1 hour before booking", false));
+            allowedActions.add(new ActionButtonData("remove","If you do this bad things will happen to you!", true));
+            allowedActions.add(new ActionButtonData("contact_phone","", true));
+            allowedActions.add(new ActionButtonData("contact_text", "", true));
+        }
+        else
+        {
+
+        }
+        return allowedActions;
+    }
+
+
+
+
+    public static final class ActionButtonData
+    {
+        @SerializedName("action_name")
+        private String actionName;
+        @SerializedName("message")
+        private String message;
+        @SerializedName("enabled")
+        private boolean enabled;
+
+        public String getActionName()
+        {
+            return actionName;
+        }
+
+        public String getMessage()
+        {
+            return message;
+        }
+
+        public ButtonActionType getAssociatedActionType()
+        {
+             for(ButtonActionType bat : ButtonActionType.values())
+             {
+                 if(actionName.equals(bat.getActionName()))
+                 {
+                    return bat;
+                 }
+             }
+            return null;
+        }
+
+        //for debugging - will remove this constructor once getting real data from server
+        public ActionButtonData(String a, String m, boolean enab)
+        {
+            actionName = a;
+            message = m;
+            enabled = enab;
+        }
+
+        public boolean isEnabled()
+        {
+            return enabled;
+        }
+    }
+
+    public enum ButtonActionType
+    {
+        CLAIM("claim",R.drawable.button_green_round, R.string.claim, R.layout.element_booking_action_button_template),
+        REMOVE("remove",R.drawable.button_red_round, R.string.remove, R.layout.element_booking_action_button_template),
+        ON_MY_WAY("on_my_way", R.drawable.button_purple_round, R.string.on_my_way, R.layout.element_booking_action_button_template),
+        CHECK_IN("check_in", R.drawable.button_purple_round, R.string.check_in, R.layout.element_booking_action_button_template),
+        UPDATE_ARRIVAL_TIME("update_arrival_time", R.drawable.button_purple_round, R.string.update_arrival_time, R.layout.element_booking_action_button_template),
+        CONTACT_PHONE("contact_phone", R.drawable.button_white_round, R.string.call, R.layout.element_booking_contact_action_button_template),
+        CONTACT_TEXT("contact_text", R.drawable.button_white_round, R.string.text, R.layout.element_booking_contact_action_button_template),
+        ;
+
+        private String actionName; //must correspond to server's actionName to match up correctly
+        private int displayNameId;
+        private int drawableId;
+        private int layoutTemplateId;
+
+        ButtonActionType()
+        {
+            this.drawableId = R.drawable.empty;
+        }
+
+        ButtonActionType(String actionName, int drawableId, int displayNameId, int layoutTemplateId)
+        {
+            this.actionName = actionName;
+            this.drawableId = drawableId;
+            this.displayNameId = displayNameId;
+            this.layoutTemplateId = layoutTemplateId;
+        }
+
+        public int getDrawableId()
+        {
+            return drawableId;
+        }
+
+        public String getActionName()
+        {
+            return actionName;
+        }
+
+        public int getDisplayNameId()
+        {
+            return displayNameId;
+        }
+
+        public int getLayoutTemplateId()
+        {
+            return layoutTemplateId;
+        }
     }
 
     public BookingStatus inferBookingStatus()
@@ -204,33 +328,9 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
         boolean bookingIsInPast = isInPast();
 
-        boolean bookingWithinOneHour = false;
-
-        Date bookingStartDate = getStartDate();
-        long diffMinutes = ((bookingStartDate.getTime() - (currentTime.getTime()) / (60 * 1000)));
-        if(diffMinutes <= 60 && diffMinutes >= 0)
-        {
-            bookingWithinOneHour = true;
-        }
-
-        boolean bookingWithinOneDay = false;
-        long diffHours = ((bookingStartDate.getTime() - currentTime.getTime()) / (60 * 60 * 1000));
-        if(diffHours <= 24 && diffHours >= 0)
-        {
-            bookingWithinOneDay = true;
-        }
-
-        boolean bookingInProgress = false;
-        if( currentTime.getTime() > getStartDate().getTime() &&
-                currentTime.getTime() < getEndDate().getTime())
-        {
-            bookingInProgress = true;
-        }
-
         if(assignedProvider.equals(NO_PROVIDER_ASSIGNED))
         {
             //TODO: If booking is in the past change status
-
             if(bookingIsInPast)
             {
                 return BookingStatus.UNAVAILABLE;
@@ -240,31 +340,9 @@ public final class Booking implements Parcelable, Comparable<Booking>
                 return BookingStatus.AVAILABLE;
             }
         }
-
         else if(getProviderId().equals(userId))
         {
-            //TODO: Depending on time to booking change status
-
-            if(bookingIsInPast)
-            {
-                return BookingStatus.CLAIMED_PAST;
-            }
-            else if(bookingInProgress)
-            {
-                return BookingStatus.CLAIMED_IN_PROGRESS;
-            }
-            else if(bookingWithinOneHour)
-            {
-                return BookingStatus.CLAIMED_WITHIN_HOUR;
-            }
-            else if(bookingWithinOneDay)
-            {
-                return BookingStatus.CLAIMED_WITHIN_DAY;
-            }
-            else
-            {
-                return BookingStatus.CLAIMED;
-            }
+            return BookingStatus.CLAIMED;
         }
         else
         {

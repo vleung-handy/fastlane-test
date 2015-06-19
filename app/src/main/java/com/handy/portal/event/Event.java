@@ -316,6 +316,18 @@ public abstract class Event
         }
     }
 
+    @Track("remove job error")
+    public static class RemoveJobErrorEvent extends Event
+    {
+        @TrackField("message")
+        private String message;
+
+        public RemoveJobErrorEvent(String message)
+        {
+            this.message = message;
+        }
+    }
+
     public static class RequestAvailableBookingsErrorEvent extends Event
     {
         public final DataManager.DataManagerError error;
