@@ -62,7 +62,6 @@ public class BookingManager
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                System.err.println("Failed to get booking details " + error);
                 bus.post(new Event.BookingsDetailsRetrievedEvent(null, false));
             }
         });

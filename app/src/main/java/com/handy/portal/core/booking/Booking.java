@@ -7,6 +7,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -188,6 +189,43 @@ public final class Booking implements Parcelable, Comparable<Booking>
         CLAIMED_IN_PROGRESS_CHECKED_IN,
         CLAIMED_PAST,
         UNAVAILABLE,
+    }
+
+
+    public List<ButtonActionType> getAllowedActions()
+    {
+        List<ButtonActionType> foo = new ArrayList<>();
+
+        foo.add(ButtonActionType.CLAIM);
+        foo.add(ButtonActionType.CONTACT_PHONE);
+        foo.add(ButtonActionType.CONTACT_TEXT);
+
+        return foo;
+    }
+
+    public enum ButtonActionType
+    {
+        CLAIM("claim",R.drawable.button_green_round),
+        ON_MY_WAY("on_my_way", R.drawable.button_purple_round),
+        CONTACT_PHONE("contact_phone", R.drawable.button_white_round),
+        CONTACT_TEXT("contact_text", R.drawable.button_white_round),
+        ;
+
+        private String actionId;
+
+        private int drawableId;
+
+        ButtonActionType()
+        {
+            this.drawableId = R.drawable.empty;
+        }
+
+        ButtonActionType(String actionId, int drawableId)
+        {
+            this.actionId = actionId;
+            this.drawableId = drawableId;
+        }
+
     }
 
     public BookingStatus inferBookingStatus()
