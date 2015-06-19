@@ -312,6 +312,11 @@ public class BookingDetailsFragment extends InjectedFragment
                 textPhoneNumber(this.associatedBooking.getUser().getPhoneNumberString());
             }
             break;
+
+            default:
+            {
+                System.err.println("Could not find associated behavior for : " + actionType.getActionName());
+            }
         }
     }
 
