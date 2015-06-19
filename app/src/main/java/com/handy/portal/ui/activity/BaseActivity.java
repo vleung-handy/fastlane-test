@@ -2,18 +2,17 @@ package com.handy.portal.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.handy.portal.core.ApplicationOnResumeWatcher;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
 import com.handy.portal.core.TermsManager;
-import com.handy.portal.core.UpdateManager;
+import com.handy.portal.core.VersionManager;
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
@@ -56,9 +55,11 @@ public abstract class BaseActivity extends FragmentActivity
     @Inject
     LoginManager loginManager;
     @Inject
-    UpdateManager updateManager;
+    VersionManager versionManager;
     @Inject
     TermsManager termsManager;
+    @Inject
+    ApplicationOnResumeWatcher applicationOnResumeWatcher;
     @Inject
     SecurePreferences prefs;
     @Inject
@@ -77,9 +78,9 @@ public abstract class BaseActivity extends FragmentActivity
         busEventListener = new Object()
         {
             @Subscribe
-            public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
+            public void onUpdateCheckReceived(Event.UpdateAvailable event)
             {
-                BaseActivity.this.onUpdateCheckReceived(event);
+                BaseActivity.this.onUpdateAvailable(event);
             }
         };
     }
@@ -110,6 +111,7 @@ public abstract class BaseActivity extends FragmentActivity
         super.onResume();
         this.bus.register(busEventListener);
         checkForUpdates();
+        postActivityResumeEvent(); //do not disable this
     }
 
     @Override
@@ -128,6 +130,7 @@ public abstract class BaseActivity extends FragmentActivity
     @Override
     public void onPause()
     {
+        postActivityPauseEvent();
         bus.unregister(busEventListener);
         super.onPause();
     }
@@ -151,23 +154,22 @@ public abstract class BaseActivity extends FragmentActivity
 
     public void checkForUpdates()
     {
-        PackageInfo pInfo = null;
-        try
-        {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            bus.post(new Event.UpdateCheckEvent(buildConfigWrapper.getFlavor(), pInfo.versionCode));
-        } catch (PackageManager.NameNotFoundException e)
-        {
-            throw new RuntimeException();
-        }
+        bus.post(new Event.UpdateCheckEvent(this));
     }
 
-    public void onUpdateCheckReceived(Event.UpdateCheckRequestReceivedEvent event)
+    public void postActivityResumeEvent()
     {
-        if (event.updateDetails != null && event.updateDetails.getShouldUpdate())
-        {
-            startActivity(new Intent(this, PleaseUpdateActivity.class));
-        }
+        bus.post(new Event.ActivityResumed(this));
+    }
+
+    public void postActivityPauseEvent()
+    {
+        bus.post(new Event.ActivityPaused(this));
+    }
+
+    public void onUpdateAvailable(Event.UpdateAvailable event)
+    {
+        startActivity(new Intent(this, PleaseUpdateActivity.class));
     }
 
 }

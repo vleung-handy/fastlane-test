@@ -4,10 +4,12 @@ import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.TermsDetails;
+import com.handy.portal.core.SimpleResponse;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class DataManager
 {
@@ -17,6 +19,8 @@ public abstract class DataManager
     public abstract void checkForTerms(Callback<TermsDetails> cb);
 
     public abstract void acceptTerms(String termsCode, Callback<Void> cb);
+
+    public abstract void sendVersionInformation(Map<String,String> info, Callback<SimpleResponse> cb);
 
     public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
 
@@ -32,6 +36,8 @@ public abstract class DataManager
     public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
 
     public abstract String getBaseUrl();
+
+    public abstract String getProviderId();
 
     public interface Callback<T>
     {

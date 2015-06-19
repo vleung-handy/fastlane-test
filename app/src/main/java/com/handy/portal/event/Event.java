@@ -1,5 +1,6 @@
 package com.handy.portal.event;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -11,7 +12,6 @@ import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.TermsDetails;
-import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
 
@@ -40,24 +40,45 @@ public abstract class Event
 
     public static class UpdateCheckEvent extends Event
     {
-        public int versionCode = 0;
-        public String appFlavor = "";
+        public Activity sender = null;
 
-        public UpdateCheckEvent(String appFlavor, int versionCode)
+        public UpdateCheckEvent(Activity sender)
         {
-            this.versionCode = versionCode;
-            this.appFlavor = appFlavor;
+            this.sender = sender;
         }
     }
 
-    public static class UpdateCheckRequestReceivedEvent extends Event
+    public static class UpdateAvailable extends Event
     {
-        public UpdateDetails updateDetails;
+    }
 
-        public UpdateCheckRequestReceivedEvent(UpdateDetails updateDetails, boolean success)
+    public static class ActivityPaused extends Event
+    {
+        public Activity sender;
+
+        public ActivityPaused(Activity sender)
         {
-            this.updateDetails = updateDetails;
-            this.success = success;
+            this.sender = sender;
+        }
+    }
+
+    public static class ActivityResumed extends Event
+    {
+        public Activity sender;
+
+        public ActivityResumed(Activity sender)
+        {
+            this.sender = sender;
+        }
+    }
+
+    public static class ApplicationResumed extends Event
+    {
+        public Activity sender;
+
+        public ApplicationResumed(Activity sender)
+        {
+            this.sender = sender;
         }
     }
 
@@ -213,6 +234,7 @@ public abstract class Event
     public static class SetLoadingOverlayVisibilityEvent extends Event
     {
         public boolean isVisible;
+
         public SetLoadingOverlayVisibilityEvent(boolean isVisible)
         {
             this.isVisible = isVisible;

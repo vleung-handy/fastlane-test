@@ -193,10 +193,11 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final UpdateManager provideUpdateManager(final Bus bus,
-                                             final DataManager dataManager)
+    final VersionManager provideVersionManager(final Bus bus,
+                                               final DataManager dataManager,
+                                               final BuildConfigWrapper buildConfigWrapper)
     {
-        return new UpdateManager(bus, dataManager);
+        return new VersionManager(bus, dataManager, buildConfigWrapper);
     }
 
     @Provides
@@ -206,6 +207,17 @@ public final class ApplicationModule
     {
         return new TermsManager(bus, dataManager);
     }
+
+    @Provides
+    @Singleton
+    final ApplicationOnResumeWatcher provideApplicationOnResumeWatcher(final Bus bus)
+    {
+        return new ApplicationOnResumeWatcher(bus);
+    }
+
+//    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {
+//        return new ReactiveLocationProvider(context);
+//    }
 
     @Provides
     @Singleton
