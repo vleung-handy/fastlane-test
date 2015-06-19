@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-public class UpdateManager
+public class VersionManager
 {
     private final Bus bus;
     private final BuildConfigWrapper buildConfigWrapper;
@@ -24,7 +24,7 @@ public class UpdateManager
     private String downloadURL =  "";
 
     @Inject
-    UpdateManager(final Bus bus, final DataManager dataManager, final BuildConfigWrapper buildConfigWrapper)
+    VersionManager(final Bus bus, final DataManager dataManager, final BuildConfigWrapper buildConfigWrapper)
     {
         this.bus = bus;
         this.bus.register(this);

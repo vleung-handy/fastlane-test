@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.handy.portal.R;
-import com.handy.portal.core.UpdateManager;
+import com.handy.portal.core.VersionManager;
 
 import javax.inject.Inject;
 
@@ -22,7 +22,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     @InjectView(R.id.download_button)
     Button downloadButton;
     @Inject
-    UpdateManager updateManager;
+    VersionManager versionManager;
 
 
     @Override
@@ -46,7 +46,7 @@ public class PleaseUpdateFragment extends InjectedFragment
             @Override
             public void onClick(View v)
             {
-                doDownloadApk(updateManager.getDownloadURL());
+                doDownloadApk(versionManager.getDownloadURL());
             }
         });
     }

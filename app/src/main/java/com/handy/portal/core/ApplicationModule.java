@@ -193,11 +193,11 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final UpdateManager provideUpdateManager(final Bus bus,
-                                             final DataManager dataManager,
-                                             final BuildConfigWrapper buildConfigWrapper)
+    final VersionManager provideVersionManager(final Bus bus,
+                                               final DataManager dataManager,
+                                               final BuildConfigWrapper buildConfigWrapper)
     {
-        return new UpdateManager(bus, dataManager, buildConfigWrapper);
+        return new VersionManager(bus, dataManager, buildConfigWrapper);
     }
 
     @Provides

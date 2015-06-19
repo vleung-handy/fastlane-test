@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class UpdateManagerTest extends RobolectricGradleTestWrapper
+public class VersionManagerTest extends RobolectricGradleTestWrapper
 {
     @Mock
     private Bus bus;
@@ -44,17 +44,17 @@ public class UpdateManagerTest extends RobolectricGradleTestWrapper
     @Captor
     private ArgumentCaptor<Event.UpdateAvailable> updateAvailableEventArgumentCaptor;
 
-    private UpdateManager updateManager;
+    private VersionManager versionManager;
 
     @Before
     public void setUp() throws Exception
     {
         initMocks(this);
-        updateManager = new UpdateManager(bus, dataManager, buildConfigWrapper);
+        versionManager = new VersionManager(bus, dataManager, buildConfigWrapper);
 
         reset(bus);
 
-        updateManager.onUpdateCheckRequest(new Event.UpdateCheckEvent(activity));
+        versionManager.onUpdateCheckRequest(new Event.UpdateCheckEvent(activity));
         verify(dataManager).checkForUpdates(anyString(), anyInt(), updateCheckCallbackCaptor.capture());
     }
 
@@ -76,7 +76,7 @@ public class UpdateManagerTest extends RobolectricGradleTestWrapper
         when(updateDetails.getDownloadUrl()).thenReturn("http://cats.org/app.apk");
         updateCheckCallbackCaptor.getValue().onSuccess(updateDetails);
 
-        assertThat(updateManager.getDownloadURL(), equalTo("http://cats.org/app.apk"));
+        assertThat(versionManager.getDownloadURL(), equalTo("http://cats.org/app.apk"));
     }
 
     @Test
