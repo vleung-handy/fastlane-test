@@ -200,13 +200,12 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
         if(inferredBookingStatus == BookingStatus.AVAILABLE)
         {
-            allowedActions.add(new ActionButtonData("claim","you are the walrus", true));
+            allowedActions.add(new ActionButtonData("claim","", true));
         }
         else if(inferredBookingStatus == BookingStatus.CLAIMED)
         {
-            allowedActions.add(new ActionButtonData("check_in","you are so fast", true));
-            allowedActions.add(new ActionButtonData("update_arrival_time","you are so fast", true));
-            allowedActions.add(new ActionButtonData("remove","are you totally sure?", true));
+            allowedActions.add(new ActionButtonData("on_my_way","Button activates 1 hour before booking", false));
+            allowedActions.add(new ActionButtonData("remove","If you do this bad things will happen to you!", true));
             allowedActions.add(new ActionButtonData("contact_phone","", true));
             allowedActions.add(new ActionButtonData("contact_text", "", true));
         }

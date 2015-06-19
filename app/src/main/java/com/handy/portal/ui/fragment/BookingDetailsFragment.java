@@ -261,13 +261,13 @@ public class BookingDetailsFragment extends InjectedFragment
         switch(bat)
         {
             case CLAIM: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
-            case REMOVE: { return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case ON_MY_WAY: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case CHECK_IN: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case UPDATE_ARRIVAL_TIME: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
             case CONTACT_PHONE: { return  (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
             case CONTACT_TEXT: { return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
+            case REMOVE: { return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             default:
             {
                 return null;
