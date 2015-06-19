@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +30,7 @@ import com.handy.portal.ui.element.BookingDetailsDateView;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.BookingDetailsLocationPanelView;
 import com.handy.portal.ui.element.GoogleMapView;
+import com.handy.portal.ui.widget.BookingActionButton;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
@@ -49,7 +49,8 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.booking_details_banner_text)
     protected TextView bannerText;
 
-    //Layouts points for fragment, the various element are childed to these
+    //Layouts points for fragment, the various elements are childed to these
+
     @InjectView(R.id.booking_details_layout)
     protected LinearLayout detailsParentLayout;
 
@@ -125,23 +126,16 @@ public class BookingDetailsFragment extends InjectedFragment
         return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
     }
 
-//Event Posts
+
+
+
+
     private void requestBookingDetails(String bookingId)
     {
         bus.post(new Event.RequestBookingDetailsEvent(bookingId));
     }
 
-    private void requestClaimJob(String bookingId)
-    {
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
-        bus.post(new Event.RequestClaimJobEvent(bookingId));
-    }
 
-    private void requestRemoveJob(String bookingId)
-    {
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
-        bus.post(new Event.RequestRemoveJobEvent(bookingId));
-    }
 
 //Display
     private void updateDisplayForBooking(Booking booking)
@@ -149,6 +143,7 @@ public class BookingDetailsFragment extends InjectedFragment
         //clear existing elements out of our fragment's display
         clearLayouts();
         initBookingDisplayElements(booking);
+        processAllowedActions(booking.getAllowedActions());
     }
 
     private void clearLayouts()
@@ -189,12 +184,12 @@ public class BookingDetailsFragment extends InjectedFragment
         //action section
         BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
         actionPanel.init(booking, arguments, actionLayout, activity);
-        initActionButtonListener(actionPanel.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
+        //initActionButtonListener(actionPanel.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
 
         //customer contact section
         BookingDetailsContactPanelView contactPanel = new BookingDetailsContactPanelView();
         contactPanel.init(booking, arguments, contactLayout, activity);
-        initContactButtonListeners(contactPanel.getCallButton(), contactPanel.getTextButton(), booking.getUser().getPhoneNumberString());
+        //initContactButtonListeners(contactPanel.getCallButton(), contactPanel.getTextButton(), booking.getUser().getPhoneNumberString());
 
         //extra details
         //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
@@ -204,7 +199,7 @@ public class BookingDetailsFragment extends InjectedFragment
         //Remove job action panel
         BookingDetailsActionRemovePanelView removeJobView = new BookingDetailsActionRemovePanelView();
         removeJobView.init(booking, arguments, removeJobLayout, activity);
-        initActionRemoveButtonListener(removeJobView.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
+        //initActionRemoveButtonListener(removeJobView.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
 
         //Full details notice
         fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
@@ -221,11 +216,6 @@ public class BookingDetailsFragment extends InjectedFragment
             break;
 
             case CLAIMED:
-            case CLAIMED_WITHIN_HOUR:
-            case CLAIMED_WITHIN_DAY:
-            case CLAIMED_PAST:
-            case CLAIMED_IN_PROGRESS_CHECKED_IN:
-            case CLAIMED_IN_PROGRESS:
             {
                 bannerText.setText(R.string.your_job);
             }
@@ -239,17 +229,56 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
-
-//Buttons and click listeners
-    private Button getActionButton()
+    //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
+    private void processAllowedActions(List<Booking.ActionButtonData> allowedActions)
     {
-        return ((Button) actionLayout.findViewById(R.id.booking_details_action_button));
+
+        for(Booking.ActionButtonData data : allowedActions)
+        {
+            if(data.getAssociatedActionType() == null)
+            {
+                System.err.println("Received an unsupported action type : " + data.getActionName());
+                continue;
+            }
+
+            //the client will need to know what layout to insert a given button into
+            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(data.getAssociatedActionType());
+
+            if(buttonParentLayout == null)
+            {
+                System.err.println("Could not find parent layout for " + data.getAssociatedActionType().getActionName());
+            }
+            else
+            {
+                int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
+                BookingActionButton bookingActionButton = (BookingActionButton)
+                        ((ViewGroup) getActivity().getLayoutInflater().inflate(data.getAssociatedActionType().getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
+                bookingActionButton.init(this, data); //not sure if this is the better way or to have buttons dispatch specifc events the fragment catches, for now this will suffice
+                bookingActionButton.setEnabled(data.isEnabled());
+            }
+        }
     }
 
-    private Button getActionRemoveButton()
+    private ViewGroup getParentLayoutForButtonActionType(Booking.ButtonActionType bat)
     {
-        return ((Button) removeJobLayout.findViewById(R.id.booking_details_action_button));
+        switch(bat)
+        {
+            case CLAIM: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            case REMOVE: { return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            case ON_MY_WAY: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+
+            //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
+            case CONTACT_PHONE: { return  (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
+            case CONTACT_TEXT: { return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
+
+            default:
+            {
+                return null;
+            }
+        }
     }
+
+//Click Actions
 
     @OnClick(R.id.booking_details_back_button)
     public void onBackButtonClick(View v)
@@ -257,89 +286,77 @@ public class BookingDetailsFragment extends InjectedFragment
         getActivity().onBackPressed();
     }
 
-    private void initActionButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
+    //The button onclick tells us what action to look up in our booking for additional data
+    //The associated booking remains the supreme data source for us
+    public void onActionButtonClick(Booking.ButtonActionType actionType)
     {
-        button.setOnClickListener(new View.OnClickListener()
+        switch(actionType)
         {
-            public void onClick(View v)
+            case CLAIM:
             {
-                //TODO: can take various actions based on booking status
-                //claim
-                //on my way
-                //check in
-                //check out
-                switch (bookingStatus)
-                {
-                    case AVAILABLE:
-                    {
-                        requestClaimJob(bookingId);
-                    }
-                    break;
-                    //TODO: more status actions
-                }
-                button.setEnabled(false); //prevent multi clicks, turn off button when an action is taken, if action fails re-enable butotn
+                requestClaimJob(this.associatedBooking.getId());
             }
-        });
+            break;
+
+            case REMOVE:
+            {
+                requestRemoveJob(this.associatedBooking.getId());
+            }
+            break;
+
+            case CONTACT_PHONE:
+            {
+                callPhoneNumber(this.associatedBooking.getUser().getPhoneNumberString());
+            }
+            break;
+
+            case CONTACT_TEXT:
+            {
+                textPhoneNumber(this.associatedBooking.getUser().getPhoneNumberString());
+            }
+            break;
+        }
     }
 
-    private void initActionRemoveButtonListener(final Button button, final BookingStatus bookingStatus, final String userId, final String bookingId)
+    private void requestClaimJob(String bookingId)
     {
-        button.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                requestRemoveJob(bookingId);
-                button.setEnabled(false); //prevent multi clicks, turn off button when an action is taken, if action fails re-enable butotn
-            }
-        });
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestClaimJobEvent(bookingId));
     }
 
-    private void initContactButtonListeners(final Button callButton, final Button textButton, final String phoneNumber)
+    private void requestRemoveJob(String bookingId)
     {
-        callButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                try
-                {
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + phoneNumber));
-                    startActivity(callIntent);
-                }
-                catch (ActivityNotFoundException activityException)
-                {
-                    System.err.println("Calling a Phone Number failed" + activityException);
-                }
-            }
-        });
-
-        textButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                try
-                {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
-                }
-                catch (ActivityNotFoundException activityException)
-                {
-                    System.err.println("Texting a Phone Number failed" + activityException);
-                }
-            }
-        });
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestRemoveJobEvent(bookingId));
     }
 
+    private void callPhoneNumber(final String phoneNumber)
+    {
+        try
+        {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phoneNumber));
+            startActivity(callIntent);
+        }
+        catch (ActivityNotFoundException activityException)
+        {
+            System.err.println("Calling a Phone Number failed" + activityException);
+        }
+    }
 
+    private void textPhoneNumber(final String phoneNumber)
+    {
+        try
+        {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
+        }
+        catch (ActivityNotFoundException activityException)
+        {
+            System.err.println("Calling a Phone Number failed" + activityException);
+        }
+    }
 
-
-
-
-
-
-
-
-
-//Events and Event Handling
+//Event Subscription and Handling
 
     @Subscribe
     public void onBookingDetailsRetrieved(Event.BookingsDetailsRetrievedEvent event)
@@ -415,7 +432,7 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
 
-//Handle Action Errors
+//Handle Action Response Errors
 
     private void handleBookingClaimError(final Event.ClaimJobRequestReceivedEvent event)
     {
@@ -437,7 +454,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
         else
         {
-            handleNetworkError(getActionButton());
+            handleNetworkError();
         }
     }
 
@@ -460,7 +477,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
         else
         {
-            handleNetworkError(getActionRemoveButton());
+            handleNetworkError();
         }
     }
 
@@ -491,13 +508,22 @@ public class BookingDetailsFragment extends InjectedFragment
         alertDialog.show();
     }
 
-    private void handleNetworkError(Button buttonToReactivate)
+    private void handleNetworkError()
     {
         //generic network problem
         //show a toast about connectivity issues
         showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
         //re-enable the button so they can try again for network errors
-        buttonToReactivate.setEnabled(true);
+        //buttonToReactivate.setEnabled(true);
+
+        //todo: turn relevant buttons back on
+        reenableButtons();
+    }
+
+    //todo: turn relevant buttons back on if a network call fails
+    private void reenableButtons()
+    {
+        System.err.println("Still need to fix, in the event of a network error re-enable relevant buttons");
     }
 
 }

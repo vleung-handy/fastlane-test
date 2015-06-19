@@ -9,17 +9,12 @@
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
-    <Button
-        android:id="@+id/booking_details_action_button"
-        android:text="@string/claim"
+    <LinearLayout
+        android:id="@+id/booking_details_action_panel_button_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        style="@style/Button.Green.Round"
-        android:layout_marginTop="10dp"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        />
+        android:layout_height="wrap_content">
+    </LinearLayout>
 
     <TextView
         android:id="@+id/booking_details_action_disclaimer_1_text"
@@ -27,7 +22,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/disclaimer_series"
-        android:layout_below="@+id/booking_details_action_button"
+        android:layout_below="@+id/booking_details_action_panel_button_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:visibility="gone"/>

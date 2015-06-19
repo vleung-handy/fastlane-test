@@ -18,37 +18,13 @@
         android:layout_marginTop="20dp"
         android:textColor="@color/black"/>
 
-
     <LinearLayout
+        android:id="@+id/booking_details_contact_action_button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/booking_details_contact_profile_text"
         android:orientation="horizontal"
         >
-
-        <Button
-            android:id="@+id/booking_details_contact_call_button"
-            android:text="@string/call"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/Button.White.Round"
-            android:layout_marginTop="10dp"
-            android:textAllCaps="true"
-            android:textSize="20sp"
-            android:layout_marginStart="10dp"/>
-
-        <Button
-            android:id="@+id/booking_details_contact_text_button"
-            android:text="@string/text"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/Button.White.Round"
-            android:layout_marginTop="10dp"
-            android:textAllCaps="true"
-            android:textSize="20sp"
-            android:layout_marginStart="10dp"/>
 
     </LinearLayout>
 
