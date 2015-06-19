@@ -5,7 +5,7 @@ import android.net.Uri;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.core.UpdateManager;
+import com.handy.portal.core.VersionManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.robolectric.Shadows.shadowOf;
 public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
 {
     @Mock
-    private UpdateManager updateManager;
+    private VersionManager versionManager;
 
     @InjectMocks
     private PleaseUpdateFragment fragment;
@@ -39,7 +39,7 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void whenDownloadButtonClicked_thenSendDownloadIntent() throws Exception
     {
-        when(updateManager.getDownloadURL()).thenReturn("http://url.cats");
+        when(versionManager.getDownloadURL()).thenReturn("http://url.cats");
 
         fragment.getView().findViewById(R.id.download_button).performClick();
 
