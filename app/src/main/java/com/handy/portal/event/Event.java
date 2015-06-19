@@ -12,7 +12,6 @@ import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.TermsDetails;
-import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
 
@@ -42,6 +41,7 @@ public abstract class Event
     public static class UpdateCheckEvent extends Event
     {
         public Activity sender = null;
+
         public UpdateCheckEvent(Activity sender)
         {
             this.sender = sender;
@@ -55,7 +55,9 @@ public abstract class Event
     public static class ActivityPaused extends Event
     {
         public Activity sender;
-        public ActivityPaused(Activity sender){
+
+        public ActivityPaused(Activity sender)
+        {
             this.sender = sender;
         }
     }
@@ -63,7 +65,9 @@ public abstract class Event
     public static class ActivityResumed extends Event
     {
         public Activity sender;
-        public ActivityResumed(Activity sender){
+
+        public ActivityResumed(Activity sender)
+        {
             this.sender = sender;
         }
     }
@@ -71,7 +75,9 @@ public abstract class Event
     public static class ApplicationResumed extends Event
     {
         public Activity sender;
-        public ApplicationResumed(Activity sender){
+
+        public ApplicationResumed(Activity sender)
+        {
             this.sender = sender;
         }
     }
@@ -228,6 +234,7 @@ public abstract class Event
     public static class SetLoadingOverlayVisibilityEvent extends Event
     {
         public boolean isVisible;
+
         public SetLoadingOverlayVisibilityEvent(boolean isVisible)
         {
             this.isVisible = isVisible;
