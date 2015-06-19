@@ -184,12 +184,10 @@ public class BookingDetailsFragment extends InjectedFragment
         //action section
         BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
         actionPanel.init(booking, arguments, actionLayout, activity);
-        //initActionButtonListener(actionPanel.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
 
         //customer contact section
         BookingDetailsContactPanelView contactPanel = new BookingDetailsContactPanelView();
         contactPanel.init(booking, arguments, contactLayout, activity);
-        //initContactButtonListeners(contactPanel.getCallButton(), contactPanel.getTextButton(), booking.getUser().getPhoneNumberString());
 
         //extra details
         //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
@@ -199,7 +197,6 @@ public class BookingDetailsFragment extends InjectedFragment
         //Remove job action panel
         BookingDetailsActionRemovePanelView removeJobView = new BookingDetailsActionRemovePanelView();
         removeJobView.init(booking, arguments, removeJobLayout, activity);
-        //initActionRemoveButtonListener(removeJobView.getActionButton(), bookingStatus, getLoggedInUserId(), booking.getId());
 
         //Full details notice
         fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
@@ -266,11 +263,11 @@ public class BookingDetailsFragment extends InjectedFragment
             case CLAIM: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case REMOVE: { return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case ON_MY_WAY: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
-
+            case CHECK_IN: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            case UPDATE_ARRIVAL_TIME: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
             case CONTACT_PHONE: { return  (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
             case CONTACT_TEXT: { return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
-
             default:
             {
                 return null;

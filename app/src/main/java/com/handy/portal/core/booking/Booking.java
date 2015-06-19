@@ -204,7 +204,8 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
         else if(inferredBookingStatus == BookingStatus.CLAIMED)
         {
-            allowedActions.add(new ActionButtonData("on_my_way","you are so fast", true));
+            allowedActions.add(new ActionButtonData("check_in","you are so fast", true));
+            allowedActions.add(new ActionButtonData("update_arrival_time","you are so fast", true));
             allowedActions.add(new ActionButtonData("remove","are you totally sure?", true));
             allowedActions.add(new ActionButtonData("contact_phone","", true));
             allowedActions.add(new ActionButtonData("contact_text", "", true));
@@ -269,6 +270,8 @@ public final class Booking implements Parcelable, Comparable<Booking>
         CLAIM("claim",R.drawable.button_green_round, R.string.claim, R.layout.element_booking_action_button_template),
         REMOVE("remove",R.drawable.button_red_round, R.string.remove, R.layout.element_booking_action_button_template),
         ON_MY_WAY("on_my_way", R.drawable.button_purple_round, R.string.on_my_way, R.layout.element_booking_action_button_template),
+        CHECK_IN("check_in", R.drawable.button_purple_round, R.string.check_in, R.layout.element_booking_action_button_template),
+        UPDATE_ARRIVAL_TIME("update_arrival_time", R.drawable.button_purple_round, R.string.update_arrival_time, R.layout.element_booking_action_button_template),
         CONTACT_PHONE("contact_phone", R.drawable.button_white_round, R.string.call, R.layout.element_booking_contact_action_button_template),
         CONTACT_TEXT("contact_text", R.drawable.button_white_round, R.string.text, R.layout.element_booking_contact_action_button_template),
         ;
