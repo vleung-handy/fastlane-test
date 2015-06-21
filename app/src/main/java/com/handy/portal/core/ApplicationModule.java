@@ -197,7 +197,7 @@ public final class ApplicationModule
                                                final DataManager dataManager,
                                                final BuildConfigWrapper buildConfigWrapper)
     {
-        return new VersionManager(bus, dataManager, buildConfigWrapper);
+        return new VersionManager(context, bus, dataManager, buildConfigWrapper);
     }
 
     @Provides

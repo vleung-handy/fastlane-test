@@ -193,8 +193,8 @@
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
-    <string name="update_copy">Please download the latest app to continue using portal.</string>
-    <string name="update_button_label">Download Update</string>
+    <string name="update_copy">Please install the update to continue using portal.</string>
+    <string name="update_button_label">Install Update</string>
 
     <plurals name="hour">
         <item quantity="one">hour</item>

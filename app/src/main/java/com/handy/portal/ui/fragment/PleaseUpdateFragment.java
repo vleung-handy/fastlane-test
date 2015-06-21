@@ -1,7 +1,6 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Inject
     VersionManager versionManager;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -46,17 +44,16 @@ public class PleaseUpdateFragment extends InjectedFragment
             @Override
             public void onClick(View v)
             {
-                doDownloadApk(versionManager.getDownloadURL());
+                installApk();
             }
         });
     }
 
-    public void doDownloadApk(String apkurl){
-        mixpanel.track("portal app update blocking screen clicked");
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(apkurl));
-        startActivity(i);
+    private void installApk()
+    {
+        Intent installIntent = new Intent(Intent.ACTION_VIEW);
+        installIntent.setDataAndType(versionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
+        startActivity(installIntent);
     }
-
 
 }
