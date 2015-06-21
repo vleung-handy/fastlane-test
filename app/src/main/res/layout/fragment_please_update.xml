@@ -22,9 +22,10 @@
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/update_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/update_copy"
+        android:text="@string/download_copy"
         style="@style/TextView.Medium"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
@@ -42,5 +43,6 @@
         android:layout_marginTop="30dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-        android:typeface="normal"/>
+        android:typeface="normal"
+        android:visibility="gone"/>
 </LinearLayout>

@@ -195,6 +195,7 @@
     <string name="update_header">Time for an update!</string>
     <string name="update_copy">Please install the update to continue using portal.</string>
     <string name="update_button_label">Install Update</string>
+    <string name="download_copy">Downloading update. Please wait…</string>
 
     <plurals name="hour">
         <item quantity="one">hour</item>

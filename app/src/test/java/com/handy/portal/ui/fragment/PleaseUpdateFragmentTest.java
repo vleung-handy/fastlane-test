@@ -46,6 +46,7 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
         fragment.getView().findViewById(R.id.update_button).performClick();
 
         Intent expectedIntent = new Intent(Intent.ACTION_VIEW);
+        expectedIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         expectedIntent.setDataAndType(mockUri, VersionManager.APK_MIME_TYPE);
         Intent actualIntent = shadowOf(fragment.getActivity()).getNextStartedActivity();
 

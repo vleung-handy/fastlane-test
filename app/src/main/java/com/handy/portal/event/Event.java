@@ -52,6 +52,10 @@ public abstract class Event
     {
     }
 
+    public static class UpdateReady
+    {
+    }
+
     public static class ActivityPaused extends Event
     {
         public Activity sender;

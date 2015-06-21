@@ -92,7 +92,18 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenUpdateNeeded_whenDownloadFinished_thenPostUpdateAvailableEvent() throws Exception
+    public void givenSuccessfulUpdateCheck_whenUpdateNeeded_thenPostUpdateAvailableEvent() throws Exception
+    {
+        when(updateDetails.getShouldUpdate()).thenReturn(true);
+
+        updateDetailsCallBack.onSuccess(updateDetails);
+
+        verify(bus).post(updateAvailableEventArgumentCaptor.capture());
+        assertThat(updateAvailableEventArgumentCaptor.getValue(), instanceOf(Event.UpdateAvailable.class));
+    }
+
+    @Test
+    public void givenUpdateNeeded_whenDownloadFinished_thenPostUpdateReadyEvent() throws Exception
     {
         BroadcastReceiver downloadReceiverSpy = spy(versionManager.downloadReceiver);
         Intent mockIntent = mock(Intent.class);
@@ -101,7 +112,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
         downloadReceiverSpy.onReceive(RuntimeEnvironment.application, mockIntent);
 
         verify(bus).post(updateAvailableEventArgumentCaptor.capture());
-        assertThat(updateAvailableEventArgumentCaptor.getValue(), instanceOf(Event.UpdateAvailable.class));
+        assertThat(updateAvailableEventArgumentCaptor.getValue(), instanceOf(Event.UpdateReady.class));
     }
 
     @Test

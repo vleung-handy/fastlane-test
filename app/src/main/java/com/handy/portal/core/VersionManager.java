@@ -64,6 +64,7 @@ public class VersionManager
                         if (updateDetails.getShouldUpdate())
                         {
                             downloadApk(updateDetails.getDownloadUrl());
+                            bus.post(new Event.UpdateAvailable());
                         }
                     }
 
@@ -135,7 +136,7 @@ public class VersionManager
             long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if (downloadReference == referenceId)
             {
-                bus.post(new Event.UpdateAvailable());
+                bus.post(new Event.UpdateReady());
             }
         }
     };
