@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.handy.portal.R;
 import com.handy.portal.core.VersionManager;
@@ -13,13 +12,10 @@ import com.handy.portal.core.VersionManager;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class PleaseUpdateFragment extends InjectedFragment
 {
-
-    @InjectView(R.id.download_button)
-    Button downloadButton;
     @Inject
     VersionManager versionManager;
 
@@ -31,29 +27,14 @@ public class PleaseUpdateFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_please_update, container);
         ButterKnife.inject(this, view);
 
-        registerControlListeners();
-
         return view;
     }
 
-    private void registerControlListeners()
-    {
-
-        downloadButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                installApk();
-            }
-        });
-    }
-
-    private void installApk()
+    @OnClick(R.id.update_button)
+    protected void installApk()
     {
         Intent installIntent = new Intent(Intent.ACTION_VIEW);
         installIntent.setDataAndType(versionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
         startActivity(installIntent);
     }
-
 }

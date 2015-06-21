@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
@@ -56,26 +57,28 @@ public class VersionManager
         PackageInfo pkgInfo = getPackageInfoFromActivity(event.sender);
 
         dataManager.checkForUpdates(buildConfigWrapper.getFlavor(), pkgInfo.versionCode, new DataManager.Callback<UpdateDetails>()
-            {
-                @Override
-                public void onSuccess(final UpdateDetails updateDetails)
                 {
-                    if (updateDetails.getShouldUpdate()) {
-                        downloadApk(updateDetails.getDownloadUrl());
+                    @Override
+                    public void onSuccess(final UpdateDetails updateDetails)
+                    {
+                        if (updateDetails.getShouldUpdate())
+                        {
+                            downloadApk(updateDetails.getDownloadUrl());
+                        }
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        //TODO: ERROR MESSAGE
                     }
                 }
-
-                @Override
-                public void onError(final DataManager.DataManagerError error)
-                {
-                    //TODO: ERROR MESSAGE
-                }
-            }
         );
     }
 
     @Subscribe
-    public void onApplicationResumed(Event.ApplicationResumed event) {
+    public void onApplicationResumed(Event.ApplicationResumed event)
+    {
 
         PackageInfo pInfo = getPackageInfoFromActivity(event.sender);
 
@@ -123,7 +126,8 @@ public class VersionManager
         context.registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
-    private BroadcastReceiver downloadReceiver = new BroadcastReceiver()
+    @VisibleForTesting
+    protected BroadcastReceiver downloadReceiver = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent)
@@ -136,8 +140,9 @@ public class VersionManager
         }
     };
 
-    private PackageInfo getPackageInfoFromActivity(Activity sender) {
-        PackageInfo pInfo = null;
+    private PackageInfo getPackageInfoFromActivity(Activity sender)
+    {
+        PackageInfo pInfo;
         try
         {
             pInfo = sender.getPackageManager().getPackageInfo(sender.getPackageName(), 0);

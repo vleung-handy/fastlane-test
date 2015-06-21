@@ -15,6 +15,7 @@ import org.robolectric.util.SupportFragmentTestUtil;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
@@ -37,13 +38,15 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void whenDownloadButtonClicked_thenSendDownloadIntent() throws Exception
+    public void whenDownloadButtonClicked_thenSendInstallIntent() throws Exception
     {
-        when(versionManager.getDownloadURL()).thenReturn("http://url.cats");
+        Uri mockUri = mock(Uri.class);
+        when(versionManager.getNewApkUri()).thenReturn(mockUri);
 
-        fragment.getView().findViewById(R.id.download_button).performClick();
+        fragment.getView().findViewById(R.id.update_button).performClick();
 
-        Intent expectedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://url.cats"));
+        Intent expectedIntent = new Intent(Intent.ACTION_VIEW);
+        expectedIntent.setDataAndType(mockUri, VersionManager.APK_MIME_TYPE);
         Intent actualIntent = shadowOf(fragment.getActivity()).getNextStartedActivity();
 
         assertThat(actualIntent, equalTo(expectedIntent));
