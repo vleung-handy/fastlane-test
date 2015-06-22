@@ -111,7 +111,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<Event.ScheduledB
         {
             for(Booking b : bookingsForDay)
             {
-                if(!b.isInPast())
+                if(!b.isEnded())
                 {
                     return true;
                 }

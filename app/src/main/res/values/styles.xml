@@ -137,7 +137,7 @@
 
     <style name="Button.White.Round">
         <item name="android:background">@drawable/button_white_round</item>
-        <item name="android:textColor">@drawable/button_text_black</item>
+        <item name="android:textColor">@drawable/button_text_blue</item>
     </style>
 
     <style name="RoundedButton">

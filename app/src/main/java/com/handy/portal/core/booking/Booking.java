@@ -86,18 +86,26 @@ public final class Booking implements Parcelable, Comparable<Booking>
         this.id = id;
     }
 
-    public boolean isInPast()
+    public boolean isStarted()
     {
-        boolean isInPast = false;
-
+        boolean isStarted = false;
         Date currentTime = Calendar.getInstance().getTime();
+        if(getStartDate().compareTo(currentTime) < 0)
+        {
+            isStarted = true;
+        }
+        return isStarted;
+    }
 
+    public boolean isEnded()
+    {
+        boolean isEnded = false;
+        Date currentTime = Calendar.getInstance().getTime();
         if(getEndDate().compareTo(currentTime) < 0)
         {
-            isInPast = true;
+            isEnded = true;
         }
-
-        return isInPast;
+        return isEnded;
     }
 
     public final boolean isRecurring() {
@@ -175,11 +183,10 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return "GB".equalsIgnoreCase(country);
     }
 
+    //providerId = 0, no one assigned can claim, otherwise is already claimed
     public static final String NO_PROVIDER_ASSIGNED = "0";
 
-    //providerId = 0, no one assigned can claim, otherwise is already claimed
-    //going to add providerstatus to track coming going etc
-
+    //Basic booking statuses inferrable from providerId
     public enum BookingStatus
     {
         AVAILABLE,
@@ -187,33 +194,69 @@ public final class Booking implements Parcelable, Comparable<Booking>
         UNAVAILABLE,
     }
 
-    public List<ActionButtonData> getAllowedActions()
+    //TODO: I don't like having all this business logic in the client, we should get authoritative statuses from the server
+    public BookingStatus inferBookingStatus(String userId)
     {
-        List<ActionButtonData> allowedActions = new ArrayList<>();
+        String assignedProvider = getProviderId();
+        boolean bookingIsStarted = isStarted();
 
-        //hack hack , does not need to be used in reality since we will get this list of actions
-        String hackUserId = "7462";
-
-        BookingStatus inferredBookingStatus = inferBookingStatus(hackUserId);
-
-        System.out.println("inferred booking status : " + inferredBookingStatus);
-
-        if(inferredBookingStatus == BookingStatus.AVAILABLE)
+        if(assignedProvider.equals(NO_PROVIDER_ASSIGNED))
         {
-            allowedActions.add(new ActionButtonData("claim","", true));
+            //Can't claim bookings that have already started
+            if(bookingIsStarted)
+            {
+                return BookingStatus.UNAVAILABLE;
+            }
+            else
+            {
+                return BookingStatus.AVAILABLE;
+            }
         }
-        else if(inferredBookingStatus == BookingStatus.CLAIMED)
+        else if(getProviderId().equals(userId))
         {
-            allowedActions.add(new ActionButtonData("on_my_way","Button activates 1 hour before booking", false));
-            allowedActions.add(new ActionButtonData("remove","If you do this bad things will happen to you!", true));
-            allowedActions.add(new ActionButtonData("contact_phone","", true));
-            allowedActions.add(new ActionButtonData("contact_text", "", true));
+            return BookingStatus.CLAIMED;
         }
         else
         {
-
+            return BookingStatus.UNAVAILABLE;
         }
-        return allowedActions;
+    }
+
+    public List<ActionButtonData> getAllowedActions()
+    {
+        if(false)
+        {
+            return actionButtonData;
+        }
+        else
+        {
+            //DEBUG : Generate hacky data for me to test with while waiting for new booking data
+            List<ActionButtonData> allowedActions = new ArrayList<>();
+
+            //hack hack , does not need to be used in reality since we will get this list of actions
+            String hackUserId = "4138";
+
+            BookingStatus inferredBookingStatus = inferBookingStatus(hackUserId);
+
+            System.out.println("inferred booking status : " + inferredBookingStatus);
+
+            if(inferredBookingStatus == BookingStatus.AVAILABLE)
+            {
+                allowedActions.add(new ActionButtonData("claim","", true));
+            }
+            else if(inferredBookingStatus == BookingStatus.CLAIMED)
+            {
+                allowedActions.add(new ActionButtonData("on_my_way","Button activates 1 hour before booking", true));
+                allowedActions.add(new ActionButtonData("remove","If you do this bad things will happen to you!", true));
+                allowedActions.add(new ActionButtonData("contact_phone","", true));
+                allowedActions.add(new ActionButtonData("contact_text", "", true));
+            }
+            else
+            {
+
+            }
+            return allowedActions;
+        }
     }
 
 
@@ -264,15 +307,25 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
+
+//Must stay synced against server
+    public static final String ACTION_NAME_CLAIM = "claim";
+    public static final String ACTION_NAME_REMOVE = "remove";
+    public static final String ACTION_NAME_ON_MY_WAY = "on_my_way";
+    public static final String ACTION_NAME_CHECK_IN = "check_in";
+    public static final String ACTION_NAME_ETA = "eta";
+    public static final String ACTION_NAME_CONTACT_PHONE = "contact_phone";
+    public static final String ACTION_NAME_CONTACT_TEXT = "contact_text";
+
     public enum ButtonActionType
     {
-        CLAIM("claim",R.drawable.button_green_round, R.string.claim, R.layout.element_booking_action_button_template),
-        REMOVE("remove",R.drawable.button_red_round, R.string.remove, R.layout.element_booking_action_button_template),
-        ON_MY_WAY("on_my_way", R.drawable.button_purple_round, R.string.on_my_way, R.layout.element_booking_action_button_template),
-        CHECK_IN("check_in", R.drawable.button_purple_round, R.string.check_in, R.layout.element_booking_action_button_template),
-        ETA("eta", R.drawable.button_purple_round, R.string.update_arrival_time, R.layout.element_booking_action_button_template),
-        CONTACT_PHONE("contact_phone", R.drawable.button_white_round, R.string.call, R.layout.element_booking_contact_action_button_template),
-        CONTACT_TEXT("contact_text", R.drawable.button_white_round, R.string.text, R.layout.element_booking_contact_action_button_template),
+        CLAIM(ACTION_NAME_CLAIM, R.drawable.button_green_round, R.string.claim, R.layout.element_booking_action_button_template),
+        REMOVE(ACTION_NAME_REMOVE,R.drawable.button_red_round, R.string.remove_job, R.layout.element_booking_action_button_template),
+        ON_MY_WAY(ACTION_NAME_ON_MY_WAY, R.drawable.button_purple_round, R.string.on_my_way, R.layout.element_booking_action_button_template),
+        CHECK_IN(ACTION_NAME_CHECK_IN, R.drawable.button_purple_round, R.string.check_in, R.layout.element_booking_action_button_template),
+        ETA(ACTION_NAME_ETA, R.drawable.button_purple_round, R.string.update_arrival_time, R.layout.element_booking_action_button_template),
+        CONTACT_PHONE(ACTION_NAME_CONTACT_PHONE, R.drawable.button_white_round, R.string.call, R.layout.element_booking_contact_action_button_template),
+        CONTACT_TEXT(ACTION_NAME_CONTACT_TEXT, R.drawable.button_white_round, R.string.text, R.layout.element_booking_contact_action_button_template),
         ;
 
         private String actionName; //must correspond to server's actionName to match up correctly
@@ -317,37 +370,6 @@ public final class Booking implements Parcelable, Comparable<Booking>
     public BookingStatus inferBookingStatus()
     {
         return inferBookingStatus("-1notavalidid");
-    }
-
-    //TODO: I don't like having all this business logic in the client, we should get authoritative statuses from the server
-    public BookingStatus inferBookingStatus(String userId)
-    {
-        String assignedProvider = getProviderId();
-
-        Date currentTime = Calendar.getInstance().getTime();
-
-        boolean bookingIsInPast = isInPast();
-
-        if(assignedProvider.equals(NO_PROVIDER_ASSIGNED))
-        {
-            //TODO: If booking is in the past change status
-            if(bookingIsInPast)
-            {
-                return BookingStatus.UNAVAILABLE;
-            }
-            else
-            {
-                return BookingStatus.AVAILABLE;
-            }
-        }
-        else if(getProviderId().equals(userId))
-        {
-            return BookingStatus.CLAIMED;
-        }
-        else
-        {
-            return BookingStatus.UNAVAILABLE;
-        }
     }
 
     private Booking(final Parcel in) {

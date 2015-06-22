@@ -138,7 +138,7 @@ public class BookingDetailsFragment extends InjectedFragment
         //clear existing elements out of our fragment's display
         clearLayouts();
         constructBookingDisplayElements(booking);
-        processAllowedActions(booking.getAllowedActions());
+        createAllowedActionButtons(booking.getAllowedActions());
     }
 
     private void clearLayouts()
@@ -192,7 +192,7 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
-    private void processAllowedActions(List<Booking.ActionButtonData> allowedActions)
+    private void createAllowedActionButtons(List<Booking.ActionButtonData> allowedActions)
     {
         for(Booking.ActionButtonData data : allowedActions)
         {

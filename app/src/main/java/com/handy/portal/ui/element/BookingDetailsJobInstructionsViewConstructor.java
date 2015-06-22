@@ -31,13 +31,9 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
     protected void constructViewFromBooking(Booking booking, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
-        boolean fullDetails = false;
-        if (bookingStatus == BookingStatus.CLAIMED)
-        {
-            fullDetails = true;
-        }
+        boolean fullDetails = (bookingStatus == BookingStatus.CLAIMED);
 
-        boolean removeJobInstructionsSection = true;
+        boolean removeJobInstructionsSection = true; //if we don't add any sections we will remove the view
 
         //Booking instructions
         if (fullDetails)
@@ -56,7 +52,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
                     removeJobInstructionsSection = false;
                     BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
                     //TODO: Hardcoding string and icon, we need to get this data from the booking info
-                    sectionView.init(activity.getString(R.string.customer_details), R.drawable.ic_details_extras, entries, true);
+                    sectionView.init(activity.getString(R.string.customer_details), R.drawable.ic_details_customer, entries, true);
                 }
             }
         }
@@ -71,7 +67,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
             removeJobInstructionsSection = false;
             BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
             //TODO: Hardcoding string and icon, we need to get this data from the booking info
-            sectionView.init(activity.getString(R.string.supplies), R.drawable.ic_details_extras, entries, true);
+            sectionView.init(activity.getString(R.string.supplies), R.drawable.ic_details_supplies, entries, true);
         }
 
         //Extras - excluding Supplies instructions
@@ -116,7 +112,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
                 removeJobInstructionsSection = false;
                 BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
                 //TODO: Hardcoding string and icon, we need to get this data from the booking info
-                sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_extras, entries, false);
+                sectionView.init(activity.getString(R.string.customer_request), R.drawable.ic_details_request, entries, false);
             }
         }
 

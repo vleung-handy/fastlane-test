@@ -67,11 +67,11 @@ public class ScheduledBookingElementView extends BookingElementView
         bookingRegionText.setText(booking.getAddress().getShortRegion());
 
         //Claimed
-        claimedIndicatorLayout.setVisibility(booking.isInPast() ? View.GONE : View.VISIBLE);
+        claimedIndicatorLayout.setVisibility(booking.isEnded() ? View.GONE : View.VISIBLE);
 
         //Completed
-        completedText.setVisibility(booking.isInPast() ? View.VISIBLE : View.GONE);
-        completedIndicator.setVisibility(booking.isInPast() ? View.VISIBLE : View.GONE);
+        completedText.setVisibility(booking.isEnded() ? View.VISIBLE : View.GONE);
+        completedIndicator.setVisibility(booking.isEnded() ? View.VISIBLE : View.GONE);
 
         //Date and Time
         SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);
