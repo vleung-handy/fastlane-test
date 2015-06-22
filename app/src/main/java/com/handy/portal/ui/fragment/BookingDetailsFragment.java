@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -138,6 +139,7 @@ public class BookingDetailsFragment extends InjectedFragment
         //clear existing elements out of our fragment's display
         clearLayouts();
         constructBookingDisplayElements(booking);
+        initBackButton();
         createAllowedActionButtons(booking.getAllowedActions());
     }
 
@@ -189,6 +191,23 @@ public class BookingDetailsFragment extends InjectedFragment
         views.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor());
         views.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor());
         return views;
+    }
+
+    //TODO: the only button on this page that is not an action button, clean this up eventually?
+    private void initBackButton()
+    {
+        ImageButton backButton = (ImageButton) bannerLayout.findViewById(R.id.booking_details_back_button);
+        if(backButton != null)
+        {
+            backButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
     }
 
     //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
