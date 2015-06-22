@@ -242,8 +242,6 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
             BookingStatus inferredBookingStatus = inferBookingStatus(hackUserId);
 
-            System.out.println("inferred booking status : " + inferredBookingStatus);
-
             if(inferredBookingStatus == BookingStatus.AVAILABLE)
             {
                 allowedActions.add(new ActionButtonData("claim", "this is the claim button above me", "if you claim you must do it, okay?", true));
@@ -308,7 +306,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         {
             actionName = a;
             helperText = h;
-            warningText = h;
+            warningText = w;
             enabled = enab;
         }
 

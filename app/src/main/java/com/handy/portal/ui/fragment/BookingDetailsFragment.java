@@ -24,10 +24,10 @@ import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.event.Event;
+import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionRemovePanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsBannerViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
@@ -264,6 +264,23 @@ public class BookingDetailsFragment extends InjectedFragment
     //The associated booking remains the supreme data source for us
     public void onActionButtonClick(Booking.ButtonActionType actionType)
     {
+        takeAction(actionType, false);
+    }
+
+    public void takeAction(Booking.ButtonActionType actionType, boolean hasBeenWarned)
+    {
+        boolean allowAction = true;
+
+        if(!hasBeenWarned)
+        {
+            allowAction = !checkShowWarningDialog(actionType);
+        }
+
+        if(!allowAction)
+        {
+            return;
+        }
+
         switch(actionType)
         {
             case CLAIM:
@@ -313,6 +330,65 @@ public class BookingDetailsFragment extends InjectedFragment
                 System.err.println("Could not find associated behavior for : " + actionType.getActionName());
             }
         }
+    }
+
+    private boolean checkShowWarningDialog(Booking.ButtonActionType actionType)
+    {
+        boolean showingWarningDialog = false;
+
+        List<Booking.ActionButtonData> allowedActions = this.associatedBooking.getAllowedActions();
+
+        //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
+
+        for (Booking.ActionButtonData abd : allowedActions)
+        {
+            if(abd.getAssociatedActionType() == actionType)
+            {
+                if(abd.getWarningText() != null && !abd.getWarningText().isEmpty())
+                {
+                    showingWarningDialog = true;
+                    showWarningDialog(abd.getWarningText(), abd.getAssociatedActionType());
+                }
+            }
+        }
+
+        return showingWarningDialog;
+    }
+
+    private void showWarningDialog(String warning, final Booking.ButtonActionType actionType)
+    {
+        //specific booking error, show an alert dialog
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+        // set title
+        alertDialogBuilder.setTitle(R.string.are_you_sure);
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(warning)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            //proceed with action
+                            takeAction(actionType, true);
+                        }
+                    }
+                )
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            //do nothing, just close the dialog
+                        }
+                    }
+                )
+        ;
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
     }
 
     private void requestClaimJob(String bookingId)

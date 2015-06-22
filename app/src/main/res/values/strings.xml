@@ -69,6 +69,7 @@
     <string name="share">Share</string>
     <string name="my_bookings">My Bookings</string>
     <string name="profile">Profile</string>
+    <string name="are_you_sure">Are you sure?</string>
     <string name="want_to_log_out">Are you sure you want to log out?</string>
     <string name="update">Update</string>
     <string name="you_have_credits">YOU HAVE&#160;&#160;#&#160;&#160;CREDITS</string>
@@ -120,6 +121,7 @@
     <string name="unavailable">Unavailable</string>
     <string name="unavailable_job">Unavailable Job</string>
     <string name="confirmation">Confirmation</string>
+    <string name="confirm">Confirm</string>
     <string name="payment_confirmed">Your payment has been confirmed.\nHow will your professional get in?</string>
     <string name="will_be_home">I’ll be home</string>
     <string name="doorman">Doorman</string>
@@ -148,6 +150,7 @@
     <string name="yes">Yes</string>
     <string name="reschedule_all_bookings">Reschedule all subsequent bookings?</string>
     <string name="cancel_booking">Cancel Booking</string>
+    <string name="cancel">Cancel</string>
     <string name="why_cancel">Why are you canceling?</string>
     <string name="get_started">Get Started</string>
     <string name="onboard_msg">Book trusted cleaners\n &amp; handymen instantly</string>
