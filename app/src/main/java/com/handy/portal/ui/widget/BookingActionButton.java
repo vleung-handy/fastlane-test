@@ -50,7 +50,7 @@ public class BookingActionButton extends Button
             public void onClick(final View v)
             {
                 self.associatedFragment.onActionButtonClick(buttonActionType);
-                self.setEnabled(false); //turn self off after click to prevent multiple clicks
+                //self.setEnabled(false); //turn self off after click to prevent multiple clicks
             }
         });
 
