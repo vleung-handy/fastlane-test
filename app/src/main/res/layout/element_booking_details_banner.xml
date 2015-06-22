@@ -24,9 +24,10 @@
         android:textSize="20sp"
         android:text="@string/available_job"
         android:textColor="@color/white"
-        android:layout_alignTop="@+id/booking_details_banner_job_id_text"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/booking_details_back_button"
-        android:layout_toEndOf="@+id/booking_details_back_button"/>
+        android:layout_toEndOf="@+id/booking_details_back_button"
+        />
 
     <TextView
         android:id="@+id/booking_details_banner_job_id_text"
