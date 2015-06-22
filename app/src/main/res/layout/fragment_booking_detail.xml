@@ -7,31 +7,6 @@
     tools:context=".BookingDetailsFragment">
 
     <LinearLayout
-        android:id="@+id/booking_details_banner_layout"
-        style="@style/Banner"
-        android:background="@color/handy_blue"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/booking_details_back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingRight="16dp"
-            android:paddingLeft="16dp"
-            android:background="@color/transparent"
-            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"/>
-
-        <TextView
-            android:id="@+id/booking_details_banner_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/available_job"
-            android:textColor="@color/white"/>
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/booking_details_main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,6 +32,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     >
+
+                    <LinearLayout
+                        android:id="@+id/booking_details_banner_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        />
 
                     <LinearLayout
                         android:id="@+id/booking_details_map_layout"

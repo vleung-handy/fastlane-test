@@ -28,6 +28,7 @@
 
     <string name="error_connectivity">The server could not be reached, please ensure you have a data connection and try again</string>
 
+    <string name="job">Job</string>
     <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
@@ -254,5 +255,6 @@
     <string name="remove_job">Remove Job</string>
     <string name="job_remove_error">"Error Removing Job"</string>
     <string name="job_remove_error_generic">"This job could not be removed"</string>
+
 
 </resources>

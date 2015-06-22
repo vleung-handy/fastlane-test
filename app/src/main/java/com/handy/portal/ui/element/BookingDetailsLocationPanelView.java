@@ -52,7 +52,6 @@ public class BookingDetailsLocationPanelView extends BookingDetailsView
         }
         else
         {
-            //TODO: More fine grained depending on status
             locationText.setText(booking.getAddress().getCompleteAddress());
         }
 

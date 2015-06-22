@@ -33,6 +33,12 @@ public class BookingActionButton extends Button
 
     public void init(BookingDetailsFragment fragment, Booking.ActionButtonData data)
     {
+        if(data.getAssociatedActionType() == null)
+        {
+            System.err.println("BookingActionButton : No associated action type for : " + data.getActionName());
+            return;
+        }
+
         final BookingActionButton self = this;
         associatedFragment = fragment;
         setBackgroundResource(data.getAssociatedActionType().getDrawableId());

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionPanelView;
 import com.handy.portal.ui.element.BookingDetailsActionRemovePanelView;
+import com.handy.portal.ui.element.BookingDetailsBannerView;
 import com.handy.portal.ui.element.BookingDetailsContactPanelView;
 import com.handy.portal.ui.element.BookingDetailsDateView;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
@@ -42,17 +44,15 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 
 public class BookingDetailsFragment extends InjectedFragment
 {
-    @InjectView(R.id.booking_details_banner_text)
-    protected TextView bannerText;
-
     //Layouts points for fragment, the various elements are childed to these
-
     @InjectView(R.id.booking_details_layout)
     protected LinearLayout detailsParentLayout;
+
+    @InjectView(R.id.booking_details_banner_layout)
+    protected LinearLayout bannerLayout;
 
     @InjectView(R.id.booking_details_map_layout)
     protected LinearLayout mapLayout;
@@ -103,8 +103,6 @@ public class BookingDetailsFragment extends InjectedFragment
 
         ButterKnife.inject(this, view);
 
-        bannerText.setText("");
-
         if (validateRequiredArguments())
         {
             requestBookingDetails(this.getArguments().getString(BundleKeys.BOOKING_ID));
@@ -126,23 +124,17 @@ public class BookingDetailsFragment extends InjectedFragment
         return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
     }
 
-
-
-
-
     private void requestBookingDetails(String bookingId)
     {
         bus.post(new Event.RequestBookingDetailsEvent(bookingId));
     }
-
-
 
 //Display
     private void updateDisplayForBooking(Booking booking)
     {
         //clear existing elements out of our fragment's display
         clearLayouts();
-        initBookingDisplayElements(booking);
+        constructBookingDisplayElements(booking);
         processAllowedActions(booking.getAllowedActions());
     }
 
@@ -158,7 +150,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
-    private void initBookingDisplayElements(Booking booking)
+    private void constructBookingDisplayElements(Booking booking)
     {
         Activity activity = getActivity();
 
@@ -167,63 +159,51 @@ public class BookingDetailsFragment extends InjectedFragment
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
 
         //Banner
-        setBannerTextByBookingStatus(bookingStatus);
+        BookingDetailsBannerView bannerView = new BookingDetailsBannerView();
+        bannerView.init(booking, arguments, bannerLayout, activity);
+        ImageButton backButton = (ImageButton) bannerLayout.findViewById(R.id.booking_details_back_button);
+        //TODO: the only button on this page that is not an action button, clean this up eventually?
+        if(backButton != null)
+        {
+            backButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v)
+                {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
 
-        //google maps
+        //Google Maps
         GoogleMapView gmv = new GoogleMapView();
         gmv.init(booking, arguments, mapLayout, activity);
 
-        //date banner
+        //Date
         BookingDetailsDateView dateView = new BookingDetailsDateView();
-        dateView.init(booking, new Bundle(), dateLayout, activity);
+        dateView.init(booking, arguments, dateLayout, activity);
 
-        //Location panel
+        //Location
         BookingDetailsLocationPanelView locationPanel = new BookingDetailsLocationPanelView();
         locationPanel.init(booking, arguments, locationLayout, activity);
 
-        //action section
+        //Actions
         BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
         actionPanel.init(booking, arguments, actionLayout, activity);
 
-        //customer contact section
+        //Customer Contact
         BookingDetailsContactPanelView contactPanel = new BookingDetailsContactPanelView();
         contactPanel.init(booking, arguments, contactLayout, activity);
 
-        //extra details
-        //TODO : Restrict details based on showing full information, only show extras not instructions if restricted
+        //Extra Details
         BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
         jobInstructionsView.init(booking, arguments, jobInstructionsLayout, activity);
 
-        //Remove job action panel
+        //Remove Job Action
         BookingDetailsActionRemovePanelView removeJobView = new BookingDetailsActionRemovePanelView();
         removeJobView.init(booking, arguments, removeJobLayout, activity);
 
-        //Full details notice
+        //Full Details Notice
         fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
-    }
-
-    private void setBannerTextByBookingStatus(BookingStatus bookingStatus)
-    {
-        switch (bookingStatus)
-        {
-            case AVAILABLE:
-            {
-                bannerText.setText(R.string.available_job);
-            }
-            break;
-
-            case CLAIMED:
-            {
-                bannerText.setText(R.string.your_job);
-            }
-            break;
-
-            case UNAVAILABLE:
-            {
-                bannerText.setText(R.string.unavailable_job);
-            }
-            break;
-        }
     }
 
     //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
@@ -276,13 +256,6 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
 //Click Actions
-
-    @OnClick(R.id.booking_details_back_button)
-    public void onBackButtonClick(View v)
-    {
-        getActivity().onBackPressed();
-    }
-
     //The button onclick tells us what action to look up in our booking for additional data
     //The associated booking remains the supreme data source for us
     public void onActionButtonClick(Booking.ButtonActionType actionType)
