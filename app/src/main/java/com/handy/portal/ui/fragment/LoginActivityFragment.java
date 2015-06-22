@@ -23,7 +23,7 @@ import com.handy.portal.core.LoginDetails;
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.EnvironmentManager;
 import com.handy.portal.event.Event;
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
 import com.squareup.otto.Subscribe;
@@ -304,8 +304,7 @@ public class LoginActivityFragment extends InjectedFragment
             CookieSyncManager.getInstance().sync();
         }
 
-        //transition to main activity
-        startActivity(new Intent(this.getActivity(), MainActivity.class));
+        startActivity(new Intent(this.getActivity(), SplashActivity.class));
     }
 
     //TODO: View work, to separate into a view class along with the view injections
