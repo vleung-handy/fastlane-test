@@ -13,14 +13,14 @@ import butterknife.ButterKnife;
 /**
  * Created by cdavis on 5/8/15.
  */
-public abstract class BookingDetailsView
+public abstract class BookingDetailsViewConstructor
 {
     protected ViewGroup parentViewGroup;
     protected Activity activity;
 
     protected abstract int getLayoutResourceId();
 
-    public void init(Booking booking, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
+    public void constructView(Booking booking, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
@@ -29,10 +29,10 @@ public abstract class BookingDetailsView
 
         ButterKnife.inject(this, parentViewGroup);
 
-        initFromBooking(booking, arguments);
+        constructViewFromBooking(booking, arguments);
     }
 
-    protected abstract void initFromBooking(Booking booking, Bundle arguments);
+    protected abstract void constructViewFromBooking(Booking booking, Bundle arguments);
 
     protected void removeView()
     {

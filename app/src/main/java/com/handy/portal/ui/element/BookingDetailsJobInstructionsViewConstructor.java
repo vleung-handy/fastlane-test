@@ -18,7 +18,7 @@ import butterknife.InjectView;
 /**
  * Created by cdavis on 5/8/15.
  */
-public class BookingDetailsJobInstructionsView extends BookingDetailsView
+public class BookingDetailsJobInstructionsViewConstructor extends BookingDetailsViewConstructor
 {
     @InjectView(R.id.booking_details_job_instructions_list_layout)
     protected LinearLayout instructionsLayout;
@@ -28,7 +28,7 @@ public class BookingDetailsJobInstructionsView extends BookingDetailsView
         return R.layout.element_booking_details_job_instructions;
     }
 
-    protected void initFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         boolean fullDetails = false;

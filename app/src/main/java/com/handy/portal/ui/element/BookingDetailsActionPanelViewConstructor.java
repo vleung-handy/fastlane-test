@@ -14,7 +14,7 @@ import butterknife.InjectView;
 /**
  * Created by cdavis on 5/8/15.
  */
-public class BookingDetailsActionPanelView extends BookingDetailsView
+public class BookingDetailsActionPanelViewConstructor extends BookingDetailsViewConstructor
 {
     @InjectView(R.id.booking_details_action_disclaimer_1_text)
     protected TextView disclaimer1Text;
@@ -27,7 +27,7 @@ public class BookingDetailsActionPanelView extends BookingDetailsView
         return R.layout.element_booking_details_action;
     }
 
-    protected void initFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         initDisclaimerText(booking, bookingStatus);

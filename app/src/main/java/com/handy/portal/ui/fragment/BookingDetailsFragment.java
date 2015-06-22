@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,21 +23,25 @@ import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.event.Event;
-import com.handy.portal.ui.element.BookingDetailsActionPanelView;
-import com.handy.portal.ui.element.BookingDetailsActionRemovePanelView;
-import com.handy.portal.ui.element.BookingDetailsBannerView;
-import com.handy.portal.ui.element.BookingDetailsContactPanelView;
-import com.handy.portal.ui.element.BookingDetailsDateView;
-import com.handy.portal.ui.element.BookingDetailsJobInstructionsView;
-import com.handy.portal.ui.element.BookingDetailsLocationPanelView;
-import com.handy.portal.ui.element.GoogleMapView;
+import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
+import com.handy.portal.ui.element.BookingDetailsActionRemovePanelViewConstructor;
+import com.handy.portal.ui.element.BookingDetailsBannerViewConstructor;
+import com.handy.portal.ui.element.BookingDetailsContactPanelViewConstructor;
+import com.handy.portal.ui.element.BookingDetailsDateViewConstructor;
+import com.handy.portal.ui.element.BookingDetailsJobInstructionsViewConstructor;
+import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
+import com.handy.portal.ui.element.BookingDetailsViewConstructor;
+import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -158,58 +161,39 @@ public class BookingDetailsFragment extends InjectedFragment
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
 
-        //Banner
-        BookingDetailsBannerView bannerView = new BookingDetailsBannerView();
-        bannerView.init(booking, arguments, bannerLayout, activity);
-        ImageButton backButton = (ImageButton) bannerLayout.findViewById(R.id.booking_details_back_button);
-        //TODO: the only button on this page that is not an action button, clean this up eventually?
-        if(backButton != null)
-        {
-            backButton.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v)
-                {
-                    getActivity().onBackPressed();
-                }
-            });
+        //Construct the views for each layout
+        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts();
+        Iterator it = viewConstructors.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            ViewGroup layout = (ViewGroup) pair.getKey();
+            BookingDetailsViewConstructor constructor = (BookingDetailsViewConstructor) pair.getValue();
+            constructor.constructView(booking, arguments, layout, activity);
         }
-
-        //Google Maps
-        GoogleMapView gmv = new GoogleMapView();
-        gmv.init(booking, arguments, mapLayout, activity);
-
-        //Date
-        BookingDetailsDateView dateView = new BookingDetailsDateView();
-        dateView.init(booking, arguments, dateLayout, activity);
-
-        //Location
-        BookingDetailsLocationPanelView locationPanel = new BookingDetailsLocationPanelView();
-        locationPanel.init(booking, arguments, locationLayout, activity);
-
-        //Actions
-        BookingDetailsActionPanelView actionPanel = new BookingDetailsActionPanelView();
-        actionPanel.init(booking, arguments, actionLayout, activity);
-
-        //Customer Contact
-        BookingDetailsContactPanelView contactPanel = new BookingDetailsContactPanelView();
-        contactPanel.init(booking, arguments, contactLayout, activity);
-
-        //Extra Details
-        BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView();
-        jobInstructionsView.init(booking, arguments, jobInstructionsLayout, activity);
-
-        //Remove Job Action
-        BookingDetailsActionRemovePanelView removeJobView = new BookingDetailsActionRemovePanelView();
-        removeJobView.init(booking, arguments, removeJobLayout, activity);
 
         //Full Details Notice
         fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
+    //A listing of all the view constructors we use to populate the layouts
+    //We don't maintain references to these constructors / the view, we always create anew from a booking
+    private Map<ViewGroup, BookingDetailsViewConstructor> getViewConstructorsForLayouts()
+    {
+        Map<ViewGroup, BookingDetailsViewConstructor> views = new HashMap<>();
+        views.put(bannerLayout, new BookingDetailsBannerViewConstructor());
+        views.put(mapLayout, new GoogleMapViewConstructor());
+        views.put(dateLayout, new BookingDetailsDateViewConstructor());
+        views.put(locationLayout, new BookingDetailsLocationPanelViewConstructor());
+        views.put(actionLayout, new BookingDetailsActionPanelViewConstructor());
+        views.put(contactLayout, new BookingDetailsContactPanelViewConstructor());
+        views.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor());
+        views.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor());
+        return views;
+    }
+
     //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
     private void processAllowedActions(List<Booking.ActionButtonData> allowedActions)
     {
-
         for(Booking.ActionButtonData data : allowedActions)
         {
             if(data.getAssociatedActionType() == null)
@@ -218,7 +202,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 continue;
             }
 
-            //the client will need to know what layout to insert a given button into
+            //the client knows what layout to insert a given button into, this should never come from the server
             ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(data.getAssociatedActionType());
 
             if(buttonParentLayout == null)
@@ -244,7 +228,7 @@ public class BookingDetailsFragment extends InjectedFragment
             case ON_MY_WAY: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case CHECK_IN: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case ETA: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
-            //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
+        //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
             case CONTACT_PHONE: { return  (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
             case CONTACT_TEXT: { return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
             case REMOVE: { return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout); }

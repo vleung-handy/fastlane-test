@@ -16,7 +16,7 @@ import butterknife.InjectView;
 /**
  * Created by cdavis on 5/8/15.
  */
-public class BookingDetailsDateView extends BookingDetailsView
+public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstructor
 {
     @InjectView(R.id.booking_details_time_text)
     protected TextView timeText;
@@ -33,7 +33,7 @@ public class BookingDetailsDateView extends BookingDetailsView
         return R.layout.element_booking_details_date;
     }
 
-    protected void initFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, Bundle arguments)
     {
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();

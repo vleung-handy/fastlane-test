@@ -12,7 +12,7 @@ import butterknife.InjectView;
 /**
  * Created by cdavis on 5/8/15.
  */
-public class BookingDetailsBannerView extends BookingDetailsView
+public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConstructor
 {
     @InjectView(R.id.booking_details_banner_text)
     protected TextView bannerText;
@@ -25,7 +25,7 @@ public class BookingDetailsBannerView extends BookingDetailsView
         return R.layout.element_booking_details_banner;
     }
 
-    protected void initFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, Bundle arguments)
     {
         Booking.BookingStatus bookingStatus = (Booking.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         setBannerTextByBookingStatus(bookingStatus);

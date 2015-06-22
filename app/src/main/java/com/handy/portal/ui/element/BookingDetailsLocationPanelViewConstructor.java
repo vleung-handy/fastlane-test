@@ -17,7 +17,7 @@ import butterknife.InjectView;
 /**
  * Created by cdavis on 5/8/15.
  */
-public class BookingDetailsLocationPanelView extends BookingDetailsView
+public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsViewConstructor
 {
     @InjectView(R.id.booking_details_location_text)
     protected TextView locationText;
@@ -42,7 +42,7 @@ public class BookingDetailsLocationPanelView extends BookingDetailsView
         return R.layout.element_booking_details_location;
     }
 
-    protected void initFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
 
