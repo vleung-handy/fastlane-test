@@ -280,13 +280,13 @@ public class BookingDetailsFragment extends InjectedFragment
 
             case CONTACT_PHONE:
             {
-                callPhoneNumber(this.associatedBooking.getUser().getPhoneNumberString());
+                callPhoneNumber(this.associatedBooking.getBookingPhone());
             }
             break;
 
             case CONTACT_TEXT:
             {
-                textPhoneNumber(this.associatedBooking.getUser().getPhoneNumberString());
+                textPhoneNumber(this.associatedBooking.getBookingPhone());
             }
             break;
 
