@@ -16,6 +16,7 @@ import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
@@ -44,10 +45,21 @@ public class VersionManager
 
     private long downloadReference;
     private DownloadManager downloadManager;
+    private boolean downloadComplete;
 
     public Uri getNewApkUri()
     {
         return downloadManager.getUriForDownloadedFile(downloadReference);
+    }
+
+    @Produce
+    public Event.UpdateReady produceUpdateReady()
+    {
+        if (downloadComplete)
+        {
+            return new Event.UpdateReady();
+        }
+        return null;
     }
 
     @Subscribe
@@ -112,6 +124,8 @@ public class VersionManager
 
     public void downloadApk(String apkUrl)
     {
+        downloadComplete = false;
+
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
 
         downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -136,6 +150,7 @@ public class VersionManager
             long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if (downloadReference == referenceId)
             {
+                downloadComplete = true;
                 bus.post(new Event.UpdateReady());
             }
         }
