@@ -272,6 +272,24 @@ public class BookingDetailsFragment extends InjectedFragment
             }
             break;
 
+            case ON_MY_WAY:
+            {
+                requestNotifyOnMyWayJob(this.associatedBooking.getId());
+            }
+            break;
+
+            case CHECK_IN:
+            {
+                requestNotifyCheckInJob(this.associatedBooking.getId());
+            }
+            break;
+
+            case CHECK_OUT:
+            {
+                requestNotifyCheckOutJob(this.associatedBooking.getId());
+            }
+            break;
+
             case REMOVE:
             {
                 requestRemoveJob(this.associatedBooking.getId());
@@ -307,6 +325,24 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         bus.post(new Event.RequestRemoveJobEvent(bookingId));
+    }
+
+    private void requestNotifyOnMyWayJob(String bookingId)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestNotifyOnMyWayJobEvent(bookingId));
+    }
+
+    private void requestNotifyCheckInJob(String bookingId)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestNotifyCheckInJobEvent(bookingId));
+    }
+
+    private void requestNotifyCheckOutJob(String bookingId)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestNotifyCheckOutJobEvent(bookingId));
     }
 
     private void callPhoneNumber(final String phoneNumber)
@@ -401,6 +437,70 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    @Subscribe
+    public void onNotifyOnMyWayJobRequestReceived(final Event.NotifyOnMyWayJobRequestReceivedEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+
+        //refresh the page with the new booking
+        this.associatedBooking = event.booking;
+        updateDisplayForBooking(event.booking);
+
+        bus.post(new Event.NotifyOnMyWayJobSuccessEvent());
+    }
+
+    @Subscribe
+    public void onNotifyOnMyWayJobError(final Event.NotifyOnMyWayJobErrorEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+        handleNotifyOnMyWayError(event);
+    }
+
+    @Subscribe
+    public void onNotifyCheckInJobRequestReceived(final Event.NotifyCheckInJobRequestReceivedEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+
+        //refresh the page with the new booking
+        this.associatedBooking = event.booking;
+        updateDisplayForBooking(event.booking);
+
+        bus.post(new Event.NotifyCheckInJobSuccessEvent());
+    }
+
+    @Subscribe
+    public void onNotifyCheckInJobError(final Event.NotifyCheckInJobErrorEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+        handleNotifyCheckInError(event);
+    }
+
+    @Subscribe
+    public void onNotifyCheckOutJobRequestReceived(final Event.NotifyCheckOutJobRequestReceivedEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+
+        //refresh the page with the new booking
+        this.associatedBooking = event.booking;
+        updateDisplayForBooking(event.booking);
+
+        bus.post(new Event.NotifyCheckOutJobSuccessEvent());
+    }
+
+    @Subscribe
+    public void onNotifyCheckOutJobError(final Event.NotifyCheckOutJobErrorEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+        handleNotifyCheckOutError(event);
+    }
+
+
+
+
+
+
+
+
     private void returnToAvailableBookings(long epochTime, TransitionStyle transitionStyle)
     {
         //Return to available jobs with success
@@ -492,17 +592,34 @@ public class BookingDetailsFragment extends InjectedFragment
         //generic network problem
         //show a toast about connectivity issues
         showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
-        //re-enable the button so they can try again for network errors
-        //buttonToReactivate.setEnabled(true);
-
-        //todo: turn relevant buttons back on
-        reenableButtons();
     }
 
-    //todo: turn relevant buttons back on if a network call fails
-    private void reenableButtons()
+    private void handleNotifyOnMyWayError(final Event.NotifyOnMyWayJobErrorEvent event)
     {
-        System.err.println("Still need to fix, in the event of a network error re-enable relevant buttons");
+        handleCheckInFlowError(event.error.getMessage());
     }
+
+    private void handleNotifyCheckInError(final Event.NotifyCheckInJobErrorEvent event)
+    {
+        handleCheckInFlowError(event.error.getMessage());
+    }
+
+    private void handleNotifyCheckOutError(final Event.NotifyCheckOutJobErrorEvent event)
+    {
+        handleCheckInFlowError(event.error.getMessage());
+    }
+
+    private void handleCheckInFlowError(String errorMessage)
+    {
+        if (errorMessage != null)
+        {
+            showErrorToast(errorMessage);
+        }
+        else
+        {
+            handleNetworkError();
+        }
+    }
+
 
 }

@@ -32,6 +32,14 @@ public abstract class DataManager
 
     public abstract void removeBooking(String bookingId, Callback<Booking> cb);
 
+    public abstract void notifyOnMyWayBooking(String bookingId, Callback<Booking> cb);
+
+    public abstract void notifyCheckInBooking(String bookingId, Callback<Booking> cb);
+
+    public abstract void notifyCheckOutBooking(String bookingId, Callback<Booking> cb);
+
+    //public abstract void notifyArrivalTimeBooking(String bookingId, String timeIdentifier, Callback<Booking> cb);
+
     //Login
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);
 

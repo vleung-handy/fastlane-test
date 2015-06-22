@@ -254,6 +254,112 @@ public abstract class Event
         }
     }
 
+    public static class RequestNotifyOnMyWayJobEvent extends Event
+    {
+        public String bookingId;
+
+        public RequestNotifyOnMyWayJobEvent(String bookingId)
+        {
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class NotifyOnMyWayJobRequestReceivedEvent extends Event
+    {
+        public Booking booking;
+
+        public NotifyOnMyWayJobRequestReceivedEvent(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
+
+    public static class NotifyOnMyWayJobErrorEvent extends Event
+    {
+        public final DataManager.DataManagerError error;
+
+        public NotifyOnMyWayJobErrorEvent(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestNotifyCheckInJobEvent extends Event
+    {
+        public String bookingId;
+
+        public RequestNotifyCheckInJobEvent(String bookingId)
+        {
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class NotifyCheckInJobRequestReceivedEvent extends Event
+    {
+        public Booking booking;
+
+        public NotifyCheckInJobRequestReceivedEvent(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
+
+    public static class NotifyCheckInJobErrorEvent extends Event
+    {
+        public final DataManager.DataManagerError error;
+
+        public NotifyCheckInJobErrorEvent(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestNotifyCheckOutJobEvent extends Event
+    {
+        public String bookingId;
+
+        public RequestNotifyCheckOutJobEvent(String bookOutgId)
+        {
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class NotifyCheckOutJobRequestReceivedEvent extends Event
+    {
+        public Booking booking;
+
+        public NotifyCheckOutJobRequestReceivedEvent(Booking bookOutg)
+        {
+            this.booking = booking;
+        }
+    }
+
+    public static class NotifyCheckOutJobErrorEvent extends Event
+    {
+        public final DataManager.DataManagerError error;
+
+        public NotifyCheckOutJobErrorEvent(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Track("portal login error")
     public static class LoginError extends Event
     {
@@ -325,6 +431,21 @@ public abstract class Event
 
     @Track("remove job")
     public static class RemoveJobSuccessEvent extends Event
+    {
+    }
+
+    @Track("on my way")
+    public static class NotifyOnMyWayJobSuccessEvent extends Event
+    {
+    }
+
+    @Track("check in")
+    public static class NotifyCheckInJobSuccessEvent extends Event
+    {
+    }
+
+    @Track("check out")
+    public static class NotifyCheckOutJobSuccessEvent extends Event
     {
     }
 

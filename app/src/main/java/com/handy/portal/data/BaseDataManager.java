@@ -179,6 +179,82 @@ public final class BaseDataManager extends DataManager
         });
     }
 
+
+    @Override
+    public final void notifyOnMyWayBooking(String bookingId, final Callback<Booking> cb)
+    {
+        service.notifyOnMyWay(getProviderId(), bookingId, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(final JSONObject response)
+            {
+                Booking booking = null;
+                try
+                {
+                    booking = gsonBuilder.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                    cb.onError(new DataManagerError(DataManagerError.Type.OTHER));
+                }
+                cb.onSuccess(booking);
+            }
+        });
+    }
+
+    @Override
+    public final void notifyCheckInBooking(String bookingId, final Callback<Booking> cb)
+    {
+        service.checkIn(getProviderId(), bookingId, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(final JSONObject response)
+            {
+                Booking booking = null;
+                try
+                {
+                    booking = gsonBuilder.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                    cb.onError(new DataManagerError(DataManagerError.Type.OTHER));
+                }
+                cb.onSuccess(booking);
+            }
+        });
+    }
+
+    @Override
+    public final void notifyCheckOutBooking(String bookingId, final Callback<Booking> cb)
+    {
+        service.checkOut(getProviderId(), bookingId, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(final JSONObject response)
+            {
+                Booking booking = null;
+                try
+                {
+                    booking = gsonBuilder.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                    cb.onError(new DataManagerError(DataManagerError.Type.OTHER));
+                }
+                cb.onSuccess(booking);
+            }
+        });
+    }
+
     @Override
     public final void requestPinCode(String phoneNumber, final Callback<PinRequestDetails> cb)
     {

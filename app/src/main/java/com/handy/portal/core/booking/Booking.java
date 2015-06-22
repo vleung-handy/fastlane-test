@@ -321,6 +321,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     public static final String ACTION_NAME_REMOVE = "remove";
     public static final String ACTION_NAME_ON_MY_WAY = "on_my_way";
     public static final String ACTION_NAME_CHECK_IN = "check_in";
+    public static final String ACTION_NAME_CHECK_OUT = "check_out";
     public static final String ACTION_NAME_ETA = "eta";
     public static final String ACTION_NAME_CONTACT_PHONE = "contact_phone";
     public static final String ACTION_NAME_CONTACT_TEXT = "contact_text";
@@ -331,6 +332,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         REMOVE(ACTION_NAME_REMOVE,R.drawable.button_red_round, R.string.remove_job, R.layout.element_booking_action_button_template),
         ON_MY_WAY(ACTION_NAME_ON_MY_WAY, R.drawable.button_purple_round, R.string.on_my_way, R.layout.element_booking_action_button_template),
         CHECK_IN(ACTION_NAME_CHECK_IN, R.drawable.button_purple_round, R.string.check_in, R.layout.element_booking_action_button_template),
+        CHECK_OUT(ACTION_NAME_CHECK_OUT, R.drawable.button_purple_round, R.string.check_out, R.layout.element_booking_action_button_template),
         ETA(ACTION_NAME_ETA, R.drawable.button_purple_round, R.string.update_arrival_time, R.layout.element_booking_action_button_template),
         CONTACT_PHONE(ACTION_NAME_CONTACT_PHONE, R.drawable.button_white_round, R.string.call, R.layout.element_booking_contact_action_button_template),
         CONTACT_TEXT(ACTION_NAME_CONTACT_TEXT, R.drawable.button_white_round, R.string.text, R.layout.element_booking_contact_action_button_template),

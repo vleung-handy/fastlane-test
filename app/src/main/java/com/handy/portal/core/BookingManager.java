@@ -179,4 +179,82 @@ public class BookingManager
         });
     }
 
+    @Subscribe
+    public void onRequestNotifyOnMyWay(Event.RequestNotifyOnMyWayJobEvent event)
+    {
+        String bookingId = event.bookingId;
+
+        dataManager.notifyOnMyWayBooking(bookingId, new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.NotifyOnMyWayJobRequestReceivedEvent(booking));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                //still need to invalidate so we don't allow them to click on same booking
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.NotifyOnMyWayJobErrorEvent(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestNotifyCheckIn(Event.RequestNotifyCheckInJobEvent event)
+    {
+        String bookingId = event.bookingId;
+
+        dataManager.notifyCheckInBooking(bookingId, new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.NotifyCheckInJobRequestReceivedEvent(booking));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                //still need to invalidate so we don't allow them to click on same booking
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.NotifyCheckInJobErrorEvent(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestNotifyCheckOut(Event.RequestNotifyCheckOutJobEvent event)
+    {
+        String bookingId = event.bookingId;
+
+        dataManager.notifyCheckOutBooking(bookingId, new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.NotifyCheckOutJobRequestReceivedEvent(booking));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                //still need to invalidate so we don't allow them to click on same booking
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.NotifyCheckOutJobErrorEvent(error));
+            }
+        });
+    }
+
 }
