@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.handy.portal.core.booking.Booking;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 
 /**
@@ -20,7 +22,7 @@ public abstract class BookingDetailsViewConstructor
 
     protected abstract int getLayoutResourceId();
 
-    public void constructView(Booking booking, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
+    public void constructView(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
@@ -29,10 +31,10 @@ public abstract class BookingDetailsViewConstructor
 
         ButterKnife.inject(this, parentViewGroup);
 
-        constructViewFromBooking(booking, arguments);
+        constructViewFromBooking(booking, allowedActions, arguments);
     }
 
-    protected abstract void constructViewFromBooking(Booking booking, Bundle arguments);
+    protected abstract void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments);
 
     protected void removeView()
     {

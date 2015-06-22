@@ -10,6 +10,7 @@ import com.handy.portal.util.Utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.InjectView;
 
@@ -33,7 +34,7 @@ public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstru
         return R.layout.element_booking_details_date;
     }
 
-    protected void constructViewFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
     {
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();

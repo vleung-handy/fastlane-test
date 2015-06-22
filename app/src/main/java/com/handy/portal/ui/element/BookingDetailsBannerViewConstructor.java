@@ -7,6 +7,8 @@ import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
 
+import java.util.List;
+
 import butterknife.InjectView;
 
 /**
@@ -25,7 +27,7 @@ public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConst
         return R.layout.element_booking_details_banner;
     }
 
-    protected void constructViewFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
     {
         Booking.BookingStatus bookingStatus = (Booking.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         setBannerTextByBookingStatus(bookingStatus);

@@ -28,7 +28,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
         return R.layout.element_booking_details_job_instructions;
     }
 
-    protected void constructViewFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         boolean fullDetails = (bookingStatus == BookingStatus.CLAIMED);

@@ -234,7 +234,8 @@ public final class Booking implements Parcelable, Comparable<Booking>
             List<ActionButtonData> allowedActions = new ArrayList<>();
 
             //hack hack , does not need to be used in reality since we will get this list of actions
-            String hackUserId = "4138";
+            //String hackUserId = "4138";
+            String hackUserId = "7462";
 
             BookingStatus inferredBookingStatus = inferBookingStatus(hackUserId);
 
@@ -242,14 +243,14 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
             if(inferredBookingStatus == BookingStatus.AVAILABLE)
             {
-                allowedActions.add(new ActionButtonData("claim","", true));
+                allowedActions.add(new ActionButtonData("claim", "this is the claim button above me", "if you claim you must do it, okay?", true));
             }
             else if(inferredBookingStatus == BookingStatus.CLAIMED)
             {
-                allowedActions.add(new ActionButtonData("on_my_way","Button activates 1 hour before booking", true));
-                allowedActions.add(new ActionButtonData("remove","If you do this bad things will happen to you!", true));
-                allowedActions.add(new ActionButtonData("contact_phone","", true));
-                allowedActions.add(new ActionButtonData("contact_text", "", true));
+                allowedActions.add(new ActionButtonData(ACTION_NAME_ON_MY_WAY, "Button activates 1 hour before booking", "", true));
+                allowedActions.add(new ActionButtonData(ACTION_NAME_REMOVE, "If remove within 24 hours bad stuff happens", "If you do this bad things will happen to you, are you sure?", true));
+                allowedActions.add(new ActionButtonData(ACTION_NAME_CONTACT_PHONE,"pewpew", "are you totes sure?", true));
+                allowedActions.add(new ActionButtonData(ACTION_NAME_CONTACT_TEXT, "laser beams dwq dqw wqdqw", "", true));
             }
             else
             {
@@ -259,15 +260,14 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-
-
-
     public static final class ActionButtonData
     {
         @SerializedName("action_name")
         private String actionName;
-        @SerializedName("message")
-        private String message;
+        @SerializedName("helper_text")
+        private String helperText; //Displayed in text field below button / button section
+        @SerializedName("warning_text")
+        private String warningText; //Indicates a popup should be shown with this message to confirm action
         @SerializedName("enabled")
         private boolean enabled;
 
@@ -275,10 +275,17 @@ public final class Booking implements Parcelable, Comparable<Booking>
         {
             return actionName;
         }
-
-        public String getMessage()
+        public String getHelperText()
         {
-            return message;
+            return helperText;
+        }
+        public String getWarningText()
+        {
+            return warningText;
+        }
+        public boolean isEnabled()
+        {
+            return enabled;
         }
 
         public ButtonActionType getAssociatedActionType()
@@ -294,17 +301,15 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
 
         //for debugging - will remove this constructor once getting real data from server
-        public ActionButtonData(String a, String m, boolean enab)
+        public ActionButtonData(String a, String h, String w, boolean enab)
         {
             actionName = a;
-            message = m;
+            helperText = h;
+            warningText = h;
             enabled = enab;
         }
 
-        public boolean isEnabled()
-        {
-            return enabled;
-        }
+
     }
 
 

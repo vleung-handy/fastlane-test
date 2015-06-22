@@ -24,9 +24,10 @@ import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 
+import java.util.List;
 import java.util.Locale;
 
-public class GoogleMapViewConstructor extends BookingDetailsViewConstructorFragmentContainer implements OnMapReadyCallback
+public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContainerConstructor implements OnMapReadyCallback
 {
     private static int DEFAULT_ZOOM_LEVEL = 15;
     private static float OVERLAY_RADIUS_METERS = 500f;
@@ -61,7 +62,7 @@ public class GoogleMapViewConstructor extends BookingDetailsViewConstructorFragm
     }
 
     @Override
-    protected void constructViewFromBooking(Booking booking, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         this.useRestrictedView = true;

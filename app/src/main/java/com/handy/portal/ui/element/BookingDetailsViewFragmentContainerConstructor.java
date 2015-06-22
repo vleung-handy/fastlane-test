@@ -9,18 +9,20 @@ import android.view.ViewGroup;
 
 import com.handy.portal.core.booking.Booking;
 
-public abstract class BookingDetailsViewConstructorFragmentContainer extends BookingDetailsViewConstructor
+import java.util.List;
+
+public abstract class BookingDetailsViewFragmentContainerConstructor extends BookingDetailsViewConstructor
 {
     protected int getLayoutResourceId() { return 0;}
     protected abstract Class getFragmentClass();
 
     @Override
-    public void constructView(Booking booking, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
+    public void constructView(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
 
-        constructViewFromBooking(booking, arguments);
+        constructViewFromBooking(booking, allowedActions, arguments);
 
         //don't inflate anything, will be adding a fragment to the container with fragment manager
         addFragment();

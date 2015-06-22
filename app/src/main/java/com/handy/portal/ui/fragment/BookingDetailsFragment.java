@@ -27,7 +27,7 @@ import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionRemovePanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsBannerViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsContactPanelViewConstructor;
+import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
@@ -137,10 +137,11 @@ public class BookingDetailsFragment extends InjectedFragment
     private void updateDisplayForBooking(Booking booking)
     {
         //clear existing elements out of our fragment's display
+        List<Booking.ActionButtonData> allowedActions = booking.getAllowedActions();
         clearLayouts();
-        constructBookingDisplayElements(booking);
+        constructBookingDisplayElements(booking, allowedActions);
+        createAllowedActionButtons(allowedActions);
         initBackButton();
-        createAllowedActionButtons(booking.getAllowedActions());
     }
 
     private void clearLayouts()
@@ -155,7 +156,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
-    private void constructBookingDisplayElements(Booking booking)
+    private void constructBookingDisplayElements(Booking booking, List<Booking.ActionButtonData> allowedActions)
     {
         Activity activity = getActivity();
 
@@ -170,10 +171,10 @@ public class BookingDetailsFragment extends InjectedFragment
             Map.Entry pair = (Map.Entry)it.next();
             ViewGroup layout = (ViewGroup) pair.getKey();
             BookingDetailsViewConstructor constructor = (BookingDetailsViewConstructor) pair.getValue();
-            constructor.constructView(booking, arguments, layout, activity);
+            constructor.constructView(booking, allowedActions, arguments, layout, activity);
         }
 
-        //Full Details Notice
+        //Full Details Notice , technically we should move this to its own view panel
         fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
@@ -187,7 +188,7 @@ public class BookingDetailsFragment extends InjectedFragment
         views.put(dateLayout, new BookingDetailsDateViewConstructor());
         views.put(locationLayout, new BookingDetailsLocationPanelViewConstructor());
         views.put(actionLayout, new BookingDetailsActionPanelViewConstructor());
-        views.put(contactLayout, new BookingDetailsContactPanelViewConstructor());
+        views.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor());
         views.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor());
         views.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor());
         return views;
@@ -247,7 +248,7 @@ public class BookingDetailsFragment extends InjectedFragment
             case ON_MY_WAY: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case CHECK_IN: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
             case ETA: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
-        //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
+            //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
             case CONTACT_PHONE: { return  (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
             case CONTACT_TEXT: { return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
             case REMOVE: { return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
