@@ -105,10 +105,6 @@ public abstract class Event
         }
     }
 
-    public static class RequestScheduledBookingsEvent extends Event
-    {
-    }
-
     public static class RequestBookingDetailsEvent extends Event
     {
         public String bookingId;
