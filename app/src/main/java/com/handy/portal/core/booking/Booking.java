@@ -199,11 +199,14 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     public enum ArrivalTimeOption
     {
+//** KEEP IN SYNC WITH SERVER VALUES **//
         EARLY_30_MINUTES(R.string.arrival_time_early_30, "-30"),
         EARLY_15_MINUTES(R.string.arrival_time_early_15, "-15"),
         LATE_10_MINUTES(R.string.arrival_time_late_10, "10"),
         LATE_15_MINUTES(R.string.arrival_time_late_15, "15"),
-        LATE_30_MINUTES(R.string.arrival_time_late_30, "30"),;
+        LATE_30_MINUTES(R.string.arrival_time_late_30, "30"),
+        ;
+//** KEEP IN SYNC WITH SERVER VALUES **//
 
         private String value;
         private int stringId;
@@ -255,44 +258,13 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     public List<ActionButtonData> getAllowedActions()
     {
-        if(true)
+        if(actionButtonData != null)
         {
-            if(actionButtonData != null)
-            {
-                return actionButtonData;
-            }
-            else
-            {
-                return new ArrayList<ActionButtonData>();
-            }
+            return actionButtonData;
         }
         else
         {
-            //DEBUG : Generate hacky data for me to test with while waiting for new booking data
-            List<ActionButtonData> allowedActions = new ArrayList<>();
-
-            //hack hack , does not need to be used in reality since we will get this list of actions
-            //String hackUserId = "4138";
-            String hackUserId = "11";
-
-            BookingStatus inferredBookingStatus = inferBookingStatus(hackUserId);
-
-            if(inferredBookingStatus == BookingStatus.AVAILABLE)
-            {
-                allowedActions.add(new ActionButtonData("claim", "this is the claim button above me", "if you claim you must do it, okay?", true));
-            }
-            else if(inferredBookingStatus == BookingStatus.CLAIMED)
-            {
-                allowedActions.add(new ActionButtonData(ACTION_NAME_ETA, "this is a check in button", "", true));
-                allowedActions.add(new ActionButtonData(ACTION_NAME_REMOVE, "If remove within 24 hours bad stuff happens", "If you do this bad things will happen to you, are you sure?", true));
-                allowedActions.add(new ActionButtonData(ACTION_NAME_CONTACT_PHONE,"pewpew", "are you totes sure?", true));
-                allowedActions.add(new ActionButtonData(ACTION_NAME_CONTACT_TEXT, "laser beams dwq dqw wqdqw", "", true));
-            }
-            else
-            {
-
-            }
-            return allowedActions;
+            return new ArrayList<ActionButtonData>();
         }
     }
 
@@ -335,20 +307,9 @@ public final class Booking implements Parcelable, Comparable<Booking>
              }
             return null;
         }
-
-        //for debugging - will remove this constructor once getting real data from server
-        public ActionButtonData(String a, String h, String w, boolean enab)
-        {
-            actionName = a;
-            helperText = h;
-            warningText = w;
-            enabled = enab;
-        }
-
     }
 
-
-//Must stay synced against server
+//** KEEP IN SYNC WITH SERVER VALUES **//
     public static final String ACTION_NAME_CLAIM = "claim";
     public static final String ACTION_NAME_REMOVE = "remove";
     public static final String ACTION_NAME_ON_MY_WAY = "on_my_way";
@@ -357,40 +318,45 @@ public final class Booking implements Parcelable, Comparable<Booking>
     public static final String ACTION_NAME_ETA = "eta";
     public static final String ACTION_NAME_CONTACT_PHONE = "contact_phone";
     public static final String ACTION_NAME_CONTACT_TEXT = "contact_text";
+//** KEEP IN SYNC WITH SERVER VALUES **//
 
     public enum ButtonActionType
     {
-        CLAIM(ACTION_NAME_CLAIM, R.drawable.button_green_round, R.string.claim, R.layout.element_booking_action_button_template),
-        REMOVE(ACTION_NAME_REMOVE,R.drawable.button_red_round, R.string.remove_job, R.layout.element_booking_action_button_template),
-        ON_MY_WAY(ACTION_NAME_ON_MY_WAY, R.drawable.button_purple_round, R.string.on_my_way, R.layout.element_booking_action_button_template),
-        CHECK_IN(ACTION_NAME_CHECK_IN, R.drawable.button_purple_round, R.string.check_in, R.layout.element_booking_action_button_template),
-        CHECK_OUT(ACTION_NAME_CHECK_OUT, R.drawable.button_purple_round, R.string.check_out, R.layout.element_booking_action_button_template),
-        ETA(ACTION_NAME_ETA, R.drawable.button_purple_round, R.string.update_arrival_time, R.layout.element_booking_action_button_template),
-        CONTACT_PHONE(ACTION_NAME_CONTACT_PHONE, R.drawable.button_white_round, R.string.call, R.layout.element_booking_contact_action_button_template),
-        CONTACT_TEXT(ACTION_NAME_CONTACT_TEXT, R.drawable.button_white_round, R.string.text, R.layout.element_booking_contact_action_button_template),
+        CLAIM(ACTION_NAME_CLAIM, R.drawable.button_green_round, R.style.Button_Green_Round, R.string.claim, R.layout.element_booking_action_button_template),
+        REMOVE(ACTION_NAME_REMOVE,R.drawable.button_red_round, R.style.Button_Red_Round, R.string.remove_job, R.layout.element_booking_action_button_template),
+        ON_MY_WAY(ACTION_NAME_ON_MY_WAY, R.drawable.button_blue_round, R.style.Button_Blue_Round, R.string.on_my_way, R.layout.element_booking_action_button_template),
+        CHECK_IN(ACTION_NAME_CHECK_IN, R.drawable.button_claimed_blue_round, R.style.Button_ClaimedBlue_Round, R.string.check_in, R.layout.element_booking_action_button_template),
+        CHECK_OUT(ACTION_NAME_CHECK_OUT, R.drawable.button_claimed_blue_round, R.style.Button_ClaimedBlue_Round, R.string.check_out, R.layout.element_booking_action_button_template),
+        ETA(ACTION_NAME_ETA, R.drawable.button_claimed_blue_empty_round, R.style.Button_ClaimedBlueEmpty_Round, R.string.update_arrival_time, R.layout.element_booking_action_button_template),
+        CONTACT_PHONE(ACTION_NAME_CONTACT_PHONE, R.drawable.button_white_round, R.style.Button_White_Round, R.string.call, R.layout.element_booking_contact_action_button_template),
+        CONTACT_TEXT(ACTION_NAME_CONTACT_TEXT, R.drawable.button_white_round, R.style.Button_White_Round, R.string.text, R.layout.element_booking_contact_action_button_template),
         ;
 
         private String actionName; //must correspond to server's actionName to match up correctly
         private int displayNameId;
-        private int drawableId;
+        private int backgroundDrawableId;
+        private int textStyleId;
         private int layoutTemplateId;
 
         ButtonActionType()
         {
-            this.drawableId = R.drawable.empty;
+            this.backgroundDrawableId = R.drawable.empty;
         }
 
-        ButtonActionType(String actionName, int drawableId, int displayNameId, int layoutTemplateId)
+        //TODO: Figure out how to use an XML defined Style as the param for setting background resource and text style
+            //Having to dupe up data for styling is weird
+        ButtonActionType(String actionName, int backgroundDrawableId, int textStyleId, int displayNameId, int layoutTemplateId)
         {
             this.actionName = actionName;
-            this.drawableId = drawableId;
+            this.backgroundDrawableId = backgroundDrawableId;
+            this.textStyleId = textStyleId;
             this.displayNameId = displayNameId;
             this.layoutTemplateId = layoutTemplateId;
         }
 
-        public int getDrawableId()
+        public int getBackgroundDrawableId()
         {
-            return drawableId;
+            return backgroundDrawableId;
         }
 
         public String getActionName()
@@ -406,6 +372,11 @@ public final class Booking implements Parcelable, Comparable<Booking>
         public int getLayoutTemplateId()
         {
             return layoutTemplateId;
+        }
+
+        public int getTextStyleId()
+        {
+            return textStyleId;
         }
     }
 

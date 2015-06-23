@@ -224,7 +224,7 @@ public class LoginActivityFragment extends InjectedFragment
                 else
                 {
                     postLoginErrorEvent("phone number");
-                    showErrorToast(R.string.login_error_bad_phone);
+                    showToast(R.string.login_error_bad_phone);
                     changeState(LoginState.INPUTTING_PHONE_NUMBER);
                     phoneNumberEditText.highlight();
                 }
@@ -232,7 +232,7 @@ public class LoginActivityFragment extends InjectedFragment
             else
             {
                 postLoginErrorEvent("server");
-                showErrorToast(R.string.login_error_connectivity);
+                showToast(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PHONE_NUMBER);
                 phoneNumberEditText.highlight();
             }
@@ -258,7 +258,7 @@ public class LoginActivityFragment extends InjectedFragment
                 else
                 {
                     postLoginErrorEvent("pin code");
-                    showErrorToast(R.string.login_error_bad_login);
+                    showToast(R.string.login_error_bad_login);
                     changeState(LoginState.INPUTTING_PIN);
                     pinCodeEditText.highlight();
                 }
@@ -266,7 +266,7 @@ public class LoginActivityFragment extends InjectedFragment
             else
             {
                 postLoginErrorEvent("server");
-                showErrorToast(R.string.login_error_connectivity);
+                showToast(R.string.login_error_connectivity);
                 changeState(LoginState.INPUTTING_PIN);
             }
         }

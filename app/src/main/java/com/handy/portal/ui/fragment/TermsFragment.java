@@ -118,7 +118,7 @@ public class TermsFragment extends InjectedFragment
     public void onAcceptTermsError(Event.AcceptTermsErrorEvent event)
     {
         loadingOverlay.setOverlayVisibility(false);
-        showErrorToast(R.string.error_accepting_terms);
+        showToast(R.string.error_accepting_terms);
     }
 
     private void initView()

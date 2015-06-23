@@ -41,7 +41,8 @@ public class BookingActionButton extends Button
 
         final BookingActionButton self = this;
         associatedFragment = fragment;
-        setBackgroundResource(data.getAssociatedActionType().getDrawableId());
+        setBackgroundResource(data.getAssociatedActionType().getBackgroundDrawableId());
+        setTextAppearance(getContext(), data.getAssociatedActionType().getTextStyleId());
         setText(data.getAssociatedActionType().getDisplayNameId());
         final Booking.ButtonActionType buttonActionType = data.getAssociatedActionType();
         setOnClickListener(new View.OnClickListener()
@@ -53,7 +54,7 @@ public class BookingActionButton extends Button
                 //self.setEnabled(false); //turn self off after click to prevent multiple clicks
             }
         });
-
+        setEnabled(data.isEnabled());
     }
 
 

@@ -227,7 +227,6 @@ public class BookingDetailsFragment extends InjectedFragment
                 BookingActionButton bookingActionButton = (BookingActionButton)
                         ((ViewGroup) getActivity().getLayoutInflater().inflate(data.getAssociatedActionType().getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
                 bookingActionButton.init(this, data); //not sure if this is the better way or to have buttons dispatch specifc events the fragment catches, for now this will suffice
-                bookingActionButton.setEnabled(data.isEnabled());
             }
         }
     }
@@ -238,34 +237,26 @@ public class BookingDetailsFragment extends InjectedFragment
         switch (bat)
         {
             case CLAIM:
-            {
-                return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
-            }
             case ON_MY_WAY:
-            {
-                return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
-            }
             case CHECK_IN:
-            {
-                return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
-            }
+            case CHECK_OUT:
             case ETA:
             {
                 return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
+
             //TODO: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
             case CONTACT_PHONE:
-            {
-                return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout);
-            }
             case CONTACT_TEXT:
             {
                 return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout);
             }
+
             case REMOVE:
             {
                 return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
+
             default:
             {
                 return null;
@@ -542,7 +533,7 @@ public class BookingDetailsFragment extends InjectedFragment
             {
                 bus.post(new Event.ClaimJobSuccessEvent());
                 TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
-                returnToAvailableBookings(event.booking.getStartDate().getTime(), transitionStyle);
+                returnToTab(MainViewTab.JOBS, event.booking.getStartDate().getTime(), transitionStyle);
             } else
             {
                 //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
@@ -565,7 +556,7 @@ public class BookingDetailsFragment extends InjectedFragment
             {
                 bus.post(new Event.RemoveJobSuccessEvent());
                 TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_REMOVE_SUCCESS : TransitionStyle.JOB_REMOVE_SUCCESS);
-                returnToAvailableBookings(event.booking.getStartDate().getTime(), transitionStyle);
+                returnToTab(MainViewTab.JOBS, event.booking.getStartDate().getTime(), transitionStyle);
             } else
             {
                 //Something has gone very wrong, show a generic error and return to date based on original associated booking
@@ -586,6 +577,8 @@ public class BookingDetailsFragment extends InjectedFragment
         this.associatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
 
+        showToast(R.string.omw_success, Toast.LENGTH_LONG);
+
         bus.post(new Event.NotifyOnMyWayJobSuccessEvent());
     }
 
@@ -605,6 +598,8 @@ public class BookingDetailsFragment extends InjectedFragment
         this.associatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
 
+        showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+
         bus.post(new Event.NotifyCheckInJobSuccessEvent());
     }
 
@@ -620,9 +615,10 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
 
-        //refresh the page with the new booking
-        this.associatedBooking = event.booking;
-        updateDisplayForBooking(event.booking);
+        //return to schedule page
+        returnToTab(MainViewTab.SCHEDULE, this.associatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+
+        showToast(R.string.check_out_success, Toast.LENGTH_LONG);
 
         bus.post(new Event.NotifyCheckOutJobSuccessEvent());
     }
@@ -643,6 +639,8 @@ public class BookingDetailsFragment extends InjectedFragment
         this.associatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
 
+        showToast(R.string.eta_success, Toast.LENGTH_LONG);
+
         bus.post(new Event.NotifyCheckOutJobSuccessEvent());
     }
 
@@ -654,13 +652,13 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
 
-    private void returnToAvailableBookings(long epochTime, TransitionStyle transitionStyle)
+    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
     {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, transitionStyle));
+        bus.post(new Event.NavigateToTabEvent(targetTab, arguments, transitionStyle));
     }
 
 
@@ -726,7 +724,7 @@ public class BookingDetailsFragment extends InjectedFragment
                     public void onClick(DialogInterface dialog, int id)
                     {
                         //Return to available jobs, don't need overlay transition after alert dialog
-                        returnToAvailableBookings(returnDateEpochTime, TransitionStyle.REFRESH_TAB);
+                        returnToTab(MainViewTab.JOBS, returnDateEpochTime, TransitionStyle.REFRESH_TAB);
                     }
                 })
         ;
@@ -740,7 +738,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         //generic network problem
         //show a toast about connectivity issues
-        showErrorToast(R.string.error_connectivity, Toast.LENGTH_LONG);
+        showToast(R.string.error_connectivity, Toast.LENGTH_LONG);
     }
 
     private void handleNotifyOnMyWayError(final Event.NotifyOnMyWayJobErrorEvent event)
@@ -767,7 +765,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         if (errorMessage != null)
         {
-            showErrorToast(errorMessage);
+            showToast(errorMessage);
         } else
         {
             handleNetworkError();
