@@ -87,16 +87,6 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
 
-    public void setAssociatedBooking(Booking b)
-    {
-        this.associatedBooking = b;
-    }
-
-    public Booking getAssociatedBooking()
-    {
-        return this.associatedBooking;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -144,6 +134,7 @@ public class BookingDetailsFragment extends InjectedFragment
         initBackButton();
     }
 
+    //We use view constructors instead of views so to clear the views just remove all children of layouts
     private void clearLayouts()
     {
         for (int i = 0; i < detailsParentLayout.getChildCount(); i++)
@@ -156,6 +147,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    //Use view constructors on layouts to generate the elements inside the layouts, we do not currently maintain a linkage to the resulting view
     private void constructBookingDisplayElements(Booking booking, List<Booking.ActionButtonData> allowedActions)
     {
         Activity activity = getActivity();
@@ -240,6 +232,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    //Mapping for ButtonActionType to Parent Layout, used when adding Action Buttons dynamically
     private ViewGroup getParentLayoutForButtonActionType(Booking.ButtonActionType bat)
     {
         switch (bat)
@@ -288,7 +281,8 @@ public class BookingDetailsFragment extends InjectedFragment
         takeAction(actionType, false);
     }
 
-    public void takeAction(Booking.ButtonActionType actionType, boolean hasBeenWarned)
+    //Take an action type, checking for warnings + showing warning dialog as needed
+    protected void takeAction(Booking.ButtonActionType actionType, boolean hasBeenWarned)
     {
         boolean allowAction = true;
 
@@ -359,6 +353,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    //Check if the current booking data for a given action type has an associated warning to display
     private boolean checkShowWarningDialog(Booking.ButtonActionType actionType)
     {
         boolean showingWarningDialog = false;
@@ -366,7 +361,6 @@ public class BookingDetailsFragment extends InjectedFragment
         List<Booking.ActionButtonData> allowedActions = this.associatedBooking.getAllowedActions();
 
         //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
-
         for (Booking.ActionButtonData abd : allowedActions)
         {
             if (abd.getAssociatedActionType() == actionType)
@@ -378,10 +372,10 @@ public class BookingDetailsFragment extends InjectedFragment
                 }
             }
         }
-
         return showingWarningDialog;
     }
 
+    //Show a warning dialog for a button action, confirming triggers the original action
     private void showWarningDialog(String warning, final Booking.ButtonActionType actionType)
     {
         //specific booking error, show an alert dialog
@@ -409,6 +403,8 @@ public class BookingDetailsFragment extends InjectedFragment
         alertDialog.show();
     }
 
+//Service request bus posts
+    //
     private void requestClaimJob(String bookingId)
     {
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
@@ -445,16 +441,20 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new Event.RequestNotifyUpdateArrivalTimeEvent(bookingId, arrivalTimeOption));
     }
 
+    //Show a radio button option dialog to select arrival time for the ETA action
     private void showUpdateArrivalTimeDialog(final Booking booking)
     {
         final String bookingId = booking.getId();
 
         //Text for options
-        final CharSequence[] arrivalTimeOptions = {
-                getString(Booking.ArrivalTimeOption.EARLY_15_MINUTES.getStringId()),
-                getString(Booking.ArrivalTimeOption.LATE_15_MINUTES.getStringId()),
-                getString(Booking.ArrivalTimeOption.LATE_30_MINUTES.getStringId()),
-        };
+        int numArrivalTimeOptions = Booking.ArrivalTimeOption.values().length;
+        final CharSequence[] arrivalTimeOptionStrings =  new CharSequence[numArrivalTimeOptions];
+        Booking.ArrivalTimeOption[] arrivalTimeOptions = Booking.ArrivalTimeOption.values();
+        for(int i = 0; i < arrivalTimeOptions.length; i++)
+        {
+            Booking.ArrivalTimeOption arrivalTimeOption = arrivalTimeOptions[i];
+            arrivalTimeOptionStrings[i] = (getString(arrivalTimeOption.getStringId()));
+        }
 
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -462,37 +462,22 @@ public class BookingDetailsFragment extends InjectedFragment
         // set dialog message
         alertDialogBuilder
                 .setTitle(R.string.notify_customer)
-                .setSingleChoiceItems(arrivalTimeOptions, 0, null)
+                .setSingleChoiceItems(arrivalTimeOptionStrings, 0, null)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
-                                Booking.ArrivalTimeOption chosenOption = Booking.ArrivalTimeOption.EARLY_15_MINUTES;
-
+                                Booking.ArrivalTimeOption[] arrivalTimeOptions = Booking.ArrivalTimeOption.values();
+                                Booking.ArrivalTimeOption chosenOption = arrivalTimeOptions[0];
                                 int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                switch (checkedItemPosition)
+                                if (checkedItemPosition < 0 || checkedItemPosition >= arrivalTimeOptions.length)
                                 {
-                                    case 0:
-                                    {
-                                        chosenOption = Booking.ArrivalTimeOption.EARLY_15_MINUTES;
-                                    }
-                                    break;
-                                    case 1:
-                                    {
-                                        chosenOption = Booking.ArrivalTimeOption.LATE_15_MINUTES;
-                                    }
-                                    break;
-                                    case 2:
-                                    {
-                                        chosenOption = Booking.ArrivalTimeOption.LATE_30_MINUTES;
-                                    }
-                                    break;
-                                    default:
-                                    {
-                                        System.err.println("Unsupported arrival time option for index : " + checkedItemPosition);
-                                    }
+                                    System.err.println("Invalid checked item position " + checkedItemPosition + " can not proceeed");
+                                } else
+                                {
+                                    chosenOption = arrivalTimeOptions[checkedItemPosition];
+                                    requestNotifyUpdateArrivalTime(bookingId, chosenOption);
                                 }
-                                requestNotifyUpdateArrivalTime(bookingId, chosenOption);
                             }
                         }
                 )
@@ -505,6 +490,7 @@ public class BookingDetailsFragment extends InjectedFragment
         alertDialog.show();
     }
 
+    //use native functionality to trigger a phone call
     private void callPhoneNumber(final String phoneNumber)
     {
         try
@@ -518,6 +504,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    //use native functionality to trigger a text message interface
     private void textPhoneNumber(final String phoneNumber)
     {
         try

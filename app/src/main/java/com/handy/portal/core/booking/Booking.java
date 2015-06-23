@@ -41,7 +41,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("partner") private String partner;
     @SerializedName("country") private String country;
     @SerializedName("user") private User user;
-    @SerializedName("action_buttons") private List<ActionButtonData> actionButtonData;
+    @SerializedName("actions") private List<ActionButtonData> actionButtonData;
     @SerializedName("booking_phone") private String bookingPhone;
 
     public int compareTo(Booking other)
@@ -255,9 +255,16 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     public List<ActionButtonData> getAllowedActions()
     {
-        if(false)
+        if(true)
         {
-            return actionButtonData;
+            if(actionButtonData != null)
+            {
+                return actionButtonData;
+            }
+            else
+            {
+                return new ArrayList<ActionButtonData>();
+            }
         }
         else
         {
@@ -266,7 +273,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
             //hack hack , does not need to be used in reality since we will get this list of actions
             //String hackUserId = "4138";
-            String hackUserId = "7462";
+            String hackUserId = "11";
 
             BookingStatus inferredBookingStatus = inferBookingStatus(hackUserId);
 
