@@ -26,6 +26,8 @@ public class BookingDetailsActionRemovePanelViewConstructor extends BookingDetai
     }
 
     private final ImmutableList<Booking.ButtonActionType> associatedButtonActionTypes =
-            ImmutableList.of(Booking.ButtonActionType.REMOVE);
+            ImmutableList.of(
+                    Booking.ButtonActionType.REMOVE
+            );
 
 }

@@ -37,16 +37,16 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         }
         else
         {
-            initHelperText(booking, allowedActions, bookingStatus);
+            initHelperText(allowedActions);
         }
     }
 
     protected boolean shouldRemoveSection(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
     {
-        return hasAllowedAction(booking, allowedActions, bookingStatus);
+        return !hasAllowedAction(allowedActions);
     }
 
-    protected boolean hasAllowedAction(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
+    protected boolean hasAllowedAction(List<Booking.ActionButtonData> allowedActions)
     {
         boolean hasAnAction = false;
         for (Booking.ActionButtonData actionButtonData : allowedActions)
@@ -60,7 +60,7 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         return hasAnAction;
     }
 
-    protected void initHelperText(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
+    protected void initHelperText(List<Booking.ActionButtonData> allowedActions)
     {
         String helperContent = "";
         for (Booking.ActionButtonData actionButtonData : allowedActions)
@@ -96,5 +96,11 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
     }
 
     private final ImmutableList<Booking.ButtonActionType> associatedButtonActionTypes =
-            ImmutableList.of(Booking.ButtonActionType.CLAIM, Booking.ButtonActionType.ON_MY_WAY, Booking.ButtonActionType.CHECK_IN, Booking.ButtonActionType.ETA);
+            ImmutableList.of(
+                    Booking.ButtonActionType.CLAIM,
+                    Booking.ButtonActionType.ON_MY_WAY,
+                    Booking.ButtonActionType.CHECK_IN,
+                    Booking.ButtonActionType.CHECK_OUT,
+                    Booking.ButtonActionType.ETA
+            );
 }

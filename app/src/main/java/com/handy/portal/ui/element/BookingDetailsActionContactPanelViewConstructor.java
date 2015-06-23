@@ -45,5 +45,8 @@ public class BookingDetailsActionContactPanelViewConstructor extends BookingDeta
     }
 
     protected final ImmutableList<Booking.ButtonActionType> associatedButtonActionTypes =
-            ImmutableList.of(Booking.ButtonActionType.CONTACT_PHONE, Booking.ButtonActionType.CONTACT_TEXT);
+            ImmutableList.of(
+                    Booking.ButtonActionType.CONTACT_PHONE,
+                    Booking.ButtonActionType.CONTACT_TEXT
+            );
 }
