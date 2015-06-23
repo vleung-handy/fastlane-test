@@ -454,7 +454,7 @@ public class BookingDetailsFragment extends InjectedFragment
         alertDialogBuilder
                 .setTitle(R.string.notify_customer)
                 .setSingleChoiceItems(arrivalTimeOptionStrings, 0, null)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener()
+                .setPositiveButton(R.string.send_update, new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
@@ -472,7 +472,7 @@ public class BookingDetailsFragment extends InjectedFragment
                             }
                         }
                 )
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(R.string.back, null)
         ;
 
         // create alert dialog
