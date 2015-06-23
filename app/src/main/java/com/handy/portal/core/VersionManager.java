@@ -130,7 +130,7 @@ public class VersionManager
         File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         downloadsDirectory.mkdirs();
 
-        File oldApkFile = new File(downloadsDirectory.getAbsolutePath() + "/" + APK_FILE_NAME);
+        File oldApkFile = new File(downloadsDirectory, APK_FILE_NAME);
         if (oldApkFile.exists())
         {
             oldApkFile.delete();

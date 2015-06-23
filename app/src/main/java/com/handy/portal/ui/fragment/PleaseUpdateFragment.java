@@ -42,7 +42,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Subscribe
     public void enableUpdateButton(Event.UpdateReady event)
     {
-        updateButton.setVisibility(View.VISIBLE);
+        updateButton.setEnabled(true);
         updateText.setText(R.string.update_copy);
     }
 
