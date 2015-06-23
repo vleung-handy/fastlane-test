@@ -19,6 +19,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
+import java.io.File;
 import java.util.HashMap;
 
 import javax.inject.Inject;
@@ -126,15 +127,23 @@ public class VersionManager
     {
         downloadComplete = false;
 
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
+        File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        downloadsDirectory.mkdirs();
+
+        File oldApkFile = new File(downloadsDirectory.getAbsolutePath() + "/" + APK_FILE_NAME);
+        if (oldApkFile.exists())
+        {
+            oldApkFile.delete();
+        }
 
         downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl));
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        request.setMimeType(APK_MIME_TYPE);
-        request.setAllowedOverRoaming(false);
-        request.setTitle("Portal Update");
-        request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, APK_FILE_NAME);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
+                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                .setMimeType(APK_MIME_TYPE)
+                .setAllowedOverRoaming(false)
+                .setVisibleInDownloadsUi(false)
+                .setTitle("Portal Update")
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, APK_FILE_NAME);
 
         downloadReference = downloadManager.enqueue(request);
 
