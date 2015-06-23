@@ -197,6 +197,34 @@ public final class Booking implements Parcelable, Comparable<Booking>
         UNAVAILABLE,
     }
 
+    public enum ArrivalTimeOption
+    {
+        EARLY_30_MINUTES(R.string.arrival_time_early_30, "-30"),
+        EARLY_15_MINUTES(R.string.arrival_time_early_15, "-15"),
+        LATE_10_MINUTES(R.string.arrival_time_late_10, "10"),
+        LATE_15_MINUTES(R.string.arrival_time_late_15, "15"),
+        LATE_30_MINUTES(R.string.arrival_time_late_30, "30"),;
+
+        private String value;
+        private int stringId;
+
+        ArrivalTimeOption(int stringId, String value)
+        {
+            this.stringId = stringId;
+            this.value = value;
+        }
+
+        public String getValue()
+        {
+            return value;
+        }
+
+        public int getStringId()
+        {
+            return stringId;
+        }
+    }
+
     //TODO: I don't like having all this business logic in the client, we should get authoritative statuses from the server
     public BookingStatus inferBookingStatus(String userId)
     {

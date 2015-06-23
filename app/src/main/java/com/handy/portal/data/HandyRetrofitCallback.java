@@ -15,7 +15,7 @@ import retrofit.client.Response;
 
 abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
 {
-    private final DataManager.Callback callback;
+    protected final DataManager.Callback callback;
 
     HandyRetrofitCallback(DataManager.Callback callback)
     {
@@ -170,7 +170,7 @@ abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
         }
     }
 
-    private final class RestError
+    protected final class RestError
     {
         @SerializedName("message")
         private String message;

@@ -13,7 +13,6 @@ import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 
 import java.util.Date;
@@ -348,8 +347,8 @@ public abstract class Event
     public static class RequestNotifyUpdateArrivalTimeEvent extends Event
     {
         public String bookingId;
-        public BaseDataManager.ArrivalTimeOption arrivalTimeOption;
-        public RequestNotifyUpdateArrivalTimeEvent(String bookingId, BaseDataManager.ArrivalTimeOption arrivalTimeOption)
+        public Booking.ArrivalTimeOption arrivalTimeOption;
+        public RequestNotifyUpdateArrivalTimeEvent(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
         {
             this.bookingId = bookingId;
             this.arrivalTimeOption = arrivalTimeOption;

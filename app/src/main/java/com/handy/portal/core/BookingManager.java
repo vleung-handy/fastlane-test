@@ -3,7 +3,6 @@ package com.handy.portal.core;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
@@ -79,11 +78,12 @@ public class BookingManager
         else
         {
             dataManager.getAvailableBookings(
-                    new DataManager.Callback<List<BookingSummary>>()
+                    new DataManager.Callback<BookingSummaryResponse>()
                     {
                         @Override
-                        public void onSuccess(final List<BookingSummary> bookingSummaries)
+                        public void onSuccess(final BookingSummaryResponse bookingSummaryResponse)
                         {
+                            List<BookingSummary> bookingSummaries = bookingSummaryResponse.getBookingSummaries();
                             bookingsCache.put(CacheKey.AVAILABLE_BOOKINGS, bookingSummaries);
                             bus.post(new Event.AvailableBookingsRetrievedEvent(bookingSummaries, true));
                         }
@@ -109,11 +109,12 @@ public class BookingManager
         else
         {
             dataManager.getScheduledBookings(
-                    new DataManager.Callback<List<BookingSummary>>()
+                    new DataManager.Callback<BookingSummaryResponse>()
                     {
                         @Override
-                        public void onSuccess(final List<BookingSummary> bookingSummaries)
+                        public void onSuccess(final BookingSummaryResponse bookingSummaryResponse)
                         {
+                            List<BookingSummary> bookingSummaries = bookingSummaryResponse.getBookingSummaries();
                             bookingsCache.put(CacheKey.SCHEDULED_BOOKINGS, bookingSummaries);
                             bus.post(new Event.ScheduledBookingsRetrievedEvent(bookingSummaries, true));
                         }
@@ -262,7 +263,7 @@ public class BookingManager
     public void onRequestNotifyUpdateArrivalTime(Event.RequestNotifyUpdateArrivalTimeEvent event)
     {
         String bookingId = event.bookingId;
-        BaseDataManager.ArrivalTimeOption arrivalTimeOption = event.arrivalTimeOption;
+        Booking.ArrivalTimeOption arrivalTimeOption = event.arrivalTimeOption;
 
         dataManager.notifyUpdateArrivalTimeBooking(bookingId, arrivalTimeOption, new DataManager.Callback<Booking>()
         {

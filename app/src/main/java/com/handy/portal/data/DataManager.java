@@ -1,6 +1,6 @@
 package com.handy.portal.data;
 
-import com.handy.portal.core.BookingSummary;
+import com.handy.portal.core.BookingSummaryResponse;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.SimpleResponse;
@@ -8,7 +8,6 @@ import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 
-import java.util.List;
 import java.util.Map;
 
 public abstract class DataManager
@@ -22,9 +21,9 @@ public abstract class DataManager
 
     public abstract void sendVersionInformation(Map<String,String> info, Callback<SimpleResponse> cb);
 
-    public abstract void getAvailableBookings(Callback<List<BookingSummary>> cb);
+    public abstract void getAvailableBookings(Callback<BookingSummaryResponse> cb);
 
-    public abstract void getScheduledBookings(Callback<List<BookingSummary>> cb);
+    public abstract void getScheduledBookings(Callback<BookingSummaryResponse> cb);
 
     public abstract void claimBooking(String bookingId, Callback<Booking> cb);
 
@@ -38,7 +37,7 @@ public abstract class DataManager
 
     public abstract void notifyCheckOutBooking(String bookingId, Callback<Booking> cb);
 
-    public abstract void notifyUpdateArrivalTimeBooking(String bookingId, BaseDataManager.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
+    public abstract void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
 
     //Login
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);

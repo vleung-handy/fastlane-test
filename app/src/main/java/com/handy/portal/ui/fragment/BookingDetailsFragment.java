@@ -23,7 +23,6 @@ import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
-import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
@@ -440,7 +439,7 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new Event.RequestNotifyCheckOutJobEvent(bookingId));
     }
 
-    private void requestNotifyUpdateArrivalTime(String bookingId, BaseDataManager.ArrivalTimeOption arrivalTimeOption)
+    private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
         bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
         bus.post(new Event.RequestNotifyUpdateArrivalTimeEvent(bookingId, arrivalTimeOption));
@@ -452,9 +451,9 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //Text for options
         final CharSequence[] arrivalTimeOptions = {
-                getString(BaseDataManager.ArrivalTimeOption.EARLY_15_MINUTES.getStringId()),
-                getString(BaseDataManager.ArrivalTimeOption.LATE_15_MINUTES.getStringId()),
-                getString(BaseDataManager.ArrivalTimeOption.LATE_30_MINUTES.getStringId()),
+                getString(Booking.ArrivalTimeOption.EARLY_15_MINUTES.getStringId()),
+                getString(Booking.ArrivalTimeOption.LATE_15_MINUTES.getStringId()),
+                getString(Booking.ArrivalTimeOption.LATE_30_MINUTES.getStringId()),
         };
 
         //specific booking error, show an alert dialog
@@ -468,24 +467,24 @@ public class BookingDetailsFragment extends InjectedFragment
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
-                                BaseDataManager.ArrivalTimeOption chosenOption = BaseDataManager.ArrivalTimeOption.EARLY_15_MINUTES;
+                                Booking.ArrivalTimeOption chosenOption = Booking.ArrivalTimeOption.EARLY_15_MINUTES;
 
                                 int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                                 switch (checkedItemPosition)
                                 {
                                     case 0:
                                     {
-                                        chosenOption = BaseDataManager.ArrivalTimeOption.EARLY_15_MINUTES;
+                                        chosenOption = Booking.ArrivalTimeOption.EARLY_15_MINUTES;
                                     }
                                     break;
                                     case 1:
                                     {
-                                        chosenOption = BaseDataManager.ArrivalTimeOption.LATE_15_MINUTES;
+                                        chosenOption = Booking.ArrivalTimeOption.LATE_15_MINUTES;
                                     }
                                     break;
                                     case 2:
                                     {
-                                        chosenOption = BaseDataManager.ArrivalTimeOption.LATE_30_MINUTES;
+                                        chosenOption = Booking.ArrivalTimeOption.LATE_30_MINUTES;
                                     }
                                     break;
                                     default:
@@ -526,7 +525,7 @@ public class BookingDetailsFragment extends InjectedFragment
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
         } catch (ActivityNotFoundException activityException)
         {
-            System.err.println("Calling a Phone Number failed" + activityException);
+            System.err.println("Texting a Phone Number failed" + activityException);
         }
     }
 
