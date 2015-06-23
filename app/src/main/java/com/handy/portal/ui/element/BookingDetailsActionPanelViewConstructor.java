@@ -30,7 +30,34 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
     protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
-        initHelperText(booking, allowedActions, bookingStatus);
+        boolean removeSection = shouldRemoveSection(booking, allowedActions, bookingStatus);
+        if(removeSection)
+        {
+            removeView();
+        }
+        else
+        {
+            initHelperText(booking, allowedActions, bookingStatus);
+        }
+    }
+
+    protected boolean shouldRemoveSection(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
+    {
+        return hasAllowedAction(booking, allowedActions, bookingStatus);
+    }
+
+    protected boolean hasAllowedAction(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
+    {
+        boolean hasAnAction = false;
+        for (Booking.ActionButtonData actionButtonData : allowedActions)
+        {
+            if (getAssociatedButtonActionTypes().contains(actionButtonData.getAssociatedActionType()))
+            {
+                hasAnAction = true;
+                break;
+            }
+        }
+        return hasAnAction;
     }
 
     protected void initHelperText(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)

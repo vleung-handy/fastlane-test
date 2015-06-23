@@ -31,7 +31,7 @@ public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConst
     {
         Booking.BookingStatus bookingStatus = (Booking.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         setBannerTextByBookingStatus(bookingStatus);
-        jobIdText.setText(activity.getString(R.string.job) + " " + booking.getId());
+        jobIdText.setText(activity.getString(R.string.job) + " #" + booking.getId());
     }
 
     private void setBannerTextByBookingStatus(Booking.BookingStatus bookingStatus)

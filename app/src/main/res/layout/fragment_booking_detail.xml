@@ -11,7 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/booking_details_banner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
 
         <ScrollView
             android:id="@+id/booking_details_scroll_view"
@@ -32,13 +39,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     >
-
-                    <LinearLayout
-                        android:id="@+id/booking_details_banner_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        />
 
                     <LinearLayout
                         android:id="@+id/booking_details_map_layout"

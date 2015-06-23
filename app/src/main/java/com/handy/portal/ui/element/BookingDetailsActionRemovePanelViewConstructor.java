@@ -1,9 +1,6 @@
 package com.handy.portal.ui.element;
 
-import android.os.Bundle;
-
 import com.google.common.collect.ImmutableList;
-import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 
@@ -15,17 +12,11 @@ import java.util.List;
 public class BookingDetailsActionRemovePanelViewConstructor extends BookingDetailsActionPanelViewConstructor
 {
     @Override
-    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
+    protected boolean shouldRemoveSection(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
     {
-        BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
-        if(bookingStatus != BookingStatus.CLAIMED)
-        {
-            removeView();
-        }
-        else
-        {
-            initHelperText(booking, allowedActions, bookingStatus);
-        }
+        boolean removeSection = false;
+        removeSection = super.shouldRemoveSection(booking, allowedActions, bookingStatus) || (bookingStatus != BookingStatus.CLAIMED);
+        return removeSection;
     }
 
     @Override

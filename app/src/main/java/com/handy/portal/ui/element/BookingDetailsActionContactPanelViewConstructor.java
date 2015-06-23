@@ -5,9 +5,7 @@ import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.Booking.BookingStatus;
 
 import java.util.List;
 
@@ -26,20 +24,18 @@ public class BookingDetailsActionContactPanelViewConstructor extends BookingDeta
         return R.layout.element_booking_details_contact;
     }
 
+    @Override
     protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
     {
-        BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
+        super.constructViewFromBooking(booking, allowedActions, arguments);
+        Booking.User bookingUser = booking.getUser();
+        profileText.setText(bookingUser.getAbbreviatedName());
+    }
 
-        if(bookingStatus != BookingStatus.CLAIMED)
-        {
-            removeView();
-        }
-        else
-        {
-            Booking.User bookingUser = booking.getUser();
-            profileText.setText(bookingUser.getAbbreviatedName());
-            initHelperText(booking, allowedActions, bookingStatus);
-        }
+    @Override
+    protected boolean shouldRemoveSection(Booking booking, List<Booking.ActionButtonData> allowedActions, Booking.BookingStatus bookingStatus)
+    {
+        return super.shouldRemoveSection(booking, allowedActions, bookingStatus) || (bookingStatus != Booking.BookingStatus.CLAIMED);
     }
 
     @Override
