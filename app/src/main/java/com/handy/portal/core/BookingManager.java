@@ -3,6 +3,7 @@ package com.handy.portal.core;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.core.booking.Booking;
+import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.Event;
 import com.squareup.otto.Bus;
@@ -253,6 +254,32 @@ public class BookingManager
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new Event.NotifyCheckOutJobErrorEvent(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestNotifyUpdateArrivalTime(Event.RequestNotifyUpdateArrivalTimeEvent event)
+    {
+        String bookingId = event.bookingId;
+        BaseDataManager.ArrivalTimeOption arrivalTimeOption = event.arrivalTimeOption;
+
+        dataManager.notifyUpdateArrivalTimeBooking(bookingId, arrivalTimeOption, new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.NotifyUpdateArrivalRequestReceivedEvent(booking));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                bus.post(new Event.NotifyUpdateArrivalErrorEvent(error));
             }
         });
     }

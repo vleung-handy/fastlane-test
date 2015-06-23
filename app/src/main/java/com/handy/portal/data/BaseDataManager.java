@@ -3,6 +3,7 @@ package com.handy.portal.data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.handy.portal.R;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.BookingSummaryResponse;
 import com.handy.portal.core.LoginDetails;
@@ -255,6 +256,59 @@ public final class BaseDataManager extends DataManager
         });
     }
 
+    public enum ArrivalTimeOption
+    {
+        EARLY_30_MINUTES(R.string.arrival_time_early_30, "-30"),
+        EARLY_15_MINUTES(R.string.arrival_time_early_15, "-15"),
+        LATE_10_MINUTES(R.string.arrival_time_late_10, "10"),
+        LATE_15_MINUTES(R.string.arrival_time_late_15, "15"),
+        LATE_30_MINUTES(R.string.arrival_time_late_30, "30"),;
+
+        private String value;
+        private int stringId;
+
+        ArrivalTimeOption(int stringId, String value)
+        {
+            this.stringId = stringId;
+            this.value = value;
+        }
+
+        public String getValue()
+        {
+            return value;
+        }
+
+        public int getStringId()
+        {
+            return stringId;
+        }
+    }
+
+    @Override
+    public final void notifyUpdateArrivalTimeBooking(String bookingId, ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)
+    {
+        service.updateArrivalTime(getProviderId(), bookingId, arrivalTimeOption.getValue(), new HandyRetrofitCallback(cb)
+        {
+            @Override
+            void success(final JSONObject response)
+            {
+                Booking booking = null;
+                try
+                {
+                    booking = gsonBuilder.fromJson((response.toString()),
+                            new TypeToken<Booking>()
+                            {
+                            }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse Booking" + e);
+                    cb.onError(new DataManagerError(DataManagerError.Type.OTHER));
+                }
+                cb.onSuccess(booking);
+            }
+        });
+    }
+
     @Override
     public final void requestPinCode(String phoneNumber, final Callback<PinRequestDetails> cb)
     {
@@ -339,30 +393,27 @@ public final class BaseDataManager extends DataManager
         });
     }
 
-
-        public final void sendVersionInformation(Map<String,String> versionInfo, final Callback<SimpleResponse> cb)
+    public final void sendVersionInformation(Map<String, String> versionInfo, final Callback<SimpleResponse> cb)
+    {
+        service.sendVersionInformation(versionInfo, new HandyRetrofitCallback(cb)
         {
-            service.sendVersionInformation(versionInfo, new HandyRetrofitCallback(cb) {
-
-                @Override
-                void success(JSONObject response)
+            @Override
+            void success(JSONObject response)
+            {
+                SimpleResponse simpleResponse = null;
+                try
                 {
-                    SimpleResponse simpleResponse = null;
-                    try
+                    simpleResponse = gsonBuilder.fromJson((response.toString()), new TypeToken<SimpleResponse>()
                     {
-                        simpleResponse = gsonBuilder.fromJson((response.toString()), new TypeToken<SimpleResponse>()
-                        {
-                        }.getType());
-                    } catch (Exception e)
-                    {
-                        System.err.println("Can not parse response " + e);
-                    }
-                    cb.onSuccess(simpleResponse);
+                    }.getType());
+                } catch (Exception e)
+                {
+                    System.err.println("Can not parse response " + e);
+                }
+                cb.onSuccess(simpleResponse);
             }
-
         });
     }
-
 
     @Override
     public final void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)

@@ -248,7 +248,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
             }
             else if(inferredBookingStatus == BookingStatus.CLAIMED)
             {
-                allowedActions.add(new ActionButtonData(ACTION_NAME_ON_MY_WAY, "Button activates 1 hour before booking", "", true));
+                allowedActions.add(new ActionButtonData(ACTION_NAME_ETA, "this is a check in button", "", true));
                 allowedActions.add(new ActionButtonData(ACTION_NAME_REMOVE, "If remove within 24 hours bad stuff happens", "If you do this bad things will happen to you, are you sure?", true));
                 allowedActions.add(new ActionButtonData(ACTION_NAME_CONTACT_PHONE,"pewpew", "are you totes sure?", true));
                 allowedActions.add(new ActionButtonData(ACTION_NAME_CONTACT_TEXT, "laser beams dwq dqw wqdqw", "", true));
@@ -309,7 +309,6 @@ public final class Booking implements Parcelable, Comparable<Booking>
             warningText = w;
             enabled = enab;
         }
-
 
     }
 

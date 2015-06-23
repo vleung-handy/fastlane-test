@@ -74,6 +74,10 @@ public interface HandyRetrofitService
     void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
     @Multipart
+    @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/eta")
+    void updateArrivalTime(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @Part("lateness") String latenessValue, HandyRetrofitCallback cb);
+
+    @Multipart
     @POST(SESSIONS_PATH + "request_pin")
     void requestPinCode(@Part("phone") String phoneNumber, HandyRetrofitCallback cb);
 

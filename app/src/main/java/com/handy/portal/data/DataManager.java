@@ -3,8 +3,8 @@ package com.handy.portal.data;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
-import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.SimpleResponse;
+import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 
@@ -38,7 +38,7 @@ public abstract class DataManager
 
     public abstract void notifyCheckOutBooking(String bookingId, Callback<Booking> cb);
 
-    //public abstract void notifyArrivalTimeBooking(String bookingId, String timeIdentifier, Callback<Booking> cb);
+    public abstract void notifyUpdateArrivalTimeBooking(String bookingId, BaseDataManager.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
 
     //Login
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);

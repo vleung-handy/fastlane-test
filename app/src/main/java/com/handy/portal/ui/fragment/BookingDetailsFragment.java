@@ -23,6 +23,7 @@ import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
+import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.event.Event;
 import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
@@ -133,7 +134,7 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new Event.RequestBookingDetailsEvent(bookingId));
     }
 
-//Display
+    //Display
     private void updateDisplayForBooking(Booking booking)
     {
         //clear existing elements out of our fragment's display
@@ -167,8 +168,9 @@ public class BookingDetailsFragment extends InjectedFragment
         //Construct the views for each layout
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts();
         Iterator it = viewConstructors.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+        while (it.hasNext())
+        {
+            Map.Entry pair = (Map.Entry) it.next();
             ViewGroup layout = (ViewGroup) pair.getKey();
             BookingDetailsViewConstructor constructor = (BookingDetailsViewConstructor) pair.getValue();
             constructor.constructView(booking, allowedActions, arguments, layout, activity);
@@ -198,7 +200,7 @@ public class BookingDetailsFragment extends InjectedFragment
     private void initBackButton()
     {
         ImageButton backButton = (ImageButton) bannerLayout.findViewById(R.id.booking_details_back_button);
-        if(backButton != null)
+        if (backButton != null)
         {
             backButton.setOnClickListener(new View.OnClickListener()
             {
@@ -214,9 +216,9 @@ public class BookingDetailsFragment extends InjectedFragment
     //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
     private void createAllowedActionButtons(List<Booking.ActionButtonData> allowedActions)
     {
-        for(Booking.ActionButtonData data : allowedActions)
+        for (Booking.ActionButtonData data : allowedActions)
         {
-            if(data.getAssociatedActionType() == null)
+            if (data.getAssociatedActionType() == null)
             {
                 System.err.println("Received an unsupported action type : " + data.getActionName());
                 continue;
@@ -225,11 +227,10 @@ public class BookingDetailsFragment extends InjectedFragment
             //the client knows what layout to insert a given button into, this should never come from the server
             ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(data.getAssociatedActionType());
 
-            if(buttonParentLayout == null)
+            if (buttonParentLayout == null)
             {
                 System.err.println("Could not find parent layout for " + data.getAssociatedActionType().getActionName());
-            }
-            else
+            } else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
                 BookingActionButton bookingActionButton = (BookingActionButton)
@@ -242,16 +243,37 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private ViewGroup getParentLayoutForButtonActionType(Booking.ButtonActionType bat)
     {
-        switch(bat)
+        switch (bat)
         {
-            case CLAIM: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
-            case ON_MY_WAY: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
-            case CHECK_IN: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
-            case ETA: { return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
-            //todo: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
-            case CONTACT_PHONE: { return  (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
-            case CONTACT_TEXT: { return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout); }
-            case REMOVE: { return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout); }
+            case CLAIM:
+            {
+                return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
+            }
+            case ON_MY_WAY:
+            {
+                return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
+            }
+            case CHECK_IN:
+            {
+                return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
+            }
+            case ETA:
+            {
+                return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
+            }
+            //TODO: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
+            case CONTACT_PHONE:
+            {
+                return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout);
+            }
+            case CONTACT_TEXT:
+            {
+                return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout);
+            }
+            case REMOVE:
+            {
+                return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout);
+            }
             default:
             {
                 return null;
@@ -259,7 +281,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
-//Click Actions
+    //Click Actions
     //The button onclick tells us what action to look up in our booking for additional data
     //The associated booking remains the supreme data source for us
     public void onActionButtonClick(Booking.ButtonActionType actionType)
@@ -271,17 +293,17 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         boolean allowAction = true;
 
-        if(!hasBeenWarned)
+        if (!hasBeenWarned)
         {
             allowAction = !checkShowWarningDialog(actionType);
         }
 
-        if(!allowAction)
+        if (!allowAction)
         {
             return;
         }
 
-        switch(actionType)
+        switch (actionType)
         {
             case CLAIM:
             {
@@ -292,6 +314,12 @@ public class BookingDetailsFragment extends InjectedFragment
             case ON_MY_WAY:
             {
                 requestNotifyOnMyWayJob(this.associatedBooking.getId());
+            }
+            break;
+
+            case ETA:
+            {
+                showUpdateArrivalTimeDialog(this.associatedBooking);
             }
             break;
 
@@ -342,9 +370,9 @@ public class BookingDetailsFragment extends InjectedFragment
 
         for (Booking.ActionButtonData abd : allowedActions)
         {
-            if(abd.getAssociatedActionType() == actionType)
+            if (abd.getAssociatedActionType() == actionType)
             {
-                if(abd.getWarningText() != null && !abd.getWarningText().isEmpty())
+                if (abd.getWarningText() != null && !abd.getWarningText().isEmpty())
                 {
                     showingWarningDialog = true;
                     showWarningDialog(abd.getWarningText(), abd.getAssociatedActionType());
@@ -360,29 +388,20 @@ public class BookingDetailsFragment extends InjectedFragment
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
-        // set title
-        alertDialogBuilder.setTitle(R.string.are_you_sure);
-
         // set dialog message
         alertDialogBuilder
+                .setTitle(R.string.are_you_sure)
                 .setMessage(warning)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
                         {
-                            //proceed with action
-                            takeAction(actionType, true);
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                //proceed with action
+                                takeAction(actionType, true);
+                            }
                         }
-                    }
                 )
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            //do nothing, just close the dialog
-                        }
-                    }
-                )
+                .setNegativeButton(R.string.cancel, null);
         ;
 
         // create alert dialog
@@ -421,6 +440,72 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new Event.RequestNotifyCheckOutJobEvent(bookingId));
     }
 
+    private void requestNotifyUpdateArrivalTime(String bookingId, BaseDataManager.ArrivalTimeOption arrivalTimeOption)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new Event.RequestNotifyUpdateArrivalTimeEvent(bookingId, arrivalTimeOption));
+    }
+
+    private void showUpdateArrivalTimeDialog(final Booking booking)
+    {
+        final String bookingId = booking.getId();
+
+        //Text for options
+        final CharSequence[] arrivalTimeOptions = {
+                getString(BaseDataManager.ArrivalTimeOption.EARLY_15_MINUTES.getStringId()),
+                getString(BaseDataManager.ArrivalTimeOption.LATE_15_MINUTES.getStringId()),
+                getString(BaseDataManager.ArrivalTimeOption.LATE_30_MINUTES.getStringId()),
+        };
+
+        //specific booking error, show an alert dialog
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+        // set dialog message
+        alertDialogBuilder
+                .setTitle(R.string.notify_customer)
+                .setSingleChoiceItems(arrivalTimeOptions, 0, null)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                BaseDataManager.ArrivalTimeOption chosenOption = BaseDataManager.ArrivalTimeOption.EARLY_15_MINUTES;
+
+                                int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                                switch (checkedItemPosition)
+                                {
+                                    case 0:
+                                    {
+                                        chosenOption = BaseDataManager.ArrivalTimeOption.EARLY_15_MINUTES;
+                                    }
+                                    break;
+                                    case 1:
+                                    {
+                                        chosenOption = BaseDataManager.ArrivalTimeOption.LATE_15_MINUTES;
+                                    }
+                                    break;
+                                    case 2:
+                                    {
+                                        chosenOption = BaseDataManager.ArrivalTimeOption.LATE_30_MINUTES;
+                                    }
+                                    break;
+                                    default:
+                                    {
+                                        System.err.println("Unsupported arrival time option for index : " + checkedItemPosition);
+                                    }
+                                }
+                                requestNotifyUpdateArrivalTime(bookingId, chosenOption);
+                            }
+                        }
+                )
+                .setNegativeButton(R.string.cancel, null)
+        ;
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
+    }
+
     private void callPhoneNumber(final String phoneNumber)
     {
         try
@@ -428,8 +513,7 @@ public class BookingDetailsFragment extends InjectedFragment
             Intent callIntent = new Intent(Intent.ACTION_CALL);
             callIntent.setData(Uri.parse("tel:" + phoneNumber));
             startActivity(callIntent);
-        }
-        catch (ActivityNotFoundException activityException)
+        } catch (ActivityNotFoundException activityException)
         {
             System.err.println("Calling a Phone Number failed" + activityException);
         }
@@ -440,8 +524,7 @@ public class BookingDetailsFragment extends InjectedFragment
         try
         {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
-        }
-        catch (ActivityNotFoundException activityException)
+        } catch (ActivityNotFoundException activityException)
         {
             System.err.println("Calling a Phone Number failed" + activityException);
         }
@@ -456,8 +539,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             this.associatedBooking = event.booking;
             updateDisplayForBooking(event.booking);
-        }
-        else
+        } else
         {
             //TODO: Show a display state that involves re-requesting booking details, could have been a network error or other?
         }
@@ -475,14 +557,12 @@ public class BookingDetailsFragment extends InjectedFragment
                 bus.post(new Event.ClaimJobSuccessEvent());
                 TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
                 returnToAvailableBookings(event.booking.getStartDate().getTime(), transitionStyle);
-            }
-            else
+            } else
             {
                 //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
                 handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error_generic, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
             }
-        }
-        else
+        } else
         {
             handleBookingClaimError(event);
         }
@@ -500,14 +580,12 @@ public class BookingDetailsFragment extends InjectedFragment
                 bus.post(new Event.RemoveJobSuccessEvent());
                 TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_REMOVE_SUCCESS : TransitionStyle.JOB_REMOVE_SUCCESS);
                 returnToAvailableBookings(event.booking.getStartDate().getTime(), transitionStyle);
-            }
-            else
+            } else
             {
                 //Something has gone very wrong, show a generic error and return to date based on original associated booking
                 handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic, R.string.return_to_schedule, this.associatedBooking.getStartDate());
             }
-        }
-        else
+        } else
         {
             handleBookingRemoveError(event);
         }
@@ -570,11 +648,24 @@ public class BookingDetailsFragment extends InjectedFragment
         handleNotifyCheckOutError(event);
     }
 
+    @Subscribe
+    public void onNotifyUpdateArrivalRequestReceived(final Event.NotifyUpdateArrivalRequestReceivedEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
 
+        //refresh the page with the new booking
+        this.associatedBooking = event.booking;
+        updateDisplayForBooking(event.booking);
 
+        bus.post(new Event.NotifyCheckOutJobSuccessEvent());
+    }
 
-
-
+    @Subscribe
+    public void onNotifyUpdateArrivalError(final Event.NotifyUpdateArrivalErrorEvent event)
+    {
+        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+        handleNotifyUpdateArrivalError(event);
+    }
 
 
     private void returnToAvailableBookings(long epochTime, TransitionStyle transitionStyle)
@@ -606,8 +697,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             bus.post(new Event.ClaimJobErrorEvent(errorMessage));
             showReturnToAvailableErrorDialog(errorMessage, title, option1, returnDate.getTime());
-        }
-        else
+        } else
         {
             handleNetworkError();
         }
@@ -629,8 +719,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             bus.post(new Event.RemoveJobErrorEvent(errorMessage));
             showReturnToAvailableErrorDialog(errorMessage, title, option1, returnDate.getTime());
-        }
-        else
+        } else
         {
             handleNetworkError();
         }
@@ -641,11 +730,9 @@ public class BookingDetailsFragment extends InjectedFragment
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
-        // set title
-        alertDialogBuilder.setTitle(title);
-
         // set dialog message
         alertDialogBuilder
+                .setTitle(title)
                 .setMessage(errorMessage)
                 .setCancelable(false)
                 .setPositiveButton(option1, new DialogInterface.OnClickListener()
@@ -685,13 +772,17 @@ public class BookingDetailsFragment extends InjectedFragment
         handleCheckInFlowError(event.error.getMessage());
     }
 
+    private void handleNotifyUpdateArrivalError(final Event.NotifyUpdateArrivalErrorEvent event)
+    {
+        handleCheckInFlowError(event.error.getMessage());
+    }
+
     private void handleCheckInFlowError(String errorMessage)
     {
         if (errorMessage != null)
         {
             showErrorToast(errorMessage);
-        }
-        else
+        } else
         {
             handleNetworkError();
         }

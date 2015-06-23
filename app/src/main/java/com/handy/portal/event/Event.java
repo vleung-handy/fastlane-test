@@ -13,6 +13,7 @@ import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.booking.Booking;
+import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 
 import java.util.Date;
@@ -318,7 +319,7 @@ public abstract class Event
     {
         public String bookingId;
 
-        public RequestNotifyCheckOutJobEvent(String bookOutgId)
+        public RequestNotifyCheckOutJobEvent(String bookingId)
         {
             this.bookingId = bookingId;
         }
@@ -328,7 +329,7 @@ public abstract class Event
     {
         public Booking booking;
 
-        public NotifyCheckOutJobRequestReceivedEvent(Booking bookOutg)
+        public NotifyCheckOutJobRequestReceivedEvent(Booking booking)
         {
             this.booking = booking;
         }
@@ -344,9 +345,36 @@ public abstract class Event
         }
     }
 
+    public static class RequestNotifyUpdateArrivalTimeEvent extends Event
+    {
+        public String bookingId;
+        public BaseDataManager.ArrivalTimeOption arrivalTimeOption;
+        public RequestNotifyUpdateArrivalTimeEvent(String bookingId, BaseDataManager.ArrivalTimeOption arrivalTimeOption)
+        {
+            this.bookingId = bookingId;
+            this.arrivalTimeOption = arrivalTimeOption;
+        }
+    }
 
+    public static class NotifyUpdateArrivalRequestReceivedEvent extends Event
+    {
+        public Booking booking;
 
+        public NotifyUpdateArrivalRequestReceivedEvent(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
 
+    public static class NotifyUpdateArrivalErrorEvent extends Event
+    {
+        public final DataManager.DataManagerError error;
+
+        public NotifyUpdateArrivalErrorEvent(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
 
 

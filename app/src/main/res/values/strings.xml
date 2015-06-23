@@ -260,6 +260,12 @@
     <string name="job_remove_error_generic">This job could not be removed</string>
     <string name="job_action_error">There was a problem taking that action, please try again</string>
     <string name="error">Error</string>
+    <string name="notify_customer">Notify customer</string>
 
+    <string name="arrival_time_early_30">I\u2019ll be 30 minutes early</string>
+    <string name="arrival_time_early_15">I\u2019ll be 15 minutes early</string>
+    <string name="arrival_time_late_10">I\u2019ll be 10 minutes late</string>
+    <string name="arrival_time_late_15">I\u2019ll be 15 minutes late</string>
+    <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
 
 </resources>
