@@ -274,4 +274,5 @@
     <string name="eta_success">Thanks for updating your arrival time</string>
     <string name="check_out_success">Thanks for checking out!</string>
 
+    <string name="send_update">Send Update</string>
 </resources>
