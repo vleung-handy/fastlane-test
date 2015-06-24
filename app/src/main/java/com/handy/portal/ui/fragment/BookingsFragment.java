@@ -80,8 +80,12 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
         //Optional param, needs to be validated
         if(getArguments() != null && getArguments().containsKey(BundleKeys.DATE_EPOCH_TIME))
         {
-            this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
-            this.selectedDay = Utils.getDateWithoutTime(this.selectedDay);
+            long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
+            if(targetDateTime > 0)
+            {
+                this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
+                this.selectedDay = Utils.getDateWithoutTime(this.selectedDay);
+            }
         }
 
         return view;

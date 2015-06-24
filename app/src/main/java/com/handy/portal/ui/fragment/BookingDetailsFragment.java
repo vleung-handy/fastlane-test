@@ -24,6 +24,7 @@ import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.event.Event;
+import com.handy.portal.ui.clicklisteners.NavigateToTabOnClickListener;
 import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionRemovePanelViewConstructor;
@@ -123,7 +124,8 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new Event.RequestBookingDetailsEvent(bookingId));
     }
 
-    //Display
+//Display Creation / Updating
+
     private void updateDisplayForBooking(Booking booking)
     {
         //clear existing elements out of our fragment's display
@@ -204,6 +206,7 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+//Action Button Creation
     //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
     private void createAllowedActionButtons(List<Booking.ActionButtonData> allowedActions)
     {
@@ -359,7 +362,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 if (abd.getWarningText() != null && !abd.getWarningText().isEmpty())
                 {
                     showingWarningDialog = true;
-                    showWarningDialog(abd.getWarningText(), abd.getAssociatedActionType());
+                    showBookingActionWarningDialog(abd.getWarningText(), abd.getAssociatedActionType());
                 }
             }
         }
@@ -367,7 +370,7 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     //Show a warning dialog for a button action, confirming triggers the original action
-    private void showWarningDialog(String warning, final Booking.ButtonActionType actionType)
+    private void showBookingActionWarningDialog(String warning, final Booking.ButtonActionType actionType)
     {
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -380,12 +383,12 @@ public class BookingDetailsFragment extends InjectedFragment
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
-                                //proceed with action
+                                //proceed with action, we have accepted the warning
                                 takeAction(actionType, true);
                             }
                         }
                 )
-                .setNegativeButton(R.string.cancel, null);
+                .setNegativeButton(R.string.cancel, null)
         ;
 
         // create alert dialog
@@ -394,7 +397,7 @@ public class BookingDetailsFragment extends InjectedFragment
         alertDialog.show();
     }
 
-//Service request bus posts
+    //Service request bus posts
     //
     private void requestClaimJob(String bookingId)
     {
@@ -439,9 +442,9 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //Text for options
         int numArrivalTimeOptions = Booking.ArrivalTimeOption.values().length;
-        final CharSequence[] arrivalTimeOptionStrings =  new CharSequence[numArrivalTimeOptions];
+        final CharSequence[] arrivalTimeOptionStrings = new CharSequence[numArrivalTimeOptions];
         Booking.ArrivalTimeOption[] arrivalTimeOptions = Booking.ArrivalTimeOption.values();
-        for(int i = 0; i < arrivalTimeOptions.length; i++)
+        for (int i = 0; i < arrivalTimeOptions.length; i++)
         {
             Booking.ArrivalTimeOption arrivalTimeOption = arrivalTimeOptions[i];
             arrivalTimeOptionStrings[i] = (getString(arrivalTimeOption.getStringId()));
@@ -459,14 +462,13 @@ public class BookingDetailsFragment extends InjectedFragment
                             public void onClick(DialogInterface dialog, int id)
                             {
                                 Booking.ArrivalTimeOption[] arrivalTimeOptions = Booking.ArrivalTimeOption.values();
-                                Booking.ArrivalTimeOption chosenOption = arrivalTimeOptions[0];
                                 int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                                 if (checkedItemPosition < 0 || checkedItemPosition >= arrivalTimeOptions.length)
                                 {
-                                    System.err.println("Invalid checked item position " + checkedItemPosition + " can not proceeed");
+                                    System.err.println("Invalid checked item position " + checkedItemPosition + " can not proceed");
                                 } else
                                 {
-                                    chosenOption = arrivalTimeOptions[checkedItemPosition];
+                                    Booking.ArrivalTimeOption chosenOption = arrivalTimeOptions[checkedItemPosition];
                                     requestNotifyUpdateArrivalTime(bookingId, chosenOption);
                                 }
                             }
@@ -651,7 +653,6 @@ public class BookingDetailsFragment extends InjectedFragment
         handleNotifyUpdateArrivalError(event);
     }
 
-
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
     {
         //Return to available jobs with success
@@ -680,7 +681,7 @@ public class BookingDetailsFragment extends InjectedFragment
         if (errorMessage != null)
         {
             bus.post(new Event.ClaimJobErrorEvent(errorMessage));
-            showReturnToAvailableErrorDialog(errorMessage, title, option1, returnDate.getTime());
+            showErrorDialogReturnToAvailable(errorMessage, title, option1, returnDate.getTime());
         } else
         {
             handleNetworkError();
@@ -702,37 +703,34 @@ public class BookingDetailsFragment extends InjectedFragment
         if (errorMessage != null)
         {
             bus.post(new Event.RemoveJobErrorEvent(errorMessage));
-            showReturnToAvailableErrorDialog(errorMessage, title, option1, returnDate.getTime());
+            showErrorDialogReturnToAvailable(errorMessage, title, option1, returnDate.getTime());
         } else
         {
             handleNetworkError();
         }
     }
 
-    private void showReturnToAvailableErrorDialog(String title, String errorMessage, String option1, final long returnDateEpochTime)
+    private void showErrorDialogReturnToAvailable(String title, String errorMessage, String option1, final long returnDateEpochTime)
     {
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+        Bundle arguments = new Bundle();
+        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, returnDateEpochTime);
 
         // set dialog message
         alertDialogBuilder
                 .setTitle(title)
                 .setMessage(errorMessage)
                 .setCancelable(false)
-                .setPositiveButton(option1, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        //Return to available jobs, don't need overlay transition after alert dialog
-                        returnToTab(MainViewTab.JOBS, returnDateEpochTime, TransitionStyle.REFRESH_TAB);
-                    }
-                })
-        ;
+                .setPositiveButton(option1, new NavigateToTabOnClickListener(MainViewTab.JOBS, arguments, TransitionStyle.REFRESH_TAB));
+
         // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
         // show it
         alertDialog.show();
     }
+
 
     private void handleNetworkError()
     {
