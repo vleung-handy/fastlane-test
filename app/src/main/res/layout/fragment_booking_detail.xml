@@ -68,13 +68,12 @@
                         android:layout_height="wrap_content"
                         />
 
-
                     <RelativeLayout
                         android:id="@+id/booking_details_contact_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
                         />
 
                     <LinearLayout
@@ -88,10 +87,10 @@
                         android:id="@+id/booking_details_remove_job_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:background="@color/transparent"
-                        android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/transparent"
+                        android:orientation="horizontal"
                         />
 
                 </LinearLayout>
