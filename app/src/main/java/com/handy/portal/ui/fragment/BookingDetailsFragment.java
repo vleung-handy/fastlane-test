@@ -533,7 +533,6 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         if (event.booking.getProviderId().equals(getLoggedInUserId()))
         {
-            bus.post(new HandyEvent.ClaimJobSuccess());
             TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
             returnToTab(MainViewTab.JOBS, event.booking.getStartDate().getTime(), transitionStyle);
         } else
@@ -547,7 +546,7 @@ public class BookingDetailsFragment extends InjectedFragment
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        handleBookingClaimError(event);
+        handleBookingClaimError(event.error.getMessage());
     }
 
     @Subscribe
@@ -556,7 +555,6 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         if (event.booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
         {
-            bus.post(new HandyEvent.RemoveJobSuccess());
             TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_REMOVE_SUCCESS : TransitionStyle.JOB_REMOVE_SUCCESS);
             returnToTab(MainViewTab.JOBS, event.booking.getStartDate().getTime(), transitionStyle);
         } else
@@ -583,8 +581,6 @@ public class BookingDetailsFragment extends InjectedFragment
         updateDisplayForBooking(event.booking);
 
         showToast(R.string.omw_success, Toast.LENGTH_LONG);
-
-        bus.post(new HandyEvent.NotifyOnMyWayJobSuccess());
     }
 
     @Subscribe
@@ -604,8 +600,6 @@ public class BookingDetailsFragment extends InjectedFragment
         updateDisplayForBooking(event.booking);
 
         showToast(R.string.check_in_success, Toast.LENGTH_LONG);
-
-        bus.post(new HandyEvent.NotifyCheckInJobSuccess());
     }
 
     @Subscribe
@@ -624,8 +618,6 @@ public class BookingDetailsFragment extends InjectedFragment
         returnToTab(MainViewTab.SCHEDULE, this.associatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
 
         showToast(R.string.check_out_success, Toast.LENGTH_LONG);
-
-        bus.post(new HandyEvent.NotifyCheckOutJobSuccess());
     }
 
     @Subscribe
@@ -645,8 +637,6 @@ public class BookingDetailsFragment extends InjectedFragment
         updateDisplayForBooking(event.booking);
 
         showToast(R.string.eta_success, Toast.LENGTH_LONG);
-
-        bus.post(new HandyEvent.NotifyCheckOutJobSuccess());
     }
 
     @Subscribe
@@ -668,10 +658,9 @@ public class BookingDetailsFragment extends InjectedFragment
 
 //Handle Action Response Errors
 
-    private void handleBookingClaimError(final HandyEvent.ReceiveClaimJobError event)
+    private void handleBookingClaimError(String errorMessage)
     {
-        //used for onclick closure
-        handleBookingClaimError(event.error.getMessage(), R.string.job_claim_error, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
+        handleBookingClaimError(errorMessage, R.string.job_claim_error, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
     }
 
     private void handleBookingClaimError(String errorMessage, int titleId, int option1Id, Date returnDate)

@@ -331,6 +331,7 @@ public abstract class HandyEvent
 
 //Job Action Receive Successes
 
+    @Track("claim job")
     public static class ReceiveClaimJobSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveClaimJobSuccess(Booking booking)
@@ -339,6 +340,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("remove job")
     public static class ReceiveRemoveJobSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveRemoveJobSuccess(Booking booking)
@@ -347,6 +349,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("on my way")
     public static class ReceiveNotifyJobOnMyWaySuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobOnMyWaySuccess(Booking booking)
@@ -355,6 +358,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("check in")
     public static class ReceiveNotifyJobCheckInSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobCheckInSuccess(Booking booking)
@@ -363,6 +367,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("check out")
     public static class ReceiveNotifyJobCheckoutSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobCheckoutSuccess(Booking booking)
@@ -371,6 +376,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("eta")
     public static class ReceiveNotifyJobUpdateArrivalTimeSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobUpdateArrivalTimeSuccess(Booking booking)
@@ -378,6 +384,7 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
+
 
 //Job Action Receive Errors
 
@@ -489,31 +496,6 @@ public abstract class HandyEvent
             this.type = type;
             this.bookingId = bookingId;
         }
-    }
-
-    @Track("claim job")
-    public static class ClaimJobSuccess extends AnalyticsEvents
-    {
-    }
-
-    @Track("remove job")
-    public static class RemoveJobSuccess extends AnalyticsEvents
-    {
-    }
-
-    @Track("on my way")
-    public static class NotifyOnMyWayJobSuccess extends AnalyticsEvents
-    {
-    }
-
-    @Track("check in")
-    public static class NotifyCheckInJobSuccess extends AnalyticsEvents
-    {
-    }
-
-    @Track("check out")
-    public static class NotifyCheckOutJobSuccess extends AnalyticsEvents
-    {
     }
 
     @Track("claim job error")
