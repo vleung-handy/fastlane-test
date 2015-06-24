@@ -147,6 +147,9 @@ public class BookingDetailsFragment extends InjectedFragment
                 vg.removeAllViews();
             }
         }
+
+        //banner layout is not under the details layout as it sticks to the top
+        bannerLayout.removeAllViews();
     }
 
     //Use view constructors on layouts to generate the elements inside the layouts, we do not currently maintain a linkage to the resulting view
