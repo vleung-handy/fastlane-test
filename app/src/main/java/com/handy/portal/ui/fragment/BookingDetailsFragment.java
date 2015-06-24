@@ -175,16 +175,16 @@ public class BookingDetailsFragment extends InjectedFragment
     //We don't maintain references to these constructors / the view, we always create anew from a booking
     private Map<ViewGroup, BookingDetailsViewConstructor> getViewConstructorsForLayouts()
     {
-        Map<ViewGroup, BookingDetailsViewConstructor> views = new HashMap<>();
-        views.put(bannerLayout, new BookingDetailsBannerViewConstructor());
-        views.put(mapLayout, new GoogleMapViewConstructor());
-        views.put(dateLayout, new BookingDetailsDateViewConstructor());
-        views.put(locationLayout, new BookingDetailsLocationPanelViewConstructor());
-        views.put(actionLayout, new BookingDetailsActionPanelViewConstructor());
-        views.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor());
-        views.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor());
-        views.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor());
-        return views;
+        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
+        viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor());
+        viewConstructors.put(mapLayout, new GoogleMapViewConstructor());
+        viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor());
+        viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor());
+        viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor());
+        viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor());
+        viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor());
+        viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor());
+        return viewConstructors;
     }
 
     //TODO: the only button on this page that is not an action button, clean this up eventually?
@@ -232,9 +232,9 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     //Mapping for ButtonActionType to Parent Layout, used when adding Action Buttons dynamically
-    private ViewGroup getParentLayoutForButtonActionType(Booking.ButtonActionType bat)
+    private ViewGroup getParentLayoutForButtonActionType(Booking.ButtonActionType buttonActionType)
     {
-        switch (bat)
+        switch (buttonActionType)
         {
             case CLAIM:
             case ON_MY_WAY:
