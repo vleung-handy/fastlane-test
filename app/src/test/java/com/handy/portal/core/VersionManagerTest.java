@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
@@ -40,9 +40,9 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     @Captor
     private ArgumentCaptor<DataManager.Callback<UpdateDetails>> updateCheckCallbackCaptor;
     @Captor
-    private ArgumentCaptor<Event.UpdateCheckEvent> updateCheckEventArgumentCaptor;
+    private ArgumentCaptor<HandyEvent.RequestUpdateCheck> updateCheckEventArgumentCaptor;
     @Captor
-    private ArgumentCaptor<Event.UpdateAvailable> updateAvailableEventArgumentCaptor;
+    private ArgumentCaptor<HandyEvent.ReceiveUpdateAvailable> updateAvailableEventArgumentCaptor;
 
     private VersionManager versionManager;
 
@@ -54,7 +54,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
 
         reset(bus);
 
-        versionManager.onUpdateCheckRequest(new Event.UpdateCheckEvent(activity));
+        versionManager.onUpdateCheckRequest(new HandyEvent.RequestUpdateCheck(activity));
         verify(dataManager).checkForUpdates(anyString(), anyInt(), updateCheckCallbackCaptor.capture());
     }
 
@@ -66,7 +66,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
         updateCheckCallbackCaptor.getValue().onSuccess(updateDetails);
 
         verify(bus).post(updateAvailableEventArgumentCaptor.capture());
-        assertThat(updateAvailableEventArgumentCaptor.getValue(), instanceOf(Event.UpdateAvailable.class));
+        assertThat(updateAvailableEventArgumentCaptor.getValue(), instanceOf(HandyEvent.ReceiveUpdateAvailable.class));
     }
 
     @Test

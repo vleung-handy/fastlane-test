@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -37,11 +37,9 @@ public class VersionManager
     }
 
     @Subscribe
-    public void onUpdateCheckRequest(Event.UpdateCheckEvent event)
+    public void onUpdateCheckRequest(HandyEvent.RequestUpdateCheck event)
     {
-
         PackageInfo pkgInfo = getPackageInfoFromActivity(event.sender);
-
         dataManager.checkForUpdates(buildConfigWrapper.getFlavor(), pkgInfo.versionCode, new DataManager.Callback<UpdateDetails>()
             {
                 @Override
@@ -49,9 +47,8 @@ public class VersionManager
                 {
                     downloadURL = updateDetails.getDownloadUrl();
                     if (updateDetails != null && updateDetails.getShouldUpdate()) {
-                        bus.post(new Event.UpdateAvailable());
+                        bus.post(new HandyEvent.ReceiveUpdateAvailable());
                     }
-
                 }
 
                 @Override
@@ -64,7 +61,7 @@ public class VersionManager
     }
 
     @Subscribe
-    public void onApplicationResumed(Event.ApplicationResumed event) {
+    public void onApplicationResumed(HandyEvent.ApplicationResumed event) {
 
         PackageInfo pInfo = getPackageInfoFromActivity(event.sender);
 

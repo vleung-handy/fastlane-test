@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 
 /**
  * Created by cdavis on 6/24/15.
@@ -42,6 +42,6 @@ public class NavigateToTabOnClickListener extends InjectedClickListener
 
     public void onClick(DialogInterface dialog, int which)
     {
-        bus.post(new Event.NavigateToTabEvent(targetTab, arguments, transitionStyle));
+        bus.post(new HandyEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
 }

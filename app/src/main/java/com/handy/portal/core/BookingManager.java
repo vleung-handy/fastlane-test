@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -47,7 +47,7 @@ public class BookingManager
     //listens and responds to requests to claim / cancel
 
     @Subscribe
-    public void onRequestBookingDetails(Event.RequestBookingDetailsEvent event)
+    public void onRequestBookingDetails(HandyEvent.RequestBookingDetails event)
     {
         String bookingId = event.bookingId;
 
@@ -56,24 +56,24 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new Event.BookingsDetailsRetrievedEvent(booking, true));
+                bus.post(new HandyEvent.ReceiveBookingDetailsSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new Event.BookingsDetailsRetrievedEvent(null, false));
+                bus.post(new HandyEvent.ReceiveBookingDetailsError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestAvailableBookings(Event.RequestAvailableBookingsEvent event)
+    public void onRequestAvailableBookings(HandyEvent.RequestAvailableBookings event)
     {
         final List<BookingSummary> cachedBookingSummaries = bookingsCache.getIfPresent(CacheKey.AVAILABLE_BOOKINGS);
         if (cachedBookingSummaries != null)
         {
-            bus.post(new Event.AvailableBookingsRetrievedEvent(cachedBookingSummaries, true));
+            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookingSummaries));
         }
         else
         {
@@ -85,13 +85,13 @@ public class BookingManager
                         {
                             List<BookingSummary> bookingSummaries = bookingSummaryResponse.getBookingSummaries();
                             bookingsCache.put(CacheKey.AVAILABLE_BOOKINGS, bookingSummaries);
-                            bus.post(new Event.AvailableBookingsRetrievedEvent(bookingSummaries, true));
+                            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookingSummaries));
                         }
 
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            bus.post(new Event.RequestAvailableBookingsErrorEvent(error));
+                            bus.post(new HandyEvent.ReceiveAvailableBookingsError(error));
                         }
                     }
             );
@@ -99,12 +99,12 @@ public class BookingManager
     }
 
     @Subscribe
-    public void onRequestScheduledBookings(Event.RequestScheduledBookingsEvent event)
+    public void onRequestScheduledBookings(HandyEvent.RequestScheduledBookings event)
     {
         final List<BookingSummary> cachedBookingSummaries = bookingsCache.getIfPresent(CacheKey.SCHEDULED_BOOKINGS);
         if (cachedBookingSummaries != null)
         {
-            bus.post(new Event.ScheduledBookingsRetrievedEvent(cachedBookingSummaries, true));
+            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookingSummaries));
         }
         else
         {
@@ -116,13 +116,13 @@ public class BookingManager
                         {
                             List<BookingSummary> bookingSummaries = bookingSummaryResponse.getBookingSummaries();
                             bookingsCache.put(CacheKey.SCHEDULED_BOOKINGS, bookingSummaries);
-                            bus.post(new Event.ScheduledBookingsRetrievedEvent(bookingSummaries, true));
+                            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookingSummaries));
                         }
 
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            bus.post(new Event.RequestScheduledBookingsErrorEvent(error));
+                            bus.post(new HandyEvent.ReceiveScheduledBookingsError(error));
                         }
                     }
             );
@@ -130,7 +130,7 @@ public class BookingManager
     }
 
     @Subscribe
-    public void onRequestClaimJob(Event.RequestClaimJobEvent event)
+    public void onRequestClaimJob(HandyEvent.RequestClaimJob event)
     {
         String bookingId = event.bookingId;
 
@@ -141,7 +141,7 @@ public class BookingManager
             {
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.ClaimJobRequestReceivedEvent(booking, true));
+                bus.post(new HandyEvent.ReceiveClaimJobSuccess(booking));
             }
 
             @Override
@@ -150,13 +150,13 @@ public class BookingManager
                 //still need to invalidate so we don't allow them to click on same booking
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.ClaimJobRequestReceivedEvent(null, false, error.getMessage()));
+                bus.post(new HandyEvent.ReceiveClaimJobError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestRemoveJob(Event.RequestRemoveJobEvent event)
+    public void onRequestRemoveJob(HandyEvent.RequestRemoveJob event)
     {
         String bookingId = event.bookingId;
 
@@ -167,7 +167,7 @@ public class BookingManager
             {
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.RemoveJobRequestReceivedEvent(booking, true));
+                bus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
             }
 
             @Override
@@ -176,13 +176,13 @@ public class BookingManager
                 //still need to invalidate so we don't allow them to click on same booking
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.RemoveJobRequestReceivedEvent(null, false, error.getMessage()));
+                bus.post(new HandyEvent.ReceiveRemoveJobError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestNotifyOnMyWay(Event.RequestNotifyOnMyWayJobEvent event)
+    public void onRequestNotifyOnMyWay(HandyEvent.RequestNotifyJobOnMyWay event)
     {
         String bookingId = event.bookingId;
 
@@ -193,7 +193,7 @@ public class BookingManager
             {
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.NotifyOnMyWayJobRequestReceivedEvent(booking));
+                bus.post(new HandyEvent.ReceiveNotifyJobOnMyWaySuccess(booking));
             }
 
             @Override
@@ -202,13 +202,13 @@ public class BookingManager
                 //still need to invalidate so we don't allow them to click on same booking
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.NotifyOnMyWayJobErrorEvent(error));
+                bus.post(new HandyEvent.ReceiveNotifyJobOnMyWayError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestNotifyCheckIn(Event.RequestNotifyCheckInJobEvent event)
+    public void onRequestNotifyCheckIn(HandyEvent.RequestNotifyJobCheckIn event)
     {
         String bookingId = event.bookingId;
 
@@ -219,7 +219,7 @@ public class BookingManager
             {
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.NotifyCheckInJobRequestReceivedEvent(booking));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking));
             }
 
             @Override
@@ -228,13 +228,13 @@ public class BookingManager
                 //still need to invalidate so we don't allow them to click on same booking
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.NotifyCheckInJobErrorEvent(error));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestNotifyCheckOut(Event.RequestNotifyCheckOutJobEvent event)
+    public void onRequestNotifyCheckOut(HandyEvent.RequestNotifyJobCheckOut event)
     {
         String bookingId = event.bookingId;
 
@@ -245,7 +245,7 @@ public class BookingManager
             {
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.NotifyCheckOutJobRequestReceivedEvent(booking));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckoutSuccess(booking));
             }
 
             @Override
@@ -254,13 +254,13 @@ public class BookingManager
                 //still need to invalidate so we don't allow them to click on same booking
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.NotifyCheckOutJobErrorEvent(error));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckoutError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestNotifyUpdateArrivalTime(Event.RequestNotifyUpdateArrivalTimeEvent event)
+    public void onRequestNotifyUpdateArrivalTime(HandyEvent.RequestNotifyJobUpdateArrivalTime event)
     {
         String bookingId = event.bookingId;
         Booking.ArrivalTimeOption arrivalTimeOption = event.arrivalTimeOption;
@@ -272,7 +272,7 @@ public class BookingManager
             {
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.NotifyUpdateArrivalRequestReceivedEvent(booking));
+                bus.post(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess(booking));
             }
 
             @Override
@@ -280,7 +280,7 @@ public class BookingManager
             {
                 bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
                 bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                bus.post(new Event.NotifyUpdateArrivalErrorEvent(error));
+                bus.post(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeError(error));
             }
         });
     }

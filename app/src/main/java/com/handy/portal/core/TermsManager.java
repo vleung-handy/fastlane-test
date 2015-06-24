@@ -1,7 +1,7 @@
 package com.handy.portal.core;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -28,7 +28,7 @@ public class TermsManager
     }
 
     @Subscribe
-    public void onCheckTermsRequest(Event.CheckTermsRequestEvent event)
+    public void onCheckTermsRequest(HandyEvent.CheckTermsRequest event)
     {
         dataManager.checkForTerms(
                 new DataManager.Callback<TermsDetails>()
@@ -37,20 +37,21 @@ public class TermsManager
                     public void onSuccess(TermsDetails termsDetails)
                     {
                         newestTermsDetails = termsDetails;
-                        bus.post(new Event.CheckTermsResponseEvent(termsDetails));
+                        System.out.println("Going to post a check terms reponse event");
+                        bus.post(new HandyEvent.CheckTermsResponse(termsDetails));
                     }
 
                     @Override
                     public void onError(DataManager.DataManagerError error)
                     {
                         newestTermsDetails = null;
-                        bus.post(new Event.CheckTermsErrorEvent());
+                        bus.post(new HandyEvent.CheckTermsError());
                     }
                 });
     }
 
     @Subscribe
-    public void onAcceptTerms(Event.AcceptTermsEvent event)
+    public void onAcceptTerms(HandyEvent.AcceptTerms event)
     {
         dataManager.acceptTerms(event.termsDetails.getCode(),
                 new DataManager.Callback<Void>()
@@ -59,13 +60,13 @@ public class TermsManager
                     public void onSuccess(Void response)
                     {
                         newestTermsDetails = null;
-                        bus.post(new Event.AcceptTermsSuccessEvent());
+                        bus.post(new HandyEvent.AcceptTermsSuccess());
                     }
 
                     @Override
                     public void onError(DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.AcceptTermsErrorEvent());
+                        bus.post(new HandyEvent.AcceptTermsError());
                     }
                 });
     }

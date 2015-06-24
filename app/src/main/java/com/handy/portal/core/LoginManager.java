@@ -1,7 +1,7 @@
 package com.handy.portal.core;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -32,27 +32,27 @@ public class LoginManager
     }
 
     @Subscribe
-    public void onRequestPinCode(Event.RequestPinCodeEvent event)
+    public void onRequestPinCode(HandyEvent.RequestPinCode event)
     {
         dataManager.requestPinCode(event.phoneNumber, new DataManager.Callback<PinRequestDetails>()
                 {
                     @Override
                     public void onSuccess(final PinRequestDetails pinRequestDetails)
                     {
-                        bus.post(new Event.PinCodeRequestReceivedEvent(pinRequestDetails, true));
+                        bus.post(new HandyEvent.PinCodeRequestSuccess(pinRequestDetails));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.PinCodeRequestReceivedEvent(null, false));
+                        bus.post(new HandyEvent.PinCodeRequestError(error));
                     }
                 }
         );
     }
 
     @Subscribe
-    public void onRequestLogin(Event.RequestLoginEvent event)
+    public void onRequestLogin(HandyEvent.RequestLogin event)
     {
         dataManager.requestLogin(event.phoneNumber, event.pinCode, new DataManager.Callback<LoginDetails>()
                 {
@@ -60,13 +60,13 @@ public class LoginManager
                     public void onSuccess(final LoginDetails loginDetails)
                     {
                         saveLoginDetails(loginDetails);
-                        bus.post(new Event.LoginRequestReceivedEvent(loginDetails, true));
+                        bus.post(new HandyEvent.LoginRequestSuccess(loginDetails));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.LoginRequestReceivedEvent(null, false));
+                        bus.post(new HandyEvent.LoginRequestError(error));
                     }
                 }
         );

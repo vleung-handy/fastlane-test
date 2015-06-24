@@ -2,7 +2,7 @@ package com.handy.portal.core;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
@@ -37,9 +37,9 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     @Captor
     private ArgumentCaptor<DataManager.Callback<LoginDetails>> loginRequestCallbackCaptor;
     @Captor
-    private ArgumentCaptor<Event.PinCodeRequestReceivedEvent> pinCodePostEventArgumentCaptor;
+    private ArgumentCaptor<HandyEvent.PinCodeRequestSuccess> pinCodePostEventArgumentCaptor;
     @Captor
-    private ArgumentCaptor<Event.LoginRequestReceivedEvent> loginPostEventArgumentCaptor;
+    private ArgumentCaptor<HandyEvent.LoginRequestSuccess> loginPostEventArgumentCaptor;
 
     private LoginManager loginManager;
 
@@ -103,13 +103,13 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
 
     private void requestPinCodeAndCaptureCallback()
     {
-        loginManager.onRequestPinCode(mock(Event.RequestPinCodeEvent.class));
+        loginManager.onRequestPinCode(mock(HandyEvent.RequestPinCode.class));
         verify(dataManager).requestPinCode(anyString(), pinCodeRequestCallbackCaptor.capture());
     }
 
     private void requestLoginAndCaptureCallback()
     {
-        loginManager.onRequestLogin(mock(Event.RequestLoginEvent.class));
+        loginManager.onRequestLogin(mock(HandyEvent.RequestLogin.class));
         verify(dataManager).requestLogin(anyString(), anyString(), loginRequestCallbackCaptor.capture());
     }
 }

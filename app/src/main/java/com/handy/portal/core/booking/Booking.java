@@ -25,24 +25,30 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("end_date") private Date endDate;
     @SerializedName("hours") private float hours;
     @SerializedName("price") private float price;
-    @SerializedName("msg_to_pro") private String proNote;
+
     @SerializedName("laundry_status") private LaundryStatus laundryStatus;
     @SerializedName("address") private Address address;
     @SerializedName("billed_status") private String billedStatus;
     @SerializedName("payment_hash") private ArrayList<LineItem> paymentInfo;
-    @SerializedName("booking_extras") private ArrayList<ExtraInfoWrapper> extrasInfo;
+
     @SerializedName("is_requested") private boolean isRequested;
     @SerializedName("payment_to_provider") private PaymentInfo paymentToProvider;
     @SerializedName("bonus") private PaymentInfo bonusPayment;
     @SerializedName("frequency") private int frequency;
-    @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions;
-    @SerializedName("description") private String description;
+
+
     @SerializedName("provider_id") private String providerId;
     @SerializedName("partner") private String partner;
     @SerializedName("country") private String country;
     @SerializedName("user") private User user;
     @SerializedName("actions") private List<ActionButtonData> actionButtonData;
     @SerializedName("booking_phone") private String bookingPhone;
+
+    @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions; //Customer Details
+    @SerializedName("booking_extras") private ArrayList<ExtraInfoWrapper> extrasInfo; //Extras
+    @SerializedName("description") private String description; //Customer Request
+    @SerializedName("msg_to_pro") private String proNote;       //Customer Request
+
 
     public int compareTo(Booking other)
     {
@@ -516,6 +522,8 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
         public String getDescription() { return description; }
         public String getMachineName() { return machineName; }
+
+        //filter out based on machine name
 
     }
 

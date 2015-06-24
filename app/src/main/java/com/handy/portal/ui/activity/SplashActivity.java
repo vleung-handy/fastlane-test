@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.core.LoginManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Subscribe;
 
 public class SplashActivity extends BaseActivity
@@ -80,11 +80,11 @@ public class SplashActivity extends BaseActivity
 
     private void checkForTerms()
     {
-        bus.post(new Event.CheckTermsRequestEvent());
+        bus.post(new HandyEvent.CheckTermsRequest());
     }
 
     @Subscribe
-    public void onCheckTermsResponse(Event.CheckTermsResponseEvent event)
+    public void onCheckTermsResponse(HandyEvent.CheckTermsResponse event)
     {
         if (event.termsDetails.getCode() != null)
         {
@@ -97,7 +97,7 @@ public class SplashActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onCheckTermsError(Event.CheckTermsErrorEvent event)
+    public void onCheckTermsError(HandyEvent.CheckTermsError event)
     {
         launchActivity(TermsActivity.class);
     }

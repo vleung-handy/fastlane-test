@@ -15,7 +15,7 @@ import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.form.BookingListView;
 import com.handy.portal.util.Utils;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> extends InjectedFragment
+public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends InjectedFragment
 {
     @InjectView(R.id.bookings_content)
     protected View bookingsContentView;
@@ -52,7 +52,7 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
 
     protected abstract String getTrackingType();
 
-    protected abstract Event getRequestEvent();
+    protected abstract HandyEvent getRequestEvent();
 
     protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
 
@@ -78,10 +78,10 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
         ButterKnife.inject(this, view);
 
         //Optional param, needs to be validated
-        if(getArguments() != null && getArguments().containsKey(BundleKeys.DATE_EPOCH_TIME))
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.DATE_EPOCH_TIME))
         {
             long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
-            if(targetDateTime > 0)
+            if (targetDateTime > 0)
             {
                 this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
                 this.selectedDay = Utils.getDateWithoutTime(this.selectedDay);
@@ -107,13 +107,13 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
     protected void requestBookings()
     {
         fetchErrorView.setVisibility(View.GONE);
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(getRequestEvent());
     }
 
-    protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
+    protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         List<BookingSummary> bookingSummaries = event.bookingSummaries;
         initDateButtons(bookingSummaries);
 
@@ -123,8 +123,7 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
         {
             dateButtonMap.get(selectedDay).performClick();
             scrollDatesToPreviousPosition();
-        }
-        else if (getDatesLayout().getChildCount() > 0)
+        } else if (getDatesLayout().getChildCount() > 0)
         {
             getDatesLayout().getChildAt(0).performClick();
         }
@@ -173,7 +172,7 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
             {
                 public void onClick(View v)
                 {
-                    bus.post(new Event.DateClickedEvent(getTrackingType(), day));
+                    bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
                     displayBookings(bookingsForDay);
                 }
@@ -182,7 +181,6 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
             dateButtonMap.put(day, dateButtonView);
         }
     }
-
 
     private void selectDay(Date day)
     {
@@ -213,7 +211,7 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
                 Booking booking = (Booking) adapter.getItemAtPosition(position);
                 if (booking != null)
                 {
-                    bus.post(new Event.BookingSelectedEvent(getTrackingType(), booking.getId()));
+                    bus.post(new HandyEvent.BookingSelected(getTrackingType(), booking.getId()));
                     previousDatesScrollPosition = ((HorizontalScrollView) getDatesLayout().getParent()).getScrollX();
                     showBookingDetails(booking);
                 }
@@ -241,7 +239,7 @@ public abstract class BookingsFragment<T extends Event.BookingsRetrievedEvent> e
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
 
-        Event.NavigateToTabEvent event = new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments);
+        HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
 
         bus.post(event);
     }

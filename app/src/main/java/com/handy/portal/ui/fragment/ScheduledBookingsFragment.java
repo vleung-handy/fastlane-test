@@ -12,7 +12,7 @@ import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.form.BookingListView;
 import com.squareup.otto.Subscribe;
 
@@ -25,7 +25,7 @@ import butterknife.OnClick;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ScheduledBookingsFragment extends BookingsFragment<Event.ScheduledBookingsRetrievedEvent>
+public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
     @InjectView(R.id.scheduled_jobs_list_view)
     protected BookingListView scheduledJobsListView;
@@ -62,9 +62,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<Event.ScheduledB
     }
 
     @Override
-    protected Event getRequestEvent()
+    protected HandyEvent getRequestEvent()
     {
-        return new Event.RequestScheduledBookingsEvent();
+        return new HandyEvent.RequestScheduledBookings();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<Event.ScheduledB
     }
 
     @Subscribe
-    public void onBookingsRetrieved(Event.ScheduledBookingsRetrievedEvent event)
+    public void onBookingsRetrieved(HandyEvent.ReceiveScheduledBookingsSuccess event)
     {
         handleBookingsRetrieved(event);
     }
@@ -94,7 +94,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<Event.ScheduledB
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, transitionStyle));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.JOBS, arguments, transitionStyle));
     }
 
     @Override
@@ -121,9 +121,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<Event.ScheduledB
     }
 
     @Subscribe
-    public void onRequestBookingsError(Event.RequestScheduledBookingsErrorEvent event)
+    public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {
             errorText.setText(R.string.error_fetching_connectivity_issue);
