@@ -159,6 +159,16 @@
         <item name="android:textColor">@drawable/button_text_claimed_blue</item>
     </style>
 
+    <style name="Button.PartnerBlueEmpty">
+        <item name="android:background">@drawable/button_partner_blue</item>
+        <item name="android:textColor">@drawable/button_text_partner_blue</item>
+    </style>
+
+    <style name="Button.PartnerBlueEmpty.Round">
+        <item name="android:background">@drawable/button_partner_blue_empty_round</item>
+        <item name="android:textColor">@drawable/button_text_partner_blue</item>
+    </style>
+
     <style name="Button.SalmonRound">
         <item name="android:textColor">@drawable/button_text_white</item>
         <item name="android:background">@drawable/button_salmon_round</item>

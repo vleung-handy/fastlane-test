@@ -16,6 +16,8 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.form.BookingListView;
 import com.squareup.otto.Subscribe;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.InjectView;
@@ -79,10 +81,25 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         handleBookingsRetrieved(event);
     }
 
+    //TODO: Get this from the server, it is technically business logic
+    private final static int HOURS_SPANNING_AVAILABLE_BOOKINGS = 144;
+
     @Override
-    protected void setupCTAButton(List<Booking> bookingsForDay)
+    protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
     {
-        findJobsForDayButton.setVisibility(bookingsForDay.size() == 0 ? View.VISIBLE : View.GONE);
+        //don't show the CTA if we're outside of our available bookings length range
+        long currentTime = Calendar.getInstance().getTime().getTime();
+        long dateOfBookingsTime = dateOfBookings.getTime();
+        long dateDifference = dateOfBookingsTime - currentTime;
+        final long millisecondsInHour = 3600000;
+        if(bookingsForDay.size() == 0 && dateDifference <= millisecondsInHour * HOURS_SPANNING_AVAILABLE_BOOKINGS)
+        {
+            findJobsForDayButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            findJobsForDayButton.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.find_jobs_for_day_button)

@@ -11,6 +11,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.form.BookingListView;
 import com.squareup.otto.Subscribe;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.InjectView;
@@ -74,7 +75,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected void setupCTAButton(List<Booking> bookingsForDay)
+    protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
     {
         //do nothing, no ctas on this page, yet, maybe a refresh button
             //we should track how often pros see 0 jobs available

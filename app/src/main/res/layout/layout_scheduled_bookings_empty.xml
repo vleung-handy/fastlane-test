@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_no_available_jobs"/>
+        android:src="@drawable/ic_no_scheduled_jobs"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:gravity="center_horizontal"
         android:text="@string/no_scheduled_jobs"
         android:textColor="@color/subtitle_grey"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:text="@string/cta_find_jobs_for_this_day"
         android:layout_gravity="center_horizontal"
-        style="@style/Button.Green.Round"
+        style="@style/Button.PartnerBlueEmpty.Round"
         />
 
 </LinearLayout>

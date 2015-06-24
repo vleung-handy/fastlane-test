@@ -58,7 +58,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
 
-    protected abstract void setupCTAButton(List<Booking> bookingsForDay);
+    protected abstract void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings);
 
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
@@ -174,7 +174,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 {
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
-                    displayBookings(bookingsForDay);
+                    displayBookings(bookingsForDay, day);
                 }
             });
 
@@ -193,12 +193,12 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         selectedDay = day;
     }
 
-    private void displayBookings(List<Booking> bookings)
+    private void displayBookings(List<Booking> bookings, Date dateOfBookings)
     {
         getBookingListView().populateList(bookings);
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
-        setupCTAButton(bookings);
+        setupCTAButton(bookings, dateOfBookings);
     }
 
     private void initListClickListener()
