@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -20,6 +21,7 @@ import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.inject.Inject;
@@ -28,6 +30,12 @@ public class VersionManager
 {
     public static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
     public static final String APK_FILE_NAME = "handy-pro-latest.apk";
+
+    // This backoff duration is used to prevent the app from executing download repeatedly when
+    // download fails. It is used to check whether there was a download attempt recently and if so,
+    // doesn't execute the update process.
+    private static final int UPDATE_CHECK_BACKOFF_DURATION_MILLIS = 300000; // 5 minutes
+    private long lastUpdateCheckTimeMillis = 0;
 
     private final Context context;
     private final Bus bus;
@@ -44,21 +52,30 @@ public class VersionManager
         this.buildConfigWrapper = buildConfigWrapper;
     }
 
-    private long downloadReference;
+    private long downloadReferenceId;
     private DownloadManager downloadManager;
-    private boolean downloadComplete;
 
     public Uri getNewApkUri()
     {
-        return downloadManager.getUriForDownloadedFile(downloadReference);
+        return downloadManager.getUriForDownloadedFile(downloadReferenceId);
     }
 
     @Produce
-    public Event.UpdateReady produceUpdateReady()
+    public Event.DownloadUpdateSuccessful produceUpdateDownloadSuccessful()
     {
-        if (downloadComplete)
+        if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
         {
-            return new Event.UpdateReady();
+            return new Event.DownloadUpdateSuccessful();
+        }
+        return null;
+    }
+
+    @Produce
+    public Event.DownloadUpdateFailed produceUpdateDownloadFailed()
+    {
+        if (getDownloadStatus() == DownloadManager.STATUS_FAILED)
+        {
+            return new Event.DownloadUpdateFailed();
         }
         return null;
     }
@@ -66,6 +83,14 @@ public class VersionManager
     @Subscribe
     public void onUpdateCheckRequest(Event.UpdateCheckEvent event)
     {
+        // TODO: Make request back-offs better
+        long now = new Date().getTime();
+        if (lastUpdateCheckTimeMillis > 0 && now - lastUpdateCheckTimeMillis < UPDATE_CHECK_BACKOFF_DURATION_MILLIS)
+        {
+            return;
+        }
+
+        lastUpdateCheckTimeMillis = now;
 
         PackageInfo pkgInfo = getPackageInfoFromActivity(event.sender);
 
@@ -125,8 +150,6 @@ public class VersionManager
 
     public void downloadApk(String apkUrl)
     {
-        downloadComplete = false;
-
         File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         downloadsDirectory.mkdirs();
 
@@ -145,7 +168,7 @@ public class VersionManager
                 .setTitle("Portal Update")
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, APK_FILE_NAME);
 
-        downloadReference = downloadManager.enqueue(request);
+        downloadReferenceId = downloadManager.enqueue(request);
 
         context.registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
@@ -157,13 +180,31 @@ public class VersionManager
         public void onReceive(Context context, Intent intent)
         {
             long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            if (downloadReference == referenceId)
+            if (downloadReferenceId == referenceId)
             {
-                downloadComplete = true;
-                bus.post(new Event.UpdateReady());
+                if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
+                {
+                    bus.post(new Event.DownloadUpdateSuccessful());
+                }
+                else
+                {
+                    bus.post(new Event.DownloadUpdateFailed());
+                }
             }
         }
     };
+
+    private int getDownloadStatus()
+    {
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(downloadReferenceId);
+        Cursor cursor = downloadManager.query(query);
+        if (cursor.moveToFirst())
+        {
+            return cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+        }
+        return -1;
+    }
 
     private PackageInfo getPackageInfoFromActivity(Activity sender)
     {

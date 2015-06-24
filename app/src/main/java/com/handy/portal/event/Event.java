@@ -48,11 +48,16 @@ public abstract class Event
         }
     }
 
-    public static class UpdateAvailable extends Event
+    public static class UpdateAvailable
     {
     }
 
-    public static class UpdateReady
+    public static class DownloadUpdateSuccessful
+    {
+    }
+
+    @Track("portal app update download failed")
+    public static class DownloadUpdateFailed
     {
     }
 

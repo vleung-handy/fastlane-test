@@ -40,10 +40,17 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void enableUpdateButton(Event.UpdateReady event)
+    public void onDownloadUpdateSuccessful(Event.DownloadUpdateSuccessful event)
     {
         updateButton.setEnabled(true);
         updateText.setText(R.string.update_copy);
+    }
+
+    @Subscribe
+    public void onDownloadUpdateFailed(Event.DownloadUpdateFailed event)
+    {
+        showErrorToast(R.string.update_failed);
+        getActivity().finish();
     }
 
     @OnClick(R.id.update_button)

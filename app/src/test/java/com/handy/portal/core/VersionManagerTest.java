@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.data.BuildConfigWrapper;
@@ -28,11 +27,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -54,9 +51,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     @Captor
     private ArgumentCaptor<DataManager.Callback<UpdateDetails>> updateCheckCallbackCaptor;
     @Captor
-    private ArgumentCaptor<Event.UpdateCheckEvent> updateCheckEventArgumentCaptor;
-    @Captor
-    private ArgumentCaptor<Event.UpdateAvailable> updateAvailableEventArgumentCaptor;
+    private ArgumentCaptor<Object> eventArgumentCaptor;
 
     private VersionManager versionManager;
     private ShadowDownloadManager downloadManager;
@@ -98,21 +93,8 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
 
         updateDetailsCallBack.onSuccess(updateDetails);
 
-        verify(bus).post(updateAvailableEventArgumentCaptor.capture());
-        assertThat(updateAvailableEventArgumentCaptor.getValue(), instanceOf(Event.UpdateAvailable.class));
-    }
-
-    @Test
-    public void givenUpdateNeeded_whenDownloadFinished_thenPostUpdateReadyEvent() throws Exception
-    {
-        BroadcastReceiver downloadReceiverSpy = spy(versionManager.downloadReceiver);
-        Intent mockIntent = mock(Intent.class);
-        when(mockIntent.getLongExtra(anyString(), anyLong())).thenReturn(0L);
-
-        downloadReceiverSpy.onReceive(RuntimeEnvironment.application, mockIntent);
-
-        verify(bus).post(updateAvailableEventArgumentCaptor.capture());
-        assertThat(updateAvailableEventArgumentCaptor.getValue(), instanceOf(Event.UpdateReady.class));
+        verify(bus).post(eventArgumentCaptor.capture());
+        assertThat(eventArgumentCaptor.getValue(), instanceOf(Event.UpdateAvailable.class));
     }
 
     @Test

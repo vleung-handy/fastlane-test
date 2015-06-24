@@ -1,6 +1,5 @@
 package com.handy.portal.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.handy.portal.R;
@@ -18,17 +17,9 @@ public class LoginActivity extends BaseActivity
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void startActivity(final Intent intent)
+    public void onResume()
     {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        super.startActivity(intent);
-        finish();
+        super.onResume();
     }
 
     @Override
