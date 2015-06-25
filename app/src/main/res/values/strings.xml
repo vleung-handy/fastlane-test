@@ -193,8 +193,9 @@
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
-    <string name="update_copy">Please download the latest app to continue using portal.</string>
-    <string name="update_button_label">Download Update</string>
+    <string name="update_copy">Please install the update to continue using Portal.</string>
+    <string name="update_button_label">Install Update</string>
+    <string name="download_copy">Downloading update. Please wait…</string>
 
     <plurals name="hour">
         <item quantity="one">hour</item>
@@ -233,6 +234,7 @@
     <string name="i_agree">I agree to the Service Professional Agreement</string>
     <string name="error_accepting_terms">There was an error accepting the terms. Please try again.</string>
     <string name="error_loading">There was a loading error. Please click below to try again.</string>
+    <string name="update_failed">Failed to download update</string>
 
 
 </resources>
