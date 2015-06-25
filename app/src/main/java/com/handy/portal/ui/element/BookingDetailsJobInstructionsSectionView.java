@@ -1,6 +1,7 @@
 package com.handy.portal.ui.element;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -15,9 +16,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-/**
- * Created by cdavis on 5/8/15.
- */
 public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
 {
     @InjectView(R.id.booking_details_job_instructions_section_title_text)
@@ -43,12 +41,15 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
     {
         super(context, attrs, defStyle);
     }
-    public void init(String sectionTitle, int sectionIconId, List<String> entries, boolean bulleted)
+    public void init(String sectionTitle, @Nullable Integer sectionIconId, List<String> entries, boolean bulleted)
     {
         ButterKnife.inject(this);
 
         sectionTitleText.setText(sectionTitle);
-        sectionIcon.setImageResource(sectionIconId);
+        if (sectionIconId != null)
+        {
+            sectionIcon.setImageResource(sectionIconId);
+        }
 
         for(int i = 0; i < entries.size(); i++)
         {
