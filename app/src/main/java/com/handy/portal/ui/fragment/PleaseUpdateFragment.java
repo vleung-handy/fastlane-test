@@ -1,10 +1,12 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -23,6 +25,8 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Inject
     VersionManager versionManager;
 
+    @InjectView(R.id.update_image)
+    ImageView updateImage;
     @InjectView(R.id.update_button)
     View updateButton;
     @InjectView(R.id.update_text)
@@ -36,12 +40,15 @@ public class PleaseUpdateFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_please_update, container);
         ButterKnife.inject(this, view);
 
+        ((AnimationDrawable) updateImage.getBackground()).start();
+
         return view;
     }
 
     @Subscribe
     public void onDownloadUpdateSuccessful(Event.DownloadUpdateSuccessful event)
     {
+        updateImage.setBackgroundResource(R.drawable.blocking_updateapp_avatar);
         updateButton.setEnabled(true);
         updateText.setText(R.string.update_copy);
     }
