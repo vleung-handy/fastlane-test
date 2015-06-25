@@ -96,4 +96,9 @@ public class TestApplicationModule {
     final BuildConfigWrapper provideBuildConfigWrapper() {
         return mock(BuildConfigWrapper.class);
     }
+
+    @Provides
+    final VersionManager provideVersionManager() {
+        return mock(VersionManager.class);
+    }
 }

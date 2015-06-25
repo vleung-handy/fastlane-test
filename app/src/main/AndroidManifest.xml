@@ -50,6 +50,7 @@
         </activity>
         <activity
             android:name=".ui.activity.PleaseUpdateActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_please_update" >
         </activity>
 

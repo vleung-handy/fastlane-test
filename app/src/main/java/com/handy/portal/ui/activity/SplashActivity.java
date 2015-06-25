@@ -106,4 +106,16 @@ public class SplashActivity extends BaseActivity
     {
         startActivity(new Intent(this, activityClass));
     }
+
+    @Override
+    public void checkForUpdates()
+    {
+        //Do nothing
+    }
+
+    @Override
+    public void onUpdateAvailable(Event.UpdateAvailable event)
+    {
+        //Do nothing
+    }
 }
