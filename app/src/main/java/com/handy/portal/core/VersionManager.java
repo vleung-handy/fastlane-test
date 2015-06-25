@@ -29,7 +29,8 @@ import javax.inject.Inject;
 public class VersionManager
 {
     public static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
-    public static final String APK_FILE_NAME = "handy-pro-latest.apk";
+    private static final String APK_FILE_NAME = "handy-pro-latest.apk";
+    private static final String DOWNLOAD_UPDATE_NOTIFICATION_TITLE = "Portal Update";
 
     // This backoff duration is used to prevent the app from executing download repeatedly when
     // download fails. It is used to check whether there was a download attempt recently and if so,
@@ -165,7 +166,7 @@ public class VersionManager
                 .setMimeType(APK_MIME_TYPE)
                 .setAllowedOverRoaming(false)
                 .setVisibleInDownloadsUi(false)
-                .setTitle("Portal Update")
+                .setTitle(DOWNLOAD_UPDATE_NOTIFICATION_TITLE)
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, APK_FILE_NAME);
 
         downloadReferenceId = downloadManager.enqueue(request);
