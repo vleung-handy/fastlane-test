@@ -6,6 +6,8 @@
     android:orientation="vertical"
     tools:context=".BookingDetailsFragment">
 
+    <include layout="@layout/layout_fetch_error"/>
+
     <LinearLayout
         android:id="@+id/booking_details_main_layout"
         android:layout_width="match_parent"

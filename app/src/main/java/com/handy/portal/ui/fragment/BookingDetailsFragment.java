@@ -49,6 +49,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class BookingDetailsFragment extends InjectedFragment
 {
@@ -83,9 +84,16 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.booking_details_full_details_notice_text)
     protected TextView fullDetailsNoticeText;
 
+    @InjectView(R.id.fetch_error_view)
+    protected View fetchErrorView;
+
+    @InjectView(R.id.fetch_error_text)
+    protected TextView errorText;
+
     @Inject
     SecurePreferences prefs;
 
+    private String requestedBookingId;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
 
     @Override
@@ -100,7 +108,13 @@ public class BookingDetailsFragment extends InjectedFragment
 
         if (validateRequiredArguments())
         {
-            requestBookingDetails(this.getArguments().getString(BundleKeys.BOOKING_ID));
+            this.requestedBookingId = getArguments().getString(BundleKeys.BOOKING_ID);
+            requestBookingDetails(this.requestedBookingId);
+        }
+        else
+        {
+            showToast(R.string.an_error_has_occurred);
+            returnToTab(MainViewTab.JOBS, 0, TransitionStyle.REFRESH_TAB);
         }
 
         return view;
@@ -121,6 +135,8 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void requestBookingDetails(String bookingId)
     {
+        fetchErrorView.setVisibility(View.GONE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestBookingDetails(bookingId));
     }
 
@@ -192,6 +208,13 @@ public class BookingDetailsFragment extends InjectedFragment
         return viewConstructors;
     }
 
+    @OnClick(R.id.try_again_button)
+    public void onClickRequestDetails()
+    {
+        requestBookingDetails(this.requestedBookingId);
+    }
+
+    //Can not use @onclick b/c the button does not exist at injection time
     //TODO: the only button on this page that is not an action button, clean this up eventually?
     private void initBackButton()
     {
@@ -517,6 +540,7 @@ public class BookingDetailsFragment extends InjectedFragment
     @Subscribe
     public void onReceiveBookingDetailsSuccess(HandyEvent.ReceiveBookingDetailsSuccess event)
     {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         this.associatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
     }
@@ -524,7 +548,7 @@ public class BookingDetailsFragment extends InjectedFragment
     @Subscribe
     public void onReceiveBookingDetailsError(HandyEvent.ReceiveBookingDetailsError event)
     {
-        //TODO: Show a display state that involves re-requesting booking details, could have been a network error or other?
+        handleBookingDetailsError(event.error.getMessage());
     }
 
     @Subscribe
@@ -676,7 +700,7 @@ public class BookingDetailsFragment extends InjectedFragment
             showErrorDialogReturnToAvailable(errorMessage, title, option1, returnDate.getTime());
         } else
         {
-            handleNetworkError();
+            showNetworkErrorToast();
         }
     }
 
@@ -698,7 +722,7 @@ public class BookingDetailsFragment extends InjectedFragment
             showErrorDialogReturnToAvailable(errorMessage, title, option1, returnDate.getTime());
         } else
         {
-            handleNetworkError();
+            showNetworkErrorToast();
         }
     }
 
@@ -724,7 +748,7 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
 
-    private void handleNetworkError()
+    private void showNetworkErrorToast()
     {
         //generic network problem
         //show a toast about connectivity issues
@@ -758,8 +782,27 @@ public class BookingDetailsFragment extends InjectedFragment
             showToast(errorMessage);
         } else
         {
-            handleNetworkError();
+            showNetworkErrorToast();
         }
+    }
+
+    //if we had problems retrieving the booking show a toast and return to available bookings
+    private void handleBookingDetailsError(String errorMessage)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        if (errorMessage != null)
+        {
+            showToast(errorMessage, Toast.LENGTH_LONG);
+            //don't have a day to return to just return to time zero, first day in list
+            returnToTab(MainViewTab.JOBS, 0, TransitionStyle.REFRESH_TAB);
+        }
+        else
+        {
+            errorText.setText(R.string.error_fetching_connectivity_issue);
+            //allow try again
+            fetchErrorView.setVisibility(View.VISIBLE);
+        }
+
     }
 
 

@@ -86,7 +86,7 @@ public abstract class BaseActivity extends FragmentActivity
             @Subscribe
             public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
             {
-                //TODO: Handle this
+                //TODO: Handle receive update available errors
             }
         };
     }

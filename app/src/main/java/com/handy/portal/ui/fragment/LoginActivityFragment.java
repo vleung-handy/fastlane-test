@@ -90,8 +90,6 @@ public class LoginActivityFragment extends InjectedFragment
 
         registerControlListeners();
 
-        //TODO: Prepopulate phone number with device's number? User could still edit if it fails
-
         return view;
     }
 
