@@ -39,11 +39,11 @@ public class MainActivity extends BaseActivity
 
     private void checkForTerms()
     {
-        bus.post(new HandyEvent.CheckTermsRequest());
+        bus.post(new HandyEvent.RequestCheckTerms());
     }
 
     @Subscribe
-    public void onCheckTermsResponse(HandyEvent.CheckTermsResponse event)
+    public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event)
     {
         //if the code is null we don't need to to show anything
         if (event.termsDetails.getCode() != null)
@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onCheckTermsError(HandyEvent.CheckTermsError event)
+    public void onReceiveCheckTermsError(HandyEvent.ReceiveCheckTermsError event)
     {
         startActivity(new Intent(this, TermsActivity.class));
     }

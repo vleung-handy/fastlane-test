@@ -78,9 +78,15 @@ public abstract class BaseActivity extends FragmentActivity
         busEventListener = new Object()
         {
             @Subscribe
-            public void onUpdateCheckReceived(HandyEvent.ReceiveUpdateAvailable event)
+            public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
             {
                 BaseActivity.this.onUpdateAvailable(event);
+            }
+
+            @Subscribe
+            public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
+            {
+                //TODO: Handle this
             }
         };
     }
@@ -167,7 +173,7 @@ public abstract class BaseActivity extends FragmentActivity
         bus.post(new HandyEvent.ActivityPaused(this));
     }
 
-    public void onUpdateAvailable(HandyEvent.ReceiveUpdateAvailable event)
+    public void onUpdateAvailable(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
         startActivity(new Intent(this, PleaseUpdateActivity.class));
     }

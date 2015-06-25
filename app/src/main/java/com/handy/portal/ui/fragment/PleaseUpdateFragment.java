@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.VersionManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -46,7 +46,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onDownloadUpdateSuccessful(Event.DownloadUpdateSuccessful event)
+    public void onDownloadUpdateSuccessful(HandyEvent.DownloadUpdateSuccessful event)
     {
         updateImage.setBackgroundResource(R.drawable.blocking_updateapp_avatar);
         updateButton.setEnabled(true);
@@ -54,9 +54,9 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onDownloadUpdateFailed(Event.DownloadUpdateFailed event)
+    public void onDownloadUpdateFailed(HandyEvent.DownloadUpdateFailed event)
     {
-        showErrorToast(R.string.update_failed);
+        showToast(R.string.update_failed);
         getActivity().finish();
     }
 

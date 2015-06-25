@@ -34,7 +34,7 @@ public class PleaseUpdateActivity extends BaseActivity
     }
 
     @Override
-    public void onUpdateAvailable(HandyEvent.ReceiveUpdateAvailable event)
+    public void onUpdateAvailable(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
         //Do nothing
     }

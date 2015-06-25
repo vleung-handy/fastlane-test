@@ -80,11 +80,11 @@ public class SplashActivity extends BaseActivity
 
     private void checkForTerms()
     {
-        bus.post(new HandyEvent.CheckTermsRequest());
+        bus.post(new HandyEvent.RequestCheckTerms());
     }
 
     @Subscribe
-    public void onCheckTermsResponse(HandyEvent.CheckTermsResponse event)
+    public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event)
     {
         if (event.termsDetails.getCode() != null)
         {
@@ -97,7 +97,7 @@ public class SplashActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onCheckTermsError(HandyEvent.CheckTermsError event)
+    public void onReceiveCheckTermsError(HandyEvent.ReceiveCheckTermsError event)
     {
         launchActivity(TermsActivity.class);
     }
@@ -114,7 +114,7 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public void onUpdateAvailable(Event.UpdateAvailable event)
+    public void onUpdateAvailable(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
         //Do nothing
     }

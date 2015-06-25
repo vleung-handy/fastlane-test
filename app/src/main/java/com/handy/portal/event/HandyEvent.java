@@ -177,25 +177,42 @@ public abstract class HandyEvent
         }
     }
 
-    public static class ReceiveUpdateAvailable extends ReceiveSuccessEvent
+    public static class ReceiveUpdateAvailableSuccess extends ReceiveSuccessEvent
     {
     }
 
-    public static class CheckTermsRequest
+    public static class ReceiveUpdateAvailableError extends ReceiveErrorEvent
+    {
+        public ReceiveUpdateAvailableError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class DownloadUpdateSuccessful extends HandyEvent
     {
     }
 
-    public static class CheckTermsResponse
+    @Track("portal app update download failed")
+    public static class DownloadUpdateFailed extends HandyEvent
+    {
+    }
+
+    public static class RequestCheckTerms extends RequestEvent
+    {
+    }
+
+    public static class ReceiveCheckTermsSuccess extends ReceiveSuccessEvent
     {
         public final TermsDetails termsDetails;
 
-        public CheckTermsResponse(@NonNull TermsDetails termsDetails)
+        public ReceiveCheckTermsSuccess(@NonNull TermsDetails termsDetails)
         {
             this.termsDetails = termsDetails;
         }
     }
 
-    public static class CheckTermsError
+    public static class ReceiveCheckTermsError extends ReceiveErrorEvent
     {
     }
 
@@ -523,7 +540,7 @@ public abstract class HandyEvent
     }
 
     @Track("portal use terms displayed")
-    public static class TermsDisplayed
+    public static class TermsDisplayed extends AnalyticsEvents
     {
         @TrackField("terms code")
         private String code;
@@ -535,7 +552,7 @@ public abstract class HandyEvent
     }
 
     @Track("portal use terms accepted")
-    public static class AcceptTerms
+    public static class AcceptTerms extends AnalyticsEvents
     {
         @TrackField("terms code")
         private String code;
@@ -550,7 +567,7 @@ public abstract class HandyEvent
     }
 
     @Track("portal use terms error")
-    public static class AcceptTermsError
+    public static class AcceptTermsError extends AnalyticsEvents
     {
         @TrackField("terms code")
         private String code;
@@ -568,9 +585,8 @@ public abstract class HandyEvent
         }
     }
 
-    public static class AcceptTermsSuccess
+    public static class AcceptTermsSuccess extends HandyEvent
     {
     }
-
 
 }

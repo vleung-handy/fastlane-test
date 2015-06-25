@@ -28,7 +28,7 @@ public class TermsManager
     }
 
     @Subscribe
-    public void onCheckTermsRequest(HandyEvent.CheckTermsRequest event)
+    public void onCheckTermsRequest(HandyEvent.RequestCheckTerms event)
     {
         dataManager.checkForTerms(
                 new DataManager.Callback<TermsDetails>()
@@ -37,15 +37,14 @@ public class TermsManager
                     public void onSuccess(TermsDetails termsDetails)
                     {
                         newestTermsDetails = termsDetails;
-                        System.out.println("Going to post a check terms reponse event");
-                        bus.post(new HandyEvent.CheckTermsResponse(termsDetails));
+                        bus.post(new HandyEvent.ReceiveCheckTermsSuccess(termsDetails));
                     }
 
                     @Override
                     public void onError(DataManager.DataManagerError error)
                     {
                         newestTermsDetails = null;
-                        bus.post(new HandyEvent.CheckTermsError());
+                        bus.post(new HandyEvent.ReceiveCheckTermsError());
                     }
                 });
     }

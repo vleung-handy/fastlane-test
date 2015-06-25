@@ -15,7 +15,7 @@ import android.os.Environment;
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -62,27 +62,27 @@ public class VersionManager
     }
 
     @Produce
-    public Event.DownloadUpdateSuccessful produceUpdateDownloadSuccessful()
+    public HandyEvent.DownloadUpdateSuccessful produceUpdateDownloadSuccessful()
     {
         if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
         {
-            return new Event.DownloadUpdateSuccessful();
+            return new HandyEvent.DownloadUpdateSuccessful();
         }
         return null;
     }
 
     @Produce
-    public Event.DownloadUpdateFailed produceUpdateDownloadFailed()
+    public HandyEvent.DownloadUpdateFailed produceUpdateDownloadFailed()
     {
         if (getDownloadStatus() == DownloadManager.STATUS_FAILED)
         {
-            return new Event.DownloadUpdateFailed();
+            return new HandyEvent.DownloadUpdateFailed();
         }
         return null;
     }
 
     @Subscribe
-    public void onUpdateCheckRequest(Event.UpdateCheckEvent event)
+    public void onUpdateCheckRequest(HandyEvent.RequestUpdateCheck event)
     {
         // TODO: Make request back-offs better
         long now = new Date().getTime();
@@ -103,25 +103,23 @@ public class VersionManager
                         if (updateDetails.getShouldUpdate())
                         {
                             downloadApk(updateDetails.getDownloadUrl());
-                            bus.post(new Event.UpdateAvailable());
+                            bus.post(new HandyEvent.ReceiveUpdateAvailableSuccess());
                         }
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        //TODO: ERROR MESSAGE
+                        bus.post(new HandyEvent.ReceiveUpdateAvailableError(error));
                     }
                 }
         );
     }
 
     @Subscribe
-    public void onApplicationResumed(Event.ApplicationResumed event)
+    public void onApplicationResumed(HandyEvent.ApplicationResumed event)
     {
-
         PackageInfo pInfo = getPackageInfoFromActivity(event.sender);
-
         HashMap<String, String> info = new HashMap<>();
         info.put("user_id", dataManager.getProviderId());
         info.put("platform", "android");
@@ -131,7 +129,6 @@ public class VersionManager
         info.put("app_flavor", buildConfigWrapper.getFlavor());
         info.put("os_version", android.os.Build.VERSION.RELEASE);
         info.put("os_version_code", Integer.toString(android.os.Build.VERSION.SDK_INT));
-
         dataManager.sendVersionInformation(info, new DataManager.Callback<SimpleResponse>()
                 {
                     @Override
@@ -185,11 +182,11 @@ public class VersionManager
             {
                 if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
                 {
-                    bus.post(new Event.DownloadUpdateSuccessful());
+                    bus.post(new HandyEvent.DownloadUpdateSuccessful());
                 }
                 else
                 {
-                    bus.post(new Event.DownloadUpdateFailed());
+                    bus.post(new HandyEvent.DownloadUpdateFailed());
                 }
             }
         }
