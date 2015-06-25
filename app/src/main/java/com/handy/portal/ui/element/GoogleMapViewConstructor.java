@@ -56,7 +56,7 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
         }
         else
         {
-            //clear out the map child if maps is not installed
+            //clear out if we don't have access to play services otherwise we will crash
             removeView();
         }
     }

@@ -10,12 +10,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
@@ -34,6 +37,7 @@ import com.handy.portal.ui.element.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsViewConstructor;
 import com.handy.portal.ui.element.GoogleMapViewConstructor;
+import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
@@ -96,6 +100,8 @@ public class BookingDetailsFragment extends InjectedFragment
     private String requestedBookingId;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
 
+    private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -149,7 +155,10 @@ public class BookingDetailsFragment extends InjectedFragment
         clearLayouts();
         constructBookingDisplayElements(booking, allowedActions);
         createAllowedActionButtons(allowedActions);
+
+        //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
         initBackButton();
+        initMapsPlaceHolderButton();
     }
 
     //We use view constructors instead of views so to clear the views just remove all children of layouts
@@ -198,7 +207,17 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
         viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor());
-        viewConstructors.put(mapLayout, new GoogleMapViewConstructor());
+
+        //show either the real map or a placeholder image depending on if we have google play services
+        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
+        {
+            viewConstructors.put(mapLayout, new GoogleMapViewConstructor());
+        }
+        else
+        {
+            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor());
+        }
+
         viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor());
         viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor());
         viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor());
@@ -214,8 +233,9 @@ public class BookingDetailsFragment extends InjectedFragment
         requestBookingDetails(this.requestedBookingId);
     }
 
+
     //Can not use @onclick b/c the button does not exist at injection time
-    //TODO: the only button on this page that is not an action button, clean this up eventually?
+    //TODO: Figure out better way to link click listeners sections
     private void initBackButton()
     {
         ImageButton backButton = (ImageButton) bannerLayout.findViewById(R.id.booking_details_back_button);
@@ -227,6 +247,26 @@ public class BookingDetailsFragment extends InjectedFragment
                 public void onClick(View v)
                 {
                     getActivity().onBackPressed();
+                }
+            });
+        }
+    }
+
+    //Can not use @onclick b/c the button does not exist at injection time
+    //TODO: Figure out better way to link click listeners sections
+    private void initMapsPlaceHolderButton()
+    {
+        Button mapsInstallButton = (Button) mapLayout.findViewById(R.id.map_placeholder_install_button);
+        //will fail if we didn't use the placeholder version
+        if (mapsInstallButton != null)
+        {
+            mapsInstallButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_SERVICES_INSTALL_URL));
+                    startActivity(browserIntent);
                 }
             });
         }
