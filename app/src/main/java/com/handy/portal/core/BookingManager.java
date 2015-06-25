@@ -63,6 +63,13 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 bus.post(new HandyEvent.ReceiveBookingDetailsError(error));
+
+                //if not a network error invalidate the caches so we don't let them try to get details on the same booking
+                if(error.getType() != DataManager.DataManagerError.Type.NETWORK)
+                {
+                    bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
+                    bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                }
             }
         });
     }
