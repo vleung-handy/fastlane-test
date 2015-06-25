@@ -23,6 +23,7 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
+import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
@@ -32,6 +33,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.TermsFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -64,7 +66,9 @@ import retrofit.converter.GsonConverter;
         MainActivity.class,
         SplashActivity.class,
         PleaseUpdateActivity.class,
-        PleaseUpdateFragment.class
+        PleaseUpdateFragment.class,
+        TermsActivity.class,
+        TermsFragment.class
 })
 public final class ApplicationModule
 {
@@ -93,7 +97,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEnpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
+    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
     {
         if (buildConfigWrapper.isDebug())
         {
@@ -105,7 +109,7 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
-            final HandyRetrofitEndpoint endpoint)
+                                                   final HandyRetrofitEndpoint endpoint)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -124,7 +128,6 @@ public final class ApplicationModule
                     public void intercept(RequestFacade request)
                     {
                         request.addHeader("Authorization", auth);
-                        request.addHeader("Accept", "application/json");
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
                         request.addQueryParam("apiver", "1");
@@ -137,7 +140,9 @@ public final class ApplicationModule
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (buildConfigWrapper.isDebug())
+        {
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
+        }
 
         return restAdapter.create(HandyRetrofitService.class);
     }
@@ -147,7 +152,7 @@ public final class ApplicationModule
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
                                          final SecurePreferences prefs
-                                        )
+    )
     {
         return new BaseDataManager(service, endpoint, prefs);
     }
@@ -183,17 +188,33 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final  DataManager dataManager)
+    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
     {
         return new LoginManager(bus, prefs, dataManager);
     }
 
     @Provides
     @Singleton
-    final UpdateManager provideUpdateManager(final Bus bus,
+    final VersionManager provideVersionManager(final Bus bus,
+                                               final DataManager dataManager,
+                                               final BuildConfigWrapper buildConfigWrapper)
+    {
+        return new VersionManager(context, bus, dataManager, buildConfigWrapper);
+    }
+
+    @Provides
+    @Singleton
+    final TermsManager provideTermsManager(final Bus bus,
                                            final DataManager dataManager)
     {
-        return new UpdateManager(bus, dataManager);
+        return new TermsManager(bus, dataManager);
+    }
+
+    @Provides
+    @Singleton
+    final ApplicationOnResumeWatcher provideApplicationOnResumeWatcher(final Bus bus)
+    {
+        return new ApplicationOnResumeWatcher(bus);
     }
 
 //    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {
@@ -234,7 +255,13 @@ public final class ApplicationModule
         final String manufacturer = Build.MANUFACTURER;
         final String model = Build.MODEL;
 
-        if (model.startsWith(manufacturer)) return model;
-        else return manufacturer + " " + model;
+        if (model.startsWith(manufacturer))
+        {
+            return model;
+        }
+        else
+        {
+            return manufacturer + " " + model;
+        }
     }
 }

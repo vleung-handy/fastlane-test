@@ -9,11 +9,11 @@ import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
+import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.EnvironmentManager;
-import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.event.Event;
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.InputTextField;
 import com.squareup.otto.Bus;
 
@@ -103,12 +103,12 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenGoToMainActivity() throws Exception
+    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenGoToSplashActivity() throws Exception
     {
         makeLoginRequest("5353");
         receiveLoginRequest(true, null, null);
 
-        Intent expectedIntent = new Intent(activity, MainActivity.class);
+        Intent expectedIntent = new Intent(activity, SplashActivity.class);
         assertThat(shadowOf(activity).getNextStartedActivity(), equalTo(expectedIntent));
     }
 
