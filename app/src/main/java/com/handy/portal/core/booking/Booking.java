@@ -45,6 +45,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("booking_phone") private String bookingPhone;
 
     @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions; //Customer Details
+    @SerializedName("booking_instruction_groups") private List<BookingInstructionGroup> bookingInstructionGroups; //Customer Details
     @SerializedName("booking_extras") private ArrayList<ExtraInfoWrapper> extrasInfo; //Extras
     @SerializedName("description") private String description; //Customer Request
     @SerializedName("msg_to_pro") private String proNote;       //Customer Request
@@ -73,6 +74,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     public final String getStatus(){return status;}
     public final List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}
+    public final List<BookingInstructionGroup> getBookingInstructionGroups() { return bookingInstructionGroups;}
 
     public final int getFrequency() { return frequency; }
 
@@ -525,6 +527,38 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
         //filter out based on machine name
 
+    }
+
+    public static final class BookingInstructionGroup
+    {
+        public static String GROUP_ENTRY_METHOD = "entry_method";
+        public static String GROUP_LINENS_LAUNDRY = "linens_laundry";
+        public static String GROUP_REFRIGERATOR = "refrigerator";
+        public static String GROUP_TRASH = "trash";
+        public static String GROUP_NOTE_TO_PRO = "note_to_pro";
+        public static String OTHER = "other";
+
+        @SerializedName("group")
+        private String group;
+        @SerializedName("label")
+        private String label;
+        @SerializedName("items")
+        private List<String> items;
+
+        public String getGroup()
+        {
+            return group;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public List<String> getItems()
+        {
+            return items;
+        }
     }
 
     public static final class ServiceInfo implements Parcelable {
