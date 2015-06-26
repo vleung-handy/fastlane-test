@@ -20,6 +20,8 @@ public class SplashActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        configManager.init();
+
         String loggedInUserId = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
         if (loggedInUserId != null)
         {

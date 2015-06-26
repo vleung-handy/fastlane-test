@@ -10,13 +10,14 @@ import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
+import com.handy.portal.core.ConfigManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.form.BookingListView;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -81,18 +82,16 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         handleBookingsRetrieved(event);
     }
 
-    //TODO: Get this from the server, it is technically business logic
-    private final static int HOURS_SPANNING_AVAILABLE_BOOKINGS = 144;
-
     @Override
     protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
     {
         //don't show the CTA if we're outside of our available bookings length range
-        long currentTime = Calendar.getInstance().getTime().getTime();
+        long currentTime = Utils.getDateWithoutTime(new Date()).getTime();
         long dateOfBookingsTime = dateOfBookings.getTime();
         long dateDifference = dateOfBookingsTime - currentTime;
         final long millisecondsInHour = 3600000;
-        if(bookingsForDay.size() == 0 && dateDifference <= millisecondsInHour * HOURS_SPANNING_AVAILABLE_BOOKINGS)
+        final Integer hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
+        if(bookingsForDay.size() == 0 && dateDifference < millisecondsInHour * hoursSpanningAvailableBookings)
         {
             findJobsForDayButton.setVisibility(View.VISIBLE);
         }

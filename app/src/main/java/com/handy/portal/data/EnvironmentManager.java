@@ -16,7 +16,7 @@ public class EnvironmentManager
 
     public enum Environment
     {
-        S, Q1, Q2, Q3, Q4, Q5, Q6, D1, D2, D3, D4, D5, D6, D7, D8, D9;
+        S, Q1, Q2, Q3, Q4, Q5, Q6;
 
         public String getName()
         {

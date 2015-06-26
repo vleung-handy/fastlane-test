@@ -1,7 +1,5 @@
 package com.handy.portal.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.handy.portal.core.BookingSummaryResponse;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.LoginManager;
@@ -23,7 +21,6 @@ public final class BaseDataManager extends DataManager
     private final HandyRetrofitService service;
     private final HandyRetrofitEndpoint endpoint;
     private final SecurePreferences prefs;
-    private final Gson gsonBuilder;
 
     @Inject
     public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint, final SecurePreferences prefs)
@@ -31,7 +28,6 @@ public final class BaseDataManager extends DataManager
         this.service = service;
         this.endpoint = endpoint;
         this.prefs = prefs;
-        this.gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
     }
 
     @Override
@@ -129,6 +125,12 @@ public final class BaseDataManager extends DataManager
                 cb.onSuccess(null);
             }
         });
+    }
+
+    @Override
+    public void getConfigParams(String[] keys, Callback<Map<String, Integer>> cb)
+    {
+        service.getConfigParams(keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }
 
     public final void sendVersionInformation(Map<String, String> versionInfo, final Callback<SimpleResponse> cb)

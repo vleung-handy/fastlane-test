@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
+import com.handy.portal.core.ConfigManager;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.NavigationManager;
 import com.handy.portal.data.DataManager;
@@ -41,6 +42,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     GoogleService googleService;
     @Inject
     Bus bus;
+    @Inject
+    ConfigManager configManager;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)

@@ -14,6 +14,8 @@ import com.handy.portal.core.booking.Booking;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback
 {
     protected static final Gson gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
@@ -89,6 +91,14 @@ class TermsDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallba
     }
 }
 
+class ConfigParamResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<Map<String, Integer>>
+{
+    ConfigParamResponseHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
 class SimpleResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<SimpleResponse>
 {
     SimpleResponseHandyRetroFitCallback(DataManager.Callback callback)
@@ -96,5 +106,3 @@ class SimpleResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<Sim
         super(callback);
     }
 }
-
-
