@@ -26,8 +26,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/booking_details_contact_profile_text"
+        android:weightSum="1"
         android:orientation="horizontal"
         >
+
+        <LinearLayout
+            android:id="@+id/booking_details_contact_action_button_layout_slot_1"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginRight="8dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/booking_details_contact_action_button_layout_slot_2"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="8dp"
+            />
+
     </LinearLayout>
 
     <TextView

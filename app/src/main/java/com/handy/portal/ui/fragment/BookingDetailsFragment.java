@@ -314,11 +314,14 @@ public class BookingDetailsFragment extends InjectedFragment
                 return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
 
-            //TODO: Will have to have sorting so phone always comes before text without relying on server sending it in a certain order
             case CONTACT_PHONE:
+            {
+                return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout_slot_1);
+            }
+
             case CONTACT_TEXT:
             {
-                return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout);
+                return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout_slot_2);
             }
 
             case REMOVE:

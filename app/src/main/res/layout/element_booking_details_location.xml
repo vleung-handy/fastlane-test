@@ -8,41 +8,52 @@
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
-    <TextView
-        android:id="@+id/booking_details_partner_text"
+    <RelativeLayout
+        android:id="@+id/booking_details_indicators_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/airbnb"
-        android:textColor="@color/partner_blue"
-        android:textSize="14sp"
-        android:textAppearance="@style/TextView.Bold"
-        />
-
-    <LinearLayout
-        android:id="@+id/booking_details_requested_indicator_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="7dp"
-            android:layout_height="7dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/circle_green"/>
+        android:layout_height="wrap_content">
 
         <TextView
-            style="@style/TextView.Bold"
+            android:id="@+id/booking_details_partner_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/youre_requested"
-            android:textAllCaps="true"
-            android:textColor="@color/requested_green"
-            android:textSize="12sp"
+            android:text="@string/airbnb"
+            android:textColor="@color/partner_blue"
+            android:textSize="14sp"
+            android:textAppearance="@style/TextView.Bold"
             />
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/booking_details_requested_indicator_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/circle_green"/>
+
+            <TextView
+                style="@style/TextView.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/youre_requested"
+                android:textAllCaps="true"
+                android:textColor="@color/requested_green"
+                android:textSize="12sp"
+                />
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
 
     <TextView
         android:id="@+id/booking_details_location_text"
@@ -53,7 +64,7 @@
         android:textSize="23sp"
         android:textStyle="bold"
         android:textAppearance="@style/TextView.Bold"
-        android:layout_below="@+id/booking_details_partner_text"
+        android:layout_below="@+id/booking_details_indicators_layout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:scrollHorizontally="false"

@@ -4,14 +4,9 @@
     android:id="@+id/booking_contact_action_button_template"
     >
      <com.handy.portal.ui.widget.BookingActionButton
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
             android:layout_alignParentBottom="false"
             android:layout_marginBottom="10dp"
-            android:text="XXXXX"
             style="@style/Button.White.Round"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             />
 </merge>
