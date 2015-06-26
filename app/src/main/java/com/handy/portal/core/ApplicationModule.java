@@ -195,6 +195,13 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final ConfigManager provideConfigManager(final DataManager dataManager)
+    {
+        return new ConfigManager(dataManager);
+    }
+
+    @Provides
+    @Singleton
     final VersionManager provideVersionManager(final Bus bus,
                                                final DataManager dataManager,
                                                final BuildConfigWrapper buildConfigWrapper)

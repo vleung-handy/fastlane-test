@@ -24,13 +24,6 @@ public class LoginManager
         this.bus.register(this);
     }
 
-    //Dagger doesn't have a good way to resolve cyclical injection dependencies from what I can tell
-    //Hopefully there is some elegant solution that can be found with more googling
-    public void setDataManager(DataManager dataManager)
-    {
-        this.dataManager = dataManager;
-    }
-
     @Subscribe
     public void onRequestPinCode(HandyEvent.RequestPinCode event)
     {

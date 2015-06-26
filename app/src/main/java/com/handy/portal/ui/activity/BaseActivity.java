@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.handy.portal.core.ApplicationOnResumeWatcher;
 import com.handy.portal.core.BaseApplication;
+import com.handy.portal.core.ConfigManager;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
@@ -58,6 +59,8 @@ public abstract class BaseActivity extends FragmentActivity
     VersionManager versionManager;
     @Inject
     TermsManager termsManager;
+    @Inject
+    ConfigManager configManager;
     @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
     @Inject
