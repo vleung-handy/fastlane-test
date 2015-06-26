@@ -83,6 +83,7 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
     </style>
 
     <style name="Button.Blue">
@@ -184,6 +185,11 @@
     <style name="Button.White.Round">
         <item name="android:background">@drawable/button_white_round</item>
         <item name="android:textColor">@drawable/button_text_blue</item>
+    </style>
+
+    <style name="Button.Transparent">
+        <item name="android:background">@drawable/button_transparent_round</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
     </style>
 
     <style name="RoundedButton">

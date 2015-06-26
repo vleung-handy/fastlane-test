@@ -5,7 +5,7 @@
                 >
     <ImageView
         android:id="@+id/image_placeholder_google"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/img_map_placeholder"
         android:layout_alignParentTop="true"
@@ -34,7 +34,7 @@
         android:layout_alignBottom="@+id/image_placeholder_google"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="33dp"
-        style="@style/Button.White.Round"
+        style="@style/Button.Transparent"
         />
 
 

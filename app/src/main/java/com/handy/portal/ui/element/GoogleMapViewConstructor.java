@@ -99,6 +99,15 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
         if (this.useRestrictedView)
         {
             this.googleMap.getUiSettings().setAllGesturesEnabled(false); //disable all controls, we just want to see the image for now
+            //Clicking on map shows error toast
+            map.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+            {
+                @Override
+                public void onMapClick(LatLng point)
+                {
+                    //todo : Add showing a toast here
+                }
+            });
         }
         else
         {

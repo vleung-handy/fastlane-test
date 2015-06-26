@@ -13,11 +13,13 @@
         android:id="@+id/booking_details_contact_profile_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="CUSTOMER N."
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/black"/>
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
 
     <LinearLayout
         android:id="@+id/booking_details_contact_action_button_layout"

@@ -1,6 +1,7 @@
 package com.handy.portal.ui.element;
 
 import com.google.common.collect.ImmutableList;
+import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 
@@ -11,6 +12,12 @@ import java.util.List;
  */
 public class BookingDetailsActionRemovePanelViewConstructor extends BookingDetailsActionPanelViewConstructor
 {
+    @Override
+    protected int getLayoutResourceId()
+    {
+        return R.layout.element_booking_details_action_remove;
+    }
+
     @Override
     protected boolean shouldRemoveSection(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
     {

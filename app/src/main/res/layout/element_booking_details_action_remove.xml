@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
     android:paddingBottom="15dp"
-    android:background="@color/white"
+    android:background="@color/transparent"
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
@@ -26,7 +26,6 @@
         android:layout_below="@+id/booking_details_action_panel_button_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:gravity="center_horizontal"
         android:visibility="gone"/>
 
 </RelativeLayout>
