@@ -130,7 +130,7 @@ public final class BaseDataManager extends DataManager
     @Override
     public void getConfigParams(String[] keys, Callback<Map<String, Integer>> cb)
     {
-        service.getConfigParams(keys, new ConfigParamResponseHandyRetroFitCallback(cb));
+        service.getConfigParams(getProviderId(), keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }
 
     public final void sendVersionInformation(Map<String, String> versionInfo, final Callback<SimpleResponse> cb)

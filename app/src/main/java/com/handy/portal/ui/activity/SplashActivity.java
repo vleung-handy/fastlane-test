@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.handy.portal.R;
-import com.handy.portal.core.LoginManager;
 import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Subscribe;
 
@@ -20,11 +19,10 @@ public class SplashActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        configManager.init();
-
-        String loggedInUserId = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
-        if (loggedInUserId != null)
+        String providerId = dataManager.getProviderId();
+        if (providerId != null)
         {
+            configManager.init();
             checkForTerms();
         }
         else

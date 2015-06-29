@@ -52,8 +52,8 @@ public interface HandyRetrofitService
     @POST("/log_version_info")
     void sendVersionInformation(@FieldMap Map<String,String> params, HandyRetrofitCallback cb);
 
-    @GET("/config_params")
-    void getConfigParams(@Query("key[]") String[] key, HandyRetrofitCallback cb);
+    @GET(PROVIDERS_PATH + "{provider_id}/config_params")
+    void getConfigParams(@Path("provider_id") String providerId, @Query("key[]") String[] key, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{provider_id}/bookings?available=true")
     void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
