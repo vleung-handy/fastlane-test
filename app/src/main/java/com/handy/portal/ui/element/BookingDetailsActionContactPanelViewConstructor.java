@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
 import com.handy.portal.R;
+import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.core.booking.Booking;
 
 import java.util.List;
@@ -39,14 +40,14 @@ public class BookingDetailsActionContactPanelViewConstructor extends BookingDeta
     }
 
     @Override
-    protected ImmutableList<Booking.ButtonActionType> getAssociatedButtonActionTypes()
+    protected ImmutableList<BookingActionButtonType> getAssociatedButtonActionTypes()
     {
         return associatedButtonActionTypes;
     }
 
-    protected final ImmutableList<Booking.ButtonActionType> associatedButtonActionTypes =
+    protected final ImmutableList<BookingActionButtonType> associatedButtonActionTypes =
             ImmutableList.of(
-                    Booking.ButtonActionType.CONTACT_PHONE,
-                    Booking.ButtonActionType.CONTACT_TEXT
+                    BookingActionButtonType.CONTACT_PHONE,
+                    BookingActionButtonType.CONTACT_TEXT
             );
 }

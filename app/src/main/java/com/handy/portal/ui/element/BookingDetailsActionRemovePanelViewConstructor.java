@@ -2,6 +2,7 @@ package com.handy.portal.ui.element;
 
 import com.google.common.collect.ImmutableList;
 import com.handy.portal.R;
+import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 
@@ -27,14 +28,14 @@ public class BookingDetailsActionRemovePanelViewConstructor extends BookingDetai
     }
 
     @Override
-    protected ImmutableList<Booking.ButtonActionType> getAssociatedButtonActionTypes()
+    protected ImmutableList<BookingActionButtonType> getAssociatedButtonActionTypes()
     {
         return associatedButtonActionTypes;
     }
 
-    private final ImmutableList<Booking.ButtonActionType> associatedButtonActionTypes =
+    private final ImmutableList<BookingActionButtonType> associatedButtonActionTypes =
             ImmutableList.of(
-                    Booking.ButtonActionType.REMOVE
+                    BookingActionButtonType.REMOVE
             );
 
 }

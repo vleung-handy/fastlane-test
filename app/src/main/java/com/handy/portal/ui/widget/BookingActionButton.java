@@ -5,8 +5,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 
+import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.util.UIUtils;
 
 /**
  * Created by cdavis on 6/19/15.
@@ -33,7 +35,8 @@ public class BookingActionButton extends Button
 
     public void init(BookingDetailsFragment fragment, Booking.ActionButtonData data)
     {
-        if(data.getAssociatedActionType() == null)
+        final BookingActionButtonType bookingActionButtonType = UIUtils.getAssociatedActionType(data);
+        if(bookingActionButtonType == null)
         {
             System.err.println("BookingActionButton : No associated action type for : " + data.getActionName());
             return;
@@ -41,16 +44,15 @@ public class BookingActionButton extends Button
 
         final BookingActionButton self = this;
         associatedFragment = fragment;
-        setBackgroundResource(data.getAssociatedActionType().getBackgroundDrawableId());
-        setTextAppearance(getContext(), data.getAssociatedActionType().getTextStyleId());
-        setText(data.getAssociatedActionType().getDisplayNameId());
-        final Booking.ButtonActionType buttonActionType = data.getAssociatedActionType();
+        setBackgroundResource(bookingActionButtonType.getBackgroundDrawableId());
+        setTextAppearance(getContext(), bookingActionButtonType.getTextStyleId());
+        setText(bookingActionButtonType.getDisplayNameId());
         setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
             {
-                self.associatedFragment.onActionButtonClick(buttonActionType);
+                self.associatedFragment.onActionButtonClick(bookingActionButtonType);
                 //self.setEnabled(false); //turn self off after click to prevent multiple clicks
             }
         });

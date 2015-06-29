@@ -6,6 +6,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -49,14 +51,21 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
         //right now erring on side of caution and requiring play and maps since I haven't been able to test having maps installed without google play, not sure if possible
         //if play is installed but not maps it will prompt the user to install maps
         //in future may be able to remove the && mapsInstalled check but that is a product decision
-        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(fragment.getActivity()))
+        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity))
         {
             MapFragment mapFragment = (MapFragment) fragment;
-            mapFragment.getMapAsync(this);
+            if(mapFragment != null)
+            {
+                mapFragment.getMapAsync(this);
+            }
+            else
+            {
+                removeView();
+            }
         }
         else
         {
-            //clear out if we don't have access to play services otherwise we will crash
+            //clear out if we don't have access to play services otherwise we will crash, the placeholder view should have been constructed in this case
             removeView();
         }
     }
@@ -79,9 +88,9 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
     @Override
     public void onMapReady(GoogleMap map)
     {
-        if (!isGoogleMapsInstalled())
+        if (!isGoogleMapsInstalled() && ConnectionResult.SUCCESS != GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity))
         {
-            //clear out the map child if maps is not installed
+            //should not be able to get to this point, should have already checked for google play availability before requesting map
             removeView();
             return;
         }
@@ -99,13 +108,15 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
         if (this.useRestrictedView)
         {
             this.googleMap.getUiSettings().setAllGesturesEnabled(false); //disable all controls, we just want to see the image for now
-            //Clicking on map shows error toast
+            //In restricted view can't click on map to see exact location, show Toast to inform user
             map.setOnMapClickListener(new GoogleMap.OnMapClickListener()
             {
                 @Override
                 public void onMapClick(LatLng point)
                 {
-                    //todo : Add showing a toast here
+                    Toast toast = Toast.makeText(activity.getApplicationContext(), R.string.exact_location_shown_claimed, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                 }
             });
         }

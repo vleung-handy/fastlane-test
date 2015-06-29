@@ -6,9 +6,11 @@ import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
 import com.handy.portal.R;
+import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
+import com.handy.portal.util.UIUtils;
 
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         boolean hasAnAction = false;
         for (Booking.ActionButtonData actionButtonData : allowedActions)
         {
-            if (getAssociatedButtonActionTypes().contains(actionButtonData.getAssociatedActionType()))
+            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(actionButtonData)))
             {
                 hasAnAction = true;
                 break;
@@ -65,7 +67,7 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         String helperContent = "";
         for (Booking.ActionButtonData actionButtonData : allowedActions)
         {
-            if(getAssociatedButtonActionTypes().contains(actionButtonData.getAssociatedActionType()))
+            if(getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(actionButtonData)))
             {
                 if(actionButtonData.getHelperText() != null && !actionButtonData.getHelperText().isEmpty())
                 {
@@ -90,17 +92,17 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         }
     }
 
-    protected  ImmutableList<Booking.ButtonActionType> getAssociatedButtonActionTypes()
+    protected  ImmutableList<BookingActionButtonType> getAssociatedButtonActionTypes()
     {
         return associatedButtonActionTypes;
     }
 
-    private final ImmutableList<Booking.ButtonActionType> associatedButtonActionTypes =
+    private final ImmutableList<BookingActionButtonType> associatedButtonActionTypes =
             ImmutableList.of(
-                    Booking.ButtonActionType.CLAIM,
-                    Booking.ButtonActionType.ON_MY_WAY,
-                    Booking.ButtonActionType.CHECK_IN,
-                    Booking.ButtonActionType.CHECK_OUT,
-                    Booking.ButtonActionType.ETA
+                    BookingActionButtonType.CLAIM,
+                    BookingActionButtonType.ON_MY_WAY,
+                    BookingActionButtonType.CHECK_IN,
+                    BookingActionButtonType.CHECK_OUT,
+                    BookingActionButtonType.ETA
             );
 }

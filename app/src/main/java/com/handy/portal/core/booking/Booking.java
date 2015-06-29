@@ -278,6 +278,17 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     public static final class ActionButtonData
     {
+        //** KEEP IN SYNC WITH SERVER VALUES **//
+        public static final String BOOKING_ACTION_NAME_CLAIM = "claim";
+        public static final String BOOKING_ACTION_NAME_REMOVE = "remove";
+        public static final String BOOKING_ACTION_NAME_ON_MY_WAY = "on_my_way";
+        public static final String BOOKING_ACTION_NAME_CHECK_IN = "check_in";
+        public static final String BOOKING_ACTION_NAME_CHECK_OUT = "check_out";
+        public static final String BOOKING_ACTION_NAME_ETA = "eta";
+        public static final String BOOKING_ACTION_NAME_CONTACT_PHONE = "contact_phone";
+        public static final String BOOKING_ACTION_NAME_CONTACT_TEXT = "contact_text";
+        //** KEEP IN SYNC WITH SERVER VALUES **//
+
         @SerializedName("action_name")
         private String actionName;
         @SerializedName("helper_text")
@@ -302,89 +313,6 @@ public final class Booking implements Parcelable, Comparable<Booking>
         public boolean isEnabled()
         {
             return enabled;
-        }
-
-        public ButtonActionType getAssociatedActionType()
-        {
-             for(ButtonActionType bat : ButtonActionType.values())
-             {
-                 if(actionName.equals(bat.getActionName()))
-                 {
-                    return bat;
-                 }
-             }
-            return null;
-        }
-    }
-
-//** KEEP IN SYNC WITH SERVER VALUES **//
-    public static final String ACTION_NAME_CLAIM = "claim";
-    public static final String ACTION_NAME_REMOVE = "remove";
-    public static final String ACTION_NAME_ON_MY_WAY = "on_my_way";
-    public static final String ACTION_NAME_CHECK_IN = "check_in";
-    public static final String ACTION_NAME_CHECK_OUT = "check_out";
-    public static final String ACTION_NAME_ETA = "eta";
-    public static final String ACTION_NAME_CONTACT_PHONE = "contact_phone";
-    public static final String ACTION_NAME_CONTACT_TEXT = "contact_text";
-//** KEEP IN SYNC WITH SERVER VALUES **//
-
-    public enum ButtonActionType
-    {
-        CLAIM(ACTION_NAME_CLAIM, R.drawable.button_green_round, R.style.Button_Green_Round, R.string.claim, R.layout.element_booking_action_button_template),
-        REMOVE(ACTION_NAME_REMOVE,R.drawable.button_red_round, R.style.Button_Red_Round, R.string.remove_job, R.layout.element_booking_action_button_template),
-        ON_MY_WAY(ACTION_NAME_ON_MY_WAY, R.drawable.button_blue_round, R.style.Button_Blue_Round, R.string.on_my_way, R.layout.element_booking_action_button_template),
-        CHECK_IN(ACTION_NAME_CHECK_IN, R.drawable.button_claimed_blue_round, R.style.Button_ClaimedBlue_Round, R.string.check_in, R.layout.element_booking_action_button_template),
-        CHECK_OUT(ACTION_NAME_CHECK_OUT, R.drawable.button_claimed_blue_round, R.style.Button_ClaimedBlue_Round, R.string.check_out, R.layout.element_booking_action_button_template),
-        ETA(ACTION_NAME_ETA, R.drawable.button_claimed_blue_empty_round, R.style.Button_ClaimedBlueEmpty_Round, R.string.update_arrival_time, R.layout.element_booking_action_button_template),
-        CONTACT_PHONE(ACTION_NAME_CONTACT_PHONE, R.drawable.button_white_round, R.style.Button_White_Round, R.string.call, R.layout.element_booking_contact_action_button_template),
-        CONTACT_TEXT(ACTION_NAME_CONTACT_TEXT, R.drawable.button_white_round, R.style.Button_White_Round, R.string.text, R.layout.element_booking_contact_action_button_template),
-        ;
-
-        private String actionName; //must correspond to server's actionName to match up correctly
-        private int displayNameId;
-        private int backgroundDrawableId;
-        private int textStyleId;
-        private int layoutTemplateId;
-
-        ButtonActionType()
-        {
-            this.backgroundDrawableId = R.drawable.empty;
-        }
-
-        //TODO: Figure out how to use an XML defined Style as the param for setting background resource and text style
-            //Having to dupe up data for styling is weird
-        ButtonActionType(String actionName, int backgroundDrawableId, int textStyleId, int displayNameId, int layoutTemplateId)
-        {
-            this.actionName = actionName;
-            this.backgroundDrawableId = backgroundDrawableId;
-            this.textStyleId = textStyleId;
-            this.displayNameId = displayNameId;
-            this.layoutTemplateId = layoutTemplateId;
-        }
-
-        public int getBackgroundDrawableId()
-        {
-            return backgroundDrawableId;
-        }
-
-        public String getActionName()
-        {
-            return actionName;
-        }
-
-        public int getDisplayNameId()
-        {
-            return displayNameId;
-        }
-
-        public int getLayoutTemplateId()
-        {
-            return layoutTemplateId;
-        }
-
-        public int getTextStyleId()
-        {
-            return textStyleId;
         }
     }
 

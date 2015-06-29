@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.handy.portal.R;
+import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
@@ -39,6 +40,7 @@ import com.handy.portal.ui.element.BookingDetailsViewConstructor;
 import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.widget.BookingActionButton;
+import com.handy.portal.util.UIUtils;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
@@ -233,7 +235,6 @@ public class BookingDetailsFragment extends InjectedFragment
         requestBookingDetails(this.requestedBookingId);
     }
 
-
     //Can not use @onclick b/c the button does not exist at injection time
     //TODO: Figure out better way to link click listeners sections
     private void initBackButton()
@@ -272,36 +273,55 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
-    //Action Button Creation
-    //instead of the element views handling the buttons we are going to have a specialized helper that inserts buttons into the relevant areas and handles their click functionality
+    //Can not use @onclick b/c the button does not exist at injection time
+    //TODO: Figure out better way to link click listeners sections
+    private void initGoogleMapsOnCLick()
+    {
+        Button mapsInstallButton = (Button) mapLayout.findViewById(R.id.map_placeholder_install_button);
+        //will fail if we didn't use the placeholder version
+        if (mapsInstallButton != null)
+        {
+            mapsInstallButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_SERVICES_INSTALL_URL));
+                    startActivity(browserIntent);
+                }
+            });
+        }
+    }
+
+    //Dynamically generated Action Buttons based on the allowedActions sent by the server in our booking data
     private void createAllowedActionButtons(List<Booking.ActionButtonData> allowedActions)
     {
         for (Booking.ActionButtonData data : allowedActions)
         {
-            if (data.getAssociatedActionType() == null)
+            if (UIUtils.getAssociatedActionType(data) == null)
             {
                 System.err.println("Received an unsupported action type : " + data.getActionName());
                 continue;
             }
 
             //the client knows what layout to insert a given button into, this should never come from the server
-            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(data.getAssociatedActionType());
+            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(UIUtils.getAssociatedActionType(data));
 
             if (buttonParentLayout == null)
             {
-                System.err.println("Could not find parent layout for " + data.getAssociatedActionType().getActionName());
+                System.err.println("Could not find parent layout for " + UIUtils.getAssociatedActionType(data).getActionName());
             } else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
                 BookingActionButton bookingActionButton = (BookingActionButton)
-                        ((ViewGroup) getActivity().getLayoutInflater().inflate(data.getAssociatedActionType().getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
+                        ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(data).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
                 bookingActionButton.init(this, data); //not sure if this is the better way or to have buttons dispatch specifc events the fragment catches, for now this will suffice
             }
         }
     }
 
     //Mapping for ButtonActionType to Parent Layout, used when adding Action Buttons dynamically
-    private ViewGroup getParentLayoutForButtonActionType(Booking.ButtonActionType buttonActionType)
+    private ViewGroup getParentLayoutForButtonActionType(BookingActionButtonType buttonActionType)
     {
         switch (buttonActionType)
         {
@@ -339,13 +359,13 @@ public class BookingDetailsFragment extends InjectedFragment
     //Click Actions
     //The button onclick tells us what action to look up in our booking for additional data
     //The associated booking remains the supreme data source for us
-    public void onActionButtonClick(Booking.ButtonActionType actionType)
+    public void onActionButtonClick(BookingActionButtonType actionType)
     {
         takeAction(actionType, false);
     }
 
     //Take an action type, checking for warnings + showing warning dialog as needed
-    protected void takeAction(Booking.ButtonActionType actionType, boolean hasBeenWarned)
+    protected void takeAction(BookingActionButtonType actionType, boolean hasBeenWarned)
     {
         boolean allowAction = true;
 
@@ -417,7 +437,7 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     //Check if the current booking data for a given action type has an associated warning to display
-    private boolean checkShowWarningDialog(Booking.ButtonActionType actionType)
+    private boolean checkShowWarningDialog(BookingActionButtonType actionType)
     {
         boolean showingWarningDialog = false;
 
@@ -426,12 +446,12 @@ public class BookingDetailsFragment extends InjectedFragment
         //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
         for (Booking.ActionButtonData abd : allowedActions)
         {
-            if (abd.getAssociatedActionType() == actionType)
+            if (UIUtils.getAssociatedActionType(abd) == actionType)
             {
                 if (abd.getWarningText() != null && !abd.getWarningText().isEmpty())
                 {
                     showingWarningDialog = true;
-                    showBookingActionWarningDialog(abd.getWarningText(), abd.getAssociatedActionType());
+                    showBookingActionWarningDialog(abd.getWarningText(), UIUtils.getAssociatedActionType(abd));
                 }
             }
         }
@@ -439,7 +459,7 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     //Show a warning dialog for a button action, confirming triggers the original action
-    private void showBookingActionWarningDialog(String warning, final Booking.ButtonActionType actionType)
+    private void showBookingActionWarningDialog(String warning, final BookingActionButtonType actionType)
     {
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -790,7 +810,6 @@ public class BookingDetailsFragment extends InjectedFragment
         alertDialog.show();
     }
 
-
     private void showNetworkErrorToast()
     {
         //generic network problem
@@ -847,6 +866,5 @@ public class BookingDetailsFragment extends InjectedFragment
         }
 
     }
-
 
 }
