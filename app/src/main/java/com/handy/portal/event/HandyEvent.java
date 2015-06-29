@@ -303,6 +303,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("cancel claim confirmation accepted")
     public static class RequestRemoveJob extends RequestBookingActionEvent
     {
         public RequestRemoveJob(String bookingId)
@@ -311,6 +312,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("on my way submitted")
     public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
     {
         public RequestNotifyJobOnMyWay(String bookingId)
@@ -319,6 +321,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("provider checkin submitted")
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
         public RequestNotifyJobCheckIn(String bookingId)
@@ -327,6 +330,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("provider checkout submitted")
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
         public RequestNotifyJobCheckOut(String bookingId)
@@ -335,8 +339,10 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("self reported late submitted")
     public static class RequestNotifyJobUpdateArrivalTime extends RequestBookingActionEvent
     {
+        @TrackField("time_submitted")
         public Booking.ArrivalTimeOption arrivalTimeOption;
 
         public RequestNotifyJobUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
@@ -571,6 +577,21 @@ public abstract class HandyEvent
     {
         @TrackField("terms code")
         private String code;
+    }
+
+    @Track("sms customer clicked")
+    public static class TextCustomerClicked extends AnalyticsEvent
+    {
+    }
+
+    @Track("call customer clicked")
+    public static class CallCustomerClicked extends AnalyticsEvent
+    {
+    }
+
+    @Track("cancel claim confirmation shown")
+    public static class ShowConfirmationRemoveJob extends AnalyticsEvent
+    {
     }
 
 //Unclassified events - events should go below here by default unless they fit another category

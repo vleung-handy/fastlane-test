@@ -419,12 +419,14 @@ public class BookingDetailsFragment extends InjectedFragment
 
             case CONTACT_PHONE:
             {
+                bus.post(new HandyEvent.CallCustomerClicked());
                 callPhoneNumber(this.associatedBooking.getBookingPhone());
             }
             break;
 
             case CONTACT_TEXT:
             {
+                bus.post(new HandyEvent.TextCustomerClicked());
                 textPhoneNumber(this.associatedBooking.getBookingPhone());
             }
             break;
@@ -461,6 +463,8 @@ public class BookingDetailsFragment extends InjectedFragment
     //Show a warning dialog for a button action, confirming triggers the original action
     private void showBookingActionWarningDialog(String warning, final BookingActionButtonType actionType)
     {
+        trackShowActionWarning(actionType);
+
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -484,6 +488,18 @@ public class BookingDetailsFragment extends InjectedFragment
         AlertDialog alertDialog = alertDialogBuilder.create();
         // show it
         alertDialog.show();
+    }
+
+    private void trackShowActionWarning(final BookingActionButtonType actionType)
+    {
+        switch(actionType)
+        {
+            case REMOVE:
+            {
+                bus.post(new HandyEvent.ShowConfirmationRemoveJob());
+            }
+            break;
+        }
     }
 
     //Service request bus posts
