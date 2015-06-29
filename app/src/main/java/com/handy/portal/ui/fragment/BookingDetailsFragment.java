@@ -273,26 +273,6 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
-    //Can not use @onclick b/c the button does not exist at injection time
-    //TODO: Figure out better way to link click listeners sections
-    private void initGoogleMapsOnCLick()
-    {
-        Button mapsInstallButton = (Button) mapLayout.findViewById(R.id.map_placeholder_install_button);
-        //will fail if we didn't use the placeholder version
-        if (mapsInstallButton != null)
-        {
-            mapsInstallButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_SERVICES_INSTALL_URL));
-                    startActivity(browserIntent);
-                }
-            });
-        }
-    }
-
     //Dynamically generated Action Buttons based on the allowedActions sent by the server in our booking data
     private void createAllowedActionButtons(List<Booking.ActionButtonData> allowedActions)
     {
