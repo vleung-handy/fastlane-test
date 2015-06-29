@@ -144,9 +144,9 @@ public class InjectedFragment extends android.support.v4.app.Fragment
         showToast(getString(stringId), length);
     }
 
-    protected void showToast(String error, int length)
+    protected void showToast(String message, int length)
     {
-        toast = Toast.makeText(getActivity().getApplicationContext(), error, length);
+        toast = Toast.makeText(getActivity().getApplicationContext(), message, length);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }

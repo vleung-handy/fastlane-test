@@ -457,12 +457,12 @@ public abstract class HandyEvent
 //Pure analytics events,
 //TODO: when possible these should track the actual events instead of having duplicate unnecessary and get rid of duped analytics events
 
-    public abstract static class AnalyticsEvents extends HandyEvent
+    public abstract static class AnalyticsEvent extends HandyEvent
     {
     }
 
     @Track("portal login error")
-    public static class LoginError extends AnalyticsEvents
+    public static class LoginError extends AnalyticsEvent
     {
         @TrackField("source")
         private String source;
@@ -474,7 +474,7 @@ public abstract class HandyEvent
     }
 
     @Track("portal navigation")
-    public static class Navigation extends AnalyticsEvents
+    public static class Navigation extends AnalyticsEvent
     {
         @TrackField("page")
         private String page;
@@ -486,7 +486,7 @@ public abstract class HandyEvent
     }
 
     @Track("date scroller date selected")
-    public static class DateClicked extends AnalyticsEvents
+    public static class DateClicked extends AnalyticsEvent
     {
         @TrackField("type")
         private String type;
@@ -501,7 +501,7 @@ public abstract class HandyEvent
     }
 
     @Track("booking detail selected")
-    public static class BookingSelected extends AnalyticsEvents
+    public static class BookingSelected extends AnalyticsEvent
     {
         @TrackField("type")
         private String type;
@@ -516,7 +516,7 @@ public abstract class HandyEvent
     }
 
     @Track("claim job error")
-    public static class ClaimJobError extends AnalyticsEvents
+    public static class ClaimJobError extends AnalyticsEvent
     {
         @TrackField("message")
         private String message;
@@ -528,7 +528,7 @@ public abstract class HandyEvent
     }
 
     @Track("remove job error")
-    public static class RemoveJobError extends AnalyticsEvents
+    public static class RemoveJobError extends AnalyticsEvent
     {
         @TrackField("message")
         private String message;
@@ -540,7 +540,7 @@ public abstract class HandyEvent
     }
 
     @Track("portal use terms displayed")
-    public static class TermsDisplayed extends AnalyticsEvents
+    public static class TermsDisplayed extends AnalyticsEvent
     {
         @TrackField("terms code")
         private String code;
@@ -552,7 +552,7 @@ public abstract class HandyEvent
     }
 
     @Track("portal use terms accepted")
-    public static class AcceptTerms extends AnalyticsEvents
+    public static class AcceptTerms extends AnalyticsEvent
     {
         @TrackField("terms code")
         private String code;
@@ -567,7 +567,7 @@ public abstract class HandyEvent
     }
 
     @Track("portal use terms error")
-    public static class AcceptTermsError extends AnalyticsEvents
+    public static class AcceptTermsError extends AnalyticsEvent
     {
         @TrackField("terms code")
         private String code;
