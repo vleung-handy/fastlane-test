@@ -27,6 +27,7 @@ public class MainActivity extends BaseActivity
     {
         super.onResume();
         bus.register(this);
+        configManager.init();
         checkForTerms();
     }
 
