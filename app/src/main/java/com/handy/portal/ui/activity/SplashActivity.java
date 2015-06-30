@@ -22,7 +22,6 @@ public class SplashActivity extends BaseActivity
         String providerId = dataManager.getProviderId();
         if (providerId != null)
         {
-            configManager.init();
             checkForTerms();
         }
         else
