@@ -48,7 +48,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Subscribe
     public void onDownloadUpdateSuccessful(Event.DownloadUpdateSuccessful event)
     {
-        updateImage.setBackgroundResource(R.drawable.blocking_updateapp_avatar);
+        updateImage.setBackgroundResource(R.drawable.img_update_success);
         updateButton.setEnabled(true);
         updateText.setText(R.string.update_copy);
     }
