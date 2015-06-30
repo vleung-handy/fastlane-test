@@ -639,7 +639,7 @@ public class BookingDetailsFragment extends InjectedFragment
         if (event.booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
         {
             TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_REMOVE_SUCCESS : TransitionStyle.JOB_REMOVE_SUCCESS);
-            returnToTab(MainViewTab.JOBS, event.booking.getStartDate().getTime(), transitionStyle);
+            returnToTab(MainViewTab.SCHEDULE, event.booking.getStartDate().getTime(), transitionStyle);
         } else
         {
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
