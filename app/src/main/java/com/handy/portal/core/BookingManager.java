@@ -198,17 +198,12 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new HandyEvent.ReceiveNotifyJobOnMyWaySuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                //still need to invalidate so we don't allow them to click on same booking
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new HandyEvent.ReceiveNotifyJobOnMyWayError(error));
             }
         });
@@ -224,8 +219,6 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking));
             }
 
@@ -233,8 +226,6 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error));
             }
         });
@@ -250,17 +241,12 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new HandyEvent.ReceiveNotifyJobCheckoutSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                //still need to invalidate so we don't allow them to click on same booking
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new HandyEvent.ReceiveNotifyJobCheckoutError(error));
             }
         });
@@ -277,16 +263,12 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
                 bus.post(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeError(error));
             }
         });
