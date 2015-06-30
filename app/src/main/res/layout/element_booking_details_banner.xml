@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/booking_details_banner_layout"
+    style="@style/Banner"
+    android:background="@color/handy_blue"
+    android:orientation="horizontal"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    >
+
+    <ImageButton
+        android:id="@+id/booking_details_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingRight="16dp"
+        android:background="@color/transparent"
+        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"/>
+
+    <TextView
+        android:id="@+id/booking_details_banner_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="@string/available_job"
+        android:textColor="@color/white"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/booking_details_back_button"
+        android:layout_toEndOf="@+id/booking_details_back_button"
+        />
+
+    <TextView
+        android:id="@+id/booking_details_banner_job_id_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="@string/available_job"
+        android:textColor="@color/white"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

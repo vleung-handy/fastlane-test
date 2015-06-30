@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.core.booking.Booking;
 
 public final class UIUtils
@@ -58,6 +59,20 @@ public final class UIUtils
             bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency);
         }
         return bookingFrequencyFormat;
+    }
+
+    //Map action button data to a booking action button type
+    public static BookingActionButtonType getAssociatedActionType(Booking.ActionButtonData data)
+    {
+        String actionName = data.getActionName();
+        for(BookingActionButtonType bat : BookingActionButtonType.values())
+        {
+            if(actionName.equals(bat.getActionName()))
+            {
+                return bat;
+            }
+        }
+        return null;
     }
 
 }

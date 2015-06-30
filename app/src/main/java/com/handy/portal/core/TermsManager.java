@@ -1,7 +1,7 @@
 package com.handy.portal.core;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -28,7 +28,7 @@ public class TermsManager
     }
 
     @Subscribe
-    public void onCheckTermsRequest(Event.CheckTermsRequestEvent event)
+    public void onCheckTermsRequest(HandyEvent.RequestCheckTerms event)
     {
         dataManager.checkForTerms(
                 new DataManager.Callback<TermsDetails>()
@@ -37,20 +37,20 @@ public class TermsManager
                     public void onSuccess(TermsDetails termsDetails)
                     {
                         newestTermsDetails = termsDetails;
-                        bus.post(new Event.CheckTermsResponseEvent(termsDetails));
+                        bus.post(new HandyEvent.ReceiveCheckTermsSuccess(termsDetails));
                     }
 
                     @Override
                     public void onError(DataManager.DataManagerError error)
                     {
                         newestTermsDetails = null;
-                        bus.post(new Event.CheckTermsErrorEvent());
+                        bus.post(new HandyEvent.ReceiveCheckTermsError());
                     }
                 });
     }
 
     @Subscribe
-    public void onAcceptTerms(Event.AcceptTermsEvent event)
+    public void onAcceptTerms(HandyEvent.AcceptTerms event)
     {
         dataManager.acceptTerms(event.termsDetails.getCode(),
                 new DataManager.Callback<Void>()
@@ -59,13 +59,13 @@ public class TermsManager
                     public void onSuccess(Void response)
                     {
                         newestTermsDetails = null;
-                        bus.post(new Event.AcceptTermsSuccessEvent());
+                        bus.post(new HandyEvent.AcceptTermsSuccess());
                     }
 
                     @Override
                     public void onError(DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.AcceptTermsErrorEvent());
+                        bus.post(new HandyEvent.AcceptTermsError());
                     }
                 });
     }

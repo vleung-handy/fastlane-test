@@ -22,7 +22,7 @@ import com.handy.portal.R;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.EnvironmentManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
@@ -89,8 +89,6 @@ public class LoginActivityFragment extends InjectedFragment
         changeState(LoginState.INIT);
 
         registerControlListeners();
-
-        //TODO: Prepopulate phone number with device's number? User could still edit if it fails
 
         return view;
     }
@@ -198,77 +196,81 @@ public class LoginActivityFragment extends InjectedFragment
     {
         storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
         changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
-        bus.post(new Event.RequestPinCodeEvent(phoneNumber));
+        bus.post(new HandyEvent.RequestPinCode(phoneNumber));
     }
 
     //send a login request to the server with our phoneNumber and pin
     private void sendLoginRequest(String phoneNumber, String pinCode)
     {
         changeState(LoginState.WAITING_FOR_LOGIN_RESPONSE);
-        bus.post(new Event.RequestLoginEvent(phoneNumber, pinCode));
+        bus.post(new HandyEvent.RequestLogin(phoneNumber, pinCode));
     }
 
     //Event Listening
 
     @Subscribe
-    public void onPinCodeRequestReceived(Event.PinCodeRequestReceivedEvent event)
+    public void onPinCodeRequestReceived(HandyEvent.ReceivePinCodeSuccess event)
     {
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
-            if (event.success)
+            if (event.pinRequestDetails.getSuccess())
             {
-                if (event.pinRequestDetails.getSuccess())
-                {
-                    changeState(LoginState.INPUTTING_PIN);
-                }
-                else
-                {
-                    postLoginErrorEvent("phone number");
-                    showErrorToast(R.string.login_error_bad_phone);
-                    changeState(LoginState.INPUTTING_PHONE_NUMBER);
-                    phoneNumberEditText.highlight();
-                }
+                changeState(LoginState.INPUTTING_PIN);
             }
             else
             {
-                postLoginErrorEvent("server");
-                showErrorToast(R.string.login_error_connectivity);
+                postLoginErrorEvent("phone number");
+                showToast(R.string.login_error_bad_phone);
                 changeState(LoginState.INPUTTING_PHONE_NUMBER);
                 phoneNumberEditText.highlight();
             }
         }
     }
 
+    @Subscribe
+    public void onPinCodeRequestError(HandyEvent.ReceivePinCodeError event)
+    {
+        if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
+        {
+            postLoginErrorEvent("server");
+            showToast(R.string.login_error_connectivity);
+            changeState(LoginState.INPUTTING_PHONE_NUMBER);
+            phoneNumberEditText.highlight();
+        }
+    }
+
     private void postLoginErrorEvent(String source)
     {
-        bus.post(new Event.LoginError(source));
+        bus.post(new HandyEvent.LoginError(source));
     }
 
     @Subscribe
-    public void onLoginRequestReceived(Event.LoginRequestReceivedEvent event)
+    public void onLoginRequestSuccess(HandyEvent.ReceiveLoginSuccess event)
     {
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
-            if (event.success)
+            if (event.loginDetails.getSuccess())
             {
-                if (event.loginDetails.getSuccess())
-                {
-                    beginLogin(event.loginDetails);
-                }
-                else
-                {
-                    postLoginErrorEvent("pin code");
-                    showErrorToast(R.string.login_error_bad_login);
-                    changeState(LoginState.INPUTTING_PIN);
-                    pinCodeEditText.highlight();
-                }
+                beginLogin(event.loginDetails);
             }
             else
             {
-                postLoginErrorEvent("server");
-                showErrorToast(R.string.login_error_connectivity);
+                postLoginErrorEvent("pin code");
+                showToast(R.string.login_error_bad_login);
                 changeState(LoginState.INPUTTING_PIN);
+                pinCodeEditText.highlight();
             }
+        }
+    }
+
+    @Subscribe
+    public void onLoginRequestError(HandyEvent.ReceiveLoginError event)
+    {
+        if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
+        {
+            postLoginErrorEvent("server");
+            showToast(R.string.login_error_connectivity);
+            changeState(LoginState.INPUTTING_PIN);
         }
     }
 

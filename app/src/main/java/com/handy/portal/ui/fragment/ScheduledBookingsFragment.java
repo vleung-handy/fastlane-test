@@ -10,12 +10,15 @@ import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
+import com.handy.portal.core.ConfigManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.form.BookingListView;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.InjectView;
@@ -25,7 +28,7 @@ import butterknife.OnClick;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ScheduledBookingsFragment extends BookingsFragment
+public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
     @InjectView(R.id.scheduled_jobs_list_view)
     protected BookingListView scheduledJobsListView;
@@ -62,9 +65,9 @@ public class ScheduledBookingsFragment extends BookingsFragment
     }
 
     @Override
-    protected Event getRequestEvent()
+    protected HandyEvent getRequestEvent()
     {
-        return new Event.RequestScheduledBookingsEvent();
+        return new HandyEvent.RequestScheduledBookings();
     }
 
     @Override
@@ -74,15 +77,28 @@ public class ScheduledBookingsFragment extends BookingsFragment
     }
 
     @Subscribe
-    public void onBookingsRetrieved(Event.BookingsRetrievedEvent event)
+    public void onBookingsRetrieved(HandyEvent.ReceiveScheduledBookingsSuccess event)
     {
         handleBookingsRetrieved(event);
     }
 
     @Override
-    protected void setupCTAButton(List<Booking> bookingsForDay)
+    protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
     {
-        findJobsForDayButton.setVisibility(bookingsForDay.size() == 0 ? View.VISIBLE : View.GONE);
+        //don't show the CTA if we're outside of our available bookings length range
+        long currentTime = Utils.getDateWithoutTime(new Date()).getTime();
+        long dateOfBookingsTime = dateOfBookings.getTime();
+        long dateDifference = dateOfBookingsTime - currentTime;
+        final long millisecondsInHour = 3600000;
+        final Integer hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
+        if(bookingsForDay.size() == 0 && dateDifference < millisecondsInHour * hoursSpanningAvailableBookings)
+        {
+            findJobsForDayButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            findJobsForDayButton.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.find_jobs_for_day_button)
@@ -94,7 +110,7 @@ public class ScheduledBookingsFragment extends BookingsFragment
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new Event.NavigateToTabEvent(MainViewTab.JOBS, arguments, transitionStyle));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.JOBS, arguments, transitionStyle));
     }
 
     @Override
@@ -111,7 +127,7 @@ public class ScheduledBookingsFragment extends BookingsFragment
         {
             for(Booking b : bookingsForDay)
             {
-                if(!b.isInPast())
+                if(!b.isEnded())
                 {
                     return true;
                 }
@@ -121,9 +137,9 @@ public class ScheduledBookingsFragment extends BookingsFragment
     }
 
     @Subscribe
-    public void onRequestBookingsError(Event.RequestScheduledBookingsErrorEvent event)
+    public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {
             errorText.setText(R.string.error_fetching_connectivity_issue);

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.handy.portal.core.ApplicationOnResumeWatcher;
 import com.handy.portal.core.BaseApplication;
+import com.handy.portal.core.ConfigManager;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
@@ -17,7 +18,7 @@ import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.widget.ProgressDialog;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
@@ -59,6 +60,8 @@ public abstract class BaseActivity extends FragmentActivity
     @Inject
     TermsManager termsManager;
     @Inject
+    ConfigManager configManager;
+    @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
     @Inject
     SecurePreferences prefs;
@@ -78,9 +81,15 @@ public abstract class BaseActivity extends FragmentActivity
         busEventListener = new Object()
         {
             @Subscribe
-            public void onUpdateCheckReceived(Event.UpdateAvailable event)
+            public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
             {
-                BaseActivity.this.onUpdateAvailable(event);
+                BaseActivity.this.onReceiveUpdateAvailableSuccess(event);
+            }
+
+            @Subscribe
+            public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
+            {
+                //TODO: Handle receive update available errors
             }
         };
     }
@@ -154,22 +163,31 @@ public abstract class BaseActivity extends FragmentActivity
 
     public void checkForUpdates()
     {
-        bus.post(new Event.UpdateCheckEvent(this));
+        bus.post(new HandyEvent.RequestUpdateCheck(this));
     }
 
     public void postActivityResumeEvent()
     {
-        bus.post(new Event.ActivityResumed(this));
+        bus.post(new HandyEvent.ActivityResumed(this));
     }
 
     public void postActivityPauseEvent()
     {
-        bus.post(new Event.ActivityPaused(this));
+        bus.post(new HandyEvent.ActivityPaused(this));
     }
 
-    public void onUpdateAvailable(Event.UpdateAvailable event)
+    public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
-        startActivity(new Intent(this, PleaseUpdateActivity.class));
+        if(event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate())
+        {
+            startActivity(new Intent(this, PleaseUpdateActivity.class));
+        }
+        //otherwise ignore
+    }
+
+    public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
+    {
+        //TODO: Handle receive update available error, do we need to block?
     }
 
 }

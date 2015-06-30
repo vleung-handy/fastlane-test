@@ -5,12 +5,13 @@
     <color name="handy_green">#8CC63f</color>
     <color name="handy_salmon">#FF5C5C</color>
     <color name="handy_green_pressed">#71A230</color>
-    <color name="handy_teal">#39D2B8</color>
+    <color name="handy_teal">#43D1B8</color>
+    <color name="handy_teal_pressed">#39B9A3</color>
     <color name="handy_yellow">#FFB600</color>
     <color name="handy_purple">#993092</color>
     <color name="handy_bg">#EAEAEA</color>
     <color name="handy_love">#F9002E</color>
-    <color name="disabled">#80E5EAEC</color>
+    <color name="disabled">#4D9CABB5</color>
     <color name="nav_bg">#1D1D1D</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>
@@ -29,6 +30,7 @@
     <color name="cell_selected">#D6D6D6</color>
     <color name="category_selected">#F6F6F6</color>
     <color name="error_red">#FF5C5C</color>
+    <color name="error_red_pressed">#F25757</color>
     <color name="price_green">#ACC63F</color>
     <color name="facebook">#246BAB</color>
     <color name="facebook_pressed">#1C4B76</color>
@@ -42,6 +44,5 @@
     <color name="partner_blue">#0BB8E3</color>
     <color name="border_grey">#EEEEEE</color>
     <color name="shadow_grey">#9CA7B2</color>
-    <color name="claimed_blue">#43D1B8</color>
-
+    <color name="helper_text_grey">#A1A1A1</color>
 </resources>

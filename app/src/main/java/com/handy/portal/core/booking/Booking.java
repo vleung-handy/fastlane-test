@@ -7,7 +7,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,21 +25,31 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("end_date") private Date endDate;
     @SerializedName("hours") private float hours;
     @SerializedName("price") private float price;
-    @SerializedName("msg_to_pro") private String proNote;
+
     @SerializedName("laundry_status") private LaundryStatus laundryStatus;
     @SerializedName("address") private Address address;
     @SerializedName("billed_status") private String billedStatus;
     @SerializedName("payment_hash") private ArrayList<LineItem> paymentInfo;
-    @SerializedName("booking_extras") private ArrayList<ExtraInfoWrapper> extrasInfo;
+
     @SerializedName("is_requested") private boolean isRequested;
     @SerializedName("payment_to_provider") private PaymentInfo paymentToProvider;
     @SerializedName("bonus") private PaymentInfo bonusPayment;
     @SerializedName("frequency") private int frequency;
-    @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions;
-    @SerializedName("description") private String description;
+
+
     @SerializedName("provider_id") private String providerId;
     @SerializedName("partner") private String partner;
     @SerializedName("country") private String country;
+    @SerializedName("user") private User user;
+    @SerializedName("actions") private List<ActionButtonData> actionButtonData;
+    @SerializedName("booking_phone") private String bookingPhone;
+
+    @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions; //Customer Details
+    @SerializedName("booking_instruction_groups") private List<BookingInstructionGroup> bookingInstructionGroups; //Customer Details
+    @SerializedName("booking_extras") private ArrayList<ExtraInfoWrapper> extrasInfo; //Extras
+    @SerializedName("description") private String description; //Customer Request
+    @SerializedName("msg_to_pro") private String proNote;       //Customer Request
+
 
     public int compareTo(Booking other)
     {
@@ -64,6 +74,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     public final String getStatus(){return status;}
     public final List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}
+    public final List<BookingInstructionGroup> getBookingInstructionGroups() { return bookingInstructionGroups;}
 
     public final int getFrequency() { return frequency; }
 
@@ -84,18 +95,26 @@ public final class Booking implements Parcelable, Comparable<Booking>
         this.id = id;
     }
 
-    public boolean isInPast()
+    public boolean isStarted()
     {
-        boolean isInPast = false;
-
+        boolean isStarted = false;
         Date currentTime = Calendar.getInstance().getTime();
+        if(getStartDate().compareTo(currentTime) < 0)
+        {
+            isStarted = true;
+        }
+        return isStarted;
+    }
 
+    public boolean isEnded()
+    {
+        boolean isEnded = false;
+        Date currentTime = Calendar.getInstance().getTime();
         if(getEndDate().compareTo(currentTime) < 0)
         {
-            isInPast = true;
+            isEnded = true;
         }
-
-        return isInPast;
+        return isEnded;
     }
 
     public final boolean isRecurring() {
@@ -110,10 +129,6 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return service;
     }
 
-    final void setService(final String service) {
-        this.service = service;
-    }
-
     public final Date getStartDate() {
         return startDate;
     }
@@ -122,32 +137,12 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return endDate;
     }
 
-    public final void setStartDate(final Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public final float getHours() {
-        return hours;
-    }
-
-    final void setHours(float hours) {
-        this.hours = hours;
-    }
-
     public final float getPrice() {
         return price;
     }
 
-    final void setPrice(float price) {
-        this.price = price;
-    }
-
     public final Address getAddress() {
         return address;
-    }
-
-    final void setAddress(final Address address) {
-        this.address = address;
     }
 
     public final String getProviderId() {
@@ -169,6 +164,13 @@ public final class Booking implements Parcelable, Comparable<Booking>
     public final ArrayList<ExtraInfoWrapper> getExtrasInfo() {
         return extrasInfo;
     }
+
+    public User getUser()
+    {
+        return user;
+    }
+
+    public String getBookingPhone() {return bookingPhone;}
 
     public final List<ExtraInfoWrapper> getExtrasInfoByMachineName(final String machineName)
     {
@@ -192,35 +194,131 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return "GB".equalsIgnoreCase(country);
     }
 
-    private static final String NO_PROVIDER_ASSIGNED = "0";
-
     //providerId = 0, no one assigned can claim, otherwise is already claimed
-    //going to add providerstatus to track coming going etc
+    public static final String NO_PROVIDER_ASSIGNED = "0";
 
-    public BookingDetailsFragment.BookingStatus inferBookingStatus()
+    //Basic booking statuses inferrable from providerId
+    public enum BookingStatus
     {
-        return inferBookingStatus("-1notavalidid");
+        AVAILABLE,
+        CLAIMED,
+        UNAVAILABLE,
     }
 
-    public BookingDetailsFragment.BookingStatus inferBookingStatus(String userId)
+    public enum ArrivalTimeOption
     {
-        if(isInPast())
+//** KEEP IN SYNC WITH SERVER VALUES **//
+        EARLY_30_MINUTES(R.string.arrival_time_early_30, "-30"),
+        EARLY_15_MINUTES(R.string.arrival_time_early_15, "-15"),
+        LATE_10_MINUTES(R.string.arrival_time_late_10, "10"),
+        LATE_15_MINUTES(R.string.arrival_time_late_15, "15"),
+        LATE_30_MINUTES(R.string.arrival_time_late_30, "30"),
+        ;
+//** KEEP IN SYNC WITH SERVER VALUES **//
+
+        private String value;
+        private int stringId;
+
+        ArrivalTimeOption(int stringId, String value)
         {
-            return BookingDetailsFragment.BookingStatus.UNAVAILABLE;
+            this.stringId = stringId;
+            this.value = value;
         }
-        else if(getProviderId().equals(NO_PROVIDER_ASSIGNED))
+
+        public String getValue()
         {
-            return BookingDetailsFragment.BookingStatus.AVAILABLE;
+            return value;
+        }
+
+        public int getStringId()
+        {
+            return stringId;
+        }
+    }
+
+    //TODO: I don't like having all this business logic in the client, we should get authoritative statuses from the server
+    public BookingStatus inferBookingStatus(String userId)
+    {
+        String assignedProvider = getProviderId();
+        boolean bookingIsStarted = isStarted();
+
+        if(assignedProvider.equals(NO_PROVIDER_ASSIGNED))
+        {
+            //Can't claim bookings that have already started
+            if(bookingIsStarted)
+            {
+                return BookingStatus.UNAVAILABLE;
+            }
+            else
+            {
+                return BookingStatus.AVAILABLE;
+            }
         }
         else if(getProviderId().equals(userId))
         {
-            //TODO: Depending on time to booking change status
-            return BookingDetailsFragment.BookingStatus.CLAIMED;
+            return BookingStatus.CLAIMED;
         }
         else
         {
-            return BookingDetailsFragment.BookingStatus.UNAVAILABLE;
+            return BookingStatus.UNAVAILABLE;
         }
+    }
+
+    public List<ActionButtonData> getAllowedActions()
+    {
+        if(actionButtonData != null)
+        {
+            return actionButtonData;
+        }
+        else
+        {
+            return new ArrayList<ActionButtonData>();
+        }
+    }
+
+    public static final class ActionButtonData
+    {
+        //** KEEP IN SYNC WITH SERVER VALUES **//
+        public static final String BOOKING_ACTION_NAME_CLAIM = "claim";
+        public static final String BOOKING_ACTION_NAME_REMOVE = "remove";
+        public static final String BOOKING_ACTION_NAME_ON_MY_WAY = "on_my_way";
+        public static final String BOOKING_ACTION_NAME_CHECK_IN = "check_in";
+        public static final String BOOKING_ACTION_NAME_CHECK_OUT = "check_out";
+        public static final String BOOKING_ACTION_NAME_ETA = "eta";
+        public static final String BOOKING_ACTION_NAME_CONTACT_PHONE = "contact_phone";
+        public static final String BOOKING_ACTION_NAME_CONTACT_TEXT = "contact_text";
+        //** KEEP IN SYNC WITH SERVER VALUES **//
+
+        @SerializedName("action_name")
+        private String actionName;
+        @SerializedName("helper_text")
+        private String helperText; //Displayed in text field below button / button section
+        @SerializedName("warning_text")
+        private String warningText; //Indicates a popup should be shown with this message to confirm action
+        @SerializedName("enabled")
+        private boolean enabled;
+
+        public String getActionName()
+        {
+            return actionName;
+        }
+        public String getHelperText()
+        {
+            return helperText;
+        }
+        public String getWarningText()
+        {
+            return warningText;
+        }
+        public boolean isEnabled()
+        {
+            return enabled;
+        }
+    }
+
+    public BookingStatus inferBookingStatus()
+    {
+        return inferBookingStatus("-1notavalidid");
     }
 
     private Booking(final Parcel in) {
@@ -287,6 +385,45 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
     };
 
+    public static final class User
+    {
+        @SerializedName("email")
+        private String email;
+        @SerializedName("first_name")
+        private String firstName;
+        @SerializedName("last_name")
+        private String lastName;
+        //TODO: We are currently receiving the real phone number which we don't want to expose, we should make sure we are getting twillo or nothing
+        //@SerializedName("phone_str")
+        //private String phoneNumberString;
+
+        public String getEmail()
+        {
+            return email;
+        }
+
+        public String getFirstName()
+        {
+            return firstName;
+        }
+
+        public String getLastName()
+        {
+            return lastName;
+        }
+
+        /*public String getPhoneNumberString()
+        {
+            return phoneNumberString;
+        }*/
+
+        public String getAbbreviatedName()
+        {
+            return firstName + (lastName.isEmpty() ? "" : " " + lastName.charAt(0) +".");
+        }
+
+    }
+
     public static final class PaymentInfo
     {
         @SerializedName("amount")
@@ -316,6 +453,40 @@ public final class Booking implements Parcelable, Comparable<Booking>
         public String getDescription() { return description; }
         public String getMachineName() { return machineName; }
 
+        //filter out based on machine name
+
+    }
+
+    public static final class BookingInstructionGroup
+    {
+        public static String GROUP_ENTRY_METHOD = "entry_method";
+        public static String GROUP_LINENS_LAUNDRY = "linens_laundry";
+        public static String GROUP_REFRIGERATOR = "refrigerator";
+        public static String GROUP_TRASH = "trash";
+        public static String GROUP_NOTE_TO_PRO = "note_to_pro";
+        public static String OTHER = "other";
+
+        @SerializedName("group")
+        private String group;
+        @SerializedName("label")
+        private String label;
+        @SerializedName("items")
+        private List<String> items;
+
+        public String getGroup()
+        {
+            return group;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public List<String> getItems()
+        {
+            return items;
+        }
     }
 
     public static final class ServiceInfo implements Parcelable {
@@ -358,40 +529,25 @@ public final class Booking implements Parcelable, Comparable<Booking>
             return address1;
         }
 
-        final void setAddress1(final String address1) {
-            this.address1 = address1;
-        }
-
         public final String getAddress2() {
             return address2;
-        }
-
-        final void setAddress2(final String address2) {
-            this.address2 = address2;
         }
 
         public final String getCity() {
             return city;
         }
 
-        final void setCity(final String city) {
-            this.city = city;
-        }
-
         public final String getState() {
             return state;
-        }
-
-        final void setState(final String state) {
-            this.state = state;
         }
 
         public final String getZip() {
             return zip;
         }
 
-        final void setZip(final String zip) {
-            this.zip = zip;
+        public final String getCompleteAddress()
+        {
+            return (getAddress1() + (getAddress2() != null ? " " + getAddress2() : ""));
         }
 
         private Address(final Parcel in) {

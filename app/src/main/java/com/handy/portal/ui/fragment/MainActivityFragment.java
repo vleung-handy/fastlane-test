@@ -14,7 +14,7 @@ import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.SwapFragmentArguments;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
@@ -73,13 +73,13 @@ public class MainActivityFragment extends InjectedFragment
 
     //Listeners
     @Subscribe
-    public void onNavigateToTabEvent(Event.NavigateToTabEvent event)
+    public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
         switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride);
     }
 
     @Subscribe
-    public void onShowLoadingOverlay(Event.SetLoadingOverlayVisibilityEvent event)
+    public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
     {
         loadingOverlayView.setOverlayVisibility(event.isVisible);
     }
@@ -198,7 +198,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             analyticsPageData = targetTab.getTarget().getValue();
         }
-        bus.post(new Event.Navigation(analyticsPageData));
+        bus.post(new HandyEvent.Navigation(analyticsPageData));
     }
 
     //Update the visuals to show the correct selected button

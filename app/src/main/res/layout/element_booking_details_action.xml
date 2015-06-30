@@ -3,100 +3,30 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="15dp"
+    android:paddingTop="10dp"
     android:paddingBottom="15dp"
     android:background="@color/white"
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
-    <TextView
-        android:id="@+id/booking_details_partner_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/airbnb"
-        android:textColor="@color/partner_blue"
-        android:textSize="14sp"
-        android:textAppearance="@style/TextView.Bold"
-        />
-
-    <TextView
-        android:id="@+id/booking_details_location_text"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="@string/location"
-        android:textColor="@color/black"
-        android:textSize="23sp"
-        android:textStyle="bold"
-        android:textAppearance="@style/TextView.Bold"
-        android:layout_below="@+id/booking_details_partner_text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:scrollHorizontally="false"
-        />
-
-    <TextView
-        android:id="@+id/booking_details_frequency_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/booking_frequency_every_week"
-        android:textColor="@color/subtitle_grey"
-        android:textSize="16sp"
-        android:layout_below="@+id/booking_details_location_text"
-        />
-
-    <TextView
-        android:id="@+id/booking_details_payment_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$30"
-        android:layout_alignTop="@id/booking_details_location_text"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textSize="30sp"
-        android:textColor="@color/black"/>
-    <TextView
-        android:id="@+id/booking_details_payment_bonus_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+$5 Bonus"
-        android:layout_alignBottom="@+id/booking_details_frequency_text"
-        android:layout_alignParentRight="true"
-        style="@style/TextView.Bold"
-        android:textColor="@color/subtitle_grey"
-        android:textSize="12sp"/>
-
-    <Button
-        android:id="@+id/booking_details_action_button"
-        android:text="@string/claim"
+    <LinearLayout
+        android:id="@+id/booking_details_action_panel_button_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_below="@+id/booking_details_frequency_text"
-        style="@style/Button.Green.Round"
-        android:layout_marginTop="10dp"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        />
+        android:layout_height="wrap_content">
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/booking_details_action_disclaimer_series_text"
+        android:id="@+id/booking_details_action_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/disclaimer_series"
-        android:layout_below="@+id/booking_details_action_button"
+        android:text=""
+        android:textColor="@color/helper_text_grey"
+        android:layout_below="@+id/booking_details_action_panel_button_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:visibility="invisible"/>
-    <TextView
-        android:id="@+id/booking_details_action_disclaimer_cancel_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/disclaimer_cancel"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="false"
-        android:layout_below="@+id/booking_details_action_disclaimer_series_text"
-        android:visibility="invisible"/>
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:visibility="gone"/>
 
 </RelativeLayout>

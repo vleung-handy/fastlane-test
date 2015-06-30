@@ -4,17 +4,20 @@ import android.content.Intent;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.core.UpdateDetails;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ActivityController;
 
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,8 +40,10 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     public void onResume_shouldPostUpdateCheckEvent() throws Exception
     {
         activityController.resume();
-
-        verify(activity.bus).post(any(Event.UpdateCheckEvent.class));
+        ArgumentCaptor<Object> argument = ArgumentCaptor.forClass(Object.class);
+        verify(activity.bus, atLeastOnce()).post(argument.capture());
+        //TODO: Verify that only one instance of RequestUpdateCheck is in the captor value
+        assertThat(argument.getAllValues(), hasItem(instanceOf(HandyEvent.RequestUpdateCheck.class)));
     }
 
     @Test
@@ -46,12 +51,14 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     {
         UpdateDetails details = mock(UpdateDetails.class);
         when(details.getShouldUpdate()).thenReturn(true);
-        Event.UpdateCheckRequestReceivedEvent event = new Event.UpdateCheckRequestReceivedEvent(details, true);
+        when(details.getSuccess()).thenReturn(true);
+        HandyEvent.ReceiveUpdateAvailableSuccess event = new HandyEvent.ReceiveUpdateAvailableSuccess(details);
 
-        activity.onUpdateCheckReceived(event);
+        activity.onReceiveUpdateAvailableSuccess(event);
 
         Intent expectedIntent = new Intent(activity, PleaseUpdateActivity.class);
         Intent actualIntent = shadowOf(activity).getNextStartedActivity();
+
         assertThat(actualIntent, equalTo(expectedIntent));
     }
 
@@ -60,9 +67,9 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     {
         UpdateDetails details = mock(UpdateDetails.class);
         when(details.getShouldUpdate()).thenReturn(false);
-        Event.UpdateCheckRequestReceivedEvent event = new Event.UpdateCheckRequestReceivedEvent(details, true);
+        HandyEvent.ReceiveUpdateAvailableSuccess event = new HandyEvent.ReceiveUpdateAvailableSuccess(details);
 
-        activity.onUpdateCheckReceived(event);
+        activity.onReceiveUpdateAvailableSuccess(event);
 
         assertNull(shadowOf(activity).getNextStartedActivity());
     }
@@ -70,9 +77,9 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     @Test
     public void givenUpdateCheckFailed_whenUpdateCheckReceived_thenDoNotStartUpdateActivity() throws Exception
     {
-        Event.UpdateCheckRequestReceivedEvent event = new Event.UpdateCheckRequestReceivedEvent(null, false);
+        HandyEvent.ReceiveUpdateAvailableError event = new HandyEvent.ReceiveUpdateAvailableError(null);
 
-        activity.onUpdateCheckReceived(event);
+        activity.onReceiveUpdateAvailableError(event);
 
         assertNull(shadowOf(activity).getNextStartedActivity());
     }

@@ -12,7 +12,7 @@ import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.EnvironmentManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.InputTextField;
 import com.squareup.otto.Bus;
@@ -76,7 +76,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     {
         makePinRequest("1111111111");
 
-        ArgumentCaptor<Event.RequestPinCodeEvent> argument = ArgumentCaptor.forClass(Event.RequestPinCodeEvent.class);
+        ArgumentCaptor<HandyEvent.RequestPinCode> argument = ArgumentCaptor.forClass(HandyEvent.RequestPinCode.class);
         verify(bus).post(argument.capture());
         assertThat(argument.getValue().phoneNumber, equalTo("1111111111"));
     }
@@ -86,7 +86,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     {
         makeLoginRequest("5353");
 
-        ArgumentCaptor<Event.RequestLoginEvent> argument = ArgumentCaptor.forClass(Event.RequestLoginEvent.class);
+        ArgumentCaptor<HandyEvent.RequestLogin> argument = ArgumentCaptor.forClass(HandyEvent.RequestLogin.class);
         verify(bus).post(argument.capture());
         assertThat(argument.getValue().phoneNumber, equalTo(VALID_PHONE_NUMBER));
         assertThat(argument.getValue().pinCode, equalTo("5353"));
@@ -211,8 +211,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
 
     private void receivePinCodeRequest(boolean isValid)
     {
-        Event.PinCodeRequestReceivedEvent event = mock(Event.PinCodeRequestReceivedEvent.class);
-        event.success = true;
+        HandyEvent.ReceivePinCodeSuccess event = mock(HandyEvent.ReceivePinCodeSuccess.class);
         event.pinRequestDetails = mock(PinRequestDetails.class);
         when(event.pinRequestDetails.getSuccess()).thenReturn(isValid);
         fragment.onPinCodeRequestReceived(event);
@@ -220,13 +219,12 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
 
     private void receiveLoginRequest(boolean isValid, String credentials, String credentialsCookie)
     {
-        Event.LoginRequestReceivedEvent event = mock(Event.LoginRequestReceivedEvent.class);
-        event.success = true;
+        HandyEvent.ReceiveLoginSuccess event = mock(HandyEvent.ReceiveLoginSuccess.class);
         event.loginDetails = mock(LoginDetails.class);
         when(event.loginDetails.getSuccess()).thenReturn(isValid);
         when(event.loginDetails.getUserCredentials()).thenReturn(credentials);
         when(event.loginDetails.getUserCredentialsCookie()).thenReturn(credentialsCookie);
-        fragment.onLoginRequestReceived(event);
+        fragment.onLoginRequestSuccess(event);
     }
 
 }
