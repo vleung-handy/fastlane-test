@@ -12,6 +12,7 @@ import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.TermsDetails;
+import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.data.DataManager;
 
@@ -114,19 +115,19 @@ public abstract class HandyEvent
         }
     }
 
-    public static class PinCodeRequestSuccess extends HandyEvent
+    public static class ReceivePinCodeSuccess extends ReceiveSuccessEvent
     {
         public PinRequestDetails pinRequestDetails;
 
-        public PinCodeRequestSuccess(PinRequestDetails pinRequestDetails)
+        public ReceivePinCodeSuccess(PinRequestDetails pinRequestDetails)
         {
             this.pinRequestDetails = pinRequestDetails;
         }
     }
 
-    public static class PinCodeRequestError extends ReceiveErrorEvent
+    public static class ReceivePinCodeError extends ReceiveErrorEvent
     {
-        public PinCodeRequestError(DataManager.DataManagerError error)
+        public ReceivePinCodeError(DataManager.DataManagerError error)
         {
             this.error = error;
         }
@@ -146,19 +147,19 @@ public abstract class HandyEvent
         }
     }
 
-    public static class LoginRequestSuccess extends HandyEvent
+    public static class ReceiveLoginSuccess extends ReceiveSuccessEvent
     {
         public LoginDetails loginDetails;
 
-        public LoginRequestSuccess(LoginDetails loginDetails)
+        public ReceiveLoginSuccess(LoginDetails loginDetails)
         {
             this.loginDetails = loginDetails;
         }
     }
 
-    public static class LoginRequestError extends ReceiveErrorEvent
+    public static class ReceiveLoginError extends ReceiveErrorEvent
     {
-        public LoginRequestError(DataManager.DataManagerError error)
+        public ReceiveLoginError(DataManager.DataManagerError error)
         {
             this.error = error;
         }
@@ -179,6 +180,11 @@ public abstract class HandyEvent
 
     public static class ReceiveUpdateAvailableSuccess extends ReceiveSuccessEvent
     {
+        public UpdateDetails updateDetails;
+        public ReceiveUpdateAvailableSuccess(UpdateDetails updateDetails)
+        {
+            this.updateDetails = updateDetails;
+        }
     }
 
     public static class ReceiveUpdateAvailableError extends ReceiveErrorEvent

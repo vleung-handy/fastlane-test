@@ -209,7 +209,7 @@ public class LoginActivityFragment extends InjectedFragment
     //Event Listening
 
     @Subscribe
-    public void onPinCodeRequestReceived(HandyEvent.PinCodeRequestSuccess event)
+    public void onPinCodeRequestReceived(HandyEvent.ReceivePinCodeSuccess event)
     {
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
@@ -228,7 +228,7 @@ public class LoginActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onPinCodeRequestError(HandyEvent.PinCodeRequestError event)
+    public void onPinCodeRequestError(HandyEvent.ReceivePinCodeError event)
     {
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
@@ -245,7 +245,7 @@ public class LoginActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onLoginRequestSuccess(HandyEvent.LoginRequestSuccess event)
+    public void onLoginRequestSuccess(HandyEvent.ReceiveLoginSuccess event)
     {
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
@@ -264,7 +264,7 @@ public class LoginActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onLoginRequestError(HandyEvent.LoginRequestError event)
+    public void onLoginRequestError(HandyEvent.ReceiveLoginError event)
     {
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {

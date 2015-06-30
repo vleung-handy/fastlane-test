@@ -83,7 +83,7 @@ public abstract class BaseActivity extends FragmentActivity
             @Subscribe
             public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
             {
-                BaseActivity.this.onUpdateAvailable(event);
+                BaseActivity.this.onReceiveUpdateAvailableSuccess(event);
             }
 
             @Subscribe
@@ -176,9 +176,18 @@ public abstract class BaseActivity extends FragmentActivity
         bus.post(new HandyEvent.ActivityPaused(this));
     }
 
-    public void onUpdateAvailable(HandyEvent.ReceiveUpdateAvailableSuccess event)
+    public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
-        startActivity(new Intent(this, PleaseUpdateActivity.class));
+        if(event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate())
+        {
+            startActivity(new Intent(this, PleaseUpdateActivity.class));
+        }
+        //otherwise ignore
+    }
+
+    public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
+    {
+        //TODO: Handle receive update available error, do we need to block?
     }
 
 }

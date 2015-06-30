@@ -113,7 +113,7 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public void onUpdateAvailable(HandyEvent.ReceiveUpdateAvailableSuccess event)
+    public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
         //Do nothing
     }

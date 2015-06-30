@@ -103,7 +103,7 @@ public class VersionManager
                         if (updateDetails.getShouldUpdate())
                         {
                             downloadApk(updateDetails.getDownloadUrl());
-                            bus.post(new HandyEvent.ReceiveUpdateAvailableSuccess());
+                            bus.post(new HandyEvent.ReceiveUpdateAvailableSuccess(updateDetails));
                         }
                     }
 

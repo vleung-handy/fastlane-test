@@ -8,7 +8,7 @@ import android.content.Context;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
@@ -67,7 +67,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
 
         downloadManager = shadowOf((DownloadManager) RuntimeEnvironment.application.getSystemService(Context.DOWNLOAD_SERVICE));
 
-        versionManager.onUpdateCheckRequest(new Event.UpdateCheckEvent(activity));
+        versionManager.onUpdateCheckRequest(new HandyEvent.RequestUpdateCheck(activity));
         verify(dataManager).checkForUpdates(anyString(), anyInt(), updateCheckCallbackCaptor.capture());
         updateDetailsCallBack = updateCheckCallbackCaptor.getValue();
 
@@ -94,7 +94,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
         updateDetailsCallBack.onSuccess(updateDetails);
 
         verify(bus).post(eventArgumentCaptor.capture());
-        assertThat(eventArgumentCaptor.getValue(), instanceOf(Event.UpdateAvailable.class));
+        assertThat(eventArgumentCaptor.getValue(), instanceOf(HandyEvent.ReceiveUpdateAvailableSuccess.class));
     }
 
     @Test

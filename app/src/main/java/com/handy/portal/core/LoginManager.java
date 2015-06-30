@@ -32,13 +32,13 @@ public class LoginManager
                     @Override
                     public void onSuccess(final PinRequestDetails pinRequestDetails)
                     {
-                        bus.post(new HandyEvent.PinCodeRequestSuccess(pinRequestDetails));
+                        bus.post(new HandyEvent.ReceivePinCodeSuccess(pinRequestDetails));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new HandyEvent.PinCodeRequestError(error));
+                        bus.post(new HandyEvent.ReceivePinCodeError(error));
                     }
                 }
         );
@@ -53,13 +53,13 @@ public class LoginManager
                     public void onSuccess(final LoginDetails loginDetails)
                     {
                         saveLoginDetails(loginDetails);
-                        bus.post(new HandyEvent.LoginRequestSuccess(loginDetails));
+                        bus.post(new HandyEvent.ReceiveLoginSuccess(loginDetails));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new HandyEvent.LoginRequestError(error));
+                        bus.post(new HandyEvent.ReceiveLoginError(error));
                     }
                 }
         );
