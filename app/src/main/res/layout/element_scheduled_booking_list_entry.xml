@@ -4,7 +4,6 @@
                 android:layout_height="95dp"
                 android:background="@drawable/booking_entry_background"
                 android:orientation="horizontal"
-                android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">
