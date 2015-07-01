@@ -24,6 +24,7 @@ import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
+import com.handy.portal.consts.WarningButtonsText;
 import com.handy.portal.core.LocationData;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
@@ -431,14 +432,14 @@ public class BookingDetailsFragment extends InjectedFragment
         List<Booking.ActionButtonData> allowedActions = this.associatedBooking.getAllowedActions();
 
         //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
-        for (Booking.ActionButtonData abd : allowedActions)
+        for (Booking.ActionButtonData buttonData : allowedActions)
         {
-            if (UIUtils.getAssociatedActionType(abd) == actionType)
+            if (UIUtils.getAssociatedActionType(buttonData) == actionType)
             {
-                if (abd.getWarningText() != null && !abd.getWarningText().isEmpty())
+                if (buttonData.getWarningText() != null && !buttonData.getWarningText().isEmpty())
                 {
                     showingWarningDialog = true;
-                    showBookingActionWarningDialog(abd.getWarningText(), UIUtils.getAssociatedActionType(abd));
+                    showBookingActionWarningDialog(buttonData.getWarningText(), UIUtils.getAssociatedActionType(buttonData));
                 }
             }
         }
@@ -453,11 +454,13 @@ public class BookingDetailsFragment extends InjectedFragment
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
+        WarningButtonsText warningButtonsText = WarningButtonsText.forAction(actionType);
+
         // set dialog message
         alertDialogBuilder
                 .setTitle(R.string.are_you_sure)
                 .setMessage(warning)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener()
+                .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
@@ -466,7 +469,7 @@ public class BookingDetailsFragment extends InjectedFragment
                             }
                         }
                 )
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(warningButtonsText.getNegativeStringId(), null)
         ;
 
         // create alert dialog
