@@ -192,8 +192,9 @@ public class BookingManager
     public void onRequestNotifyOnMyWay(HandyEvent.RequestNotifyJobOnMyWay event)
     {
         String bookingId = event.bookingId;
+        LocationData locationData = event.locationData;
 
-        dataManager.notifyOnMyWayBooking(bookingId, new DataManager.Callback<Booking>()
+        dataManager.notifyOnMyWayBooking(bookingId, locationData.getLocationParamsMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -213,8 +214,9 @@ public class BookingManager
     public void onRequestNotifyCheckIn(HandyEvent.RequestNotifyJobCheckIn event)
     {
         String bookingId = event.bookingId;
+        LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckInBooking(bookingId, new DataManager.Callback<Booking>()
+        dataManager.notifyCheckInBooking(bookingId, locationData.getLocationParamsMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -235,8 +237,9 @@ public class BookingManager
     public void onRequestNotifyCheckOut(HandyEvent.RequestNotifyJobCheckOut event)
     {
         String bookingId = event.bookingId;
+        LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckOutBooking(bookingId, new DataManager.Callback<Booking>()
+        dataManager.notifyCheckOutBooking(bookingId, locationData.getLocationParamsMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
