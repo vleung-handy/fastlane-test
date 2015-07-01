@@ -643,7 +643,8 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         if (event.booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
         {
-            TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_REMOVE_SUCCESS : TransitionStyle.JOB_REMOVE_SUCCESS);
+            //TODO: can't currently remove series using portal endpoint so only removing the single job
+            TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
             returnToTab(MainViewTab.SCHEDULE, event.booking.getStartDate().getTime(), transitionStyle);
         } else
         {
