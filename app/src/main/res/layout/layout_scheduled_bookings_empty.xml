@@ -27,7 +27,7 @@
 
     <Button
         android:id="@+id/find_jobs_for_day_button"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cta_find_jobs_for_this_day"
         android:layout_gravity="center_horizontal"
