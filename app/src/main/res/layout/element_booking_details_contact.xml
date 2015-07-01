@@ -56,6 +56,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text=""
+        android:textColor="@color/helper_text_grey"
         android:layout_below="@+id/booking_details_contact_action_button_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
