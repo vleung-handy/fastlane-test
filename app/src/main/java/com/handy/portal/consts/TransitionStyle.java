@@ -13,7 +13,6 @@ public enum TransitionStyle
     JOB_REMOVE_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_REMOVE_SUCCESS),
     SERIES_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.SERIES_CLAIM_SUCCESS),
     SERIES_REMOVE_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.SERIES_REMOVE_SUCCESS),
-    JOB_CLAIM_FAIL(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_CLAIM_FAIL),
     TAB_TO_TAB(R.anim.fade_in, R.anim.fade_out),
     JOB_LIST_TO_DETAILS(R.anim.fade_in, R.anim.fade_out),
     NATIVE_TO_NATIVE(R.anim.fade_in, R.anim.fade_out),
@@ -55,7 +54,6 @@ public enum TransitionStyle
 
     public int getOverlayStringId() { return overlayStyle.getOverlayStringId();}
     public int getOverlayImageId() { return overlayStyle.getOverlayImageId(); }
-    public int getOverlayBackingImageId() { return overlayStyle.getOverlayBackingImageId(); }
 
     public int getIncomingAnimId() { return incomingAnimId; }
     public int getOutgoingAnimId() { return outgoingAnimId; }
