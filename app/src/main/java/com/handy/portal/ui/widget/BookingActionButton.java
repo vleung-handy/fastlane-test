@@ -8,6 +8,7 @@ import android.widget.Button;
 import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 
 /**
@@ -47,20 +48,16 @@ public class BookingActionButton extends Button
         setBackgroundResource(bookingActionButtonType.getBackgroundDrawableId());
         setTextAppearance(getContext(), bookingActionButtonType.getTextStyleId());
         setText(bookingActionButtonType.getDisplayNameId());
+        setTypeface(TextUtils.get(getContext(), TextUtils.Fonts.CIRCULAR_BOOK));
         setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
             {
                 self.associatedFragment.onActionButtonClick(bookingActionButtonType);
-                //self.setEnabled(false); //turn self off after click to prevent multiple clicks
             }
         });
         setEnabled(data.isEnabled());
     }
-
-
-
-
 
 }
