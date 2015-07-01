@@ -26,6 +26,7 @@
         android:layout_below="@+id/booking_details_action_panel_button_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
         android:visibility="gone"/>
 
 </RelativeLayout>
