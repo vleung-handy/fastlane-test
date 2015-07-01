@@ -24,10 +24,12 @@ import com.handy.portal.consts.BookingActionButtonType;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
+import com.handy.portal.core.LocationData;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.clicklisteners.NavigateToTabOnClickListener;
 import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
@@ -41,6 +43,7 @@ import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.UIUtils;
+import com.handy.portal.util.Utils;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
@@ -359,6 +362,8 @@ public class BookingDetailsFragment extends InjectedFragment
             return;
         }
 
+        LocationData locationData = Utils.getCurrentLocation((BaseActivity) getActivity());
+
         switch (actionType)
         {
             case CLAIM:
@@ -369,7 +374,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
             case ON_MY_WAY:
             {
-                requestNotifyOnMyWayJob(this.associatedBooking.getId());
+                requestNotifyOnMyWayJob(this.associatedBooking.getId(), locationData);
             }
             break;
 
@@ -381,13 +386,13 @@ public class BookingDetailsFragment extends InjectedFragment
 
             case CHECK_IN:
             {
-                requestNotifyCheckInJob(this.associatedBooking.getId());
+                requestNotifyCheckInJob(this.associatedBooking.getId(), locationData);
             }
             break;
 
             case CHECK_OUT:
             {
-                requestNotifyCheckOutJob(this.associatedBooking.getId());
+                requestNotifyCheckOutJob(this.associatedBooking.getId(), locationData);
             }
             break;
 
@@ -496,22 +501,22 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new HandyEvent.RequestRemoveJob(bookingId));
     }
 
-    private void requestNotifyOnMyWayJob(String bookingId)
+    private void requestNotifyOnMyWayJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId));
+        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
     }
 
-    private void requestNotifyCheckInJob(String bookingId)
+    private void requestNotifyCheckInJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId));
+        bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
     }
 
-    private void requestNotifyCheckOutJob(String bookingId)
+    private void requestNotifyCheckOutJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId));
+        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, locationData));
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)

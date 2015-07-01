@@ -67,14 +67,17 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}")
     void getBookingDetails(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/on_my_way")
-    void notifyOnMyWay(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+    void notifyOnMyWay(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String,String> locationParams, HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/check_in")
-    void checkIn(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+    void checkIn(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String,String> locationParams, HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/check_out")
-    void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+    void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String,String> locationParams, HandyRetrofitCallback cb);
 
     @Multipart
     @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/eta")

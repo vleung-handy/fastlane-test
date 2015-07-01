@@ -8,7 +8,6 @@ import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 
-import java.util.List;
 import java.util.Map;
 
 public abstract class DataManager
@@ -34,11 +33,11 @@ public abstract class DataManager
 
     public abstract void removeBooking(String bookingId, Callback<Booking> cb);
 
-    public abstract void notifyOnMyWayBooking(String bookingId, Callback<Booking> cb);
+    public abstract void notifyOnMyWayBooking(String bookingId, Map<String,String> locationParams, Callback<Booking> cb);
 
-    public abstract void notifyCheckInBooking(String bookingId, Callback<Booking> cb);
+    public abstract void notifyCheckInBooking(String bookingId,  Map<String,String> locationParams, Callback<Booking> cb);
 
-    public abstract void notifyCheckOutBooking(String bookingId, Callback<Booking> cb);
+    public abstract void notifyCheckOutBooking(String bookingId,  Map<String,String> locationParams, Callback<Booking> cb);
 
     public abstract void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
 

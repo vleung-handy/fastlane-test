@@ -9,6 +9,7 @@ import com.handy.portal.annotations.TrackField;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.BookingSummary;
+import com.handy.portal.core.LocationData;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.TermsDetails;
@@ -321,27 +322,33 @@ public abstract class HandyEvent
     @Track("on my way submitted")
     public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
     {
-        public RequestNotifyJobOnMyWay(String bookingId)
+        public LocationData locationData;
+        public RequestNotifyJobOnMyWay(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
+            this.locationData = locationData;
         }
     }
 
     @Track("provider checkin submitted")
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
-        public RequestNotifyJobCheckIn(String bookingId)
+        public LocationData locationData;
+        public RequestNotifyJobCheckIn(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
+            this.locationData = locationData;
         }
     }
 
     @Track("provider checkout submitted")
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
-        public RequestNotifyJobCheckOut(String bookingId)
+        public LocationData locationData;
+        public RequestNotifyJobCheckOut(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
+            this.locationData = locationData;
         }
     }
 
