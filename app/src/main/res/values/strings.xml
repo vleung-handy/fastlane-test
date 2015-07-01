@@ -282,4 +282,6 @@
     <string name="install">Install</string>
     <string name="need_google_play">To view maps, please install Google Play Services</string>
     <string name="exact_location_shown_claimed">Exact location shown after job is claimed</string>
+    <string name="customer_prefix">CUSTOMER: </string>
+
 </resources>

@@ -30,7 +30,7 @@ public class BookingDetailsActionContactPanelViewConstructor extends BookingDeta
     {
         super.constructViewFromBooking(booking, allowedActions, arguments);
         Booking.User bookingUser = booking.getUser();
-        profileText.setText(bookingUser.getAbbreviatedName());
+        profileText.setText(bookingUser.getFullName());
     }
 
     @Override

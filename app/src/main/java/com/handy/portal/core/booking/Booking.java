@@ -422,6 +422,11 @@ public final class Booking implements Parcelable, Comparable<Booking>
             return firstName + (lastName.isEmpty() ? "" : " " + lastName.charAt(0) +".");
         }
 
+        public String getFullName()
+        {
+            return firstName + " " +  lastName;
+        }
+
     }
 
     public static final class PaymentInfo
