@@ -25,6 +25,7 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
+    private static final String BUNDLE_KEY_TAB = "tab";
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -51,9 +52,6 @@ public class MainActivityFragment extends InjectedFragment
 
         registerButtonListeners();
 
-        jobsButton.setChecked(true);
-        switchToTab(MainViewTab.JOBS);
-
         transitionOverlayView.init();
         loadingOverlayView.init();
 
@@ -61,14 +59,27 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
-    public void onResume()
+    public void onViewStateRestored(Bundle savedInstanceState)
     {
-        super.onResume();
-        if (currentTab == null)
+        super.onViewStateRestored(savedInstanceState);
+
+        String tab = MainViewTab.JOBS.name();
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_KEY_TAB))
         {
-            jobsButton.setChecked(true);
-            switchToTab(MainViewTab.JOBS);
+            tab = savedInstanceState.getString(BUNDLE_KEY_TAB);
         }
+        switchToTab(MainViewTab.valueOf(tab));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        if (outState == null)
+        {
+            outState = new Bundle();
+        }
+        outState.putString(BUNDLE_KEY_TAB, currentTab.name());
+        super.onSaveInstanceState(outState);
     }
 
     //Listeners
