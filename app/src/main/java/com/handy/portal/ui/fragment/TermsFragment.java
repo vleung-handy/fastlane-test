@@ -111,7 +111,10 @@ public class TermsFragment extends InjectedFragment
     @Subscribe
     public void onAcceptTermsSuccess(HandyEvent.AcceptTermsSuccess event)
     {
-        startActivity(new Intent(this.getActivity(), SplashActivity.class));
+        Intent intent = new Intent(this.getActivity(), SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Subscribe
