@@ -103,4 +103,5 @@
         style="@style/TextView.Bold"
         android:textColor="@color/subtitle_grey"
         android:textSize="12sp"/>
+
 </RelativeLayout>

@@ -67,5 +67,4 @@
         android:textColor="@color/helper_text_grey"
         android:visibility="gone"/>
 
-
 </RelativeLayout>
