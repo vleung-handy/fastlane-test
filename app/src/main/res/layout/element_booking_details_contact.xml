@@ -61,6 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/booking_details_contact_action_button_layout"
         android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall"
