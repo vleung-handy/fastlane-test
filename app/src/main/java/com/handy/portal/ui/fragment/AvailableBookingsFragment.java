@@ -102,4 +102,20 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         fetchErrorView.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    protected void insertSeparator(List<Booking> bookings)
+    {
+        for (int i = 1; i < bookings.size(); i++)
+        {
+            Booking previousBooking = bookings.get(i - 1);
+            Booking booking = bookings.get(i);
+
+            if (previousBooking.getIsRequested() && !booking.getIsRequested())
+            {
+                bookings.add(i, null);
+                return;
+            }
+        }
+    }
+
 }

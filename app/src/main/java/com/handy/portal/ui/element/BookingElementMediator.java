@@ -17,7 +17,7 @@ public class BookingElementMediator
     public BookingElementMediator(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
         // TODO: This is a quick hack, soon the scheduled view is going to be entirely different and not use these cells so I am not putting in the time to make it super clean
-        if (booking.inferBookingStatus() == BookingStatus.AVAILABLE)
+        if (booking == null || booking.inferBookingStatus() == BookingStatus.AVAILABLE)
         {
             this.view = new AvailableBookingElementView();
         }

@@ -182,6 +182,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
+    protected abstract void insertSeparator(List<Booking> bookingsForDay);
+
     private void selectDay(Date day)
     {
         DateButtonView selectedDateButtonView = dateButtonMap.get(selectedDay);
@@ -217,21 +219,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 }
             }
         });
-    }
-
-    private void insertSeparator(List<Booking> bookings)
-    {
-        for (int i = 1; i < bookings.size(); i++)
-        {
-            Booking previousBooking = bookings.get(i - 1);
-            Booking booking = bookings.get(i);
-
-            if (previousBooking.getIsRequested() && !booking.getIsRequested())
-            {
-                bookings.add(i, null);
-                return;
-            }
-        }
     }
 
     private void showBookingDetails(Booking booking)

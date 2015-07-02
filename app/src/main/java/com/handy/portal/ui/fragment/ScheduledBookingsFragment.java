@@ -83,6 +83,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
+    protected void insertSeparator(List<Booking> bookingsForDay)
+    {
+        // do nothing
+    }
+
+    @Override
     protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
     {
         //don't show the CTA if we're outside of our available bookings length range
