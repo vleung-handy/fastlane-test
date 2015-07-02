@@ -34,7 +34,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text="@string/available_job"
         android:textColor="@color/white"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
