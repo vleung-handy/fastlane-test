@@ -12,9 +12,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by cdavis on 5/8/15.
- */
 public abstract class BookingDetailsViewConstructor
 {
     protected ViewGroup parentViewGroup;

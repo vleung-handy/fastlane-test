@@ -51,7 +51,6 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -157,10 +156,9 @@ public class BookingDetailsFragment extends InjectedFragment
     private void updateDisplayForBooking(Booking booking)
     {
         //clear existing elements out of our fragment's display
-        List<Booking.ActionButtonData> allowedActions = booking.getAllowedActions();
         clearLayouts();
-        constructBookingDisplayElements(booking, allowedActions);
-        createAllowedActionButtons(allowedActions);
+        constructBookingDisplayElements(booking);
+        createAllowedActionButtons(booking);
 
         //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
         initBackButton();
@@ -184,8 +182,9 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     //Use view constructors on layouts to generate the elements inside the layouts, we do not currently maintain a linkage to the resulting view
-    private void constructBookingDisplayElements(Booking booking, List<Booking.ActionButtonData> allowedActions)
+    private void constructBookingDisplayElements(Booking booking)
     {
+        List<Booking.ActionButtonData> allowedActions = booking.getAllowedActions();
         Activity activity = getActivity();
 
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
@@ -194,12 +193,10 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //Construct the views for each layout
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts();
-        Iterator it = viewConstructors.entrySet().iterator();
-        while (it.hasNext())
+        for (Map.Entry<ViewGroup, BookingDetailsViewConstructor> viewConstructorEntry : viewConstructors.entrySet())
         {
-            Map.Entry pair = (Map.Entry) it.next();
-            ViewGroup layout = (ViewGroup) pair.getKey();
-            BookingDetailsViewConstructor constructor = (BookingDetailsViewConstructor) pair.getValue();
+            ViewGroup layout = viewConstructorEntry.getKey();
+            BookingDetailsViewConstructor constructor = viewConstructorEntry.getValue();
             constructor.constructView(booking, allowedActions, arguments, layout, activity);
         }
 
@@ -278,8 +275,9 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     //Dynamically generated Action Buttons based on the allowedActions sent by the server in our booking data
-    private void createAllowedActionButtons(List<Booking.ActionButtonData> allowedActions)
+    private void createAllowedActionButtons(Booking booking)
     {
+        List<Booking.ActionButtonData> allowedActions = booking.getAllowedActions();
         for (Booking.ActionButtonData data : allowedActions)
         {
             if (UIUtils.getAssociatedActionType(data) == null)
@@ -299,7 +297,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
                 BookingActionButton bookingActionButton = (BookingActionButton)
                         ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(data).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
-                bookingActionButton.init(this, data); //not sure if this is the better way or to have buttons dispatch specifc events the fragment catches, for now this will suffice
+                bookingActionButton.init(booking, this, data); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
             }
         }
     }

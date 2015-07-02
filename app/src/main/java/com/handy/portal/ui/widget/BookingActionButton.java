@@ -11,9 +11,6 @@ import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 
-/**
- * Created by cdavis on 6/19/15.
- */
 public class BookingActionButton extends Button
 {
     public BookingActionButton(Context context) {
@@ -34,7 +31,7 @@ public class BookingActionButton extends Button
 
     protected BookingDetailsFragment associatedFragment;
 
-    public void init(BookingDetailsFragment fragment, Booking.ActionButtonData data)
+    public void init(Booking booking, BookingDetailsFragment fragment, Booking.ActionButtonData data)
     {
         final BookingActionButtonType bookingActionButtonType = UIUtils.getAssociatedActionType(data);
         if(bookingActionButtonType == null)
@@ -47,7 +44,7 @@ public class BookingActionButton extends Button
         associatedFragment = fragment;
         setBackgroundResource(bookingActionButtonType.getBackgroundDrawableId());
         setTextAppearance(getContext(), bookingActionButtonType.getTextStyleId());
-        setText(bookingActionButtonType.getDisplayNameId());
+        setText(bookingActionButtonType.getDisplayNameId(booking));
         setTypeface(TextUtils.get(getContext(), TextUtils.Fonts.CIRCULAR_BOOK));
         setOnClickListener(new View.OnClickListener()
         {

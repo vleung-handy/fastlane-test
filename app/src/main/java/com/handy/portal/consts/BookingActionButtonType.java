@@ -3,10 +3,6 @@ package com.handy.portal.consts;
 import com.handy.portal.R;
 import com.handy.portal.core.booking.Booking;
 
-/**
- * Created by cdavis on 6/29/15.
- */
-
 public enum BookingActionButtonType
 {
     CLAIM(Booking.ActionButtonData.BOOKING_ACTION_NAME_CLAIM, R.string.claim, BookingActionButtonStyle.GREEN),
@@ -40,8 +36,12 @@ public enum BookingActionButtonType
         return actionName;
     }
 
-    public int getDisplayNameId()
+    public int getDisplayNameId(Booking booking)
     {
+        if (this == CLAIM)
+        {
+            return booking.isRecurring() ? R.string.claim_series : R.string.claim_job;
+        }
         return displayNameId;
     }
 

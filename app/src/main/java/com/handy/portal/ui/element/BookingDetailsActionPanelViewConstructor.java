@@ -16,9 +16,6 @@ import java.util.List;
 
 import butterknife.InjectView;
 
-/**
- * Created by cdavis on 5/8/15.
- */
 public class BookingDetailsActionPanelViewConstructor extends BookingDetailsViewConstructor
 {
     @InjectView(R.id.booking_details_action_text)
@@ -33,7 +30,7 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         boolean removeSection = shouldRemoveSection(booking, allowedActions, bookingStatus);
-        if(removeSection)
+        if (removeSection)
         {
             removeView();
         }
@@ -67,12 +64,12 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         String helperContent = "";
         for (Booking.ActionButtonData actionButtonData : allowedActions)
         {
-            if(getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(actionButtonData)))
+            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(actionButtonData)))
             {
-                if(actionButtonData.getHelperText() != null && !actionButtonData.getHelperText().isEmpty())
+                if (actionButtonData.getHelperText() != null && !actionButtonData.getHelperText().isEmpty())
                 {
                     //allow accumulation of helper text, it will all display below the buttons instead of below each button
-                    if(!helperContent.isEmpty())
+                    if (!helperContent.isEmpty())
                     {
                         helperContent += "\n";
                     }
@@ -81,7 +78,7 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
             }
         }
 
-        if(!helperContent.isEmpty())
+        if (!helperContent.isEmpty())
         {
             helperText.setVisibility(View.VISIBLE);
             helperText.setText(helperContent);
@@ -92,7 +89,7 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         }
     }
 
-    protected  ImmutableList<BookingActionButtonType> getAssociatedButtonActionTypes()
+    protected ImmutableList<BookingActionButtonType> getAssociatedButtonActionTypes()
     {
         return associatedButtonActionTypes;
     }

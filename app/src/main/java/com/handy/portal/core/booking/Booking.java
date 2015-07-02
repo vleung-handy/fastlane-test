@@ -41,7 +41,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("partner") private String partner;
     @SerializedName("country") private String country;
     @SerializedName("user") private User user;
-    @SerializedName("actions") private List<ActionButtonData> actionButtonData;
+    @SerializedName("actions") private List<ActionButtonData> actionButtonDataList;
     @SerializedName("booking_phone") private String bookingPhone;
 
     @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions; //Customer Details
@@ -266,13 +266,13 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     public List<ActionButtonData> getAllowedActions()
     {
-        if(actionButtonData != null)
+        if (actionButtonDataList != null)
         {
-            return actionButtonData;
+            return actionButtonDataList;
         }
         else
         {
-            return new ArrayList<ActionButtonData>();
+            return Collections.emptyList();
         }
     }
 

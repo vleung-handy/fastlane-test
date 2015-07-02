@@ -1,9 +1,5 @@
 package com.handy.portal.consts;
 
-/**
- * Created by cdavis on 6/29/15.
- */
-
 //** KEEP IN SYNC WITH SERVER VALUES **//
 
 import com.handy.portal.R;
