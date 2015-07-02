@@ -30,12 +30,6 @@ public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConst
     protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
     {
         Booking.BookingStatus bookingStatus = (Booking.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
-        setBannerTextByBookingStatus(bookingStatus);
-        jobIdText.setText(activity.getString(R.string.job) + " #" + booking.getId());
-    }
-
-    private void setBannerTextByBookingStatus(Booking.BookingStatus bookingStatus)
-    {
         switch (bookingStatus)
         {
             case AVAILABLE:
@@ -47,6 +41,7 @@ public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConst
             case CLAIMED:
             {
                 bannerText.setText(R.string.your_job);
+                jobIdText.setText(activity.getString(R.string.job_num) + booking.getId());
             }
             break;
 
