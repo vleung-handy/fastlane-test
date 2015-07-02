@@ -31,7 +31,6 @@ import com.handy.portal.core.booking.Booking;
 import com.handy.portal.core.booking.Booking.BookingStatus;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.clicklisteners.NavigateToTabOnClickListener;
 import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionRemovePanelViewConstructor;
@@ -797,7 +796,7 @@ public class BookingDetailsFragment extends InjectedFragment
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
-        Bundle arguments = new Bundle();
+        final Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, returnDateEpochTime);
 
         // set dialog message
@@ -805,7 +804,14 @@ public class BookingDetailsFragment extends InjectedFragment
                 .setTitle(title)
                 .setMessage(errorMessage)
                 .setCancelable(false)
-                .setPositiveButton(option1, new NavigateToTabOnClickListener(MainViewTab.JOBS, arguments, TransitionStyle.REFRESH_TAB));
+                .setPositiveButton(option1, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULE, arguments, TransitionStyle.REFRESH_TAB));
+                    }
+                });
 
         // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
