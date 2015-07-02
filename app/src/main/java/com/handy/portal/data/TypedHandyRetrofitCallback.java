@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.handy.portal.core.BookingSummaryResponse;
+import com.handy.portal.core.ConfigParams;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.SimpleResponse;
@@ -13,8 +14,6 @@ import com.handy.portal.core.UpdateDetails;
 import com.handy.portal.core.booking.Booking;
 
 import org.json.JSONObject;
-
-import java.util.Map;
 
 class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback
 {
@@ -91,7 +90,7 @@ class TermsDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallba
     }
 }
 
-class ConfigParamResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<Map<String, Integer>>
+class ConfigParamResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<ConfigParams>
 {
     ConfigParamResponseHandyRetroFitCallback(DataManager.Callback callback)
     {

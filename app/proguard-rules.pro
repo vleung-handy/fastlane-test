@@ -67,6 +67,7 @@
     <fields>;
 }
 -dontwarn com.google.common.**
+-keepattributes EnclosingMethod
 
 #Urban Airship
 -keepnames class * implements android.os.Parcelable {

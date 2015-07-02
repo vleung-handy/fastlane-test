@@ -1,6 +1,7 @@
 package com.handy.portal.data;
 
 import com.handy.portal.core.BookingSummaryResponse;
+import com.handy.portal.core.ConfigParams;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.PinRequestDetails;
@@ -128,7 +129,7 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getConfigParams(String[] keys, Callback<Map<String, Integer>> cb)
+    public void getConfigParams(String[] keys, Callback<ConfigParams> cb)
     {
         service.getConfigParams(getProviderId(), keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }

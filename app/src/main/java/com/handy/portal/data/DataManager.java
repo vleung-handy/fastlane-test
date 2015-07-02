@@ -1,6 +1,7 @@
 package com.handy.portal.data;
 
 import com.handy.portal.core.BookingSummaryResponse;
+import com.handy.portal.core.ConfigParams;
 import com.handy.portal.core.LoginDetails;
 import com.handy.portal.core.PinRequestDetails;
 import com.handy.portal.core.SimpleResponse;
@@ -19,7 +20,7 @@ public abstract class DataManager
 
     public abstract void acceptTerms(String termsCode, Callback<Void> cb);
 
-    public abstract void getConfigParams(String[] keys, Callback<Map<String, Integer>> cb);
+    public abstract void getConfigParams(String[] keys, Callback<ConfigParams> cb);
 
     public abstract void sendVersionInformation(Map<String,String> info, Callback<SimpleResponse> cb);
 
