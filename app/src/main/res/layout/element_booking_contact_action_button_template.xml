@@ -5,7 +5,6 @@
     >
      <com.handy.portal.ui.widget.BookingActionButton
             android:layout_alignParentBottom="false"
-            android:layout_marginBottom="10dp"
             style="@style/Button.White.Round"
             android:layout_width="match_parent"
             />

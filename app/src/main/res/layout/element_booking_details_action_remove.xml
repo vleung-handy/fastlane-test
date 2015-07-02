@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="15dp"
-    android:background="@color/transparent"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:orientation="vertical"
+                android:padding="15dp">
 
     <LinearLayout
         android:id="@+id/booking_details_action_panel_button_layout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     </LinearLayout>
 
     <TextView
         android:id="@+id/booking_details_action_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text=""
-        android:textColor="@color/helper_text_grey"
         android:layout_below="@+id/booking_details_action_panel_button_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:gravity="center_horizontal"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/helper_text_grey"
         android:visibility="gone"/>
 
 </RelativeLayout>
