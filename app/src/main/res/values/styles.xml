@@ -120,6 +120,11 @@
         <item name="android:textColor">@drawable/button_text_white_trans</item>
     </style>
 
+    <style name="Button.RedEmptyRound">
+        <item name="android:background">@drawable/button_red_empty_round</item>
+        <item name="android:textColor">@drawable/button_text_red</item>
+    </style>
+
     <style name="Button.Red.Round">
         <item name="android:background">@drawable/button_red_round</item>
         <item name="android:textColor">@drawable/button_text_white_trans</item>
