@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/booking_action_button_template"
+    >
+    <com.handy.portal.ui.widget.BookingActionButton
+        android:id="@+id/booking_action_button"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="false"
+        style="@style/Button.Green.Round"
+        />
+</merge>
