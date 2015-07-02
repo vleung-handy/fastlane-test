@@ -13,6 +13,7 @@ import com.handy.portal.R;
 import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.core.PortalWebViewClient;
 import com.handy.portal.data.HandyRetrofitEndpoint;
+import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,8 @@ public class PortalWebViewFragment extends InjectedFragment
 
     @Inject
     HandyRetrofitEndpoint endpoint;
+    @Inject
+    Bus bus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,7 +103,7 @@ public class PortalWebViewFragment extends InjectedFragment
     {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setGeolocationEnabled(true);
-        webView.setWebViewClient(new PortalWebViewClient(this, webView, googleService));
+        webView.setWebViewClient(new PortalWebViewClient(this, webView, googleService, bus));
     }
 
     private void loadUrlWithFromAppParam(String url)

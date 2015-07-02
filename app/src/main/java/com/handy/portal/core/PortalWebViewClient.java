@@ -8,23 +8,25 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.handy.portal.ui.widget.ProgressDialog;
+import com.handy.portal.event.HandyEvent;
+import com.squareup.otto.Bus;
 
 public class PortalWebViewClient extends WebViewClient
 {
     private Fragment parentFragment;
     private WebView webView;
-    private ProgressDialog pd;
     private GoogleService googleService;
+    private Bus bus;
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,
-                               GoogleService gs)
+                               GoogleService gs,
+                               Bus bus)
     {
         this.parentFragment = parentFragment;
         this.webView = webView;
-        this.pd = new ProgressDialog(this.parentFragment.getActivity());
         this.googleService = gs;
+        this.bus = bus;
     }
 
     @Override
@@ -60,20 +62,19 @@ public class PortalWebViewClient extends WebViewClient
     public void onPageStarted(WebView view, String url, Bitmap favicon)
     {
         super.onPageStarted(view, url, favicon);
-        pd.setTitle("Please wait");
-        pd.show();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
     }
 
     @Override
     public void onPageFinished(WebView view, String url)
     {
         super.onPageFinished(view, url);
-        pd.dismiss();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
     }
 
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
     {
-        pd.dismiss();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         // API level 5: WebViewClient.ERROR_HOST_LOOKUP
         if (errorCode == -2)
         {

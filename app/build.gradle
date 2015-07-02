@@ -107,10 +107,7 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.google.android.gms:play-services:7.0.0'
     compile 'com.crashlytics.android:crashlytics:1.+'
-    compile 'com.scottyab:aes-crypto:0.0.2-SNAPSHOT'
-    compile('com.scottyab:secure-preferences-lib:0.1.0') {
-        provided 'com.scottyab:aes-crypto:0.0.2-SNAPSHOT'
-    }
+    compile 'com.scottyab:secure-preferences-lib:0.1.1'
 
     testCompile 'org.robolectric:robolectric:3.0-rc3'
     testCompile 'org.robolectric:shadows-support-v4:3.0-rc3'
