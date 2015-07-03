@@ -2,7 +2,7 @@ package com.handy.portal.core;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.data.Mixpanel;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Subscribe;
 
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class MainBusTest extends RobolectricGradleTestWrapper
         final Object object = new Object()
         {
             @Subscribe
-            public void triggerEvent(Event.RequestLoginEvent event)
+            public void triggerEvent(HandyEvent.RequestLogin event)
             {
                 eventTriggered[0] = true;
             }
@@ -47,7 +47,7 @@ public class MainBusTest extends RobolectricGradleTestWrapper
 
         ShadowLooper.idleMainLooper();
 
-        bus.post(mock(Event.RequestLoginEvent.class));
+        bus.post(mock(HandyEvent.RequestLogin.class));
 
         assertTrue(eventTriggered[0]);
     }

@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.BookingManager;
+import com.handy.portal.core.ConfigManager;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.NavigationManager;
 import com.handy.portal.data.DataManager;
@@ -41,6 +42,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     GoogleService googleService;
     @Inject
     Bus bus;
+    @Inject
+    ConfigManager configManager;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -126,24 +129,24 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     }
 
     //Helpers
-    protected void showErrorToast(int stringId)
+    protected void showToast(int stringId)
     {
-        showErrorToast(getString(stringId));
+        showToast(getString(stringId));
     }
 
-    protected void showErrorToast(String error)
+    protected void showToast(String message)
     {
-        showErrorToast(error, Toast.LENGTH_SHORT);
+        showToast(message, Toast.LENGTH_SHORT);
     }
 
-    protected void showErrorToast(int stringId, int length)
+    protected void showToast(int stringId, int length)
     {
-        showErrorToast(getString(stringId), length);
+        showToast(getString(stringId), length);
     }
 
-    protected void showErrorToast(String error, int length)
+    protected void showToast(String message, int length)
     {
-        toast = Toast.makeText(getActivity().getApplicationContext(), error, length);
+        toast = Toast.makeText(getActivity().getApplicationContext(), message, length);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }

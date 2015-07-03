@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:state_pressed="true">
+<item android:state_enabled="false">
+    <shape android:shape="rectangle">
+        <corners android:radius="@dimen/round_button_radius" />
+        <stroke android:width="@dimen/round_button_stroke"
+                android:color="@color/disabled" />
+        <solid android:color="@color/disabled" />
+    </shape>
+</item>
+<item android:state_pressed="false">
     <shape android:shape="rectangle">
         <corners android:radius="@dimen/round_button_radius" />
         <stroke android:width="@dimen/round_button_stroke"
@@ -8,7 +16,7 @@
         <solid android:color="@color/handy_purple" />
     </shape>
 </item>
-<item android:state_pressed="false">
+<item android:state_pressed="true">
     <shape android:shape="rectangle">
         <corners android:radius="@dimen/round_button_radius" />
         <stroke android:width="@dimen/round_button_stroke"
@@ -22,14 +30,6 @@
         <stroke android:width="@dimen/round_button_stroke"
                 android:color="@color/handy_purple" />
         <solid android:color="@color/handy_purple" />
-    </shape>
-</item>
-<item android:state_enabled="false">
-    <shape android:shape="rectangle">
-        <corners android:radius="@dimen/round_button_radius" />
-        <stroke android:width="@dimen/round_button_stroke"
-                android:color="@color/disabled" />
-        <solid android:color="@color/disabled" />
     </shape>
 </item>
 </selector>

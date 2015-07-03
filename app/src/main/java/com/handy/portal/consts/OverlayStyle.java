@@ -9,30 +9,29 @@ import com.handy.portal.R;
 //
 public enum OverlayStyle
 {
-    JOB_CLAIM_SUCCESS(R.string.job_claim_success, R.drawable.ic_check, R.drawable.circle_green),
-    SERIES_CLAIM_SUCCESS(R.string.series_claim_success, R.drawable.ic_check, R.drawable.circle_green),
-    JOB_CLAIM_FAIL(R.string.booking_action_error_not_available,R.drawable.ic_x, R.drawable.circle_red),
-    NONE(-1, -1, -1)
+    JOB_CLAIM_SUCCESS(R.string.job_claim_success, R.drawable.ic_success_circle),
+    SERIES_CLAIM_SUCCESS(R.string.series_claim_success, R.drawable.ic_success_circle),
+    JOB_REMOVE_SUCCESS(R.string.job_remove_success, R.drawable.ic_success_circle),
+    SERIES_REMOVE_SUCCESS(R.string.series_remove_success, R.drawable.ic_success_circle),
+    NONE(-1, -1)
     ;
 
     private int overlayStringId;
     private int overlayImageId;
-    private int overlayBackingImageId;
 
-    OverlayStyle(int overlayStringId, int overlayImageId, int overlayBackingImageId)
+    OverlayStyle(int overlayStringId, int overlayImageId)
     {
         this.overlayStringId = overlayStringId;
         this.overlayImageId = overlayImageId;
-        this.overlayBackingImageId = overlayBackingImageId;
     }
 
     public boolean shouldShowOverlay()
     {
-        return(overlayStringId != -1 || overlayImageId != -1 || overlayBackingImageId != -1);
+        return(overlayStringId != -1 || overlayImageId != -1);
     }
 
     public int getOverlayStringId() { return overlayStringId; }
     public int getOverlayImageId() { return overlayImageId; }
-    public int getOverlayBackingImageId() { return overlayBackingImageId; }
+
 }
 

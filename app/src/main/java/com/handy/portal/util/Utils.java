@@ -10,6 +10,9 @@ import android.util.TypedValue;
 import android.view.TouchDelegate;
 import android.view.View;
 
+import com.handy.portal.core.LocationData;
+import com.handy.portal.ui.activity.BaseActivity;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -39,7 +42,7 @@ public final class Utils
         }
     }
 
-    public static boolean equalDates(final Date date1, final Date date2)
+    public static boolean equalCalendarDates(final Date date1, final Date date2)
     {
         final Time time = new Time();
         time.set(date1.getTime());
@@ -111,4 +114,21 @@ public final class Utils
             throw new RuntimeException("Could not get package name: " + e);
         }
     }
+
+    public static LocationData getCurrentLocation(BaseActivity baseActivity)
+    {
+        LocationData locationData;
+        if(baseActivity != null)
+        {
+            locationData = new LocationData(baseActivity.getLastLocation());
+        }
+        else
+        {
+            System.err.println("Attempting to access location data outside of a BaseActivity Context, returning empty");
+            locationData = new LocationData();
+        }
+        return locationData;
+    }
+
+
 }

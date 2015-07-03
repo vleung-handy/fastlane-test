@@ -8,23 +8,25 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.handy.portal.ui.widget.ProgressDialog;
+import com.handy.portal.event.HandyEvent;
+import com.squareup.otto.Bus;
 
 public class PortalWebViewClient extends WebViewClient
 {
     private Fragment parentFragment;
     private WebView webView;
-    private ProgressDialog pd;
     private GoogleService googleService;
+    private Bus bus;
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,
-                               GoogleService gs)
+                               GoogleService gs,
+                               Bus bus)
     {
         this.parentFragment = parentFragment;
         this.webView = webView;
-        this.pd = new ProgressDialog(this.parentFragment.getActivity());
         this.googleService = gs;
+        this.bus = bus;
     }
 
     @Override
@@ -60,20 +62,19 @@ public class PortalWebViewClient extends WebViewClient
     public void onPageStarted(WebView view, String url, Bitmap favicon)
     {
         super.onPageStarted(view, url, favicon);
-        pd.setTitle("Please wait");
-        pd.show();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
     }
 
     @Override
     public void onPageFinished(WebView view, String url)
     {
         super.onPageFinished(view, url);
-        pd.dismiss();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
     }
 
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
     {
-        pd.dismiss();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         // API level 5: WebViewClient.ERROR_HOST_LOOKUP
         if (errorCode == -2)
         {
@@ -96,7 +97,7 @@ public class PortalWebViewClient extends WebViewClient
         }
 
         //TODO: This code seems to be duplicated in the PortalWebViewFragment
-        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1&hide_pro_request=1&ht=1";
+        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1&hide_pro_request=1&ht=1&skip_web_portal_version_tracking=1";
         String urlWithParams = url + (url.contains("?") ? (url.endsWith("&") ? "" : "&") : "?") + endOfUrl;
         Log.d(PortalWebViewClient.class.getSimpleName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);

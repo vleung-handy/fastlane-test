@@ -1,6 +1,6 @@
 package com.handy.portal.core;
 
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -23,18 +23,18 @@ public class ApplicationOnResumeWatcher
     }
 
     @Subscribe
-    public void onActivityResume(Event.ActivityResumed event)
+    public void onActivityResume(HandyEvent.ActivityResumed event)
     {
         Date now = new Date();
         if(lastOnPause == null) {
-            bus.post(new Event.ApplicationResumed(event.sender));
+            bus.post(new HandyEvent.ApplicationResumed(event.sender));
         } else if (Math.abs(now.getTime() - lastOnPause.getTime()) > TRANSITION_THRESHOLD) {
-            bus.post(new Event.ApplicationResumed(event.sender));
+            bus.post(new HandyEvent.ApplicationResumed(event.sender));
         }
     }
 
     @Subscribe
-    public void onActivityPaused(Event.ActivityPaused event)
+    public void onActivityPaused(HandyEvent.ActivityPaused event)
     {
         lastOnPause = new Date();
     }

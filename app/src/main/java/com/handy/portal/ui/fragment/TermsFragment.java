@@ -17,7 +17,7 @@ import com.google.common.io.CharStreams;
 import com.handy.portal.R;
 import com.handy.portal.core.TermsDetails;
 import com.handy.portal.core.TermsManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.squareup.otto.Subscribe;
@@ -85,7 +85,7 @@ public class TermsFragment extends InjectedFragment
         if (acceptCheckbox.isChecked())
         {
             loadingOverlay.setOverlayVisibility(true);
-            bus.post(new Event.AcceptTermsEvent(termsManager.getNewestTermsDetails()));
+            bus.post(new HandyEvent.AcceptTerms(termsManager.getNewestTermsDetails()));
         }
         else
         {
@@ -109,16 +109,19 @@ public class TermsFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onAcceptTermsSuccess(Event.AcceptTermsSuccessEvent event)
+    public void onAcceptTermsSuccess(HandyEvent.AcceptTermsSuccess event)
     {
-        startActivity(new Intent(this.getActivity(), SplashActivity.class));
+        Intent intent = new Intent(this.getActivity(), SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Subscribe
-    public void onAcceptTermsError(Event.AcceptTermsErrorEvent event)
+    public void onAcceptTermsError(HandyEvent.AcceptTermsError event)
     {
         loadingOverlay.setOverlayVisibility(false);
-        showErrorToast(R.string.error_accepting_terms);
+        showToast(R.string.error_accepting_terms);
     }
 
     private void initView()
@@ -135,7 +138,7 @@ public class TermsFragment extends InjectedFragment
             termsWebview.loadDataWithBaseURL(ASSETS_BASE_URL, htmlContent, "text/html", UTF_8, null);
             overrideTermsWebviewUrlLoading();
 
-            bus.post(new Event.TermsDisplayedEvent(newestTermsDetails.getCode()));
+            bus.post(new HandyEvent.TermsDisplayed(newestTermsDetails.getCode()));
         }
         else
         {
