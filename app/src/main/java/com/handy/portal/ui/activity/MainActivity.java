@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.handy.portal.R;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -27,6 +27,7 @@ public class MainActivity extends BaseActivity
     {
         super.onResume();
         bus.register(this);
+        configManager.init();
         checkForTerms();
     }
 
@@ -39,12 +40,13 @@ public class MainActivity extends BaseActivity
 
     private void checkForTerms()
     {
-        bus.post(new Event.CheckTermsRequestEvent());
+        bus.post(new HandyEvent.RequestCheckTerms());
     }
 
     @Subscribe
-    public void onCheckTermsResponse(Event.CheckTermsResponseEvent event)
+    public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event)
     {
+        //if the code is null we don't need to to show anything
         if (event.termsDetails.getCode() != null)
         {
             startActivity(new Intent(this, TermsActivity.class));
@@ -52,7 +54,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onCheckTermsError(Event.CheckTermsErrorEvent event)
+    public void onReceiveCheckTermsError(HandyEvent.ReceiveCheckTermsError event)
     {
         startActivity(new Intent(this, TermsActivity.class));
     }

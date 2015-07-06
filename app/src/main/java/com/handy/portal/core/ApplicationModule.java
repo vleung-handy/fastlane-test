@@ -97,7 +97,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEnpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
+    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
     {
         if (buildConfigWrapper.isDebug())
         {
@@ -140,7 +140,9 @@ public final class ApplicationModule
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (buildConfigWrapper.isDebug())
+        {
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
+        }
 
         return restAdapter.create(HandyRetrofitService.class);
     }
@@ -193,11 +195,18 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final ConfigManager provideConfigManager(final DataManager dataManager)
+    {
+        return new ConfigManager(dataManager);
+    }
+
+    @Provides
+    @Singleton
     final VersionManager provideVersionManager(final Bus bus,
                                                final DataManager dataManager,
                                                final BuildConfigWrapper buildConfigWrapper)
     {
-        return new VersionManager(bus, dataManager, buildConfigWrapper);
+        return new VersionManager(context, bus, dataManager, buildConfigWrapper);
     }
 
     @Provides
@@ -253,7 +262,13 @@ public final class ApplicationModule
         final String manufacturer = Build.MANUFACTURER;
         final String model = Build.MODEL;
 
-        if (model.startsWith(manufacturer)) return model;
-        else return manufacturer + " " + model;
+        if (model.startsWith(manufacturer))
+        {
+            return model;
+        }
+        else
+        {
+            return manufacturer + " " + model;
+        }
     }
 }

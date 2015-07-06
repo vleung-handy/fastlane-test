@@ -1,7 +1,7 @@
 package com.handy.portal.core;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -24,35 +24,28 @@ public class LoginManager
         this.bus.register(this);
     }
 
-    //Dagger doesn't have a good way to resolve cyclical injection dependencies from what I can tell
-    //Hopefully there is some elegant solution that can be found with more googling
-    public void setDataManager(DataManager dataManager)
-    {
-        this.dataManager = dataManager;
-    }
-
     @Subscribe
-    public void onRequestPinCode(Event.RequestPinCodeEvent event)
+    public void onRequestPinCode(HandyEvent.RequestPinCode event)
     {
         dataManager.requestPinCode(event.phoneNumber, new DataManager.Callback<PinRequestDetails>()
                 {
                     @Override
                     public void onSuccess(final PinRequestDetails pinRequestDetails)
                     {
-                        bus.post(new Event.PinCodeRequestReceivedEvent(pinRequestDetails, true));
+                        bus.post(new HandyEvent.ReceivePinCodeSuccess(pinRequestDetails));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.PinCodeRequestReceivedEvent(null, false));
+                        bus.post(new HandyEvent.ReceivePinCodeError(error));
                     }
                 }
         );
     }
 
     @Subscribe
-    public void onRequestLogin(Event.RequestLoginEvent event)
+    public void onRequestLogin(HandyEvent.RequestLogin event)
     {
         dataManager.requestLogin(event.phoneNumber, event.pinCode, new DataManager.Callback<LoginDetails>()
                 {
@@ -60,13 +53,13 @@ public class LoginManager
                     public void onSuccess(final LoginDetails loginDetails)
                     {
                         saveLoginDetails(loginDetails);
-                        bus.post(new Event.LoginRequestReceivedEvent(loginDetails, true));
+                        bus.post(new HandyEvent.ReceiveLoginSuccess(loginDetails));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new Event.LoginRequestReceivedEvent(null, false));
+                        bus.post(new HandyEvent.ReceiveLoginError(error));
                     }
                 }
         );

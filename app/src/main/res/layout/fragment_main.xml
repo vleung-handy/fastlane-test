@@ -62,19 +62,11 @@
         android:clickable="false"
         >
         <ImageView
-            android:id="@+id/transition_overlay_image_backing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:src="@drawable/circle_green"
-            android:layout_gravity="center"
-            android:layout_centerInParent="true"/>
-        <ImageView
             android:id="@+id/transition_overlay_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:src="@drawable/ic_check"
+            android:src="@drawable/ic_success_circle"
             android:layout_gravity="center"
             android:layout_centerInParent="true"/>
         <TextView
@@ -83,11 +75,11 @@
             android:layout_height="wrap_content"
             android:text="@string/job_claim_success"
             android:layout_gravity="center"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:layout_below="@id/transition_overlay_image"
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="25dp"/>
     </com.handy.portal.ui.element.TransitionOverlayView>
 
 </RelativeLayout>

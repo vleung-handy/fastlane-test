@@ -5,10 +5,11 @@
 
     <!-- TODO: Update blank fragment layout -->
     <ImageView
+        android:id="@+id/update_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/blocking_updateapp_avatar"
+        android:background="@drawable/anim_update"
         android:layout_marginTop="90dp"/>
 
     <TextView
@@ -22,9 +23,10 @@
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/update_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/update_copy"
+        android:layout_height="60dp"
+        android:text="@string/download_copy"
         style="@style/TextView.Medium"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
@@ -34,13 +36,13 @@
 
     <Button
         style="@style/Button.SalmonRound"
-        android:id="@+id/download_button"
+        android:id="@+id/update_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/update_button_label"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-        android:typeface="normal"/>
+        android:enabled="false"/>
 </LinearLayout>

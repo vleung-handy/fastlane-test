@@ -14,7 +14,7 @@ import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.consts.TransitionStyle;
 import com.handy.portal.core.SwapFragmentArguments;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
@@ -25,6 +25,7 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
+    private static final String BUNDLE_KEY_TAB = "tab";
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -51,9 +52,6 @@ public class MainActivityFragment extends InjectedFragment
 
         registerButtonListeners();
 
-        jobsButton.setChecked(true);
-        switchToTab(MainViewTab.JOBS);
-
         transitionOverlayView.init();
         loadingOverlayView.init();
 
@@ -61,25 +59,38 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
-    public void onResume()
+    public void onViewStateRestored(Bundle savedInstanceState)
     {
-        super.onResume();
-        if (currentTab == null)
+        super.onViewStateRestored(savedInstanceState);
+
+        String tab = MainViewTab.JOBS.name();
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_KEY_TAB))
         {
-            jobsButton.setChecked(true);
-            switchToTab(MainViewTab.JOBS);
+            tab = savedInstanceState.getString(BUNDLE_KEY_TAB);
         }
+        switchToTab(MainViewTab.valueOf(tab));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        if (outState == null)
+        {
+            outState = new Bundle();
+        }
+        outState.putString(BUNDLE_KEY_TAB, currentTab.name());
+        super.onSaveInstanceState(outState);
     }
 
     //Listeners
     @Subscribe
-    public void onNavigateToTabEvent(Event.NavigateToTabEvent event)
+    public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
         switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride);
     }
 
     @Subscribe
-    public void onShowLoadingOverlay(Event.SetLoadingOverlayVisibilityEvent event)
+    public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
     {
         loadingOverlayView.setOverlayVisibility(event.isVisible);
     }
@@ -137,17 +148,9 @@ public class MainActivityFragment extends InjectedFragment
     {
         clearFragmentBackStack();
 
-        //analytics event
-        String analyticsPageData;
-        if (targetTab.isNativeTab())
-        {
-            analyticsPageData = targetTab.getClassType().toString();
-        }
-        else
-        {
-            analyticsPageData = targetTab.getTarget().getValue();
-        }
-        bus.post(new Event.Navigation(analyticsPageData));
+        trackSwitchToTab(targetTab);
+
+        updateSelectedTabButton(targetTab);
 
         if (targetTab.isNativeTab())
         {
@@ -191,6 +194,37 @@ public class MainActivityFragment extends InjectedFragment
         for (int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
         {
             supportFragmentManager.popBackStack();
+        }
+    }
+
+    //analytics event
+    private void trackSwitchToTab(MainViewTab targetTab)
+    {
+        String analyticsPageData;
+        if (targetTab.isNativeTab())
+        {
+            analyticsPageData = targetTab.getClassType().toString();
+        }
+        else
+        {
+            analyticsPageData = targetTab.getTarget().getValue();
+        }
+        bus.post(new HandyEvent.Navigation(analyticsPageData));
+    }
+
+    //Update the visuals to show the correct selected button
+    private void updateSelectedTabButton(MainViewTab targetTab)
+    {
+        //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
+        if (targetTab != MainViewTab.DETAILS)
+        {
+            switch(targetTab)
+            {
+                case JOBS: { jobsButton.toggle();} break;
+                case SCHEDULE: { scheduleButton.toggle();} break;
+                case PROFILE: { profileButton.toggle();} break;
+                case HELP: { helpButton.toggle();} break;
+            }
         }
     }
 

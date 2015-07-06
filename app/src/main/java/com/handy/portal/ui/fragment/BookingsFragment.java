@@ -15,7 +15,7 @@ import com.handy.portal.consts.BundleKeys;
 import com.handy.portal.consts.MainViewTab;
 import com.handy.portal.core.BookingSummary;
 import com.handy.portal.core.booking.Booking;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.form.BookingListView;
 import com.handy.portal.util.Utils;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public abstract class BookingsFragment extends InjectedFragment
+public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends InjectedFragment
 {
     @InjectView(R.id.bookings_content)
     protected View bookingsContentView;
@@ -52,13 +52,22 @@ public abstract class BookingsFragment extends InjectedFragment
 
     protected abstract String getTrackingType();
 
-    protected abstract Event getRequestEvent();
+    protected abstract HandyEvent getRequestEvent();
+
+    protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
+
+    protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
+
+    protected abstract void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings);
+
+    //Event listeners
+    public abstract void onBookingsRetrieved(T event);
 
     private int previousDatesScrollPosition;
 
     //should use date without time for these entries, see Utils.getDateWithoutTime
     private Map<Date, DateButtonView> dateButtonMap;
-    private Date selectedDay;
+    protected Date selectedDay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,10 +78,14 @@ public abstract class BookingsFragment extends InjectedFragment
         ButterKnife.inject(this, view);
 
         //Optional param, needs to be validated
-        if(getArguments() != null && getArguments().containsKey(BundleKeys.DATE_EPOCH_TIME))
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.DATE_EPOCH_TIME))
         {
-            this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
-            this.selectedDay = Utils.getDateWithoutTime(this.selectedDay);
+            long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
+            if (targetDateTime > 0)
+            {
+                this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
+                this.selectedDay = Utils.getDateWithoutTime(this.selectedDay);
+            }
         }
 
         return view;
@@ -94,17 +107,13 @@ public abstract class BookingsFragment extends InjectedFragment
     protected void requestBookings()
     {
         fetchErrorView.setVisibility(View.GONE);
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(true));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(getRequestEvent());
     }
 
-    //Event listeners
-    //Can't subscribe in an abstract class?
-    public abstract void onBookingsRetrieved(Event.BookingsRetrievedEvent event);
-
-    protected void handleBookingsRetrieved(Event.BookingsRetrievedEvent event)
+    protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
-        bus.post(new Event.SetLoadingOverlayVisibilityEvent(false));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         List<BookingSummary> bookingSummaries = event.bookingSummaries;
         initDateButtons(bookingSummaries);
 
@@ -114,8 +123,7 @@ public abstract class BookingsFragment extends InjectedFragment
         {
             dateButtonMap.get(selectedDay).performClick();
             scrollDatesToPreviousPosition();
-        }
-        else if (getDatesLayout().getChildCount() > 0)
+        } else if (getDatesLayout().getChildCount() > 0)
         {
             getDatesLayout().getChildAt(0).performClick();
         }
@@ -152,25 +160,29 @@ public abstract class BookingsFragment extends InjectedFragment
 
             final List<Booking> bookingsForDay = new ArrayList<>(bookingSummary.getBookings());
 
-            Collections.sort(bookingsForDay);
+            Collections.sort(bookingsForDay); //date, ascending
             insertSeparator(bookingsForDay);
 
-            boolean requestedJobsThisDay = bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
+            boolean requestedJobsThisDay = showRequestedIndicator(bookingsForDay);
+            boolean claimedJobsThisDay = showClaimedIndicator(bookingsForDay);
+
             final Date day = bookingSummary.getDate();
-            dateButtonView.init(day, requestedJobsThisDay);
+            dateButtonView.init(day, requestedJobsThisDay, claimedJobsThisDay);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
-                    bus.post(new Event.DateClickedEvent(getTrackingType(), day));
+                    bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
-                    displayBookings(bookingsForDay);
+                    displayBookings(bookingsForDay, day);
                 }
             });
 
             dateButtonMap.put(day, dateButtonView);
         }
     }
+
+    protected abstract void insertSeparator(List<Booking> bookingsForDay);
 
     private void selectDay(Date day)
     {
@@ -183,11 +195,12 @@ public abstract class BookingsFragment extends InjectedFragment
         selectedDay = day;
     }
 
-    private void displayBookings(List<Booking> bookings)
+    private void displayBookings(List<Booking> bookings, Date dateOfBookings)
     {
         getBookingListView().populateList(bookings);
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
+        setupCTAButton(bookings, dateOfBookings);
     }
 
     private void initListClickListener()
@@ -200,7 +213,7 @@ public abstract class BookingsFragment extends InjectedFragment
                 Booking booking = (Booking) adapter.getItemAtPosition(position);
                 if (booking != null)
                 {
-                    bus.post(new Event.BookingSelectedEvent(getTrackingType(), booking.getId()));
+                    bus.post(new HandyEvent.BookingSelected(getTrackingType(), booking.getId()));
                     previousDatesScrollPosition = ((HorizontalScrollView) getDatesLayout().getParent()).getScrollX();
                     showBookingDetails(booking);
                 }
@@ -208,27 +221,12 @@ public abstract class BookingsFragment extends InjectedFragment
         });
     }
 
-    private void insertSeparator(List<Booking> bookings)
-    {
-        for (int i = 1; i < bookings.size(); i++)
-        {
-            Booking previousBooking = bookings.get(i - 1);
-            Booking booking = bookings.get(i);
-
-            if (previousBooking.getIsRequested() && !booking.getIsRequested())
-            {
-                bookings.add(i, null);
-                return;
-            }
-        }
-    }
-
     private void showBookingDetails(Booking booking)
     {
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
 
-        Event.NavigateToTabEvent event = new Event.NavigateToTabEvent(MainViewTab.DETAILS, arguments);
+        HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
 
         bus.post(event);
     }

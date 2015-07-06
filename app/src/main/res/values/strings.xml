@@ -28,6 +28,8 @@
 
     <string name="error_connectivity">The server could not be reached, please ensure you have a data connection and try again</string>
 
+    <string name="job">Job</string>
+    <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
     <string name="claimed_job">Claimed Job</string>
@@ -38,13 +40,17 @@
     <string name="disclaimer_cancel">You can remove jobs or series with 24 hour notice.</string>
 
     <string name="booking_action_error_server">The server could not be reached, please try again</string>
-    <string name="booking_action_error_not_available">That job was not available to claim, please select another job</string>
+    <string name="claim_action_error_not_available">That job was not available to claim, please select another job</string>
+    <string name="remove_action_error_not_available">That job could not be removed</string>
 
     <string name="customer_details">Customer Details</string>
     <string name="customer_request">Customer Request</string>
 
     <string name="job_claim_success">Success! Job claimed!</string>
     <string name="series_claim_success">Success! Series claimed!</string>
+
+    <string name="job_remove_success">Success! Job removed!</string>
+    <string name="series_remove_success">Success! Series removed!</string>
 
     <string name="home">Home</string>
     <string name="help">Help</string>
@@ -63,6 +69,7 @@
     <string name="share">Share</string>
     <string name="my_bookings">My Bookings</string>
     <string name="profile">Profile</string>
+    <string name="are_you_sure">Are you sure?</string>
     <string name="want_to_log_out">Are you sure you want to log out?</string>
     <string name="update">Update</string>
     <string name="you_have_credits">YOU HAVE&#160;&#160;#&#160;&#160;CREDITS</string>
@@ -114,6 +121,7 @@
     <string name="unavailable">Unavailable</string>
     <string name="unavailable_job">Unavailable Job</string>
     <string name="confirmation">Confirmation</string>
+    <string name="confirm">Confirm</string>
     <string name="payment_confirmed">Your payment has been confirmed.\nHow will your professional get in?</string>
     <string name="will_be_home">I’ll be home</string>
     <string name="doorman">Doorman</string>
@@ -142,6 +150,7 @@
     <string name="yes">Yes</string>
     <string name="reschedule_all_bookings">Reschedule all subsequent bookings?</string>
     <string name="cancel_booking">Cancel Booking</string>
+    <string name="cancel">Cancel</string>
     <string name="why_cancel">Why are you canceling?</string>
     <string name="get_started">Get Started</string>
     <string name="onboard_msg">Book trusted cleaners\n &amp; handymen instantly</string>
@@ -193,8 +202,9 @@
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
-    <string name="update_copy">Please download the latest app to continue using portal.</string>
-    <string name="update_button_label">Download Update</string>
+    <string name="update_copy">Please install the update to continue using Portal.</string>
+    <string name="update_button_label">Install Update</string>
+    <string name="download_copy">Downloading update. Please wait…</string>
 
     <plurals name="hour">
         <item quantity="one">hour</item>
@@ -209,13 +219,14 @@
     <string name="tab_help">Help</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
+    <string name="scheduled_jobs">Scheduled Jobs</string>
     <string name="available_job">Available Job</string>
     <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
     <string name="payment_value">%s</string>
     <string name="bonus_payment_value">+ %s BONUS</string>
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
-    <string name="booking_frequency_non_recurring">One Time Only</string>
+    <string name="booking_frequency_non_recurring">One-time only</string>
     <string name="booking_frequency_recurring_generic">Recurring</string>
     <string name="supplies">Supplies</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
@@ -224,15 +235,53 @@
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_connectivity_issue">Oops! There was an error with your internet connection</string>
     <string name="try_again">Try Again</string>
-
+    <string name="no_scheduled_jobs">You have not claimed any jobs for this day</string>
     <string name="return_to_available_jobs">"Return to Jobs"</string>
+    <string name="return_to_schedule">"Return to Schedule"</string>
     <string name="job_claim_error">"Error Claiming Job"</string>
     <string name="job_claim_error_generic">"This job is no longer available"</string>
     <string name="bring_cleaning_supplies">Bring cleaning supplies to this job</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="completed">Completed</string>
+    <string name="cta_find_jobs_for_this_day">Find Jobs</string>
     <string name="important">Important</string>
     <string name="i_agree">I agree to the Service Professional Agreement</string>
     <string name="error_accepting_terms">There was an error accepting the terms. Please try again.</string>
     <string name="error_loading">There was a loading error. Please click below to try again.</string>
+    <string name="update_failed">Failed to download update</string>
 
+    <string name="call">Call</string>
+    <string name="text">Text</string>
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
+    <string name="update_arrival_time">Update Arrival Time</string>
+    <string name="disclaimer_on_my_way">Button activates 1 hour before booking</string>
+    <string name="remove_job">Remove Job</string>
+    <string name="job_remove_error">Error Removing Job"</string>
+    <string name="job_remove_error_generic">This job could not be removed</string>
+    <string name="job_action_error">There was a problem taking that action, please try again</string>
+    <string name="error">Error</string>
+    <string name="notify_customer">Notify customer</string>
+
+    <string name="arrival_time_early_30">I\u2019ll be 30 minutes early</string>
+    <string name="arrival_time_early_15">I\u2019ll be 15 minutes early</string>
+    <string name="arrival_time_late_10">I\u2019ll be 10 minutes late</string>
+    <string name="arrival_time_late_15">I\u2019ll be 15 minutes late</string>
+    <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
+
+    <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
+    <string name="omw_failure">There was a problem updating your status. Please try again</string>
+    <string name="check_in_success">Thanks for checking in!</string>
+    <string name="eta_success">Thanks for updating your arrival time</string>
+    <string name="check_out_success">Thanks for checking out!</string>
+
+    <string name="send_update">Send Update</string>
+    <string name="an_error_has_occurred">An error has occurred, please try again</string>
+
+    <string name="install">Install</string>
+    <string name="need_google_play">To view maps, please install Google Play Services</string>
+    <string name="exact_location_shown_claimed">Exact location shown after job is claimed</string>
+    <string name="customer_prefix">CUSTOMER: </string>
 
 </resources>

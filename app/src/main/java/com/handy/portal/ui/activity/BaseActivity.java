@@ -2,12 +2,18 @@ package com.handy.portal.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.handy.portal.core.ApplicationOnResumeWatcher;
 import com.handy.portal.core.BaseApplication;
+import com.handy.portal.core.ConfigManager;
 import com.handy.portal.core.GoogleService;
 import com.handy.portal.core.LoginManager;
 import com.handy.portal.core.NavigationManager;
@@ -17,7 +23,7 @@ import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManagerErrorHandler;
 import com.handy.portal.data.Mixpanel;
-import com.handy.portal.event.Event;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.widget.ProgressDialog;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
@@ -27,12 +33,18 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends FragmentActivity
+public abstract class BaseActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
     private Object busEventListener;
     protected boolean allowCallbacks;
     private OnBackPressedListener onBackPressedListener;
     protected ProgressDialog progressDialog;
+
+    //According to android docs this is the preferred way of accessing location instead of using LocationManager
+    //will also let us do geofencing and reverse address lookup which is nice
+        //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
+    protected static GoogleApiClient googleApiClient;
+    protected static Location lastLocation;
 
     //Public Properties
     public boolean getAllowCallbacks()
@@ -59,6 +71,8 @@ public abstract class BaseActivity extends FragmentActivity
     @Inject
     TermsManager termsManager;
     @Inject
+    ConfigManager configManager;
+    @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
     @Inject
     SecurePreferences prefs;
@@ -78,11 +92,19 @@ public abstract class BaseActivity extends FragmentActivity
         busEventListener = new Object()
         {
             @Subscribe
-            public void onUpdateCheckReceived(Event.UpdateAvailable event)
+            public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
             {
-                BaseActivity.this.onUpdateAvailable(event);
+                BaseActivity.this.onReceiveUpdateAvailableSuccess(event);
+            }
+
+            @Subscribe
+            public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
+            {
+                //TODO: Handle receive update available errors
             }
         };
+
+        buildGoogleApiClient();
     }
 
     @Override
@@ -90,6 +112,11 @@ public abstract class BaseActivity extends FragmentActivity
     {
         super.onStart();
         allowCallbacks = true;
+
+        if(this.googleApiClient != null)
+        {
+            this.googleApiClient.connect();
+        }
     }
 
     @Override
@@ -97,6 +124,11 @@ public abstract class BaseActivity extends FragmentActivity
     {
         super.onStop();
         allowCallbacks = false;
+
+        if(this.googleApiClient != null)
+        {
+            this.googleApiClient.connect();
+        }
     }
 
     @Override
@@ -154,22 +186,79 @@ public abstract class BaseActivity extends FragmentActivity
 
     public void checkForUpdates()
     {
-        bus.post(new Event.UpdateCheckEvent(this));
+        bus.post(new HandyEvent.RequestUpdateCheck(this));
     }
 
     public void postActivityResumeEvent()
     {
-        bus.post(new Event.ActivityResumed(this));
+        bus.post(new HandyEvent.ActivityResumed(this));
     }
 
     public void postActivityPauseEvent()
     {
-        bus.post(new Event.ActivityPaused(this));
+        bus.post(new HandyEvent.ActivityPaused(this));
     }
 
-    public void onUpdateAvailable(Event.UpdateAvailable event)
+    public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
-        startActivity(new Intent(this, PleaseUpdateActivity.class));
+        if(event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate())
+        {
+            startActivity(new Intent(this, PleaseUpdateActivity.class));
+        }
+        //otherwise ignore
     }
 
+    public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
+    {
+        //TODO: Handle receive update available error, do we need to block?
+    }
+
+    //Setup Google API client to be able to access location through play services
+    protected synchronized void buildGoogleApiClient()
+    {
+        //client is static across activities
+        if(googleApiClient == null)
+        {
+            int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            if (resultCode == ConnectionResult.SUCCESS)
+            {
+                googleApiClient = new GoogleApiClient.Builder(this)
+                        .addConnectionCallbacks(this)
+                        .addOnConnectionFailedListener(this)
+                        .addApi(LocationServices.API)
+                        .build();
+            }
+            else
+            {
+                System.err.println("No Google Play Services, can not get locational data");
+            }
+        }
+    }
+
+    public void onConnected(Bundle connectionHint)
+    {
+        Location newLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        //Keeping old value in the event we have a failed location update
+        if (newLocation != null)
+        {
+            lastLocation = newLocation;
+        }
+    }
+
+    public Location getLastLocation()
+    {
+        return lastLocation;
+    }
+
+    //For google apli client
+    public void onConnectionSuspended(int i)
+    {
+        //TODO: Handle?
+    }
+
+    //For google apli client
+    public void onConnectionFailed(ConnectionResult var1)
+    {
+        //TODO: Handle?
+    }
 }
