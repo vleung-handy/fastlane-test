@@ -130,7 +130,8 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
                 @Override
                 public void onMapClick(LatLng point)
                 {
-                    openNativeMap(target);
+                    String queryAddress = booking.getAddress().getStreetAddress() + " " + booking.getAddress().getZip();
+                    openNativeMap(target, queryAddress);
                 }
             });
         }
@@ -171,15 +172,16 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
     }
 
     //TODO: This is failing on emulator, no activity to handle the intent
-    private void openNativeMap(LatLng target)
+    private void openNativeMap(LatLng target, String fullAddress)
     {
-        String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=%d&q=%f,%f (%s)",
-                target.latitude, target.longitude, DEFAULT_ZOOM_LEVEL, target.latitude, target.longitude, R.string.location);
+        //Query format: lat,long,?optionalZoomLevel&q=address
+            //the lat long are used to bias the search querys address and are used as a fallback if address not found
+        String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=%d&q=%s",
+                target.latitude, target.longitude, DEFAULT_ZOOM_LEVEL, fullAddress);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         activity.startActivity(intent);
     }
 
-//
     public boolean isGoogleMapsInstalled()
     {
         try

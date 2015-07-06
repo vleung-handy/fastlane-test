@@ -54,7 +54,7 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
         }
         else
         {
-            locationText.setText(booking.getAddress().getCompleteAddress() + "\n" + booking.getAddress().getZip());
+            locationText.setText(booking.getAddress().getStreetAddress() + "\n" + booking.getAddress().getZip());
         }
 
         UIUtils.setFrequencyInfo(booking, frequencyText, activity);

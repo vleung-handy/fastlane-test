@@ -550,7 +550,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
             return zip;
         }
 
-        public final String getCompleteAddress()
+        public final String getStreetAddress()
         {
             return (getAddress1() + (getAddress2() != null ? " " + getAddress2() : ""));
         }
