@@ -6,10 +6,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.consts.PartnerNames;
-import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.Booking.BookingStatus;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.PartnerNames;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.util.UIUtils;
 
 import java.util.List;

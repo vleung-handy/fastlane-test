@@ -7,9 +7,6 @@ import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
 import android.widget.TextView;
-
-import com.handy.portal.core.CreditCard;
-
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -94,47 +91,6 @@ public final class TextUtils
     {
         final DecimalFormat decimalFormat = new DecimalFormat(format);
         return decimalFormat.format(value);
-    }
-
-    public static String formatCreditCardNumber(final CreditCard.Type cardType, final String number)
-    {
-        if (number == null || number.length() < 1) return number;
-
-        final String raw = number.replaceAll("\\D+", "");
-
-        if (cardType == CreditCard.Type.AMEX)
-        {
-            if (raw.length() >= 5 && raw.length() <= 10) return String.format("%s %s",
-                    raw.substring(0, 4), raw.substring(4));
-
-            if (raw.length() >= 11) return String.format("%s %s %s",
-                    raw.substring(0, 4), raw.substring(4, 10), raw.substring(10));
-
-            return raw;
-        }
-
-        if (raw.length() >= 5 && raw.length() <= 8) return String.format("%s %s",
-                raw.substring(0, 4), raw.substring(4));
-
-        if (raw.length() >= 9 && raw.length() <= 12) return String.format("%s %s %s",
-                raw.substring(0, 4), raw.substring(4, 8), raw.substring(8));
-
-        if (raw.length() >= 13) return String.format("%s %s %s %s",
-                raw.substring(0, 4), raw.substring(4, 8), raw.substring(8, 12), raw.substring(12));
-
-        return raw;
-    }
-
-    public static String formatCreditCardExpDate(final String number)
-    {
-        if (number == null || number.length() < 1) return number;
-
-        final String raw = number.replaceAll("\\D+", "");
-
-        if (raw.length() >= 3) return String.format("%s/%s",
-                raw.substring(0, 2), raw.substring(2));
-
-        return raw;
     }
 
     public static String toTitleCase(final String str)

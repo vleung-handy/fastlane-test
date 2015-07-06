@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.consts.MainViewTab;
-import com.handy.portal.consts.TransitionStyle;
-import com.handy.portal.core.SwapFragmentArguments;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;

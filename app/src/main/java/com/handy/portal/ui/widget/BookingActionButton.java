@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 
-import com.handy.portal.consts.BookingActionButtonType;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;

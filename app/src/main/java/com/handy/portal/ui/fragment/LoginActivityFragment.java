@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
-import com.handy.portal.core.LoginDetails;
-import com.handy.portal.data.BuildConfigWrapper;
-import com.handy.portal.data.EnvironmentManager;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.core.BuildConfigWrapper;
+import com.handy.portal.core.EnvironmentSwitcher;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-import static com.handy.portal.data.EnvironmentManager.Environment;
+import static com.handy.portal.core.EnvironmentSwitcher.Environment;
 
 public class LoginActivityFragment extends InjectedFragment
 {
@@ -59,7 +59,7 @@ public class LoginActivityFragment extends InjectedFragment
     TextView loginHelpText;
 
     @Inject
-    EnvironmentManager environmentManager;
+    EnvironmentSwitcher environmentSwitcher;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
 
@@ -158,7 +158,7 @@ public class LoginActivityFragment extends InjectedFragment
 
         final Environment[] environments = Environment.values();
         String[] environmentNames = new String[environments.length];
-        Environment currentEnvironment = environmentManager.getEnvironment();
+        Environment currentEnvironment = environmentSwitcher.getEnvironment();
         for (int i = 0; i < environments.length; i++)
         {
             Environment environment = environments[i];
@@ -175,7 +175,7 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        environmentManager.setEnvironment(environments[which]);
+                        environmentSwitcher.setEnvironment(environments[which]);
                     }
                 });
         builder.create().show();

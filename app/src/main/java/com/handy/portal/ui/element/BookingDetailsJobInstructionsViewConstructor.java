@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.Booking.BookingStatus;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;

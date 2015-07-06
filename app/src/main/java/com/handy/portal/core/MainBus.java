@@ -3,7 +3,7 @@ package com.handy.portal.core;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.handy.portal.data.Mixpanel;
+import com.handy.portal.analytics.Mixpanel;
 import com.squareup.otto.Bus;
 import com.squareup.otto.DeadEvent;
 

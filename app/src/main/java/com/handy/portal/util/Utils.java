@@ -10,7 +10,7 @@ import android.util.TypedValue;
 import android.view.TouchDelegate;
 import android.view.View;
 
-import com.handy.portal.core.LocationData;
+import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 
 import java.util.Calendar;

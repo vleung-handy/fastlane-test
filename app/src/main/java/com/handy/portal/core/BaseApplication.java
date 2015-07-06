@@ -7,7 +7,13 @@ import android.os.Bundle;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.data.Mixpanel;
+import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.manager.BookingManager;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.TermsManager;
+import com.handy.portal.manager.VersionManager;
 import com.handy.portal.util.TextUtils;
 
 import javax.inject.Inject;
@@ -22,11 +28,25 @@ public class BaseApplication extends Application
     private boolean savedInstance;
 
     @Inject
+    Mixpanel mixpanel;
+
+    //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
+    @Inject
     DataManager dataManager;
     @Inject
-    Mixpanel mixpanel;
+    GoogleManager googleManager;
     @Inject
-    GoogleService googleService;
+    BookingManager bookingManager;
+    @Inject
+    LoginManager loginManager;
+    @Inject
+    VersionManager versionManager;
+    @Inject
+    TermsManager termsManager;
+    @Inject
+    ConfigManager configManager;
+    @Inject
+    ApplicationOnResumeWatcher applicationOnResumeWatcher;
 
     @Override
     public final void onCreate()
@@ -58,8 +78,6 @@ public class BaseApplication extends Application
 //                airship.getPushManager().setUserNotificationsEnabled(false);
 //            }
 //        });
-//
-//        CalligraphyConfig.initDefault("fonts/CircularStd-Book.otf", R.attr.fontPath);
 //
 //        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)) {
 //            NewRelic.withApplicationToken("AA7a37dccf925fd1e474142399691d1b6b3f84648b").start(this);
