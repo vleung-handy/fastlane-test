@@ -1,8 +1,8 @@
 package com.handy.portal.core;
 
 import android.app.Activity;
-import android.app.Application;
 import android.os.Bundle;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import dagger.ObjectGraph;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class BaseApplication extends Application
+public class BaseApplication extends MultiDexApplication
 {
     protected ObjectGraph graph;
     private int started;
