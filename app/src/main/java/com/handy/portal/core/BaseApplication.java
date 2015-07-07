@@ -2,13 +2,17 @@ package com.handy.portal.core;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.Mixpanel;
+import com.handy.portal.data.PropertiesReader;
 import com.handy.portal.util.TextUtils;
+import com.newrelic.agent.android.NewRelic;
 
 import javax.inject.Inject;
 
@@ -36,6 +40,8 @@ public class BaseApplication extends Application
         createObjectGraph();
         inject(this);
 
+        startNewRelic();
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(TextUtils.Fonts.CIRCULAR_BOOK)
                 .setFontAttrId(R.attr.fontPath)
@@ -60,13 +66,6 @@ public class BaseApplication extends Application
 //        });
 //
 //        CalligraphyConfig.initDefault("fonts/CircularStd-Book.otf", R.attr.fontPath);
-//
-//        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)) {
-//            NewRelic.withApplicationToken("AA7a37dccf925fd1e474142399691d1b6b3f84648b").start(this);
-//        }
-//        else {
-//            NewRelic.withApplicationToken("AAbaf8c55fb9788d1664e82661d94bc18ea7c39aa6").start(this);
-//        }
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks()
         {
@@ -115,6 +114,24 @@ public class BaseApplication extends Application
             {
             }
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context base)
+    {
+        super.attachBaseContext(base);
+        installMultiDex();
+    }
+
+    protected void installMultiDex()
+    {
+        MultiDex.install(this);
+    }
+
+    protected void startNewRelic()
+    {
+        String newRelicApiKey = PropertiesReader.getConfigProperties(this).getProperty("newrelic_api_key");
+        NewRelic.withApplicationToken(newRelicApiKey).start(this);
     }
 
     protected void startCrashlytics()
