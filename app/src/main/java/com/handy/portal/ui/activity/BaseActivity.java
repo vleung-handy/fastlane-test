@@ -11,21 +11,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.handy.portal.core.ApplicationOnResumeWatcher;
 import com.handy.portal.core.BaseApplication;
-import com.handy.portal.core.ConfigManager;
-import com.handy.portal.core.GoogleService;
-import com.handy.portal.core.LoginManager;
-import com.handy.portal.core.NavigationManager;
-import com.handy.portal.core.TermsManager;
-import com.handy.portal.core.VersionManager;
-import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.Mixpanel;
+import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
-import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -59,25 +50,7 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
     @Inject
     DataManager dataManager;
     @Inject
-    DataManagerErrorHandler dataManagerErrorHandler;
-    @Inject
-    NavigationManager navigationManager;
-    @Inject
-    GoogleService googleService;
-    @Inject
-    LoginManager loginManager;
-    @Inject
-    VersionManager versionManager;
-    @Inject
-    TermsManager termsManager;
-    @Inject
     ConfigManager configManager;
-    @Inject
-    ApplicationOnResumeWatcher applicationOnResumeWatcher;
-    @Inject
-    SecurePreferences prefs;
-    @Inject
-    BuildConfigWrapper buildConfigWrapper;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)

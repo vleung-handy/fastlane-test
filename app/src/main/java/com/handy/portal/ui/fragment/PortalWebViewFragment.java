@@ -10,9 +10,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.core.PortalWebViewClient;
-import com.handy.portal.data.HandyRetrofitEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -103,13 +103,13 @@ public class PortalWebViewFragment extends InjectedFragment
     {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setGeolocationEnabled(true);
-        webView.setWebViewClient(new PortalWebViewClient(this, webView, googleService, bus));
+        webView.setWebViewClient(new PortalWebViewClient(this, webView, googleManager, bus));
     }
 
     private void loadUrlWithFromAppParam(String url)
     {
 
-        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1&hide_pro_request=1&ht=1&skip_web_portal_version_tracking=1";
+        String endOfUrl = "from_app=true&device_id=" + googleManager.getOrSetDeviceId() + "&device_type=android&hide_nav=1&hide_pro_request=1&ht=1&skip_web_portal_version_tracking=1";
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
         Log.d(PortalWebViewFragment.class.getSimpleName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);

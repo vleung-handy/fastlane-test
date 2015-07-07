@@ -5,7 +5,7 @@ import android.net.Uri;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.core.VersionManager;
+import com.handy.portal.manager.VersionManager;
 
 import org.junit.Before;
 import org.junit.Test;

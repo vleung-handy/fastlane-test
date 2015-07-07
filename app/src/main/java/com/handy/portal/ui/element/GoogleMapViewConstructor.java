@@ -22,9 +22,9 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.Booking.BookingStatus;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingStatus;
 
 import java.util.List;
 import java.util.Locale;

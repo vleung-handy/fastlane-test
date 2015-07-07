@@ -7,11 +7,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.consts.MainViewTab;
-import com.handy.portal.consts.TransitionStyle;
-import com.handy.portal.core.ConfigManager;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.model.Booking;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.form.BookingListView;

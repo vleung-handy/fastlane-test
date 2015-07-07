@@ -7,17 +7,18 @@ import android.util.Base64;
 
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
+import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.BaseDataManager;
-import com.handy.portal.data.BaseDataManagerErrorHandler;
-import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.EnvironmentManager;
-import com.handy.portal.data.HandyRetrofitEndpoint;
-import com.handy.portal.data.HandyRetrofitFluidEndpoint;
-import com.handy.portal.data.HandyRetrofitService;
-import com.handy.portal.data.Mixpanel;
-import com.handy.portal.data.PropertiesReader;
+import com.handy.portal.manager.BookingManager;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.TermsManager;
+import com.handy.portal.manager.VersionManager;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -90,18 +91,18 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentManager provideEnvironmentManager()
+    final EnvironmentSwitcher provideEnvironmentManager()
     {
-        return new EnvironmentManager();
+        return new EnvironmentSwitcher();
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
+    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentSwitcher environmentSwitcher)
     {
         if (buildConfigWrapper.isDebug())
         {
-            return new HandyRetrofitFluidEndpoint(context, environmentManager);
+            return new HandyRetrofitFluidEndpoint(context, environmentSwitcher);
         }
         return new HandyRetrofitEndpoint(context);
     }
@@ -155,12 +156,6 @@ public final class ApplicationModule
     )
     {
         return new BaseDataManager(service, endpoint, prefs);
-    }
-
-    @Provides
-    final DataManagerErrorHandler provideDataManagerErrorHandler()
-    {
-        return new BaseDataManagerErrorHandler();
     }
 
     @Provides
@@ -237,17 +232,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final NavigationManager provideNavigationManager(final DataManager dataManager,
-                                                     final DataManagerErrorHandler dataManagerErrorHandler)
+    final GoogleManager provideGoogleService()
     {
-        return new NavigationManager(this.context, dataManager, dataManagerErrorHandler);
-    }
-
-    @Provides
-    @Singleton
-    final GoogleService provideGoogleService()
-    {
-        return new GoogleService(this.context);
+        return new GoogleManager(this.context);
     }
 
 

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.core.VersionManager;
+import com.handy.portal.manager.VersionManager;
 import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Subscribe;
 

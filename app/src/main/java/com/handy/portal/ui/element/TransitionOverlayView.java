@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.consts.TransitionStyle;
+import com.handy.portal.constant.TransitionStyle;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

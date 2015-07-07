@@ -3,7 +3,7 @@ package com.handy.portal.ui.activity;
 import android.content.Intent;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.core.UpdateDetails;
+import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.event.HandyEvent;
 
 import org.junit.Before;

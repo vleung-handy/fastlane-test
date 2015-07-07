@@ -2,9 +2,9 @@ package com.handy.portal.ui.element;
 
 import com.google.common.collect.ImmutableList;
 import com.handy.portal.R;
-import com.handy.portal.consts.BookingActionButtonType;
-import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.Booking.BookingStatus;
+import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingStatus;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.Booking;
 import com.handy.portal.ui.adapter.BookingElementAdapter;
 
 import java.util.List;

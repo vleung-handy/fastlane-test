@@ -5,14 +5,9 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.handy.portal.core.BaseApplication;
-import com.handy.portal.core.BookingManager;
-import com.handy.portal.core.ConfigManager;
-import com.handy.portal.core.GoogleService;
-import com.handy.portal.core.NavigationManager;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.Mixpanel;
-import com.handy.portal.ui.widget.ProgressDialog;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.GoogleManager;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -25,21 +20,12 @@ import butterknife.ButterKnife;
 public class InjectedFragment extends android.support.v4.app.Fragment
 {
     protected boolean allowCallbacks;
-    protected ProgressDialog progressDialog;
     protected Toast toast;
 
     @Inject
-    BookingManager bookingManager;
-    @Inject
-    Mixpanel mixpanel;
-    @Inject
     DataManager dataManager;
     @Inject
-    DataManagerErrorHandler dataManagerErrorHandler;
-    @Inject
-    NavigationManager navigationManager;
-    @Inject
-    GoogleService googleService;
+    GoogleManager googleManager;
     @Inject
     Bus bus;
     @Inject

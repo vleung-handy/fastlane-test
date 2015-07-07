@@ -4,17 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.handy.portal.annotations.Track;
-import com.handy.portal.annotations.TrackField;
-import com.handy.portal.consts.MainViewTab;
-import com.handy.portal.consts.TransitionStyle;
-import com.handy.portal.core.BookingSummary;
-import com.handy.portal.core.LocationData;
-import com.handy.portal.core.LoginDetails;
-import com.handy.portal.core.PinRequestDetails;
-import com.handy.portal.core.TermsDetails;
-import com.handy.portal.core.UpdateDetails;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.annotation.Track;
+import com.handy.portal.annotation.TrackField;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.model.BookingSummary;
+import com.handy.portal.model.LocationData;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.Booking;
 import com.handy.portal.data.DataManager;
 
 import java.util.Date;

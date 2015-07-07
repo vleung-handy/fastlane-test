@@ -1,13 +1,13 @@
 package com.handy.portal.data;
 
-import com.handy.portal.core.BookingSummaryResponse;
-import com.handy.portal.core.ConfigParams;
-import com.handy.portal.core.LoginDetails;
-import com.handy.portal.core.PinRequestDetails;
-import com.handy.portal.core.SimpleResponse;
-import com.handy.portal.core.TermsDetails;
-import com.handy.portal.core.UpdateDetails;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.BookingSummaryResponse;
+import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.SimpleResponse;
+import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.Booking;
 
 import java.util.Map;
 
@@ -74,13 +74,13 @@ public abstract class DataManager
         private final String message;
         private String[] invalidInputs;
 
-        DataManagerError(final Type type)
+        public DataManagerError(final Type type)
         {
             this.type = type;
             this.message = null;
         }
 
-        DataManagerError(final Type type, final String message)
+        public DataManagerError(final Type type, final String message)
         {
             this.type = type;
             this.message = message;
@@ -91,7 +91,7 @@ public abstract class DataManager
             return invalidInputs;
         }
 
-        final void setInvalidInputs(final String[] inputs)
+        public final void setInvalidInputs(final String[] inputs)
         {
             this.invalidInputs = inputs;
         }

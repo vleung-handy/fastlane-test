@@ -1,14 +1,17 @@
 package com.handy.portal.data;
 
-import com.handy.portal.core.BookingSummaryResponse;
-import com.handy.portal.core.ConfigParams;
-import com.handy.portal.core.LoginDetails;
-import com.handy.portal.core.LoginManager;
-import com.handy.portal.core.PinRequestDetails;
-import com.handy.portal.core.SimpleResponse;
-import com.handy.portal.core.TermsDetails;
-import com.handy.portal.core.UpdateDetails;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.BookingSummaryResponse;
+import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.manager.LoginManager;
+import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.SimpleResponse;
+import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.Booking;
+import com.handy.portal.retrofit.HandyRetrofitCallback;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitService;
 import com.securepreferences.SecurePreferences;
 
 import org.json.JSONObject;
@@ -121,7 +124,7 @@ public final class BaseDataManager extends DataManager
         service.acceptTerms(getProviderId(), termsCode, new HandyRetrofitCallback(cb)
         {
             @Override
-            void success(JSONObject response)
+            public void success(JSONObject response)
             {
                 cb.onSuccess(null);
             }

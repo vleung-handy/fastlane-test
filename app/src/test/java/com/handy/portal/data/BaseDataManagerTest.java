@@ -1,10 +1,13 @@
 package com.handy.portal.data;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.core.LoginDetails;
-import com.handy.portal.core.LoginManager;
-import com.handy.portal.core.PinRequestDetails;
-import com.handy.portal.core.UpdateDetails;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.manager.LoginManager;
+import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.retrofit.HandyRetrofitCallback;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitService;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 

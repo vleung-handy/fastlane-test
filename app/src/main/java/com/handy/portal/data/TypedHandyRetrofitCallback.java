@@ -4,18 +4,19 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.handy.portal.core.BookingSummaryResponse;
-import com.handy.portal.core.ConfigParams;
-import com.handy.portal.core.LoginDetails;
-import com.handy.portal.core.PinRequestDetails;
-import com.handy.portal.core.SimpleResponse;
-import com.handy.portal.core.TermsDetails;
-import com.handy.portal.core.UpdateDetails;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.BookingSummaryResponse;
+import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.SimpleResponse;
+import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.Booking;
+import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
 
-class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback
+public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback
 {
     protected static final Gson gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
     protected T returnData;
@@ -26,7 +27,7 @@ class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback
     }
 
     @Override
-    void success(final JSONObject response)
+    public void success(final JSONObject response)
     {
         try
         {
