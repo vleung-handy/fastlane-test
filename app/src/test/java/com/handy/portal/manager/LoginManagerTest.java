@@ -52,7 +52,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        loginManager = new LoginManager(bus, dataManager);
+        loginManager = new LoginManager(bus, dataManager, prefsManager);
     }
 
     @Test
