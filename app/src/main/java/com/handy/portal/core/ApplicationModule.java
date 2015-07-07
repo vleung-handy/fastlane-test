@@ -70,7 +70,7 @@ import retrofit.converter.GsonConverter;
         PleaseUpdateActivity.class,
         PleaseUpdateFragment.class,
         TermsActivity.class,
-        TermsFragment.class,
+        TermsFragment.class
 })
 public final class ApplicationModule
 {
@@ -228,15 +228,11 @@ public final class ApplicationModule
         return new ApplicationOnResumeWatcher(bus);
     }
 
-//    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {
-//        return new ReactiveLocationProvider(context);
-//    }
-
     @Provides
     @Singleton
-    final Mixpanel provideMixpanel()
+    final Mixpanel provideMixpanel(final PrefsManager prefsManager)
     {
-        return new Mixpanel(context);
+        return new Mixpanel(this.context, prefsManager);
     }
 
     @Provides
@@ -245,7 +241,6 @@ public final class ApplicationModule
     {
         return new GoogleManager(this.context);
     }
-
 
     private String getDeviceId()
     {

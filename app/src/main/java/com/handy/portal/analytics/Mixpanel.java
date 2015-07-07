@@ -20,13 +20,12 @@ import javax.inject.Inject;
 public class Mixpanel
 {
     private MixpanelAPI mixpanelAPI;
+    private PrefsManager prefsManager;
 
     @Inject
-    PrefsManager prefsManager;
-
-    @Inject
-    public Mixpanel(final Context context)
+    public Mixpanel(final Context context, final PrefsManager prefsManager)
     {
+        this.prefsManager = prefsManager;
         String mixpanelApiKey = PropertiesReader.getConfigProperties(context).getProperty("mixpanel_api_key");
         this.mixpanelAPI = MixpanelAPI.getInstance(context, mixpanelApiKey);
         setupBaseProperties();
@@ -38,10 +37,8 @@ public class Mixpanel
         addProps(baseProps, "device", "android");
         addProps(baseProps, "app version", BuildConfig.VERSION_NAME);
         addProps(baseProps, "app flavor", BuildConfig.FLAVOR);
-        if(prefsManager != null)
-        {
-            addProps(baseProps, "user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY));
-        }
+        //TODO: This does not yet update when a user logs into the app, going to add event bus access with the analytics layer abstraction
+        addProps(baseProps, "user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY));
         mixpanelAPI.registerSuperProperties(baseProps);
     }
 
