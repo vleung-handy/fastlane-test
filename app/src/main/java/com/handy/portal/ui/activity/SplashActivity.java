@@ -29,7 +29,7 @@ public class SplashActivity extends BaseActivity
 
         String providerId = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY);
 
-        if (providerId != null)
+        if (providerId != null && !providerId.isEmpty())
         {
             Crashlytics.setUserIdentifier(providerId);
             checkForTerms();

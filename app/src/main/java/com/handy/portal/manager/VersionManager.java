@@ -47,7 +47,6 @@ public class VersionManager
     private DataManager dataManager;
     private PrefsManager prefsManager;
 
-
     @Inject
     public VersionManager(final Context context, final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final BuildConfigWrapper buildConfigWrapper)
     {

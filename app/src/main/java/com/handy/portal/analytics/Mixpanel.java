@@ -7,6 +7,7 @@ import com.handy.portal.annotation.Track;
 import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.PropertiesReader;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -37,7 +38,6 @@ public class Mixpanel
         addProps(baseProps, "device", "android");
         addProps(baseProps, "app version", BuildConfig.VERSION_NAME);
         addProps(baseProps, "app flavor", BuildConfig.FLAVOR);
-        //TODO: This does not yet update when a user logs into the app, going to add event bus access with the analytics layer abstraction
         addProps(baseProps, "user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY));
         mixpanelAPI.registerSuperProperties(baseProps);
     }
@@ -63,6 +63,13 @@ public class Mixpanel
     public void trackEvent(Object event)
     {
         Class eventClass = event.getClass();
+
+        if(eventClass == HandyEvent.ReceiveLoginSuccess.class)
+        {
+            //update our base attributes to use the updated user ID, it should have already been written to prefs
+            setupBaseProperties();
+        }
+
         if (eventClass.isAnnotationPresent(Track.class))
         {
             Track annotation = (Track) eventClass.getAnnotation(Track.class);

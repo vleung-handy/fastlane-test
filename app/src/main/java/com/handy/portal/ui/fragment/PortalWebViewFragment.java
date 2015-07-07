@@ -13,7 +13,6 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.core.PortalWebViewClient;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
-import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +50,6 @@ public class PortalWebViewFragment extends InjectedFragment
 
     @Inject
     HandyRetrofitEndpoint endpoint;
-    @Inject
-    Bus bus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -14,15 +14,14 @@ public class LoginManager
 {
     private final Bus bus;
     private DataManager dataManager;
+    private PrefsManager prefsManager;
 
     @Inject
-    PrefsManager prefsManager;
-
-    @Inject
-    public LoginManager(final Bus bus, final DataManager dataManager)
+    public LoginManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
         this.bus = bus;
         this.dataManager = dataManager;
+        this.prefsManager = prefsManager;
         this.bus.register(this);
     }
 

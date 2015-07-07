@@ -43,6 +43,8 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     @Mock
     private DataManager dataManager;
     @Mock
+    private PrefsManager prefsManager;
+    @Mock
     private BuildConfigWrapper buildConfigWrapper;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Activity activity;
@@ -62,7 +64,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     public void setUp() throws Exception
     {
         initMocks(this);
-        versionManager = new VersionManager(RuntimeEnvironment.application, bus, dataManager, buildConfigWrapper);
+        versionManager = new VersionManager(RuntimeEnvironment.application, bus, dataManager, prefsManager, buildConfigWrapper);
 
         reset(bus);
 
