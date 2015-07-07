@@ -1,8 +1,10 @@
 package com.handy.portal.core;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.multidex.MultiDexApplication;
+import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -17,7 +19,7 @@ import javax.inject.Inject;
 import dagger.ObjectGraph;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class BaseApplication extends MultiDexApplication
+public class BaseApplication extends Application
 {
     protected ObjectGraph graph;
     private int started;
@@ -114,7 +116,19 @@ public class BaseApplication extends MultiDexApplication
         });
     }
 
-    private void startNewRelic()
+    @Override
+    protected void attachBaseContext(Context base)
+    {
+        super.attachBaseContext(base);
+        installMultiDex();
+    }
+
+    protected void installMultiDex()
+    {
+        MultiDex.install(this);
+    }
+
+    protected void startNewRelic()
     {
         String newRelicApiKey = PropertiesReader.getConfigProperties(this).getProperty("newrelic_api_key");
         NewRelic.withApplicationToken(newRelicApiKey).start(this);

@@ -14,4 +14,14 @@ public class TestBaseApplication extends BaseApplication
     protected void startCrashlytics()
     {
     }
+
+    @Override
+    protected void startNewRelic()
+    {
+    }
+
+    @Override
+    protected void installMultiDex()
+    {
+    }
 }
