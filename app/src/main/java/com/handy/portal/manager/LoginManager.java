@@ -1,10 +1,10 @@
 package com.handy.portal.manager;
 
-import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.securepreferences.SecurePreferences;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.model.PinRequestDetails;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -12,16 +12,16 @@ import javax.inject.Inject;
 
 public class LoginManager
 {
-    public static final String USER_CREDENTIALS_ID_KEY = "user_credentials_id";
     private final Bus bus;
-    private SecurePreferences prefs;
     private DataManager dataManager;
 
     @Inject
-    public LoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
+    PrefsManager prefsManager;
+
+    @Inject
+    public LoginManager(final Bus bus, final DataManager dataManager)
     {
         this.bus = bus;
-        this.prefs = prefs;
         this.dataManager = dataManager;
         this.bus.register(this);
     }
@@ -69,7 +69,7 @@ public class LoginManager
 
     private void saveLoginDetails(final LoginDetails loginDetails)
     {
-        prefs.edit().putString(USER_CREDENTIALS_ID_KEY, loginDetails.getUserCredentialsId()).apply();
+        prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID_KEY, loginDetails.getUserCredentialsId());
     }
 
 }

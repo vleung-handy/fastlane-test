@@ -1,16 +1,14 @@
 package com.handy.portal.manager;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.securepreferences.SecurePreferences;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.model.PinRequestDetails;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -29,10 +27,10 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
 {
     @Mock
     private Bus bus;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private SecurePreferences prefs;
     @Mock
     private DataManager dataManager;
+    @Mock
+    private PrefsManager prefsManager;
 
     @Captor
     private ArgumentCaptor<DataManager.Callback<PinRequestDetails>> pinCodeRequestCallbackCaptor;
@@ -54,7 +52,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        loginManager = new LoginManager(bus, prefs, dataManager);
+        loginManager = new LoginManager(bus, dataManager);
     }
 
     @Test

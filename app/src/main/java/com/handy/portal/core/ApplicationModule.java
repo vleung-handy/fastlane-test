@@ -14,6 +14,7 @@ import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -64,12 +65,12 @@ import retrofit.converter.GsonConverter;
         MainActivityFragment.class,
         BaseApplication.class,
         BaseActivity.class,
-        MainActivity.class,
         SplashActivity.class,
+        MainActivity.class,
         PleaseUpdateActivity.class,
         PleaseUpdateFragment.class,
         TermsActivity.class,
-        TermsFragment.class
+        TermsFragment.class,
 })
 public final class ApplicationModule
 {
@@ -152,10 +153,10 @@ public final class ApplicationModule
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
-                                         final SecurePreferences prefs
+                                         final PrefsManager prefsManager
     )
     {
-        return new BaseDataManager(service, endpoint, prefs);
+        return new BaseDataManager(service, endpoint, prefsManager);
     }
 
     @Provides
@@ -185,7 +186,7 @@ public final class ApplicationModule
     @Singleton
     final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
     {
-        return new LoginManager(bus, prefs, dataManager);
+        return new LoginManager(bus, dataManager);
     }
 
     @Provides
@@ -199,9 +200,10 @@ public final class ApplicationModule
     @Singleton
     final VersionManager provideVersionManager(final Bus bus,
                                                final DataManager dataManager,
+                                               final PrefsManager prefsManager,
                                                final BuildConfigWrapper buildConfigWrapper)
     {
-        return new VersionManager(context, bus, dataManager, buildConfigWrapper);
+        return new VersionManager(context, bus, dataManager, prefsManager, buildConfigWrapper);
     }
 
     @Provides
@@ -210,6 +212,13 @@ public final class ApplicationModule
                                            final DataManager dataManager)
     {
         return new TermsManager(bus, dataManager);
+    }
+
+    @Provides
+    @Singleton
+    final PrefsManager providePrefsManager(final SecurePreferences prefs)
+    {
+        return new PrefsManager(prefs);
     }
 
     @Provides

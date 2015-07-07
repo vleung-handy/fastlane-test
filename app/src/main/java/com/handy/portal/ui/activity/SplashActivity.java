@@ -5,8 +5,12 @@ import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.PrefsManager;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 public class SplashActivity extends BaseActivity
 {
@@ -14,13 +18,17 @@ public class SplashActivity extends BaseActivity
 
     private boolean launchedNext;
 
+    @Inject
+    PrefsManager prefsManager;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        String providerId = dataManager.getProviderId();
+        String providerId = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY);
+
         if (providerId != null)
         {
             Crashlytics.setUserIdentifier(providerId);

@@ -24,13 +24,14 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
-import com.handy.portal.model.LocationData;
-import com.handy.portal.manager.LoginManager;
+import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
@@ -45,7 +46,6 @@ import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
-import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -100,7 +100,7 @@ public class BookingDetailsFragment extends InjectedFragment
     protected TextView errorText;
 
     @Inject
-    SecurePreferences prefs;
+    PrefsManager prefsManager;
 
     private String requestedBookingId;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
@@ -141,7 +141,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private String getLoggedInUserId()
     {
-        return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
+        return prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY);
     }
 
     private void requestBookingDetails(String bookingId)

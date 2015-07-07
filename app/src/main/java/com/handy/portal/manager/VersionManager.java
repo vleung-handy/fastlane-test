@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.model.SimpleResponse;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.core.BuildConfigWrapper;
@@ -44,14 +45,17 @@ public class VersionManager
     private final Bus bus;
     private final BuildConfigWrapper buildConfigWrapper;
     private DataManager dataManager;
+    private PrefsManager prefsManager;
+
 
     @Inject
-    public VersionManager(final Context context, final Bus bus, final DataManager dataManager, final BuildConfigWrapper buildConfigWrapper)
+    public VersionManager(final Context context, final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final BuildConfigWrapper buildConfigWrapper)
     {
         this.context = context;
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
+        this.prefsManager = prefsManager;
         this.buildConfigWrapper = buildConfigWrapper;
     }
 
@@ -123,7 +127,7 @@ public class VersionManager
     {
         PackageInfo pInfo = getPackageInfoFromActivity(event.sender);
         HashMap<String, String> info = new HashMap<>();
-        info.put("user_id", dataManager.getProviderId());
+        info.put("user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY));
         info.put("platform", "android");
         info.put("app_identifier", event.sender.getPackageName());
         info.put("app_version", pInfo.versionName);
