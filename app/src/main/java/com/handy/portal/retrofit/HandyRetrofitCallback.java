@@ -113,9 +113,9 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
     @Override
     public final void failure(final RetrofitError error)
     {
-        Crashlytics.logException(error);
         if (callback != null)
         {
+            Crashlytics.logException(new HandyRetrofitCallbackError(callback, error));
 
             final DataManagerError err;
             if (error.isNetworkError())
