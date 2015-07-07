@@ -8,8 +8,8 @@ import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.data.DataManager;
 import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
@@ -56,11 +56,11 @@ public class BaseApplication extends Application
     public final void onCreate()
     {
         super.onCreate();
-        startCrashlytics();
         createObjectGraph();
         inject(this);
 
         startNewRelic();
+        startCrashlytics();
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(TextUtils.Fonts.CIRCULAR_BOOK)

@@ -1,5 +1,6 @@
 package com.handy.portal.retrofit;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManager.DataManagerError;
@@ -109,12 +110,13 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
         }
     }
 
-
     @Override
     public final void failure(final RetrofitError error)
     {
+        Crashlytics.logException(error);
         if (callback != null)
         {
+
             final DataManagerError err;
             if (error.isNetworkError())
             {

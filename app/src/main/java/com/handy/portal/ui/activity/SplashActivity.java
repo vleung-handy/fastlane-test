@@ -3,6 +3,7 @@ package com.handy.portal.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Subscribe;
@@ -22,6 +23,7 @@ public class SplashActivity extends BaseActivity
         String providerId = dataManager.getProviderId();
         if (providerId != null)
         {
+            Crashlytics.setUserIdentifier(providerId);
             checkForTerms();
         }
         else
