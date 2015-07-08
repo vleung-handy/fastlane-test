@@ -95,7 +95,10 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void onResume()
     {
         super.onResume();
-        requestBookings();
+        if(!MainActivityFragment.clearingBackStack)
+        {
+            requestBookings();
+        }
     }
 
     @OnClick(R.id.try_again_button)
