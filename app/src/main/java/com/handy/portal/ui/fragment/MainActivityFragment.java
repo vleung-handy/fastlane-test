@@ -42,6 +42,8 @@ public class MainActivityFragment extends InjectedFragment
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
+    public static boolean clearingBackStack; //flag we set while clearing the backstack to let fragments determine if they should run their onResume
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -49,9 +51,7 @@ public class MainActivityFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
-
         registerButtonListeners();
-
         transitionOverlayView.init();
         loadingOverlayView.init();
 
@@ -190,11 +190,13 @@ public class MainActivityFragment extends InjectedFragment
 
     private void clearFragmentBackStack()
     {
+        clearingBackStack = true;
         FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-        for (int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
+        while(supportFragmentManager.getBackStackEntryCount() > 0)
         {
-            supportFragmentManager.popBackStack();
+            supportFragmentManager.popBackStackImmediate();
         }
+        clearingBackStack = false;
     }
 
     //analytics event
