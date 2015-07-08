@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.handy.portal.R;
@@ -281,7 +282,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             if (UIUtils.getAssociatedActionType(data) == null)
             {
-                System.err.println("Received an unsupported action type : " + data.getActionName());
+                Crashlytics.log("Received an unsupported action type : " + data.getActionName());
                 continue;
             }
 
@@ -290,7 +291,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
             if (buttonParentLayout == null)
             {
-                System.err.println("Could not find parent layout for " + UIUtils.getAssociatedActionType(data).getActionName());
+                Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(data).getActionName());
             } else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
@@ -416,7 +417,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
             default:
             {
-                System.err.println("Could not find associated behavior for : " + actionType.getActionName());
+                Crashlytics.log("Could not find associated behavior for : " + actionType.getActionName());
             }
         }
     }
@@ -555,7 +556,7 @@ public class BookingDetailsFragment extends InjectedFragment
                                 int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                                 if (checkedItemPosition < 0 || checkedItemPosition >= arrivalTimeOptions.length)
                                 {
-                                    System.err.println("Invalid checked item position " + checkedItemPosition + " can not proceed");
+                                    Crashlytics.log("Invalid checked item position " + checkedItemPosition + " can not proceed");
                                 } else
                                 {
                                     Booking.ArrivalTimeOption chosenOption = arrivalTimeOptions[checkedItemPosition];
@@ -583,7 +584,7 @@ public class BookingDetailsFragment extends InjectedFragment
             startActivity(callIntent);
         } catch (ActivityNotFoundException activityException)
         {
-            System.err.println("Calling a Phone Number failed" + activityException);
+            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
         }
     }
 
@@ -595,7 +596,7 @@ public class BookingDetailsFragment extends InjectedFragment
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
         } catch (ActivityNotFoundException activityException)
         {
-            System.err.println("Texting a Phone Number failed" + activityException);
+            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
         }
     }
 

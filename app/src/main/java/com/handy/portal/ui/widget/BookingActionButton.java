@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
@@ -36,7 +37,7 @@ public class BookingActionButton extends Button
         final BookingActionButtonType bookingActionButtonType = UIUtils.getAssociatedActionType(data);
         if(bookingActionButtonType == null)
         {
-            System.err.println("BookingActionButton : No associated action type for : " + data.getActionName());
+            Crashlytics.log("BookingActionButton : No associated action type for : " + data.getActionName());
             return;
         }
 

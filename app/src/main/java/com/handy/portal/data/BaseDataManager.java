@@ -1,5 +1,6 @@
 package com.handy.portal.data;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
@@ -147,7 +148,7 @@ public final class BaseDataManager extends DataManager
         String id = prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
         if (id == null)
         {
-            System.err.println("ID not found");
+            Crashlytics.log("ID not found");
         }
         return id;
     }

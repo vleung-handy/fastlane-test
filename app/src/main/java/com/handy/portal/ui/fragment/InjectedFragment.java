@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.ConfigManager;
@@ -108,7 +109,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
             }
         } catch (Exception e)
         {
-            System.err.println(e.toString());
+            Crashlytics.logException(e);
         }
 
         return validated;

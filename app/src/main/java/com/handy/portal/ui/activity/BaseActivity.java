@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -203,7 +204,7 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
             }
             else
             {
-                System.err.println("No Google Play Services, can not get locational data");
+                Crashlytics.log("No Google Play Services, can not get locational data");
             }
         }
     }
