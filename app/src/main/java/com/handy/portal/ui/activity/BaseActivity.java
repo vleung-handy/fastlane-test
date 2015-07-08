@@ -12,9 +12,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.handy.portal.core.BaseApplication;
-import com.handy.portal.data.DataManager;
 import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.core.BaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
@@ -48,8 +47,6 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
     Mixpanel mixpanel;
     @Inject
     Bus bus;
-    @Inject
-    DataManager dataManager;
     @Inject
     ConfigManager configManager;
 

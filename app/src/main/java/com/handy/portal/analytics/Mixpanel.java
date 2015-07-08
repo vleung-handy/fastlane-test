@@ -5,7 +5,9 @@ import android.content.Context;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.annotation.Track;
 import com.handy.portal.annotation.TrackField;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.PropertiesReader;
+import com.handy.portal.manager.PrefsManager;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONException;
@@ -18,12 +20,20 @@ import javax.inject.Inject;
 public class Mixpanel
 {
     private MixpanelAPI mixpanelAPI;
+    private PrefsManager prefsManager;
 
     @Inject
-    public Mixpanel(final Context context)
+    public Mixpanel(final Context context, final PrefsManager prefsManager)
     {
+        this.prefsManager = prefsManager;
         String mixpanelApiKey = PropertiesReader.getConfigProperties(context).getProperty("mixpanel_api_key");
         this.mixpanelAPI = MixpanelAPI.getInstance(context, mixpanelApiKey);
+        setupBaseProperties();
+    }
+
+    public void onLoginSuccess()
+    {
+        //update our base attributes to use the updated user ID, it should have already been written to prefs
         setupBaseProperties();
     }
 
@@ -33,6 +43,7 @@ public class Mixpanel
         addProps(baseProps, "device", "android");
         addProps(baseProps, "app version", BuildConfig.VERSION_NAME);
         addProps(baseProps, "app flavor", BuildConfig.FLAVOR);
+        addProps(baseProps, "user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID));
         mixpanelAPI.registerSuperProperties(baseProps);
     }
 
@@ -57,6 +68,7 @@ public class Mixpanel
     public void trackEvent(Object event)
     {
         Class eventClass = event.getClass();
+
         if (eventClass.isAnnotationPresent(Track.class))
         {
             Track annotation = (Track) eventClass.getAnnotation(Track.class);
