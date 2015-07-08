@@ -284,4 +284,8 @@
     <string name="exact_location_shown_claimed">Exact location shown after job is claimed</string>
     <string name="customer_prefix">CUSTOMER: </string>
 
+    <string name="enable_disable_pin_request">Enable/Disable pin request?</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+
 </resources>

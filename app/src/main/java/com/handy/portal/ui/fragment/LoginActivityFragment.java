@@ -152,7 +152,7 @@ public class LoginActivityFragment extends InjectedFragment
 
 
     @OnClick(R.id.logo)
-    protected void onSelectEnvironment()
+    protected void selectEnvironment()
     {
         if (!buildConfigWrapper.isDebug()) return;
 
@@ -162,11 +162,7 @@ public class LoginActivityFragment extends InjectedFragment
         for (int i = 0; i < environments.length; i++)
         {
             Environment environment = environments[i];
-            environmentNames[i] = environment.getName();
-            if (currentEnvironment == environment)
-            {
-                environmentNames[i] += " (selected)";
-            }
+            environmentNames[i] = environment.getName() + (currentEnvironment == environment ? " (selected)" : "");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -176,9 +172,31 @@ public class LoginActivityFragment extends InjectedFragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         environmentSwitcher.setEnvironment(environments[which]);
+                        selectEnablePinRequest();
                     }
                 });
         builder.create().show();
+    }
+
+    private void selectEnablePinRequest()
+    {
+        if (!buildConfigWrapper.isDebug()) return;
+
+        DialogInterface.OnClickListener onDialogClickListener = new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which)
+            {
+                environmentSwitcher.setPinRequestEnabled(which == DialogInterface.BUTTON_POSITIVE);
+            }
+        };
+
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.enable_disable_pin_request)
+                .setPositiveButton(R.string.enable, onDialogClickListener)
+                .setNegativeButton(R.string.disable, onDialogClickListener)
+                .create()
+                .show();
     }
 
     private void goToUrl(String url)
@@ -196,7 +214,18 @@ public class LoginActivityFragment extends InjectedFragment
     {
         storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
         changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
-        bus.post(new HandyEvent.RequestPinCode(phoneNumber));
+
+        if (buildConfigWrapper.isDebug() && !environmentSwitcher.pinRequestEnabled())
+        {
+            // if pin request is disabled, jump to pin input state; this is used for test automation
+            // purposes where the seeded value of the pin associated with the provider will be
+            // preserved on the server side and used on the client side
+            changeState(LoginState.INPUTTING_PIN);
+        }
+        else
+        {
+            bus.post(new HandyEvent.RequestPinCode(phoneNumber));
+        }
     }
 
     //send a login request to the server with our phoneNumber and pin

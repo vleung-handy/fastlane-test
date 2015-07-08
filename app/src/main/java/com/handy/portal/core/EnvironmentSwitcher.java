@@ -3,15 +3,26 @@ package com.handy.portal.core;
 public class EnvironmentSwitcher
 {
     private Environment environment = Environment.S;
+    private boolean pinRequestEnabled = true;
 
     public Environment getEnvironment()
     {
         return environment;
     }
 
+    public boolean pinRequestEnabled()
+    {
+        return pinRequestEnabled;
+    }
+
     public void setEnvironment(Environment environment)
     {
         this.environment = environment;
+    }
+
+    public void setPinRequestEnabled(boolean pinRequestEnabled)
+    {
+        this.pinRequestEnabled = pinRequestEnabled;
     }
 
     public enum Environment
