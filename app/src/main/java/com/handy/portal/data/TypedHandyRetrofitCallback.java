@@ -1,5 +1,6 @@
 package com.handy.portal.data;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,7 +37,7 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
 
         } catch (JsonSyntaxException e)
         {
-            System.err.println("Can not parse " + e);
+            Crashlytics.logException(e);
         }
         callback.onSuccess(returnData);
     }

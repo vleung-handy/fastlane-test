@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -243,7 +244,7 @@ public class MainActivityFragment extends InjectedFragment
                 newFragment = (Fragment) swapArguments.targetClassType.newInstance();
             } catch (Exception e)
             {
-                System.err.println("Error instantiating fragment class : " + e);
+                Crashlytics.logException(new RuntimeException("Error instantiating fragment class", e));
                 return;
             }
         }

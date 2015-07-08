@@ -8,6 +8,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
@@ -93,7 +94,7 @@ public class PortalWebViewClient extends WebViewClient
     {
         if (googleManager == null)
         {
-            System.err.println("Can not contact google service");
+            Crashlytics.log("Can not contact google service");
             return;
         }
 

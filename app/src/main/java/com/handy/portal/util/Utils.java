@@ -10,6 +10,7 @@ import android.util.TypedValue;
 import android.view.TouchDelegate;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 
@@ -111,7 +112,8 @@ public final class Utils
         } catch (PackageManager.NameNotFoundException e)
         {
             // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
+            Crashlytics.logException(new RuntimeException("Could not get package name",  e));
+            return -1;
         }
     }
 
@@ -124,7 +126,7 @@ public final class Utils
         }
         else
         {
-            System.err.println("Attempting to access location data outside of a BaseActivity Context, returning empty");
+            Crashlytics.log("Attempting to access location data outside of a BaseActivity Context, returning empty");
             locationData = new LocationData();
         }
         return locationData;
