@@ -184,9 +184,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager, final PrefsManager prefsManager)
+    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
     {
-        return new LoginManager(bus, dataManager, prefsManager);
+        return new LoginManager(bus, dataManager, prefsManager, mixpanel);
     }
 
     @Provides

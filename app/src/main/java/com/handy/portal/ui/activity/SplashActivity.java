@@ -27,9 +27,8 @@ public class SplashActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        String providerId = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY);
-
-        if (providerId != null && !providerId.isEmpty())
+        String providerId = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID);
+        if (!providerId.isEmpty())
         {
             Crashlytics.setUserIdentifier(providerId);
             checkForTerms();

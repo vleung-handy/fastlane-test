@@ -5,7 +5,7 @@ package com.handy.portal.constant;
  */
 public enum PrefsKey
 {
-    USER_CREDENTIALS_ID_KEY("user_credentials_id");
+    USER_CREDENTIALS_ID("user_credentials_id");
 
     private String key;
 

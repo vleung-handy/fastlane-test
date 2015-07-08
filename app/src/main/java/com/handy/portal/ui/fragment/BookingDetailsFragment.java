@@ -141,7 +141,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private String getLoggedInUserId()
     {
-        return prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID_KEY);
+        return prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID);
     }
 
     private void requestBookingDetails(String bookingId)

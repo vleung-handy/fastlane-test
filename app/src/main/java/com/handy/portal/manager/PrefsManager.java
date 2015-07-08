@@ -20,8 +20,12 @@ public class PrefsManager
 
     public String getString(PrefsKey prefsKey)
     {
-        String value = prefs.getString(prefsKey.getKey(), "");
-        return value;
+        return getString(prefsKey, "");
+    }
+
+    public String getString(PrefsKey prefsKey, String defaultValue)
+    {
+        return(prefs.getString(prefsKey.getKey(), defaultValue));
     }
 
     public void setString(PrefsKey prefsKey, String value)
