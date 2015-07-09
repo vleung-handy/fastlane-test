@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
+import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
@@ -62,6 +63,8 @@ public class LoginActivityFragment extends InjectedFragment
     EnvironmentModifier environmentModifier;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
+    @Inject
+    Mixpanel mixpanel;
 
     private enum LoginState
     {
@@ -149,7 +152,6 @@ public class LoginActivityFragment extends InjectedFragment
             }
         });
     }
-
 
     @OnClick(R.id.logo)
     protected void selectEnvironment()
@@ -331,6 +333,7 @@ public class LoginActivityFragment extends InjectedFragment
             break;
             case INPUTTING_PHONE_NUMBER:
             {
+                mixpanel.track("portal login shown - phone");
                 instructionsText.setText(R.string.login_instructions_1_a);
                 phoneInputLayout.setVisibility(View.VISIBLE);
                 pinCodeInputLayout.setVisibility(View.GONE);
