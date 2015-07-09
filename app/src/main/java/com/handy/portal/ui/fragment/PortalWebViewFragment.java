@@ -1,7 +1,6 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,16 +83,19 @@ public class PortalWebViewFragment extends InjectedFragment
 
     public void openPortalUrl(String target)
     {
-        webView.setWebChromeClient(new WebChromeClient()
+        if(webView != null)
         {
-            @Override
-            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback)
+            webView.setWebChromeClient(new WebChromeClient()
             {
-                callback.invoke(origin, true, false);
-            }
-        });
-        String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target;
-        loadUrlWithFromAppParam(url);
+                @Override
+                public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback)
+                {
+                    callback.invoke(origin, true, false);
+                }
+            });
+            String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target;
+            loadUrlWithFromAppParam(url);
+        }
     }
 
     private void initWebView()
@@ -114,7 +116,6 @@ public class PortalWebViewFragment extends InjectedFragment
                 + "&skip_web_portal_blocking=1"
                 ;
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
-        Log.d(PortalWebViewFragment.class.getSimpleName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);
     }
 }
