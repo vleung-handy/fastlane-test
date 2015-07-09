@@ -1,6 +1,7 @@
 package com.handy.portal.analytics;
 
 import android.content.Context;
+import android.provider.Settings;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.annotation.Track;
@@ -20,11 +21,13 @@ import javax.inject.Inject;
 public class Mixpanel
 {
     private MixpanelAPI mixpanelAPI;
+    private Context context;
     private PrefsManager prefsManager;
 
     @Inject
     public Mixpanel(final Context context, final PrefsManager prefsManager)
     {
+        this.context = context;
         this.prefsManager = prefsManager;
         String mixpanelApiKey = PropertiesReader.getConfigProperties(context).getProperty("mixpanel_api_key");
         this.mixpanelAPI = MixpanelAPI.getInstance(context, mixpanelApiKey);
@@ -43,6 +46,7 @@ public class Mixpanel
         addProps(baseProps, "device", "android");
         addProps(baseProps, "app version", BuildConfig.VERSION_NAME);
         addProps(baseProps, "app flavor", BuildConfig.FLAVOR);
+        addProps(baseProps, "device id", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
         addProps(baseProps, "user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID));
         mixpanelAPI.registerSuperProperties(baseProps);
     }
@@ -117,8 +121,7 @@ public class Mixpanel
         try
         {
             object.put(key, value);
-        }
-        catch (final JSONException e)
+        } catch (final JSONException e)
         {
             throw new RuntimeException(e);
         }
