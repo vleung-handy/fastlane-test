@@ -21,7 +21,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.core.BuildConfigWrapper;
-import com.handy.portal.core.EnvironmentSwitcher;
+import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-import static com.handy.portal.core.EnvironmentSwitcher.Environment;
+import static com.handy.portal.core.EnvironmentModifier.Environment;
 
 public class LoginActivityFragment extends InjectedFragment
 {
@@ -59,7 +59,7 @@ public class LoginActivityFragment extends InjectedFragment
     TextView loginHelpText;
 
     @Inject
-    EnvironmentSwitcher environmentSwitcher;
+    EnvironmentModifier environmentModifier;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
 
@@ -158,7 +158,7 @@ public class LoginActivityFragment extends InjectedFragment
 
         final Environment[] environments = Environment.values();
         String[] environmentNames = new String[environments.length];
-        Environment currentEnvironment = environmentSwitcher.getEnvironment();
+        Environment currentEnvironment = environmentModifier.getEnvironment();
         for (int i = 0; i < environments.length; i++)
         {
             Environment environment = environments[i];
@@ -171,32 +171,10 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        environmentSwitcher.setEnvironment(environments[which]);
-                        selectEnablePinRequest();
+                        environmentModifier.setEnvironment(environments[which]);
                     }
                 });
         builder.create().show();
-    }
-
-    private void selectEnablePinRequest()
-    {
-        if (!buildConfigWrapper.isDebug()) return;
-
-        DialogInterface.OnClickListener onDialogClickListener = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int which)
-            {
-                environmentSwitcher.setPinRequestEnabled(which == DialogInterface.BUTTON_POSITIVE);
-            }
-        };
-
-        new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.enable_disable_pin_request)
-                .setPositiveButton(R.string.enable, onDialogClickListener)
-                .setNegativeButton(R.string.disable, onDialogClickListener)
-                .create()
-                .show();
     }
 
     private void goToUrl(String url)
@@ -215,7 +193,7 @@ public class LoginActivityFragment extends InjectedFragment
         storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
         changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
 
-        if (buildConfigWrapper.isDebug() && !environmentSwitcher.pinRequestEnabled())
+        if (buildConfigWrapper.isDebug() && !environmentModifier.pinRequestEnabled())
         {
             // if pin request is disabled, jump to pin input state; this is used for test automation
             // purposes where the seeded value of the pin associated with the provider will be

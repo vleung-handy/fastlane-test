@@ -78,8 +78,8 @@ public class TestApplicationModule {
     }
 
     @Provides
-    final EnvironmentSwitcher provideEnvironmentManager() {
-        return mock(EnvironmentSwitcher.class);
+    final EnvironmentModifier provideEnvironmentManager() {
+        return mock(EnvironmentModifier.class);
     }
 
     @Provides
