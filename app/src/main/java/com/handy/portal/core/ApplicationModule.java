@@ -92,18 +92,18 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentSwitcher provideEnvironmentManager()
+    final EnvironmentModifier provideEnvironmentModifier(final BuildConfigWrapper buildConfigWrapper)
     {
-        return new EnvironmentSwitcher();
+        return new EnvironmentModifier(context, buildConfigWrapper);
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentSwitcher environmentSwitcher)
+    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentModifier environmentModifier)
     {
         if (buildConfigWrapper.isDebug())
         {
-            return new HandyRetrofitFluidEndpoint(context, environmentSwitcher);
+            return new HandyRetrofitFluidEndpoint(context, environmentModifier);
         }
         return new HandyRetrofitEndpoint(context);
     }
