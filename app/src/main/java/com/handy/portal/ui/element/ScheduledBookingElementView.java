@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.Booking;
 
 import java.text.SimpleDateFormat;
 
@@ -61,7 +61,7 @@ public class ScheduledBookingElementView extends BookingElementView
         ButterKnife.inject(this, convertView);
 
         //Address
-        addressTextView.setText(booking.getAddress().getCompleteAddress());
+        addressTextView.setText(booking.getAddress().getStreetAddress());
 
         //Area
         bookingRegionText.setText(booking.getAddress().getShortRegion());

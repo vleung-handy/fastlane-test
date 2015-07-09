@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.model.Booking;
 
 import java.util.List;
 

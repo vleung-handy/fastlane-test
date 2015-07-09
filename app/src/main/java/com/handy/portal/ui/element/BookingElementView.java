@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.Booking;
 
 public abstract class BookingElementView
 {

@@ -3,7 +3,7 @@ package com.handy.portal.ui.element;
 import android.os.Bundle;
 
 import com.handy.portal.R;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.Booking;
 
 import java.util.List;
 

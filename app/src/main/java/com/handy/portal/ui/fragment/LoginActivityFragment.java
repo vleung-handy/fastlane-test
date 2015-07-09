@@ -19,9 +19,10 @@ import android.widget.TextView;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
-import com.handy.portal.core.LoginDetails;
-import com.handy.portal.data.BuildConfigWrapper;
-import com.handy.portal.data.EnvironmentManager;
+import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.core.BuildConfigWrapper;
+import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.PhoneInputTextView;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-import static com.handy.portal.data.EnvironmentManager.Environment;
+import static com.handy.portal.core.EnvironmentModifier.Environment;
 
 public class LoginActivityFragment extends InjectedFragment
 {
@@ -59,9 +60,11 @@ public class LoginActivityFragment extends InjectedFragment
     TextView loginHelpText;
 
     @Inject
-    EnvironmentManager environmentManager;
+    EnvironmentModifier environmentModifier;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
+    @Inject
+    Mixpanel mixpanel;
 
     private enum LoginState
     {
@@ -150,23 +153,18 @@ public class LoginActivityFragment extends InjectedFragment
         });
     }
 
-
     @OnClick(R.id.logo)
-    protected void onSelectEnvironment()
+    protected void selectEnvironment()
     {
         if (!buildConfigWrapper.isDebug()) return;
 
         final Environment[] environments = Environment.values();
         String[] environmentNames = new String[environments.length];
-        Environment currentEnvironment = environmentManager.getEnvironment();
+        Environment currentEnvironment = environmentModifier.getEnvironment();
         for (int i = 0; i < environments.length; i++)
         {
             Environment environment = environments[i];
-            environmentNames[i] = environment.getName();
-            if (currentEnvironment == environment)
-            {
-                environmentNames[i] += " (selected)";
-            }
+            environmentNames[i] = environment.getName() + (currentEnvironment == environment ? " (selected)" : "");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -175,7 +173,7 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        environmentManager.setEnvironment(environments[which]);
+                        environmentModifier.setEnvironment(environments[which]);
                     }
                 });
         builder.create().show();
@@ -196,7 +194,18 @@ public class LoginActivityFragment extends InjectedFragment
     {
         storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
         changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
-        bus.post(new HandyEvent.RequestPinCode(phoneNumber));
+
+        if (buildConfigWrapper.isDebug() && !environmentModifier.pinRequestEnabled())
+        {
+            // if pin request is disabled, jump to pin input state; this is used for test automation
+            // purposes where the seeded value of the pin associated with the provider will be
+            // preserved on the server side and used on the client side
+            changeState(LoginState.INPUTTING_PIN);
+        }
+        else
+        {
+            bus.post(new HandyEvent.RequestPinCode(phoneNumber));
+        }
     }
 
     //send a login request to the server with our phoneNumber and pin
@@ -324,6 +333,7 @@ public class LoginActivityFragment extends InjectedFragment
             break;
             case INPUTTING_PHONE_NUMBER:
             {
+                mixpanel.track("portal login shown - phone");
                 instructionsText.setText(R.string.login_instructions_1_a);
                 phoneInputLayout.setVisibility(View.VISIBLE);
                 pinCodeInputLayout.setVisibility(View.GONE);

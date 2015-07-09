@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.google.common.io.CharStreams;
 import com.handy.portal.R;
-import com.handy.portal.core.TermsDetails;
-import com.handy.portal.core.TermsManager;
+import com.handy.portal.model.TermsDetails;
+import com.handy.portal.manager.TermsManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;

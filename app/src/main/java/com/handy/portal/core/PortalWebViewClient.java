@@ -8,6 +8,8 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.crashlytics.android.Crashlytics;
+import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 
@@ -15,17 +17,17 @@ public class PortalWebViewClient extends WebViewClient
 {
     private Fragment parentFragment;
     private WebView webView;
-    private GoogleService googleService;
+    private GoogleManager googleManager;
     private Bus bus;
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,
-                               GoogleService gs,
+                               GoogleManager gs,
                                Bus bus)
     {
         this.parentFragment = parentFragment;
         this.webView = webView;
-        this.googleService = gs;
+        this.googleManager = gs;
         this.bus = bus;
     }
 
@@ -90,14 +92,21 @@ public class PortalWebViewClient extends WebViewClient
 
     private void loadUrlWithFromAppParam(String url)
     {
-        if (googleService == null)
+        if (googleManager == null)
         {
-            System.err.println("Can not contact google service");
+            Crashlytics.log("Can not contact google service");
             return;
         }
 
         //TODO: This code seems to be duplicated in the PortalWebViewFragment
-        String endOfUrl = "from_app=true&device_id=" + googleService.getOrSetDeviceId() + "&device_type=android&hide_nav=1&hide_pro_request=1&ht=1&skip_web_portal_version_tracking=1";
+        String endOfUrl = "from_app=true&device_id=" + googleManager.getOrSetDeviceId()
+                + "&device_type=android&hide_nav=1"
+                + "&hide_pro_request=1"
+                + "&ht=1"
+                + "&skip_web_portal_version_tracking=1"
+                + "&skip_web_portal_blocking=1"
+                ;
+
         String urlWithParams = url + (url.contains("?") ? (url.endsWith("&") ? "" : "&") : "?") + endOfUrl;
         Log.d(PortalWebViewClient.class.getSimpleName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);

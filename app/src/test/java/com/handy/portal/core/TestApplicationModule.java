@@ -1,13 +1,13 @@
 package com.handy.portal.core;
 
 
-import com.handy.portal.data.BuildConfigWrapper;
+import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.EnvironmentManager;
-import com.handy.portal.data.HandyRetrofitEndpoint;
-import com.handy.portal.data.HandyRetrofitService;
-import com.handy.portal.data.Mixpanel;
+import com.handy.portal.manager.BookingManager;
+import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.manager.VersionManager;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -53,11 +53,6 @@ public class TestApplicationModule {
     }
 
     @Provides
-    public DataManagerErrorHandler provideDataManagerErrorHandler() {
-        return mock(DataManagerErrorHandler.class);
-    }
-
-    @Provides
     public Bus provideBus() {
         return mock(Bus.class);
     }
@@ -78,18 +73,13 @@ public class TestApplicationModule {
     }
 
     @Provides
-    final GoogleService provideGoogleService() {
-        return mock(GoogleService.class);
+    final GoogleManager provideGoogleService() {
+        return mock(GoogleManager.class);
     }
 
     @Provides
-    final NavigationManager provideNavigationManager() {
-        return mock(NavigationManager.class);
-    }
-
-    @Provides
-    final EnvironmentManager provideEnvironmentManager() {
-        return mock(EnvironmentManager.class);
+    final EnvironmentModifier provideEnvironmentManager() {
+        return mock(EnvironmentModifier.class);
     }
 
     @Provides

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.Booking;
 import com.handy.portal.util.Utils;
 
 import java.text.SimpleDateFormat;

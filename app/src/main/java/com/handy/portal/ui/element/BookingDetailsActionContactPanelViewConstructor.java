@@ -5,8 +5,8 @@ import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
 import com.handy.portal.R;
-import com.handy.portal.consts.BookingActionButtonType;
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.model.Booking;
 
 import java.util.List;
 

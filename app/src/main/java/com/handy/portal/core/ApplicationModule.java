@@ -7,17 +7,19 @@ import android.util.Base64;
 
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
+import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.BaseDataManager;
-import com.handy.portal.data.BaseDataManagerErrorHandler;
-import com.handy.portal.data.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.EnvironmentManager;
-import com.handy.portal.data.HandyRetrofitEndpoint;
-import com.handy.portal.data.HandyRetrofitFluidEndpoint;
-import com.handy.portal.data.HandyRetrofitService;
-import com.handy.portal.data.Mixpanel;
-import com.handy.portal.data.PropertiesReader;
+import com.handy.portal.manager.BookingManager;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.TermsManager;
+import com.handy.portal.manager.VersionManager;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -63,8 +65,8 @@ import retrofit.converter.GsonConverter;
         MainActivityFragment.class,
         BaseApplication.class,
         BaseActivity.class,
-        MainActivity.class,
         SplashActivity.class,
+        MainActivity.class,
         PleaseUpdateActivity.class,
         PleaseUpdateFragment.class,
         TermsActivity.class,
@@ -90,18 +92,18 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentManager provideEnvironmentManager()
+    final EnvironmentModifier provideEnvironmentModifier(final BuildConfigWrapper buildConfigWrapper)
     {
-        return new EnvironmentManager();
+        return new EnvironmentModifier(context, buildConfigWrapper);
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentManager environmentManager)
+    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentModifier environmentModifier)
     {
         if (buildConfigWrapper.isDebug())
         {
-            return new HandyRetrofitFluidEndpoint(context, environmentManager);
+            return new HandyRetrofitFluidEndpoint(context, environmentModifier);
         }
         return new HandyRetrofitEndpoint(context);
     }
@@ -151,16 +153,10 @@ public final class ApplicationModule
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
-                                         final SecurePreferences prefs
+                                         final PrefsManager prefsManager
     )
     {
-        return new BaseDataManager(service, endpoint, prefs);
-    }
-
-    @Provides
-    final DataManagerErrorHandler provideDataManagerErrorHandler()
-    {
-        return new BaseDataManagerErrorHandler();
+        return new BaseDataManager(service, endpoint, prefsManager);
     }
 
     @Provides
@@ -188,9 +184,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
+    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
     {
-        return new LoginManager(bus, prefs, dataManager);
+        return new LoginManager(bus, dataManager, prefsManager, mixpanel);
     }
 
     @Provides
@@ -204,9 +200,10 @@ public final class ApplicationModule
     @Singleton
     final VersionManager provideVersionManager(final Bus bus,
                                                final DataManager dataManager,
+                                               final PrefsManager prefsManager,
                                                final BuildConfigWrapper buildConfigWrapper)
     {
-        return new VersionManager(context, bus, dataManager, buildConfigWrapper);
+        return new VersionManager(context, bus, dataManager, prefsManager, buildConfigWrapper);
     }
 
     @Provides
@@ -219,37 +216,31 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final PrefsManager providePrefsManager(final SecurePreferences prefs)
+    {
+        return new PrefsManager(prefs);
+    }
+
+    @Provides
+    @Singleton
     final ApplicationOnResumeWatcher provideApplicationOnResumeWatcher(final Bus bus)
     {
         return new ApplicationOnResumeWatcher(bus);
     }
 
-//    @Provides final ReactiveLocationProvider provideReactiveLocationProvider() {
-//        return new ReactiveLocationProvider(context);
-//    }
-
     @Provides
     @Singleton
-    final Mixpanel provideMixpanel()
+    final Mixpanel provideMixpanel(final PrefsManager prefsManager)
     {
-        return new Mixpanel(context);
+        return new Mixpanel(this.context, prefsManager);
     }
 
     @Provides
     @Singleton
-    final NavigationManager provideNavigationManager(final DataManager dataManager,
-                                                     final DataManagerErrorHandler dataManagerErrorHandler)
+    final GoogleManager provideGoogleService()
     {
-        return new NavigationManager(this.context, dataManager, dataManagerErrorHandler);
+        return new GoogleManager(this.context);
     }
-
-    @Provides
-    @Singleton
-    final GoogleService provideGoogleService()
-    {
-        return new GoogleService(this.context);
-    }
-
 
     private String getDeviceId()
     {

@@ -9,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.consts.MainViewTab;
-import com.handy.portal.consts.TransitionStyle;
-import com.handy.portal.core.SwapFragmentArguments;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
@@ -42,6 +43,8 @@ public class MainActivityFragment extends InjectedFragment
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
+    public static boolean clearingBackStack; //flag we set while clearing the backstack to let fragments determine if they should run their onResume
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -49,9 +52,7 @@ public class MainActivityFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
-
         registerButtonListeners();
-
         transitionOverlayView.init();
         loadingOverlayView.init();
 
@@ -190,11 +191,13 @@ public class MainActivityFragment extends InjectedFragment
 
     private void clearFragmentBackStack()
     {
+        clearingBackStack = true;
         FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-        for (int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
+        while(supportFragmentManager.getBackStackEntryCount() > 0)
         {
-            supportFragmentManager.popBackStack();
+            supportFragmentManager.popBackStackImmediate();
         }
+        clearingBackStack = false;
     }
 
     //analytics event
@@ -241,7 +244,7 @@ public class MainActivityFragment extends InjectedFragment
                 newFragment = (Fragment) swapArguments.targetClassType.newInstance();
             } catch (Exception e)
             {
-                System.err.println("Error instantiating fragment class : " + e);
+                Crashlytics.logException(new RuntimeException("Error instantiating fragment class", e));
                 return;
             }
         }

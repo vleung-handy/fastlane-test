@@ -17,19 +17,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.handy.portal.R;
-import com.handy.portal.consts.BookingActionButtonType;
-import com.handy.portal.consts.BundleKeys;
-import com.handy.portal.consts.MainViewTab;
-import com.handy.portal.consts.TransitionStyle;
-import com.handy.portal.consts.WarningButtonsText;
-import com.handy.portal.core.LocationData;
-import com.handy.portal.core.LoginManager;
-import com.handy.portal.core.booking.Booking;
-import com.handy.portal.core.booking.Booking.BookingStatus;
+import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingStatus;
+import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
@@ -44,7 +46,6 @@ import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
-import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class BookingDetailsFragment extends InjectedFragment
     protected TextView errorText;
 
     @Inject
-    SecurePreferences prefs;
+    PrefsManager prefsManager;
 
     private String requestedBookingId;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
@@ -140,7 +141,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private String getLoggedInUserId()
     {
-        return prefs.getString(LoginManager.USER_CREDENTIALS_ID_KEY, null);
+        return prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID);
     }
 
     private void requestBookingDetails(String bookingId)
@@ -281,7 +282,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             if (UIUtils.getAssociatedActionType(data) == null)
             {
-                System.err.println("Received an unsupported action type : " + data.getActionName());
+                Crashlytics.log("Received an unsupported action type : " + data.getActionName());
                 continue;
             }
 
@@ -290,7 +291,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
             if (buttonParentLayout == null)
             {
-                System.err.println("Could not find parent layout for " + UIUtils.getAssociatedActionType(data).getActionName());
+                Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(data).getActionName());
             } else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
@@ -416,7 +417,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
             default:
             {
-                System.err.println("Could not find associated behavior for : " + actionType.getActionName());
+                Crashlytics.log("Could not find associated behavior for : " + actionType.getActionName());
             }
         }
     }
@@ -555,7 +556,7 @@ public class BookingDetailsFragment extends InjectedFragment
                                 int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                                 if (checkedItemPosition < 0 || checkedItemPosition >= arrivalTimeOptions.length)
                                 {
-                                    System.err.println("Invalid checked item position " + checkedItemPosition + " can not proceed");
+                                    Crashlytics.log("Invalid checked item position " + checkedItemPosition + " can not proceed");
                                 } else
                                 {
                                     Booking.ArrivalTimeOption chosenOption = arrivalTimeOptions[checkedItemPosition];
@@ -583,7 +584,7 @@ public class BookingDetailsFragment extends InjectedFragment
             startActivity(callIntent);
         } catch (ActivityNotFoundException activityException)
         {
-            System.err.println("Calling a Phone Number failed" + activityException);
+            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
         }
     }
 
@@ -595,7 +596,7 @@ public class BookingDetailsFragment extends InjectedFragment
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
         } catch (ActivityNotFoundException activityException)
         {
-            System.err.println("Texting a Phone Number failed" + activityException);
+            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
         }
     }
 

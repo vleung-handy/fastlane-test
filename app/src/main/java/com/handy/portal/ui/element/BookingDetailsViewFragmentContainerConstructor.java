@@ -7,7 +7,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
-import com.handy.portal.core.booking.Booking;
+import com.handy.portal.model.Booking;
 
 import java.util.List;
 

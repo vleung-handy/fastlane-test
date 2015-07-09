@@ -6,33 +6,13 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.handy.portal.core.BaseApplication;
-import com.handy.portal.core.BookingManager;
-import com.handy.portal.core.LoginManager;
-import com.handy.portal.data.DataManager;
-import com.handy.portal.data.DataManagerErrorHandler;
-import com.handy.portal.data.Mixpanel;
-import com.handy.portal.ui.widget.ProgressDialog;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
 public class InjectedDialogFragment extends DialogFragment
 {
     protected boolean allowCallbacks;
-    protected ProgressDialog progressDialog;
     protected Toast toast;
-
-    @Inject
-    BookingManager bookingManager;
-    @Inject
-    Mixpanel mixpanel;
-    @Inject
-    DataManager dataManager;
-    @Inject
-    DataManagerErrorHandler dataManagerErrorHandler;
-    @Inject
-    LoginManager loginManager;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
