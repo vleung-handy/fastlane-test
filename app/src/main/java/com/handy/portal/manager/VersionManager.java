@@ -1,6 +1,5 @@
 package com.handy.portal.manager;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,11 +13,11 @@ import android.os.Environment;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.model.SimpleResponse;
-import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.SimpleResponse;
+import com.handy.portal.model.UpdateDetails;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -124,17 +123,26 @@ public class VersionManager
     @Subscribe
     public void onApplicationResumed(HandyEvent.ApplicationResumed event)
     {
-        PackageInfo pInfo = getPackageInfoFromActivity(event.sender);
-        HashMap<String, String> info = new HashMap<>();
-        info.put("user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID));
-        info.put("platform", "android");
-        info.put("app_identifier", event.sender.getPackageName());
-        info.put("app_version", pInfo.versionName);
-        info.put("app_version_code", Integer.toString(pInfo.versionCode));
-        info.put("app_flavor", buildConfigWrapper.getFlavor());
-        info.put("os_version", android.os.Build.VERSION.RELEASE);
-        info.put("os_version_code", Integer.toString(android.os.Build.VERSION.SDK_INT));
-        dataManager.sendVersionInformation(info, new DataManager.Callback<SimpleResponse>()
+        dataManager.sendVersionInformation(getVersionInfo(), new DataManager.Callback<SimpleResponse>()
+                {
+                    @Override
+                    public void onSuccess(final SimpleResponse updateDetails)
+                    {
+                        //Do nothing
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        //Do nothing
+                    }
+                }
+        );
+    }
+
+    @Subscribe
+    public void onReceiveLoginSuccess(HandyEvent.ReceiveLoginSuccess event) {
+        dataManager.sendVersionInformation(getVersionInfo(), new DataManager.Callback<SimpleResponse>()
                 {
                     @Override
                     public void onSuccess(final SimpleResponse updateDetails)
@@ -209,16 +217,30 @@ public class VersionManager
         return -1;
     }
 
-    private PackageInfo getPackageInfoFromActivity(Activity sender)
+    private PackageInfo getPackageInfoFromActivity(Context context)
     {
         PackageInfo pInfo;
         try
         {
-            pInfo = sender.getPackageManager().getPackageInfo(sender.getPackageName(), 0);
+            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e)
         {
             throw new RuntimeException();
         }
         return pInfo;
+    }
+
+    private HashMap<String, String> getVersionInfo() {
+        PackageInfo pInfo = getPackageInfoFromActivity(context);
+        HashMap<String, String> info = new HashMap<>();
+        info.put("user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID));
+        info.put("platform", "android");
+        info.put("app_identifier", context.getPackageName());
+        info.put("app_version", pInfo.versionName);
+        info.put("app_version_code", Integer.toString(pInfo.versionCode));
+        info.put("app_flavor", buildConfigWrapper.getFlavor());
+        info.put("os_version", android.os.Build.VERSION.RELEASE);
+        info.put("os_version_code", Integer.toString(android.os.Build.VERSION.SDK_INT));
+        return info;
     }
 }
