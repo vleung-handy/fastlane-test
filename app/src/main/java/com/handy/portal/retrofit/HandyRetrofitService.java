@@ -101,6 +101,17 @@ public interface HandyRetrofitService
 
   //These addresses are wrong for portal help
     //********Help Center********
+
+/*
+  routes.rb
+
+  resource :self_service do
+  get 'node_details' =>'self_service#single_node_details'
+  get 'booking_node_details' =>'self_service#booking_single_node_details'
+  post 'create_case' => 'self_service#salesforce_web_to_case'
+
+  */
+
     @GET("/self_service/node_details")
     void getHelpInfo(@Query("id") String nodeId,
                      @Query("auth_token") String authToken,
