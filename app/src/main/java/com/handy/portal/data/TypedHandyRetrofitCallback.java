@@ -5,14 +5,13 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
-import com.handy.portal.model.SimpleResponse;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
-import com.handy.portal.model.Booking;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
@@ -100,10 +99,29 @@ class ConfigParamResponseHandyRetroFitCallback extends TypedHandyRetrofitCallbac
     }
 }
 
-class SimpleResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<SimpleResponse>
+class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 {
-    SimpleResponseHandyRetroFitCallback(DataManager.Callback callback)
+
+    @Override
+    public void success(JSONObject response)
     {
-        super(callback);
+    }
+
+    EmptyHandyRetroFitCallback()
+    {
+        super(new EmptyCallback());
+    }
+
+    public static class EmptyCallback implements DataManager.Callback<Void>
+    {
+        @Override
+        public void onSuccess(Void response)
+        {
+        }
+
+        @Override
+        public void onError(DataManager.DataManagerError error)
+        {
+        }
     }
 }
