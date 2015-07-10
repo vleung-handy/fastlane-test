@@ -19,11 +19,14 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.util.TextUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,7 +35,6 @@ import butterknife.InjectView;
 
 public final class HelpFragment extends InjectedFragment
 {
-
     private final String STATE_SCROLL_POSITION = "SCROLL_POSITION";
     static final String EXTRA_HELP_NODE = "com.handy.handy.EXTRA_HELP_NODE";
     private static String HELP_CONTACT_FORM_NODE_TYPE = "help-contact-form";
@@ -67,8 +69,6 @@ public final class HelpFragment extends InjectedFragment
     @InjectView(R.id.close_img) ImageView closeImage;
     @InjectView(R.id.back_img) ImageView backImage;
 
-    @InjectView(R.id.cta_button_template_layout) ViewGroup ctaButtonTemplateLayout;
-
     public static HelpFragment newInstance(final HelpNode node,
                                            final String bookingId,
                                            final String loginToken,
@@ -86,9 +86,28 @@ public final class HelpFragment extends InjectedFragment
 
 
     @Override
+    protected List<String> requiredArguments()
+    {
+        List<String> requiredArguments = new ArrayList<>();
+        requiredArguments.add(BundleKeys.BOOKING_ID);
+        requiredArguments.add(BundleKeys.HELP_NODE);
+        requiredArguments.add(BundleKeys.LOGIN_TOKEN);
+        requiredArguments.add(BundleKeys.PATH);
+        return requiredArguments;
+    }
+
+
+    @Override
     public final void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        if(!validateRequiredArguments())
+        {
+            System.err.println("Help fragment lacking required arguments can not create properly");
+            return;
+        }
+
         currentNode = getArguments().getParcelable(EXTRA_HELP_NODE);
         currentBookingId = getArguments().getString(EXTRA_BOOKING_ID);
         currentLoginToken = getArguments().getString(EXTRA_LOGIN_TOKEN);
@@ -113,10 +132,21 @@ public final class HelpFragment extends InjectedFragment
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
     {
+
+
+
         final View view = getActivity().getLayoutInflater()
-                .inflate(R.layout.fragment_help, container, false);
+                .inflate(R.layout.fragment_help_page, container, false);
 
         ButterKnife.inject(this, view);
+
+
+        if(!validateRequiredArguments())
+        {
+            System.err.println("Help fragment lacking required arguments can not create view properly");
+            //return;
+        }
+
 
 /*
         final MenuButton menuButton = new MenuButton(getActivity(), menuButtonLayout);
@@ -167,12 +197,30 @@ public final class HelpFragment extends InjectedFragment
         }
         */
 
+
+
+
+
+
+
+
+
         //May return to root of help screen without re-downloading root navigation currentNode
         if (currentNode == null)
         {
             currentNode = rootNode;
         }
 
+        //constructNodeView(container);
+
+
+        return view;
+    }
+
+
+
+    private void constructNodeView(final ViewGroup container)
+    {
         switch (currentNode.getType())
         {
             case "root":
@@ -240,9 +288,9 @@ public final class HelpFragment extends InjectedFragment
             }
             break;
         }
-
-        return view;
     }
+
+
 
     @Override
     public void onSaveInstanceState(final Bundle outState)
