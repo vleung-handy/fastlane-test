@@ -1,10 +1,11 @@
 package com.handy.portal.manager;
 
-import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.securepreferences.SecurePreferences;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.model.PinRequestDetails;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -12,17 +13,18 @@ import javax.inject.Inject;
 
 public class LoginManager
 {
-    public static final String USER_CREDENTIALS_ID_KEY = "user_credentials_id";
     private final Bus bus;
-    private SecurePreferences prefs;
     private DataManager dataManager;
+    private PrefsManager prefsManager;
+    private Mixpanel mixpanel;
 
     @Inject
-    public LoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager)
+    public LoginManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
     {
         this.bus = bus;
-        this.prefs = prefs;
         this.dataManager = dataManager;
+        this.prefsManager = prefsManager;
+        this.mixpanel = mixpanel;
         this.bus.register(this);
     }
 
@@ -56,6 +58,7 @@ public class LoginManager
                     {
                         saveLoginDetails(loginDetails);
                         bus.post(new HandyEvent.ReceiveLoginSuccess(loginDetails));
+                        mixpanel.onLoginSuccess();
                     }
 
                     @Override
@@ -69,7 +72,7 @@ public class LoginManager
 
     private void saveLoginDetails(final LoginDetails loginDetails)
     {
-        prefs.edit().putString(USER_CREDENTIALS_ID_KEY, loginDetails.getUserCredentialsId()).apply();
+        prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID, loginDetails.getUserCredentialsId());
     }
 
 }

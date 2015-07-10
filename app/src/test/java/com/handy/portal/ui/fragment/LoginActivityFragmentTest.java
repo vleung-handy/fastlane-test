@@ -11,7 +11,7 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.core.EnvironmentSwitcher;
+import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.InputTextField;
@@ -50,7 +50,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @Mock
     private BuildConfigWrapper buildConfigWrapper;
     @Mock
-    private EnvironmentSwitcher environmentSwitcher;
+    private EnvironmentModifier environmentModifier;
     @Mock
     private DataManager dataManager;
 
@@ -183,13 +183,13 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     {
         when(buildConfigWrapper.isDebug()).thenReturn(true);
         fragmentView.findViewById(R.id.logo).performClick();
-        reset(environmentSwitcher);
+        reset(environmentModifier);
 
         ShadowAlertDialog alertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
         alertDialog.clickOnItem(2);
 
         String secondItem = (String) alertDialog.getItems()[2];
-        verify(environmentSwitcher).setEnvironment(EnvironmentSwitcher.Environment.valueOf(secondItem));
+        verify(environmentModifier).setEnvironment(EnvironmentModifier.Environment.valueOf(secondItem));
     }
 
     private void makeLoginRequest(String pinCode)

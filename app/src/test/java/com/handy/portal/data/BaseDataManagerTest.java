@@ -1,14 +1,14 @@
 package com.handy.portal.data;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.model.LoginDetails;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
 import org.json.JSONObject;
@@ -37,9 +37,10 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     @Mock
     Bus bus;
     @Mock
-    SecurePreferences securePreferences;
+    PrefsManager prefsManager;
     @Mock
     LoginManager loginManager;
+
 
     private BaseDataManager dataManager;
 
@@ -51,7 +52,7 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        dataManager = new BaseDataManager(service, endpoint, securePreferences);
+        dataManager = new BaseDataManager(service, endpoint, prefsManager);
     }
 
     @Test

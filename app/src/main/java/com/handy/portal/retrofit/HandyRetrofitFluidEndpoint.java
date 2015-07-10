@@ -2,18 +2,18 @@ package com.handy.portal.retrofit;
 
 import android.content.Context;
 
-import com.handy.portal.core.EnvironmentSwitcher;
+import com.handy.portal.core.EnvironmentModifier;
 
 import java.text.MessageFormat;
 
 public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint
 {
-    private final EnvironmentSwitcher environmentSwitcher;
+    private final EnvironmentModifier environmentModifier;
 
-    public HandyRetrofitFluidEndpoint(Context context, EnvironmentSwitcher environmentSwitcher)
+    public HandyRetrofitFluidEndpoint(Context context, EnvironmentModifier environmentModifier)
     {
         super(context);
-        this.environmentSwitcher = environmentSwitcher;
+        this.environmentModifier = environmentModifier;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint
     @Override
     public String getName()
     {
-        return environmentSwitcher.getEnvironment().getName();
+        return environmentModifier.getEnvironment().getName();
     }
 
     @Override
@@ -36,6 +36,6 @@ public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint
 
     private String formatUrl(String url)
     {
-        return MessageFormat.format(url, environmentSwitcher.getEnvironment().getPrefix());
+        return MessageFormat.format(url, environmentModifier.getEnvironment().getPrefix());
     }
 }

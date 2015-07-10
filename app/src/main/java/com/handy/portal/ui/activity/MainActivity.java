@@ -5,16 +5,10 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import javax.inject.Inject;
 
 public class MainActivity extends BaseActivity
 {
-    @Inject
-    Bus bus;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

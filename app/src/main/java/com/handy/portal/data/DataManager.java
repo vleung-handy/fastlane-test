@@ -67,8 +67,6 @@ public abstract class DataManager
 
     public abstract String getBaseUrl();
 
-    public abstract String getProviderId();
-
     public interface Callback<T>
     {
         void onSuccess(T response);
