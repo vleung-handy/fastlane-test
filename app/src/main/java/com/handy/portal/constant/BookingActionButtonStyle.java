@@ -6,12 +6,12 @@ import com.handy.portal.R;
 
 public enum BookingActionButtonStyle
 {
-    GREEN(R.drawable.button_green_round, R.style.Button_Green_Round, R.layout.element_booking_action_button_template),
-    RED_EMPTY(R.drawable.button_red_empty_round, R.style.Button_RedEmptyRound, R.layout.element_booking_action_button_template),
-    BLUE(R.drawable.button_blue_round, R.style.Button_Blue_Round, R.layout.element_booking_action_button_template),
-    CLAIMED_BLUE(R.drawable.button_claimed_blue_round, R.style.Button_ClaimedBlue_Round, R.layout.element_booking_action_button_template),
-    CLAIMED_BLUE_EMPTY(R.drawable.button_claimed_blue_empty_round, R.style.Button_ClaimedBlueEmpty_Round, R.layout.element_booking_secondary_action_button_template),
-    CONTACT(R.drawable.button_white_round, R.style.Button_White_Round, R.layout.element_booking_contact_action_button_template),
+    GREEN(R.drawable.button_booking_action_green, R.style.Button_BookingAction_Green, R.layout.element_booking_action_button_template),
+    RED_EMPTY(R.drawable.button_booking_action_red, R.style.Button_BookingAction_Red, R.layout.element_booking_action_button_template),
+    BLUE(R.drawable.button_booking_action_blue, R.style.Button_BookingAction_Blue, R.layout.element_booking_action_button_template),
+    TEAL(R.drawable.button_booking_action_teal, R.style.Button_BookingAction_Teal, R.layout.element_booking_action_button_template),
+    TEAL_EMPTY(R.drawable.button_booking_action_teal_empty, R.style.Button_BookingAction_Teal_Empty, R.layout.element_booking_secondary_action_button_template),
+    CONTACT(R.drawable.button_booking_action_white, R.style.Button_BookingAction_White, R.layout.element_booking_contact_action_button_template),
     ;
 
     private int backgroundDrawableId;

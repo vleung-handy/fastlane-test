@@ -5,7 +5,7 @@
             <corners android:radius="@dimen/round_button_radius" />
             <stroke android:width="@dimen/round_button_stroke"
                     android:color="@color/disabled" />
-            <solid android:color="@color/disabled" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
     <item android:state_pressed="false">
@@ -13,7 +13,7 @@
             <corners android:radius="@dimen/round_button_radius" />
             <stroke android:width="@dimen/round_button_stroke"
                     android:color="@color/handy_teal" />
-            <solid android:color="@color/handy_teal" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
     <item android:state_pressed="true">
@@ -21,7 +21,7 @@
             <corners android:radius="@dimen/round_button_radius" />
             <stroke android:width="@dimen/round_button_stroke"
                     android:color="@color/handy_teal_pressed" />
-            <solid android:color="@color/handy_teal_pressed" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
     <item android:state_enabled="true">
@@ -29,7 +29,7 @@
             <corners android:radius="@dimen/round_button_radius" />
             <stroke android:width="@dimen/round_button_stroke"
                     android:color="@color/handy_teal" />
-            <solid android:color="@color/handy_teal" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
 </selector>

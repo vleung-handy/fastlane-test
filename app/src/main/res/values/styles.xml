@@ -155,6 +155,42 @@
         <item name="android:textColor">@drawable/button_text_white_trans</item>
     </style>
 
+
+    <style name="Button.BookingAction">
+        <item name="android:background">@drawable/button_booking_action_teal</item>
+        <item name="android:textColor">@drawable/button_text_booking_action</item>
+    </style>
+
+    <style name="Button.BookingAction.Green">
+        <item name="android:background">@drawable/button_booking_action_green</item>
+        <item name="android:textColor">@drawable/button_text_booking_action</item>
+    </style>
+
+    <style name="Button.BookingAction.Blue">
+        <item name="android:background">@drawable/button_booking_action_blue</item>
+        <item name="android:textColor">@drawable/button_text_booking_action</item>
+    </style>
+
+    <style name="Button.BookingAction.Teal">
+        <item name="android:background">@drawable/button_booking_action_teal</item>
+        <item name="android:textColor">@drawable/button_text_booking_action</item>
+    </style>
+
+    <style name="Button.BookingAction.Teal.Empty">
+        <item name="android:background">@drawable/button_booking_action_teal</item>
+        <item name="android:textColor">@drawable/button_text_booking_action</item>
+    </style>
+
+    <style name="Button.BookingAction.Red">
+        <item name="android:background">@drawable/button_booking_action_red</item>
+        <item name="android:textColor">@drawable/button_text_booking_action_red</item>
+    </style>
+
+    <style name="Button.BookingAction.White">
+        <item name="android:background">@drawable/button_booking_action_white</item>
+        <item name="android:textColor">@drawable/button_text_booking_action_blue</item>
+    </style>
+
     <style name="Button.ClaimedBlueEmpty">
         <item name="android:background">@drawable/button_claimed_blue</item>
         <item name="android:textColor">@drawable/button_text_claimed_blue</item>
