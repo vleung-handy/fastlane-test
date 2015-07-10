@@ -10,6 +10,8 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.help.HelpContactFragment;
+import com.handy.portal.help.HelpFragment;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
@@ -28,7 +30,6 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
-import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
@@ -59,7 +60,6 @@ import retrofit.converter.GsonConverter;
         PortalWebViewFragment.class,
         ScheduledBookingsFragment.class,
         ProfileFragment.class,
-        HelpFragment.class,
         AvailableBookingsFragment.class,
         PortalWebViewClient.class,
         MainActivityFragment.class,
@@ -70,7 +70,9 @@ import retrofit.converter.GsonConverter;
         PleaseUpdateActivity.class,
         PleaseUpdateFragment.class,
         TermsActivity.class,
-        TermsFragment.class
+        TermsFragment.class,
+        HelpFragment.class,
+        HelpContactFragment.class
 })
 public final class ApplicationModule
 {

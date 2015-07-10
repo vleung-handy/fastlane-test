@@ -85,6 +85,19 @@ public class InjectedFragment extends android.support.v4.app.Fragment
         boolean validated = true;
 
         Bundle suppliedArguments = this.getArguments();
+
+        if(suppliedArguments == null)
+        {
+            if(requiredArguments().size() == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         List<String> requiredArguments = requiredArguments();
         String errorDetails = "";
         for (String requiredArgument : requiredArguments)
