@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cta_button_template_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/handy_bg"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="10dp"
+    >
+     <com.handybook.handybook.ui.widget.CTAButton
+            android:id="@+id/cta_button_template"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_alignParentBottom="false"
+            android:layout_marginBottom="10dp"
+            android:text="CTA"
+            style="@style/Button.Green.Round"
+            />
+</merge>

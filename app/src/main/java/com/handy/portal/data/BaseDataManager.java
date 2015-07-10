@@ -1,15 +1,15 @@
 package com.handy.portal.data;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.manager.LoginManager;
+import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.manager.LoginManager;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.SimpleResponse;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
-import com.handy.portal.model.Booking;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import retrofit.mime.TypedInput;
 
 public final class BaseDataManager extends DataManager
 {
@@ -72,19 +74,19 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void notifyOnMyWayBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyOnMyWayBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.notifyOnMyWay(getProviderId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckInBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckInBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.checkIn(getProviderId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckOutBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckOutBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.checkOut(getProviderId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
@@ -142,6 +144,42 @@ public final class BaseDataManager extends DataManager
     {
         service.sendVersionInformation(versionInfo, new SimpleResponseHandyRetroFitCallback(cb));
     }
+
+
+    //These addresses are wrong for portal help
+    //********Help Center********
+    public void getHelpInfo(String nodeId,
+                     String authToken,
+                     String bookingId,
+                            final Callback<SimpleResponse> cb)
+    {
+        service.getHelpInfo(nodeId, authToken, bookingId, new SimpleResponseHandyRetroFitCallback(cb));
+    }
+
+    public void getHelpBookingsInfo(String nodeId,
+                             String authToken,
+                             String bookingId,
+                                    final Callback<SimpleResponse> cb)
+    {
+        service.getHelpBookingsInfo(nodeId, authToken, bookingId, new SimpleResponseHandyRetroFitCallback(cb));
+    }
+
+    public void createHelpCase( TypedInput body, final Callback<Void> cb)
+    {
+        service.createHelpCase(body, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            public void success(JSONObject response)
+            {
+                cb.onSuccess(null);
+            }
+        });
+    }
+    //********End Help Center********
+
+
+
+
 
     public String getProviderId()
     {

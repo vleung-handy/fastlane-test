@@ -2,6 +2,7 @@ package com.handy.portal.retrofit;
 
 import java.util.Map;
 
+import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -11,6 +12,7 @@ import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.mime.TypedInput;
 
 public interface HandyRetrofitService
 {
@@ -93,5 +95,24 @@ public interface HandyRetrofitService
 
     @PUT(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/remove")
     void removeBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
+
+  //These addresses are wrong for portal help
+    //********Help Center********
+    @GET("/self_service/node_details")
+    void getHelpInfo(@Query("id") String nodeId,
+                     @Query("auth_token") String authToken,
+                     @Query("booking_id") String bookingId,
+                     HandyRetrofitCallback cb);
+
+    @GET("/self_service/booking_node_details")
+    void getHelpBookingsInfo(@Query("id") String nodeId,
+                             @Query("auth_token") String authToken,
+                             @Query("booking_id") String bookingId,
+                             HandyRetrofitCallback cb);
+
+    @POST("/self_service/create_case")
+    void createHelpCase(@Body TypedInput body, HandyRetrofitCallback cb);
+    //********End Help Center********
 
 }
