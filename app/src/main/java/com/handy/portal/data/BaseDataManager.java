@@ -20,6 +20,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import retrofit.mime.TypedInput;
+
 public final class BaseDataManager extends DataManager
 {
     private final HandyRetrofitService service;
@@ -71,19 +73,19 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void notifyOnMyWayBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyOnMyWayBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.notifyOnMyWay(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckInBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckInBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.checkIn(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckOutBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckOutBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.checkOut(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
@@ -151,4 +153,29 @@ public final class BaseDataManager extends DataManager
         }
         return id;
     }
+
+    //These addresses are wrong for portal help
+    //********Help Center********
+    public void getHelpInfo(String nodeId,
+                     String authToken,
+                     String bookingId,
+                    final EmptyHandyRetroFitCallback cb)
+    {
+        service.getHelpInfo(nodeId, authToken, bookingId, cb);
+    }
+
+    public void getHelpBookingsInfo(String nodeId,
+                             String authToken,
+                             String bookingId,
+                                    final EmptyHandyRetroFitCallback cb)
+    {
+        service.getHelpBookingsInfo(nodeId, authToken, bookingId, cb);
+    }
+
+    public void createHelpCase( TypedInput body, final Callback<Void> cb)
+    {
+        service.createHelpCase(body, cb);
+    }
+    //********End Help Center********
+
 }

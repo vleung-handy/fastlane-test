@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/handy_bg">
+
+
+
+    <Button
+        android:id="@+id/send_message_button"
+        android:text="Send Message"
+        style="@style/Button.Green" />
+
+    <FrameLayout
+        android:id="@+id/nav_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/nav_text"
+            android:text="@string/help"
+            android:paddingRight="44dp"
+            android:paddingLeft="44dp"
+            style="@style/TextView.Navbar"
+            />
+
+        <RelativeLayout
+            android:id="@+id/menu_button_layout"
+            android:layout_gravity="start|center_vertical" >
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/close_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="15dp"
+            android:src="@drawable/ic_x"
+            android:visibility="visible"
+            android:contentDescription="@string/close"
+            android:layout_gravity="end|center_vertical" />
+
+        <ImageView
+            android:id="@+id/back_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleX="-1"
+            android:padding="15dp"
+            android:src="@drawable/ic_chevron"
+            android:visibility="visible"
+            android:contentDescription="@string/back"
+            android:layout_gravity="start|center_vertical" />
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/send_message_button"
+        android:layout_below="@id/nav_layout"
+        >
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="@dimen/default_margin"
+            >
+
+            <RelativeLayout
+                android:id="@+id/help_header"
+                android:layout_width="match_parent"
+                android:layout_height="142dp"
+                android:gravity="center"
+                android:padding="@dimen/default_padding"
+                android:background="@drawable/help_header_blue"
+                >
+
+                <ImageView
+                    android:id="@+id/help_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:src="@drawable/ic_help_contact"
+                    android:contentDescription="help" />
+
+                <TextView
+                    android:id="@+id/help_header_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/help_icon"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="@string/contact_us"
+                    android:textSize="20sp"
+                    style="@style/TextView.Large.Med" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/help_triangle"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignBottom="@id/help_header"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:src="@drawable/triangle"
+                android:contentDescription="help" />
+
+            <RelativeLayout
+                android:id="@+id/info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/help_header"
+                android:background="@drawable/cell_booking_last_rounded"
+                android:paddingBottom="5dp"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/name_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    style="@style/BookingsCell">
+
+                    <ImageView
+                        android:id="@+id/name_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_name"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:contentDescription="icon" />
+
+                    <com.handybook.handybook.ui.widget.FirstNameInputTextView
+                        android:id="@+id/user_name_text"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_toRightOf="@id/name_icon"
+                        android:layout_toEndOf="@id/name_icon"
+                        android:layout_centerVertical="true"
+                        android:padding="0dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@null"
+                        style="@style/EditText.FirstName" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/email_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/name_layout"
+                    style="@style/BookingsCell">
+
+                    <ImageView
+                        android:id="@+id/email_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_email"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:contentDescription="icon" />
+
+                    <com.handybook.handybook.ui.widget.EmailInputTextView
+                        android:id="@+id/email_text"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_toRightOf="@id/email_icon"
+                        android:layout_toEndOf="@id/email_icon"
+                        android:layout_centerVertical="true"
+                        android:padding="0dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@null"
+                        style="@style/EditText.Email" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/comment_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/email_layout"
+                    android:gravity="top"
+                    style="@style/BookingsCell.End">
+
+                    <ImageView
+                        android:id="@+id/comment_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pencil"
+                        android:contentDescription="icon"
+                        android:layout_marginTop="-4dp"/>
+
+                    <com.handybook.handybook.ui.widget.BasicInputTextView
+                        android:id="@+id/comment_text"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:hint="@string/contact_form_hint"
+                        android:gravity="top"
+                        app:minLength="1"
+                        android:padding="0dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@null"
+                        style="@style/EditText.Last.Comment" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/nav_options_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/help_header"
+                android:orientation="vertical"
+                android:background="@android:color/transparent"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+
+</RelativeLayout>

@@ -21,7 +21,7 @@ public final class PhoneInputTextView extends InputTextField
     }
 
     @Override
-    boolean validate()
+    public boolean validate()
     {
         return true;
     }

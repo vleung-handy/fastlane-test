@@ -109,7 +109,6 @@ public class PortalWebViewClient extends WebViewClient
                 ;
 
         String urlWithParams = url + (url.contains("?") ? (url.endsWith("&") ? "" : "&") : "?") + endOfUrl;
-        Log.d(PortalWebViewClient.class.getSimpleName(), "Loading url: " + urlWithParams);
         webView.loadUrl(urlWithParams);
     }
 }

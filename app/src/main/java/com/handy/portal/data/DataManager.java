@@ -10,6 +10,8 @@ import com.handy.portal.model.UpdateDetails;
 
 import java.util.Map;
 
+import retrofit.mime.TypedInput;
+
 public abstract class DataManager
 {
     //Portal
@@ -45,6 +47,22 @@ public abstract class DataManager
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);
 
     public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
+
+    //Help Center - not real yet
+
+    public abstract void getHelpInfo(String nodeId,
+                            String authToken,
+                            String bookingId,
+                            final EmptyHandyRetroFitCallback cb);
+
+    public abstract void getHelpBookingsInfo(String nodeId,
+                                    String authToken,
+                                    String bookingId,
+                                    final EmptyHandyRetroFitCallback cb);
+
+    public abstract void createHelpCase( TypedInput body, final Callback<Void> cb);
+
+
 
     public abstract String getBaseUrl();
 
