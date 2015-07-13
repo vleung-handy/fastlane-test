@@ -1,13 +1,12 @@
 package com.handy.portal.data;
 
+import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
-import com.handy.portal.model.SimpleResponse;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
-import com.handy.portal.model.Booking;
 
 import java.util.Map;
 
@@ -22,7 +21,7 @@ public abstract class DataManager
 
     public abstract void getConfigParams(String[] keys, Callback<ConfigParams> cb);
 
-    public abstract void sendVersionInformation(Map<String,String> info, Callback<SimpleResponse> cb);
+    public abstract void sendVersionInformation(Map<String,String> info);
 
     public abstract void getAvailableBookings(Callback<BookingSummaryResponse> cb);
 

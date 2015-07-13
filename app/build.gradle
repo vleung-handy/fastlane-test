@@ -33,8 +33,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 8
-        versionName "0.4.1"
+        versionCode 9
+        versionName "0.4.2"
         multiDexEnabled true
     }
 
@@ -65,12 +65,12 @@ android {
         stable {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.4.1"
+            versionName "0.4.2"
         }
         beta {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.4.1b"
+            versionName "0.4.2b"
         }
 
         applicationVariants.all { variant ->

@@ -43,37 +43,6 @@
         <item name="android:textSize">13sp</item>
     </style>
 
-    <style name="ContentLayout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_margin">@dimen/default_margin</item>
-    </style>
-
-    <style name="ContentLayout.NoBottom">
-        <item name="android:layout_marginTop">@dimen/default_margin</item>
-        <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:layout_marginLeft">@dimen/default_margin</item>
-        <item name="android:layout_marginRight">@dimen/default_margin</item>
-    </style>
-
-    <style name="ContentLayoutCell">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/default_margin</item>
-        <item name="android:layout_marginBottom">@dimen/default_margin</item>
-        <item name="android:layout_marginLeft">@dimen/default_margin</item>
-        <item name="android:layout_marginRight">@dimen/default_margin</item>
-    </style>
-
-    <style name="MenuButtonLayout">
-        <item name="android:layout_width">64dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingTop">18dp</item>
-        <item name="android:paddingBottom">18dp</item>
-    </style>
-
     <style name="Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -84,11 +53,15 @@
         <item name="android:paddingRight">16dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="fontPath">fonts/CircularStd-Book.otf</item>
+        <item name="android:textColor">@drawable/button_text_white_trans</item>
     </style>
 
     <style name="Button.Blue">
         <item name="android:background">@drawable/button_blue</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
+    </style>
+
+    <style name="Button.Blue.Round">
+        <item name="android:background">@drawable/button_blue_round</item>
     </style>
 
     <style name="Button.Grey">
@@ -96,73 +69,60 @@
         <item name="android:textColor">@drawable/button_text_white</item>
     </style>
 
-    <style name="Button.Trans">
+    <style name="Button.Transparent">
         <item name="android:background">@color/transparent</item>
         <item name="android:textColor">@color/subtitle_grey</item>
     </style>
 
-    <style name="Button.Trans.Round">
+    <style name="Button.Transparent.Round">
         <item name="android:background">@drawable/button_trans_round</item>
     </style>
 
     <style name="Button.Green">
         <item name="android:background">@drawable/button_green</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
     </style>
 
     <style name="Button.Green.Round">
         <item name="android:background">@drawable/button_green_round</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
     </style>
 
     <style name="Button.Red">
-        <item name="android:background">@drawable/button_red_round</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
-    </style>
-
-    <style name="Button.RedEmptyRound">
-        <item name="android:background">@drawable/button_red_empty_round</item>
-        <item name="android:textColor">@drawable/button_text_red</item>
+        <item name="android:background">@drawable/button_red</item>
     </style>
 
     <style name="Button.Red.Round">
         <item name="android:background">@drawable/button_red_round</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
+    </style>
+
+    <style name="Button.Red.Round.Empty">
+        <item name="android:background">@drawable/button_red_empty_round</item>
+        <item name="android:textColor">@drawable/button_text_red</item>
     </style>
 
     <style name="Button.Purple">
         <item name="android:background">@drawable/button_purple</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
     </style>
 
     <style name="Button.Purple.Round">
         <item name="android:background">@drawable/button_purple_round</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
     </style>
 
-    <style name="Button.Blue.Round">
-        <item name="android:background">@drawable/button_blue_round</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
+    <style name="Button.Teal">
+        <item name="android:background">@drawable/button_teal</item>
     </style>
 
-    <style name="Button.ClaimedBlue">
-        <item name="android:background">@drawable/button_claimed_blue</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
+    <style name="Button.Teal.Round">
+        <item name="android:background">@drawable/button_teal_round</item>
     </style>
 
-    <style name="Button.ClaimedBlue.Round">
-        <item name="android:background">@drawable/button_claimed_blue_round</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
+    <style name="Button.TealEmpty">
+        <item name="android:background">@drawable/button_teal</item>
+        <item name="android:textColor">@drawable/button_text_teal</item>
     </style>
 
-    <style name="Button.ClaimedBlueEmpty">
-        <item name="android:background">@drawable/button_claimed_blue</item>
-        <item name="android:textColor">@drawable/button_text_claimed_blue</item>
-    </style>
-
-    <style name="Button.ClaimedBlueEmpty.Round">
-        <item name="android:background">@drawable/button_claimed_blue_empty_round</item>
-        <item name="android:textColor">@drawable/button_text_claimed_blue</item>
+    <style name="Button.TealEmpty.Round">
+        <item name="android:background">@drawable/button_teal_empty_round</item>
+        <item name="android:textColor">@drawable/button_text_teal</item>
     </style>
 
     <style name="Button.PartnerBlueEmpty">
@@ -192,21 +152,39 @@
         <item name="android:textColor">@drawable/button_text_blue</item>
     </style>
 
-    <style name="Button.Transparent">
-        <item name="android:background">@drawable/button_transparent_round</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
+    <style name="Button.BookingAction">
+        <item name="android:textColor">@drawable/button_text_booking_action_white</item>
     </style>
 
-    <style name="RoundedButton">
-        <item name="android:layout_width">64dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:minWidth">0dp</item>
-        <item name="android:padding">6dp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">@dimen/xsmall_text_size</item>
-        <item name="android:background">@drawable/rounded_button_grey</item>
-        <item name="android:textColor">@drawable/button_text_white_trans</item>
+    <style name="Button.BookingAction.White">
+        <item name="android:background">@drawable/button_booking_action_white</item>
+        <item name="android:textColor">@drawable/button_text_booking_action_blue</item>
+    </style>
+
+    <style name="Button.BookingAction.Green">
+        <item name="android:background">@drawable/button_booking_action_green</item>
+    </style>
+
+    <style name="Button.BookingAction.Blue">
+        <item name="android:background">@drawable/button_booking_action_blue</item>
+    </style>
+
+    <style name="Button.BookingAction.Teal">
+        <item name="android:background">@drawable/button_booking_action_teal</item>
+    </style>
+
+    <style name="Button.BookingAction.Teal.Empty">
+        <item name="android:background">@drawable/button_booking_action_teal</item>
+        <item name="android:textColor">@drawable/button_text_booking_action_teal</item>
+    </style>
+
+    <style name="Button.BookingAction.Red">
+        <item name="android:background">@drawable/button_booking_action_red</item>
+    </style>
+
+    <style name="Button.BookingAction.Red.Empty">
+        <item name="android:background">@drawable/button_booking_action_red</item>
+        <item name="android:textColor">@drawable/button_text_booking_action_red</item>
     </style>
 
     <style name="TextButton">
