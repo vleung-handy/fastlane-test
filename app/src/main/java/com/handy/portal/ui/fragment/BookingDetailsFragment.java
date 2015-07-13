@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
@@ -48,7 +50,6 @@ import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -134,9 +135,7 @@ public class BookingDetailsFragment extends InjectedFragment
     @Override
     protected List<String> requiredArguments()
     {
-        List<String> requiredArguments = new ArrayList<>();
-        requiredArguments.add(BundleKeys.BOOKING_ID);
-        return requiredArguments;
+        return Lists.newArrayList(BundleKeys.BOOKING_ID);
     }
 
     private String getLoggedInUserId()
@@ -153,7 +152,8 @@ public class BookingDetailsFragment extends InjectedFragment
 
 //Display Creation / Updating
 
-    private void updateDisplayForBooking(Booking booking)
+    @VisibleForTesting
+    protected void updateDisplayForBooking(Booking booking)
     {
         //clear existing elements out of our fragment's display
         clearLayouts();
