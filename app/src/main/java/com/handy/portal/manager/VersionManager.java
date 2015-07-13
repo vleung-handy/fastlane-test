@@ -54,6 +54,7 @@ public class VersionManager
         this.dataManager = dataManager;
         this.prefsManager = prefsManager;
         this.buildConfigWrapper = buildConfigWrapper;
+        this.downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
     private long downloadReferenceId;
@@ -141,7 +142,6 @@ public class VersionManager
             oldApkFile.delete();
         }
 
-        downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
                 .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
                 .setMimeType(APK_MIME_TYPE)
