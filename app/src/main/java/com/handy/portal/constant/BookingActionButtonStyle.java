@@ -7,7 +7,7 @@ import com.handy.portal.R;
 public enum BookingActionButtonStyle
 {
     GREEN(R.drawable.button_booking_action_green, R.style.Button_BookingAction_Green, R.layout.element_booking_action_button_template),
-    RED_EMPTY(R.drawable.button_booking_action_red, R.style.Button_BookingAction_Red, R.layout.element_booking_action_button_template),
+    RED_EMPTY(R.drawable.button_booking_action_red_empty, R.style.Button_BookingAction_Red_Empty, R.layout.element_booking_action_button_template),
     BLUE(R.drawable.button_booking_action_blue, R.style.Button_BookingAction_Blue, R.layout.element_booking_action_button_template),
     TEAL(R.drawable.button_booking_action_teal, R.style.Button_BookingAction_Teal, R.layout.element_booking_action_button_template),
     TEAL_EMPTY(R.drawable.button_booking_action_teal_empty, R.style.Button_BookingAction_Teal_Empty, R.layout.element_booking_secondary_action_button_template),

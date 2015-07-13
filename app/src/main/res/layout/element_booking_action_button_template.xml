@@ -6,7 +6,5 @@
      <com.handy.portal.ui.widget.BookingActionButton
             android:id="@+id/booking_action_button"
             android:layout_alignParentBottom="false"
-            style="@style/Button.BookingAction.Red"
-            android:text="Remove Job"
-            android:enabled="false"/>
+         />
 </merge>

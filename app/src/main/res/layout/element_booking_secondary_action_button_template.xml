@@ -5,8 +5,7 @@
     >
     <com.handy.portal.ui.widget.BookingActionButton
         android:id="@+id/booking_action_button"
-        android:layout_marginTop="10dp"
         android:layout_alignParentBottom="false"
-        style="@style/Button.Green.Round"
+        android:layout_marginTop="10dp"
         />
 </merge>
