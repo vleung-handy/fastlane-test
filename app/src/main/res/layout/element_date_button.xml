@@ -57,7 +57,7 @@
         android:layout_height="5dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"
-        android:src="@drawable/circle_claimed_blue"
+        android:src="@drawable/circle_teal"
         android:layout_below="@id/date_day_of_month_text"
         android:layout_centerHorizontal="true"
         />

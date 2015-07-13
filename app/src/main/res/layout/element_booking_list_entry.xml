@@ -98,7 +98,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/circle_claimed_blue"/>
+                android:src="@drawable/circle_teal"/>
 
             <TextView
                 style="@style/TextView.Bold"
