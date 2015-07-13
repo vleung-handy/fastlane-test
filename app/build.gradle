@@ -54,10 +54,10 @@ android {
             signingConfig signingConfigs.prod
         }
         debug {
+            applicationIdSuffix ".debug"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.prod
-            ext.enableCrashlytics = false
         }
     }
 
