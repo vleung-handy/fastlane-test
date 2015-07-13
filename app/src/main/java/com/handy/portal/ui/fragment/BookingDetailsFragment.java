@@ -310,8 +310,9 @@ public class BookingDetailsFragment extends InjectedFragment
             case CLAIM:
             case ON_MY_WAY:
             case CHECK_IN:
-            case CHECK_OUT:
             case ETA:
+            case CHECK_OUT:
+            case HELP:
             {
                 return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }

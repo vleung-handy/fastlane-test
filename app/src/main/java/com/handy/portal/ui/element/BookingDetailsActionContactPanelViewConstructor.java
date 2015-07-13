@@ -12,9 +12,6 @@ import java.util.List;
 
 import butterknife.InjectView;
 
-/**
- * Created by cdavis on 5/8/15.
- */
 public class BookingDetailsActionContactPanelViewConstructor extends BookingDetailsActionPanelViewConstructor
 {
     @InjectView(R.id.booking_details_contact_profile_text)

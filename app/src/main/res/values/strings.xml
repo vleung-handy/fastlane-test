@@ -255,6 +255,7 @@
     <string name="text">Text</string>
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
+    <string name="i_need_help">I Need Help</string>
     <string name="update_arrival_time">Update Arrival Time</string>
     <string name="disclaimer_on_my_way">Button activates 1 hour before booking</string>
     <string name="remove_job">Remove Job</string>
