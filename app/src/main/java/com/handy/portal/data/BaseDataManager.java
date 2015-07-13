@@ -1,14 +1,13 @@
 package com.handy.portal.data;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
-import com.handy.portal.model.SimpleResponse;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -138,9 +137,9 @@ public final class BaseDataManager extends DataManager
         service.getConfigParams(getUserId(), keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }
 
-    public final void sendVersionInformation(Map<String, String> versionInfo, final Callback<SimpleResponse> cb)
+    public final void sendVersionInformation(Map<String, String> versionInfo)
     {
-        service.sendVersionInformation(versionInfo, new SimpleResponseHandyRetroFitCallback(cb));
+        service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback());
     }
 
     private String getUserId()

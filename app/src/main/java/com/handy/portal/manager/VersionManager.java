@@ -16,7 +16,6 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.SimpleResponse;
 import com.handy.portal.model.UpdateDetails;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
@@ -123,40 +122,12 @@ public class VersionManager
     @Subscribe
     public void onApplicationResumed(HandyEvent.ApplicationResumed event)
     {
-        dataManager.sendVersionInformation(getVersionInfo(), new DataManager.Callback<SimpleResponse>()
-                {
-                    @Override
-                    public void onSuccess(final SimpleResponse updateDetails)
-                    {
-                        //Do nothing
-                    }
-
-                    @Override
-                    public void onError(final DataManager.DataManagerError error)
-                    {
-                        //Do nothing
-                    }
-                }
-        );
+        dataManager.sendVersionInformation(getVersionInfo());
     }
 
     @Subscribe
     public void onReceiveLoginSuccess(HandyEvent.ReceiveLoginSuccess event) {
-        dataManager.sendVersionInformation(getVersionInfo(), new DataManager.Callback<SimpleResponse>()
-                {
-                    @Override
-                    public void onSuccess(final SimpleResponse updateDetails)
-                    {
-                        //Do nothing
-                    }
-
-                    @Override
-                    public void onError(final DataManager.DataManagerError error)
-                    {
-                        //Do nothing
-                    }
-                }
-        );
+        dataManager.sendVersionInformation(getVersionInfo());
     }
 
     public void downloadApk(String apkUrl)
