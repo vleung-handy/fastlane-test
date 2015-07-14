@@ -310,7 +310,6 @@ public class BookingDetailsFragment extends InjectedFragment
             case CLAIM:
             case ON_MY_WAY:
             case CHECK_IN:
-            case ETA:
             case CHECK_OUT:
             case HELP:
             {
@@ -375,12 +374,6 @@ public class BookingDetailsFragment extends InjectedFragment
             case ON_MY_WAY:
             {
                 requestNotifyOnMyWayJob(this.associatedBooking.getId(), locationData);
-            }
-            break;
-
-            case ETA:
-            {
-                showUpdateArrivalTimeDialog(this.associatedBooking);
             }
             break;
 

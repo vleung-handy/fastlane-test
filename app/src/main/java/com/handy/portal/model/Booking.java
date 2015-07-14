@@ -283,7 +283,6 @@ public class Booking implements Parcelable, Comparable<Booking>
         public static final String BOOKING_ACTION_NAME_REMOVE = "remove";
         public static final String BOOKING_ACTION_NAME_ON_MY_WAY = "on_my_way";
         public static final String BOOKING_ACTION_NAME_CHECK_IN = "check_in";
-        public static final String BOOKING_ACTION_NAME_ETA = "eta";
         public static final String BOOKING_ACTION_NAME_CHECK_OUT = "check_out";
         public static final String BOOKING_ACTION_NAME_HELP = "help";
         public static final String BOOKING_ACTION_NAME_CONTACT_PHONE = "contact_phone";
