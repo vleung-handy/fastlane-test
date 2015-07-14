@@ -4,6 +4,12 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
+<<<<<<< HEAD
+=======
+import com.crashlytics.android.Crashlytics;
+import com.handy.portal.manager.LoginManager;
+import com.handy.portal.model.Booking;
+>>>>>>> 036ee679510b748f78fb1550da4170c9d5d2c100
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
@@ -143,6 +149,37 @@ public final class BaseDataManager extends DataManager
     {
         service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback());
     }
+
+    //These addresses are wrong for portal help
+    //********Help Center********
+    public void getHelpInfo(String nodeId,
+                     String authToken,
+                     String bookingId,
+                            final Callback<SimpleResponse> cb)
+    {
+        service.getHelpInfo(nodeId, authToken, bookingId, new SimpleResponseHandyRetroFitCallback(cb));
+    }
+
+    public void getHelpBookingsInfo(String nodeId,
+                             String authToken,
+                             String bookingId,
+                                    final Callback<SimpleResponse> cb)
+    {
+        service.getHelpBookingsInfo(nodeId, authToken, bookingId, new SimpleResponseHandyRetroFitCallback(cb));
+    }
+
+    public void createHelpCase( TypedInput body, final Callback<Void> cb)
+    {
+        service.createHelpCase(body, new HandyRetrofitCallback(cb)
+        {
+            @Override
+            public void success(JSONObject response)
+            {
+                cb.onSuccess(null);
+            }
+        });
+    }
+    //********End Help Center********
 
     private String getUserId()
     {

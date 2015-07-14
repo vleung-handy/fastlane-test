@@ -107,7 +107,6 @@ public class PortalWebViewClient extends WebViewClient
                 + "&skip_web_portal_blocking=1"
                 + "&from_android_native=1"
                 ;
-
         String urlWithParams = url + (url.contains("?") ? (url.endsWith("&") ? "" : "&") : "?") + endOfUrl;
         webView.loadUrl(urlWithParams);
     }
