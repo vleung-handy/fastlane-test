@@ -1,4 +1,4 @@
-<com.handy.portal.ui.layout.SlideUpPanelLayout
+<com.handy.portal.ui.layout.SlideUpPanelContainer
     android:id="@+id/container_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -121,4 +121,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</com.handy.portal.ui.layout.SlideUpPanelLayout>
+</com.handy.portal.ui.layout.SlideUpPanelContainer>

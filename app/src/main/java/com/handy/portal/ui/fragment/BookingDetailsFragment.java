@@ -45,7 +45,7 @@ import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsViewConstructor;
 import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
-import com.handy.portal.ui.layout.SlideUpPanelLayout;
+import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -93,7 +93,7 @@ public class BookingDetailsFragment extends InjectedFragment
     protected LinearLayout removeJobLayout;
 
     @InjectView(R.id.container_layout)
-    protected SlideUpPanelLayout containerLayout;
+    protected SlideUpPanelContainer containerLayout;
 
     @InjectView(R.id.booking_details_full_details_notice_text)
     protected TextView fullDetailsNoticeText;
