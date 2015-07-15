@@ -17,7 +17,7 @@ public abstract class BookingDetailsViewFragmentContainerConstructor extends Boo
     protected abstract Class getFragmentClass();
 
     @Override
-    public void constructView(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
+    public void constructView(Booking booking, List<Booking.Action> allowedActions, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;

@@ -71,7 +71,7 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
     }
 
     @Override
-    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         this.useRestrictedView = true;

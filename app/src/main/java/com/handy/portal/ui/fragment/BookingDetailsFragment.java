@@ -45,6 +45,7 @@ import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsViewConstructor;
 import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
+import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -90,6 +91,9 @@ public class BookingDetailsFragment extends InjectedFragment
 
     @InjectView(R.id.booking_details_remove_job_layout)
     protected LinearLayout removeJobLayout;
+
+    @InjectView(R.id.container_layout)
+    protected SlideUpPanelLayout containerLayout;
 
     @InjectView(R.id.booking_details_full_details_notice_text)
     protected TextView fullDetailsNoticeText;
@@ -184,7 +188,7 @@ public class BookingDetailsFragment extends InjectedFragment
     //Use view constructors on layouts to generate the elements inside the layouts, we do not currently maintain a linkage to the resulting view
     private void constructBookingDisplayElements(Booking booking)
     {
-        List<Booking.ActionButtonData> allowedActions = booking.getAllowedActions();
+        List<Booking.Action> allowedActions = booking.getAllowedActions();
         Activity activity = getActivity();
 
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
@@ -277,27 +281,27 @@ public class BookingDetailsFragment extends InjectedFragment
     //Dynamically generated Action Buttons based on the allowedActions sent by the server in our booking data
     private void createAllowedActionButtons(Booking booking)
     {
-        List<Booking.ActionButtonData> allowedActions = booking.getAllowedActions();
-        for (Booking.ActionButtonData data : allowedActions)
+        List<Booking.Action> allowedActions = booking.getAllowedActions();
+        for (Booking.Action action : allowedActions)
         {
-            if (UIUtils.getAssociatedActionType(data) == null)
+            if (UIUtils.getAssociatedActionType(action) == null)
             {
-                Crashlytics.log("Received an unsupported action type : " + data.getActionName());
+                Crashlytics.log("Received an unsupported action type : " + action.getActionName());
                 continue;
             }
 
             //the client knows what layout to insert a given button into, this should never come from the server
-            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(UIUtils.getAssociatedActionType(data));
+            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(UIUtils.getAssociatedActionType(action));
 
             if (buttonParentLayout == null)
             {
-                Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(data).getActionName());
+                Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(action).getActionName());
             } else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
                 BookingActionButton bookingActionButton = (BookingActionButton)
-                        ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(data).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
-                bookingActionButton.init(booking, this, data); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
+                        ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(action).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
+                bookingActionButton.init(booking, this, action); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
             }
         }
     }
@@ -383,6 +387,12 @@ public class BookingDetailsFragment extends InjectedFragment
             }
             break;
 
+            case HELP:
+            {
+                showHelpOptions();
+            }
+            break;
+
             case CHECK_OUT:
             {
                 requestNotifyCheckOutJob(this.associatedBooking.getId(), locationData);
@@ -416,22 +426,27 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    private void showHelpOptions()
+    {
+        containerLayout.showPanel();
+    }
+
     //Check if the current booking data for a given action type has an associated warning to display
     private boolean checkShowWarningDialog(BookingActionButtonType actionType)
     {
         boolean showingWarningDialog = false;
 
-        List<Booking.ActionButtonData> allowedActions = this.associatedBooking.getAllowedActions();
+        List<Booking.Action> allowedActions = this.associatedBooking.getAllowedActions();
 
         //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
-        for (Booking.ActionButtonData buttonData : allowedActions)
+        for (Booking.Action action : allowedActions)
         {
-            if (UIUtils.getAssociatedActionType(buttonData) == actionType)
+            if (UIUtils.getAssociatedActionType(action) == actionType)
             {
-                if (buttonData.getWarningText() != null && !buttonData.getWarningText().isEmpty())
+                if (action.getWarningText() != null && !action.getWarningText().isEmpty())
                 {
                     showingWarningDialog = true;
-                    showBookingActionWarningDialog(buttonData.getWarningText(), UIUtils.getAssociatedActionType(buttonData));
+                    showBookingActionWarningDialog(action.getWarningText(), UIUtils.getAssociatedActionType(action));
                 }
             }
         }

@@ -20,7 +20,7 @@ public class BookingDetailsActionRemovePanelViewConstructor extends BookingDetai
     }
 
     @Override
-    protected boolean shouldRemoveSection(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
+    protected boolean shouldRemoveSection(Booking booking, List<Booking.Action> allowedActions, BookingStatus bookingStatus)
     {
         boolean removeSection = false;
         removeSection = super.shouldRemoveSection(booking, allowedActions, bookingStatus) || (bookingStatus != BookingStatus.CLAIMED);

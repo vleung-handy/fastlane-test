@@ -34,7 +34,7 @@ public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstru
         return R.layout.element_booking_details_date;
     }
 
-    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
     {
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();

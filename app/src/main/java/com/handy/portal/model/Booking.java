@@ -41,7 +41,7 @@ public class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("partner") private String partner;
     @SerializedName("country") private String country;
     @SerializedName("user") private User user;
-    @SerializedName("actions") private List<ActionButtonData> actionButtonDataList;
+    @SerializedName("actions") private List<Action> actionList;
     @SerializedName("booking_phone") private String bookingPhone;
 
     @SerializedName("booking_instructions") private List<BookingInstruction> bookingInstructions; //Customer Details
@@ -264,11 +264,11 @@ public class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-    public List<ActionButtonData> getAllowedActions()
+    public List<Action> getAllowedActions()
     {
-        if (actionButtonDataList != null)
+        if (actionList != null)
         {
-            return actionButtonDataList;
+            return actionList;
         }
         else
         {
@@ -276,18 +276,21 @@ public class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-    public static class ActionButtonData
+    public static class Action
     {
-        //** KEEP IN SYNC WITH SERVER VALUES **//
-        public static final String BOOKING_ACTION_NAME_CLAIM = "claim";
-        public static final String BOOKING_ACTION_NAME_REMOVE = "remove";
-        public static final String BOOKING_ACTION_NAME_ON_MY_WAY = "on_my_way";
-        public static final String BOOKING_ACTION_NAME_CHECK_IN = "check_in";
-        public static final String BOOKING_ACTION_NAME_CHECK_OUT = "check_out";
-        public static final String BOOKING_ACTION_NAME_HELP = "help";
-        public static final String BOOKING_ACTION_NAME_CONTACT_PHONE = "contact_phone";
-        public static final String BOOKING_ACTION_NAME_CONTACT_TEXT = "contact_text";
-        //** KEEP IN SYNC WITH SERVER VALUES **//
+        // KEEP IN SYNC WITH SERVER VALUES
+        public static final String ACTION_CLAIM = "claim";
+        public static final String ACTION_REMOVE = "remove";
+        public static final String ACTION_ON_MY_WAY = "on_my_way";
+        public static final String ACTION_CHECK_IN = "check_in";
+        public static final String ACTION_CHECK_OUT = "check_out";
+        public static final String ACTION_CONTACT_PHONE = "contact_phone";
+        public static final String ACTION_CONTACT_TEXT = "contact_text";
+        public static final String ACTION_HELP = "need_help";
+        public static final String ACTION_REPORT_NO_SHOW = "report_no_show";
+        public static final String ACTION_ISSUE_OTHER = "other_issue";
+        public static final String ACTION_ISSUE_UNSAFE = "unsafe_conditions";
+        public static final String ACTION_ISSUE_HOURS = "change_hours";
 
         @SerializedName("action_name")
         private String actionName;

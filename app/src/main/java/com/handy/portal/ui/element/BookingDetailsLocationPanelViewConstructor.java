@@ -44,7 +44,7 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
         return R.layout.element_booking_details_location;
     }
 
-    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
 

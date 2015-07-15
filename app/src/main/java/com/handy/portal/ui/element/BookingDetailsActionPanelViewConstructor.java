@@ -26,7 +26,7 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         return R.layout.element_booking_details_action;
     }
 
-    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
     {
         BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         boolean removeSection = shouldRemoveSection(booking, allowedActions, bookingStatus);
@@ -40,17 +40,17 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         }
     }
 
-    protected boolean shouldRemoveSection(Booking booking, List<Booking.ActionButtonData> allowedActions, BookingStatus bookingStatus)
+    protected boolean shouldRemoveSection(Booking booking, List<Booking.Action> allowedActions, BookingStatus bookingStatus)
     {
         return !hasAllowedAction(allowedActions);
     }
 
-    protected boolean hasAllowedAction(List<Booking.ActionButtonData> allowedActions)
+    protected boolean hasAllowedAction(List<Booking.Action> allowedActions)
     {
         boolean hasAnAction = false;
-        for (Booking.ActionButtonData actionButtonData : allowedActions)
+        for (Booking.Action action : allowedActions)
         {
-            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(actionButtonData)))
+            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(action)))
             {
                 hasAnAction = true;
                 break;
@@ -59,21 +59,21 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         return hasAnAction;
     }
 
-    protected void initHelperText(List<Booking.ActionButtonData> allowedActions)
+    protected void initHelperText(List<Booking.Action> allowedActions)
     {
         String helperContent = "";
-        for (Booking.ActionButtonData actionButtonData : allowedActions)
+        for (Booking.Action action : allowedActions)
         {
-            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(actionButtonData)))
+            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(action)))
             {
-                if (actionButtonData.getHelperText() != null && !actionButtonData.getHelperText().isEmpty())
+                if (action.getHelperText() != null && !action.getHelperText().isEmpty())
                 {
                     //allow accumulation of helper text, it will all display below the buttons instead of below each button
                     if (!helperContent.isEmpty())
                     {
                         helperContent += "\n";
                     }
-                    helperContent += actionButtonData.getHelperText();
+                    helperContent += action.getHelperText();
                 }
             }
         }

@@ -27,7 +27,7 @@ public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConst
         return R.layout.element_booking_details_banner;
     }
 
-    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
     {
         Booking.BookingStatus bookingStatus = (Booking.BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
         switch (bookingStatus)

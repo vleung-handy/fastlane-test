@@ -62,7 +62,7 @@ public final class UIUtils
     }
 
     //Map action button data to a booking action button type
-    public static BookingActionButtonType getAssociatedActionType(Booking.ActionButtonData data)
+    public static BookingActionButtonType getAssociatedActionType(Booking.Action data)
     {
         String actionName = data.getActionName();
         for(BookingActionButtonType bat : BookingActionButtonType.values())

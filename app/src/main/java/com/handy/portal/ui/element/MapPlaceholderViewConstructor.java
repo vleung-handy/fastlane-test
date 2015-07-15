@@ -15,7 +15,7 @@ public class MapPlaceholderViewConstructor extends BookingDetailsViewConstructor
         return R.layout.element_map_placeholder;
     }
 
-    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
     {
     }
 

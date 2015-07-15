@@ -19,7 +19,7 @@ public abstract class BookingDetailsViewConstructor
 
     protected abstract int getLayoutResourceId();
 
-    public void constructView(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
+    public void constructView(Booking booking, List<Booking.Action> allowedActions, Bundle arguments, ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
@@ -31,7 +31,7 @@ public abstract class BookingDetailsViewConstructor
         constructViewFromBooking(booking, allowedActions, arguments);
     }
 
-    protected abstract void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments);
+    protected abstract void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments);
 
     protected void removeView()
     {

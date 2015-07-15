@@ -23,7 +23,7 @@ public class BookingDetailsActionContactPanelViewConstructor extends BookingDeta
     }
 
     @Override
-    protected void constructViewFromBooking(Booking booking, List<Booking.ActionButtonData> allowedActions, Bundle arguments)
+    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
     {
         super.constructViewFromBooking(booking, allowedActions, arguments);
         Booking.User bookingUser = booking.getUser();
@@ -31,7 +31,7 @@ public class BookingDetailsActionContactPanelViewConstructor extends BookingDeta
     }
 
     @Override
-    protected boolean shouldRemoveSection(Booking booking, List<Booking.ActionButtonData> allowedActions, Booking.BookingStatus bookingStatus)
+    protected boolean shouldRemoveSection(Booking booking, List<Booking.Action> allowedActions, Booking.BookingStatus bookingStatus)
     {
         return super.shouldRemoveSection(booking, allowedActions, bookingStatus) || (bookingStatus != Booking.BookingStatus.CLAIMED);
     }

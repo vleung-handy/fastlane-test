@@ -5,14 +5,14 @@ import com.handy.portal.model.Booking;
 
 public enum BookingActionButtonType
 {
-    CLAIM(Booking.ActionButtonData.BOOKING_ACTION_NAME_CLAIM, R.string.claim, BookingActionButtonStyle.GREEN),
-    REMOVE(Booking.ActionButtonData.BOOKING_ACTION_NAME_REMOVE, R.string.remove_job, BookingActionButtonStyle.RED_EMPTY),
-    ON_MY_WAY(Booking.ActionButtonData.BOOKING_ACTION_NAME_ON_MY_WAY, R.string.on_my_way, BookingActionButtonStyle.BLUE),
-    CHECK_IN(Booking.ActionButtonData.BOOKING_ACTION_NAME_CHECK_IN, R.string.check_in, BookingActionButtonStyle.TEAL),
-    CHECK_OUT(Booking.ActionButtonData.BOOKING_ACTION_NAME_CHECK_OUT, R.string.check_out, BookingActionButtonStyle.TEAL),
-    HELP(Booking.ActionButtonData.BOOKING_ACTION_NAME_HELP, R.string.i_need_help, BookingActionButtonStyle.TEAL_EMPTY),
-    CONTACT_PHONE(Booking.ActionButtonData.BOOKING_ACTION_NAME_CONTACT_PHONE, R.string.call, BookingActionButtonStyle.CONTACT),
-    CONTACT_TEXT(Booking.ActionButtonData.BOOKING_ACTION_NAME_CONTACT_TEXT, R.string.text, BookingActionButtonStyle.CONTACT),
+    CLAIM(Booking.Action.ACTION_CLAIM, R.string.claim, BookingActionButtonStyle.GREEN),
+    REMOVE(Booking.Action.ACTION_REMOVE, R.string.remove_job, BookingActionButtonStyle.RED_EMPTY),
+    ON_MY_WAY(Booking.Action.ACTION_ON_MY_WAY, R.string.on_my_way, BookingActionButtonStyle.BLUE),
+    CHECK_IN(Booking.Action.ACTION_CHECK_IN, R.string.check_in, BookingActionButtonStyle.TEAL),
+    CHECK_OUT(Booking.Action.ACTION_CHECK_OUT, R.string.check_out, BookingActionButtonStyle.TEAL),
+    HELP(Booking.Action.ACTION_HELP, R.string.i_need_help, BookingActionButtonStyle.TEAL_EMPTY),
+    CONTACT_PHONE(Booking.Action.ACTION_CONTACT_PHONE, R.string.call, BookingActionButtonStyle.CONTACT),
+    CONTACT_TEXT(Booking.Action.ACTION_CONTACT_TEXT, R.string.text, BookingActionButtonStyle.CONTACT),
     ;
 
     private String actionName; //must correspond to server's actionName to match up correctly
