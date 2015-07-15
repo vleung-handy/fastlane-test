@@ -623,4 +623,7 @@ public abstract class HandyEvent
     {
     }
 
+    public static class ShowSlideUpPanel
+    {
+    }
 }

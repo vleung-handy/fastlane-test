@@ -286,11 +286,17 @@ public class Booking implements Parcelable, Comparable<Booking>
         public static final String ACTION_CHECK_OUT = "check_out";
         public static final String ACTION_CONTACT_PHONE = "contact_phone";
         public static final String ACTION_CONTACT_TEXT = "contact_text";
+
         public static final String ACTION_HELP = "need_help";
+
         public static final String ACTION_REPORT_NO_SHOW = "report_no_show";
-        public static final String ACTION_ISSUE_OTHER = "other_issue";
+        public static final String ACTION_NOTIFY_EARLY = "notify_early";
+        public static final String ACTION_NOTIFY_LATE = "notify_late";
         public static final String ACTION_ISSUE_UNSAFE = "unsafe_conditions";
         public static final String ACTION_ISSUE_HOURS = "change_hours";
+        public static final String ACTION_ISSUE_OTHER = "other_issue";
+
+        public static final String ACTION_RETRACT_NO_SHOW = "retract_no_show";
 
         @SerializedName("action_name")
         private String actionName;
