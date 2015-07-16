@@ -27,10 +27,7 @@
 
         <RelativeLayout
             android:id="@+id/menu_button_layout"
-<<<<<<< HEAD
-=======
             style="@style/MenuButtonLayout"
->>>>>>> 036ee679510b748f78fb1550da4170c9d5d2c100
             android:layout_gravity="start|center_vertical" >
         </RelativeLayout>
 

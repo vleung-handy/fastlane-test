@@ -53,20 +53,12 @@ public abstract class DataManager
     public abstract void getHelpInfo(String nodeId,
                             String authToken,
                             String bookingId,
-<<<<<<< HEAD
                             final EmptyHandyRetroFitCallback cb);
-=======
-                            final Callback<SimpleResponse> cb);
->>>>>>> 036ee679510b748f78fb1550da4170c9d5d2c100
 
     public abstract void getHelpBookingsInfo(String nodeId,
                                     String authToken,
                                     String bookingId,
-<<<<<<< HEAD
                                     final EmptyHandyRetroFitCallback cb);
-=======
-                                    final Callback<SimpleResponse> cb);
->>>>>>> 036ee679510b748f78fb1550da4170c9d5d2c100
 
     public abstract void createHelpCase( TypedInput body, final Callback<Void> cb);
 

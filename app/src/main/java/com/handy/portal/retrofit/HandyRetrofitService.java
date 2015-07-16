@@ -125,11 +125,7 @@ public interface HandyRetrofitService
                              HandyRetrofitCallback cb);
 
     @POST("/self_service/create_case")
-<<<<<<< HEAD
     void createHelpCase(@Body TypedInput body, DataManager.Callback<Void> cb);
-=======
-    void createHelpCase(@Body TypedInput body, HandyRetrofitCallback cb);
->>>>>>> 036ee679510b748f78fb1550da4170c9d5d2c100
     //********End Help Center********
 
 }
