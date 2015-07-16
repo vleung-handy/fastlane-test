@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public final class Booking implements Parcelable, Comparable<Booking>
+public class Booking implements Parcelable, Comparable<Booking>
 {
     @SerializedName("id") private String id;
     @SerializedName("service_name") private String service;
@@ -72,26 +72,26 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return b.id.equals(id);
     }
 
-    public final String getStatus(){return status;}
-    public final List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}
-    public final List<BookingInstructionGroup> getBookingInstructionGroups() { return bookingInstructionGroups;}
+    public String getStatus(){return status;}
+    public List<BookingInstruction> getBookingInstructions() { return bookingInstructions;}
+    public List<BookingInstructionGroup> getBookingInstructionGroups() { return bookingInstructionGroups;}
 
-    public final int getFrequency() { return frequency; }
+    public int getFrequency() { return frequency; }
 
-    public final String getPartner() { return partner; }
+    public String getPartner() { return partner; }
 
-    public final PaymentInfo getPaymentToProvider() { return paymentToProvider; }
-    public final PaymentInfo getBonusPaymentToProvider() { return bonusPayment; }
+    public PaymentInfo getPaymentToProvider() { return paymentToProvider; }
+    public PaymentInfo getBonusPaymentToProvider() { return bonusPayment; }
 
-    public final String getDescription() { return description; }
+    public String getDescription() { return description; }
 
-    public final boolean getIsRequested() { return isRequested;}
+    public boolean getIsRequested() { return isRequested;}
 
-    public final String getId() {
+    public String getId() {
         return id;
     }
 
-    public final void setId(final String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -117,51 +117,51 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return isEnded;
     }
 
-    public final boolean isRecurring() {
+    public boolean isRecurring() {
         return frequency > 0;
     }
 
-    public final String getProNote() {
+    public String getProNote() {
         return proNote;
     }
 
-    public final String getService() {
+    public String getService() {
         return service;
     }
 
-    public final Date getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public final Date getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public final float getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public final Address getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public final String getProviderId() {
+    public String getProviderId() {
         return providerId;
     }
 
-    public final LaundryStatus getLaundryStatus() {
+    public LaundryStatus getLaundryStatus() {
         return laundryStatus;
     }
 
-    public final String getBilledStatus() {
+    public String getBilledStatus() {
         return billedStatus;
     }
 
-    public final ArrayList<LineItem> getPaymentInfo() {
+    public ArrayList<LineItem> getPaymentInfo() {
         return paymentInfo;
     }
 
-    public final ArrayList<ExtraInfoWrapper> getExtrasInfo() {
+    public ArrayList<ExtraInfoWrapper> getExtrasInfo() {
         return extrasInfo;
     }
 
@@ -172,7 +172,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     public String getBookingPhone() {return bookingPhone;}
 
-    public final List<ExtraInfoWrapper> getExtrasInfoByMachineName(final String machineName)
+    public List<ExtraInfoWrapper> getExtrasInfoByMachineName(final String machineName)
     {
         ArrayList<Booking.ExtraInfoWrapper> extrasInfo = getExtrasInfo();
         if (extrasInfo != null)
@@ -189,7 +189,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         return Collections.emptyList();
     }
 
-    public final boolean isUK()
+    public boolean isUK()
     {
         return "GB".equalsIgnoreCase(country);
     }
@@ -276,7 +276,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-    public static final class ActionButtonData
+    public static class ActionButtonData
     {
         //** KEEP IN SYNC WITH SERVER VALUES **//
         public static final String BOOKING_ACTION_NAME_CLAIM = "claim";
@@ -358,7 +358,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     }
 
     @Override
-    public final void writeToParcel(final Parcel out, final int flags) {
+    public void writeToParcel(final Parcel out, final int flags) {
         out.writeStringArray(new String[]{id, service, laundryStatus != null
                 ? laundryStatus.name() : "", proNote,
                 billedStatus});
@@ -372,7 +372,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
     }
 
     @Override
-    public final int describeContents(){
+    public int describeContents(){
         return 0;
     }
 
@@ -385,7 +385,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
     };
 
-    public static final class User
+    public static class User
     {
         @SerializedName("email")
         private String email;
@@ -429,7 +429,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     }
 
-    public static final class PaymentInfo
+    public static class PaymentInfo
     {
         @SerializedName("amount")
         private int amount;
@@ -448,7 +448,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         public String getCurrencySuffix() { return currencySuffix; }
     }
 
-    public static final class BookingInstruction
+    public static class BookingInstruction
     {
         @SerializedName("description")
         private String description;
@@ -462,7 +462,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     }
 
-    public static final class BookingInstructionGroup
+    public static class BookingInstructionGroup
     {
         public static String GROUP_ENTRY_METHOD = "entry_method";
         public static String GROUP_LINENS_LAUNDRY = "linens_laundry";
@@ -494,7 +494,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-    public static final class ServiceInfo implements Parcelable {
+    public static class ServiceInfo implements Parcelable {
         @SerializedName("id")
         private String id;
         @SerializedName("machine_name")
@@ -503,17 +503,17 @@ public final class Booking implements Parcelable, Comparable<Booking>
         private String displayName;
 
         @Override
-        public final void writeToParcel(final Parcel out, final int flags) {
+        public void writeToParcel(final Parcel out, final int flags) {
             out.writeStringArray(new String[]{ id, machineName, displayName});
         }
 
         @Override
-        public final int describeContents(){
+        public int describeContents(){
             return 0;
         }
     }
 
-    public static final class Address implements Parcelable {
+    public static class Address implements Parcelable {
         @SerializedName("address1") private String address1;
         @SerializedName("address2") private String address2;
         @SerializedName("city") private String city;
@@ -525,32 +525,32 @@ public final class Booking implements Parcelable, Comparable<Booking>
         @SerializedName("short_region") private String shortRegion;
         @SerializedName("region_id") private int regionId;
 
-        public final float getLatitude() { return latitude;}
-        public final float getLongitude() { return longitude;}
+        public float getLatitude() { return latitude;}
+        public float getLongitude() { return longitude;}
 
-        public final String getShortRegion() { return shortRegion; }
+        public String getShortRegion() { return shortRegion; }
 
-        public final String getAddress1() {
+        public String getAddress1() {
             return address1;
         }
 
-        public final String getAddress2() {
+        public String getAddress2() {
             return address2;
         }
 
-        public final String getCity() {
+        public String getCity() {
             return city;
         }
 
-        public final String getState() {
+        public String getState() {
             return state;
         }
 
-        public final String getZip() {
+        public String getZip() {
             return zip;
         }
 
-        public final String getStreetAddress()
+        public String getStreetAddress()
         {
             return (getAddress1() + (getAddress2() != null ? " " + getAddress2() : ""));
         }
@@ -566,12 +566,12 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
 
         @Override
-        public final void writeToParcel(final Parcel out, final int flags) {
+        public void writeToParcel(final Parcel out, final int flags) {
             out.writeStringArray(new String[]{ address1, address2, city, state, zip });
         }
 
         @Override
-        public final int describeContents(){
+        public int describeContents(){
             return 0;
         }
 
@@ -585,13 +585,13 @@ public final class Booking implements Parcelable, Comparable<Booking>
         };
     }
 
-    public static final class Provider implements Parcelable {
+    public static class Provider implements Parcelable {
         @SerializedName("status") private int status;
         @SerializedName("first_name") private String firstName;
         @SerializedName("last_name") private String lastName;
         @SerializedName("phone") private String phone;
 
-        public final int getStatus() {
+        public int getStatus() {
             return status;
         }
 
@@ -599,7 +599,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
             this.status = status;
         }
 
-        public final String getFirstName() {
+        public String getFirstName() {
             return firstName;
         }
 
@@ -607,7 +607,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
             this.firstName = firstName;
         }
 
-        public final String getLastName() {
+        public String getLastName() {
             return lastName;
         }
 
@@ -615,7 +615,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
             this.lastName = lastName;
         }
 
-        public final String getPhone() {
+        public String getPhone() {
             return phone;
         }
 
@@ -636,13 +636,13 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
 
         @Override
-        public final void writeToParcel(final Parcel out, final int flags) {
+        public void writeToParcel(final Parcel out, final int flags) {
             out.writeIntArray(new int[]{ status });
             out.writeStringArray(new String[]{ firstName, lastName, phone });
         }
 
         @Override
-        public final int describeContents(){
+        public int describeContents(){
             return 0;
         }
 
@@ -656,20 +656,20 @@ public final class Booking implements Parcelable, Comparable<Booking>
         };
     }
 
-    public static final class LineItem implements Parcelable {
+    public static class LineItem implements Parcelable {
         @SerializedName("order") private int order;
         @SerializedName("label") private String label;
         @SerializedName("amount") private String amount;
 
-        public final int getOrder() {
+        public int getOrder() {
             return order;
         }
 
-        public final String getLabel() {
+        public String getLabel() {
             return label;
         }
 
-        public final String getAmount() {
+        public String getAmount() {
             return amount;
         }
 
@@ -685,13 +685,13 @@ public final class Booking implements Parcelable, Comparable<Booking>
         }
 
         @Override
-        public final void writeToParcel(final Parcel out, final int flags) {
+        public void writeToParcel(final Parcel out, final int flags) {
             out.writeIntArray(new int[]{order});
             out.writeStringArray(new String[]{label, amount});
         }
 
         @Override
-        public final int describeContents(){
+        public int describeContents(){
             return 0;
         }
 
@@ -705,7 +705,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
         };
     }
 
-    public static final class ExtraInfoWrapper
+    public static class ExtraInfoWrapper
     {
         public ExtraInfo getExtraInfo()
         {
@@ -718,7 +718,7 @@ public final class Booking implements Parcelable, Comparable<Booking>
 
     }
 
-    public static final class ExtraInfo
+    public static class ExtraInfo
     {
         @SerializedName("category") private String category;
         @SerializedName("fee") private String fee;
