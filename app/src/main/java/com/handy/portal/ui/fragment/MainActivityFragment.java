@@ -105,6 +105,12 @@ public class MainActivityFragment extends InjectedFragment
         slideUpPanelContainer.showPanel(event.contentInitializer);
     }
 
+    @Subscribe
+    public void onHideSlideUpPanel(HandyEvent.HideSlideUpPanel event)
+    {
+        slideUpPanelContainer.hidePanel();
+    }
+
     private void initWebViewFragment(Target urlTarget)
     {
         webViewFragment = new PortalWebViewFragment();

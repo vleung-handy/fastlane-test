@@ -8,6 +8,7 @@ import com.google.common.collect.Collections2;
 import com.handy.portal.R;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
+import com.squareup.otto.Bus;
 
 import java.util.Collection;
 import java.util.Set;
@@ -19,11 +20,13 @@ public class SupportActionContainerViewConstructor extends ViewConstructor<Booki
     @InjectView(R.id.support_actions_container)
     ViewGroup supportActionsContainer;
 
+    private Bus bus;
     private Set<String> allowedActionNames;
 
-    public SupportActionContainerViewConstructor(@NonNull Set<String> allowedActionNames)
+    public SupportActionContainerViewConstructor(Bus bus, @NonNull Set<String> allowedActionNames)
     {
         super();
+        this.bus = bus;
         this.allowedActionNames = allowedActionNames;
     }
 
@@ -47,7 +50,8 @@ public class SupportActionContainerViewConstructor extends ViewConstructor<Booki
 
         for (Action action : supportActions)
         {
-            new SupportActionViewConstructor().create(getContext(), supportActionsContainer, action);
+            new SupportActionViewConstructor(bus)
+                    .create(getContext(), supportActionsContainer, action);
         }
 
         return supportActions.size() > 0;

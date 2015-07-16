@@ -8,6 +8,7 @@ import com.handy.portal.annotation.Track;
 import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.BookingSummary;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
@@ -631,6 +632,20 @@ public abstract class HandyEvent
         public ShowSlideUpPanel(SlideUpPanelContainer.ContentInitializer contentInitializer)
         {
             this.contentInitializer = contentInitializer;
+        }
+    }
+
+    public static class HideSlideUpPanel
+    {
+    }
+
+    public static class TriggerSupportAction
+    {
+        public final Action action;
+
+        public TriggerSupportAction(@NonNull Action action)
+        {
+            this.action = action;
         }
     }
 }

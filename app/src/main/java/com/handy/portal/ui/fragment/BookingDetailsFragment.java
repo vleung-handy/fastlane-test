@@ -27,6 +27,7 @@ import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.SupportAction;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
@@ -48,7 +49,7 @@ import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
-import com.handy.portal.util.ActionUtils;
+import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -432,9 +433,9 @@ public class BookingDetailsFragment extends InjectedFragment
             @Override
             public void initialize(ViewGroup panel)
             {
-                new SupportActionContainerViewConstructor(ActionUtils.ETA_ACTION_NAMES)
+                new SupportActionContainerViewConstructor(bus, SupportActionUtils.ETA_ACTION_NAMES)
                         .create(getActivity(), panel, associatedBooking);
-                new SupportActionContainerViewConstructor(ActionUtils.ISSUE_ACTION_NAMES)
+                new SupportActionContainerViewConstructor(bus, SupportActionUtils.ISSUE_ACTION_NAMES)
                         .create(getActivity(), panel, associatedBooking);
             }
         }));
@@ -752,6 +753,29 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleNotifyUpdateArrivalError(event);
+    }
+
+    @Subscribe
+    public void onSupportActionTriggered(HandyEvent.TriggerSupportAction event)
+    {
+        SupportAction supportAction = SupportActionUtils.getSupportAction(event.action);
+        switch (supportAction)
+        {
+            case NOTIFY_EARLY:
+                break;
+            case NOTIFY_LATE:
+                break;
+            case REPORT_NO_SHOW:
+                break;
+            case ISSUE_UNSAFE:
+            case ISSUE_HOURS:
+            case ISSUE_OTHER:
+                bus.post(new HandyEvent.HideSlideUpPanel());
+                Bundle arguments = new Bundle();
+                arguments.putString(BundleKeys.TARGET_URL, event.action.getDeepLink());
+                bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments, TransitionStyle.NATIVE_TO_WEBVIEW));
+                break;
+        }
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)

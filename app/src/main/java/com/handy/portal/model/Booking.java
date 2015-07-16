@@ -306,6 +306,8 @@ public class Booking implements Parcelable, Comparable<Booking>
         private String warningText; //Indicates a popup should be shown with this message to confirm action
         @SerializedName("enabled")
         private boolean enabled;
+        @SerializedName("deep_link_data")
+        private String deepLink;
 
         public String getActionName()
         {
@@ -322,6 +324,10 @@ public class Booking implements Parcelable, Comparable<Booking>
         public boolean isEnabled()
         {
             return enabled;
+        }
+        public String getDeepLink()
+        {
+            return deepLink;
         }
     }
 
