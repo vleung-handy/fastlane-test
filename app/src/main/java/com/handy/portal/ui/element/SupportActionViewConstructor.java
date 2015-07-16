@@ -24,10 +24,11 @@ public class SupportActionViewConstructor extends ViewConstructor<Action>
     }
 
     @Override
-    void constructView(ViewGroup container, Action action)
+    boolean constructView(ViewGroup container, Action action)
     {
         String actionName = action.getActionName();
         icon.setImageResource(ActionUtils.getActionIcon(actionName));
         text.setText(ActionUtils.getActionText(actionName));
+        return true;
     }
 }

@@ -48,6 +48,7 @@ import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
+import com.handy.portal.util.ActionUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -431,7 +432,10 @@ public class BookingDetailsFragment extends InjectedFragment
             @Override
             public void initialize(ViewGroup panel)
             {
-                new SupportActionContainerViewConstructor().create(getActivity(), panel, associatedBooking);
+                new SupportActionContainerViewConstructor(ActionUtils.ETA_ACTION_NAMES)
+                        .create(getActivity(), panel, associatedBooking);
+                new SupportActionContainerViewConstructor(ActionUtils.ISSUE_ACTION_NAMES)
+                        .create(getActivity(), panel, associatedBooking);
             }
         }));
     }

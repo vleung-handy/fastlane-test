@@ -13,15 +13,17 @@ public abstract class ViewConstructor<T>
 
     abstract int getLayoutResourceId();
 
-    abstract void constructView(ViewGroup container, T item);
+    abstract boolean constructView(ViewGroup container, T item);
 
     public void create(Context context, ViewGroup container, T item)
     {
         this.context = context;
         View view = LayoutInflater.from(context).inflate(getLayoutResourceId(), container, false);
         ButterKnife.inject(this, view);
-        constructView(container, item);
-        container.addView(view);
+        if (constructView(container, item))
+        {
+            container.addView(view);
+        }
     }
 
     public Context getContext()

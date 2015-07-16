@@ -284,9 +284,12 @@
     <string name="need_google_play">To view maps, please install Google Play Services</string>
     <string name="exact_location_shown_claimed">Exact location shown after job is claimed</string>
     <string name="customer_prefix">CUSTOMER: </string>
+
     <string name="customer_not_home">My customer is not home</string>
     <string name="add_remove_hours">Request to add/remove hours</string>
     <string name="i_feel_unsafe">I feel uncomfortable or unsafe</string>
     <string name="different_issue">I have a different issue</string>
+    <string name="will_be_early">I\u2019ll be early</string>
+    <string name="will_be_late">I\u2019m running late</string>
 
 </resources>

@@ -13,6 +13,9 @@ public class ActionUtils
     private static Map<String, Integer> actionStringIdMap = new HashMap<>();
     static
     {
+        actionStringIdMap.put(Action.ACTION_NOTIFY_EARLY, R.string.will_be_early);
+        actionStringIdMap.put(Action.ACTION_NOTIFY_LATE, R.string.will_be_late);
+
         actionStringIdMap.put(Action.ACTION_REPORT_NO_SHOW, R.string.customer_not_home);
         actionStringIdMap.put(Action.ACTION_ISSUE_HOURS, R.string.add_remove_hours);
         actionStringIdMap.put(Action.ACTION_ISSUE_UNSAFE, R.string.i_feel_unsafe);
@@ -22,13 +25,21 @@ public class ActionUtils
     private static Map<String, Integer> actionDrawableIdMap = new HashMap<>();
     static
     {
+        actionDrawableIdMap.put(Action.ACTION_NOTIFY_EARLY, R.drawable.ic_details_trash);
+        actionDrawableIdMap.put(Action.ACTION_NOTIFY_LATE, R.drawable.ic_details_trash);
+
         actionDrawableIdMap.put(Action.ACTION_REPORT_NO_SHOW, R.drawable.ic_details_trash);
         actionDrawableIdMap.put(Action.ACTION_ISSUE_HOURS, R.drawable.ic_details_trash);
         actionDrawableIdMap.put(Action.ACTION_ISSUE_UNSAFE, R.drawable.ic_details_trash);
         actionDrawableIdMap.put(Action.ACTION_ISSUE_OTHER, R.drawable.ic_details_trash);
     }
 
-    public static final Set<String> SUPPORT_ACTION_NAMES = Sets.newHashSet(
+    public static final Set<String> ETA_ACTION_NAMES = Sets.newHashSet(
+            Action.ACTION_NOTIFY_EARLY,
+            Action.ACTION_NOTIFY_LATE
+    );
+
+    public static final Set<String> ISSUE_ACTION_NAMES = Sets.newHashSet(
             Action.ACTION_REPORT_NO_SHOW,
             Action.ACTION_ISSUE_HOURS,
             Action.ACTION_ISSUE_UNSAFE,
