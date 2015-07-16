@@ -1,33 +1,39 @@
 package com.handy.portal.ui.element;
 
+import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.SupportAction;
+import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking.Action;
 import com.handy.portal.util.SupportActionUtils;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class SupportActionViewConstructor extends ViewConstructor<Action>
+public class SupportActionViewInitializer extends ViewInitializer<Action>
 {
     @InjectView(R.id.support_action_icon)
     ImageView icon;
     @InjectView(R.id.support_action_text)
     TextView text;
 
-    private Bus bus;
+    @Inject
+    Bus bus;
+
     private Action action;
 
-    public SupportActionViewConstructor(Bus bus)
+    public SupportActionViewInitializer(Context context)
     {
-        super();
-        this.bus = bus;
+        super(context);
+        Utils.inject(context, this);
     }
 
     @Override
@@ -46,9 +52,9 @@ public class SupportActionViewConstructor extends ViewConstructor<Action>
     boolean constructView(ViewGroup container, Action action)
     {
         this.action = action;
-        SupportAction supportAction = SupportActionUtils.getSupportAction(action);
-        icon.setImageResource(supportAction.getIconId());
-        text.setText(supportAction.getTextId());
+        SupportActionType supportActionType = SupportActionUtils.getSupportActionType(action);
+        icon.setImageResource(supportActionType.getIconId());
+        text.setText(supportActionType.getTextId());
         return true;
     }
 }

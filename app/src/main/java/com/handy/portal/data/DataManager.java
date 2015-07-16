@@ -41,6 +41,8 @@ public abstract class DataManager
 
     public abstract void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
 
+    public abstract void reportNoShow(String bookingId, Map<String, String> params, Callback<Booking> cb);
+
     //Login
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);
 

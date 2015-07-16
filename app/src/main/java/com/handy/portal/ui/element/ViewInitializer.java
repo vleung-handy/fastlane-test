@@ -1,13 +1,14 @@
 package com.handy.portal.ui.element;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 
-public abstract class ViewConstructor<T>
+public abstract class ViewInitializer<T>
 {
     private Context context;
 
@@ -15,10 +16,14 @@ public abstract class ViewConstructor<T>
 
     abstract boolean constructView(ViewGroup container, T item);
 
-    public void create(Context context, ViewGroup container, T item)
+    public ViewInitializer(@NonNull Context context)
     {
         this.context = context;
-        View view = LayoutInflater.from(context).inflate(getLayoutResourceId(), container, false);
+    }
+
+    public void create(ViewGroup container, T item)
+    {
+        View view = LayoutInflater.from(getContext()).inflate(getLayoutResourceId(), container, false);
         ButterKnife.inject(this, view);
         if (constructView(container, item))
         {

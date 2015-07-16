@@ -71,19 +71,19 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void notifyOnMyWayBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyOnMyWayBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.notifyOnMyWay(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckInBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckInBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.checkIn(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckOutBooking(String bookingId, Map<String,String> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckOutBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
     {
         service.checkOut(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
     }
@@ -92,6 +92,12 @@ public final class BaseDataManager extends DataManager
     public final void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)
     {
         service.updateArrivalTime(getUserId(), bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void reportNoShow(String bookingId, Map<String, String> params, Callback<Booking> cb)
+    {
+        service.reportNoShow(getUserId(), bookingId, params, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override

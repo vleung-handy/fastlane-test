@@ -13,10 +13,10 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.analytics.Mixpanel;
-import com.handy.portal.core.BaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -55,7 +55,7 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
     {
         super.onCreate(savedInstanceState);
 
-        ((BaseApplication) this.getApplication()).inject(this);
+        Utils.inject(this, this);
 
         final Intent intent = getIntent();
         final Uri data = intent.getData();

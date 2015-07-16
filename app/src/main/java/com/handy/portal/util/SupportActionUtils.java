@@ -2,7 +2,7 @@ package com.handy.portal.util;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.handy.portal.constant.SupportAction;
+import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.model.Booking.Action;
 
 import java.util.Map;
@@ -22,20 +22,20 @@ public class SupportActionUtils
             Action.ACTION_ISSUE_OTHER
     );
 
-    public static SupportAction getSupportAction(Action action)
+    public static SupportActionType getSupportActionType(Action action)
     {
-        return supportActionMap.get(action.getActionName());
+        return supportActionTypeMap.get(action.getActionName());
     }
 
-    private static Map<String, SupportAction> supportActionMap = Maps.newHashMap();
+    private static Map<String, SupportActionType> supportActionTypeMap = Maps.newHashMap();
     static
     {
-        supportActionMap.put(Action.ACTION_NOTIFY_EARLY, SupportAction.NOTIFY_EARLY);
-        supportActionMap.put(Action.ACTION_NOTIFY_LATE, SupportAction.NOTIFY_LATE);
+        supportActionTypeMap.put(Action.ACTION_NOTIFY_EARLY, SupportActionType.NOTIFY_EARLY);
+        supportActionTypeMap.put(Action.ACTION_NOTIFY_LATE, SupportActionType.NOTIFY_LATE);
 
-        supportActionMap.put(Action.ACTION_REPORT_NO_SHOW, SupportAction.REPORT_NO_SHOW);
-        supportActionMap.put(Action.ACTION_ISSUE_HOURS, SupportAction.ISSUE_HOURS);
-        supportActionMap.put(Action.ACTION_ISSUE_UNSAFE, SupportAction.ISSUE_UNSAFE);
-        supportActionMap.put(Action.ACTION_ISSUE_OTHER, SupportAction.ISSUE_OTHER);
+        supportActionTypeMap.put(Action.ACTION_REPORT_NO_SHOW, SupportActionType.REPORT_NO_SHOW);
+        supportActionTypeMap.put(Action.ACTION_ISSUE_HOURS, SupportActionType.ISSUE_HOURS);
+        supportActionTypeMap.put(Action.ACTION_ISSUE_UNSAFE, SupportActionType.ISSUE_UNSAFE);
+        supportActionTypeMap.put(Action.ACTION_ISSUE_OTHER, SupportActionType.ISSUE_OTHER);
     }
 }

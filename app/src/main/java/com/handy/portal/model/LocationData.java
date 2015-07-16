@@ -5,9 +5,6 @@ import android.location.Location;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by cdavis on 6/30/15.
- */
 public class LocationData
 {
     public final static String LATITUDE = "latitude";
@@ -31,14 +28,6 @@ public class LocationData
         }
     }
 
-    public LocationData(double latitude, double longitude, float accuracy)
-    {
-        locationParams = new HashMap<>();
-        locationParams.put(LATITUDE, Double.toString(latitude));
-        locationParams.put(LONGITUDE, Double.toString(longitude));
-        locationParams.put(ACCURACY, Float.toString(accuracy));
-    }
-
     public Map<String, String> getLocationParamsMap()
     {
         return locationParams;
@@ -53,9 +42,9 @@ public class LocationData
         }
 
         String s =
-                (locationParams.get(LATITUDE) != null ? locationParams.get(LATITUDE).toString() : "|") + " " +
-                (locationParams.get(LONGITUDE) != null ? locationParams.get(LONGITUDE).toString() : "|") + " " +
-                (locationParams.get(ACCURACY) != null ? locationParams.get(ACCURACY).toString() : "|")
+                (locationParams.get(LATITUDE) != null ? locationParams.get(LATITUDE) : "|") + " " +
+                (locationParams.get(LONGITUDE) != null ? locationParams.get(LONGITUDE) : "|") + " " +
+                (locationParams.get(ACCURACY) != null ? locationParams.get(ACCURACY) : "|")
         ;
 
         return s;

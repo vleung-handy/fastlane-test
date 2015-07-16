@@ -2,7 +2,7 @@ package com.handy.portal.constant;
 
 import com.handy.portal.R;
 
-public enum SupportAction
+public enum SupportActionType
 {
     NOTIFY_EARLY(R.string.will_be_early, R.drawable.ic_details_trash),
     NOTIFY_LATE(R.string.will_be_late, R.drawable.ic_details_trash),
@@ -14,7 +14,7 @@ public enum SupportAction
     private int textId;
     private int iconId;
 
-    SupportAction(int textId, int iconId)
+    SupportActionType(int textId, int iconId)
     {
         this.textId = textId;
         this.iconId = iconId;

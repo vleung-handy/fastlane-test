@@ -21,6 +21,7 @@ import com.handy.portal.ui.layout.SlideUpPanelContainer;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public abstract class HandyEvent
 {
@@ -646,6 +647,36 @@ public abstract class HandyEvent
         public TriggerSupportAction(@NonNull Action action)
         {
             this.action = action;
+        }
+    }
+
+    public static class RequestReportNoShow extends RequestEvent
+    {
+        public final String bookingId;
+        public final Map<String, String> params;
+
+        public RequestReportNoShow(String bookingId, Map<String, String> params)
+        {
+            this.bookingId = bookingId;
+            this.params = params;
+        }
+    }
+
+    public static class ReceiveReportNoShowSuccess extends ReceiveSuccessEvent
+    {
+        public final Booking booking;
+
+        public ReceiveReportNoShowSuccess(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
+
+    public static class ReceiveReportNoShowError extends ReceiveErrorEvent
+    {
+        public ReceiveReportNoShowError(DataManager.DataManagerError error)
+        {
+            this.error = error;
         }
     }
 }

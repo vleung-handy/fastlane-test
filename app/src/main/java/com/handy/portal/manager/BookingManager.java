@@ -280,4 +280,23 @@ public class BookingManager
         });
     }
 
+    @Subscribe
+    public void onRequestReportNoShow(HandyEvent.RequestReportNoShow event)
+    {
+        dataManager.reportNoShow(event.bookingId, event.params, new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bus.post(new HandyEvent.ReceiveReportNoShowSuccess(booking));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveReportNoShowError(error));
+            }
+        });
+    }
+
 }

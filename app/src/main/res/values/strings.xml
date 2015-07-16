@@ -292,4 +292,9 @@
     <string name="will_be_early">I\u2019ll be early</string>
     <string name="will_be_late">I\u2019m running late</string>
 
+    <string name="report_customer_no_show">Report customer no show</string>
+    <string name="report_no_show">Report No Show</string>
+    <string name="customer_no_show_reported">Customer no show reported</string>
+    <string name="unable_to_report_no_show">Unable to report customer no show. Please try again.</string>
+
 </resources>

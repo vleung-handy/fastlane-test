@@ -27,7 +27,7 @@ import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.constant.SupportAction;
+import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
@@ -43,10 +43,10 @@ import com.handy.portal.ui.element.BookingDetailsBannerViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
-import com.handy.portal.ui.element.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsViewConstructor;
 import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
+import com.handy.portal.ui.element.SupportActionContainerViewInitializer;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
@@ -296,7 +296,8 @@ public class BookingDetailsFragment extends InjectedFragment
             if (buttonParentLayout == null)
             {
                 Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(action).getActionName());
-            } else
+            }
+            else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
                 BookingActionButton bookingActionButton = (BookingActionButton)
@@ -433,10 +434,10 @@ public class BookingDetailsFragment extends InjectedFragment
             @Override
             public void initialize(ViewGroup panel)
             {
-                new SupportActionContainerViewConstructor(bus, SupportActionUtils.ETA_ACTION_NAMES)
-                        .create(getActivity(), panel, associatedBooking);
-                new SupportActionContainerViewConstructor(bus, SupportActionUtils.ISSUE_ACTION_NAMES)
-                        .create(getActivity(), panel, associatedBooking);
+                new SupportActionContainerViewInitializer(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
+                        .create(panel, associatedBooking);
+                new SupportActionContainerViewInitializer(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
+                        .create(panel, associatedBooking);
             }
         }));
     }
@@ -497,7 +498,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void trackShowActionWarning(final BookingActionButtonType actionType)
     {
-        switch(actionType)
+        switch (actionType)
         {
             case REMOVE:
             {
@@ -576,7 +577,8 @@ public class BookingDetailsFragment extends InjectedFragment
                                 if (checkedItemPosition < 0 || checkedItemPosition >= arrivalTimeOptions.length)
                                 {
                                     Crashlytics.log("Invalid checked item position " + checkedItemPosition + " can not proceed");
-                                } else
+                                }
+                                else
                                 {
                                     Booking.ArrivalTimeOption chosenOption = arrivalTimeOptions[checkedItemPosition];
                                     requestNotifyUpdateArrivalTime(bookingId, chosenOption);
@@ -591,6 +593,28 @@ public class BookingDetailsFragment extends InjectedFragment
         AlertDialog alertDialog = alertDialogBuilder.create();
         // show it
         alertDialog.show();
+    }
+
+    private void showCustomerNoShowDialog(Booking.Action action)
+    {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.report_customer_no_show)
+                .setMessage(action.getWarningText())
+                .setPositiveButton(R.string.report_no_show, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which)
+                    {
+                        Map<String, String> params = Utils.getCurrentLocation((BaseActivity) getActivity()).getLocationParamsMap();
+                        params.put("enabled", "true");
+                        bus.post(new HandyEvent.HideSlideUpPanel());
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                        bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), params));
+                    }
+                })
+                .setNegativeButton(R.string.back, null)
+                .create()
+                .show();
     }
 
     //use native functionality to trigger a phone call
@@ -643,7 +667,8 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
             returnToTab(MainViewTab.JOBS, event.booking.getStartDate().getTime(), transitionStyle);
-        } else
+        }
+        else
         {
             //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
             handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error_generic, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
@@ -666,7 +691,8 @@ public class BookingDetailsFragment extends InjectedFragment
             //TODO: can't currently remove series using portal endpoint so only removing the single job
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
             returnToTab(MainViewTab.SCHEDULE, event.booking.getStartDate().getTime(), transitionStyle);
-        } else
+        }
+        else
         {
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
             handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic, R.string.return_to_schedule, this.associatedBooking.getStartDate());
@@ -756,16 +782,33 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     @Subscribe
+    public void onReceiveReportNoShowSuccess(HandyEvent.ReceiveReportNoShowSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        this.associatedBooking = event.booking;
+        updateDisplayForBooking(event.booking);
+        showToast(R.string.customer_no_show_reported, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveReportNoShowError(HandyEvent.ReceiveReportNoShowError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.unable_to_report_no_show, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
     public void onSupportActionTriggered(HandyEvent.TriggerSupportAction event)
     {
-        SupportAction supportAction = SupportActionUtils.getSupportAction(event.action);
-        switch (supportAction)
+        SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
+        switch (supportActionType)
         {
             case NOTIFY_EARLY:
                 break;
             case NOTIFY_LATE:
                 break;
             case REPORT_NO_SHOW:
+                showCustomerNoShowDialog(event.action);
                 break;
             case ISSUE_UNSAFE:
             case ISSUE_HOURS:
@@ -806,7 +849,8 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             bus.post(new HandyEvent.ClaimJobError(errorMessage));
             showErrorDialogReturnToAvailable(errorMessage, title, option1, returnDate.getTime());
-        } else
+        }
+        else
         {
             showNetworkErrorToast();
         }
@@ -828,7 +872,8 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             bus.post(new HandyEvent.RemoveJobError(errorMessage));
             showErrorDialogReturnToAvailable(errorMessage, title, option1, returnDate.getTime());
-        } else
+        }
+        else
         {
             showNetworkErrorToast();
         }
@@ -894,7 +939,8 @@ public class BookingDetailsFragment extends InjectedFragment
         if (errorMessage != null)
         {
             showToast(errorMessage);
-        } else
+        }
+        else
         {
             showNetworkErrorToast();
         }
