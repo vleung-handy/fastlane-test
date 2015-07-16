@@ -42,9 +42,11 @@ import com.handy.portal.ui.element.BookingDetailsBannerViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
+import com.handy.portal.ui.element.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.element.BookingDetailsViewConstructor;
 import com.handy.portal.ui.element.GoogleMapViewConstructor;
 import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
+import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -424,7 +426,14 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void showHelpOptions()
     {
-        bus.post(new HandyEvent.ShowSlideUpPanel());
+        bus.post(new HandyEvent.ShowSlideUpPanel(new SlideUpPanelContainer.ContentInitializer()
+        {
+            @Override
+            public void initialize(ViewGroup panel)
+            {
+                new SupportActionContainerViewConstructor().create(getActivity(), panel, associatedBooking);
+            }
+        }));
     }
 
     //Check if the current booking data for a given action type has an associated warning to display

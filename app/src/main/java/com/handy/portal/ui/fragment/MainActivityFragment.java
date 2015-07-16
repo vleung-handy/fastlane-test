@@ -102,7 +102,7 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onShowSlideUpPanel(HandyEvent.ShowSlideUpPanel event)
     {
-        slideUpPanelContainer.showPanel();
+        slideUpPanelContainer.showPanel(event.contentInitializer);
     }
 
     private void initWebViewFragment(Target urlTarget)

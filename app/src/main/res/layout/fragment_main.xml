@@ -8,13 +8,13 @@
     <com.handy.portal.ui.layout.SlideUpPanelContainer
         android:id="@+id/slide_up_panel_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tabs">
 
         <FrameLayout
             android:id="@+id/main_container"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_above="@+id/tabs" />
+            android:layout_height="fill_parent"/>
 
     </com.handy.portal.ui.layout.SlideUpPanelContainer>
 

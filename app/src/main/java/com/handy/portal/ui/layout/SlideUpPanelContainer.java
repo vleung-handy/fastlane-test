@@ -4,9 +4,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
@@ -38,12 +40,24 @@ public class SlideUpPanelContainer extends RelativeLayout
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void showPanel()
+    public boolean isShown()
+    {
+        return panelShown;
+    }
+
+    public interface ContentInitializer
+    {
+        void initialize(ViewGroup panel);
+    }
+
+    public void showPanel(@NonNull ContentInitializer contentInitializer)
     {
         if (!panelShown)
         {
             View panelOverlay = LayoutInflater.from(getContext()).inflate(R.layout.layout_slide_up_panel_overlay, this, false);
-            View panel = LayoutInflater.from(getContext()).inflate(R.layout.layout_slide_up_panel, this, false);
+            ViewGroup panel = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.layout_slide_up_panel, this, false);
+
+            contentInitializer.initialize(panel);
 
             showElement(panelOverlay, R.anim.fade_in);
             showElement(panel, R.anim.abc_slide_in_bottom);
@@ -85,16 +99,16 @@ public class SlideUpPanelContainer extends RelativeLayout
     private void hideElement(View view, int animId)
     {
         Animation animation = AnimationUtils.loadAnimation(getContext(), animId);
-        animation.setAnimationListener(new RemoveViewAnimationListener(view));
+        animation.setAnimationListener(new PostAnimationViewRemover(view));
         view.setAnimation(animation);
         view.setVisibility(View.GONE);
     }
 
-    private class RemoveViewAnimationListener implements Animation.AnimationListener
+    private class PostAnimationViewRemover implements Animation.AnimationListener
     {
         private View view;
 
-        RemoveViewAnimationListener(View view)
+        PostAnimationViewRemover(View view)
         {
             this.view = view;
         }

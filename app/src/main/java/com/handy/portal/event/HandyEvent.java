@@ -16,6 +16,7 @@ import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.Booking;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.ui.layout.SlideUpPanelContainer;
 
 import java.util.Date;
 import java.util.List;
@@ -625,5 +626,11 @@ public abstract class HandyEvent
 
     public static class ShowSlideUpPanel
     {
+        public final SlideUpPanelContainer.ContentInitializer contentInitializer;
+
+        public ShowSlideUpPanel(SlideUpPanelContainer.ContentInitializer contentInitializer)
+        {
+            this.contentInitializer = contentInitializer;
+        }
     }
 }
