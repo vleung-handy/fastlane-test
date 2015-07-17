@@ -102,6 +102,8 @@ public interface HandyRetrofitService
   //These addresses are wrong for portal help
     //********Help Center********
 
+  String SELF_SERVICE_PATH = "/self_service/";
+
 /*
   routes.rb
 
@@ -112,19 +114,18 @@ public interface HandyRetrofitService
 
   */
 
-    @GET("/self_service/node_details")
+    @GET(SELF_SERVICE_PATH + "node_details")
+    //empty id returns root?
     void getHelpInfo(@Query("id") String nodeId,
-                     @Query("auth_token") String authToken,
                      @Query("booking_id") String bookingId,
                      HandyRetrofitCallback cb);
 
-    @GET("/self_service/booking_node_details")
+    @GET(SELF_SERVICE_PATH + "booking_node_details")
     void getHelpBookingsInfo(@Query("id") String nodeId,
-                             @Query("auth_token") String authToken,
                              @Query("booking_id") String bookingId,
                              HandyRetrofitCallback cb);
 
-    @POST("/self_service/create_case")
+    @POST(SELF_SERVICE_PATH + "create_case")
     void createHelpCase(@Body TypedInput body, DataManager.Callback<Void> cb);
     //********End Help Center********
 

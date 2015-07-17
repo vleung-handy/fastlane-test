@@ -36,7 +36,6 @@ public class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("bonus") private PaymentInfo bonusPayment;
     @SerializedName("frequency") private int frequency;
 
-
     @SerializedName("provider_id") private String providerId;
     @SerializedName("partner") private String partner;
     @SerializedName("country") private String country;

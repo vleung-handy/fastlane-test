@@ -48,26 +48,45 @@ public final class HelpFragment extends InjectedFragment
     private String currentLoginToken;
     private String path;
 
+
+
+   private ViewGroup myContainer;
+
+
     @Inject
     Mixpanel mixpanel;
 
     @Inject
     DataManager dataManager;
 
-    @InjectView(R.id.menu_button_layout) ViewGroup menuButtonLayout;
-    @InjectView(R.id.nav_text) TextView navText;
-    @InjectView(R.id.help_header) View helpHeader;
-    @InjectView(R.id.help_header_title) TextView headerTitle;
-    @InjectView(R.id.info_text) TextView infoText;
-    @InjectView(R.id.nav_options_layout) LinearLayout navList;
-    @InjectView(R.id.info_layout) View infoLayout;
-    @InjectView(R.id.help_icon) ImageView helpIcon;
-    @InjectView(R.id.help_triangle) ImageView helpTriangleView;
-    @InjectView(R.id.cta_layout) ViewGroup ctaLayout;
-    @InjectView(R.id.contact_button) Button contactButton;
-    @InjectView(R.id.scroll_view) ScrollView scrollView;
-    @InjectView(R.id.close_img) ImageView closeImage;
-    @InjectView(R.id.back_img) ImageView backImage;
+    @InjectView(R.id.menu_button_layout)
+    ViewGroup menuButtonLayout;
+    @InjectView(R.id.nav_text)
+    TextView navText;
+    @InjectView(R.id.help_header)
+    View helpHeader;
+    @InjectView(R.id.help_header_title)
+    TextView headerTitle;
+    @InjectView(R.id.info_text)
+    TextView infoText;
+    @InjectView(R.id.nav_options_layout)
+    LinearLayout navList;
+    @InjectView(R.id.info_layout)
+    View infoLayout;
+    @InjectView(R.id.help_icon)
+    ImageView helpIcon;
+    @InjectView(R.id.help_triangle)
+    ImageView helpTriangleView;
+    @InjectView(R.id.cta_layout)
+    ViewGroup ctaLayout;
+    @InjectView(R.id.contact_button)
+    Button contactButton;
+    @InjectView(R.id.scroll_view)
+    ScrollView scrollView;
+    @InjectView(R.id.close_img)
+    ImageView closeImage;
+    @InjectView(R.id.back_img)
+    ImageView backImage;
 
     public static HelpFragment newInstance(final HelpNode node,
                                            final String bookingId,
@@ -102,30 +121,46 @@ public final class HelpFragment extends InjectedFragment
     {
         super.onCreate(savedInstanceState);
 
-        if(!validateRequiredArguments())
+        if (!validateRequiredArguments())
         {
             System.err.println("Help fragment lacking required arguments can not create properly");
             return;
         }
 
+        System.out.println("Creating help fragment");
+
         currentNode = getArguments().getParcelable(EXTRA_HELP_NODE);
-        currentBookingId = getArguments().getString(EXTRA_BOOKING_ID);
-        currentLoginToken = getArguments().getString(EXTRA_LOGIN_TOKEN);
-        path = getArguments().getString(EXTRA_PATH, "");
 
-        if (savedInstanceState == null)
+        if(currentNode == null)
         {
-            switch (currentNode.getType())
-            {
-                case "root":
-                    //mixpanel.trackEventHelpCenterOpened();
-                    break;
+            //put in a request to the server for the root node
+System.out.println("Don't have a node, request root");
+            dataManager.getHelpInfo(null, null, helpNodeCallback);
 
-                case "article":
-                    //mixpanel.trackEventHelpCenterLeaf(Integer.toString(currentNode.getId()), currentNode.getLabel());
-                    break;
+        }
+        else
+        {
+            currentBookingId = getArguments().getString(EXTRA_BOOKING_ID);
+            currentLoginToken = getArguments().getString(EXTRA_LOGIN_TOKEN);
+            path = getArguments().getString(EXTRA_PATH, "");
+
+            if (savedInstanceState == null)
+            {
+                switch (currentNode.getType())
+                {
+                    case "root":
+                        //mixpanel.trackEventHelpCenterOpened();
+                        break;
+
+                    case "article":
+                        //mixpanel.trackEventHelpCenterLeaf(Integer.toString(currentNode.getId()), currentNode.getLabel());
+                        break;
+                }
             }
         }
+
+
+
     }
 
     @Override
@@ -134,24 +169,72 @@ public final class HelpFragment extends InjectedFragment
     {
 
 
-
         final View view = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_help_page, container, false);
 
         ButterKnife.inject(this, view);
 
 
-        if(!validateRequiredArguments())
+        myContainer = container;
+
+        if (!validateRequiredArguments())
         {
             System.err.println("Help fragment lacking required arguments can not create view properly");
             //return;
         }
+
+        System.out.println("Creating help fragment view");
+
+        currentNode = null;
+        //currentNode = getArguments().getParcelable(EXTRA_HELP_NODE);
+
+        if(currentNode == null && rootNode == null)
+        {
+            //put in a request to the server for the root node
+            System.out.println("Don't have any nodes while constructing view, request root");
+            dataManager.getHelpInfo(null, null, helpNodeCallback);
+
+        }
+        else
+        {
 
 
 /*
         final MenuButton menuButton = new MenuButton(getActivity(), menuButtonLayout);
         menuButtonLayout.addView(menuButton);
 */
+
+
+
+
+
+        /*
+        if (savedInstanceState != null)
+        {
+            final int[] position = savedInstanceState.getIntArray(STATE_SCROLL_POSITION);
+            if (position != null)
+            {
+                scrollView.post(new Runnable()
+                {
+                    public void run()
+                    {
+                        scrollView.scrollTo(position[0], position[1]);
+                    }
+                });
+            }
+        }
+        */
+
+
+            //May return to root of help screen without re-downloading root navigation currentNode
+            if (currentNode == null)
+            {
+                currentNode = rootNode;
+            }
+
+            constructNodeView(container);
+        }
+
 
 
         closeImage.setOnClickListener(new View.OnClickListener()
@@ -179,44 +262,8 @@ public final class HelpFragment extends InjectedFragment
             }
         });
 
-
-        /*
-        if (savedInstanceState != null)
-        {
-            final int[] position = savedInstanceState.getIntArray(STATE_SCROLL_POSITION);
-            if (position != null)
-            {
-                scrollView.post(new Runnable()
-                {
-                    public void run()
-                    {
-                        scrollView.scrollTo(position[0], position[1]);
-                    }
-                });
-            }
-        }
-        */
-
-
-
-
-
-
-
-
-
-        //May return to root of help screen without re-downloading root navigation currentNode
-        if (currentNode == null)
-        {
-            currentNode = rootNode;
-        }
-
-        //constructNodeView(container);
-
-
         return view;
     }
-
 
 
     private void constructNodeView(final ViewGroup container)
@@ -254,17 +301,19 @@ public final class HelpFragment extends InjectedFragment
                 // ((MenuDrawerActivity) getActivity()).setDrawerDisabled(true);
 
 
-                contactButton.setOnClickListener(new View.OnClickListener() {
+                contactButton.setOnClickListener(new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View v)
+                    {
 
 //                        mixpanel.trackEventHelpCenterNeedHelpClicked(Integer
 //                                .toString(currentNode.getId()), currentNode.getLabel());
 
                         final Intent intent = new Intent(getActivity(), HelpContactActivity.class);
-                        for(HelpNode n : currentNode.getChildren())
+                        for (HelpNode n : currentNode.getChildren())
                         {
-                            if(n.getType().equals(HELP_CONTACT_FORM_NODE_TYPE))
+                            if (n.getType().equals(HELP_CONTACT_FORM_NODE_TYPE))
                             {
                                 intent.putExtra(HelpContactActivity.EXTRA_HELP_NODE, n);
                                 intent.putExtra(HelpContactActivity.EXTRA_HELP_PATH, path);
@@ -289,7 +338,6 @@ public final class HelpFragment extends InjectedFragment
             break;
         }
     }
-
 
 
     @Override
@@ -371,6 +419,9 @@ public final class HelpFragment extends InjectedFragment
             public void onClick(final View v)
             {
                 HashMap<String, String> params = new HashMap<String, String>();
+
+                System.out.println("TODO Clicked on CTA Button Functionality");
+
                 /*
                 if (currentBookingId != null && !currentBookingId.isEmpty())
                 {
@@ -433,7 +484,7 @@ public final class HelpFragment extends InjectedFragment
                 if (currentNode.getType().equals("root"))
                 {
                     textView.setTextAppearance(getActivity(), R.style.TextView_Large);
-                    textView.setTypeface(TextUtils.get(getActivity(), "CircularStd-Book.otf"));
+                    //textView.setTypeface(TextUtils.get(getActivity(), "CircularStd-Book.otf"));
                 }
             }
 
@@ -449,7 +500,10 @@ public final class HelpFragment extends InjectedFragment
                     {
                         toast.setText(getString(R.string.please_login));
                         toast.show();
-                    } else displayNextNode(helpNode);
+                    } else
+                    {
+                        displayNextNode(helpNode);
+                    }
                 }
             });
 
@@ -460,6 +514,9 @@ public final class HelpFragment extends InjectedFragment
 
     private void displayNextNode(final HelpNode node)
     {
+
+        System.out.println("Display next node ");
+
 
 //        progressDialog.show();
 
@@ -477,6 +534,17 @@ public final class HelpFragment extends InjectedFragment
             dataManager.getHelpInfo(Integer.toString(node.getId()), authToken, currentBookingId, helpNodeCallback);
         }
         */
+
+        if (node.getType().equals("booking"))
+        {
+            currentBookingId = Integer.toString(node.getId());
+            dataManager.getHelpBookingsInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
+        } else
+        {
+            dataManager.getHelpInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
+        }
+
+
     }
 
     private void setHeaderColor(final int color)
@@ -489,36 +557,69 @@ public final class HelpFragment extends InjectedFragment
         else helpHeader.setBackground(header);
     }
 
-    private DataManager.Callback<HelpNode> helpNodeCallback = new DataManager.Callback<HelpNode>()
+    private DataManager.Callback<HelpNodeWrapper> helpNodeCallback = new DataManager.Callback<HelpNodeWrapper>()
     {
         @Override
-        public void onSuccess(final HelpNode helpNode)
+        public void onSuccess(final HelpNodeWrapper helpNodeWrapper)
         {
-            if (helpNode.getType().equals("article"))
+
+            if(helpNodeWrapper == null)
             {
-                currentLoginToken = helpNode.getLoginToken();
+                System.err.println("The wrapper is null");
+                return;
             }
 
-            if (!allowCallbacks) return;
+            //HelpNode helpNode = helpNodeWrapper.getHelpNode();
 
-            final Intent intent = new Intent(getActivity(), HelpActivity.class);
-            intent.putExtra(HelpActivity.EXTRA_HELP_NODE, helpNode);
-            intent.putExtra(HelpActivity.EXTRA_BOOKING_ID, currentBookingId);
-            intent.putExtra(HelpActivity.EXTRA_LOGIN_TOKEN, currentLoginToken);
 
-            intent.putExtra(HelpActivity.EXTRA_PATH, path.length() > 0 ? path += " -> "
-                    + helpNode.getLabel() : helpNode.getLabel());
+            HelpNode innerHelpNode = helpNodeWrapper.getHelpNode();
 
-            startActivity(intent);
+
+//            if (helpNode.getType().equals("article"))
+//            {
+//                currentLoginToken = helpNode.getLoginToken();
+//            }
+
+            System.out.println("Heard back success for help node callback");
+
+//            if (!allowCallbacks) return;
+//
+//            final Intent intent = new Intent(getActivity(), HelpActivity.class);
+//            intent.putExtra(HelpActivity.EXTRA_HELP_NODE, helpNode);
+//            intent.putExtra(HelpActivity.EXTRA_BOOKING_ID, currentBookingId);
+//            intent.putExtra(HelpActivity.EXTRA_LOGIN_TOKEN, currentLoginToken);
+//
+//            intent.putExtra(HelpActivity.EXTRA_PATH, path.length() > 0 ? path += " -> "
+//                    + helpNode.getLabel() : helpNode.getLabel());
+
+
+
+
+            //startActivity(intent);
 
             //progressDialog.dismiss();
             //mixpanel.trackEventHelpCenterNavigation(helpNode.getLabel());
+
+            System.out.println("Going to construct node view");
+
+            if(innerHelpNode == null)
+            {
+                System.err.println("The help node returned from the data was null, didn't parse properly?");
+                return;
+            }
+
+            currentNode = innerHelpNode;
+            constructNodeView(myContainer);
+
         }
 
         @Override
         public void onError(final DataManager.DataManagerError error)
         {
             if (!allowCallbacks) return;
+
+            System.err.println("Error when retrieving help node : " + error.getMessage());
+
             //progressDialog.dismiss();
             //dataManagerErrorHandler.handleError(getActivity(), error);
         }

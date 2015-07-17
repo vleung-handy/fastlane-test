@@ -1,5 +1,6 @@
 package com.handy.portal.data;
 
+import com.handy.portal.help.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
@@ -51,18 +52,14 @@ public abstract class DataManager
     //Help Center - not real yet
 
     public abstract void getHelpInfo(String nodeId,
-                            String authToken,
-                            String bookingId,
-                            final EmptyHandyRetroFitCallback cb);
+                                    String bookingId,
+                                    final DataManager.Callback<HelpNodeWrapper> cb);
 
     public abstract void getHelpBookingsInfo(String nodeId,
-                                    String authToken,
                                     String bookingId,
-                                    final EmptyHandyRetroFitCallback cb);
+                                    final DataManager.Callback<HelpNodeWrapper> cb);
 
     public abstract void createHelpCase( TypedInput body, final Callback<Void> cb);
-
-
 
     public abstract String getBaseUrl();
 

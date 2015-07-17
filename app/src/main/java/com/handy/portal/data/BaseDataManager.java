@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.help.HelpNodeWrapper;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
@@ -156,20 +157,20 @@ public final class BaseDataManager extends DataManager
 
     //These addresses are wrong for portal help
     //********Help Center********
+    @Override
     public void getHelpInfo(String nodeId,
-                     String authToken,
                      String bookingId,
-                    final EmptyHandyRetroFitCallback cb)
+                    final Callback<HelpNodeWrapper> cb)
     {
-        service.getHelpInfo(nodeId, authToken, bookingId, cb);
+        service.getHelpInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
     }
 
+    @Override
     public void getHelpBookingsInfo(String nodeId,
-                             String authToken,
-                             String bookingId,
-                                    final EmptyHandyRetroFitCallback cb)
+                                    String bookingId,
+                                    final Callback<HelpNodeWrapper> cb)
     {
-        service.getHelpBookingsInfo(nodeId, authToken, bookingId, cb);
+        service.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
     }
 
     public void createHelpCase( TypedInput body, final Callback<Void> cb)

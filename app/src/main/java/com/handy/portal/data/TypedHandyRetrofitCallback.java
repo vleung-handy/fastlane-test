@@ -5,6 +5,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.handy.portal.help.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
@@ -31,13 +32,15 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
     {
         try
         {
+            System.out.println("See response : " + response);
             TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
             returnData = gsonBuilder.fromJson((response.toString()), typeToken.getType());
-
+            System.out.println("return data " + returnData);
         } catch (JsonSyntaxException e)
         {
             Crashlytics.logException(e);
         }
+
         callback.onSuccess(returnData);
     }
 }
@@ -94,6 +97,14 @@ class TermsDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallba
 class ConfigParamResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<ConfigParams>
 {
     ConfigParamResponseHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class HelpNodeResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<HelpNodeWrapper>
+{
+    HelpNodeResponseHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }
