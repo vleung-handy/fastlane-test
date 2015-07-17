@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public abstract class BaseActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
     private Object busEventListener;
     protected boolean allowCallbacks;
@@ -126,7 +126,7 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
     @Override
     public void onBackPressed()
     {
-        if (onBackPressedListener != null) onBackPressedListener.onBack();
+        if (onBackPressedListener != null) onBackPressedListener.onBackPressed();
         else super.onBackPressed();
     }
 
@@ -152,7 +152,7 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
 
     public interface OnBackPressedListener
     {
-        void onBack();
+        void onBackPressed();
     }
 
     public void checkForUpdates()

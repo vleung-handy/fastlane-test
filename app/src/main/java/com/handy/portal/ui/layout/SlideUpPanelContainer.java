@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.ui.activity.BaseActivity;
 
 public class SlideUpPanelContainer extends RelativeLayout
 {
@@ -71,8 +72,23 @@ public class SlideUpPanelContainer extends RelativeLayout
                 }
             });
 
+            setOnBackPressedListener();
+
             panelShown = true;
         }
+    }
+
+    private void setOnBackPressedListener()
+    {
+        BaseActivity baseActivity = (BaseActivity) getContext();
+        baseActivity.setOnBackPressedListener(new BaseActivity.OnBackPressedListener()
+        {
+            @Override
+            public void onBackPressed()
+            {
+                SlideUpPanelContainer.this.hidePanel();
+            }
+        });
     }
 
     private void showElement(View view, int animId)
@@ -92,8 +108,16 @@ public class SlideUpPanelContainer extends RelativeLayout
             View panelOverlay = findViewById(R.id.slide_up_panel_overlay);
             hideElement(panelOverlay, R.anim.fade_out);
 
+            unsetOnBackPressedListener();
+
             panelShown = false;
         }
+    }
+
+    public void unsetOnBackPressedListener()
+    {
+        BaseActivity baseActivity = (BaseActivity) getContext();
+        baseActivity.setOnBackPressedListener(null);
     }
 
     private void hideElement(View view, int animId)

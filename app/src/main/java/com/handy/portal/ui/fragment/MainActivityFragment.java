@@ -14,12 +14,11 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
-import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -40,8 +39,6 @@ public class MainActivityFragment extends InjectedFragment
     TransitionOverlayView transitionOverlayView;
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
-    @InjectView(R.id.slide_up_panel_container)
-    SlideUpPanelContainer slideUpPanelContainer;
 
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
@@ -97,18 +94,6 @@ public class MainActivityFragment extends InjectedFragment
     public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
     {
         loadingOverlayView.setOverlayVisibility(event.isVisible);
-    }
-
-    @Subscribe
-    public void onShowSlideUpPanel(HandyEvent.ShowSlideUpPanel event)
-    {
-        slideUpPanelContainer.showPanel(event.contentInitializer);
-    }
-
-    @Subscribe
-    public void onHideSlideUpPanel(HandyEvent.HideSlideUpPanel event)
-    {
-        slideUpPanelContainer.hidePanel();
     }
 
     private void initWebViewFragment(Target urlTarget)

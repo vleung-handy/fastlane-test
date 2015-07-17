@@ -106,6 +106,9 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.fetch_error_text)
     protected TextView errorText;
 
+    @InjectView(R.id.slide_up_panel_container)
+    protected SlideUpPanelContainer slideUpPanelContainer;
+
     @Inject
     PrefsManager prefsManager;
 
@@ -431,7 +434,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void showHelpOptions()
     {
-        bus.post(new HandyEvent.ShowSlideUpPanel(new SlideUpPanelContainer.ContentInitializer()
+        slideUpPanelContainer.showPanel(new SlideUpPanelContainer.ContentInitializer()
         {
             @Override
             public void initialize(ViewGroup panel)
@@ -441,7 +444,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 new SupportActionContainerViewInitializer(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
                         .create(panel, associatedBooking);
             }
-        }));
+        });
     }
 
     //Check if the current booking data for a given action type has an associated warning to display
@@ -544,9 +547,17 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
-        bus.post(new HandyEvent.HideSlideUpPanel());
+        slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
+    }
+
+    private void requestReportNoShow()
+    {
+        Map<String, String> params = Utils.getCurrentLocation((BaseActivity) getActivity()).getLocationParamsMap();
+        slideUpPanelContainer.hidePanel();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), params));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
@@ -567,17 +578,17 @@ public class BookingDetailsFragment extends InjectedFragment
                 .setTitle(titleStringId)
                 .setSingleChoiceItems(optionStrings, 0, null)
                 .setPositiveButton(R.string.send_update, new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id)
                         {
-                            int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                            if (checkedItemPosition >= 0 && checkedItemPosition < options.size())
+                            @Override
+                            public void onClick(DialogInterface dialog, int id)
                             {
-                                requestNotifyUpdateArrivalTime(bookingId, options.get(checkedItemPosition));
+                                int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                                if (checkedItemPosition >= 0 && checkedItemPosition < options.size())
+                                {
+                                    requestNotifyUpdateArrivalTime(bookingId, options.get(checkedItemPosition));
+                                }
                             }
                         }
-                    }
                 )
                 .setNegativeButton(R.string.back, null)
                 .create()
@@ -594,11 +605,7 @@ public class BookingDetailsFragment extends InjectedFragment
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which)
                     {
-                        Map<String, String> params = Utils.getCurrentLocation((BaseActivity) getActivity()).getLocationParamsMap();
-                        params.put("enabled", "true");
-                        bus.post(new HandyEvent.HideSlideUpPanel());
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), params));
+                        requestReportNoShow();
                     }
                 })
                 .setNegativeButton(R.string.back, null)
@@ -804,12 +811,22 @@ public class BookingDetailsFragment extends InjectedFragment
             case ISSUE_UNSAFE:
             case ISSUE_HOURS:
             case ISSUE_OTHER:
-                bus.post(new HandyEvent.HideSlideUpPanel());
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.TARGET_URL, event.action.getDeepLink());
                 bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments, TransitionStyle.NATIVE_TO_WEBVIEW));
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        if (slideUpPanelContainer.isShown())
+        {
+            // no need to hide the panel, just make sure it no longer listens to the back button
+            slideUpPanelContainer.unsetOnBackPressedListener();
+        }
+        super.onDestroyView();
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)

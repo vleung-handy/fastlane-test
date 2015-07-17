@@ -1,60 +1,53 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivityFragment"
-    >
+    tools:context=".MainActivityFragment">
 
-    <com.handy.portal.ui.layout.SlideUpPanelContainer
-        android:id="@+id/slide_up_panel_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/tabs">
-
-        <FrameLayout
-            android:id="@+id/main_container"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
-
-    </com.handy.portal.ui.layout.SlideUpPanelContainer>
+    <FrameLayout
+        android:id="@+id/main_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/tabs"/>
 
     <RadioGroup
         android:id="@+id/tabs"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:background="@color/light_grey"
+        android:orientation="horizontal"
         android:weightSum="4">
 
         <RadioButton
             android:id="@+id/button_jobs"
-            android:drawableTop="@drawable/tab_button_jobs"
-            android:layout_weight="1"
             style="@style/TabButton"
-            android:text="@string/tab_jobs" />
+            android:layout_weight="1"
+            android:drawableTop="@drawable/tab_button_jobs"
+            android:text="@string/tab_jobs"/>
 
         <RadioButton
             android:id="@+id/button_schedule"
-            android:drawableTop="@drawable/tab_button_schedule"
-            android:layout_weight="1"
             style="@style/TabButton"
-            android:text="@string/tab_schedule"
-            android:checked="false" />
+            android:layout_weight="1"
+            android:checked="false"
+            android:drawableTop="@drawable/tab_button_schedule"
+            android:text="@string/tab_schedule"/>
 
         <RadioButton
             android:id="@+id/button_profile"
-            android:drawableTop="@drawable/tab_button_profile"
-            android:layout_weight="1"
             style="@style/TabButton"
-            android:text="@string/tab_profile" />
+            android:layout_weight="1"
+            android:drawableTop="@drawable/tab_button_profile"
+            android:text="@string/tab_profile"/>
 
         <RadioButton
             android:id="@+id/button_help"
-            android:drawableTop="@drawable/tab_button_help"
-            android:layout_weight="1"
             style="@style/TabButton"
-            android:text="@string/tab_help" />
+            android:layout_weight="1"
+            android:drawableTop="@drawable/tab_button_help"
+            android:text="@string/tab_help"/>
 
     </RadioGroup>
 
@@ -65,28 +58,30 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/dark_grey"
-        android:visibility="gone"
         android:clickable="false"
+        android:visibility="gone"
         >
+
         <ImageView
             android:id="@+id/transition_overlay_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:src="@drawable/ic_success_circle"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_centerInParent="true"/>
+            android:background="@color/transparent"
+            android:src="@drawable/ic_success_circle"/>
+
         <TextView
             android:id="@+id/transition_overlay_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/job_claim_success"
-            android:layout_gravity="center"
-            android:textSize="18sp"
             android:layout_below="@id/transition_overlay_image"
             android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:text="@string/job_claim_success"
             android:textColor="@color/white"
-            android:layout_marginTop="25dp"/>
+            android:textSize="18sp"/>
     </com.handy.portal.ui.element.TransitionOverlayView>
 
 </RelativeLayout>

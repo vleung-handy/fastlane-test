@@ -8,6 +8,8 @@ import com.handy.portal.annotation.Track;
 import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.BookingSummary;
 import com.handy.portal.model.LocationData;
@@ -15,9 +17,6 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
-import com.handy.portal.model.Booking;
-import com.handy.portal.data.DataManager;
-import com.handy.portal.ui.layout.SlideUpPanelContainer;
 
 import java.util.Date;
 import java.util.List;
@@ -623,20 +622,6 @@ public abstract class HandyEvent
     }
 
     public static class AcceptTermsSuccess extends HandyEvent
-    {
-    }
-
-    public static class ShowSlideUpPanel
-    {
-        public final SlideUpPanelContainer.ContentInitializer contentInitializer;
-
-        public ShowSlideUpPanel(SlideUpPanelContainer.ContentInitializer contentInitializer)
-        {
-            this.contentInitializer = contentInitializer;
-        }
-    }
-
-    public static class HideSlideUpPanel
     {
     }
 
