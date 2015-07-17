@@ -322,6 +322,7 @@ public class BookingDetailsFragment extends InjectedFragment
             case CHECK_IN:
             case CHECK_OUT:
             case HELP:
+            case RETRACT_NO_SHOW:
             {
                 return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
@@ -422,6 +423,12 @@ public class BookingDetailsFragment extends InjectedFragment
             {
                 bus.post(new HandyEvent.TextCustomerClicked());
                 textPhoneNumber(this.associatedBooking.getBookingPhone());
+            }
+            break;
+
+            case RETRACT_NO_SHOW:
+            {
+                requestCancelNoShow();
             }
             break;
 
@@ -554,10 +561,20 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void requestReportNoShow()
     {
-        Map<String, String> params = Utils.getCurrentLocation((BaseActivity) getActivity()).getLocationParamsMap();
         slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        Map<String, String> params = Utils.getCurrentLocation((BaseActivity) getActivity()).getLocationParamsMap();
+        params.put("active", "true");
         bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), params));
+    }
+
+    private void requestCancelNoShow()
+    {
+        slideUpPanelContainer.hidePanel();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        Map<String, String> params = Utils.getCurrentLocation((BaseActivity) getActivity()).getLocationParamsMap();
+        params.put("active", "false");
+        bus.post(new HandyEvent.RequestCancelNoShow(associatedBooking.getId(), params));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
@@ -791,6 +808,22 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(R.string.unable_to_report_no_show, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveCancelNoShowSuccess(HandyEvent.ReceiveCancelNoShowSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        this.associatedBooking = event.booking;
+        updateDisplayForBooking(event.booking);
+        showToast(R.string.customer_no_show_cancelled, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveCancelNoShowError(HandyEvent.ReceiveCancelNoShowError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.unable_to_cancel_no_show, Toast.LENGTH_LONG);
     }
 
     @Subscribe

@@ -299,4 +299,22 @@ public class BookingManager
         });
     }
 
+    @Subscribe
+    public void onRequestCancelNoShow(HandyEvent.RequestCancelNoShow event)
+    {
+        dataManager.reportNoShow(event.bookingId, event.params, new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bus.post(new HandyEvent.ReceiveCancelNoShowSuccess(booking));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveCancelNoShowError(error));
+            }
+        });
+    }
 }

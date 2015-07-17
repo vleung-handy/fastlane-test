@@ -13,7 +13,7 @@ public enum BookingActionButtonType
     HELP(Booking.Action.ACTION_HELP, R.string.i_need_help, BookingActionButtonStyle.TEAL_EMPTY),
     CONTACT_PHONE(Booking.Action.ACTION_CONTACT_PHONE, R.string.call, BookingActionButtonStyle.CONTACT),
     CONTACT_TEXT(Booking.Action.ACTION_CONTACT_TEXT, R.string.text, BookingActionButtonStyle.CONTACT),
-    ;
+    RETRACT_NO_SHOW(Booking.Action.ACTION_RETRACT_NO_SHOW, R.string.customer_no_show_reported, BookingActionButtonStyle.RETRACT);
 
     private String actionName; //must correspond to server's actionName to match up correctly
     private int displayNameId;

@@ -474,6 +474,68 @@ public abstract class HandyEvent
         }
     }
 
+    // Customer No Show Events
+
+    public static class RequestReportNoShow extends RequestEvent
+    {
+        public final String bookingId;
+        public final Map<String, String> params;
+
+        public RequestReportNoShow(String bookingId, Map<String, String> params)
+        {
+            this.bookingId = bookingId;
+            this.params = params;
+        }
+    }
+
+    public static class ReceiveReportNoShowSuccess extends ReceiveSuccessEvent
+    {
+        public final Booking booking;
+
+        public ReceiveReportNoShowSuccess(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
+
+    public static class ReceiveReportNoShowError extends ReceiveErrorEvent
+    {
+        public ReceiveReportNoShowError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestCancelNoShow extends RequestEvent
+    {
+        public final String bookingId;
+        public final Map<String, String> params;
+
+        public RequestCancelNoShow(String bookingId, Map<String, String> params)
+        {
+            this.bookingId = bookingId;
+            this.params = params;
+        }
+    }
+
+    public static class ReceiveCancelNoShowSuccess extends ReceiveSuccessEvent
+    {
+        public final Booking booking;
+
+        public ReceiveCancelNoShowSuccess(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
+
+    public static class ReceiveCancelNoShowError extends ReceiveErrorEvent
+    {
+        public ReceiveCancelNoShowError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
 
 //Pure analytics events,
 //TODO: when possible these should track the actual events instead of having duplicate unnecessary and get rid of duped analytics events
@@ -632,36 +694,6 @@ public abstract class HandyEvent
         public TriggerSupportAction(@NonNull Action action)
         {
             this.action = action;
-        }
-    }
-
-    public static class RequestReportNoShow extends RequestEvent
-    {
-        public final String bookingId;
-        public final Map<String, String> params;
-
-        public RequestReportNoShow(String bookingId, Map<String, String> params)
-        {
-            this.bookingId = bookingId;
-            this.params = params;
-        }
-    }
-
-    public static class ReceiveReportNoShowSuccess extends ReceiveSuccessEvent
-    {
-        public final Booking booking;
-
-        public ReceiveReportNoShowSuccess(Booking booking)
-        {
-            this.booking = booking;
-        }
-    }
-
-    public static class ReceiveReportNoShowError extends ReceiveErrorEvent
-    {
-        public ReceiveReportNoShowError(DataManager.DataManagerError error)
-        {
-            this.error = error;
         }
     }
 }

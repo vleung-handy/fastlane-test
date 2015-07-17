@@ -274,7 +274,7 @@
     <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
 
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
-    <string name="omw_failure">There was a problem updating your status. Please try again</string>
+    <string name="omw_failure">There was a problem updating your status. Please try again.</string>
     <string name="check_in_success">Thanks for checking in!</string>
     <string name="eta_success">Thanks for updating your arrival time</string>
     <string name="check_out_success">Thanks for checking out!</string>
@@ -297,6 +297,8 @@
     <string name="report_customer_no_show">Report customer no show</string>
     <string name="report_no_show">Report No Show</string>
     <string name="customer_no_show_reported">Customer no show reported</string>
-    <string name="unable_to_report_no_show">Unable to report customer no show. Please try again.</string>
+    <string name="unable_to_report_no_show">Unable to submit customer no show report. Please try again.</string>
+    <string name="customer_no_show_cancelled">Customer no show report cancelled</string>
+    <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
 
 </resources>
