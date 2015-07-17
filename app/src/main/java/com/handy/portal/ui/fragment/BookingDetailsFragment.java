@@ -171,6 +171,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
         initBackButton();
+        initCancelNoShowButton();
         initMapsPlaceHolderButton();
     }
 
@@ -263,6 +264,35 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    private void initCancelNoShowButton()
+    {
+        ViewGroup cancelNoShowButton = (ViewGroup) actionLayout.findViewById(R.id.cancel_no_show_button);
+        if (cancelNoShowButton != null && isActionRetractNoShowAllowed())
+        {
+            cancelNoShowButton.setVisibility(View.VISIBLE);
+            cancelNoShowButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    takeAction(BookingActionButtonType.RETRACT_NO_SHOW, false);
+                }
+            });
+        }
+    }
+
+    private boolean isActionRetractNoShowAllowed()
+    {
+        for (Booking.Action action : associatedBooking.getAllowedActions())
+        {
+            if (action.getActionName().equals(Booking.Action.ACTION_RETRACT_NO_SHOW))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Can not use @onclick b/c the button does not exist at injection time
     //TODO: Figure out better way to link click listeners sections
     private void initMapsPlaceHolderButton()
@@ -322,7 +352,6 @@ public class BookingDetailsFragment extends InjectedFragment
             case CHECK_IN:
             case CHECK_OUT:
             case HELP:
-            case RETRACT_NO_SHOW:
             {
                 return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }

@@ -100,7 +100,6 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
                     BookingActionButtonType.ON_MY_WAY,
                     BookingActionButtonType.CHECK_IN,
                     BookingActionButtonType.CHECK_OUT,
-                    BookingActionButtonType.HELP,
-                    BookingActionButtonType.RETRACT_NO_SHOW
+                    BookingActionButtonType.HELP
             );
 }

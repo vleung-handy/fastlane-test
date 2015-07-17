@@ -65,9 +65,9 @@ public final class UIUtils
     public static BookingActionButtonType getAssociatedActionType(Booking.Action data)
     {
         String actionName = data.getActionName();
-        for(BookingActionButtonType bat : BookingActionButtonType.values())
+        for (BookingActionButtonType bat : BookingActionButtonType.values())
         {
-            if(actionName.equals(bat.getActionName()))
+            if (actionName.equals(bat.getActionName()))
             {
                 return bat;
             }

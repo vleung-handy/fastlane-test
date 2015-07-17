@@ -12,7 +12,7 @@ public enum BookingActionButtonStyle
     TEAL(R.drawable.button_booking_action_teal, R.style.Button_BookingAction_Teal, R.layout.element_booking_action_button_template),
     TEAL_EMPTY(R.drawable.button_booking_action_teal_empty, R.style.Button_BookingAction_Teal_Empty, R.layout.element_booking_secondary_action_button_template),
     CONTACT(R.drawable.button_booking_action_white, R.style.Button_BookingAction_White, R.layout.element_booking_contact_action_button_template),
-    RETRACT(R.drawable.button_booking_action_teal_empty, R.style.Button_BookingAction_Teal_Empty, R.layout.element_booking_retract_action_button_template);
+    ;
 
     private int backgroundDrawableId;
     private int textStyleId;
