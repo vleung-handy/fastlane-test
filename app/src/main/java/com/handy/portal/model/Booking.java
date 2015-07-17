@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
@@ -207,14 +208,13 @@ public class Booking implements Parcelable, Comparable<Booking>
 
     public enum ArrivalTimeOption
     {
-//** KEEP IN SYNC WITH SERVER VALUES **//
+        /* KEEP IN SYNC WITH SERVER VALUES */
         EARLY_30_MINUTES(R.string.arrival_time_early_30, "-30"),
         EARLY_15_MINUTES(R.string.arrival_time_early_15, "-15"),
         LATE_10_MINUTES(R.string.arrival_time_late_10, "10"),
         LATE_15_MINUTES(R.string.arrival_time_late_15, "15"),
         LATE_30_MINUTES(R.string.arrival_time_late_30, "30"),
         ;
-//** KEEP IN SYNC WITH SERVER VALUES **//
 
         private String value;
         private int stringId;
@@ -223,6 +223,16 @@ public class Booking implements Parcelable, Comparable<Booking>
         {
             this.stringId = stringId;
             this.value = value;
+        }
+
+        public static List<ArrivalTimeOption> lateValues()
+        {
+            return Lists.newArrayList(LATE_10_MINUTES, LATE_15_MINUTES, LATE_30_MINUTES);
+        }
+
+        public static List<ArrivalTimeOption> earlyValues()
+        {
+            return Lists.newArrayList(EARLY_15_MINUTES, EARLY_30_MINUTES);
         }
 
         public String getValue()

@@ -21,6 +21,8 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
@@ -542,57 +544,44 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
+        bus.post(new HandyEvent.HideSlideUpPanel());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
-    private void showUpdateArrivalTimeDialog(final Booking booking)
+    private void showUpdateArrivalTimeDialog(Booking booking, int titleStringId, final List<Booking.ArrivalTimeOption> options)
     {
         final String bookingId = booking.getId();
 
-        //Text for options
-        int numArrivalTimeOptions = Booking.ArrivalTimeOption.values().length;
-        final CharSequence[] arrivalTimeOptionStrings = new CharSequence[numArrivalTimeOptions];
-        Booking.ArrivalTimeOption[] arrivalTimeOptions = Booking.ArrivalTimeOption.values();
-        for (int i = 0; i < arrivalTimeOptions.length; i++)
+        String[] optionStrings = Collections2.transform(options, new Function<Booking.ArrivalTimeOption, String>()
         {
-            Booking.ArrivalTimeOption arrivalTimeOption = arrivalTimeOptions[i];
-            arrivalTimeOptionStrings[i] = (getString(arrivalTimeOption.getStringId()));
-        }
+            @Override
+            public String apply(Booking.ArrivalTimeOption input)
+            {
+                return getString(input.getStringId());
+            }
+        }).toArray(new String[options.size()]);
 
-        //specific booking error, show an alert dialog
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-
-        // set dialog message
-        alertDialogBuilder
-                .setTitle(R.string.notify_customer)
-                .setSingleChoiceItems(arrivalTimeOptionStrings, 0, null)
+        new AlertDialog.Builder(getActivity())
+                .setTitle(titleStringId)
+                .setSingleChoiceItems(optionStrings, 0, null)
                 .setPositiveButton(R.string.send_update, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id)
                         {
-                            public void onClick(DialogInterface dialog, int id)
+                            int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                            if (checkedItemPosition >= 0 && checkedItemPosition < options.size())
                             {
-                                Booking.ArrivalTimeOption[] arrivalTimeOptions = Booking.ArrivalTimeOption.values();
-                                int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                if (checkedItemPosition < 0 || checkedItemPosition >= arrivalTimeOptions.length)
-                                {
-                                    Crashlytics.log("Invalid checked item position " + checkedItemPosition + " can not proceed");
-                                }
-                                else
-                                {
-                                    Booking.ArrivalTimeOption chosenOption = arrivalTimeOptions[checkedItemPosition];
-                                    requestNotifyUpdateArrivalTime(bookingId, chosenOption);
-                                }
+                                requestNotifyUpdateArrivalTime(bookingId, options.get(checkedItemPosition));
                             }
                         }
+                    }
                 )
                 .setNegativeButton(R.string.back, null)
-        ;
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
+                .create()
+                .show();
     }
 
     private void showCustomerNoShowDialog(Booking.Action action)
@@ -804,8 +793,10 @@ public class BookingDetailsFragment extends InjectedFragment
         switch (supportActionType)
         {
             case NOTIFY_EARLY:
+                showUpdateArrivalTimeDialog(associatedBooking, R.string.notify_customer_of_earliness, Booking.ArrivalTimeOption.earlyValues());
                 break;
             case NOTIFY_LATE:
+                showUpdateArrivalTimeDialog(associatedBooking, R.string.notify_customer_of_lateness, Booking.ArrivalTimeOption.lateValues());
                 break;
             case REPORT_NO_SHOW:
                 showCustomerNoShowDialog(event.action);
