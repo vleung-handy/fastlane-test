@@ -685,6 +685,14 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    private void goToHelpCenter(String deepLink)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.TARGET_URL, deepLink);
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments, TransitionStyle.NATIVE_TO_WEBVIEW));
+    }
+
 //Event Subscription and Handling
 
     @Subscribe
@@ -873,9 +881,7 @@ public class BookingDetailsFragment extends InjectedFragment
             case ISSUE_UNSAFE:
             case ISSUE_HOURS:
             case ISSUE_OTHER:
-                Bundle arguments = new Bundle();
-                arguments.putString(BundleKeys.TARGET_URL, event.action.getDeepLink());
-                bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments, TransitionStyle.NATIVE_TO_WEBVIEW));
+                goToHelpCenter(event.action.getDeepLink());
                 break;
         }
     }
