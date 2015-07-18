@@ -517,7 +517,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         // set dialog message
         alertDialogBuilder
-                .setTitle(R.string.are_you_sure)
+                .setTitle(warningButtonsText.getTitleStringId())
                 .setMessage(warning)
                 .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
                         {

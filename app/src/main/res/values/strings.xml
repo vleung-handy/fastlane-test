@@ -298,7 +298,9 @@
     <string name="report_no_show">Report No Show</string>
     <string name="customer_no_show_reported">Customer no show reported</string>
     <string name="unable_to_report_no_show">Unable to submit customer no show report. Please try again.</string>
+    <string name="remove_customer_no_show">Remove No Show</string>
     <string name="customer_no_show_cancelled">Customer no show report cancelled</string>
     <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
+    <string name="remove_customer_no_show_question">Remove customer no show report?</string>
 
 </resources>
