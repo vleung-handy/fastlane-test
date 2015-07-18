@@ -1,6 +1,8 @@
 package com.handy.portal.data;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.constant.LocationKey;
+import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
@@ -9,6 +11,7 @@ import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -71,21 +74,21 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void notifyOnMyWayBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
+    public final void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.notifyOnMyWay(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
+        service.notifyOnMyWay(getUserId(), bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckInBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckInBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.checkIn(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
+        service.checkIn(getUserId(), bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckOutBooking(String bookingId, Map<String, String> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckOutBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.checkOut(getUserId(), bookingId, locationParams, new BookingHandyRetroFitCallback(cb));
+        service.checkOut(getUserId(), bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
@@ -95,9 +98,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void reportNoShow(String bookingId, Map<String, String> params, Callback<Booking> cb)
+    public void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb)
     {
-        service.reportNoShow(getUserId(), bookingId, params, new BookingHandyRetroFitCallback(cb));
+        service.reportNoShow(getUserId(), bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override

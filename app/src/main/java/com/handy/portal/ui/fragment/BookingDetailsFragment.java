@@ -401,7 +401,7 @@ public class BookingDetailsFragment extends InjectedFragment
             return;
         }
 
-        LocationData locationData = Utils.getCurrentLocation((BaseActivity) getActivity());
+        LocationData locationData = getLocationData();
 
         switch (actionType)
         {
@@ -466,6 +466,11 @@ public class BookingDetailsFragment extends InjectedFragment
                 Crashlytics.log("Could not find associated behavior for : " + actionType.getActionName());
             }
         }
+    }
+
+    private LocationData getLocationData()
+    {
+        return Utils.getCurrentLocation((BaseActivity) getActivity());
     }
 
     private void showHelpOptions()
@@ -592,18 +597,14 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        Map<String, String> params = Utils.getCurrentLocation((BaseActivity) getActivity()).getLocationParamsMap();
-        params.put("active", "true");
-        bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), params));
+        bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), getLocationData()));
     }
 
     private void requestCancelNoShow()
     {
         slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        Map<String, String> params = Utils.getCurrentLocation((BaseActivity) getActivity()).getLocationParamsMap();
-        params.put("active", "false");
-        bus.post(new HandyEvent.RequestCancelNoShow(associatedBooking.getId(), params));
+        bus.post(new HandyEvent.RequestCancelNoShow(associatedBooking.getId(), getLocationData()));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
@@ -1040,5 +1041,4 @@ public class BookingDetailsFragment extends InjectedFragment
         }
 
     }
-
 }

@@ -1,8 +1,5 @@
 package com.handy.portal.constant;
 
-/**
- * Created by cdavis on 7/7/15.
- */
 public enum PrefsKey
 {
     USER_CREDENTIALS_ID("user_credentials_id");
@@ -17,5 +14,11 @@ public enum PrefsKey
     public String getKey()
     {
         return this.key;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.getKey();
     }
 }

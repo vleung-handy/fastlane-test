@@ -20,7 +20,6 @@ import com.handy.portal.model.UpdateDetails;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public abstract class HandyEvent
 {
@@ -479,12 +478,12 @@ public abstract class HandyEvent
     public static class RequestReportNoShow extends RequestEvent
     {
         public final String bookingId;
-        public final Map<String, String> params;
+        public final LocationData locationData;
 
-        public RequestReportNoShow(String bookingId, Map<String, String> params)
+        public RequestReportNoShow(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
-            this.params = params;
+            this.locationData = locationData;
         }
     }
 
@@ -509,12 +508,12 @@ public abstract class HandyEvent
     public static class RequestCancelNoShow extends RequestEvent
     {
         public final String bookingId;
-        public final Map<String, String> params;
+        public final LocationData locationData;
 
-        public RequestCancelNoShow(String bookingId, Map<String, String> params)
+        public RequestCancelNoShow(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
-            this.params = params;
+            this.locationData = locationData;
         }
     }
 

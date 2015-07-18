@@ -2,51 +2,30 @@ package com.handy.portal.model;
 
 import android.location.Location;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.handy.portal.constant.LocationKey;
 
 public class LocationData
 {
-    public final static String LATITUDE = "latitude";
-    public final static String LONGITUDE = "longitude";
-    public final static String ACCURACY = "accuracy";
-    private Map<String, String> locationParams;
+    private TypeSafeMap<LocationKey> locationMap;
 
     public LocationData()
     {
-        locationParams = new HashMap<>();
+        locationMap = new TypeSafeMap<>();
     }
 
     public LocationData(Location location)
     {
-        locationParams = new HashMap<>();
-        if(location != null)
+        this();
+        if (location != null)
         {
-            locationParams.put(LATITUDE, Double.toString(location.getLatitude()));
-            locationParams.put(LONGITUDE, Double.toString(location.getLongitude()));
-            locationParams.put(ACCURACY, Float.toString(location.getAccuracy()));
+            locationMap.put(LocationKey.LATITUDE, Double.toString(location.getLatitude()));
+            locationMap.put(LocationKey.LONGITUDE, Double.toString(location.getLongitude()));
+            locationMap.put(LocationKey.ACCURACY, Float.toString(location.getAccuracy()));
         }
     }
 
-    public Map<String, String> getLocationParamsMap()
+    public TypeSafeMap<LocationKey> getLocationMap()
     {
-        return locationParams;
-    }
-
-    @Override
-    public String toString()
-    {
-        if(locationParams == null)
-        {
-            return "";
-        }
-
-        String s =
-                (locationParams.get(LATITUDE) != null ? locationParams.get(LATITUDE) : "|") + " " +
-                (locationParams.get(LONGITUDE) != null ? locationParams.get(LONGITUDE) : "|") + " " +
-                (locationParams.get(ACCURACY) != null ? locationParams.get(ACCURACY) : "|")
-        ;
-
-        return s;
+        return locationMap;
     }
 }
