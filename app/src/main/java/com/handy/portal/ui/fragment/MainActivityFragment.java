@@ -16,10 +16,12 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.SwapFragmentArguments;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
-import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -39,6 +41,9 @@ public class MainActivityFragment extends InjectedFragment
     TransitionOverlayView transitionOverlayView;
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
+
+    @Inject
+    HandyRetrofitEndpoint endpoint;
 
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
@@ -96,13 +101,13 @@ public class MainActivityFragment extends InjectedFragment
         loadingOverlayView.setOverlayVisibility(event.isVisible);
     }
 
-    private void initWebViewFragment(Target urlTarget)
+    private void initWebViewFragment(String url)
     {
         webViewFragment = new PortalWebViewFragment();
 
         //pass along the target
         Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.TARGET_URL, urlTarget.getValue());
+        arguments.putString(BundleKeys.TARGET_URL, url);
 
         SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
         swapFragmentArguments.argumentsBundle = arguments;
@@ -173,13 +178,23 @@ public class MainActivityFragment extends InjectedFragment
         }
         else
         {
-            if (webViewFragment == null)
+            String url;
+            if (argumentsBundle != null && argumentsBundle.containsKey(BundleKeys.TARGET_URL))
             {
-                initWebViewFragment(targetTab.getTarget());
+                url = argumentsBundle.getString(BundleKeys.TARGET_URL);
             }
             else
             {
-                webViewFragment.openPortalUrl(targetTab.getTarget());
+                url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getTarget().getValue();
+            }
+
+            if (webViewFragment == null)
+            {
+                initWebViewFragment(url);
+            }
+            else
+            {
+                webViewFragment.openPortalUrl(url);
             }
         }
 
@@ -193,7 +208,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         clearingBackStack = true;
         FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-        while(supportFragmentManager.getBackStackEntryCount() > 0)
+        while (supportFragmentManager.getBackStackEntryCount() > 0)
         {
             supportFragmentManager.popBackStackImmediate();
         }
@@ -221,12 +236,28 @@ public class MainActivityFragment extends InjectedFragment
         //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
         if (targetTab != MainViewTab.DETAILS)
         {
-            switch(targetTab)
+            switch (targetTab)
             {
-                case JOBS: { jobsButton.toggle();} break;
-                case SCHEDULE: { scheduleButton.toggle();} break;
-                case PROFILE: { profileButton.toggle();} break;
-                case HELP: { helpButton.toggle();} break;
+                case JOBS:
+                {
+                    jobsButton.toggle();
+                }
+                break;
+                case SCHEDULE:
+                {
+                    scheduleButton.toggle();
+                }
+                break;
+                case PROFILE:
+                {
+                    profileButton.toggle();
+                }
+                break;
+                case HELP:
+                {
+                    helpButton.toggle();
+                }
+                break;
             }
         }
     }
@@ -287,7 +318,5 @@ public class MainActivityFragment extends InjectedFragment
 
         // Commit the transaction
         transaction.commit();
-
     }
-
 }
