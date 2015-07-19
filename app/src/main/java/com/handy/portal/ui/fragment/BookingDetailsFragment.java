@@ -116,6 +116,8 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
 
+    private boolean backButtonInitialized = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -247,6 +249,11 @@ public class BookingDetailsFragment extends InjectedFragment
     //TODO: Figure out better way to link click listeners sections
     private void initBackButton()
     {
+        if (backButtonInitialized)
+        {
+            removeBackPressedListeners();
+        }
+
         ImageButton backButton = (ImageButton) bannerLayout.findViewById(R.id.booking_details_back_button);
         if (backButton != null)
         {
@@ -259,6 +266,18 @@ public class BookingDetailsFragment extends InjectedFragment
                 }
             });
         }
+        ((BaseActivity) getActivity()).addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
+        {
+            @Override
+            public void onBackPressed()
+            {
+                BookingStatus bookingStatus = associatedBooking.inferBookingStatus(getLoggedInUserId());
+                MainViewTab targetTab = bookingStatus == BookingStatus.CLAIMED ? MainViewTab.SCHEDULE : MainViewTab.JOBS;
+                returnToTab(targetTab, associatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+            }
+        });
+
+        backButtonInitialized = true;
     }
 
     private void initCancelNoShowButton()
@@ -887,12 +906,18 @@ public class BookingDetailsFragment extends InjectedFragment
     @Override
     public void onDestroyView()
     {
+        removeBackPressedListeners();
+        super.onDestroyView();
+    }
+
+    private void removeBackPressedListeners()
+    {
+        BaseActivity activity = (BaseActivity) getActivity();
         if (slideUpPanelContainer.isShown())
         {
-            // no need to hide the panel, just make sure it no longer listens to the back button
-            slideUpPanelContainer.unsetOnBackPressedListener();
+            activity.popOnBackPressedListenerStack();
         }
-        super.onDestroyView();
+        activity.popOnBackPressedListenerStack();
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)

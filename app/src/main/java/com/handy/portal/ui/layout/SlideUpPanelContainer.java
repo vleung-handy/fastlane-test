@@ -83,7 +83,7 @@ public class SlideUpPanelContainer extends RelativeLayout
     private void setOnBackPressedListener()
     {
         BaseActivity baseActivity = (BaseActivity) getContext();
-        baseActivity.setOnBackPressedListener(new BaseActivity.OnBackPressedListener()
+        baseActivity.addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
         {
             @Override
             public void onBackPressed()
@@ -116,10 +116,9 @@ public class SlideUpPanelContainer extends RelativeLayout
         }
     }
 
-    public void unsetOnBackPressedListener()
+    private void unsetOnBackPressedListener()
     {
-        BaseActivity baseActivity = (BaseActivity) getContext();
-        baseActivity.setOnBackPressedListener(null);
+        ((BaseActivity) getContext()).popOnBackPressedListenerStack();
     }
 
     private void hideElement(View view, int animId)

@@ -2,7 +2,6 @@ package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,8 +46,6 @@ public class MainActivityFragment extends InjectedFragment
 
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
-
-    public static boolean clearingBackStack; //flag we set while clearing the backstack to let fragments determine if they should run their onResume
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -152,8 +149,6 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle)
     {
-        clearFragmentBackStack();
-
         trackSwitchToTab(targetTab);
 
         updateSelectedTabButton(targetTab);
@@ -172,7 +167,6 @@ public class MainActivityFragment extends InjectedFragment
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
             swapFragmentArguments.argumentsBundle = argumentsBundle;
-            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS);
 
             swapFragment(swapFragmentArguments);
         }
@@ -202,17 +196,6 @@ public class MainActivityFragment extends InjectedFragment
         {
             currentTab = targetTab;
         }
-    }
-
-    private void clearFragmentBackStack()
-    {
-        clearingBackStack = true;
-        FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-        while (supportFragmentManager.getBackStackEntryCount() > 0)
-        {
-            supportFragmentManager.popBackStackImmediate();
-        }
-        clearingBackStack = false;
     }
 
     //analytics event
@@ -306,15 +289,7 @@ public class MainActivityFragment extends InjectedFragment
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.main_container, newFragment);
-
-        if (swapArguments.addToBackStack)
-        {
-            transaction.addToBackStack(null);
-        }
-        else
-        {
-            transaction.disallowAddToBackStack();
-        }
+        transaction.disallowAddToBackStack();
 
         // Commit the transaction
         transaction.commit();

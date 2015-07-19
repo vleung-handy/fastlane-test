@@ -20,6 +20,8 @@ import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.Stack;
+
 import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -28,7 +30,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
 {
     private Object busEventListener;
     protected boolean allowCallbacks;
-    private OnBackPressedListener onBackPressedListener;
+    private Stack<OnBackPressedListener> onBackPressedListenerStack;
     protected ProgressDialog progressDialog;
 
     //According to android docs this is the preferred way of accessing location instead of using LocationManager
@@ -74,6 +76,8 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
                 //TODO: Handle receive update available errors
             }
         };
+
+        onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
     }
@@ -126,7 +130,10 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
     @Override
     public void onBackPressed()
     {
-        if (onBackPressedListener != null) onBackPressedListener.onBackPressed();
+        if (!onBackPressedListenerStack.isEmpty())
+        {
+            onBackPressedListenerStack.peek().onBackPressed();
+        }
         else super.onBackPressed();
     }
 
@@ -145,9 +152,14 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         super.onDestroy();
     }
 
-    public void setOnBackPressedListener(final OnBackPressedListener onBackPressedListener)
+    public void addOnBackPressedListener(final OnBackPressedListener onBackPressedListener)
     {
-        this.onBackPressedListener = onBackPressedListener;
+        this.onBackPressedListenerStack.push(onBackPressedListener);
+    }
+
+    public void popOnBackPressedListenerStack()
+    {
+        this.onBackPressedListenerStack.pop();
     }
 
     public interface OnBackPressedListener
