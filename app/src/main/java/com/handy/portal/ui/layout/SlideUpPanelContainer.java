@@ -63,14 +63,16 @@ public class SlideUpPanelContainer extends RelativeLayout
             showElement(panelOverlay, R.anim.fade_in);
             showElement(panel, R.anim.abc_slide_in_bottom);
 
-            panelOverlay.setOnClickListener(new OnClickListener()
+            OnClickListener hidePanelListener = new OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
                     hidePanel();
                 }
-            });
+            };
+            panelOverlay.setOnClickListener(hidePanelListener);
+            panel.findViewById(R.id.slide_up_panel_close).setOnClickListener(hidePanelListener);
 
             setOnBackPressedListener();
 
