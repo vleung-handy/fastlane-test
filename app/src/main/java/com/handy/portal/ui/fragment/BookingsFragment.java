@@ -16,6 +16,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.model.BookingSummary;
 import com.handy.portal.model.Booking;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.util.Utils;
@@ -161,7 +162,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             final List<Booking> bookingsForDay = new ArrayList<>(bookingSummary.getBookings());
 
             Collections.sort(bookingsForDay); //date, ascending
-            insertSeparator(bookingsForDay);
 
             boolean requestedJobsThisDay = showRequestedIndicator(bookingsForDay);
             boolean claimedJobsThisDay = showClaimedIndicator(bookingsForDay);
@@ -182,8 +182,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
-    protected abstract void insertSeparator(List<Booking> bookingsForDay);
-
     private void selectDay(Date day)
     {
         DateButtonView selectedDateButtonView = dateButtonMap.get(selectedDay);
@@ -197,11 +195,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void displayBookings(List<Booking> bookings, Date dateOfBookings)
     {
-        getBookingListView().populateList(bookings);
+        getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
         setupCTAButton(bookings, dateOfBookings);
     }
+
+    protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
     private void initListClickListener()
     {

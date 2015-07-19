@@ -14,7 +14,9 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
+import com.handy.portal.ui.element.ScheduledBookingElementView;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -24,10 +26,6 @@ import java.util.List;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
     @InjectView(R.id.scheduled_jobs_list_view)
@@ -83,9 +81,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected void insertSeparator(List<Booking> bookingsForDay)
+    protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
-        // do nothing
+        return ScheduledBookingElementView.class;
     }
 
     @Override
@@ -97,7 +95,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         long dateDifference = dateOfBookingsTime - currentTime;
         final long millisecondsInHour = 3600000;
         final Integer hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if(bookingsForDay.size() == 0 && dateDifference < millisecondsInHour * hoursSpanningAvailableBookings)
+        if (bookingsForDay.size() == 0 && dateDifference < millisecondsInHour * hoursSpanningAvailableBookings)
         {
             findJobsForDayButton.setVisibility(View.VISIBLE);
         }
@@ -129,11 +127,11 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     //All bookings not in the past on this page should cause the claimed indicator to appear
     protected boolean showClaimedIndicator(List<Booking> bookingsForDay)
     {
-        if(bookingsForDay.size() > 0)
+        if (bookingsForDay.size() > 0)
         {
-            for(Booking b : bookingsForDay)
+            for (Booking b : bookingsForDay)
             {
-                if(!b.isEnded())
+                if (!b.isEnded())
                 {
                     return true;
                 }

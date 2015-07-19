@@ -26,10 +26,10 @@ public class BookingListView extends ListView
         super(context, attrs);
     }
 
-    public void populateList(List<Booking> bookings)
+    public void populateList(List<Booking> bookings, Class<? extends BookingElementView> elementViewClass)
     {
         BookingElementAdapter itemsAdapter =
-                new BookingElementAdapter(getContext(), bookings);
+                new BookingElementAdapter(getContext(), bookings, elementViewClass);
         setAdapter(itemsAdapter);
     }
 
