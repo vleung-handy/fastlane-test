@@ -30,8 +30,7 @@ public final class UIUtils
         //Valid values : 1,2,4 every X weeks, 0 = non-recurring
         int frequency = booking.getFrequency();
         String bookingFrequencyFormat = getFrequencyFormatString(booking, parentContext);
-        String bookingFrequency = String.format(bookingFrequencyFormat, frequency);
-        return bookingFrequency;
+        return String.format(bookingFrequencyFormat, frequency);
     }
 
     public static void setFrequencyInfo(Booking booking, TextView textView, Context parentContext)
@@ -43,8 +42,7 @@ public final class UIUtils
     private static String getFrequencyFormatString(Booking booking, Context parentContext)
     {
         int frequency = booking.getFrequency();
-        String bookingFrequencyFormat = null;
-        //UK style regions show "One Time/Recurring" they do not specify the weeks interval
+        String bookingFrequencyFormat;
 
         if (frequency == 0)
         {

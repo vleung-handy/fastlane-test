@@ -26,7 +26,7 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.handy.portal.ui.element.SupportActionViewInitializer;
+import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
@@ -73,7 +73,7 @@ import retrofit.converter.GsonConverter;
         PleaseUpdateFragment.class,
         TermsActivity.class,
         TermsFragment.class,
-        SupportActionViewInitializer.class
+        SupportActionViewConstructor.class
 })
 public final class ApplicationModule
 {

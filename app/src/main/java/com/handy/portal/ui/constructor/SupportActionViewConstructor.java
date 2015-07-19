@@ -1,4 +1,4 @@
-package com.handy.portal.ui.element;
+package com.handy.portal.ui.constructor;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class SupportActionViewInitializer extends ViewInitializer<Action>
+public class SupportActionViewConstructor extends ViewConstructor<Action>
 {
     @InjectView(R.id.support_action_icon)
     ImageView icon;
@@ -30,7 +30,7 @@ public class SupportActionViewInitializer extends ViewInitializer<Action>
 
     private Action action;
 
-    public SupportActionViewInitializer(Context context)
+    public SupportActionViewConstructor(Context context)
     {
         super(context);
         Utils.inject(context, this);
@@ -49,7 +49,7 @@ public class SupportActionViewInitializer extends ViewInitializer<Action>
     }
 
     @Override
-    boolean constructView(ViewGroup container, Action action)
+    protected boolean constructView(ViewGroup container, Action action)
     {
         this.action = action;
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(action);

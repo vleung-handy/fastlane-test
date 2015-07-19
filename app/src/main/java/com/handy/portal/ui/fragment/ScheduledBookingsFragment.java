@@ -14,7 +14,7 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.ui.form.BookingListView;
+import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 

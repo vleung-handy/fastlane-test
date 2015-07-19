@@ -1,7 +1,10 @@
-package com.handy.portal.ui.element;
+package com.handy.portal.ui.constructor;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
@@ -21,22 +24,31 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
     @InjectView(R.id.booking_details_action_text)
     protected TextView helperText;
 
+    public BookingDetailsActionPanelViewConstructor(@NonNull Context context, Bundle arguments)
+    {
+        super(context, arguments);
+    }
+
     protected int getLayoutResourceId()
     {
         return R.layout.element_booking_details_action;
     }
 
-    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
+    @Override
+    protected boolean constructView(ViewGroup container, Booking booking)
     {
-        BookingStatus bookingStatus = (BookingStatus) arguments.getSerializable(BundleKeys.BOOKING_STATUS);
+        BookingStatus bookingStatus = (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
+        List<Booking.Action> allowedActions = booking.getAllowedActions();
         boolean removeSection = shouldRemoveSection(booking, allowedActions, bookingStatus);
         if (removeSection)
         {
-            removeView();
+            container.setVisibility(View.GONE);
+            return false;
         }
         else
         {
             initHelperText(allowedActions);
+            return true;
         }
     }
 

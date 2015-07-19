@@ -8,7 +8,7 @@ import com.handy.portal.R;
 import com.handy.portal.model.Booking;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.ui.form.BookingListView;
+import com.handy.portal.ui.element.BookingListView;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;

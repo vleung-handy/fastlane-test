@@ -1,4 +1,8 @@
-package com.handy.portal.ui.element;
+package com.handy.portal.ui.constructor;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.google.common.collect.ImmutableList;
 import com.handy.portal.R;
@@ -8,11 +12,13 @@ import com.handy.portal.model.Booking.BookingStatus;
 
 import java.util.List;
 
-/**
- * Created by cdavis on 5/8/15.
- */
 public class BookingDetailsActionRemovePanelViewConstructor extends BookingDetailsActionPanelViewConstructor
 {
+    public BookingDetailsActionRemovePanelViewConstructor(@NonNull Context context, Bundle arguments)
+    {
+        super(context, arguments);
+    }
+
     @Override
     protected int getLayoutResourceId()
     {
@@ -22,9 +28,7 @@ public class BookingDetailsActionRemovePanelViewConstructor extends BookingDetai
     @Override
     protected boolean shouldRemoveSection(Booking booking, List<Booking.Action> allowedActions, BookingStatus bookingStatus)
     {
-        boolean removeSection = false;
-        removeSection = super.shouldRemoveSection(booking, allowedActions, bookingStatus) || (bookingStatus != BookingStatus.CLAIMED);
-        return removeSection;
+        return super.shouldRemoveSection(booking, allowedActions, bookingStatus) || (bookingStatus != BookingStatus.CLAIMED);
     }
 
     @Override

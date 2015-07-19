@@ -17,7 +17,7 @@ import com.handy.portal.model.BookingSummary;
 import com.handy.portal.model.Booking;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.DateButtonView;
-import com.handy.portal.ui.form.BookingListView;
+import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.util.Utils;
 
 import java.util.ArrayList;

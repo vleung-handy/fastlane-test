@@ -1,6 +1,10 @@
-package com.handy.portal.ui.element;
+package com.handy.portal.ui.constructor;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
@@ -17,17 +21,31 @@ public class BookingDetailsActionContactPanelViewConstructor extends BookingDeta
     @InjectView(R.id.booking_details_contact_profile_text)
     protected TextView profileText;
 
+    public BookingDetailsActionContactPanelViewConstructor(@NonNull Context context, Bundle arguments)
+    {
+        super(context, arguments);
+    }
+
     protected int getLayoutResourceId()
     {
         return R.layout.element_booking_details_contact;
     }
 
     @Override
-    protected void constructViewFromBooking(Booking booking, List<Booking.Action> allowedActions, Bundle arguments)
+    protected boolean constructView(ViewGroup container, Booking booking)
     {
-        super.constructViewFromBooking(booking, allowedActions, arguments);
-        Booking.User bookingUser = booking.getUser();
-        profileText.setText(bookingUser.getFullName());
+        boolean actionPanelExists = super.constructView(container, booking);
+        if (actionPanelExists)
+        {
+            Booking.User bookingUser = booking.getUser();
+            profileText.setText(bookingUser.getFullName());
+            return true;
+        }
+        else
+        {
+            container.setVisibility(View.GONE);
+            return false;
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.element;
+package com.handy.portal.ui.constructor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,18 +11,17 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
 
 import java.util.Collection;
-import java.util.Set;
 
 import butterknife.InjectView;
 
-public class SupportActionContainerViewInitializer extends ViewInitializer<Booking>
+public class SupportActionContainerViewConstructor extends ViewConstructor<Booking>
 {
     @InjectView(R.id.support_actions_container)
     ViewGroup supportActionsContainer;
 
-    private Set<String> allowedActionNames;
+    private Collection<String> allowedActionNames;
 
-    public SupportActionContainerViewInitializer(Context context, @NonNull Set<String> allowedActionNames)
+    public SupportActionContainerViewConstructor(Context context, @NonNull Collection<String> allowedActionNames)
     {
         super(context);
         this.allowedActionNames = allowedActionNames;
@@ -35,7 +34,7 @@ public class SupportActionContainerViewInitializer extends ViewInitializer<Booki
     }
 
     @Override
-    boolean constructView(ViewGroup container, Booking booking)
+    protected boolean constructView(ViewGroup container, Booking booking)
     {
         Collection<Action> supportActions = Collections2.filter(booking.getAllowedActions(), new Predicate<Action>()
         {
@@ -48,7 +47,7 @@ public class SupportActionContainerViewInitializer extends ViewInitializer<Booki
 
         for (Action action : supportActions)
         {
-            new SupportActionViewInitializer(getContext())
+            new SupportActionViewConstructor(getContext())
                     .create(supportActionsContainer, action);
         }
 

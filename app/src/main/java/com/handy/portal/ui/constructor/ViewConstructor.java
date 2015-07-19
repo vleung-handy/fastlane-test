@@ -1,4 +1,4 @@
-package com.handy.portal.ui.element;
+package com.handy.portal.ui.constructor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 
-public abstract class ViewInitializer<T>
+public abstract class ViewConstructor<T>
 {
     private Context context;
 
     abstract int getLayoutResourceId();
 
-    abstract boolean constructView(ViewGroup container, T item);
+    protected abstract boolean constructView(ViewGroup container, T item);
 
-    public ViewInitializer(@NonNull Context context)
+    public ViewConstructor(@NonNull Context context)
     {
         this.context = context;
     }

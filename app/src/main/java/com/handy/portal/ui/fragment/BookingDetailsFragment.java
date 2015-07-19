@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -38,17 +37,17 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsActionRemovePanelViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsBannerViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsDateViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsJobInstructionsViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsViewConstructor;
-import com.handy.portal.ui.element.GoogleMapViewConstructor;
-import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
-import com.handy.portal.ui.element.SupportActionContainerViewInitializer;
+import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsActionRemovePanelViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsBannerViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
+import com.handy.portal.ui.constructor.GoogleMapViewConstructor;
+import com.handy.portal.ui.constructor.MapPlaceholderViewConstructor;
+import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
@@ -194,49 +193,47 @@ public class BookingDetailsFragment extends InjectedFragment
     //Use view constructors on layouts to generate the elements inside the layouts, we do not currently maintain a linkage to the resulting view
     private void constructBookingDisplayElements(Booking booking)
     {
-        List<Booking.Action> allowedActions = booking.getAllowedActions();
-        Activity activity = getActivity();
-
-        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
-
         //Construct the views for each layout
-        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts();
+        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts(booking);
         for (Map.Entry<ViewGroup, BookingDetailsViewConstructor> viewConstructorEntry : viewConstructors.entrySet())
         {
             ViewGroup layout = viewConstructorEntry.getKey();
             BookingDetailsViewConstructor constructor = viewConstructorEntry.getValue();
-            constructor.constructView(booking, allowedActions, arguments, layout, activity);
+            constructor.create(layout, booking);
         }
 
         //Full Details Notice , technically we should move this to its own view panel
+        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
     //A listing of all the view constructors we use to populate the layouts
     //We don't maintain references to these constructors / the view, we always create anew from a booking
-    private Map<ViewGroup, BookingDetailsViewConstructor> getViewConstructorsForLayouts()
+    private Map<ViewGroup, BookingDetailsViewConstructor> getViewConstructorsForLayouts(Booking booking)
     {
+        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
+
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
-        viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor());
+        viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor(getActivity(), arguments));
 
         //show either the real map or a placeholder image depending on if we have google play services
         if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
         {
-            viewConstructors.put(mapLayout, new GoogleMapViewConstructor());
+            viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
         }
         else
         {
-            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor());
+            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
         }
 
-        viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor());
-        viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor());
-        viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor());
-        viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor());
-        viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor());
-        viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor());
+        viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
+        viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
+        viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor(getActivity(), arguments));
+        viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments));
+        viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments));
+        viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments));
         return viewConstructors;
     }
 
@@ -480,9 +477,9 @@ public class BookingDetailsFragment extends InjectedFragment
             @Override
             public void initialize(ViewGroup panel)
             {
-                new SupportActionContainerViewInitializer(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
+                new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
                         .create(panel, associatedBooking);
-                new SupportActionContainerViewInitializer(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
+                new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
                         .create(panel, associatedBooking);
             }
         });

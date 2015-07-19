@@ -303,4 +303,6 @@
     <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
 
+    <string name="bullet">⋅</string>
+
 </resources>
