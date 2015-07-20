@@ -857,7 +857,12 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         this.associatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
-        showToast(R.string.customer_no_show_reported, Toast.LENGTH_LONG);
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.thanks_for_reporting)
+                .setMessage(R.string.customer_no_show_recorded)
+                .setPositiveButton(R.string.ok, null)
+                .create()
+                .show();
     }
 
     @Subscribe

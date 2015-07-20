@@ -294,9 +294,12 @@
     <string name="will_be_early">I\u2019ll be early</string>
     <string name="will_be_late">I\u2019m running late</string>
 
+    <string name="on_the_job_support">On The Job Support</string>
     <string name="report_customer_no_show">Report customer no show</string>
     <string name="report_no_show">Report No Show</string>
     <string name="customer_no_show_reported">Customer no show reported</string>
+    <string name="customer_no_show_recorded">We\u2019ve recorded this customer no show – no need to contact us.\n\nDon\u2019t forget to check-out of the booking to receive full payment.</string>
+    <string name="thanks_for_reporting">Thanks for reporting</string>
     <string name="unable_to_report_no_show">Unable to submit customer no show report. Please try again.</string>
     <string name="remove_customer_no_show">Remove No Show</string>
     <string name="customer_no_show_cancelled">Customer no show report cancelled</string>
@@ -305,6 +308,6 @@
 
     <string name="bullet">⋅</string>
     <string name="undo">Undo</string>
-    <string name="on_the_job_support">On The Job Support</string>
+    <string name="ok">OK</string>
 
 </resources>
