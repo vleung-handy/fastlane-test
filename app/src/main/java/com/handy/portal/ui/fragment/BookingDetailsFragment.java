@@ -419,6 +419,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         LocationData locationData = getLocationData();
 
+        bus.post(new HandyEvent.ActionTriggered(actionType));
         switch (actionType)
         {
             case CLAIM:
@@ -545,6 +546,7 @@ public class BookingDetailsFragment extends InjectedFragment
                             public void onClick(DialogInterface dialog, int id)
                             {
                                 //proceed with action, we have accepted the warning
+                                bus.post(new HandyEvent.ActionWarningAccepted(actionType));
                                 takeAction(actionType, true);
                             }
                         }
@@ -658,7 +660,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 .show();
     }
 
-    private void showCustomerNoShowDialog(Booking.Action action)
+    private void showCustomerNoShowDialog(final Booking.Action action)
     {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.report_customer_no_show)
@@ -668,6 +670,7 @@ public class BookingDetailsFragment extends InjectedFragment
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which)
                     {
+                        bus.post(new HandyEvent.ActionWarningAccepted(action));
                         requestReportNoShow();
                     }
                 })
@@ -881,7 +884,7 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onSupportActionTriggered(HandyEvent.TriggerSupportAction event)
+    public void onSupportActionTriggered(HandyEvent.SupportActionTrigerred event)
     {
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
         switch (supportActionType)

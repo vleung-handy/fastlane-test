@@ -45,7 +45,7 @@ public class SupportActionViewConstructor extends ViewConstructor<Action>
     @OnClick(R.id.support_action)
     public void triggerSupportAction()
     {
-        bus.post(new HandyEvent.TriggerSupportAction(action));
+        bus.post(new HandyEvent.SupportActionTrigerred(action));
     }
 
     @Override

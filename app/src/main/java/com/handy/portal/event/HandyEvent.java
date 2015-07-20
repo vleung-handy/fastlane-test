@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.annotation.Track;
 import com.handy.portal.annotation.TrackField;
+import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
@@ -475,6 +476,7 @@ public abstract class HandyEvent
 
     // Customer No Show Events
 
+    @Track("report customer no show")
     public static class RequestReportNoShow extends RequestEvent
     {
         public final String bookingId;
@@ -505,6 +507,7 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("cancel customer no show")
     public static class RequestCancelNoShow extends RequestEvent
     {
         public final String bookingId;
@@ -648,11 +651,38 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("action triggered")
+    public static class ActionTriggered extends AnalyticsEvent
+    {
+        @TrackField("action name")
+        private String actionName;
+
+        public ActionTriggered(BookingActionButtonType actionType)
+        {
+            this.actionName = actionType.getActionName();
+        }
+    }
+
+    @Track("warning dialog accepted")
+    public static class ActionWarningAccepted extends AnalyticsEvent
+    {
+        @TrackField("action name")
+        private String actionName;
+
+        public ActionWarningAccepted(BookingActionButtonType actionType)
+        {
+            this.actionName = actionType.getActionName();
+        }
+
+        public ActionWarningAccepted(Action action)
+        {
+            this.actionName = action.getActionName();
+        }
+    }
+
     @Track("portal use terms error")
     public static class AcceptTermsError extends AnalyticsEvent
     {
-        @TrackField("terms code")
-        private String code;
     }
 
     @Track("sms customer clicked")
@@ -686,13 +716,17 @@ public abstract class HandyEvent
     {
     }
 
-    public static class TriggerSupportAction
+    @Track("support action triggered")
+    public static class SupportActionTrigerred
     {
         public final Action action;
+        @TrackField("action name")
+        private String actionName;
 
-        public TriggerSupportAction(@NonNull Action action)
+        public SupportActionTrigerred(@NonNull Action action)
         {
             this.action = action;
+            this.actionName = action.getActionName();
         }
     }
 }
