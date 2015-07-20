@@ -52,8 +52,16 @@ public class PortalWebViewClient extends WebViewClient
             return true;
         }
 
-        // changes #future to goto=future
-        String fixedUrl = url.replaceFirst("#profile(?:\\?|$)", "?goto=profile&");
+        String fixedUrl;
+        if (url.contains("help"))
+        {
+            fixedUrl = url;
+        }
+        else
+        {
+            // changes #future to goto=future
+            fixedUrl = url.replaceFirst("#(.*)(?:\\?|$)", "?goto=$1&");
+        }
 
         loadUrlWithFromAppParam(fixedUrl);
         return true;
