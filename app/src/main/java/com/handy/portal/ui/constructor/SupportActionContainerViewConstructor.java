@@ -6,11 +6,17 @@ import android.view.ViewGroup;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
+import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
+import com.handy.portal.util.SupportActionUtils;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import butterknife.InjectView;
 
@@ -36,21 +42,45 @@ public class SupportActionContainerViewConstructor extends ViewConstructor<Booki
     @Override
     protected boolean constructView(ViewGroup container, Booking booking)
     {
-        Collection<Action> supportActions = Collections2.filter(booking.getAllowedActions(), new Predicate<Action>()
+        List<Action> supportActions = Lists.newArrayList(Collections2.filter(booking.getAllowedActions(), new Predicate<Action>()
         {
             @Override
             public boolean apply(Action input)
             {
                 return allowedActionNames.contains(input.getActionName());
             }
-        });
+        }));
 
-        for (Action action : supportActions)
+        if (supportActions.size() > 0)
         {
-            new SupportActionViewConstructor(getContext())
-                    .create(supportActionsContainer, action);
-        }
+            sortSupportActions(supportActions);
 
-        return supportActions.size() > 0;
+            for (Action action : supportActions)
+            {
+                new SupportActionViewConstructor(getContext())
+                        .create(supportActionsContainer, action);
+
+            }
+            return true;
+        }
+        else
+        {
+
+            return false;
+        }
+    }
+
+    private void sortSupportActions(List<Action> supportActions)
+    {
+        Collections.sort(supportActions, new Comparator<Action>()
+        {
+            @Override
+            public int compare(Action action1, Action action2)
+            {
+                SupportActionType supportActionType1 = SupportActionUtils.getSupportActionType(action1);
+                SupportActionType supportActionType2 = SupportActionUtils.getSupportActionType(action2);
+                return supportActionType1.compareTo(supportActionType2);
+            }
+        });
     }
 }
