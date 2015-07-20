@@ -884,7 +884,7 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onSupportActionTriggered(HandyEvent.SupportActionTrigerred event)
+    public void onSupportActionTriggered(HandyEvent.SupportActionTriggered event)
     {
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
         switch (supportActionType)

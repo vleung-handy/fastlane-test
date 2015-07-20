@@ -717,13 +717,13 @@ public abstract class HandyEvent
     }
 
     @Track("support action triggered")
-    public static class SupportActionTrigerred
+    public static class SupportActionTriggered
     {
         public final Action action;
         @TrackField("action name")
         private String actionName;
 
-        public SupportActionTrigerred(@NonNull Action action)
+        public SupportActionTriggered(@NonNull Action action)
         {
             this.action = action;
             this.actionName = action.getActionName();
