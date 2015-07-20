@@ -28,7 +28,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Inject
     GoogleManager googleManager;
     @Inject
-    Bus bus;
+    protected Bus bus;
     @Inject
     ConfigManager configManager;
 

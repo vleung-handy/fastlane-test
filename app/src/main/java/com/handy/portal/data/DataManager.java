@@ -59,7 +59,7 @@ public abstract class DataManager
                                     String bookingId,
                                     final DataManager.Callback<HelpNodeWrapper> cb);
 
-    public abstract void createHelpCase( TypedInput body, final Callback<Void> cb);
+    public abstract void createHelpCase(TypedInput body, final Callback<Void> cb);
 
     public abstract String getBaseUrl();
 

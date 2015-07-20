@@ -15,6 +15,7 @@ import com.handy.portal.help.HelpFragment;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.TermsManager;
@@ -221,6 +222,14 @@ public final class ApplicationModule
     final PrefsManager providePrefsManager(final SecurePreferences prefs)
     {
         return new PrefsManager(prefs);
+    }
+
+    @Provides
+    @Singleton
+    final HelpManager provideHelpManager(final Bus bus,
+                                               final DataManager dataManager)
+    {
+        return new HelpManager(bus, dataManager);
     }
 
     @Provides

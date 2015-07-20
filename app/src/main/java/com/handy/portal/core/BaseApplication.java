@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.VersionManager;
@@ -48,6 +50,8 @@ public class BaseApplication extends Application
     TermsManager termsManager;
     @Inject
     ConfigManager configManager;
+    @Inject
+    HelpManager helpManager;
 
     @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;

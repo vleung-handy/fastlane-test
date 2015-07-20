@@ -8,6 +8,7 @@ import com.handy.portal.annotation.Track;
 import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.help.HelpNode;
 import com.handy.portal.model.BookingSummary;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
@@ -471,6 +472,68 @@ public abstract class HandyEvent
             this.error = error;
         }
     }
+
+//Help Center Events
+
+    public static class RequestHelpNode extends HandyEvent
+    {
+        public String nodeId;
+        public String bookingId;
+
+        public RequestHelpNode(String nodeId, String bookingId)
+        {
+            this.nodeId = nodeId;
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class ReceiveHelpNodeSuccess extends ReceiveSuccessEvent
+    {
+        public HelpNode helpNode;
+        public ReceiveHelpNodeSuccess(HelpNode helpNode)
+        {
+            this.helpNode = helpNode;
+        }
+    }
+
+    public static class ReceiveHelpNodeError extends ReceiveErrorEvent
+    {
+        public ReceiveHelpNodeError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    //
+    public static class RequestHelpBookingNode extends HandyEvent
+    {
+        public String nodeId;
+        public String bookingId;
+
+        public RequestHelpBookingNode(String nodeId, String bookingId)
+        {
+            this.nodeId = nodeId;
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class ReceiveHelpBookingNodeSuccess extends ReceiveSuccessEvent
+    {
+        public HelpNode helpNode;
+        public ReceiveHelpBookingNodeSuccess(HelpNode helpNode)
+        {
+            this.helpNode = helpNode;
+        }
+    }
+
+    public static class ReceiveHelpBookingNodeError extends ReceiveErrorEvent
+    {
+        public ReceiveHelpBookingNodeError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
 
 
 //Pure analytics events,

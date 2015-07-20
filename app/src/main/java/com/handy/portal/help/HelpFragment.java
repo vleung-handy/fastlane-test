@@ -19,9 +19,10 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.util.TextUtils;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public final class HelpFragment extends InjectedFragment
 
     //private HelpNode currentNode;
     //private static HelpNode rootNode;
-    private String currentBookingId;
+    //private String currentBookingId;
     private String currentLoginToken;
     private String path;
 
@@ -54,8 +55,10 @@ public final class HelpFragment extends InjectedFragment
     @Inject
     Mixpanel mixpanel;
 
-    @Inject
-    DataManager dataManager;
+    //@Inject
+    //DataManager dataManager;
+
+
 
     @InjectView(R.id.menu_button_layout)
     ViewGroup menuButtonLayout;
@@ -113,7 +116,7 @@ public final class HelpFragment extends InjectedFragment
         return requiredArguments;
     }
 
-
+/*
     @Override
     public final void onCreate(final Bundle savedInstanceState)
     {
@@ -135,7 +138,10 @@ public final class HelpFragment extends InjectedFragment
             System.out.println("Don't have an override node, request root");
 
             //get help info with null arg requests root node
-            dataManager.getHelpInfo(null, null, helpNodeCallback);
+            //dataManager.getHelpInfo(null, null, helpNodeCallback);
+
+            bus.post(new HandyEvent.RequestHelpNode(null, null));
+
         } else
         {
             currentBookingId = getArguments().getString(EXTRA_BOOKING_ID);
@@ -159,6 +165,8 @@ public final class HelpFragment extends InjectedFragment
 
 
     }
+
+    */
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -186,7 +194,11 @@ public final class HelpFragment extends InjectedFragment
 
 
         System.out.println("Don't have any nodes while constructing view, request root");
-        dataManager.getHelpInfo(null, null, helpNodeCallback);
+
+
+        bus.post(new HandyEvent.RequestHelpNode(null, null));
+
+        //dataManager.getHelpInfo(null, null, helpNodeCallback);
 
 
 //        if(rootNode == null)
@@ -262,6 +274,51 @@ public final class HelpFragment extends InjectedFragment
 
         return view;
     }
+
+
+
+    @Subscribe
+     public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
+    {
+        System.out.println("Heard back with help node");
+        HelpNode helpNode = event.helpNode;
+        if (helpNode == null)
+        {
+            System.err.println("The help node returned from the data was null, didn't parse properly?");
+            return;
+        }
+        System.out.println("See node content " + helpNode.getContent());
+        constructNodeView(helpNode, myContainer);
+    }
+
+    @Subscribe
+    public void onReceiveHelpNodeError(HandyEvent.ReceiveHelpNodeError event)
+    {
+        //TODO: Hardcoded string
+        showToast("Error retrieving help node " + event.error.getMessage());
+    }
+
+    @Subscribe
+    public void onReceiveHelpBookingNodeSuccess(HandyEvent.ReceiveHelpBookingNodeSuccess event)
+    {
+        System.out.println("Heard back with booking help node");
+        HelpNode helpNode = event.helpNode;
+        if (helpNode == null)
+        {
+            System.err.println("The booking help node returned from the data was null, didn't parse properly?");
+            return;
+        }
+        System.out.println("See node content " + helpNode.getContent());
+        constructNodeView(helpNode, myContainer);
+    }
+
+
+    @Subscribe
+    public void onReceiveHelpBookingNodeError(HandyEvent.ReceiveHelpBookingNodeError event)
+    {
+        showToast("Error retrieving booking help node " + event.error.getMessage());
+    }
+
 
 
     private void constructNodeView(final HelpNode node, final ViewGroup container)
@@ -521,7 +578,8 @@ public final class HelpFragment extends InjectedFragment
                     {
                         toast.setText(getString(R.string.please_login));
                         toast.show();
-                    } else
+                    }
+                    else
                     {
                         displayNextNode(helpNode);
                     }
@@ -558,11 +616,15 @@ public final class HelpFragment extends InjectedFragment
 
         if (node.getType().equals("booking"))
         {
-            currentBookingId = Integer.toString(node.getId());
-            dataManager.getHelpBookingsInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
+            //currentBookingId = Integer.toString(node.getId()); //TODO: What is this? It makes no sense
+
+            //dataManager.getHelpBookingsInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
+
+            bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), "invalidbookingid"));
         } else
         {
-            dataManager.getHelpInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
+            //dataManager.getHelpInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
+            bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), "invalidbookingid"));
         }
 
 
@@ -578,6 +640,7 @@ public final class HelpFragment extends InjectedFragment
         else helpHeader.setBackground(header);
     }
 
+    /*
     private DataManager.Callback<HelpNodeWrapper> helpNodeCallback = new DataManager.Callback<HelpNodeWrapper>()
     {
         @Override
@@ -645,4 +708,5 @@ public final class HelpFragment extends InjectedFragment
             //dataManagerErrorHandler.handleError(getActivity(), error);
         }
     };
+    */
 }
