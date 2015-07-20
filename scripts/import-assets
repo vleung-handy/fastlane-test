@@ -1,0 +1,53 @@
+#!/bin/bash
+if [ $# -eq 0 ]; then
+  echo "Usage: ./scripts/import-assets path/to/assets/source"
+  exit 1
+fi
+
+assets_path=app/src/main/res/
+names=()
+target_names=()
+
+source=$1
+for f in $(find $source -name \*.png); do
+  name=`echo $f | sed 's/.*\/\(.*\)\.png/\1/' | cut -d '@' -f 1`
+  scale=`echo $f | sed 's/.*\/\(.*\)\.png/\1/' | cut -d '@' -f 2`
+
+  target_name=''
+
+  for i in ${!names[*]}
+  do
+    if [ ${names[$i]} = $name ]; then
+      target_name=${target_names[$i]}
+    fi
+  done
+
+  if [ -z $target_name ]; then
+    echo -n "Enter replacement name for '$name': "
+    read target_name
+
+    k=${#names[@]}
+    names[$k]=$name
+    target_names[$k]=$target_name
+  fi
+  
+  case $scale in
+  $name)
+    cp $f $assets_path/drawable-mdpi/$target_name.png
+    ;;
+  '1x')
+    cp $f $assets_path/drawable-mdpi/$target_name.png
+    ;;
+  '1.5x')
+    cp $f $assets_path/drawable-hdpi/$target_name.png
+    ;;
+  '2x')
+    cp $f $assets_path/drawable-xhdpi/$target_name.png
+    ;;
+  '3x')
+    cp $f $assets_path/drawable-xxhdpi/$target_name.png
+    ;;
+  esac
+
+done
+
