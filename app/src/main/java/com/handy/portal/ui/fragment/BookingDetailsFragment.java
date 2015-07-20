@@ -491,7 +491,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void showHelpOptions()
     {
-        slideUpPanelContainer.showPanel(new SlideUpPanelContainer.ContentInitializer()
+        slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
         {
             @Override
             public void initialize(ViewGroup panel)

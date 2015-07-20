@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -51,12 +52,14 @@ public class SlideUpPanelContainer extends RelativeLayout
         void initialize(ViewGroup panel);
     }
 
-    public void showPanel(@NonNull ContentInitializer contentInitializer)
+    public void showPanel(int titleStringId, @NonNull ContentInitializer contentInitializer)
     {
         if (!panelShown)
         {
             View panelOverlay = LayoutInflater.from(getContext()).inflate(R.layout.layout_slide_up_panel_overlay, this, false);
             ViewGroup panel = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.layout_slide_up_panel, this, false);
+
+            ((TextView) panel.findViewById(R.id.slide_up_panel_title)).setText(titleStringId);
 
             contentInitializer.initialize(panel);
 
