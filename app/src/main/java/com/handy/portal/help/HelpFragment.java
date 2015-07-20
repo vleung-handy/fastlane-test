@@ -1,7 +1,6 @@
 package com.handy.portal.help;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -42,15 +41,14 @@ public final class HelpFragment extends InjectedFragment
     static final String EXTRA_LOGIN_TOKEN = "com.handy.handy.EXTRA_LOGIN_TOKEN";
     static final String EXTRA_PATH = "com.handy.handy.EXTRA_PATH";
 
-    private HelpNode currentNode;
-    private static HelpNode rootNode;
+    //private HelpNode currentNode;
+    //private static HelpNode rootNode;
     private String currentBookingId;
     private String currentLoginToken;
     private String path;
 
 
-
-   private ViewGroup myContainer;
+    private ViewGroup myContainer;
 
 
     @Inject
@@ -129,16 +127,16 @@ public final class HelpFragment extends InjectedFragment
 
         System.out.println("Creating help fragment");
 
-        currentNode = getArguments().getParcelable(EXTRA_HELP_NODE);
+        HelpNode overrideNode = getArguments().getParcelable(EXTRA_HELP_NODE);
 
-        if(currentNode == null)
+        if (overrideNode == null)
         {
             //put in a request to the server for the root node
-System.out.println("Don't have a node, request root");
-            dataManager.getHelpInfo(null, null, helpNodeCallback);
+            System.out.println("Don't have an override node, request root");
 
-        }
-        else
+            //get help info with null arg requests root node
+            dataManager.getHelpInfo(null, null, helpNodeCallback);
+        } else
         {
             currentBookingId = getArguments().getString(EXTRA_BOOKING_ID);
             currentLoginToken = getArguments().getString(EXTRA_LOGIN_TOKEN);
@@ -146,7 +144,7 @@ System.out.println("Don't have a node, request root");
 
             if (savedInstanceState == null)
             {
-                switch (currentNode.getType())
+                switch (overrideNode.getType())
                 {
                     case "root":
                         //mixpanel.trackEventHelpCenterOpened();
@@ -160,14 +158,12 @@ System.out.println("Don't have a node, request root");
         }
 
 
-
     }
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
     {
-
 
         final View view = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_help_page, container, false);
@@ -185,18 +181,21 @@ System.out.println("Don't have a node, request root");
 
         System.out.println("Creating help fragment view");
 
-        currentNode = null;
+        //currentNode = null;
         //currentNode = getArguments().getParcelable(EXTRA_HELP_NODE);
 
-        if(currentNode == null && rootNode == null)
-        {
-            //put in a request to the server for the root node
-            System.out.println("Don't have any nodes while constructing view, request root");
-            dataManager.getHelpInfo(null, null, helpNodeCallback);
 
-        }
-        else
-        {
+        System.out.println("Don't have any nodes while constructing view, request root");
+        dataManager.getHelpInfo(null, null, helpNodeCallback);
+
+
+//        if(rootNode == null)
+//        {
+//            //put in a request to the server for the root node
+//
+//        }
+//        else
+//        {
 
 
 /*
@@ -226,15 +225,14 @@ System.out.println("Don't have a node, request root");
         */
 
 
-            //May return to root of help screen without re-downloading root navigation currentNode
-            if (currentNode == null)
-            {
-                currentNode = rootNode;
-            }
+        //May return to root of help screen without re-downloading root navigation currentNode
+//            if (currentNode == null)
+//            {
+//                currentNode = rootNode;
+//            }
 
-            constructNodeView(container);
-        }
-
+        //constructNodeView(container);
+        // }
 
 
         closeImage.setOnClickListener(new View.OnClickListener()
@@ -266,15 +264,24 @@ System.out.println("Don't have a node, request root");
     }
 
 
-    private void constructNodeView(final ViewGroup container)
+    private void constructNodeView(final HelpNode node, final ViewGroup container)
     {
-        switch (currentNode.getType())
+
+        if (node == null)
+        {
+            System.err.println("Tried to construct while current node is null");
+            return;
+        }
+
+
+        System.out.println("Constructing node of type : " + node.getType());
+
+        switch (node.getType())
         {
             case "root":
             {
                 //cache the root currentNode so we can navigate back to it from anywhere in our flow
-                rootNode = currentNode;
-                layoutForRoot(container);
+                layoutForRoot(node, container);
                 backImage.setVisibility(View.GONE);
             }
             break;
@@ -283,7 +290,7 @@ System.out.println("Don't have a node, request root");
             case "dynamic-bookings-navigation":
             case "booking":
             {
-                layoutForNavigation(container);
+                layoutForNavigation(node, container);
 
                 menuButtonLayout.setVisibility(View.GONE);
                 backImage.setVisibility(View.VISIBLE);
@@ -294,12 +301,11 @@ System.out.println("Don't have a node, request root");
 
             case "article":
             {
-                layoutForArticle();
+                layoutForArticle(node);
 
                 menuButtonLayout.setVisibility(View.GONE);
                 backImage.setVisibility(View.VISIBLE);
                 // ((MenuDrawerActivity) getActivity()).setDrawerDisabled(true);
-
 
                 contactButton.setOnClickListener(new View.OnClickListener()
                 {
@@ -307,20 +313,27 @@ System.out.println("Don't have a node, request root");
                     public void onClick(View v)
                     {
 
+                        System.out.println("Clicked on contact button");
+
+
 //                        mixpanel.trackEventHelpCenterNeedHelpClicked(Integer
 //                                .toString(currentNode.getId()), currentNode.getLabel());
 
-                        final Intent intent = new Intent(getActivity(), HelpContactActivity.class);
-                        for (HelpNode n : currentNode.getChildren())
-                        {
-                            if (n.getType().equals(HELP_CONTACT_FORM_NODE_TYPE))
-                            {
-                                intent.putExtra(HelpContactActivity.EXTRA_HELP_NODE, n);
-                                intent.putExtra(HelpContactActivity.EXTRA_HELP_PATH, path);
-                                break;
-                            }
-                        }
-                        startActivity(intent);
+                        //TODO: Open up a help contact activity with the node info attached
+//                        final Intent intent = new Intent(getActivity(), HelpContactActivity.class);
+//
+//                        for (HelpNode n : node.getChildren())
+//                        {
+//                            if (n.getType().equals(HELP_CONTACT_FORM_NODE_TYPE))
+//                            {
+//                                intent.putExtra(HelpContactActivity.EXTRA_HELP_NODE, n);
+//                                intent.putExtra(HelpContactActivity.EXTRA_HELP_PATH, path);
+//                                break;
+//                            }
+//                        }
+//
+//                        startActivity(intent);
+
                     }
                 });
 
@@ -329,6 +342,8 @@ System.out.println("Don't have a node, request root");
 
             default:
             {
+
+                System.err.println("Don't recognize this node type : " + node.getType());
 
                 menuButtonLayout.setVisibility(View.GONE);
                 backImage.setVisibility(View.VISIBLE);
@@ -351,32 +366,38 @@ System.out.println("Don't have a node, request root");
                 */
     }
 
-    private void layoutForRoot(final ViewGroup container)
+    private void layoutForRoot(final HelpNode node, final ViewGroup container)
     {
         closeImage.setVisibility(View.GONE);
         headerTitle.setText(getResources().getString(R.string.what_need_help_with));
         setHeaderColor(getResources().getColor(R.color.handy_blue));
         helpIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_help_smiley));
-        layoutNavList(container);
+        layoutNavList(node, container);
     }
 
-    private void layoutForNavigation(final ViewGroup container)
+    private void layoutForNavigation(final HelpNode node, final ViewGroup container)
     {
-        if (currentNode.getType().equals("booking")) navText.setText(getString(R.string.help));
-        else navText.setText(currentNode.getLabel());
-        layoutNavList(container);
+        if (node.getType().equals("booking"))
+        {
+            navText.setText(getString(R.string.help));
+        }
+        else
+        {
+            navText.setText(node.getLabel());
+        }
+        layoutNavList(node, container);
     }
 
-    private void layoutForArticle()
+    private void layoutForArticle(final HelpNode node)
     {
-        navText.setText(currentNode.getLabel());
+        navText.setText(node.getLabel());
         setHeaderColor(getResources().getColor(R.color.handy_yellow));
         helpIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_help_bulb));
         helpTriangleView.setVisibility(View.VISIBLE);
 
-        String info = currentNode.getContent();
+        String info = node.getContent();
 
-        for (final HelpNode child : currentNode.getChildren())
+        for (final HelpNode child : node.getChildren())
         {
             if (child.getType() == null)
             {
@@ -407,7 +428,7 @@ System.out.println("Don't have a node, request root");
         infoText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    private void addCtaButton(HelpNode node)
+    private void addCtaButton(final HelpNode node)
     {
         int newChildIndex = ctaLayout.getChildCount(); //new index is equal to the old count since the new count is +1
         final CTAButton ctaButton = (CTAButton) ((ViewGroup) getActivity().getLayoutInflater().inflate(R.layout.fragment_cta_button_template, ctaLayout)).getChildAt(newChildIndex);
@@ -434,20 +455,20 @@ System.out.println("Don't have a node, request root");
         });
     }
 
-    private void layoutNavList(final ViewGroup container)
+    private void layoutNavList(final HelpNode node, final ViewGroup container)
     {
         infoLayout.setVisibility(View.GONE);
         navList.setVisibility(View.VISIBLE);
 
-        if (currentNode.getType().equals("dynamic-bookings-navigation"))
+        if (node.getType().equals("dynamic-bookings-navigation"))
         {
             setHeaderColor(getResources().getColor(R.color.handy_teal));
         }
 
         int count = 0;
-        int size = currentNode.getChildren().size();
+        int size = node.getChildren().size();
 
-        for (final HelpNode helpNode : currentNode.getChildren())
+        for (final HelpNode helpNode : node.getChildren())
         {
             final View navView;
 
@@ -468,7 +489,7 @@ System.out.println("Don't have a node, request root");
                         + getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
             } else
             {
-                if (currentNode.getType().equals("root"))
+                if (node.getType().equals("root"))
                 {
                     navView = getActivity().getLayoutInflater()
                             .inflate(R.layout.list_item_help_nav_main, container, false);
@@ -481,7 +502,7 @@ System.out.println("Don't have a node, request root");
                 final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
                 textView.setText(helpNode.getLabel());
 
-                if (currentNode.getType().equals("root"))
+                if (node.getType().equals("root"))
                 {
                     textView.setTextAppearance(getActivity(), R.style.TextView_Large);
                     //textView.setTypeface(TextUtils.get(getActivity(), "CircularStd-Book.otf"));
@@ -563,7 +584,7 @@ System.out.println("Don't have a node, request root");
         public void onSuccess(final HelpNodeWrapper helpNodeWrapper)
         {
 
-            if(helpNodeWrapper == null)
+            if (helpNodeWrapper == null)
             {
                 System.err.println("The wrapper is null");
                 return;
@@ -593,8 +614,6 @@ System.out.println("Don't have a node, request root");
 //                    + helpNode.getLabel() : helpNode.getLabel());
 
 
-
-
             //startActivity(intent);
 
             //progressDialog.dismiss();
@@ -602,14 +621,16 @@ System.out.println("Don't have a node, request root");
 
             System.out.println("Going to construct node view");
 
-            if(innerHelpNode == null)
+            if (innerHelpNode == null)
             {
                 System.err.println("The help node returned from the data was null, didn't parse properly?");
                 return;
             }
 
-            currentNode = innerHelpNode;
-            constructNodeView(myContainer);
+            System.out.println("See node content " + innerHelpNode.getContent());
+
+            //currentNode = innerHelpNode;
+            constructNodeView(innerHelpNode, myContainer);
 
         }
 
