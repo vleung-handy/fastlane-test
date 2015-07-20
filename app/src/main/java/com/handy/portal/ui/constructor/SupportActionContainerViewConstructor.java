@@ -72,6 +72,7 @@ public class SupportActionContainerViewConstructor extends ViewConstructor<Booki
 
     private void sortSupportActions(List<Action> supportActions)
     {
+        // enums are sorted based on their declaration order in the enum class
         Collections.sort(supportActions, new Comparator<Action>()
         {
             @Override
