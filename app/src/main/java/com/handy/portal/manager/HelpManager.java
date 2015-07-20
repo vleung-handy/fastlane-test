@@ -48,35 +48,38 @@ public class HelpManager
             System.err.println("Our help node cache didn't get fired up?");
         }
 
-        final HelpNode helpNode = helpNodeCache.getIfPresent(nodeId);
-        if (helpNode != null)
+        //TODO: Currently we send null to request root on the server, this is a bit hacky and does not allow us to cache the root node which is silly
+
+        if(nodeId != null) //nulls will crash our cache on the getIfPresentCall
         {
-            bus.post(new HandyEvent.ReceiveHelpNodeSuccess(helpNode));
-        }
-        else
-        {
-            dataManager.getHelpInfo(nodeId, bookingId, new DataManager.Callback<HelpNodeWrapper>()
+            final HelpNode cachedHelpNode = helpNodeCache.getIfPresent(nodeId);
+            if (cachedHelpNode != null)
             {
-                @Override
-                public void onSuccess(HelpNodeWrapper helpNodeWrapper)
-                {
-                    HelpNode helpNode = helpNodeWrapper.getHelpNode();
-                    bus.post(new HandyEvent.ReceiveHelpNodeSuccess(helpNode));
-                }
-
-                @Override
-                public void onError(DataManager.DataManagerError error)
-                {
-                    bus.post(new HandyEvent.ReceiveHelpNodeError(error));
-
-                    if(error.getType() != DataManager.DataManagerError.Type.NETWORK)
-                    {
-                        //TODO: should we invalidate cache?
-                    }
-                }
-            });
+                bus.post(new HandyEvent.ReceiveHelpNodeSuccess(cachedHelpNode));
+                return;
+            }
         }
 
+        dataManager.getHelpInfo(nodeId, bookingId, new DataManager.Callback<HelpNodeWrapper>()
+        {
+            @Override
+            public void onSuccess(HelpNodeWrapper helpNodeWrapper)
+            {
+                HelpNode helpNode = helpNodeWrapper.getHelpNode();
+                bus.post(new HandyEvent.ReceiveHelpNodeSuccess(helpNode));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveHelpNodeError(error));
+
+                if(error.getType() != DataManager.DataManagerError.Type.NETWORK)
+                {
+                    //TODO: should we invalidate cache?
+                }
+            }
+        });
     }
 
     @Subscribe
@@ -85,33 +88,36 @@ public class HelpManager
         String nodeId = event.nodeId;
         String bookingId = event.bookingId;
 
-        final HelpNode helpNode = helpNodeCache.getIfPresent(nodeId);
-        if (helpNode != null)
+        if(nodeId != null) //nulls will crash our cache on the getIfPresentCall
         {
-            bus.post(new HandyEvent.ReceiveHelpBookingNodeSuccess(helpNode));
-        }
-        else
-        {
-            dataManager.getHelpBookingsInfo(nodeId, bookingId, new DataManager.Callback<HelpNodeWrapper>()
+            final HelpNode cachedHelpNode = helpNodeCache.getIfPresent(nodeId);
+            if (cachedHelpNode != null)
             {
-                @Override
-                public void onSuccess(HelpNodeWrapper helpNodeWrapper)
-                {
-                    HelpNode helpNode = helpNodeWrapper.getHelpNode();
-                    bus.post(new HandyEvent.ReceiveHelpBookingNodeSuccess(helpNode));
-                }
-
-                @Override
-                public void onError(DataManager.DataManagerError error)
-                {
-                    bus.post(new HandyEvent.ReceiveHelpBookingNodeError(error));
-
-                    if (error.getType() != DataManager.DataManagerError.Type.NETWORK)
-                    {
-                        //TODO: should we invalidate cache?
-                    }
-                }
-            });
+                bus.post(new HandyEvent.ReceiveHelpBookingNodeSuccess(cachedHelpNode));
+                return;
+            }
         }
+
+        dataManager.getHelpBookingsInfo(nodeId, bookingId, new DataManager.Callback<HelpNodeWrapper>()
+        {
+            @Override
+            public void onSuccess(HelpNodeWrapper helpNodeWrapper)
+            {
+                HelpNode helpNode = helpNodeWrapper.getHelpNode();
+                bus.post(new HandyEvent.ReceiveHelpBookingNodeSuccess(helpNode));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveHelpBookingNodeError(error));
+
+                if (error.getType() != DataManager.DataManagerError.Type.NETWORK)
+                {
+                    //TODO: should we invalidate cache?
+                }
+            }
+        });
+
     }
 }

@@ -620,11 +620,11 @@ public final class HelpFragment extends InjectedFragment
 
             //dataManager.getHelpBookingsInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
 
-            bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), "invalidbookingid"));
+            bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), null));
         } else
         {
             //dataManager.getHelpInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
-            bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), "invalidbookingid"));
+            bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
         }
 
 
