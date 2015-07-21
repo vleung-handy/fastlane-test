@@ -60,7 +60,7 @@ public class PortalWebViewFragment extends InjectedFragment
 
         initWebView();
 
-        if(validateRequiredArguments())
+        if (validateRequiredArguments())
         {
             openPortalUrl(getArguments().getString(BundleKeys.TARGET_URL));
         }
@@ -76,14 +76,9 @@ public class PortalWebViewFragment extends InjectedFragment
         return requiredArguments;
     }
 
-    public void openPortalUrl(Target target)
+    public void openPortalUrl(String url)
     {
-        openPortalUrl(target.getValue());
-    }
-
-    public void openPortalUrl(String target)
-    {
-        if(webView != null)
+        if (webView != null)
         {
             webView.setWebChromeClient(new WebChromeClient()
             {
@@ -93,7 +88,6 @@ public class PortalWebViewFragment extends InjectedFragment
                     callback.invoke(origin, true, false);
                 }
             });
-            String url = endpoint.getBaseUrl() + "/portal/home?goto=" + target;
             loadUrlWithFromAppParam(url);
         }
     }
@@ -114,8 +108,7 @@ public class PortalWebViewFragment extends InjectedFragment
                 + "&ht=1"
                 + "&skip_web_portal_version_tracking=1"
                 + "&skip_web_portal_blocking=1"
-                + "&from_android_native=1"
-                ;
+                + "&from_android_native=1";
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
         webView.loadUrl(urlWithParams);
     }

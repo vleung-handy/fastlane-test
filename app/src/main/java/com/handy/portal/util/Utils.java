@@ -11,6 +11,7 @@ import android.view.TouchDelegate;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.core.BaseApplication;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 
@@ -19,6 +20,10 @@ import java.util.Date;
 
 public final class Utils
 {
+    public static void inject(Context context, Object object)
+    {
+        ((BaseApplication) context.getApplicationContext()).inject(object);
+    }
 
     public static int toDP(final float px, final Context context)
     {

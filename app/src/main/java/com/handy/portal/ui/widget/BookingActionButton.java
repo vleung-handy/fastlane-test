@@ -32,7 +32,7 @@ public class BookingActionButton extends Button
 
     protected BookingDetailsFragment associatedFragment;
 
-    public void init(Booking booking, BookingDetailsFragment fragment, Booking.ActionButtonData data)
+    public void init(Booking booking, BookingDetailsFragment fragment, Booking.Action data)
     {
         final BookingActionButtonType bookingActionButtonType = UIUtils.getAssociatedActionType(data);
         if(bookingActionButtonType == null)

@@ -7,14 +7,22 @@ import android.widget.ArrayAdapter;
 
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingElementMediator;
+import com.handy.portal.ui.element.BookingElementView;
 
 import java.util.List;
 
 public class BookingElementAdapter extends ArrayAdapter<Booking>
 {
-    public BookingElementAdapter(Context context, List<Booking> bookings)
+    private final Context context;
+    private final List<Booking> bookings;
+    private final Class<? extends BookingElementView> elementViewClass;
+
+    public BookingElementAdapter(Context context, List<Booking> bookings, Class<? extends BookingElementView> elementViewClass)
     {
         super(context, 0, bookings);
+        this.context = context;
+        this.bookings = bookings;
+        this.elementViewClass = elementViewClass;
     }
 
     @Override
@@ -22,7 +30,7 @@ public class BookingElementAdapter extends ArrayAdapter<Booking>
     {
         // Get the data item for this position
         Booking booking = getItem(position);
-        BookingElementMediator bem = new BookingElementMediator(getContext(), booking, convertView, parent);
+        BookingElementMediator bem = new BookingElementMediator(getContext(), booking, convertView, parent, elementViewClass);
         return bem.getAssociatedView();
     }
 }

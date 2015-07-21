@@ -5,10 +5,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.model.Booking;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.ui.form.BookingListView;
+import com.handy.portal.model.Booking;
+import com.handy.portal.ui.element.AvailableBookingElementView;
+import com.handy.portal.ui.element.BookingElementView;
+import com.handy.portal.ui.element.BookingListView;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -78,13 +80,19 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
     {
         //do nothing, no ctas on this page, yet, maybe a refresh button
-            //we should track how often pros see 0 jobs available
+        //we should track how often pros see 0 jobs available
     }
 
     @Subscribe
     public void onBookingsRetrieved(HandyEvent.ReceiveAvailableBookingsSuccess event)
     {
         handleBookingsRetrieved(event);
+    }
+
+    @Override
+    protected Class<? extends BookingElementView> getBookingElementViewClass()
+    {
+        return AvailableBookingElementView.class;
     }
 
     @Subscribe
@@ -101,21 +109,4 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
         fetchErrorView.setVisibility(View.VISIBLE);
     }
-
-    @Override
-    protected void insertSeparator(List<Booking> bookings)
-    {
-        for (int i = 1; i < bookings.size(); i++)
-        {
-            Booking previousBooking = bookings.get(i - 1);
-            Booking booking = bookings.get(i);
-
-            if (previousBooking.getIsRequested() && !booking.getIsRequested())
-            {
-                bookings.add(i, null);
-                return;
-            }
-        }
-    }
-
 }

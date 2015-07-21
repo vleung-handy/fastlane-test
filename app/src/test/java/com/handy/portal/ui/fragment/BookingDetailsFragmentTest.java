@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
@@ -9,6 +10,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.ui.activity.MainActivity;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -17,8 +19,9 @@ import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowToast;
-import org.robolectric.util.SupportFragmentTestUtil;
+import org.robolectric.util.ActivityController;
 
 import java.util.Date;
 import java.util.List;
@@ -46,11 +49,20 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        ActivityController<MainActivity> activityController = Robolectric.buildActivity(MainActivity.class).create();
+        activityController.start().resume().visible();
+
         fragment = new BookingDetailsFragment();
+
         Bundle args = new Bundle();
         args.putString(BundleKeys.BOOKING_ID, "123456");
         fragment.setArguments(args);
-        SupportFragmentTestUtil.startFragment(fragment);
+
+        FragmentManager fragmentManager = activityController.get().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(fragment, null)
+                .commit();
+        fragmentManager.executePendingTransactions();
 
         initMocks(this);
 

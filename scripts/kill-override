@@ -1,0 +1,4 @@
+#!/bin/bash
+rm -f app/src/main/assets/override.properties
+echo 'Successfully removed override.properties file.'
+

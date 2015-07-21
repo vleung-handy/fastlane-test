@@ -1,4 +1,4 @@
-package com.handy.portal.ui.form;
+package com.handy.portal.ui.element;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -26,10 +26,10 @@ public class BookingListView extends ListView
         super(context, attrs);
     }
 
-    public void populateList(List<Booking> bookings)
+    public void populateList(List<Booking> bookings, Class<? extends BookingElementView> elementViewClass)
     {
         BookingElementAdapter itemsAdapter =
-                new BookingElementAdapter(getContext(), bookings);
+                new BookingElementAdapter(getContext(), bookings, elementViewClass);
         setAdapter(itemsAdapter);
     }
 

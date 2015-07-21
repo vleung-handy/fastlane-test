@@ -1,11 +1,14 @@
 package com.handy.portal.data;
 
+import com.handy.portal.constant.LocationKey;
+import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 
 import java.util.Map;
@@ -21,7 +24,7 @@ public abstract class DataManager
 
     public abstract void getConfigParams(String[] keys, Callback<ConfigParams> cb);
 
-    public abstract void sendVersionInformation(Map<String,String> info);
+    public abstract void sendVersionInformation(Map<String, String> info);
 
     public abstract void getAvailableBookings(Callback<BookingSummaryResponse> cb);
 
@@ -33,13 +36,15 @@ public abstract class DataManager
 
     public abstract void removeBooking(String bookingId, Callback<Booking> cb);
 
-    public abstract void notifyOnMyWayBooking(String bookingId, Map<String,String> locationParams, Callback<Booking> cb);
+    public abstract void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
-    public abstract void notifyCheckInBooking(String bookingId,  Map<String,String> locationParams, Callback<Booking> cb);
+    public abstract void notifyCheckInBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
-    public abstract void notifyCheckOutBooking(String bookingId,  Map<String,String> locationParams, Callback<Booking> cb);
+    public abstract void notifyCheckOutBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
     public abstract void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
+
+    public abstract void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb);
 
     //Login
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);

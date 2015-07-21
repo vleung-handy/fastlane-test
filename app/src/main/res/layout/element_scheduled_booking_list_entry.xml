@@ -5,6 +5,7 @@
                 android:background="@drawable/booking_entry_background"
                 android:orientation="horizontal"
                 android:paddingRight="15dp"
+                android:paddingEnd="15dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">
 
@@ -51,7 +52,9 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"/>
 
     <LinearLayout
         android:id="@+id/booking_entry_details_layout"
@@ -61,6 +64,8 @@
         android:layout_marginStart="14dp"
         android:layout_toEndOf="@+id/booking_entry_time_layout"
         android:layout_toRightOf="@+id/booking_entry_time_layout"
+        android:layout_toStartOf="@+id/booking_entry_completed_indicator"
+        android:layout_toLeftOf="@+id/booking_entry_completed_indicator"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
