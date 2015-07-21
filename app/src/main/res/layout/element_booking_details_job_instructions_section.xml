@@ -1,44 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
+
     <com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/booking_details_job_instructions_section_title_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_details_extras"
-        android:cropToPadding="false"
-        android:layout_marginRight="8dp"
-        />
+        <ImageView
+            android:id="@+id/booking_details_job_instructions_section_title_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:cropToPadding="false"
+            android:src="@drawable/ic_details_extras"/>
 
-    <TextView
-        android:id="@+id/booking_details_job_instructions_section_title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/TextView.Bold"
-        android:layout_toRightOf="@id/booking_details_job_instructions_section_title_icon"
-        android:layout_toEndOf="@id/booking_details_job_instructions_section_title_icon"
-        android:textSize="16sp"
-        android:textColor="@color/bg_inactive_grey"
-        android:text="xxSectionTitlexx"
-        android:paddingTop="2dp"/>
+        <TextView
+            android:id="@+id/booking_details_job_instructions_section_title_text"
+            style="@style/TextView.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/booking_details_job_instructions_section_title_icon"
+            android:layout_toRightOf="@id/booking_details_job_instructions_section_title_icon"
+            android:paddingTop="2dp"
+            android:textColor="@color/bg_inactive_grey"
+            android:textSize="16sp"/>
 
-    <LinearLayout
-        android:id="@+id/booking_details_job_instructions_section_entries_layout"
-        android:orientation="vertical"
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@id/booking_details_job_instructions_section_title_text"
-        android:layout_alignLeft="@id/booking_details_job_instructions_section_title_text"
-        android:layout_below="@id/booking_details_job_instructions_section_title_text"
-        >
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/booking_details_job_instructions_section_entries_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/booking_details_job_instructions_section_title_text"
+            android:layout_alignStart="@id/booking_details_job_instructions_section_title_text"
+            android:layout_below="@id/booking_details_job_instructions_section_title_text"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+        </LinearLayout>
 
     </com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView>
 </merge>
-

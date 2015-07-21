@@ -255,6 +255,7 @@
     <string name="text">Text</string>
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
+    <string name="i_need_help">I Need Help</string>
     <string name="update_arrival_time">Update Arrival Time</string>
     <string name="disclaimer_on_my_way">Button activates 1 hour before booking</string>
     <string name="remove_job">Remove Job</string>
@@ -262,7 +263,9 @@
     <string name="job_remove_error_generic">This job could not be removed</string>
     <string name="job_action_error">There was a problem taking that action, please try again</string>
     <string name="error">Error</string>
-    <string name="notify_customer">Notify customer</string>
+
+    <string name="notify_customer_of_lateness">Notify customer of your late arrival</string>
+    <string name="notify_customer_of_earliness">Notify customer of your early arrival</string>
 
     <string name="arrival_time_early_30">I\u2019ll be 30 minutes early</string>
     <string name="arrival_time_early_15">I\u2019ll be 15 minutes early</string>
@@ -271,7 +274,7 @@
     <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
 
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
-    <string name="omw_failure">There was a problem updating your status. Please try again</string>
+    <string name="omw_failure">There was a problem updating your status. Please try again.</string>
     <string name="check_in_success">Thanks for checking in!</string>
     <string name="eta_success">Thanks for updating your arrival time</string>
     <string name="check_out_success">Thanks for checking out!</string>
@@ -283,5 +286,28 @@
     <string name="need_google_play">To view maps, please install Google Play Services</string>
     <string name="exact_location_shown_claimed">Exact location shown after job is claimed</string>
     <string name="customer_prefix">CUSTOMER: </string>
+
+    <string name="customer_not_home">My customer is not home</string>
+    <string name="add_remove_hours">Request to add/remove hours</string>
+    <string name="i_feel_unsafe">I feel uncomfortable or unsafe</string>
+    <string name="different_issue">I have a different issue</string>
+    <string name="will_be_early">I\u2019ll be early</string>
+    <string name="will_be_late">I\u2019m running late</string>
+
+    <string name="on_the_job_support">On The Job Support</string>
+    <string name="report_customer_no_show">Report customer no show</string>
+    <string name="report_no_show">Report No Show</string>
+    <string name="customer_no_show_reported">Customer no show reported</string>
+    <string name="customer_no_show_recorded">We\u2019ve recorded this customer no show – no need to contact us.\n\nDon\u2019t forget to check-out of the booking to receive full payment.</string>
+    <string name="thanks_for_reporting">Thanks for reporting</string>
+    <string name="unable_to_report_no_show">Unable to submit customer no show report. Please try again.</string>
+    <string name="remove_customer_no_show">Remove No Show</string>
+    <string name="customer_no_show_cancelled">Customer no show report cancelled</string>
+    <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
+    <string name="remove_customer_no_show_question">Remove customer no show report?</string>
+
+    <string name="bullet">⋅</string>
+    <string name="undo">Undo</string>
+    <string name="ok">OK</string>
 
 </resources>

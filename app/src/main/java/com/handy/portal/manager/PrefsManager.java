@@ -5,9 +5,6 @@ import com.securepreferences.SecurePreferences;
 
 import javax.inject.Inject;
 
-/**
- * Created by cdavis on 7/7/15.
- */
 public class PrefsManager
 {
     private final SecurePreferences prefs;

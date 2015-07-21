@@ -41,7 +41,8 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
     {
         super(context, attrs, defStyle);
     }
-    public void init(String sectionTitle, @Nullable Integer sectionIconId, List<String> entries, boolean bulleted)
+
+    public void init(String sectionTitle, @Nullable Integer sectionIconId, List<String> entries)
     {
         ButterKnife.inject(this);
 
@@ -51,12 +52,11 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
             sectionIcon.setImageResource(sectionIconId);
         }
 
-        for(int i = 0; i < entries.size(); i++)
+        for (int i = 0; i < entries.size(); i++)
         {
             LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_entry, entriesLayout);
             BookingDetailsJobInstructionsSectionEntryView entryView = ((BookingDetailsJobInstructionsSectionEntryView) (entriesLayout.getChildAt(i)));
-            entryView.init(entries.get(i), bulleted);
+            entryView.init(entries.get(i));
         }
     }
-
 }

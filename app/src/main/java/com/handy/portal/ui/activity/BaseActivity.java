@@ -13,22 +13,24 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.analytics.Mixpanel;
-import com.handy.portal.core.BaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import java.util.Stack;
 
 import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public abstract class BaseActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
     private Object busEventListener;
     protected boolean allowCallbacks;
-    private OnBackPressedListener onBackPressedListener;
+    private Stack<OnBackPressedListener> onBackPressedListenerStack;
     protected ProgressDialog progressDialog;
 
     //According to android docs this is the preferred way of accessing location instead of using LocationManager
@@ -55,7 +57,7 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
     {
         super.onCreate(savedInstanceState);
 
-        ((BaseApplication) this.getApplication()).inject(this);
+        Utils.inject(this, this);
 
         final Intent intent = getIntent();
         final Uri data = intent.getData();
@@ -74,6 +76,8 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
                 //TODO: Handle receive update available errors
             }
         };
+
+        onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
     }
@@ -126,7 +130,10 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
     @Override
     public void onBackPressed()
     {
-        if (onBackPressedListener != null) onBackPressedListener.onBack();
+        if (!onBackPressedListenerStack.isEmpty())
+        {
+            onBackPressedListenerStack.peek().onBackPressed();
+        }
         else super.onBackPressed();
     }
 
@@ -145,14 +152,19 @@ public abstract class BaseActivity extends FragmentActivity  implements GoogleAp
         super.onDestroy();
     }
 
-    public void setOnBackPressedListener(final OnBackPressedListener onBackPressedListener)
+    public void addOnBackPressedListener(final OnBackPressedListener onBackPressedListener)
     {
-        this.onBackPressedListener = onBackPressedListener;
+        this.onBackPressedListenerStack.push(onBackPressedListener);
+    }
+
+    public void popOnBackPressedListenerStack()
+    {
+        this.onBackPressedListenerStack.pop();
     }
 
     public interface OnBackPressedListener
     {
-        void onBack();
+        void onBackPressed();
     }
 
     public void checkForUpdates()

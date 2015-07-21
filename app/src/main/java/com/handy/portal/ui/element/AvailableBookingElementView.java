@@ -49,17 +49,10 @@ public class AvailableBookingElementView extends BookingElementView
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
-        if (booking == null)
-        {
-            View separator = LayoutInflater.from(parentContext).inflate(R.layout.element_booking_list_entry_separator, parent, false);
-            this.associatedView = separator;
-            return separator;
-        }
-
         boolean isRequested = booking.getIsRequested();
 
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null || convertView.getId() == R.id.booking_list_entry_separator)
+        if (convertView == null)
         {
             convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_available_booking_list_entry, parent, false);
         }

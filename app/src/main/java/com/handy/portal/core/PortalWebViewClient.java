@@ -34,7 +34,6 @@ public class PortalWebViewClient extends WebViewClient
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url)
     {
-        String[] splitBySlash = url.split("/");
         // To prevent a bug in webkit where it redirects to a url ending with /undefined
         if (url.substring(Math.max(0, url.length() - 10)).equals("/undefined"))
         {
@@ -53,8 +52,16 @@ public class PortalWebViewClient extends WebViewClient
             return true;
         }
 
-        // changes #future to goto=future
-        String fixedUrl = url.replaceFirst("#(.*?)(?:\\?|$)", "?goto=$1&");
+        String fixedUrl;
+        if (url.contains("help"))
+        {
+            fixedUrl = url;
+        }
+        else
+        {
+            // changes #future to goto=future
+            fixedUrl = url.replaceFirst("#(.*)(?:\\?|$)", "?goto=$1&");
+        }
 
         loadUrlWithFromAppParam(fixedUrl);
         return true;
