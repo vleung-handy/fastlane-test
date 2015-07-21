@@ -118,7 +118,7 @@ public final class ApplicationModule
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
 
         final String username = configs.getProperty("api_username");
         final String password = configs.getProperty("api_password");
