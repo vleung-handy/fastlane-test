@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
@@ -81,6 +82,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         //do nothing, no ctas on this page, yet, maybe a refresh button
         //we should track how often pros see 0 jobs available
+    }
+
+    @Override
+    protected MainViewTab getMainViewTab()
+    {
+        return MainViewTab.JOBS;
     }
 
     @Subscribe

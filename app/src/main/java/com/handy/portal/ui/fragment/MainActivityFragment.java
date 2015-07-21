@@ -16,6 +16,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
@@ -194,6 +195,7 @@ public class MainActivityFragment extends InjectedFragment
 
         if (targetTab != MainViewTab.DETAILS)
         {
+            ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
             currentTab = targetTab;
         }
     }
