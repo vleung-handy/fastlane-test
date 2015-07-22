@@ -7,16 +7,17 @@
     <string name="pin_code_hint">Pin Code</string>
     <string name="request_pin">Get Pin Code</string>
     <string name="professional_portal">Professional Portal</string>
-    <string name="login_instructions_1_a">Log in to Handy:</string>
+    <string name="login_instructions_1_a">Log in to Handy</string>
     <string name="login_instructions_1_b">You will be texted a pin code</string>
     <string name="login_instructions_2">Enter the 4-digit code that was texted to %1$s:</string>
     <string name="sending_pin">Sending Pin to Phone</string>
     <string name="logging_in">Logging In</string>
+    <string name="login_need_help"><u>I need help logging in</u></string>
 
     <string name="no_pin_cta">Not receiving a pin code?</string>
 
     <string name="instructions">Instructions</string>
-    <string name="login_help">Phone number entered must match the number registered to your account. If you are experiencing difficulty, please go visit our <a href="#">Help Center</a>.</string>
+    <string name="login_help">Phone number entered must match the number registered to your account. If you are experiencing difficulty, please visit our <a href="#">Help Center</a>.</string>
 
     <string name="login_error_bad_phone">Your phone number was not recognized</string>
     <string name="login_error_bad_login">Login failed. Please make sure your phone and PIN code are correct.</string>
