@@ -7,12 +7,12 @@
     <string name="pin_code_hint">Pin Code</string>
     <string name="request_pin">Get Pin Code</string>
     <string name="professional_portal">Professional Portal</string>
-    <string name="login_instructions_1_a">Log in to Handy:</string>
+    <string name="login_instructions_1_a">Log in to Handy</string>
     <string name="login_instructions_1_b">You will be texted a pin code</string>
     <string name="login_instructions_2">Enter the 4-digit code that was texted to %1$s:</string>
     <string name="sending_pin">Sending Pin to Phone</string>
     <string name="logging_in">Logging In</string>
-    <string name="login_need_help">I need help logging in</string>
+    <string name="login_need_help"><u>I need help logging in</u></string>
 
     <string name="no_pin_cta">Not receiving a pin code?</string>
 
