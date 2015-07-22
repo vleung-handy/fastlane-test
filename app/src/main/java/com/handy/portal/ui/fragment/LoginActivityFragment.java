@@ -352,7 +352,7 @@ public class LoginActivityFragment extends InjectedFragment
         changeState(LoginState.COMPLETE);
 
         //Set cookies to enable seamless access in our webview
-        if (loginDetails.getUserCredentials() != null)
+        if (loginDetails.getUserCredentialsToken() != null)
         {
             CookieSyncManager.createInstance(getActivity());
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());

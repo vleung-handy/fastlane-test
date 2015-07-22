@@ -8,6 +8,7 @@ import android.util.Base64;
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
@@ -114,7 +115,8 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
-                                                   final HandyRetrofitEndpoint endpoint)
+                                                   final HandyRetrofitEndpoint endpoint,
+                                                   final PrefsManager prefsManager)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -132,6 +134,12 @@ public final class ApplicationModule
                     @Override
                     public void intercept(RequestFacade request)
                     {
+                        String userCredentialsToken = prefsManager.getString(PrefsKey.USER_CREDENTIALS_TOKEN, null);
+                        if (userCredentialsToken != null)
+                        {
+                            request.addQueryParam("persistence_token", userCredentialsToken);
+                        }
+
                         request.addHeader("Authorization", auth);
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);

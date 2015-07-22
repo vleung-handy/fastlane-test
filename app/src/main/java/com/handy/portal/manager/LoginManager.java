@@ -73,6 +73,7 @@ public class LoginManager
     private void saveLoginDetails(final LoginDetails loginDetails)
     {
         prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID, loginDetails.getUserCredentialsId());
+        prefsManager.setString(PrefsKey.USER_CREDENTIALS_TOKEN, loginDetails.getUserCredentialsToken());
     }
 
 }
