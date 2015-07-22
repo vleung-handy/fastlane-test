@@ -132,7 +132,7 @@
             android:textSize="18sp"/>
 
         <TextView
-            android:id="@+id/booking_entry_frequency_text"
+            android:id="@+id/booking_entry_service_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/subtitle_grey"
