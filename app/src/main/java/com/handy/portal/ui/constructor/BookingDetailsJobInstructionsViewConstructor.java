@@ -51,7 +51,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
     protected boolean constructView(ViewGroup container, Booking booking)
     {
         BookingStatus bookingStatus = (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
-        boolean fullDetails = (bookingStatus == BookingStatus.CLAIMED);
+        boolean fullDetails = !booking.getServiceInfo().isHomeCleaning() || (bookingStatus == BookingStatus.CLAIMED);
 
         boolean jobInstructionsSectionConstructed = false; //if we don't add any sections we will not add the view
 
