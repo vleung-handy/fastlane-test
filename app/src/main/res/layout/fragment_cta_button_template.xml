@@ -8,13 +8,12 @@
     android:layout_marginTop="4dp"
     android:layout_marginBottom="10dp"
     >
-     <com.handybook.handybook.ui.widget.CTAButton
+     <com.handy.portal.help.CTAButton
             android:id="@+id/cta_button_template"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
             android:layout_alignParentBottom="false"
             android:layout_marginBottom="10dp"
-            android:text="CTA"
             style="@style/Button.Green.Round"
             />
 </merge>

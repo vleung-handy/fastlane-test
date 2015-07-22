@@ -133,7 +133,7 @@
                         android:layout_alignParentStart="true"
                         android:contentDescription="icon" />
 
-                    <com.handybook.handybook.ui.widget.FirstNameInputTextView
+                    <com.handy.portal.ui.widget.FirstNameInputTextView
                         android:id="@+id/user_name_text"
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
@@ -166,7 +166,7 @@
                         android:layout_alignParentStart="true"
                         android:contentDescription="icon" />
 
-                    <com.handybook.handybook.ui.widget.EmailInputTextView
+                    <com.handy.portal.ui.widget.EmailInputTextView
                         android:id="@+id/email_text"
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
@@ -198,7 +198,7 @@
                         android:contentDescription="icon"
                         android:layout_marginTop="-4dp"/>
 
-                    <com.handybook.handybook.ui.widget.BasicInputTextView
+                    <com.handy.portal.ui.widget.BasicInputTextView
                         android:id="@+id/comment_text"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"

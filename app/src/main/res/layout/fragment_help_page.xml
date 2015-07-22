@@ -8,11 +8,17 @@
     tools:context=".HelpFragment"
     >
 
+    <RelativeLayout
+        android:id="@+id/nav_content"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="@dimen/default_margin"/>
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/nav_layout">
+        android:layout_below="@id/nav_content">
 
         <RelativeLayout
             android:id="@+id/help_page_content"

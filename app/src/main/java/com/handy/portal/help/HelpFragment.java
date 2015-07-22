@@ -28,11 +28,6 @@ public final class HelpFragment extends InjectedFragment
     static final String EXTRA_LOGIN_TOKEN = "com.handy.handy.EXTRA_LOGIN_TOKEN";
     static final String EXTRA_PATH = "com.handy.handy.EXTRA_PATH";
 
-    private String currentLoginToken;
-    private String path;
-
-    private ViewGroup myContainer;
-
 //
 //    @InjectView(R.id.back_img)
 //    ImageView backImage;
@@ -40,6 +35,9 @@ public final class HelpFragment extends InjectedFragment
 
     @InjectView(R.id.help_page_content)
     RelativeLayout helpPageContent;
+
+    @InjectView(R.id.nav_content)
+    RelativeLayout navContent;
 
 
     public static HelpFragment newInstance(final HelpNode node,
@@ -79,7 +77,6 @@ public final class HelpFragment extends InjectedFragment
 
         ButterKnife.inject(this, view);
 
-        myContainer = container;
         bus.post(new HandyEvent.RequestHelpNode(null, null));
 
         final Activity fragmentActivity = this.getActivity();
@@ -105,7 +102,7 @@ public final class HelpFragment extends InjectedFragment
             System.err.println("The help node returned from the data was null, didn't parse properly?");
             return;
         }
-        constructNodeView(helpNode, helpPageContent);
+        constructNodeView(helpNode);
     }
 
     @Subscribe
@@ -124,7 +121,7 @@ public final class HelpFragment extends InjectedFragment
             System.err.println("The booking help node returned from the data was null, didn't parse properly?");
             return;
         }
-        constructNodeView(helpNode, myContainer);
+        constructNodeView(helpNode);
     }
 
     @Subscribe
@@ -141,14 +138,21 @@ public final class HelpFragment extends InjectedFragment
 //View Construction
 
 
-    private void constructNodeView(final HelpNode node, final ViewGroup container)
+    private void constructNodeView(final HelpNode node)
     {
+        helpPageContent.removeAllViews();
+        navContent.removeAllViews();
+
         HelpNodeViewConstructor constructor = new HelpNodeViewConstructor();
-        constructor.constructView(node, container, getActivity());
+        constructor.constructView(node, helpPageContent, getActivity(), this);
+
+        HelpNodeNavViewConstructor navViewConstructor = new HelpNodeNavViewConstructor();
+        navViewConstructor.constructView(node, navContent, getActivity(), this);
+
     }
 
 
-    private void requestNodeData(final HelpNode node)
+    public void requestNodeData(final HelpNode node)
     {
         if (node.getType().equals("booking"))
         {
@@ -178,5 +182,117 @@ public final class HelpFragment extends InjectedFragment
 //            }
 //        });
 //    }
+
+/*
+    private void layoutNavList(final HelpNode node, final ViewGroup container)
+    {
+        infoLayout.setVisibility(View.GONE);
+        navOptionsLayout.setVisibility(View.VISIBLE);
+
+        if (node.getType().equals("dynamic-bookings-navigation"))
+        {
+            setHeaderColor(activity.getResources().getColor(R.color.handy_teal));
+        }
+
+        int count = 0;
+        int size = node.getChildren().size();
+
+        for (final HelpNode helpNode : node.getChildren())
+        {
+            final View navView;
+
+            if (helpNode.getType().equals("booking"))
+            {
+                navView = activity.getLayoutInflater()
+                        .inflate(R.layout.list_item_help_booking_nav, container, false);
+
+                TextView textView = (TextView) navView.findViewById(R.id.service_text);
+                textView.setText(helpNode.getService());
+
+                textView = (TextView) navView.findViewById(R.id.date_text);
+                textView.setText(TextUtils.formatDate(helpNode.getStartDate(), "EEEE',' MMMM d"));
+
+                textView = (TextView) navView.findViewById(R.id.time_text);
+                textView.setText(TextUtils.formatDate(helpNode.getStartDate(), "h:mmaaa \u2013 ")
+                        + TextUtils.formatDecimal(helpNode.getHours(), "#.# ")
+                        + activity.getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
+            } else
+            {
+                if (node.getType().equals("root"))
+                {
+                    navView = activity.getLayoutInflater()
+                            .inflate(R.layout.list_item_help_nav_main, container, false);
+                } else
+                {
+                    navView = activity.getLayoutInflater()
+                            .inflate(R.layout.list_item_help_nav, container, false);
+                }
+
+                final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
+                textView.setText(helpNode.getLabel());
+
+                if (node.getType().equals("root"))
+                {
+                    textView.setTextAppearance(activity, R.style.TextView_Large);
+                }
+            }
+
+            if (count == size - 1)
+            {
+                navView.setBackgroundResource((R.drawable.cell_booking_last_rounded));
+            }
+
+
+            navView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(final View v)
+                {
+                    if (helpNode.getType().equals("help-log-in-form"))
+                    {
+//                        activity.toast.setText(getString(R.string.please_login));
+//                        toast.show();
+                    }
+                    else
+                    {
+                        //requestNextNode(helpNode);
+                    }
+                }
+            });
+
+
+            navOptionsLayout.addView(navView);
+            count++;
+        }
+    }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
