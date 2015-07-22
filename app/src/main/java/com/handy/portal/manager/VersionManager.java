@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
@@ -31,7 +32,6 @@ public class VersionManager
 {
     public static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
     private static final String APK_FILE_NAME = "handy-pro-latest.apk";
-    private static final String DOWNLOAD_UPDATE_NOTIFICATION_TITLE = "Portal Update";
 
     // This backoff duration is used to prevent the app from executing download repeatedly when
     // download fails. It is used to check whether there was a download attempt recently and if so,
@@ -147,7 +147,7 @@ public class VersionManager
                 .setMimeType(APK_MIME_TYPE)
                 .setAllowedOverRoaming(false)
                 .setVisibleInDownloadsUi(false)
-                .setTitle(DOWNLOAD_UPDATE_NOTIFICATION_TITLE)
+                .setTitle(context.getString(R.string.app_update))
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, APK_FILE_NAME);
 
         downloadReferenceId = downloadManager.enqueue(request);

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Handy Pro</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_update">Handy Pro Update</string>
     <string name="action_settings">Settings</string>
 
     <string name="phone_number_hint">Cell Phone Number</string>
