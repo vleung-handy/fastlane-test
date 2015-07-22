@@ -22,8 +22,8 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
     @InjectView(R.id.booking_details_location_text)
     protected TextView locationText;
 
-    @InjectView(R.id.booking_details_frequency_text)
-    protected TextView frequencyText;
+    @InjectView(R.id.booking_details_service_text)
+    protected TextView serviceText;
 
     @InjectView(R.id.booking_details_payment_text)
     protected TextView paymentText;
@@ -61,7 +61,15 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
             locationText.setText(booking.getAddress().getStreetAddress() + "\n" + booking.getAddress().getZip());
         }
 
-        UIUtils.setFrequencyInfo(booking, frequencyText, getContext());
+        Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
+        if (serviceInfo.isHomeCleaning())
+        {
+            UIUtils.setFrequencyInfo(booking, serviceText, getContext());
+        }
+        else
+        {
+            serviceText.setText(serviceInfo.getDisplayName());
+        }
 
         UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider(), getContext().getString(R.string.payment_value));
         UIUtils.setPaymentInfo(paymentBonusText, booking.getBonusPaymentToProvider(), getContext().getString(R.string.bonus_payment_value));
