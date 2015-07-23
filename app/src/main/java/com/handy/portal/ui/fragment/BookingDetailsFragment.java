@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -21,12 +20,15 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
@@ -35,17 +37,20 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.element.BookingDetailsActionContactPanelViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsActionPanelViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsActionRemovePanelViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsBannerViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsDateViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsJobInstructionsViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsLocationPanelViewConstructor;
-import com.handy.portal.ui.element.BookingDetailsViewConstructor;
-import com.handy.portal.ui.element.GoogleMapViewConstructor;
-import com.handy.portal.ui.element.MapPlaceholderViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsActionRemovePanelViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsBannerViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
+import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
+import com.handy.portal.ui.constructor.GoogleMapViewConstructor;
+import com.handy.portal.ui.constructor.MapPlaceholderViewConstructor;
+import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
+import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
+import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -100,6 +105,9 @@ public class BookingDetailsFragment extends InjectedFragment
     @InjectView(R.id.fetch_error_text)
     protected TextView errorText;
 
+    @InjectView(R.id.slide_up_panel_container)
+    protected SlideUpPanelContainer slideUpPanelContainer;
+
     @Inject
     PrefsManager prefsManager;
 
@@ -107,6 +115,8 @@ public class BookingDetailsFragment extends InjectedFragment
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
 
     private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
+
+    private boolean backButtonInitialized = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -162,6 +172,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
         initBackButton();
+        initCancelNoShowButton();
         initMapsPlaceHolderButton();
     }
 
@@ -184,49 +195,47 @@ public class BookingDetailsFragment extends InjectedFragment
     //Use view constructors on layouts to generate the elements inside the layouts, we do not currently maintain a linkage to the resulting view
     private void constructBookingDisplayElements(Booking booking)
     {
-        List<Booking.ActionButtonData> allowedActions = booking.getAllowedActions();
-        Activity activity = getActivity();
-
-        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
-
         //Construct the views for each layout
-        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts();
+        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts(booking);
         for (Map.Entry<ViewGroup, BookingDetailsViewConstructor> viewConstructorEntry : viewConstructors.entrySet())
         {
             ViewGroup layout = viewConstructorEntry.getKey();
             BookingDetailsViewConstructor constructor = viewConstructorEntry.getValue();
-            constructor.constructView(booking, allowedActions, arguments, layout, activity);
+            constructor.create(layout, booking);
         }
 
         //Full Details Notice , technically we should move this to its own view panel
-        fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
+        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
+        fullDetailsNoticeText.setVisibility(booking.getServiceInfo().isHomeCleaning() && bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
     //A listing of all the view constructors we use to populate the layouts
     //We don't maintain references to these constructors / the view, we always create anew from a booking
-    private Map<ViewGroup, BookingDetailsViewConstructor> getViewConstructorsForLayouts()
+    private Map<ViewGroup, BookingDetailsViewConstructor> getViewConstructorsForLayouts(Booking booking)
     {
+        BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
+
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
-        viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor());
+        viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor(getActivity(), arguments));
 
         //show either the real map or a placeholder image depending on if we have google play services
         if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
         {
-            viewConstructors.put(mapLayout, new GoogleMapViewConstructor());
+            viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
         }
         else
         {
-            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor());
+            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
         }
 
-        viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor());
-        viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor());
-        viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor());
-        viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor());
-        viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor());
-        viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor());
+        viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
+        viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
+        viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor(getActivity(), arguments));
+        viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments));
+        viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments));
+        viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments));
         return viewConstructors;
     }
 
@@ -240,6 +249,11 @@ public class BookingDetailsFragment extends InjectedFragment
     //TODO: Figure out better way to link click listeners sections
     private void initBackButton()
     {
+        if (backButtonInitialized)
+        {
+            removeBackPressedListeners();
+        }
+
         ImageButton backButton = (ImageButton) bannerLayout.findViewById(R.id.booking_details_back_button);
         if (backButton != null)
         {
@@ -252,6 +266,47 @@ public class BookingDetailsFragment extends InjectedFragment
                 }
             });
         }
+        ((BaseActivity) getActivity()).addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
+        {
+            @Override
+            public void onBackPressed()
+            {
+                BookingStatus bookingStatus = associatedBooking.inferBookingStatus(getLoggedInUserId());
+                MainViewTab targetTab = bookingStatus == BookingStatus.CLAIMED ? MainViewTab.SCHEDULE : MainViewTab.JOBS;
+                returnToTab(targetTab, associatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+            }
+        });
+
+        backButtonInitialized = true;
+    }
+
+    private void initCancelNoShowButton()
+    {
+        ViewGroup cancelNoShowButton = (ViewGroup) actionLayout.findViewById(R.id.cancel_no_show_button);
+        if (cancelNoShowButton != null && isActionRetractNoShowAllowed())
+        {
+            cancelNoShowButton.setVisibility(View.VISIBLE);
+            cancelNoShowButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    takeAction(BookingActionButtonType.RETRACT_NO_SHOW, false);
+                }
+            });
+        }
+    }
+
+    private boolean isActionRetractNoShowAllowed()
+    {
+        for (Booking.Action action : associatedBooking.getAllowedActions())
+        {
+            if (action.getActionName().equals(Booking.Action.ACTION_RETRACT_NO_SHOW))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     //Can not use @onclick b/c the button does not exist at injection time
@@ -277,27 +332,28 @@ public class BookingDetailsFragment extends InjectedFragment
     //Dynamically generated Action Buttons based on the allowedActions sent by the server in our booking data
     private void createAllowedActionButtons(Booking booking)
     {
-        List<Booking.ActionButtonData> allowedActions = booking.getAllowedActions();
-        for (Booking.ActionButtonData data : allowedActions)
+        List<Booking.Action> allowedActions = booking.getAllowedActions();
+        for (Booking.Action action : allowedActions)
         {
-            if (UIUtils.getAssociatedActionType(data) == null)
+            if (UIUtils.getAssociatedActionType(action) == null)
             {
-                Crashlytics.log("Received an unsupported action type : " + data.getActionName());
+                Crashlytics.log("Received an unsupported action type : " + action.getActionName());
                 continue;
             }
 
             //the client knows what layout to insert a given button into, this should never come from the server
-            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(UIUtils.getAssociatedActionType(data));
+            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(UIUtils.getAssociatedActionType(action));
 
             if (buttonParentLayout == null)
             {
-                Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(data).getActionName());
-            } else
+                Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(action).getActionName());
+            }
+            else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
                 BookingActionButton bookingActionButton = (BookingActionButton)
-                        ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(data).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
-                bookingActionButton.init(booking, this, data); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
+                        ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(action).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
+                bookingActionButton.init(booking, this, action); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
             }
         }
     }
@@ -311,7 +367,7 @@ public class BookingDetailsFragment extends InjectedFragment
             case ON_MY_WAY:
             case CHECK_IN:
             case CHECK_OUT:
-            case ETA:
+            case HELP:
             {
                 return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
@@ -361,8 +417,9 @@ public class BookingDetailsFragment extends InjectedFragment
             return;
         }
 
-        LocationData locationData = Utils.getCurrentLocation((BaseActivity) getActivity());
+        LocationData locationData = getLocationData();
 
+        bus.post(new HandyEvent.ActionTriggered(actionType));
         switch (actionType)
         {
             case CLAIM:
@@ -377,15 +434,15 @@ public class BookingDetailsFragment extends InjectedFragment
             }
             break;
 
-            case ETA:
-            {
-                showUpdateArrivalTimeDialog(this.associatedBooking);
-            }
-            break;
-
             case CHECK_IN:
             {
                 requestNotifyCheckInJob(this.associatedBooking.getId(), locationData);
+            }
+            break;
+
+            case HELP:
+            {
+                showHelpOptions();
             }
             break;
 
@@ -415,6 +472,12 @@ public class BookingDetailsFragment extends InjectedFragment
             }
             break;
 
+            case RETRACT_NO_SHOW:
+            {
+                requestCancelNoShow();
+            }
+            break;
+
             default:
             {
                 Crashlytics.log("Could not find associated behavior for : " + actionType.getActionName());
@@ -422,22 +485,42 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    private LocationData getLocationData()
+    {
+        return Utils.getCurrentLocation((BaseActivity) getActivity());
+    }
+
+    private void showHelpOptions()
+    {
+        slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
+        {
+            @Override
+            public void initialize(ViewGroup panel)
+            {
+                new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
+                        .create(panel, associatedBooking);
+                new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
+                        .create(panel, associatedBooking);
+            }
+        });
+    }
+
     //Check if the current booking data for a given action type has an associated warning to display
     private boolean checkShowWarningDialog(BookingActionButtonType actionType)
     {
         boolean showingWarningDialog = false;
 
-        List<Booking.ActionButtonData> allowedActions = this.associatedBooking.getAllowedActions();
+        List<Booking.Action> allowedActions = this.associatedBooking.getAllowedActions();
 
         //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
-        for (Booking.ActionButtonData buttonData : allowedActions)
+        for (Booking.Action action : allowedActions)
         {
-            if (UIUtils.getAssociatedActionType(buttonData) == actionType)
+            if (UIUtils.getAssociatedActionType(action) == actionType)
             {
-                if (buttonData.getWarningText() != null && !buttonData.getWarningText().isEmpty())
+                if (action.getWarningText() != null && !action.getWarningText().isEmpty())
                 {
                     showingWarningDialog = true;
-                    showBookingActionWarningDialog(buttonData.getWarningText(), UIUtils.getAssociatedActionType(buttonData));
+                    showBookingActionWarningDialog(action.getWarningText(), UIUtils.getAssociatedActionType(action));
                 }
             }
         }
@@ -456,13 +539,14 @@ public class BookingDetailsFragment extends InjectedFragment
 
         // set dialog message
         alertDialogBuilder
-                .setTitle(R.string.are_you_sure)
+                .setTitle(warningButtonsText.getTitleStringId())
                 .setMessage(warning)
                 .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
                                 //proceed with action, we have accepted the warning
+                                bus.post(new HandyEvent.ActionWarningAccepted(actionType));
                                 takeAction(actionType, true);
                             }
                         }
@@ -478,7 +562,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void trackShowActionWarning(final BookingActionButtonType actionType)
     {
-        switch(actionType)
+        switch (actionType)
         {
             case REMOVE:
             {
@@ -522,56 +606,77 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
+        slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
     }
 
+    private void requestReportNoShow()
+    {
+        slideUpPanelContainer.hidePanel();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), getLocationData()));
+    }
+
+    private void requestCancelNoShow()
+    {
+        slideUpPanelContainer.hidePanel();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestCancelNoShow(associatedBooking.getId(), getLocationData()));
+    }
+
     //Show a radio button option dialog to select arrival time for the ETA action
-    private void showUpdateArrivalTimeDialog(final Booking booking)
+    private void showUpdateArrivalTimeDialog(Booking booking, int titleStringId, final List<Booking.ArrivalTimeOption> options)
     {
         final String bookingId = booking.getId();
 
-        //Text for options
-        int numArrivalTimeOptions = Booking.ArrivalTimeOption.values().length;
-        final CharSequence[] arrivalTimeOptionStrings = new CharSequence[numArrivalTimeOptions];
-        Booking.ArrivalTimeOption[] arrivalTimeOptions = Booking.ArrivalTimeOption.values();
-        for (int i = 0; i < arrivalTimeOptions.length; i++)
+        String[] optionStrings = Collections2.transform(options, new Function<Booking.ArrivalTimeOption, String>()
         {
-            Booking.ArrivalTimeOption arrivalTimeOption = arrivalTimeOptions[i];
-            arrivalTimeOptionStrings[i] = (getString(arrivalTimeOption.getStringId()));
-        }
+            @Override
+            public String apply(Booking.ArrivalTimeOption input)
+            {
+                return getString(input.getStringId());
+            }
+        }).toArray(new String[options.size()]);
 
-        //specific booking error, show an alert dialog
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-
-        // set dialog message
-        alertDialogBuilder
-                .setTitle(R.string.notify_customer)
-                .setSingleChoiceItems(arrivalTimeOptionStrings, 0, null)
+        new AlertDialog.Builder(getActivity())
+                .setTitle(titleStringId)
+                .setSingleChoiceItems(optionStrings, 0, null)
                 .setPositiveButton(R.string.send_update, new DialogInterface.OnClickListener()
                         {
+                            @Override
                             public void onClick(DialogInterface dialog, int id)
                             {
-                                Booking.ArrivalTimeOption[] arrivalTimeOptions = Booking.ArrivalTimeOption.values();
                                 int checkedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                if (checkedItemPosition < 0 || checkedItemPosition >= arrivalTimeOptions.length)
+                                if (checkedItemPosition >= 0 && checkedItemPosition < options.size())
                                 {
-                                    Crashlytics.log("Invalid checked item position " + checkedItemPosition + " can not proceed");
-                                } else
-                                {
-                                    Booking.ArrivalTimeOption chosenOption = arrivalTimeOptions[checkedItemPosition];
-                                    requestNotifyUpdateArrivalTime(bookingId, chosenOption);
+                                    requestNotifyUpdateArrivalTime(bookingId, options.get(checkedItemPosition));
                                 }
                             }
                         }
                 )
                 .setNegativeButton(R.string.back, null)
-        ;
+                .create()
+                .show();
+    }
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
+    private void showCustomerNoShowDialog(final Booking.Action action)
+    {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.report_customer_no_show)
+                .setMessage(action.getWarningText())
+                .setPositiveButton(R.string.report_no_show, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which)
+                    {
+                        bus.post(new HandyEvent.ActionWarningAccepted(action));
+                        requestReportNoShow();
+                    }
+                })
+                .setNegativeButton(R.string.back, null)
+                .create()
+                .show();
     }
 
     //use native functionality to trigger a phone call
@@ -600,6 +705,14 @@ public class BookingDetailsFragment extends InjectedFragment
         }
     }
 
+    private void goToHelpCenter(String deepLink)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.TARGET_URL, deepLink);
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments, TransitionStyle.NATIVE_TO_WEBVIEW));
+    }
+
 //Event Subscription and Handling
 
     @Subscribe
@@ -624,7 +737,8 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
             returnToTab(MainViewTab.JOBS, event.booking.getStartDate().getTime(), transitionStyle);
-        } else
+        }
+        else
         {
             //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
             handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error_generic, R.string.return_to_available_jobs, this.associatedBooking.getStartDate());
@@ -647,7 +761,8 @@ public class BookingDetailsFragment extends InjectedFragment
             //TODO: can't currently remove series using portal endpoint so only removing the single job
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
             returnToTab(MainViewTab.SCHEDULE, event.booking.getStartDate().getTime(), transitionStyle);
-        } else
+        }
+        else
         {
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
             handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic, R.string.return_to_schedule, this.associatedBooking.getStartDate());
@@ -736,6 +851,83 @@ public class BookingDetailsFragment extends InjectedFragment
         handleNotifyUpdateArrivalError(event);
     }
 
+    @Subscribe
+    public void onReceiveReportNoShowSuccess(HandyEvent.ReceiveReportNoShowSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        this.associatedBooking = event.booking;
+        updateDisplayForBooking(event.booking);
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.thanks_for_reporting)
+                .setMessage(R.string.customer_no_show_recorded)
+                .setPositiveButton(R.string.ok, null)
+                .create()
+                .show();
+    }
+
+    @Subscribe
+    public void onReceiveReportNoShowError(HandyEvent.ReceiveReportNoShowError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.unable_to_report_no_show, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveCancelNoShowSuccess(HandyEvent.ReceiveCancelNoShowSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        this.associatedBooking = event.booking;
+        updateDisplayForBooking(event.booking);
+        showToast(R.string.customer_no_show_cancelled, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveCancelNoShowError(HandyEvent.ReceiveCancelNoShowError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.unable_to_cancel_no_show, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onSupportActionTriggered(HandyEvent.SupportActionTriggered event)
+    {
+        SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
+        switch (supportActionType)
+        {
+            case NOTIFY_EARLY:
+                showUpdateArrivalTimeDialog(associatedBooking, R.string.notify_customer_of_earliness, Booking.ArrivalTimeOption.earlyValues());
+                break;
+            case NOTIFY_LATE:
+                showUpdateArrivalTimeDialog(associatedBooking, R.string.notify_customer_of_lateness, Booking.ArrivalTimeOption.lateValues());
+                break;
+            case REPORT_NO_SHOW:
+                showCustomerNoShowDialog(event.action);
+                break;
+            case ISSUE_UNSAFE:
+            case ISSUE_HOURS:
+            case ISSUE_OTHER:
+                goToHelpCenter(event.action.getDeepLink());
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        removeBackPressedListeners();
+        super.onDestroyView();
+    }
+
+    private void removeBackPressedListeners()
+    {
+        BaseActivity activity = (BaseActivity) getActivity();
+        if (slideUpPanelContainer.isShown())
+        {
+            activity.popOnBackPressedListenerStack();
+        }
+        activity.popOnBackPressedListenerStack();
+    }
+
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
     {
         //Return to available jobs with success
@@ -764,7 +956,8 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             bus.post(new HandyEvent.ClaimJobError(errorMessage));
             showErrorDialogReturnToAvailable(errorMessage, title, option1, returnDate.getTime());
-        } else
+        }
+        else
         {
             showNetworkErrorToast();
         }
@@ -786,7 +979,8 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             bus.post(new HandyEvent.RemoveJobError(errorMessage));
             showErrorDialogReturnToAvailable(errorMessage, title, option1, returnDate.getTime());
-        } else
+        }
+        else
         {
             showNetworkErrorToast();
         }
@@ -852,7 +1046,8 @@ public class BookingDetailsFragment extends InjectedFragment
         if (errorMessage != null)
         {
             showToast(errorMessage);
-        } else
+        }
+        else
         {
             showNetworkErrorToast();
         }
@@ -876,5 +1071,4 @@ public class BookingDetailsFragment extends InjectedFragment
         }
 
     }
-
 }

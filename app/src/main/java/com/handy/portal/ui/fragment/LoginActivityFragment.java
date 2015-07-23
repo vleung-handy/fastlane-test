@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,12 +22,15 @@ import android.widget.TextView;
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;
+import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
 import com.squareup.otto.Subscribe;
@@ -35,6 +40,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 import static com.handy.portal.core.EnvironmentModifier.Environment;
 
@@ -57,8 +63,6 @@ public class LoginActivityFragment extends InjectedFragment
     Button loginButton;
     @InjectView(R.id.back_button)
     ImageButton backButton;
-    @InjectView(R.id.login_help)
-    TextView loginHelpText;
 
     @Inject
     EnvironmentModifier environmentModifier;
@@ -66,6 +70,10 @@ public class LoginActivityFragment extends InjectedFragment
     BuildConfigWrapper buildConfigWrapper;
     @Inject
     Mixpanel mixpanel;
+    @Inject
+    PrefsManager prefsManager;
+    @InjectView(R.id.slide_up_panel_container)
+    protected SlideUpPanelContainer slideUpPanelContainer;
 
     private enum LoginState
     {
@@ -143,15 +151,6 @@ public class LoginActivityFragment extends InjectedFragment
                 }
             }
         });
-
-        loginHelpText.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                goToUrl(HELP_CENTER_URL);
-            }
-        });
     }
 
     @OnClick(R.id.logo)
@@ -180,6 +179,54 @@ public class LoginActivityFragment extends InjectedFragment
         builder.create().show();
     }
 
+    @OnClick(R.id.login_help_button)
+    protected void showLoginInstructions()
+    {
+        slideUpPanelContainer.showPanel(R.string.instructions, new SlideUpPanelContainer.ContentInitializer()
+        {
+            @Override
+            public void initialize(ViewGroup panel)
+            {
+                LayoutInflater.from(getActivity()).inflate(R.layout.element_login_instructions, panel);
+
+                panel.findViewById(R.id.login_help).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        goToUrl(HELP_CENTER_URL);
+                    }
+                });
+            }
+        });
+    }
+
+    @OnLongClick(R.id.logo)
+    protected boolean impersonateProvider()
+    {
+        if (!buildConfigWrapper.isDebug()) return true;
+
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Enter provider ID")
+                .setView(input)
+                .setPositiveButton("Log In", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which)
+                    {
+                        prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID, input.getText().toString());
+                        startActivity(new Intent(getActivity(), SplashActivity.class));
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+
+        return true;
+    }
+
     private void goToUrl(String url)
     {
         Uri uriUrl = Uri.parse(url);
@@ -202,8 +249,7 @@ public class LoginActivityFragment extends InjectedFragment
             // purposes where the seeded value of the pin associated with the provider will be
             // preserved on the server side and used on the client side
             changeState(LoginState.INPUTTING_PIN);
-        }
-        else
+        } else
         {
             bus.post(new HandyEvent.RequestPinCode(phoneNumber));
         }
@@ -226,8 +272,7 @@ public class LoginActivityFragment extends InjectedFragment
             if (event.pinRequestDetails.getSuccess())
             {
                 changeState(LoginState.INPUTTING_PIN);
-            }
-            else
+            } else
             {
                 postLoginErrorEvent("phone number");
                 showToast(R.string.login_error_bad_phone);
@@ -262,8 +307,7 @@ public class LoginActivityFragment extends InjectedFragment
             if (event.loginDetails.getSuccess())
             {
                 beginLogin(event.loginDetails);
-            }
-            else
+            } else
             {
                 postLoginErrorEvent("pin code");
                 showToast(R.string.login_error_bad_login);

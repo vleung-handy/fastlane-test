@@ -2,12 +2,15 @@ package com.handy.portal.manager;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.handy.portal.constant.LocationKey;
+import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummary;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.LocationData;
-import com.handy.portal.model.Booking;
-import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.TypeSafeMap;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -197,7 +200,7 @@ public class BookingManager
         String bookingId = event.bookingId;
         LocationData locationData = event.locationData;
 
-        dataManager.notifyOnMyWayBooking(bookingId, locationData.getLocationParamsMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyOnMyWayBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -219,7 +222,7 @@ public class BookingManager
         String bookingId = event.bookingId;
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckInBooking(bookingId, locationData.getLocationParamsMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckInBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -242,7 +245,7 @@ public class BookingManager
         String bookingId = event.bookingId;
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckOutBooking(bookingId, locationData.getLocationParamsMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckOutBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -280,4 +283,52 @@ public class BookingManager
         });
     }
 
+    @Subscribe
+    public void onRequestReportNoShow(HandyEvent.RequestReportNoShow event)
+    {
+        dataManager.reportNoShow(event.bookingId, getNoShowParams(true, event.locationData), new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bus.post(new HandyEvent.ReceiveReportNoShowSuccess(booking));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveReportNoShowError(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestCancelNoShow(HandyEvent.RequestCancelNoShow event)
+    {
+        dataManager.reportNoShow(event.bookingId, getNoShowParams(false, event.locationData), new DataManager.Callback<Booking>()
+        {
+            @Override
+            public void onSuccess(Booking booking)
+            {
+                bus.post(new HandyEvent.ReceiveCancelNoShowSuccess(booking));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveCancelNoShowError(error));
+            }
+        });
+    }
+
+    private TypeSafeMap<NoShowKey> getNoShowParams(boolean active, LocationData locationData)
+    {
+        TypeSafeMap<NoShowKey> noShowParams = new TypeSafeMap<>();
+        TypeSafeMap<LocationKey> locationParamsMap = locationData.getLocationMap();
+        noShowParams.put(NoShowKey.LATITUDE, locationParamsMap.get(LocationKey.LATITUDE));
+        noShowParams.put(NoShowKey.LONGITUDE, locationParamsMap.get(LocationKey.LONGITUDE));
+        noShowParams.put(NoShowKey.ACCURACY, locationParamsMap.get(LocationKey.ACCURACY));
+        noShowParams.put(NoShowKey.ACTIVE, Boolean.toString(active));
+        return noShowParams;
+    }
 }

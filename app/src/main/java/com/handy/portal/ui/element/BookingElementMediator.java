@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.Booking.BookingStatus;
 
 //mediators push information to the view telling them what to display
 //they listen for signals from and intended for the associated view
@@ -14,16 +13,17 @@ public class BookingElementMediator
 {
     private BookingElementView view;
 
-    public BookingElementMediator(Context parentContext, Booking booking, View convertView, ViewGroup parent)
+    public BookingElementMediator(Context parentContext, Booking booking, View convertView, ViewGroup parent, Class<? extends BookingElementView> elementViewClass)
     {
         // TODO: This is a quick hack, soon the scheduled view is going to be entirely different and not use these cells so I am not putting in the time to make it super clean
-        if (booking == null || booking.inferBookingStatus() == BookingStatus.AVAILABLE)
+        try
         {
-            this.view = new AvailableBookingElementView();
+            this.view = elementViewClass.newInstance();
         }
-        else
+        catch (Exception e)
         {
-            this.view = new ScheduledBookingElementView();
+            // not gonna happen
+            e.printStackTrace();
         }
 
         this.view.initView(parentContext, booking, convertView, parent);

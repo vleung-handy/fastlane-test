@@ -60,6 +60,7 @@
         <item name="android:paddingBottom">12dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
+        <item name="android:maxHeight">50dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="fontPath">fonts/CircularStd-Book.otf</item>
         <item name="android:textColor">@drawable/button_text_white_trans</item>

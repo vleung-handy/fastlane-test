@@ -52,7 +52,7 @@ public interface HandyRetrofitService
 
     @FormUrlEncoded
     @POST("/log_version_info")
-    void sendVersionInformation(@FieldMap Map<String,String> params, HandyRetrofitCallback cb);
+    void sendVersionInformation(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{provider_id}/config_params")
     void getConfigParams(@Path("provider_id") String providerId, @Query("key[]") String[] key, HandyRetrofitCallback cb);
@@ -71,15 +71,19 @@ public interface HandyRetrofitService
 
     @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/on_my_way")
-    void notifyOnMyWay(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String,String> locationParams, HandyRetrofitCallback cb);
+    void notifyOnMyWay(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/check_in")
-    void checkIn(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String,String> locationParams, HandyRetrofitCallback cb);
+    void checkIn(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/check_out")
-    void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String,String> locationParams, HandyRetrofitCallback cb);
+    void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/customer_no_show")
+    void reportNoShow(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String, String> params, HandyRetrofitCallback cb);
 
     @Multipart
     @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/eta")

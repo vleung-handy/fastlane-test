@@ -1,31 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="15dp"
-    android:background="@color/white"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
 
     <LinearLayout
         android:id="@+id/booking_details_action_panel_button_layout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/cancel_no_show_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/booking_details_action_panel_button_layout"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/grey_round"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_toLeftOf="@+id/undo_button"
+            android:layout_toStartOf="@+id/undo_button"
+            android:gravity="center_vertical"
+            android:text="@string/customer_no_show_reported"
+            android:textColor="@color/subtitle_grey"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/undo_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginStart="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/undo"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/handy_blue"
+            android:textSize="14sp"/>
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/booking_details_action_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text=""
-        android:textColor="@color/helper_text_grey"
-        android:layout_below="@+id/booking_details_action_panel_button_layout"
+        android:layout_below="@+id/cancel_no_show_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/helper_text_grey"
         android:visibility="gone"/>
 
 </RelativeLayout>

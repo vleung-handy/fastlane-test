@@ -54,7 +54,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     }
 
     @Override
-    public final void onDestroyView()
+    public void onDestroyView()
     {
         ButterKnife.reset(this);
         super.onDestroyView();

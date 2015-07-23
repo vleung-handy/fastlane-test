@@ -29,6 +29,7 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
+import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
@@ -43,6 +44,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -73,7 +75,8 @@ import retrofit.converter.GsonConverter;
         TermsActivity.class,
         TermsFragment.class,
         HelpFragment.class,
-        HelpContactFragment.class
+        HelpContactFragment.class,
+        SupportActionViewConstructor.class,
 })
 public final class ApplicationModule
 {
@@ -118,7 +121,7 @@ public final class ApplicationModule
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
 
         final String username = configs.getProperty("api_username");
         final String password = configs.getProperty("api_password");
@@ -139,6 +142,7 @@ public final class ApplicationModule
                         request.addQueryParam("app_device_id", getDeviceId());
                         request.addQueryParam("app_device_model", getDeviceName());
                         request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
+                        request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
                 }).setConverter(new GsonConverter(new GsonBuilder()
                         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")

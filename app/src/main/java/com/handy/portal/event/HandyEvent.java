@@ -6,17 +6,19 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.annotation.Track;
 import com.handy.portal.annotation.TrackField;
+import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.help.HelpNode;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.BookingSummary;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
-import com.handy.portal.model.Booking;
-import com.handy.portal.data.DataManager;
 
 import java.util.Date;
 import java.util.List;
@@ -475,7 +477,38 @@ public abstract class HandyEvent
         }
     }
 
-//Help Center Events
+    // Customer No Show Events
+
+    @Track("report customer no show")
+    public static class RequestReportNoShow extends RequestEvent
+    {
+        public final String bookingId;
+        public final LocationData locationData;
+
+        public RequestReportNoShow(String bookingId, LocationData locationData)
+        {
+            this.bookingId = bookingId;
+            this.locationData = locationData;
+        }
+    }
+
+    public static class ReceiveReportNoShowSuccess extends ReceiveSuccessEvent
+    {
+        public final Booking booking;
+
+        public ReceiveReportNoShowSuccess(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
+
+    public static class ReceiveReportNoShowError extends ReceiveErrorEvent
+    {
+        public ReceiveReportNoShowError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
     //Help Node
     public static class RequestHelpNode extends HandyEvent
@@ -563,7 +596,36 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("cancel customer no show")
+    public static class RequestCancelNoShow extends RequestEvent
+    {
+        public final String bookingId;
+        public final LocationData locationData;
 
+        public RequestCancelNoShow(String bookingId, LocationData locationData)
+        {
+            this.bookingId = bookingId;
+            this.locationData = locationData;
+        }
+    }
+
+    public static class ReceiveCancelNoShowSuccess extends ReceiveSuccessEvent
+    {
+        public final Booking booking;
+
+        public ReceiveCancelNoShowSuccess(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
+
+    public static class ReceiveCancelNoShowError extends ReceiveErrorEvent
+    {
+        public ReceiveCancelNoShowError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
 //Pure analytics events,
 //TODO: when possible these should track the actual events instead of having duplicate unnecessary and get rid of duped analytics events
@@ -677,11 +739,38 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("action triggered")
+    public static class ActionTriggered extends AnalyticsEvent
+    {
+        @TrackField("action name")
+        private String actionName;
+
+        public ActionTriggered(BookingActionButtonType actionType)
+        {
+            this.actionName = actionType.getActionName();
+        }
+    }
+
+    @Track("warning dialog accepted")
+    public static class ActionWarningAccepted extends AnalyticsEvent
+    {
+        @TrackField("action name")
+        private String actionName;
+
+        public ActionWarningAccepted(BookingActionButtonType actionType)
+        {
+            this.actionName = actionType.getActionName();
+        }
+
+        public ActionWarningAccepted(Action action)
+        {
+            this.actionName = action.getActionName();
+        }
+    }
+
     @Track("portal use terms error")
     public static class AcceptTermsError extends AnalyticsEvent
     {
-        @TrackField("terms code")
-        private String code;
     }
 
     @Track("sms customer clicked")
@@ -715,4 +804,17 @@ public abstract class HandyEvent
     {
     }
 
+    @Track("support action triggered")
+    public static class SupportActionTriggered
+    {
+        public final Action action;
+        @TrackField("action name")
+        private String actionName;
+
+        public SupportActionTriggered(@NonNull Action action)
+        {
+            this.action = action;
+            this.actionName = action.getActionName();
+        }
+    }
 }
