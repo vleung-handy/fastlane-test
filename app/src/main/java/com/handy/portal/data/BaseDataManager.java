@@ -160,7 +160,7 @@ public final class BaseDataManager extends DataManager
 
     private String getUserId()
     {
-        String id = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID, null);
+        String id = prefsManager.getString(PrefsKey.PROVIDER_ID, null);
         if (id == null)
         {
             Crashlytics.log("ID not found");

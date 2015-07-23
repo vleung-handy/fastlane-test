@@ -12,8 +12,8 @@ public class LoginDetails
         private String userCredentialsId;
 
         public boolean getSuccess() { return success; }
-        public String getUserCredentialsToken() { return userCredentials; }
-        public String getUserCredentialsCookie() { return "user_credentials="+ getUserCredentialsToken();}
+        public String getAuthToken() { return userCredentials; }
+        public String getUserCredentialsCookie() { return "user_credentials="+ getAuthToken();}
 
-        public String getUserCredentialsId() { return userCredentialsId; }
+        public String getProviderId() { return userCredentialsId; }
 }

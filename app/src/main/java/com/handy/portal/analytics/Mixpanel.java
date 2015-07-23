@@ -47,7 +47,7 @@ public class Mixpanel
         addProps(baseProps, "app version", BuildConfig.VERSION_NAME);
         addProps(baseProps, "app flavor", BuildConfig.FLAVOR);
         addProps(baseProps, "device id", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
-        addProps(baseProps, "user_id", prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID));
+        addProps(baseProps, "user_id", prefsManager.getString(PrefsKey.PROVIDER_ID));
         mixpanelAPI.registerSuperProperties(baseProps);
     }
 

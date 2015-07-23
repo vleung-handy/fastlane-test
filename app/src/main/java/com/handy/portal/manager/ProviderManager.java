@@ -29,7 +29,7 @@ public class ProviderManager
             @Override
             public void onSuccess(Provider provider)
             {
-                prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID, provider.getId());
+                prefsManager.setString(PrefsKey.PROVIDER_ID, provider.getId());
                 bus.post(new HandyEvent.ReceiveProviderInfoSuccess(provider));
             }
 

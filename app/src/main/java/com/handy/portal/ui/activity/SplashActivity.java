@@ -38,21 +38,21 @@ public class SplashActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        String providerId = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID, null);
+        String providerId = prefsManager.getString(PrefsKey.PROVIDER_ID, null);
         if (providerId != null)
         {
             Crashlytics.setUserIdentifier(providerId);
         }
 
-        String userCredentialsToken = prefsManager.getString(PrefsKey.USER_CREDENTIALS_TOKEN, null);
-        String userCredentialsTokenFromCookieManager = getUserCredentialsTokenFromCookieManager();
-        if (userCredentialsToken == null && userCredentialsTokenFromCookieManager != null)
+        String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
+        String authTokenFromCookieManager = getAuthTokenFromCookieManager();
+        if (authToken == null && authTokenFromCookieManager != null)
         {
-            userCredentialsToken = userCredentialsTokenFromCookieManager;
-            prefsManager.setString(PrefsKey.USER_CREDENTIALS_TOKEN, userCredentialsToken);
+            authToken = authTokenFromCookieManager;
+            prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
         }
 
-        if (userCredentialsToken == null)
+        if (authToken == null)
         {
             launchActivity(LoginActivity.class);
         }
@@ -106,7 +106,7 @@ public class SplashActivity extends BaseActivity
         }
     }
 
-    private String getUserCredentialsTokenFromCookieManager()
+    private String getAuthTokenFromCookieManager()
     {
         CookieSyncManager.createInstance(this);
         String allCookies = CookieManager.getInstance().getCookie(endpoint.getBaseUrl());

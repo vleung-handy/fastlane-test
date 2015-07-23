@@ -215,7 +215,7 @@ public class LoginActivityFragment extends InjectedFragment
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which)
                     {
-                        prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID, input.getText().toString());
+                        prefsManager.setString(PrefsKey.PROVIDER_ID, input.getText().toString());
                         startActivity(new Intent(getActivity(), SplashActivity.class));
                     }
                 })
@@ -352,7 +352,7 @@ public class LoginActivityFragment extends InjectedFragment
         changeState(LoginState.COMPLETE);
 
         //Set cookies to enable seamless access in our webview
-        if (loginDetails.getUserCredentialsToken() != null)
+        if (loginDetails.getAuthToken() != null)
         {
             CookieSyncManager.createInstance(getActivity());
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());

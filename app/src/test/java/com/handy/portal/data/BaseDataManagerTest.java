@@ -136,7 +136,7 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
 
         LoginDetails loginDetails = (LoginDetails) responseCatcher[0];
         assertTrue(loginDetails.getSuccess());
-        assertThat(loginDetails.getUserCredentialsToken(), equalTo("credentials"));
+        assertThat(loginDetails.getAuthToken(), equalTo("credentials"));
     }
 
 }

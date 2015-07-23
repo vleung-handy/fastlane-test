@@ -135,10 +135,10 @@ public final class ApplicationModule
                     @Override
                     public void intercept(RequestFacade request)
                     {
-                        String userCredentialsToken = prefsManager.getString(PrefsKey.USER_CREDENTIALS_TOKEN, null);
-                        if (userCredentialsToken != null)
+                        String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
+                        if (authToken != null)
                         {
-                            request.addQueryParam("auth_token", userCredentialsToken);
+                            request.addQueryParam("auth_token", authToken);
                         }
 
                         request.addHeader("Authorization", auth);
