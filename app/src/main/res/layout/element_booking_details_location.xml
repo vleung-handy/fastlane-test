@@ -73,7 +73,7 @@
         />
 
     <TextView
-        android:id="@+id/booking_details_frequency_text"
+        android:id="@+id/booking_details_service_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/booking_frequency_every_week"

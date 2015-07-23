@@ -206,7 +206,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
         //Full Details Notice , technically we should move this to its own view panel
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
-        fullDetailsNoticeText.setVisibility(bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
+        fullDetailsNoticeText.setVisibility(booking.getServiceInfo().isHomeCleaning() && bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
     //A listing of all the view constructors we use to populate the layouts
