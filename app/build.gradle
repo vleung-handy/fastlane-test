@@ -33,9 +33,10 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 11
-        versionName "0.4.4"
+        versionCode 23
+        versionName "0.4.5"
         multiDexEnabled true
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
     signingConfigs {
@@ -45,19 +46,21 @@ android {
             storeFile file('keys/handy-prod-key.keystore')
             storePassword 'S0H@ndy!'
         }
+        playstore {
+            keyAlias 'HandyReleaseKey'
+            keyPassword 'S0H@ndy!'
+            storeFile file('keys/handy-release-key.keystore')
+            storePassword 'S0H@ndy!'
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.prod
         }
         debug {
-            applicationIdSuffix ".debug"
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.prod
+            applicationIdSuffix ".debug"
         }
     }
 
@@ -65,12 +68,20 @@ android {
         stable {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.4.4"
+            versionName "0.4.5"
+            signingConfig signingConfigs.prod
         }
         beta {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.4.4b"
+            versionName "0.4.5b"
+            signingConfig signingConfigs.prod
+        }
+        store {
+            applicationId 'com.handybook.handy_portal'
+            manifestPlaceholders = [PACKAGE_NAME: "com.handybook.handy_portal"]
+            versionName "0.4.5p"
+            signingConfig signingConfigs.playstore
         }
 
         applicationVariants.all { variant ->
