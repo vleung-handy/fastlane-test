@@ -14,8 +14,8 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.handy.portal.ui.fragment.PortalWebViewFragment.Target;
@@ -167,7 +167,7 @@ public class MainActivityFragment extends InjectedFragment
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
             swapFragmentArguments.argumentsBundle = argumentsBundle;
-            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS);
+            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS || targetTab == MainViewTab.HELP_CONTACT);
 
             swapFragment(swapFragmentArguments);
         }
@@ -193,10 +193,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         clearingBackStack = true;
         FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-        while(supportFragmentManager.getBackStackEntryCount() > 0)
-        {
-            supportFragmentManager.popBackStackImmediate();
-        }
+        supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); //clears out the whole stack
         clearingBackStack = false;
     }
 
@@ -278,6 +275,7 @@ public class MainActivityFragment extends InjectedFragment
 
         if (swapArguments.addToBackStack)
         {
+            //just using this for debugging pass null normally or make sure when we clear we use a special name
             transaction.addToBackStack(null);
         }
         else
@@ -287,7 +285,6 @@ public class MainActivityFragment extends InjectedFragment
 
         // Commit the transaction
         transaction.commit();
-
     }
 
 }

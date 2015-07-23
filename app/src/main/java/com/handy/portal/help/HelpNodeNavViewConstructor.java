@@ -16,7 +16,6 @@ public final class HelpNodeNavViewConstructor
 {
     protected ViewGroup parentViewGroup;
     protected Activity activity;
-    protected HelpFragment helpFragment;
 
     protected int getLayoutResourceId()
     {
@@ -30,11 +29,10 @@ public final class HelpNodeNavViewConstructor
     @InjectView(R.id.nav_text)
     TextView navText;
 
-    public void constructView(HelpNode helpNode, ViewGroup parentViewGroup, Activity activity, HelpFragment helpFragment)
+    public void constructView(HelpNode helpNode, ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
-        this.helpFragment = helpFragment;
 
         LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
 

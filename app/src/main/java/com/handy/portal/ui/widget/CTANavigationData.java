@@ -1,4 +1,6 @@
-package com.handy.portal.help;
+package com.handy.portal.ui.widget;
+
+import com.handy.portal.help.HelpNode;
 
 import org.json.JSONObject;
 

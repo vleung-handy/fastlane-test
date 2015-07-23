@@ -102,8 +102,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment
         String errorDetails = "";
         for (String requiredArgument : requiredArguments)
         {
-            if (!suppliedArguments.containsKey(requiredArgument)
-                    || suppliedArguments.getString(requiredArgument) == null)
+            //TODO: Is there a way we can validate without knowing the type in advance?
+            if (!suppliedArguments.containsKey(requiredArgument))
             {
                 validated = false;
 

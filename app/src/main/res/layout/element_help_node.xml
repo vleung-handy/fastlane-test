@@ -60,40 +60,29 @@
             android:padding="@dimen/default_padding"
             style="@style/TextView" />
 
+        <Button
+            android:id="@+id/contact_button"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_below="@id/info_text"
+            android:text="@string/i_still_need_help"
+            android:layout_marginBottom="10dp"
+            style="@style/Button.Green.Round"
+            android:visibility="gone"
+            />
+
         <LinearLayout
             android:id="@+id/cta_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/info_text"
+            android:layout_below="@id/contact_button"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="10dp"
             android:visibility="gone"
             android:orientation="vertical"
-            >
+            />
 
-            <Button
-                android:id="@+id/contact_button"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:text="@string/i_still_need_help"
-                android:layout_marginBottom="10dp"
-                style="@style/Button.Green.Round"
-                android:visibility="gone"
-                />
-                <!--empty view needed for bottom layout margin bug on older APIs-->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    />
-
-            </LinearLayout>
-
-         <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_below="@id/cta_layout" />
-
-        </RelativeLayout>
+    </RelativeLayout>
 
         <!--empty view needed for bottom layout margin bug on older APIs-->
 

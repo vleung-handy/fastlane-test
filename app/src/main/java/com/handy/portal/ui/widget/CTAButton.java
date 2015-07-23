@@ -1,9 +1,11 @@
-package com.handy.portal.help;
+package com.handy.portal.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+
+import com.handy.portal.help.HelpNode;
 
 public final class CTAButton extends Button
 {

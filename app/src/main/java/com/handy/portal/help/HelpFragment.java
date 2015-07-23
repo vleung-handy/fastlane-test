@@ -1,6 +1,5 @@
 package com.handy.portal.help;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,8 +78,9 @@ public final class HelpFragment extends InjectedFragment
 
         bus.post(new HandyEvent.RequestHelpNode(null, null));
 
-        final Activity fragmentActivity = this.getActivity();
-//        backImage.setOnClickListener(new View.OnClickListener()
+       // final Activity linkToActivity = this.getActivity();
+
+//      backImage.setOnClickListener(new View.OnClickListener()
 //        {
 //            @Override
 //            public void onClick(final View v)
@@ -134,8 +134,13 @@ public final class HelpFragment extends InjectedFragment
 
 
 
+    public void postForMe(HandyEvent.NavigateToTab navigateEvent)
+    {
+        bus.post(navigateEvent);
+    }
 
 //View Construction
+
 
 
     private void constructNodeView(final HelpNode node)
@@ -147,7 +152,29 @@ public final class HelpFragment extends InjectedFragment
         constructor.constructView(node, helpPageContent, getActivity(), this);
 
         HelpNodeNavViewConstructor navViewConstructor = new HelpNodeNavViewConstructor();
-        navViewConstructor.constructView(node, navContent, getActivity(), this);
+        navViewConstructor.constructView(node, navContent, getActivity());
+
+//        //todo: move this to the fragment
+//        Button contactButton = (Button) getActivity().findViewById(R.id.contact_button);
+//
+//        contactButton.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                System.out.println("Clicked on contact button");
+//                //TODO: Open up a help contact activity with the node info attached
+//
+//                Bundle arguments = new Bundle();
+//                arguments.putString(BundleKeys.PATH, "fakepathdata");
+//                arguments.putParcelable(BundleKeys.HELP_NODE, child);
+//
+//                HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
+//
+//
+//            }
+//        });
+
 
     }
 
@@ -164,6 +191,11 @@ public final class HelpFragment extends InjectedFragment
             bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
         }
     }
+
+
+
+
+
 
 
 //    private void addCtaButton(final HelpNode node)

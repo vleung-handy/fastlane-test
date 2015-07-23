@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.HandyEvent;
+import com.handy.portal.ui.widget.CTAButton;
 import com.handy.portal.util.TextUtils;
 
 import java.util.HashMap;
@@ -27,7 +31,7 @@ public final class HelpNodeViewConstructor
 {
     protected ViewGroup parentViewGroup;
     protected Activity activity;
-    protected HelpFragment helpFragment;
+    protected HelpFragment helpFragment; //horrible hack should not know about fragment
 
     protected int getLayoutResourceId()
     {
@@ -53,6 +57,9 @@ public final class HelpNodeViewConstructor
     @InjectView(R.id.contact_button)
     Button contactButton;
 
+
+
+
     public void constructView(HelpNode helpNode, ViewGroup parentViewGroup, Activity activity, HelpFragment helpFragment)
     {
         this.parentViewGroup = parentViewGroup;
@@ -71,12 +78,6 @@ public final class HelpNodeViewConstructor
         constructNodeView(helpNode, this.parentViewGroup);
     }
 
-    //if we need to abort showing this node
-    protected void removeView()
-    {
-        parentViewGroup.removeAllViews();
-        parentViewGroup.setVisibility(View.GONE);
-    }
 
 
 //View Construction
@@ -174,9 +175,13 @@ public final class HelpNodeViewConstructor
         contactButton.setVisibility(View.INVISIBLE);
 
         System.out.println("Article node info : " + info);
+        System.out.println("See num node children : " + node.getChildren().size());
 
-        System.out.println("Num children : " + node.getChildren().size());
+        //TODO: Any inline images from the HTML are displayed as placeholders, need to figure out how to grab the images and display them
+        infoText.setText(TextUtils.trim(Html.fromHtml(info)));
 
+        //TODO: this determine what happens when you click on inline links, currently crashing
+        //infoText.setMovementMethod(LinkMovementMethod.getInstance());
 
         for (final HelpNode child : node.getChildren())
         {
@@ -204,9 +209,11 @@ public final class HelpNodeViewConstructor
             }
             else if (child.getType().equals("help-contact-form"))
             {
+
                 ctaLayout.setVisibility(View.VISIBLE);
                 contactButton.setVisibility(View.VISIBLE);
 
+                //todo: move this to the fragment
                 contactButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -214,16 +221,18 @@ public final class HelpNodeViewConstructor
                     {
                         System.out.println("Clicked on contact button");
                         //TODO: Open up a help contact activity with the node info attached
+
+                        Bundle arguments = new Bundle();
+                        arguments.putString(BundleKeys.PATH, "fakepathdata");
+                        arguments.putParcelable(BundleKeys.HELP_NODE, child);
+                        HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
+
+                        helpFragment.postForMe(navigateEvent);
                     }
                 });
 
             }
         }
-
-        infoText.setText(TextUtils.trim(Html.fromHtml(info)));
-        infoText.setMovementMethod(LinkMovementMethod.getInstance());
-
-
 
 
     }
@@ -293,10 +302,6 @@ public final class HelpNodeViewConstructor
                 navView.setBackgroundResource((R.drawable.cell_booking_last_rounded));
             }
 
-
-
-
-
             navView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -315,7 +320,6 @@ public final class HelpNodeViewConstructor
                     }
                 }
             });
-
 
             navOptionsLayout.addView(navView);
             count++;
@@ -338,11 +342,17 @@ public final class HelpNodeViewConstructor
     private void setHeaderColor(final int color)
     {
         final Drawable header = activity.getResources().getDrawable(R.drawable.help_header_purple);
+
         header.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+        {
             helpHeader.setBackgroundDrawable(header);
-        else helpHeader.setBackground(header);
+        }
+        else
+        {
+            helpHeader.setBackground(header);
+        }
     }
 
     private void addCtaButton(final HelpNode node)

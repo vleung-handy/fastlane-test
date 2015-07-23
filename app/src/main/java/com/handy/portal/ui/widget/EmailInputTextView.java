@@ -1,4 +1,4 @@
-package com.handy.portal.help;
+package com.handy.portal.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

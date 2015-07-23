@@ -95,6 +95,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void onResume()
     {
         super.onResume();
+
+        System.out.println("ON RESUME OF A BOOKINGS FRAGMENT CALLED : " + MainActivityFragment.clearingBackStack + " " + this);
+
         if(!MainActivityFragment.clearingBackStack)
         {
             requestBookings();
