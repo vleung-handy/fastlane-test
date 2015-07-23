@@ -10,14 +10,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.ui.widget.BasicInputTextView;
 import com.handy.portal.ui.widget.EmailInputTextView;
 import com.handy.portal.ui.widget.FirstNameInputTextView;
+import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
 
@@ -35,7 +37,6 @@ import retrofit.mime.TypedInput;
 
 public final class HelpContactFragment extends InjectedFragment
 {
-
     public static final String EXTRA_HELP_NODE = "com.handy.handy.EXTRA_HELP_NODE";
     public static final String EXTRA_HELP_PATH = "com.handy.handy.EXTRA_HELP_PATH";
     private static final String HELP_CONTACT_FORM_DISPOSITION = "help-contact-form-disposition";
@@ -45,17 +46,11 @@ public final class HelpContactFragment extends InjectedFragment
     private static final String HELP_CONTACT_FORM_PATH = "path";
     private static final String SALESFORCE_DATA_WRAPPER_KEY = "salesforce_data";
 
-
-    @Inject
-    Mixpanel mixpanel;
-
-
     @InjectView(R.id.contact_page_content)
     RelativeLayout contactPageContent;
 
     @InjectView(R.id.nav_content)
     RelativeLayout navContent;
-
 
 //    @InjectView(R.id.send_message_button) Button sendMessageButton;
 //    @InjectView(R.id.user_name_text) FirstNameInputTextView nameText;
@@ -69,6 +64,10 @@ public final class HelpContactFragment extends InjectedFragment
     ;
     private HelpNode associatedNode;
     private String path;
+
+
+    private View associatedView;
+
 
     @Inject
     LoginManager loginManager;
@@ -115,7 +114,6 @@ public final class HelpContactFragment extends InjectedFragment
         ButterKnife.inject(this, view);
 
         //should have passed along an associated node and a path
-
         if (!validateRequiredArguments())
         {
             return view;
@@ -126,7 +124,16 @@ public final class HelpContactFragment extends InjectedFragment
 
         constructViews(this.associatedNode);
 
-//Link up onclicks
+        assignClickListeners(view);
+
+        associatedView = view;
+
+        return view;
+    }
+
+    private void assignClickListeners(View view)
+    {
+        //Link up onclicks
         ImageView closeImage = (ImageView) view.findViewById(R.id.close_img);
         ImageView backImage = (ImageView) view.findViewById(R.id.back_img);
         Button sendMessageButton = (Button) view.findViewById(R.id.send_message_button);
@@ -158,9 +165,8 @@ public final class HelpContactFragment extends InjectedFragment
                 activity.onBackPressed();
             }
         });
-
-        return view;
     }
+
 
 
     //construct the views
@@ -176,35 +182,13 @@ public final class HelpContactFragment extends InjectedFragment
         navViewConstructor.constructView(node, navContent, getActivity());
     }
 
-    private void prepopulateUserData()
-    {
-//        if(this.userManager.getCurrentUser() != null)
-//        {
-//            this.nameText.setText(this.userManager.getCurrentUser().getFullName());
-//            this.emailText.setText(this.userManager.getCurrentUser().getEmail());
-//
-//            //Hide the name and email fields if they are prepopulated so the user can not alter them
-//                //Validating them off prepopulated data, not hiding if the prepop data would prevent validation
-//            if(nameText.validate()) {
-//                this.nameLayout.setVisibility(View.GONE);
-//            }
-//            if(emailText.validate()) {
-//                this.emailLayout.setVisibility(View.GONE);
-//            }
-//        }
-    }
-
     private void onSendMessageButtonClick()
     {
         Boolean allValid = true;
-//        allValid &= nameText.validate();
-//        allValid &= emailText.validate();
-//        allValid &= commentText.validate();
 
-
-        FirstNameInputTextView nameText = (FirstNameInputTextView) getActivity().findViewById(R.id.help_contact_user_name_text);
-        EmailInputTextView emailText = (EmailInputTextView) getActivity().findViewById(R.id.help_contact_email_text);
-        BasicInputTextView commentText = (BasicInputTextView) getActivity().findViewById(R.id.help_contact_comment_text);
+        FirstNameInputTextView nameText = (FirstNameInputTextView) associatedView.findViewById(R.id.help_contact_user_name_text);
+        EmailInputTextView emailText = (EmailInputTextView) associatedView.findViewById(R.id.help_contact_email_text);
+        BasicInputTextView commentText = (BasicInputTextView) associatedView.findViewById(R.id.help_contact_comment_text);
 
         allValid &= nameText.validate();
         allValid &= emailText.validate();
@@ -215,7 +199,6 @@ public final class HelpContactFragment extends InjectedFragment
             sendContactFormData(nameText.getString(), emailText.getString(), commentText.getString(), this.associatedNode);
         }
     }
-
 
     private void sendContactFormData(String name, String email, String comment, HelpNode associatedNode)
     {
@@ -244,8 +227,12 @@ public final class HelpContactFragment extends InjectedFragment
             body = null;
         }
 
-        dataManager.createHelpCase(body, createCaseCallback);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestNotifyHelpContact(body));
     }
+
+
+
 
     private HashMap<String, String> parseHelpNode(HelpNode node)
     {
@@ -262,34 +249,23 @@ public final class HelpContactFragment extends InjectedFragment
 
     private void returnToHomeScreen()
     {
-//        final Intent toHomeScreenIntent = new Intent(getActivity(), ServiceCategoriesActivity.class);
-//        toHomeScreenIntent.addFlags((Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-//        startActivity(toHomeScreenIntent);
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.JOBS));
     }
 
-    private DataManager.Callback<Void> createCaseCallback = new DataManager.Callback<Void>()
+    @Subscribe
+    public void onReceiveNotifyHelpContactSuccess(HandyEvent.ReceiveNotifyHelpContactSuccess event)
     {
-        @Override
-        public void onSuccess(final Void v)
-        {
-            if (!allowCallbacks) return;
-            //progressDialog.dismiss();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        returnToHomeScreen();
+        showToast(getString(R.string.contact_received));
+    }
 
-            returnToHomeScreen();
+    @Subscribe
+    public void onReceiveNotifyHelpContactError(HandyEvent.ReceiveNotifyHelpContactError event)
+    {
+        //TODO: Get them to resubmit?
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(getString(R.string.an_error_has_occurred));
+    }
 
-            toast.setText(getString(R.string.contact_received));
-            toast.show();
-
-//            mixpanel.trackEventHelpCenterSubmitTicket(Integer
-//                    .toString(associatedNode.getId()), associatedNode.getLabel());
-        }
-
-        @Override
-        public void onError(final DataManager.DataManagerError error)
-        {
-            if (!allowCallbacks) return;
-//            progressDialog.dismiss();
-//            dataManagerErrorHandler.handleError(getActivity(), error);
-        }
-    };
 }

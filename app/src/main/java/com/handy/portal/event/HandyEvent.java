@@ -21,6 +21,8 @@ import com.handy.portal.data.DataManager;
 import java.util.Date;
 import java.util.List;
 
+import retrofit.mime.TypedInput;
+
 public abstract class HandyEvent
 {
     public abstract static class RequestEvent extends HandyEvent
@@ -475,6 +477,7 @@ public abstract class HandyEvent
 
 //Help Center Events
 
+    //Help Node
     public static class RequestHelpNode extends HandyEvent
     {
         public String nodeId;
@@ -504,7 +507,7 @@ public abstract class HandyEvent
         }
     }
 
-    //
+    //Help Booking Node
     public static class RequestHelpBookingNode extends HandyEvent
     {
         public String nodeId;
@@ -529,6 +532,32 @@ public abstract class HandyEvent
     public static class ReceiveHelpBookingNodeError extends ReceiveErrorEvent
     {
         public ReceiveHelpBookingNodeError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    //Help Contact Message
+    public static class RequestNotifyHelpContact extends HandyEvent
+    {
+        public TypedInput body;
+
+        public RequestNotifyHelpContact(TypedInput body)
+        {
+            this.body = body;
+        }
+    }
+
+    public static class ReceiveNotifyHelpContactSuccess extends ReceiveSuccessEvent
+    {
+        public ReceiveNotifyHelpContactSuccess()
+        {
+        }
+    }
+
+    public static class ReceiveNotifyHelpContactError extends ReceiveErrorEvent
+    {
+        public ReceiveNotifyHelpContactError(DataManager.DataManagerError error)
         {
             this.error = error;
         }

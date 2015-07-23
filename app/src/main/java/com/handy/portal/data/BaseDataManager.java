@@ -175,7 +175,7 @@ public final class BaseDataManager extends DataManager
 
     public void createHelpCase( TypedInput body, final Callback<Void> cb)
     {
-        service.createHelpCase(body, cb);
+        service.createHelpCase(body, new EmptyHandyRetroFitCallback());
     }
     //********End Help Center********
 

@@ -7,6 +7,7 @@
 
     <!-- change the help header to an insertable element for the help fragments -->
     <RelativeLayout
+        android:id="@+id/help_contact_content"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:padding="@dimen/default_margin"
@@ -172,6 +173,7 @@
     </RelativeLayout>
 
     <Button
+        android:layout_below="@id/help_contact_content"
         android:id="@+id/send_message_button"
         android:text="Send Message"
         style="@style/Button.Green" />

@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,8 +181,8 @@ public final class HelpNodeViewConstructor
         //TODO: Any inline images from the HTML are displayed as placeholders, need to figure out how to grab the images and display them
         infoText.setText(TextUtils.trim(Html.fromHtml(info)));
 
-        //TODO: this determine what happens when you click on inline links, currently crashing
-        //infoText.setMovementMethod(LinkMovementMethod.getInstance());
+        //TODO: this determine what happens when you click on inline links, currently crashing on emulator?
+        infoText.setMovementMethod(LinkMovementMethod.getInstance());
 
         for (final HelpNode child : node.getChildren())
         {

@@ -1,7 +1,5 @@
 package com.handy.portal.retrofit;
 
-import com.handy.portal.data.DataManager;
-
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -126,7 +124,7 @@ public interface HandyRetrofitService
                              HandyRetrofitCallback cb);
 
     @POST(SELF_SERVICE_PATH + "create_case")
-    void createHelpCase(@Body TypedInput body, DataManager.Callback<Void> cb);
+    void createHelpCase(@Body TypedInput body, HandyRetrofitCallback cb);
     //********End Help Center********
 
 }
