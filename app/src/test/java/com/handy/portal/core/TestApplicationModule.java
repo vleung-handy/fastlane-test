@@ -8,6 +8,7 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -16,7 +17,6 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
-import com.handy.portal.ui.fragment.BookingDetailsFragmentTest;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
@@ -97,6 +97,12 @@ public class TestApplicationModule
     final LoginManager provideLoginManager()
     {
         return mock(LoginManager.class);
+    }
+
+    @Provides
+    final ProviderManager provideProviderManager()
+    {
+        return mock(ProviderManager.class);
     }
 
     @Provides

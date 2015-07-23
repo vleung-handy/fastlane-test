@@ -2,12 +2,15 @@ package com.handy.portal.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -45,13 +48,57 @@ public class SplashActivity extends BaseActivity
         String userCredentialsTokenFromCookieManager = getUserCredentialsTokenFromCookieManager();
         if (userCredentialsToken == null && userCredentialsTokenFromCookieManager != null)
         {
-            prefsManager.setString(PrefsKey.USER_CREDENTIALS_TOKEN, userCredentialsTokenFromCookieManager);
+            userCredentialsToken = userCredentialsTokenFromCookieManager;
+            prefsManager.setString(PrefsKey.USER_CREDENTIALS_TOKEN, userCredentialsToken);
+        }
+
+        if (userCredentialsToken == null)
+        {
+            launchActivity(LoginActivity.class);
+        }
+        else
+        {
             if (providerId == null)
             {
-                prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID, "1"); // doesn't matter, we have a token
+                requestUserInfo();
             }
+            else
+            {
+                checkForTerms();
+            }
+        }
+    }
 
-            checkForTerms();
+    private void requestUserInfo()
+    {
+        bus.post(new HandyEvent.RequestUserInfo());
+    }
+
+    @Subscribe
+    public void onReceiveUserInfoSuccess(HandyEvent.ReceiveUserInfoSuccess event)
+    {
+        launchActivity(SplashActivity.class);
+    }
+
+    @Subscribe
+    public void onReceiveUserInfoError(HandyEvent.ReceiveUserInfoError event)
+    {
+        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        {
+            // only allow retries on network errors
+            findViewById(R.id.progress_spinner).setVisibility(View.GONE);
+            findViewById(R.id.fetch_error_view).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.fetch_error_text)).setText(R.string.unable_to_fetch_user);
+            findViewById(R.id.try_again_button).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    findViewById(R.id.progress_spinner).setVisibility(View.VISIBLE);
+                    findViewById(R.id.fetch_error_view).setVisibility(View.GONE);
+                    requestUserInfo();
+                }
+            });
         }
         else
         {

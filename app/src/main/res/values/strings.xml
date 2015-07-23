@@ -311,4 +311,6 @@
     <string name="undo">Undo</string>
     <string name="ok">OK</string>
 
+    <string name="unable_to_fetch_user">Unable to fetch your information. Please try again.</string>
+
 </resources>

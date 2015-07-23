@@ -10,6 +10,7 @@ import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
@@ -113,6 +114,12 @@ public final class BaseDataManager extends DataManager
     public final void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
     {
         service.requestLogin(phoneNumber, pinCode, new LoginDetailsResponseHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getProviderInfo(Callback<Provider> cb)
+    {
+        service.getProviderInfo(new ProviderResponseHandyRetroFitCallback(cb));
     }
 
     @Override

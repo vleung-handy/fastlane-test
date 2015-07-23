@@ -16,6 +16,7 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -196,9 +197,16 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
+    final LoginManager provideLoginManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
     {
         return new LoginManager(bus, dataManager, prefsManager, mixpanel);
+    }
+
+    @Provides
+    @Singleton
+    final ProviderManager provideProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    {
+        return new ProviderManager(bus, dataManager, prefsManager);
     }
 
     @Provides
