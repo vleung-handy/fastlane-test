@@ -22,7 +22,7 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestUserInfo(HandyEvent.RequestUserInfo event)
+    public void onRequestUserInfo(HandyEvent.RequestProviderInfo event)
     {
         dataManager.getProviderInfo(new DataManager.Callback<Provider>()
         {
@@ -30,13 +30,13 @@ public class ProviderManager
             public void onSuccess(Provider provider)
             {
                 prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID, provider.getId());
-                bus.post(new HandyEvent.ReceiveUserInfoSuccess(provider));
+                bus.post(new HandyEvent.ReceiveProviderInfoSuccess(provider));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveUserInfoError(error));
+                bus.post(new HandyEvent.ReceiveProviderInfoError(error));
             }
         });
     }

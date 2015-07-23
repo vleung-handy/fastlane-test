@@ -71,17 +71,17 @@ public class SplashActivity extends BaseActivity
 
     private void requestUserInfo()
     {
-        bus.post(new HandyEvent.RequestUserInfo());
+        bus.post(new HandyEvent.RequestProviderInfo());
     }
 
     @Subscribe
-    public void onReceiveUserInfoSuccess(HandyEvent.ReceiveUserInfoSuccess event)
+    public void onReceiveUserInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
         launchActivity(SplashActivity.class);
     }
 
     @Subscribe
-    public void onReceiveUserInfoError(HandyEvent.ReceiveUserInfoError event)
+    public void onReceiveUserInfoError(HandyEvent.ReceiveProviderInfoError event)
     {
         if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {

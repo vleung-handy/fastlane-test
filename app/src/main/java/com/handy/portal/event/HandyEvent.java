@@ -169,6 +169,27 @@ public abstract class HandyEvent
         }
     }
 
+    public static class RequestProviderInfo extends RequestEvent
+    {
+    }
+
+    public static class ReceiveProviderInfoSuccess extends ReceiveSuccessEvent
+    {
+        public final Provider provider;
+
+        public ReceiveProviderInfoSuccess(Provider provider)
+        {
+            this.provider = provider;
+        }
+    }
+
+    public static class ReceiveProviderInfoError extends ReceiveErrorEvent
+    {
+        public ReceiveProviderInfoError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
 //Update and Version Management
 
@@ -728,28 +749,6 @@ public abstract class HandyEvent
         {
             this.action = action;
             this.actionName = action.getActionName();
-        }
-    }
-
-    public static class RequestUserInfo extends RequestEvent
-    {
-    }
-
-    public static class ReceiveUserInfoSuccess extends ReceiveSuccessEvent
-    {
-        public final Provider provider;
-
-        public ReceiveUserInfoSuccess(Provider provider)
-        {
-            this.provider = provider;
-        }
-    }
-
-    public static class ReceiveUserInfoError extends ReceiveErrorEvent
-    {
-        public ReceiveUserInfoError(DataManager.DataManagerError error)
-        {
-            this.error = error;
         }
     }
 }
