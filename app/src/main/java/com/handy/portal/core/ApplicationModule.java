@@ -138,7 +138,7 @@ public final class ApplicationModule
                         String userCredentialsToken = prefsManager.getString(PrefsKey.USER_CREDENTIALS_TOKEN, null);
                         if (userCredentialsToken != null)
                         {
-                            request.addQueryParam("persistence_token", userCredentialsToken);
+                            request.addQueryParam("auth_token", userCredentialsToken);
                         }
 
                         request.addHeader("Authorization", auth);
