@@ -105,12 +105,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
     }
 
-    @Override
-    protected MainViewTab getMainViewTab()
-    {
-        return MainViewTab.SCHEDULE;
-    }
-
     @OnClick(R.id.find_jobs_for_day_button)
     public void onFindJobsButtonClicked(View v)
     {

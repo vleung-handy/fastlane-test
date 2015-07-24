@@ -13,11 +13,9 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummary;
-import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.DateButtonView;
@@ -63,8 +61,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings);
 
-    protected abstract MainViewTab getMainViewTab();
-
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
 
@@ -100,7 +96,10 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void onResume()
     {
         super.onResume();
-        requestBookings();
+        if(!MainActivityFragment.clearingBackStack)
+        {
+            requestBookings();
+        }
     }
 
     @OnClick(R.id.try_again_button)
@@ -219,23 +218,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 {
                     bus.post(new HandyEvent.BookingSelected(getTrackingType(), booking.getId()));
                     previousDatesScrollPosition = ((HorizontalScrollView) getDatesLayout().getParent()).getScrollX();
-                    initBackPressedListener();
                     showBookingDetails(booking);
                 }
-            }
-        });
-    }
-
-    private void initBackPressedListener()
-    {
-        ((BaseActivity) getActivity()).addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
-        {
-            @Override
-            public void onBackPressed()
-            {
-                Bundle arguments = new Bundle();
-                arguments.putLong(BundleKeys.DATE_EPOCH_TIME, selectedDay.getTime());
-                bus.post(new HandyEvent.NavigateToTab(getMainViewTab(), arguments, TransitionStyle.REFRESH_TAB));
             }
         });
     }
