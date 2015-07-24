@@ -41,6 +41,7 @@ public class SplashActivity extends BaseActivity
         String providerId = prefsManager.getString(PrefsKey.PROVIDER_ID, null);
         if (providerId != null)
         {
+            // this needs to happen first so we have more insight in case something bad happens after this line
             Crashlytics.setUserIdentifier(providerId);
         }
 
@@ -77,6 +78,7 @@ public class SplashActivity extends BaseActivity
     @Subscribe
     public void onReceiveUserInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
+        // at this point, ProviderManager should have set the provider ID in prefs
         launchActivity(SplashActivity.class);
     }
 
