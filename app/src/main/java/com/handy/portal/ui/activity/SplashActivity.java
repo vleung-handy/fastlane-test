@@ -114,7 +114,7 @@ public class SplashActivity extends BaseActivity
 
         if (allCookies != null)
         {
-            Pattern pattern = Pattern.compile(".*user_credentials=(.*?)(?:;|$).*");
+            Pattern pattern = Pattern.compile(".*user_credentials=(.*?)(?:%3A|;|$).*");
             Matcher matcher = pattern.matcher(allCookies);
             if (matcher.matches())
             {
