@@ -17,6 +17,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
@@ -28,7 +29,6 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
-    private static final String BUNDLE_KEY_TAB = "tab";
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -70,9 +70,9 @@ public class MainActivityFragment extends InjectedFragment
         super.onViewStateRestored(savedInstanceState);
 
         String tab = MainViewTab.JOBS.name();
-        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_KEY_TAB))
+        if (savedInstanceState != null && savedInstanceState.containsKey(BundleKeys.TAB))
         {
-            tab = savedInstanceState.getString(BUNDLE_KEY_TAB);
+            tab = savedInstanceState.getString(BundleKeys.TAB);
         }
         switchToTab(MainViewTab.valueOf(tab));
     }
@@ -84,7 +84,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             outState = new Bundle();
         }
-        outState.putString(BUNDLE_KEY_TAB, currentTab.name());
+        outState.putString(BundleKeys.TAB, currentTab.name());
         super.onSaveInstanceState(outState);
     }
 
@@ -197,6 +197,7 @@ public class MainActivityFragment extends InjectedFragment
 
         if (targetTab != MainViewTab.DETAILS)
         {
+            ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
             currentTab = targetTab;
         }
     }
@@ -258,6 +259,8 @@ public class MainActivityFragment extends InjectedFragment
 
     private void swapFragment(SwapFragmentArguments swapArguments)
     {
+        clearFragmentBackStack();
+
         //replace the existing fragment with the new fragment
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
@@ -303,7 +306,6 @@ public class MainActivityFragment extends InjectedFragment
 
         if (swapArguments.addToBackStack)
         {
-            //just using this for debugging pass null normally or make sure when we clear we use a special name
             transaction.addToBackStack(null);
         }
         else
