@@ -1,6 +1,7 @@
 package com.handy.portal.ui.layout;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -42,11 +43,6 @@ public class SlideUpPanelContainer extends RelativeLayout
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public boolean isShown()
-    {
-        return panelShown;
-    }
-
     public interface ContentInitializer
     {
         void initialize(ViewGroup panel);
@@ -71,7 +67,7 @@ public class SlideUpPanelContainer extends RelativeLayout
                 @Override
                 public void onClick(View view)
                 {
-                    hidePanel();
+                    SlideUpPanelContainer.this.hidePanel();
                 }
             };
             panelOverlay.setOnClickListener(hidePanelListener);
@@ -91,7 +87,7 @@ public class SlideUpPanelContainer extends RelativeLayout
             @Override
             public void onBackPressed()
             {
-                SlideUpPanelContainer.this.hidePanel();
+                SlideUpPanelContainer.this.dismiss();
             }
         });
     }
@@ -107,21 +103,19 @@ public class SlideUpPanelContainer extends RelativeLayout
     {
         if (panelShown)
         {
-            View panel = findViewById(R.id.slide_up_panel);
-            hideElement(panel, R.anim.slide_down);
-
-            View panelOverlay = findViewById(R.id.slide_up_panel_overlay);
-            hideElement(panelOverlay, R.anim.fade_out);
-
-            unsetOnBackPressedListener();
-
-            panelShown = false;
+            ((Activity) getContext()).onBackPressed();
         }
     }
 
-    private void unsetOnBackPressedListener()
+    private void dismiss()
     {
-        ((BaseActivity) getContext()).popOnBackPressedListenerStack();
+        View panel = findViewById(R.id.slide_up_panel);
+        hideElement(panel, R.anim.slide_down);
+
+        View panelOverlay = findViewById(R.id.slide_up_panel_overlay);
+        hideElement(panelOverlay, R.anim.fade_out);
+
+        panelShown = false;
     }
 
     private void hideElement(View view, int animId)
