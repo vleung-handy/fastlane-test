@@ -23,50 +23,15 @@ import butterknife.InjectView;
 
 public final class HelpFragment extends InjectedFragment
 {
-
-
-    private final String STATE_SCROLL_POSITION = "SCROLL_POSITION";
-    static final String EXTRA_HELP_NODE = "com.handy.handy.EXTRA_HELP_NODE";
-    private static String HELP_CONTACT_FORM_NODE_TYPE = "help-contact-form";
-    static final String EXTRA_BOOKING_ID = "com.handy.handy.EXTRA_BOOKING_ID";
-    static final String EXTRA_LOGIN_TOKEN = "com.handy.handy.EXTRA_LOGIN_TOKEN";
-    static final String EXTRA_PATH = "com.handy.handy.EXTRA_PATH";
-
     @InjectView(R.id.help_page_content)
     RelativeLayout helpPageContent;
 
     @InjectView(R.id.nav_content)
     RelativeLayout navContent;
 
-    private HelpNodeNavView nodeNavView;
-    private HelpNodeView nodeView;
+    private HelpNodeNavView nodeNavView; //upper banner and nav controls
+    private HelpNodeView nodeView; //main node display
     private String currentBookingId;
-
-//    public static HelpFragment newInstance(final HelpNode node,
-//                                           final String bookingId,
-//                                           final String loginToken,
-//                                           final String path)
-//    {
-//        final HelpFragment fragment = new HelpFragment();
-//        final Bundle args = new Bundle();
-//        args.putParcelable(EXTRA_HELP_NODE, node);
-//        args.putString(EXTRA_BOOKING_ID, bookingId);
-//        args.putString(EXTRA_LOGIN_TOKEN, loginToken);
-//        args.putString(EXTRA_PATH, path);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
-//    @Override
-//    protected List<String> requiredArguments()
-//    {
-//        List<String> requiredArguments = new ArrayList<>();
-//        requiredArguments.add(BundleKeys.BOOKING_ID);
-//        requiredArguments.add(BundleKeys.HELP_NODE);
-//        requiredArguments.add(BundleKeys.LOGIN_TOKEN);
-//        requiredArguments.add(BundleKeys.PATH);
-//        return requiredArguments;
-//    }
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -78,7 +43,6 @@ public final class HelpFragment extends InjectedFragment
 
         if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
         {
-            System.out.println("See override node : " + getArguments().getString(BundleKeys.HELP_NODE_ID));
             bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), null));
         } else
         {
@@ -114,43 +78,9 @@ public final class HelpFragment extends InjectedFragment
         showToast(R.string.error_connectivity);
     }
 
-//    @Subscribe
-//    public void onReceiveHelpBookingNodeSuccess(HandyEvent.ReceiveHelpBookingNodeSuccess event)
-//    {
-//        HelpNode helpNode = event.helpNode;
-//        if (helpNode == null)
-//        {
-//            System.err.println("The booking help node returned from the data was null, didn't parse properly?");
-//            return;
-//        }
-//        constructNodeView(helpNode);
-//    }
-//
-//    @Subscribe
-//    public void onReceiveHelpBookingNodeError(HandyEvent.ReceiveHelpBookingNodeError event)
-//    {
-//        showToast("Error retrieving booking help node " + event.error.getMessage());
-//    }
-
-
 //View Construction
-
     private void constructNodeView(final HelpNode node)
     {
-        //for all but root node add a special back listeners to return to the node
-//        if(node.getType() != HelpNode.HelpNodeType.ROOT)
-//        {
-//            ((BaseActivity) getActivity()).addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
-//            {
-//                @Override
-//                public void onBackPressed()
-//                {
-//                    //navigate to this help node
-//                    bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
-//                }
-//            });
-//        }
-
         nodeNavView.updateDisplay(node);
         nodeView.updateDisplay(node);
         setupClickListeners(node);

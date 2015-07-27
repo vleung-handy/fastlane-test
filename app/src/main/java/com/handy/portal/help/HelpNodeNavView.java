@@ -29,7 +29,6 @@ public final class HelpNodeNavView
     @InjectView(R.id.nav_text)
     public TextView navText;
 
-
     public void initView(ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
@@ -44,7 +43,6 @@ public final class HelpNodeNavView
     }
 
     ///////////////////
-
 
     public void constructView(HelpNode helpNode, ViewGroup parentViewGroup, Activity activity)
     {
@@ -65,7 +63,6 @@ public final class HelpNodeNavView
 
     private void constructNodeView(final HelpNode node, final ViewGroup container)
     {
-
         if (node == null)
         {
             System.err.println("Tried to construct a node view for a null node");
@@ -76,6 +73,7 @@ public final class HelpNodeNavView
         {
             case "root":
             {
+                layoutForArticle(node);
                 backImage.setVisibility(View.GONE);
                 closeImage.setVisibility(View.GONE);
             }

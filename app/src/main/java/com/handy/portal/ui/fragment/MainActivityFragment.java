@@ -170,7 +170,11 @@ public class MainActivityFragment extends InjectedFragment
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
             swapFragmentArguments.argumentsBundle = argumentsBundle;
-            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS || targetTab == MainViewTab.HELP_CONTACT);
+            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS
+                                                    || targetTab == MainViewTab.HELP
+                                                    || targetTab == MainViewTab.HELP_CONTACT);
+            swapFragmentArguments.clearBackStack = !(targetTab == MainViewTab.HELP || targetTab == MainViewTab.HELP_CONTACT);
+
             swapFragment(swapFragmentArguments);
         }
         else
@@ -259,7 +263,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void swapFragment(SwapFragmentArguments swapArguments)
     {
-        clearFragmentBackStack();
+        if(swapArguments.clearBackStack)
+        {
+            clearFragmentBackStack();
+        }
 
         //replace the existing fragment with the new fragment
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

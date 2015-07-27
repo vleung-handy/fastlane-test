@@ -171,7 +171,7 @@ public final class HelpNodeView
             }
             else if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
             {
-                ctaLayout.setVisibility(View.VISIBLE);
+                contactButton.setVisibility(View.VISIBLE);
             }
         }
     }
