@@ -2,6 +2,9 @@ package com.handy.portal.core;
 
 import android.content.Context;
 
+import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.manager.PrefsManager;
+
 import java.util.Properties;
 
 public class EnvironmentModifier
@@ -9,7 +12,7 @@ public class EnvironmentModifier
     private Environment environment = Environment.S;
     private boolean pinRequestEnabled = true;
 
-    public EnvironmentModifier(Context context, BuildConfigWrapper buildConfigWrapper)
+    public EnvironmentModifier(Context context, BuildConfigWrapper buildConfigWrapper, PrefsManager prefsManager)
     {
         // only allow environment overrides on debug builds
         if (buildConfigWrapper.isDebug())
@@ -17,12 +20,15 @@ public class EnvironmentModifier
             try
             {
                 Properties properties = PropertiesReader.getProperties(context, "override.properties");
-                boolean disablePinRequest = Boolean.parseBoolean((String) properties.get("disable_pin_request"));
-                String environment = (String) properties.get("environment");
+                boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
+                String environment = properties.getProperty("environment", "S");
+                String token = properties.getProperty("token");
 
                 this.pinRequestEnabled = !disablePinRequest;
                 this.environment = Environment.valueOf(environment);
-            } catch (Exception e)
+                prefsManager.setString(PrefsKey.AUTH_TOKEN, token);
+            }
+            catch (Exception e)
             {
                 e.printStackTrace();
             }
