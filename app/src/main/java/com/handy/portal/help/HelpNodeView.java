@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -17,22 +16,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.widget.CTAButton;
 import com.handy.portal.util.TextUtils;
-
-import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class HelpNodeViewConstructor
+public final class HelpNodeView
 {
     protected ViewGroup parentViewGroup;
     protected Activity activity;
-    protected HelpFragment helpFragment; //horrible hack should not know about fragment
 
     protected int getLayoutResourceId()
     {
@@ -46,7 +39,7 @@ public final class HelpNodeViewConstructor
     @InjectView(R.id.info_text)
     TextView infoText;
     @InjectView(R.id.nav_options_layout)
-    LinearLayout navOptionsLayout;
+    public LinearLayout navOptionsLayout;
     @InjectView(R.id.info_layout)
     RelativeLayout infoLayout;
     @InjectView(R.id.help_icon)
@@ -54,32 +47,24 @@ public final class HelpNodeViewConstructor
     @InjectView(R.id.help_triangle)
     ImageView helpTriangleView;
     @InjectView(R.id.cta_layout)
-    ViewGroup ctaLayout;
+    public ViewGroup ctaLayout;
     @InjectView(R.id.contact_button)
-    Button contactButton;
+    public Button contactButton;
 
-
-
-
-    public void constructView(HelpNode helpNode, ViewGroup parentViewGroup, Activity activity, HelpFragment helpFragment)
+    public void initView(ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
-        this.helpFragment = helpFragment;
 
         LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
 
         ButterKnife.inject(this, parentViewGroup);
-
-        constructHelpNodeView(helpNode);
     }
 
-    protected void constructHelpNodeView(HelpNode helpNode)
+    public void updateDisplay(HelpNode helpNode)
     {
         constructNodeView(helpNode, this.parentViewGroup);
     }
-
-
 
 //View Construction
 
@@ -89,47 +74,40 @@ public final class HelpNodeViewConstructor
         navOptionsLayout.removeAllViews();
         ctaLayout.removeAllViews();
 
+        System.out.println("Construct node view : " + node.getId() + " : " + container.getId());
+
         if (node == null)
         {
             System.err.println("Tried to construct a node view for a null node");
             return;
         }
 
-        System.out.println("Setting up for node of type : " + node.getType());
-
         switch (node.getType())
         {
-            case "root":
+            case HelpNode.HelpNodeType.ROOT:
             {
                 layoutForRoot(node, container);
-               // backImage.setVisibility(View.GONE);
+                layoutNavList(node, container);
             }
             break;
 
-            case "navigation":
-            case "dynamic-bookings-navigation":
-            case "booking":
+            case HelpNode.HelpNodeType.NAVIGATION:
+            case HelpNode.HelpNodeType.BOOKINGS_NAV:
+            case HelpNode.HelpNodeType.BOOKING:
             {
-                layoutForNavigation(node, container);
-                //backImage.setVisibility(View.VISIBLE);
+                layoutNavList(node, container);
             }
             break;
 
-            case "article":
+            case HelpNode.HelpNodeType.ARTICLE:
             {
-
-                System.out.println("Going to layout for article");
-
                 layoutForArticle(node);
-               // backImage.setVisibility(View.VISIBLE);
-
             }
             break;
 
             default:
             {
                 System.err.println("Unrecognized node type : " + node.getType());
-                //backImage.setVisibility(View.VISIBLE);
             }
             break;
         }
@@ -137,34 +115,15 @@ public final class HelpNodeViewConstructor
 
     private void layoutForRoot(final HelpNode node, final ViewGroup container)
     {
-       // closeImage.setVisibility(View.GONE);
         headerTitle.setText(activity.getResources().getString(R.string.what_need_help_with));
         setHeaderColor(activity.getResources().getColor(R.color.handy_blue));
         helpIcon.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_help_smiley));
-        layoutNavList(node, container);
-    }
-
-    private void layoutForNavigation(final HelpNode node, final ViewGroup container)
-    {
-        if (node.getType().equals("booking"))
-        {
-          // navText.setText(activity.getString(R.string.help));
-        }
-        else
-        {
-          // navText.setText(node.getLabel());
-        }
-        layoutNavList(node, container);
     }
 
     private void layoutForArticle(final HelpNode node)
     {
-
-        System.out.println("Turning on info layout");
-
         infoLayout.setVisibility(View.VISIBLE);
 
-        //navText.setText(node.getLabel());
         setHeaderColor(activity.getResources().getColor(R.color.handy_yellow));
         helpIcon.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_help_bulb));
         helpTriangleView.setVisibility(View.VISIBLE);
@@ -194,7 +153,7 @@ public final class HelpNodeViewConstructor
 
             System.out.println("See node child : " + child.getType());
 
-            if (child.getType().equals("help-faq-container"))
+            if (child.getType().equals(HelpNode.HelpNodeType.FAQ))
             {
                 info += "<br/><br/><b>" + activity.getString(R.string.related_faq) + ":</b>";
 
@@ -203,54 +162,26 @@ public final class HelpNodeViewConstructor
                     info += "<br/><a href=" + faqChild.getContent() + ">" + faqChild.getLabel() + "</a>";
                 }
             }
-            else if (child.getType().equals("help-cta"))
+            else if (child.getType().equals(HelpNode.HelpNodeType.CTA))
             {
-                ctaLayout.setVisibility(View.VISIBLE);
-                addCtaButton(child);
+                //TODO: Re-enable CTAs when we support them
+                    //ctaLayout.setVisibility(View.VISIBLE);
+                    //addCtaButton(child);
+                System.err.println("No support for CTAs, required for node : " + child.getId());
             }
-            else if (child.getType().equals("help-contact-form"))
+            else if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
             {
-
                 ctaLayout.setVisibility(View.VISIBLE);
-                contactButton.setVisibility(View.VISIBLE);
-
-                //todo: move this to the fragment
-                contactButton.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        System.out.println("Clicked on contact button");
-                        //TODO: Open up a help contact activity with the node info attached
-
-                        Bundle arguments = new Bundle();
-                        arguments.putString(BundleKeys.PATH, "fakepathdata");
-                        arguments.putParcelable(BundleKeys.HELP_NODE, child);
-                        HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
-
-                        helpFragment.postForMe(navigateEvent);
-                    }
-                });
-
             }
         }
-
-
     }
-
-
-
-
-
-
-
 
     private void layoutNavList(final HelpNode node, final ViewGroup container)
     {
         infoLayout.setVisibility(View.GONE);
         navOptionsLayout.setVisibility(View.VISIBLE);
 
-        if (node.getType().equals("dynamic-bookings-navigation"))
+        if (node.getType().equals(HelpNode.HelpNodeType.BOOKINGS_NAV))
         {
             setHeaderColor(activity.getResources().getColor(R.color.handy_teal));
         }
@@ -262,7 +193,7 @@ public final class HelpNodeViewConstructor
         {
             final View navView;
 
-            if (helpNode.getType().equals("booking"))
+            if (helpNode.getType().equals(HelpNode.HelpNodeType.BOOKING))
             {
                 navView = activity.getLayoutInflater()
                         .inflate(R.layout.list_item_help_booking_nav, container, false);
@@ -279,7 +210,7 @@ public final class HelpNodeViewConstructor
                         + activity.getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
             } else
             {
-                if (node.getType().equals("root"))
+                if (node.getType().equals(HelpNode.HelpNodeType.ROOT))
                 {
                     navView = activity.getLayoutInflater()
                             .inflate(R.layout.list_item_help_nav_main, container, false);
@@ -292,53 +223,22 @@ public final class HelpNodeViewConstructor
                 final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
                 textView.setText(helpNode.getLabel());
 
-                if (node.getType().equals("root"))
+                if (node.getType().equals(HelpNode.HelpNodeType.ROOT))
                 {
                     textView.setTextAppearance(activity, R.style.TextView_Large);
                 }
             }
 
+            //round out the visuals of the last cell
             if (count == size - 1)
             {
                 navView.setBackgroundResource((R.drawable.cell_booking_last_rounded));
             }
 
-            navView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(final View v)
-                {
-                    if (helpNode.getType().equals("help-log-in-form"))
-                    {
-                        //helpFragment.showToast(getString(R.string.please_login);
-
-                        //activity.toast.setText(getString(R.string.please_login));
-                        //toast.show();
-                    }
-                    else
-                    {
-                        helpFragment.requestNodeData(helpNode);
-                    }
-                }
-            });
-
             navOptionsLayout.addView(navView);
             count++;
         }
     }
-
-//    private void displayNextNode(final HelpNode node)
-//    {
-//        if (node.getType().equals("booking"))
-//        {
-//            //currentBookingId = Integer.toString(node.getId()); //TODO: What is this? It makes no sense
-//            bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), null));
-//        } else
-//        {
-//            //dataManager.getHelpInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
-//            bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
-//        }
-//    }
 
     private void setHeaderColor(final int color)
     {
@@ -358,24 +258,9 @@ public final class HelpNodeViewConstructor
 
     private void addCtaButton(final HelpNode node)
     {
-
-        System.out.println("Adding cta button");
-
         int newChildIndex = ctaLayout.getChildCount(); //new index is equal to the old count since the new count is +1
         final CTAButton ctaButton = (CTAButton) ((ViewGroup) activity.getLayoutInflater().inflate(R.layout.fragment_cta_button_template, ctaLayout)).getChildAt(newChildIndex);
-
-        ctaButton.initFromHelpNode(node, null); //TODO: Get real login token?
-
-        //can't inject into buttons so need to set the on click listener here to take advantage of fragments injection
-        ctaButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                HashMap<String, String> params = new HashMap<String, String>();
-                System.out.println("TODO Clicked on CTA Button Functionality");
-            }
-        });
+        ctaButton.initFromHelpNode(node, null); //TODO: Get real login/auth token?
     }
 
 }

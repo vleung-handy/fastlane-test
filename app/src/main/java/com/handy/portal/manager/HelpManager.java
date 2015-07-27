@@ -66,6 +66,8 @@ public class HelpManager
             public void onSuccess(HelpNodeWrapper helpNodeWrapper)
             {
                 HelpNode helpNode = helpNodeWrapper.getHelpNode();
+                helpNodeCache.put(Integer.toString(helpNode.getId()), helpNode);
+                //don't cache the child nodes, they look full but don't have their children
                 bus.post(new HandyEvent.ReceiveHelpNodeSuccess(helpNode));
             }
 

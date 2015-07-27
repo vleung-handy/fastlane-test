@@ -8,18 +8,25 @@ import android.widget.RelativeLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.ui.widget.CTAButton;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+
 public final class HelpFragment extends InjectedFragment
 {
+
+
     private final String STATE_SCROLL_POSITION = "SCROLL_POSITION";
     static final String EXTRA_HELP_NODE = "com.handy.handy.EXTRA_HELP_NODE";
     private static String HELP_CONTACT_FORM_NODE_TYPE = "help-contact-form";
@@ -27,33 +34,30 @@ public final class HelpFragment extends InjectedFragment
     static final String EXTRA_LOGIN_TOKEN = "com.handy.handy.EXTRA_LOGIN_TOKEN";
     static final String EXTRA_PATH = "com.handy.handy.EXTRA_PATH";
 
-//
-//    @InjectView(R.id.back_img)
-//    ImageView backImage;
-
-
     @InjectView(R.id.help_page_content)
     RelativeLayout helpPageContent;
 
     @InjectView(R.id.nav_content)
     RelativeLayout navContent;
 
+    private HelpNodeNavView nodeNavView;
+    private HelpNodeView nodeView;
+    private String currentBookingId;
 
-    public static HelpFragment newInstance(final HelpNode node,
-                                           final String bookingId,
-                                           final String loginToken,
-                                           final String path)
-    {
-        final HelpFragment fragment = new HelpFragment();
-        final Bundle args = new Bundle();
-        args.putParcelable(EXTRA_HELP_NODE, node);
-        args.putString(EXTRA_BOOKING_ID, bookingId);
-        args.putString(EXTRA_LOGIN_TOKEN, loginToken);
-        args.putString(EXTRA_PATH, path);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+//    public static HelpFragment newInstance(final HelpNode node,
+//                                           final String bookingId,
+//                                           final String loginToken,
+//                                           final String path)
+//    {
+//        final HelpFragment fragment = new HelpFragment();
+//        final Bundle args = new Bundle();
+//        args.putParcelable(EXTRA_HELP_NODE, node);
+//        args.putString(EXTRA_BOOKING_ID, bookingId);
+//        args.putString(EXTRA_LOGIN_TOKEN, loginToken);
+//        args.putString(EXTRA_PATH, path);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     protected List<String> requiredArguments()
@@ -70,31 +74,30 @@ public final class HelpFragment extends InjectedFragment
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
     {
-
         final View view = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_help_page, container, false);
-
         ButterKnife.inject(this, view);
 
-        bus.post(new HandyEvent.RequestHelpNode(null, null));
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
+        {
+            bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), null));
+        } else
+        {
+            //null = request root
+            bus.post(new HandyEvent.RequestHelpNode(null, null));
+        }
 
-       // final Activity linkToActivity = this.getActivity();
+        nodeView = new HelpNodeView();
+        nodeView.initView(helpPageContent, getActivity());
+        nodeNavView = new HelpNodeNavView();
+        nodeNavView.initView(navContent, getActivity());
 
-//      backImage.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(final View v)
-//            {
-//                fragmentActivity.onBackPressed();
-//            }
-//        });
         return view;
     }
 
-
-//Event Listeners
+    //Event Listeners
     @Subscribe
-     public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
+    public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
     {
         HelpNode helpNode = event.helpNode;
         if (helpNode == null)
@@ -109,222 +112,199 @@ public final class HelpFragment extends InjectedFragment
     public void onReceiveHelpNodeError(HandyEvent.ReceiveHelpNodeError event)
     {
         //TODO: Hardcoded string
-        showToast("Error retrieving help node " + event.error.getMessage());
+        showToast(R.string.error_connectivity);
     }
 
-    @Subscribe
-    public void onReceiveHelpBookingNodeSuccess(HandyEvent.ReceiveHelpBookingNodeSuccess event)
-    {
-        HelpNode helpNode = event.helpNode;
-        if (helpNode == null)
-        {
-            System.err.println("The booking help node returned from the data was null, didn't parse properly?");
-            return;
-        }
-        constructNodeView(helpNode);
-    }
+//    @Subscribe
+//    public void onReceiveHelpBookingNodeSuccess(HandyEvent.ReceiveHelpBookingNodeSuccess event)
+//    {
+//        HelpNode helpNode = event.helpNode;
+//        if (helpNode == null)
+//        {
+//            System.err.println("The booking help node returned from the data was null, didn't parse properly?");
+//            return;
+//        }
+//        constructNodeView(helpNode);
+//    }
+//
+//    @Subscribe
+//    public void onReceiveHelpBookingNodeError(HandyEvent.ReceiveHelpBookingNodeError event)
+//    {
+//        showToast("Error retrieving booking help node " + event.error.getMessage());
+//    }
 
-    @Subscribe
-    public void onReceiveHelpBookingNodeError(HandyEvent.ReceiveHelpBookingNodeError event)
-    {
-        showToast("Error retrieving booking help node " + event.error.getMessage());
-    }
-
-
-
-
-
-    public void postForMe(HandyEvent.NavigateToTab navigateEvent)
-    {
-        bus.post(navigateEvent);
-    }
 
 //View Construction
 
-
-
     private void constructNodeView(final HelpNode node)
     {
-        helpPageContent.removeAllViews();
-        navContent.removeAllViews();
-
-        HelpNodeViewConstructor constructor = new HelpNodeViewConstructor();
-        constructor.constructView(node, helpPageContent, getActivity(), this);
-
-        HelpNodeNavViewConstructor navViewConstructor = new HelpNodeNavViewConstructor();
-        navViewConstructor.constructView(node, navContent, getActivity());
-
-//        //todo: move this to the fragment
-//        Button contactButton = (Button) getActivity().findViewById(R.id.contact_button);
-//
-//        contactButton.setOnClickListener(new View.OnClickListener()
+        //for all but root node add a special back listeners to return to the node
+//        if(node.getType() != HelpNode.HelpNodeType.ROOT)
 //        {
-//            @Override
-//            public void onClick(View v)
+//            ((BaseActivity) getActivity()).addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
 //            {
-//                System.out.println("Clicked on contact button");
-//                //TODO: Open up a help contact activity with the node info attached
-//
-//                Bundle arguments = new Bundle();
-//                arguments.putString(BundleKeys.PATH, "fakepathdata");
-//                arguments.putParcelable(BundleKeys.HELP_NODE, child);
-//
-//                HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
-//
-//
-//            }
-//        });
+//                @Override
+//                public void onBackPressed()
+//                {
+//                    //navigate to this help node
+//                    bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
+//                }
+//            });
+//        }
 
-
+        nodeNavView.updateDisplay(node);
+        nodeView.updateDisplay(node);
+        setupClickListeners(node);
     }
-
 
     public void requestNodeData(final HelpNode node)
     {
-        if (node.getType().equals("booking"))
+        if (node.getType().equals(HelpNode.HelpNodeType.BOOKING))
         {
             //currentBookingId = Integer.toString(node.getId()); //TODO: What is this? It makes no sense
             bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), null));
         } else
         {
-            //dataManager.getHelpInfo(Integer.toString(node.getId()), currentBookingId, helpNodeCallback);
             bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
         }
     }
 
-
-
-
-
-
-
-//    private void addCtaButton(final HelpNode node)
-//    {
-//        int newChildIndex = ctaLayout.getChildCount(); //new index is equal to the old count since the new count is +1
-//        final CTAButton ctaButton = (CTAButton) ((ViewGroup) getActivity().getLayoutInflater().inflate(R.layout.fragment_cta_button_template, ctaLayout)).getChildAt(newChildIndex);
-//        ctaButton.initFromHelpNode(node, currentLoginToken);
-//        //can't inject into buttons so need to set the on click listener here to take advantage of fragments injection
-//        ctaButton.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(final View v)
-//            {
-//                HashMap<String, String> params = new HashMap<String, String>();
-//                System.out.println("TODO Clicked on CTA Button Functionality");
-//            }
-//        });
-//    }
-
-/*
-    private void layoutNavList(final HelpNode node, final ViewGroup container)
+    public void setupClickListeners(HelpNode helpNode)
     {
-        infoLayout.setVisibility(View.GONE);
-        navOptionsLayout.setVisibility(View.VISIBLE);
+        setupNavigationClickListeners();
 
-        if (node.getType().equals("dynamic-bookings-navigation"))
+        switch (helpNode.getType())
         {
-            setHeaderColor(activity.getResources().getColor(R.color.handy_teal));
+            case HelpNode.HelpNodeType.ROOT:
+            case HelpNode.HelpNodeType.NAVIGATION:
+            case HelpNode.HelpNodeType.BOOKINGS_NAV:
+            case HelpNode.HelpNodeType.BOOKING:
+            {
+                setupNavListClickListeners(helpNode);
+            }
+            break;
+
+            case HelpNode.HelpNodeType.ARTICLE:
+            {
+                setupArticleClickListeners(helpNode);
+            }
+            break;
         }
+    }
 
-        int count = 0;
-        int size = node.getChildren().size();
-
-        for (final HelpNode helpNode : node.getChildren())
+    private void setupNavigationClickListeners()
+    {
+        nodeNavView.backImage.setOnClickListener(new View.OnClickListener()
         {
-            final View navView;
-
-            if (helpNode.getType().equals("booking"))
+            @Override
+            public void onClick(final View v)
             {
-                navView = activity.getLayoutInflater()
-                        .inflate(R.layout.list_item_help_booking_nav, container, false);
-
-                TextView textView = (TextView) navView.findViewById(R.id.service_text);
-                textView.setText(helpNode.getService());
-
-                textView = (TextView) navView.findViewById(R.id.date_text);
-                textView.setText(TextUtils.formatDate(helpNode.getStartDate(), "EEEE',' MMMM d"));
-
-                textView = (TextView) navView.findViewById(R.id.time_text);
-                textView.setText(TextUtils.formatDate(helpNode.getStartDate(), "h:mmaaa \u2013 ")
-                        + TextUtils.formatDecimal(helpNode.getHours(), "#.# ")
-                        + activity.getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
-            } else
-            {
-                if (node.getType().equals("root"))
-                {
-                    navView = activity.getLayoutInflater()
-                            .inflate(R.layout.list_item_help_nav_main, container, false);
-                } else
-                {
-                    navView = activity.getLayoutInflater()
-                            .inflate(R.layout.list_item_help_nav, container, false);
-                }
-
-                final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
-                textView.setText(helpNode.getLabel());
-
-                if (node.getType().equals("root"))
-                {
-                    textView.setTextAppearance(activity, R.style.TextView_Large);
-                }
+                getActivity().onBackPressed();
             }
+        });
 
-            if (count == size - 1)
+        nodeNavView.closeImage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
             {
-                navView.setBackgroundResource((R.drawable.cell_booking_last_rounded));
+                //TODO: like a super back, clear out all of the help node backs and then hit back a final time
+                getActivity().onBackPressed();
             }
+        });
+    }
 
+    private void setupNavListClickListeners(final HelpNode helpNode)
+    {
+        for (int i = 0; i < helpNode.getChildren().size(); i++)
+        {
+            final HelpNode childNode = helpNode.getChildren().get(i);
+            final View navView = (View) nodeView.navOptionsLayout.getChildAt(i);
 
             navView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(final View v)
                 {
-                    if (helpNode.getType().equals("help-log-in-form"))
+                    if (childNode.getType().equals(HelpNode.HelpNodeType.LOG_IN_FORM))
                     {
-//                        activity.toast.setText(getString(R.string.please_login));
-//                        toast.show();
-                    }
-                    else
+                        showToast(R.string.please_login);
+                    } else
                     {
-                        //requestNextNode(helpNode);
+                        //setup the back listener to be able to return to here
+                        ((BaseActivity) getActivity()).addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
+                        {
+                            @Override
+                            public void onBackPressed()
+                            {
+                                //navigate to this help node
+                                bus.post(new HandyEvent.RequestHelpNode(Integer.toString(helpNode.getId()), null));
+                            }
+                        });
+
+                        //Request data for node, will trigger a display
+                        requestNodeData(childNode);
                     }
                 }
             });
-
-
-            navOptionsLayout.addView(navView);
-            count++;
         }
     }
-*/
 
 
+    public void setupArticleClickListeners(HelpNode helpNode)
+    {
 
+        if (helpNode.getChildren().size() > 0)
+        {
+            int ctaButtonIndex = 0;
+            for (final HelpNode child : helpNode.getChildren())
+            {
+                String nodeType = child.getType();
+                if (nodeType == null)
+                {
+                    System.err.println("HelpNode " + child.getId() + " has null data");
+                    continue;
+                }
 
+                if (child.getType().equals(HelpNode.HelpNodeType.CTA))
+                {
+                    //TODO: Add the controllers for CTAs when we support them
+                    //All the CTA buttons should have been constructed already, we now hook up their functionality
+                    final CTAButton ctaButton = (CTAButton) nodeView.ctaLayout.getChildAt(ctaButtonIndex);
 
+                    ctaButton.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(final View v)
+                        {
+                            //TODO: Real CTA functionality, whatever that ends up being
+                            HashMap<String, String> params = new HashMap<String, String>();
+                            if (currentBookingId != null && !currentBookingId.isEmpty())
+                            {
+                                //params.put(NavigationManager.PARAM_BOOKING_ID, currentBookingId);
+                            }
+                            //Boolean success = navigationManager.navigateTo(ctaButton.navigationData, params);
+                            //mixpanel.trackEventHelpCenterDeepLinkClicked(Integer.toString(ctaButton.nodeId), ctaButton.nodeLabel);
+                        }
+                    });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    ctaButtonIndex++;
+                } else if (nodeType.equals(HelpNode.HelpNodeType.CONTACT))
+                {
+                    nodeView.contactButton.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Bundle arguments = new Bundle();
+                            arguments.putString(BundleKeys.PATH, "fakepathdata"); //TODO: What is the real path data that help contact cares about?
+                            arguments.putParcelable(BundleKeys.HELP_NODE, child);
+                            HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
+                            bus.post(navigateEvent);
+                        }
+                    });
+                }
+            }
+        }
+    }
 }

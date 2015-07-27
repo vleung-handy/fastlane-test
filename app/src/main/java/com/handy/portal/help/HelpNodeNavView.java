@@ -12,7 +12,7 @@ import com.handy.portal.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class HelpNodeNavViewConstructor
+public final class HelpNodeNavView
 {
     protected ViewGroup parentViewGroup;
     protected Activity activity;
@@ -23,11 +23,28 @@ public final class HelpNodeNavViewConstructor
     }
 
     @InjectView(R.id.close_img)
-    ImageView closeImage;
+    public ImageView closeImage;
     @InjectView(R.id.back_img)
-    ImageView backImage;
+    public ImageView backImage;
     @InjectView(R.id.nav_text)
-    TextView navText;
+    public TextView navText;
+
+
+    public void initView(ViewGroup parentViewGroup, Activity activity)
+    {
+        this.parentViewGroup = parentViewGroup;
+        this.activity = activity;
+        LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
+        ButterKnife.inject(this, parentViewGroup);
+    }
+
+    public void updateDisplay(HelpNode helpNode)
+    {
+        constructNodeView(helpNode, this.parentViewGroup);
+    }
+
+    ///////////////////
+
 
     public void constructView(HelpNode helpNode, ViewGroup parentViewGroup, Activity activity)
     {
@@ -46,9 +63,6 @@ public final class HelpNodeNavViewConstructor
         constructNodeView(helpNode, this.parentViewGroup);
     }
 
-
-//View Construction
-
     private void constructNodeView(final HelpNode node, final ViewGroup container)
     {
 
@@ -62,7 +76,6 @@ public final class HelpNodeNavViewConstructor
         {
             case "root":
             {
-                layoutForRoot(node, container);
                 backImage.setVisibility(View.GONE);
                 closeImage.setVisibility(View.GONE);
             }
@@ -72,7 +85,7 @@ public final class HelpNodeNavViewConstructor
             case "dynamic-bookings-navigation":
             case "booking":
             {
-                layoutForNavigation(node, container);
+                layoutForNavigation(node);
                 backImage.setVisibility(View.VISIBLE);
                 closeImage.setVisibility(View.GONE);
             }
@@ -95,12 +108,7 @@ public final class HelpNodeNavViewConstructor
         }
     }
 
-    private void layoutForRoot(final HelpNode node, final ViewGroup container)
-    {
-
-    }
-
-    private void layoutForNavigation(final HelpNode node, final ViewGroup container)
+    private void layoutForNavigation(final HelpNode node)
     {
         if (node.getType().equals("booking"))
         {

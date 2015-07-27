@@ -9,7 +9,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Date;
 
-public final class HelpNode implements Parcelable {
+public final class HelpNode implements Parcelable
+{
     @SerializedName("id") private int id;
     @SerializedName("type") private String type;
     @SerializedName("label") private String label;
@@ -107,4 +108,18 @@ public final class HelpNode implements Parcelable {
             return new HelpNode[size];
         }
     };
+
+
+    public static class HelpNodeType
+    {
+        public static final String FAQ = "help-faq-container";
+        public static final String CTA = "help-cta";
+        public static final String CONTACT = "help-contact-form";
+        public static final String BOOKINGS_NAV = "dynamic-bookings-navigation";
+        public static final String LOG_IN_FORM = "help-log-in-form";
+        public static final String ROOT = "root";
+        public static final String NAVIGATION = "navigation";
+        public static final String BOOKING = "booking";
+        public static final String ARTICLE = "article";
+    }
 }

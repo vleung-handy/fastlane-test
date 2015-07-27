@@ -178,7 +178,7 @@ public final class HelpContactFragment extends InjectedFragment
         HelpNodeContactViewConstructor constructor = new HelpNodeContactViewConstructor();
         constructor.constructView(node, contactPageContent, getActivity(), this);
 
-        HelpNodeNavViewConstructor navViewConstructor = new HelpNodeNavViewConstructor();
+        HelpNodeNavView navViewConstructor = new HelpNodeNavView();
         navViewConstructor.constructView(node, navContent, getActivity());
     }
 

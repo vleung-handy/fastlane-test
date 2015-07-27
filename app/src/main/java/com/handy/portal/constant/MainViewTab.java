@@ -12,8 +12,7 @@ public enum MainViewTab
     JOBS(null, AvailableBookingsFragment.class),
     SCHEDULE(null, ScheduledBookingsFragment.class),
     PROFILE(PortalWebViewFragment.Target.PROFILE, null),
-    HELP(PortalWebViewFragment.Target.HELP, HelpFragment.class),
-    //HELP(PortalWebViewFragment.Target.HELP, null),
+    HELP(null, HelpFragment.class),
     DETAILS(null, BookingDetailsFragment.class),
     HELP_CONTACT(null, HelpContactFragment.class),
     ;
