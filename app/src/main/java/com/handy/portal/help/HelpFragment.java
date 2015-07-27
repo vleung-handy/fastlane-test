@@ -15,9 +15,7 @@ import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.ui.widget.CTAButton;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -59,16 +57,16 @@ public final class HelpFragment extends InjectedFragment
 //        return fragment;
 //    }
 
-    @Override
-    protected List<String> requiredArguments()
-    {
-        List<String> requiredArguments = new ArrayList<>();
-        requiredArguments.add(BundleKeys.BOOKING_ID);
-        requiredArguments.add(BundleKeys.HELP_NODE);
-        requiredArguments.add(BundleKeys.LOGIN_TOKEN);
-        requiredArguments.add(BundleKeys.PATH);
-        return requiredArguments;
-    }
+//    @Override
+//    protected List<String> requiredArguments()
+//    {
+//        List<String> requiredArguments = new ArrayList<>();
+//        requiredArguments.add(BundleKeys.BOOKING_ID);
+//        requiredArguments.add(BundleKeys.HELP_NODE);
+//        requiredArguments.add(BundleKeys.LOGIN_TOKEN);
+//        requiredArguments.add(BundleKeys.PATH);
+//        return requiredArguments;
+//    }
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -80,6 +78,7 @@ public final class HelpFragment extends InjectedFragment
 
         if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
         {
+            System.out.println("See override node : " + getArguments().getString(BundleKeys.HELP_NODE_ID));
             bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), null));
         } else
         {
