@@ -21,11 +21,4 @@ public class LoginActivity extends BaseActivity
     {
         super.onResume();
     }
-
-    @Override
-    public void onBackPressed()
-    {
-        moveTaskToBack(true);
-    }
-
 }

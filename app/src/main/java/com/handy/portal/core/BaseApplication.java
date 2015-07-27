@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
@@ -168,7 +169,10 @@ public class BaseApplication extends Application
 
     protected void startCrashlytics()
     {
-        Crashlytics.start(this);
+        if(!BuildConfig.DEBUG)
+        {
+            Crashlytics.start(this);
+        }
     }
 
     protected void createObjectGraph()
