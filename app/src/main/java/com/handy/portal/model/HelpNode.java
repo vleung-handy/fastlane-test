@@ -1,4 +1,4 @@
-package com.handy.portal.help;
+package com.handy.portal.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

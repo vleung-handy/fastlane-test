@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 
-import com.handy.portal.help.HelpNode;
+import com.handy.portal.model.HelpNode;
 
 public final class CTAButton extends Button
 {

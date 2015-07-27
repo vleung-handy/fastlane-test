@@ -1,6 +1,6 @@
 package com.handy.portal.data;
 
-import com.handy.portal.help.HelpNodeWrapper;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;

@@ -1,4 +1,4 @@
-package com.handy.portal.help;
+package com.handy.portal.ui.view;
 
 import android.app.Activity;
 import android.text.Html;
@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.HelpNode;
 import com.handy.portal.ui.widget.CTAButton;
 import com.handy.portal.util.TextUtils;
 

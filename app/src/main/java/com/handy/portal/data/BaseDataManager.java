@@ -4,7 +4,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.help.HelpNodeWrapper;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;

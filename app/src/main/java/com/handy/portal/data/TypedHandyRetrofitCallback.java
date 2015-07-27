@@ -5,7 +5,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.handy.portal.help.HelpNodeWrapper;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;

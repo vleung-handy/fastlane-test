@@ -1,4 +1,4 @@
-package com.handy.portal.help;
+package com.handy.portal.ui.view;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.HelpNode;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

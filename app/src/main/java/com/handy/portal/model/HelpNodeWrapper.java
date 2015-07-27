@@ -1,4 +1,4 @@
-package com.handy.portal.help;
+package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,4 +1,4 @@
-package com.handy.portal.help;
+package com.handy.portal.ui.view;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.handy.portal.R;
+import com.handy.portal.model.HelpNode;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.HelpContactFragment;

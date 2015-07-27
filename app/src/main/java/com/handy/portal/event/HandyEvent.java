@@ -9,7 +9,7 @@ import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.help.HelpNode;
+import com.handy.portal.model.HelpNode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;

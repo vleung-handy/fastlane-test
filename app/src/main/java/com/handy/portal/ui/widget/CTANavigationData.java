@@ -1,6 +1,6 @@
 package com.handy.portal.ui.widget;
 
-import com.handy.portal.help.HelpNode;
+import com.handy.portal.model.HelpNode;
 
 import org.json.JSONObject;
 

@@ -4,8 +4,8 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.help.HelpNode;
-import com.handy.portal.help.HelpNodeWrapper;
+import com.handy.portal.model.HelpNode;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
