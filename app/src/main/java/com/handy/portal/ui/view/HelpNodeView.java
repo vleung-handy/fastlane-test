@@ -63,8 +63,6 @@ public final class HelpNodeView
         navOptionsLayout.removeAllViews();
         ctaLayout.removeAllViews();
 
-        System.out.println("Construct node view : " + node.getId() + " : " + container.getId());
-
         if (node == null)
         {
             System.err.println("Tried to construct a node view for a null node");
@@ -106,9 +104,6 @@ public final class HelpNodeView
         ctaLayout.setVisibility(View.INVISIBLE);
         contactButton.setVisibility(View.INVISIBLE);
 
-        System.out.println("Article node info : " + info);
-        System.out.println("See num node children : " + node.getChildren().size());
-
         //TODO: Any inline images from the HTML are displayed as placeholders, need to figure out how to grab the images and display them
         infoText.setText(TextUtils.trim(Html.fromHtml(info)));
 
@@ -122,8 +117,6 @@ public final class HelpNodeView
                 System.err.println("HelpNode " + child.getId() + " has null data");
                 continue;
             }
-
-            System.out.println("See node child : " + child.getType());
 
             if (child.getType().equals(HelpNode.HelpNodeType.FAQ))
             {

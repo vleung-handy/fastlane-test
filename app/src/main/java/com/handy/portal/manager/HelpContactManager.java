@@ -32,14 +32,12 @@ public class HelpContactManager
             @Override
             public void onSuccess(Void response)
             {
-                System.out.println("Success help contact");
                 bus.post(new HandyEvent.ReceiveNotifyHelpContactSuccess());
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                System.out.println("error help contact");
                 bus.post(new HandyEvent.ReceiveNotifyHelpContactError(error));
             }
         });

@@ -32,10 +32,8 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
     {
         try
         {
-            System.out.println("See response : " + response);
             TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
             returnData = gsonBuilder.fromJson((response.toString()), typeToken.getType());
-            System.out.println("return data " + returnData);
         } catch (JsonSyntaxException e)
         {
             Crashlytics.logException(e);

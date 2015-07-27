@@ -132,12 +132,10 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
     {
         if (!onBackPressedListenerStack.isEmpty())
         {
-            System.out.println("Using the custom back listener");
             onBackPressedListenerStack.pop().onBackPressed();
         }
         else
         {
-            System.out.println("Using basic back listener");
             super.onBackPressed();
         }
     }
