@@ -12,6 +12,7 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
@@ -70,6 +71,14 @@ class PinRequestDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitC
 class LoginDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<LoginDetails>
 {
     LoginDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class ProviderResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<Provider>
+{
+    ProviderResponseHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

@@ -10,6 +10,7 @@ import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
@@ -116,6 +117,12 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
+    public void getProviderInfo(Callback<Provider> cb)
+    {
+        service.getProviderInfo(new ProviderResponseHandyRetroFitCallback(cb));
+    }
+
+    @Override
     public final void checkForUpdates(String appFlavor, int versionCode, final Callback<UpdateDetails> cb)
     {
         service.checkUpdates(appFlavor, versionCode, new UpdateDetailsResponseHandyRetroFitCallback(cb));
@@ -153,7 +160,7 @@ public final class BaseDataManager extends DataManager
 
     private String getUserId()
     {
-        String id = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID, null);
+        String id = prefsManager.getString(PrefsKey.PROVIDER_ID, null);
         if (id == null)
         {
             Crashlytics.log("ID not found");

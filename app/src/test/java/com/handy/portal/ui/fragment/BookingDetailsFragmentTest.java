@@ -66,7 +66,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
 
         initMocks(this);
 
-        when(fragment.prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID)).thenReturn("444");
+        when(fragment.prefsManager.getString(PrefsKey.PROVIDER_ID)).thenReturn("444");
         when(booking.getProviderId()).thenReturn("444");
         when(booking.inferBookingStatus(anyString())).thenReturn(Booking.BookingStatus.CLAIMED);
         when(booking.getStartDate()).thenReturn(new Date());
