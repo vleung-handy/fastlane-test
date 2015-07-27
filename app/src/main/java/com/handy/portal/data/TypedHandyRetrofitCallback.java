@@ -41,7 +41,10 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
             Crashlytics.logException(e);
         }
 
-        callback.onSuccess(returnData);
+        if(callback != null)
+        {
+            callback.onSuccess(returnData);
+        }
     }
 }
 
@@ -112,27 +115,31 @@ class HelpNodeResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<H
 
 class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 {
-
-    @Override
-    public void success(JSONObject response)
+    EmptyHandyRetroFitCallback(DataManager.Callback callback)
     {
+        super(callback);
     }
 
-    EmptyHandyRetroFitCallback()
-    {
-        super(new EmptyCallback());
-    }
-
-    public static class EmptyCallback implements DataManager.Callback<Void>
-    {
-        @Override
-        public void onSuccess(Void response)
-        {
-        }
-
-        @Override
-        public void onError(DataManager.DataManagerError error)
-        {
-        }
-    }
+//    @Override
+//    public void success(JSONObject response)
+//    {
+//    }
+//
+//    EmptyHandyRetroFitCallback()
+//    {
+//        super(new EmptyCallback());
+//    }
+//
+//    public static class EmptyCallback implements DataManager.Callback<Void>
+//    {
+//        @Override
+//        public void onSuccess(Void response)
+//        {
+//        }
+//
+//        @Override
+//        public void onError(DataManager.DataManagerError error)
+//        {
+//        }
+//    }
 }

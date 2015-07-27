@@ -103,7 +103,10 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
 
                 err.setInvalidInputs(inputs.toArray(new String[inputs.size()]));
             }
-            callback.onError(err);
+            if(callback != null)
+            {
+                callback.onError(err);
+            }
         } else
         {
             success(obj);

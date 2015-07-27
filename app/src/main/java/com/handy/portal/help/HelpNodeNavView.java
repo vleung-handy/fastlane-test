@@ -22,8 +22,6 @@ public final class HelpNodeNavView
         return R.layout.element_help_node_nav;
     }
 
-    @InjectView(R.id.close_img)
-    public ImageView closeImage;
     @InjectView(R.id.back_img)
     public ImageView backImage;
     @InjectView(R.id.nav_text)
@@ -75,7 +73,6 @@ public final class HelpNodeNavView
             {
                 layoutForArticle(node);
                 backImage.setVisibility(View.GONE);
-                closeImage.setVisibility(View.GONE);
             }
             break;
 
@@ -85,7 +82,6 @@ public final class HelpNodeNavView
             {
                 layoutForNavigation(node);
                 backImage.setVisibility(View.VISIBLE);
-                closeImage.setVisibility(View.GONE);
             }
             break;
 
@@ -93,7 +89,6 @@ public final class HelpNodeNavView
             {
                 layoutForArticle(node);
                 backImage.setVisibility(View.VISIBLE);
-                closeImage.setVisibility(View.GONE);
             }
             break;
 

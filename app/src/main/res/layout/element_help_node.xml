@@ -6,51 +6,12 @@
     android:id="@+id/help_node_content"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:padding="@dimen/default_margin">
-
-    <RelativeLayout
-        android:id="@+id/help_header"
-        android:layout_width="match_parent"
-        android:layout_height="142dp"
-        android:gravity="center"
-        android:padding="@dimen/default_padding"
-        android:background="@drawable/help_header_purple">
-
-        <ImageView
-            android:id="@+id/help_icon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:src="@drawable/ic_help_lifesaver"
-            android:contentDescription="help" />
-
-        <TextView
-            android:id="@+id/help_header_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/help_icon"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:text="@string/what_can_help_with"
-            style="@style/TextView.Large.Med" />
-
-    </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/help_triangle"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignBottom="@id/help_header"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:src="@drawable/triangle" />
+    >
 
     <RelativeLayout
         android:id="@+id/info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/help_header"
         android:background="@drawable/cell_booking_last_rounded">
 
         <TextView
@@ -84,15 +45,13 @@
 
     </RelativeLayout>
 
-        <!--empty view needed for bottom layout margin bug on older APIs-->
-
-        <LinearLayout
-            android:id="@+id/nav_options_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/help_header"
-            android:orientation="vertical"
-            android:background="@android:color/transparent"
-            android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/nav_options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_layout"
+        android:orientation="vertical"
+        android:background="@android:color/transparent"
+        android:visibility="gone" />
 
 </RelativeLayout>

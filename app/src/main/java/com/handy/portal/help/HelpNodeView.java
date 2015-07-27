@@ -1,16 +1,12 @@
 package com.handy.portal.help;
 
 import android.app.Activity;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,20 +28,12 @@ public final class HelpNodeView
         return R.layout.element_help_node;
     }
 
-    @InjectView(R.id.help_header)
-    View helpHeader;
-    @InjectView(R.id.help_header_title)
-    TextView headerTitle;
     @InjectView(R.id.info_text)
     TextView infoText;
     @InjectView(R.id.nav_options_layout)
     public LinearLayout navOptionsLayout;
     @InjectView(R.id.info_layout)
     RelativeLayout infoLayout;
-    @InjectView(R.id.help_icon)
-    ImageView helpIcon;
-    @InjectView(R.id.help_triangle)
-    ImageView helpTriangleView;
     @InjectView(R.id.cta_layout)
     public ViewGroup ctaLayout;
     @InjectView(R.id.contact_button)
@@ -85,12 +73,6 @@ public final class HelpNodeView
         switch (node.getType())
         {
             case HelpNode.HelpNodeType.ROOT:
-            {
-                layoutForRoot(node, container);
-                layoutNavList(node, container);
-            }
-            break;
-
             case HelpNode.HelpNodeType.NAVIGATION:
             case HelpNode.HelpNodeType.BOOKINGS_NAV:
             case HelpNode.HelpNodeType.BOOKING:
@@ -113,20 +95,9 @@ public final class HelpNodeView
         }
     }
 
-    private void layoutForRoot(final HelpNode node, final ViewGroup container)
-    {
-        headerTitle.setText(activity.getResources().getString(R.string.what_need_help_with));
-        setHeaderColor(activity.getResources().getColor(R.color.handy_blue));
-        helpIcon.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_help_smiley));
-    }
-
     private void layoutForArticle(final HelpNode node)
     {
         infoLayout.setVisibility(View.VISIBLE);
-
-        setHeaderColor(activity.getResources().getColor(R.color.handy_yellow));
-        helpIcon.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_help_bulb));
-        helpTriangleView.setVisibility(View.VISIBLE);
 
         String info = node.getContent();
 
@@ -181,11 +152,6 @@ public final class HelpNodeView
         infoLayout.setVisibility(View.GONE);
         navOptionsLayout.setVisibility(View.VISIBLE);
 
-        if (node.getType().equals(HelpNode.HelpNodeType.BOOKINGS_NAV))
-        {
-            setHeaderColor(activity.getResources().getColor(R.color.handy_teal));
-        }
-
         int count = 0;
         int size = node.getChildren().size();
 
@@ -237,22 +203,6 @@ public final class HelpNodeView
 
             navOptionsLayout.addView(navView);
             count++;
-        }
-    }
-
-    private void setHeaderColor(final int color)
-    {
-        final Drawable header = activity.getResources().getDrawable(R.drawable.help_header_purple);
-
-        header.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
-        {
-            helpHeader.setBackgroundDrawable(header);
-        }
-        else
-        {
-            helpHeader.setBackground(header);
         }
     }
 

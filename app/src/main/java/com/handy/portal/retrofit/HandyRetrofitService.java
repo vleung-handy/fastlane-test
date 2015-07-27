@@ -101,20 +101,8 @@ public interface HandyRetrofitService
     void removeBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
 
-  //These addresses are wrong for portal help
-    //********Help Center********
-
+  //********Help Center********
   String SELF_SERVICE_PATH = "/self_service/";
-
-/*
-  routes.rb
-
-  resource :self_service do
-  get 'node_details' =>'self_service#single_node_details'
-  get 'booking_node_details' =>'self_service#booking_single_node_details'
-  post 'create_case' => 'self_service#salesforce_web_to_case'
-
-  */
 
     @GET(SELF_SERVICE_PATH + "node_details")
     //empty id returns root?

@@ -52,21 +52,13 @@ public final class HelpContactFragment extends InjectedFragment
     @InjectView(R.id.nav_content)
     RelativeLayout navContent;
 
-//    @InjectView(R.id.send_message_button) Button sendMessageButton;
-//    @InjectView(R.id.user_name_text) FirstNameInputTextView nameText;
-//    @InjectView(R.id.email_text) EmailInputTextView emailText;
-//    @InjectView(R.id.comment_text) BasicInputTextView commentText;
-//    @InjectView(R.id.close_img) ImageView closeImage;
-//    @InjectView(R.id.back_img) ImageView backImage;
-//
-//    @InjectView(R.id.name_layout) ViewGroup nameLayout;
-//    @InjectView(R.id.email_layout) ViewGroup emailLayout;
-    ;
     private HelpNode associatedNode;
     private String path;
 
-
     private View associatedView;
+
+    private HelpContactView contactView;
+    private HelpNodeNavView navView;
 
 
     @Inject
@@ -116,11 +108,15 @@ public final class HelpContactFragment extends InjectedFragment
         //should have passed along an associated node and a path
         if (!validateRequiredArguments())
         {
+            System.err.println("Can not construct Help Contact Form");
             return view;
         }
 
         this.associatedNode = getArguments().getParcelable(BundleKeys.HELP_NODE);
         this.path = getArguments().getString(BundleKeys.PATH);
+
+        contactView = new HelpContactView();
+        navView = new HelpNodeNavView();
 
         constructViews(this.associatedNode);
 
@@ -133,8 +129,6 @@ public final class HelpContactFragment extends InjectedFragment
 
     private void assignClickListeners(View view)
     {
-        //Link up onclicks
-        ImageView closeImage = (ImageView) view.findViewById(R.id.close_img);
         ImageView backImage = (ImageView) view.findViewById(R.id.back_img);
         Button sendMessageButton = (Button) view.findViewById(R.id.send_message_button);
 
@@ -144,15 +138,6 @@ public final class HelpContactFragment extends InjectedFragment
             public void onClick(final View v)
             {
                 onSendMessageButtonClick();
-            }
-        });
-
-        closeImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                returnToHomeScreen();
             }
         });
 
@@ -175,11 +160,8 @@ public final class HelpContactFragment extends InjectedFragment
         contactPageContent.removeAllViews();
         navContent.removeAllViews();
 
-        HelpNodeContactViewConstructor constructor = new HelpNodeContactViewConstructor();
-        constructor.constructView(node, contactPageContent, getActivity(), this);
-
-        HelpNodeNavView navViewConstructor = new HelpNodeNavView();
-        navViewConstructor.constructView(node, navContent, getActivity());
+        contactView.constructView(node, contactPageContent, getActivity(), this);
+        navView.constructView(node, navContent, getActivity());
     }
 
     private void onSendMessageButtonClick()
@@ -228,11 +210,9 @@ public final class HelpContactFragment extends InjectedFragment
         }
 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+
         bus.post(new HandyEvent.RequestNotifyHelpContact(body));
     }
-
-
-
 
     private HashMap<String, String> parseHelpNode(HelpNode node)
     {

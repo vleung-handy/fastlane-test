@@ -152,20 +152,9 @@ public final class BaseDataManager extends DataManager
     @Override
     public final void sendVersionInformation(Map<String, String> versionInfo)
     {
-        service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback());
+        service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback(null));
     }
 
-    private String getUserId()
-    {
-        String id = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID, null);
-        if (id == null)
-        {
-            Crashlytics.log("ID not found");
-        }
-        return id;
-    }
-
-    //These addresses are wrong for portal help
     //********Help Center********
     @Override
     public void getHelpInfo(String nodeId,
@@ -184,10 +173,19 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void createHelpCase( TypedInput body, final Callback<Void> cb)
+    public void createHelpCase(TypedInput body, final Callback<Void> cb)
     {
-        service.createHelpCase(body, new EmptyHandyRetroFitCallback());
+        service.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
     }
     //********End Help Center********
 
+    private String getUserId()
+    {
+        String id = prefsManager.getString(PrefsKey.USER_CREDENTIALS_ID, null);
+        if (id == null)
+        {
+            Crashlytics.log("ID not found");
+        }
+        return id;
+    }
 }

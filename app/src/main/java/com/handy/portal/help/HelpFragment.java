@@ -131,16 +131,6 @@ public final class HelpFragment extends InjectedFragment
                 getActivity().onBackPressed();
             }
         });
-
-        nodeNavView.closeImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                //TODO: like a super back, clear out all of the help node backs and then hit back a final time
-                getActivity().onBackPressed();
-            }
-        });
     }
 
     private void setupNavListClickListeners(final HelpNode helpNode)
