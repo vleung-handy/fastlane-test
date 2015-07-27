@@ -176,23 +176,10 @@ public final class HelpNodeView
                         + activity.getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
             } else
             {
-                if (node.getType().equals(HelpNode.HelpNodeType.ROOT))
-                {
-                    navView = activity.getLayoutInflater()
-                            .inflate(R.layout.list_item_help_nav_main, container, false);
-                } else
-                {
-                    navView = activity.getLayoutInflater()
-                            .inflate(R.layout.list_item_help_nav, container, false);
-                }
-
+                navView = activity.getLayoutInflater()
+                        .inflate(R.layout.list_item_help_nav, container, false);
                 final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
                 textView.setText(helpNode.getLabel());
-
-                if (node.getType().equals(HelpNode.HelpNodeType.ROOT))
-                {
-                    textView.setTextAppearance(activity, R.style.TextView_Large);
-                }
             }
 
             //round out the visuals of the last cell

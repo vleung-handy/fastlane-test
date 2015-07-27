@@ -28,13 +28,12 @@ public class HelpManager
         this.bus.register(this);
         this.dataManager = dataManager;
 
+        //TODO: we don't currently have a way to query to see if a node is changed so we rely on our cache decaying every day
         this.helpNodeCache = CacheBuilder.newBuilder()
                 .weakKeys()
                 .maximumSize(10000)
-                .expireAfterWrite(1, TimeUnit.HOURS)
+                .expireAfterWrite(1, TimeUnit.DAYS)
                 .build();
-
-        System.out.println("Constructed our help manager");
     }
 
     @Subscribe
@@ -42,11 +41,6 @@ public class HelpManager
     {
         String nodeId = event.nodeId;
         String bookingId = event.bookingId;
-
-        if(helpNodeCache == null)
-        {
-            System.err.println("Our help node cache didn't get fired up?");
-        }
 
         //TODO: Currently we send null to request root on the server, this is a bit hacky and does not allow us to cache the root node which is silly
 
@@ -67,7 +61,7 @@ public class HelpManager
             {
                 HelpNode helpNode = helpNodeWrapper.getHelpNode();
                 helpNodeCache.put(Integer.toString(helpNode.getId()), helpNode);
-                //don't cache the child nodes, they look full but don't have their children
+                //don't cache the child nodes, they look like full data but don't have their children
                 bus.post(new HandyEvent.ReceiveHelpNodeSuccess(helpNode));
             }
 

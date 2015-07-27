@@ -1,4 +1,4 @@
-package com.handy.portal.help;
+package com.handy.portal.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,9 +12,10 @@ import android.widget.RelativeLayout;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.manager.LoginManager;
+import com.handy.portal.help.HelpContactView;
+import com.handy.portal.help.HelpNode;
+import com.handy.portal.help.HelpNodeNavView;
 import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.ui.widget.BasicInputTextView;
 import com.handy.portal.ui.widget.EmailInputTextView;
@@ -27,8 +28,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -44,6 +43,7 @@ public final class HelpContactFragment extends InjectedFragment
     private static final String HELP_CONTACT_FORM_EMAIL = "email";
     private static final String HELP_CONTACT_FORM_DESCRIPTION = "description";
     private static final String HELP_CONTACT_FORM_PATH = "path";
+    private static final String HELP_CONTACT_FORM_BOOKING_ID = "booking_id";
     private static final String SALESFORCE_DATA_WRAPPER_KEY = "salesforce_data";
 
     @InjectView(R.id.contact_page_content)
@@ -54,38 +54,12 @@ public final class HelpContactFragment extends InjectedFragment
 
     private HelpNode associatedNode;
     private String path;
+    private String bookingId;
 
     private View associatedView;
 
     private HelpContactView contactView;
     private HelpNodeNavView navView;
-
-
-    @Inject
-    LoginManager loginManager;
-
-    @Inject
-    DataManager dataManager;
-
-    public static HelpContactFragment newInstance(final HelpNode node, final String path)
-    {
-        final HelpContactFragment fragment = new HelpContactFragment();
-        final Bundle args = new Bundle();
-        args.putParcelable(EXTRA_HELP_NODE, node);
-        args.putString(EXTRA_HELP_PATH, path);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public final void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        associatedNode = getArguments().getParcelable(EXTRA_HELP_NODE);
-        path = getArguments().getString(EXTRA_HELP_PATH);
-
-    }
-
 
     @Override
     protected List<String> requiredArguments()
@@ -114,6 +88,16 @@ public final class HelpContactFragment extends InjectedFragment
 
         this.associatedNode = getArguments().getParcelable(BundleKeys.HELP_NODE);
         this.path = getArguments().getString(BundleKeys.PATH);
+
+        //optional arg booking id
+        if(getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
+        {
+            this.bookingId = getArguments().getString(BundleKeys.BOOKING_ID);
+        }
+        else
+        {
+            this.bookingId = "";
+        }
 
         contactView = new HelpContactView();
         navView = new HelpNodeNavView();
@@ -191,6 +175,7 @@ public final class HelpContactFragment extends InjectedFragment
         contactFormInfo.put(HELP_CONTACT_FORM_EMAIL, email);
         contactFormInfo.put(HELP_CONTACT_FORM_DESCRIPTION, comment);
         contactFormInfo.put(HELP_CONTACT_FORM_PATH, path);
+        contactFormInfo.put(HELP_CONTACT_FORM_BOOKING_ID, bookingId);
 
         JSONObject salesforceWrapper = new JSONObject();
         try

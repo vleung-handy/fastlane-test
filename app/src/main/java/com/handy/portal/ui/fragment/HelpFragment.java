@@ -1,4 +1,4 @@
-package com.handy.portal.help;
+package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +10,10 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.help.HelpNode;
+import com.handy.portal.help.HelpNodeNavView;
+import com.handy.portal.help.HelpNodeView;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.ui.widget.CTAButton;
 import com.squareup.otto.Subscribe;
 
@@ -23,6 +25,8 @@ import butterknife.InjectView;
 
 public final class HelpFragment extends InjectedFragment
 {
+    private final static String PATH_SEPARATOR = "->";
+
     @InjectView(R.id.help_page_content)
     RelativeLayout helpPageContent;
 
@@ -31,7 +35,8 @@ public final class HelpFragment extends InjectedFragment
 
     private HelpNodeNavView nodeNavView; //upper banner and nav controls
     private HelpNodeView nodeView; //main node display
-    private String currentBookingId;
+    private String currentBookingId; //optional, if help request is associated with a booking
+    private String currentPath; //what nodes have we traversed to get to the current node?
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -41,13 +46,24 @@ public final class HelpFragment extends InjectedFragment
                 .inflate(R.layout.fragment_help_page, container, false);
         ButterKnife.inject(this, view);
 
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
+        {
+            this.currentBookingId = getArguments().getString(BundleKeys.BOOKING_ID);
+        }
+        else
+        {
+            this.currentBookingId = "";
+        }
+
+        currentPath = "";
+
         if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
         {
-            bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), null));
+            bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), this.currentBookingId));
         } else
         {
             //null = request root
-            bus.post(new HandyEvent.RequestHelpNode(null, null));
+            bus.post(new HandyEvent.RequestHelpNode(null, this.currentBookingId));
         }
 
         nodeView = new HelpNodeView();
@@ -56,6 +72,13 @@ public final class HelpFragment extends InjectedFragment
         nodeNavView.initView(navContent, getActivity());
 
         return view;
+    }
+
+    //TODO: Make this smarter and recognize back tracking
+    private void trackPath(HelpNode node)
+    {
+        String nodeId = Integer.toString(node.getId());
+        currentPath += PATH_SEPARATOR + nodeId;
     }
 
     //Event Listeners
@@ -68,6 +91,7 @@ public final class HelpFragment extends InjectedFragment
             System.err.println("The help node returned from the data was null, didn't parse properly?");
             return;
         }
+        trackPath(helpNode);
         constructNodeView(helpNode);
     }
 
@@ -90,7 +114,7 @@ public final class HelpFragment extends InjectedFragment
     {
         if (node.getType().equals(HelpNode.HelpNodeType.BOOKING))
         {
-            //currentBookingId = Integer.toString(node.getId()); //TODO: What is this? It makes no sense
+            currentBookingId = Integer.toString(node.getId()); //TODO: What is this? Does this make sense? It seems odd.....
             bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), null));
         } else
         {
@@ -216,7 +240,7 @@ public final class HelpFragment extends InjectedFragment
                         public void onClick(View v)
                         {
                             Bundle arguments = new Bundle();
-                            arguments.putString(BundleKeys.PATH, "fakepathdata"); //TODO: What is the real path data that help contact cares about?
+                            arguments.putString(BundleKeys.PATH, currentPath); //TODO: What is the real path data that help contact cares about?
                             arguments.putParcelable(BundleKeys.HELP_NODE, child);
                             HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
                             bus.post(navigateEvent);

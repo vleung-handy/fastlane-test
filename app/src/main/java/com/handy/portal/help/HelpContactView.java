@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.handy.portal.R;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.model.Booking;
+import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.widget.BasicInputTextView;
 import com.handy.portal.ui.widget.EmailInputTextView;
 import com.handy.portal.ui.widget.FirstNameInputTextView;

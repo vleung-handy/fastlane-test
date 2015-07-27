@@ -21,13 +21,12 @@
             android:layout_marginEnd="20dp"
             android:src="@drawable/circle_teal"
             android:visibility="gone"
-            android:contentDescription="navigation" />
+            />
 
         <TextView
             android:id="@+id/nav_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Help Nav Item"
             android:ellipsize="end"
             android:maxLines="2"
             android:freezesText="false"
