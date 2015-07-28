@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
@@ -27,7 +29,6 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
-    private static final String BUNDLE_KEY_TAB = "tab";
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -46,6 +47,8 @@ public class MainActivityFragment extends InjectedFragment
 
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
+
+    public static boolean clearingBackStack;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,9 +70,9 @@ public class MainActivityFragment extends InjectedFragment
         super.onViewStateRestored(savedInstanceState);
 
         String tab = MainViewTab.JOBS.name();
-        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_KEY_TAB))
+        if (savedInstanceState != null && savedInstanceState.containsKey(BundleKeys.TAB))
         {
-            tab = savedInstanceState.getString(BUNDLE_KEY_TAB);
+            tab = savedInstanceState.getString(BundleKeys.TAB);
         }
         switchToTab(MainViewTab.valueOf(tab));
     }
@@ -81,7 +84,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             outState = new Bundle();
         }
-        outState.putString(BUNDLE_KEY_TAB, currentTab.name());
+        outState.putString(BundleKeys.TAB, currentTab.name());
         super.onSaveInstanceState(outState);
     }
 
@@ -167,7 +170,7 @@ public class MainActivityFragment extends InjectedFragment
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
             swapFragmentArguments.argumentsBundle = argumentsBundle;
-
+            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS);
             swapFragment(swapFragmentArguments);
         }
         else
@@ -194,8 +197,17 @@ public class MainActivityFragment extends InjectedFragment
 
         if (targetTab != MainViewTab.DETAILS)
         {
+            ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
             currentTab = targetTab;
         }
+    }
+
+    private void clearFragmentBackStack()
+    {
+        clearingBackStack = true;
+        FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
+        supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); //clears out the whole stack
+        clearingBackStack = false;
     }
 
     //analytics event
@@ -247,6 +259,8 @@ public class MainActivityFragment extends InjectedFragment
 
     private void swapFragment(SwapFragmentArguments swapArguments)
     {
+        clearFragmentBackStack();
+
         //replace the existing fragment with the new fragment
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
@@ -289,7 +303,15 @@ public class MainActivityFragment extends InjectedFragment
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.main_container, newFragment);
-        transaction.disallowAddToBackStack();
+
+        if(swapArguments.addToBackStack)
+        {
+            transaction.addToBackStack(null);
+        }
+        else
+        {
+            transaction.disallowAddToBackStack();
+        }
 
         // Commit the transaction
         transaction.commit();

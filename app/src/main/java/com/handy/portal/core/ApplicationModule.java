@@ -8,6 +8,7 @@ import android.util.Base64;
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
@@ -15,6 +16,7 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -95,9 +97,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentModifier provideEnvironmentModifier(final BuildConfigWrapper buildConfigWrapper)
+    final EnvironmentModifier provideEnvironmentModifier(final BuildConfigWrapper buildConfigWrapper, final PrefsManager prefsManager)
     {
-        return new EnvironmentModifier(context, buildConfigWrapper);
+        return new EnvironmentModifier(context, buildConfigWrapper, prefsManager);
     }
 
     @Provides
@@ -114,11 +116,12 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
-                                                   final HandyRetrofitEndpoint endpoint)
+                                                   final HandyRetrofitEndpoint endpoint,
+                                                   final PrefsManager prefsManager)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
 
         final String username = configs.getProperty("api_username");
         final String password = configs.getProperty("api_password");
@@ -132,6 +135,12 @@ public final class ApplicationModule
                     @Override
                     public void intercept(RequestFacade request)
                     {
+                        String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
+                        if (authToken != null)
+                        {
+                            request.addQueryParam("auth_token", authToken);
+                        }
+
                         request.addHeader("Authorization", auth);
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
@@ -188,9 +197,16 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus, final SecurePreferences prefs, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
+    final LoginManager provideLoginManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
     {
         return new LoginManager(bus, dataManager, prefsManager, mixpanel);
+    }
+
+    @Provides
+    @Singleton
+    final ProviderManager provideProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    {
+        return new ProviderManager(bus, dataManager, prefsManager);
     }
 
     @Provides

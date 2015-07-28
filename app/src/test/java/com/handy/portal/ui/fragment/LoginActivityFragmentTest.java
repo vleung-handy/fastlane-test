@@ -7,12 +7,13 @@ import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.core.BuildConfigWrapper;
+import com.handy.portal.core.EnvironmentModifier;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
-import com.handy.portal.core.BuildConfigWrapper;
-import com.handy.portal.data.DataManager;
-import com.handy.portal.core.EnvironmentModifier;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.widget.InputTextField;
 import com.squareup.otto.Bus;
@@ -22,10 +23,11 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowCookieManager;
 import org.robolectric.shadows.ShadowToast;
-import org.robolectric.util.SupportFragmentTestUtil;
+import org.robolectric.util.ActivityController;
 
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
@@ -63,10 +65,12 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
-        fragment = new LoginActivityFragment();
-        SupportFragmentTestUtil.startFragment(fragment);
+        ActivityController<LoginActivity> activityController = Robolectric.buildActivity(LoginActivity.class).create();
+        activityController.start().resume().visible();
+
+        fragment = (LoginActivityFragment) activityController.get().getSupportFragmentManager().getFragments().get(0);
         fragmentView = fragment.getView();
-        activity = fragment.getActivity();
+        activity = activityController.get();
 
         initMocks(this);
     }
@@ -150,7 +154,9 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void whenLoginHelpClicked_thenSendIntentForMail() throws Exception {
+    public void whenLoginHelpClicked_thenSendViewIntentToHelpCenterUrl() throws Exception
+    {
+        fragmentView.findViewById(R.id.login_help_button).performClick();
         fragmentView.findViewById(R.id.login_help).performClick();
 
         Intent actualIntent = shadowOf(activity).getNextStartedActivity();
@@ -222,7 +228,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         HandyEvent.ReceiveLoginSuccess event = mock(HandyEvent.ReceiveLoginSuccess.class);
         event.loginDetails = mock(LoginDetails.class);
         when(event.loginDetails.getSuccess()).thenReturn(isValid);
-        when(event.loginDetails.getUserCredentials()).thenReturn(credentials);
+        when(event.loginDetails.getAuthToken()).thenReturn(credentials);
         when(event.loginDetails.getUserCredentialsCookie()).thenReturn(credentialsCookie);
         fragment.onLoginRequestSuccess(event);
     }

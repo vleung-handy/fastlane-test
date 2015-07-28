@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
@@ -14,6 +15,7 @@ import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.util.TextUtils;
@@ -42,6 +44,8 @@ public class BaseApplication extends Application
     BookingManager bookingManager;
     @Inject
     LoginManager loginManager;
+    @Inject
+    ProviderManager providerManager;
     @Inject
     VersionManager versionManager;
     @Inject
@@ -162,7 +166,10 @@ public class BaseApplication extends Application
 
     protected void startCrashlytics()
     {
-        Crashlytics.start(this);
+        if(!BuildConfig.DEBUG)
+        {
+            Crashlytics.start(this);
+        }
     }
 
     protected void createObjectGraph()

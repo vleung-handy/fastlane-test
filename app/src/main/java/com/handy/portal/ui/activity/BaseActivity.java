@@ -132,7 +132,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
     {
         if (!onBackPressedListenerStack.isEmpty())
         {
-            onBackPressedListenerStack.peek().onBackPressed();
+            onBackPressedListenerStack.pop().onBackPressed();
         }
         else super.onBackPressed();
     }
@@ -157,9 +157,9 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         this.onBackPressedListenerStack.push(onBackPressedListener);
     }
 
-    public void popOnBackPressedListenerStack()
+    public void clearOnBackPressedListenerStack()
     {
-        this.onBackPressedListenerStack.pop();
+        onBackPressedListenerStack.clear();
     }
 
     public interface OnBackPressedListener

@@ -242,6 +242,11 @@ public class Booking implements Parcelable, Comparable<Booking>
         return extrasInfo;
     }
 
+    public ServiceInfo getServiceInfo()
+    {
+        return serviceInfo;
+    }
+
     public User getUser()
     {
         return user;
@@ -633,25 +638,28 @@ public class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-    public static class ServiceInfo implements Parcelable
+    public static class ServiceInfo
     {
-        @SerializedName("id")
-        private String id;
+        private static final String MACHINE_NAME_CLEANING = "home_cleaning";
+
         @SerializedName("machine_name")
         private String machineName;
         @SerializedName("name")
         private String displayName;
 
-        @Override
-        public void writeToParcel(final Parcel out, final int flags)
+        public String getMachineName()
         {
-            out.writeStringArray(new String[]{id, machineName, displayName});
+            return machineName;
         }
 
-        @Override
-        public int describeContents()
+        public String getDisplayName()
         {
-            return 0;
+            return displayName;
+        }
+
+        public boolean isHomeCleaning()
+        {
+            return MACHINE_NAME_CLEANING.equalsIgnoreCase(machineName);
         }
     }
 

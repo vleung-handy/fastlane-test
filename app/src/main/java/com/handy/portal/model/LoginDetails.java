@@ -2,9 +2,6 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by cdavis on 5/15/15.
- */
 public class LoginDetails
 {
         @SerializedName("success")
@@ -15,8 +12,8 @@ public class LoginDetails
         private String userCredentialsId;
 
         public boolean getSuccess() { return success; }
-        public String getUserCredentials() { return userCredentials; }
-        public String getUserCredentialsCookie() { return "user_credentials="+ getUserCredentials();}
+        public String getAuthToken() { return userCredentials; }
+        public String getUserCredentialsCookie() { return "user_credentials="+ getAuthToken();}
 
-        public String getUserCredentialsId() { return userCredentialsId; }
+        public String getProviderId() { return userCredentialsId; }
 }

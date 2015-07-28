@@ -29,8 +29,8 @@ public class AvailableBookingElementView extends BookingElementView
     @InjectView(R.id.booking_entry_area_text)
     protected TextView bookingAreaTextView;
 
-    @InjectView(R.id.booking_entry_frequency_text)
-    protected TextView frequencyTextView;
+    @InjectView(R.id.booking_entry_service_text)
+    protected TextView bookingServiceTextView;
 
     @InjectView(R.id.booking_entry_partner_text)
     protected TextView partnerText;
@@ -68,13 +68,21 @@ public class AvailableBookingElementView extends BookingElementView
         //Area
         bookingAreaTextView.setText(booking.getAddress().getShortRegion());
 
-        //Frequency
-        String frequencyInfo = UIUtils.getFrequencyInfo(booking, parentContext);
-        if (booking.isUK() && booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES).size() > 0)
+        //Service or frequency for home cleaning jobs
+        Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
+        if (serviceInfo.isHomeCleaning())
         {
-            frequencyInfo += " \u22C5 " + parentContext.getString(R.string.supplies);
+            String frequencyInfo = UIUtils.getFrequencyInfo(booking, parentContext);
+            if (booking.isUK() && booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES).size() > 0)
+            {
+                frequencyInfo += " \u22C5 " + parentContext.getString(R.string.supplies);
+            }
+            bookingServiceTextView.setText(frequencyInfo);
         }
-        frequencyTextView.setText(frequencyInfo);
+        else
+        {
+            bookingServiceTextView.setText(serviceInfo.getDisplayName());
+        }
 
         //Requested Provider
         requestedIndicatorBar.setVisibility(isRequested ? View.VISIBLE : View.INVISIBLE);

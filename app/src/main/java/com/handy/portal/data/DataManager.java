@@ -7,6 +7,7 @@ import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
@@ -50,6 +51,8 @@ public abstract class DataManager
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);
 
     public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
+
+    public abstract void getProviderInfo(Callback<Provider> cb);
 
     public abstract String getBaseUrl();
 

@@ -16,6 +16,7 @@ import com.handy.portal.model.BookingSummary;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
 
@@ -168,6 +169,27 @@ public abstract class HandyEvent
         }
     }
 
+    public static class RequestProviderInfo extends RequestEvent
+    {
+    }
+
+    public static class ReceiveProviderInfoSuccess extends ReceiveSuccessEvent
+    {
+        public final Provider provider;
+
+        public ReceiveProviderInfoSuccess(Provider provider)
+        {
+            this.provider = provider;
+        }
+    }
+
+    public static class ReceiveProviderInfoError extends ReceiveErrorEvent
+    {
+        public ReceiveProviderInfoError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
 //Update and Version Management
 
