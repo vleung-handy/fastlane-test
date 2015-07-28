@@ -167,7 +167,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
                 navView.setBackgroundResource((R.drawable.cell_booking_last_rounded));
             }
 
-            navOptionsLayout.addView(navView);
             count++;
         }
     }
