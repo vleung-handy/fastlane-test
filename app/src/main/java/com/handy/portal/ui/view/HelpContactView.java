@@ -1,7 +1,7 @@
 package com.handy.portal.ui.view;
 
-import android.app.Activity;
-import android.view.LayoutInflater;
+import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,10 +12,9 @@ import com.handy.portal.ui.widget.BasicInputTextView;
 import com.handy.portal.ui.widget.EmailInputTextView;
 import com.handy.portal.ui.widget.FirstNameInputTextView;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class HelpContactView
+public final class HelpContactView extends InjectedRelativeLayout
 {
     @InjectView(R.id.send_message_button)
     public Button sendMessageButton;
@@ -31,19 +30,23 @@ public final class HelpContactView
     @InjectView(R.id.email_layout)
     ViewGroup emailLayout;
 
-    protected int getLayoutResourceId()
+    public HelpContactView(final Context context)
     {
-        return R.layout.element_help_contact;
+        super(context);
     }
 
-    public HelpContactView(ViewGroup parentViewGroup, Activity activity)
+    public HelpContactView(final Context context, final AttributeSet attrs)
     {
-        LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
-        ButterKnife.inject(this, parentViewGroup);
+        super(context, attrs);
+    }
 
-        //TODO: Get User model passed in when we start receiving it
-        Booking.User user = new Booking.User();
+    public HelpContactView(final Context context, final AttributeSet attrs, final int defStyle)
+    {
+        super(context, attrs, defStyle);
+    }
 
+    public void updateDisplay(Booking.User user)
+    {
         prepopulateUserData(user);
     }
 

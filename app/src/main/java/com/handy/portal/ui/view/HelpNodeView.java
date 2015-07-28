@@ -1,8 +1,9 @@
 package com.handy.portal.ui.view;
 
-import android.app.Activity;
+import android.content.Context;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +17,10 @@ import com.handy.portal.model.HelpNode;
 import com.handy.portal.ui.widget.CTAButton;
 import com.handy.portal.util.TextUtils;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class HelpNodeView
+public final class HelpNodeView extends InjectedRelativeLayout
 {
-    protected ViewGroup parentViewGroup;
-    protected Activity activity;
-
-    protected int getLayoutResourceId()
-    {
-        return R.layout.element_help_node;
-    }
-
     @InjectView(R.id.info_layout)
     RelativeLayout infoLayout;
     @InjectView(R.id.info_text)
@@ -40,22 +32,22 @@ public final class HelpNodeView
     @InjectView(R.id.nav_options_layout)
     public LinearLayout navOptionsLayout;
 
-    public HelpNodeView(ViewGroup parentViewGroup, Activity activity)
+    public HelpNodeView(final Context context)
     {
-        this.parentViewGroup = parentViewGroup;
-        this.activity = activity;
-        LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
-        ButterKnife.inject(this, parentViewGroup);
+        super(context);
     }
 
-    public void updateDisplay(HelpNode helpNode)
+    public HelpNodeView(final Context context, final AttributeSet attrs)
     {
-        updateDisplay(helpNode, this.parentViewGroup);
+        super(context, attrs);
     }
 
-//View Construction
+    public HelpNodeView(final Context context, final AttributeSet attrs, final int defStyle)
+    {
+        super(context, attrs, defStyle);
+    }
 
-    private void updateDisplay(final HelpNode node, final ViewGroup container)
+    public void updateDisplay(final HelpNode node)
     {
         //clear out the existing ctas and navigation buttons
         ctaLayout.removeAllViews();
@@ -74,7 +66,7 @@ public final class HelpNodeView
             case HelpNode.HelpNodeType.BOOKINGS_NAV:
             case HelpNode.HelpNodeType.BOOKING:
             {
-                layoutNavList(node, container);
+                layoutNavList(node);
             }
             break;
 
@@ -139,7 +131,7 @@ public final class HelpNodeView
         }
     }
 
-    private void layoutNavList(final HelpNode node, final ViewGroup container)
+    private void layoutNavList(final HelpNode node)
     {
         infoLayout.setVisibility(View.GONE);
         navOptionsLayout.setVisibility(View.VISIBLE);
@@ -154,7 +146,7 @@ public final class HelpNodeView
             if (helpNode.getType().equals(HelpNode.HelpNodeType.BOOKING))
             {
                 navView = activity.getLayoutInflater()
-                        .inflate(R.layout.list_item_help_booking_nav, container, false);
+                        .inflate(R.layout.list_item_help_booking_nav, navOptionsLayout, false);
 
                 TextView textView = (TextView) navView.findViewById(R.id.service_text);
                 textView.setText(helpNode.getService());
@@ -169,7 +161,7 @@ public final class HelpNodeView
             } else
             {
                 navView = activity.getLayoutInflater()
-                        .inflate(R.layout.list_item_help_nav, container, false);
+                        .inflate(R.layout.list_item_help_nav, navOptionsLayout, false);
                 final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
                 textView.setText(helpNode.getLabel());
             }
@@ -189,9 +181,11 @@ public final class HelpNodeView
     {
         int newChildIndex = ctaLayout.getChildCount(); //new index is equal to the old count since the new count is +1
         final CTAButton ctaButton = (CTAButton) ((ViewGroup) LayoutInflater.from(activity).inflate(R.layout.fragment_cta_button_template, ctaLayout)).getChildAt(newChildIndex);
-
-
         ctaButton.initFromHelpNode(node, null); //TODO: Get real login/auth token?
+
+    //don't need activity just need context
+        //View.inflate(getContext(), R.layout.fragment_cta_button_template, ctaLayout);
+
     }
 
 }

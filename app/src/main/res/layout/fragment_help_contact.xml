@@ -1,32 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/handy_bg"
                 tools:context=".HelpContactFragment"
     >
-
-    <RelativeLayout
-        android:id="@+id/banner_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <include layout="@layout/element_help_node_banner"
+             android:id="@+id/help_banner_view"
         />
-
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/banner_content">
-
-        <RelativeLayout
-            android:id="@+id/contact_page_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-        </RelativeLayout>
-
+        android:layout_below="@id/help_banner_view">
+        <include layout="@layout/element_help_contact"
+                 android:id="@+id/help_contact_view"
+            />
     </ScrollView>
-
 </RelativeLayout>

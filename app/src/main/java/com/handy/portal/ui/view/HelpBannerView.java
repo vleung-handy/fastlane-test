@@ -1,39 +1,42 @@
 package com.handy.portal.ui.view;
 
-import android.app.Activity;
-import android.view.LayoutInflater;
+import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.HelpNode;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class HelpBannerView
+public final class HelpBannerView extends InjectedRelativeLayout
 {
-    protected ViewGroup parentViewGroup;
-    protected Activity activity;
-
-    protected int getLayoutResourceId()
-    {
-        return R.layout.element_help_node_banner;
-    }
-
     @InjectView(R.id.back_img)
     public ImageView backImage;
+
     @InjectView(R.id.nav_text)
     public TextView navText;
 
-    public HelpBannerView(ViewGroup parentViewGroup, Activity activity)
+    public HelpBannerView(final Context context)
     {
-        this.parentViewGroup = parentViewGroup;
-        this.activity = activity;
-        LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
-        ButterKnife.inject(this, parentViewGroup);
+        super(context);
+    }
+
+    public HelpBannerView(final Context context, final AttributeSet attrs)
+    {
+        super(context, attrs);
+    }
+
+    public HelpBannerView(final Context context, final AttributeSet attrs, final int defStyle)
+    {
+        super(context, attrs, defStyle);
+    }
+
+    public void updateDisplay()
+    {
+        backImage.setVisibility(View.VISIBLE);
     }
 
     public void updateDisplay(HelpNode helpNode)
@@ -95,8 +98,5 @@ public final class HelpBannerView
     {
         navText.setText(node.getLabel());
     }
-
-
-
 
 }

@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.Booking;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.ui.view.HelpBannerView;
 import com.handy.portal.ui.view.HelpContactView;
@@ -38,18 +38,15 @@ public final class HelpContactFragment extends InjectedFragment
     private static final String HELP_CONTACT_FORM_BOOKING_ID = "booking_id";
     private static final String SALESFORCE_DATA_WRAPPER_KEY = "salesforce_data";
 
-    @InjectView(R.id.contact_page_content)
-    RelativeLayout contactPageContent;
+    @InjectView(R.id.help_contact_view)
+    HelpContactView helpContactView;
 
-    @InjectView(R.id.banner_content)
-    RelativeLayout bannerContent;
+    @InjectView(R.id.help_banner_view)
+    HelpBannerView helpBannerView;
 
     private HelpNode associatedNode;
     private String path;
     private String bookingId;
-
-    private HelpContactView contactView;
-    private HelpBannerView helpBannerView;
 
     @Override
     protected List<String> requiredArguments()
@@ -72,14 +69,15 @@ public final class HelpContactFragment extends InjectedFragment
         //should have passed along an associated node and a path
         if (!validateRequiredArguments())
         {
-            System.err.println("Can not construct Help Contact Form");
+            System.err.println("Can not construct Help Contact Form, missing requirements");
             return view;
         }
 
+        //required arguments
         this.associatedNode = getArguments().getParcelable(BundleKeys.HELP_NODE);
         this.path = getArguments().getString(BundleKeys.PATH);
 
-        //optional arg booking id
+        //optional argument booking id
         if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
         {
             this.bookingId = getArguments().getString(BundleKeys.BOOKING_ID);
@@ -88,10 +86,11 @@ public final class HelpContactFragment extends InjectedFragment
             this.bookingId = "";
         }
 
-        //Neither display here needs additional information to construct their view
-        contactView = new HelpContactView(contactPageContent, getActivity());
-        helpBannerView = new HelpBannerView(bannerContent, getActivity());
-        helpBannerView.backImage.setVisibility(View.VISIBLE);
+        //TODO: Get real user data when we have that model
+        Booking.User user = new Booking.User();
+        helpContactView.updateDisplay(user);
+
+        helpBannerView.updateDisplay();
 
         assignClickListeners(view);
 
@@ -100,7 +99,7 @@ public final class HelpContactFragment extends InjectedFragment
 
     private void assignClickListeners(View view)
     {
-        contactView.sendMessageButton.setOnClickListener(new View.OnClickListener()
+        helpContactView.sendMessageButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
@@ -124,13 +123,13 @@ public final class HelpContactFragment extends InjectedFragment
     {
         Boolean allValid = true;
 
-        allValid &= contactView.nameText.validate();
-        allValid &= contactView.emailText.validate();
-        allValid &= contactView.commentText.validate();
+        allValid &= helpContactView.nameText.validate();
+        allValid &= helpContactView.emailText.validate();
+        allValid &= helpContactView.commentText.validate();
 
         if (allValid)
         {
-            sendContactFormData(contactView.nameText.getString(), contactView.emailText.getString(), contactView.commentText.getString(), this.associatedNode);
+            sendContactFormData(helpContactView.nameText.getString(), helpContactView.emailText.getString(), helpContactView.commentText.getString(), this.associatedNode);
         }
     }
 

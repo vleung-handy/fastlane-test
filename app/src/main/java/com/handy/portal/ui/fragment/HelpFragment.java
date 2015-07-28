@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -26,14 +25,12 @@ public final class HelpFragment extends InjectedFragment
 {
     private final static String PATH_SEPARATOR = "->";
 
-    @InjectView(R.id.help_page_content)
-    RelativeLayout helpPageContent;
+    @InjectView(R.id.help_node_view)
+    HelpNodeView helpNodeView;
 
-    @InjectView(R.id.banner_content)
-    RelativeLayout bannerContent;
+    @InjectView(R.id.help_banner_view)
+    HelpBannerView helpBannerView;
 
-    private HelpBannerView helpBannerView; //upper banner and nav controls
-    private HelpNodeView nodeView; //main node display
     private String currentBookingId; //optional param, if help request is associated with a booking
     private String currentPath; //what nodes have we traversed to get to the current node
 
@@ -74,9 +71,6 @@ public final class HelpFragment extends InjectedFragment
 
         currentPath = "";
 
-        nodeView = new HelpNodeView(helpPageContent, getActivity());
-        helpBannerView = new HelpBannerView(bannerContent, getActivity());
-
         return view;
     }
 
@@ -112,7 +106,7 @@ public final class HelpFragment extends InjectedFragment
     private void updateDisplay(final HelpNode node)
     {
         helpBannerView.updateDisplay(node);
-        nodeView.updateDisplay(node);
+        helpNodeView.updateDisplay(node);
         setupClickListeners(node);
     }
 
@@ -168,7 +162,7 @@ public final class HelpFragment extends InjectedFragment
         for (int i = 0; i < helpNode.getChildren().size(); i++)
         {
             final HelpNode childNode = helpNode.getChildren().get(i);
-            final View navView = (View) nodeView.navOptionsLayout.getChildAt(i);
+            final View navView = (View) helpNodeView.navOptionsLayout.getChildAt(i);
 
             navView.setOnClickListener(new View.OnClickListener()
             {
@@ -219,7 +213,7 @@ public final class HelpFragment extends InjectedFragment
                 {
                     //TODO: Add the controllers for CTAs when we support them
                     //All the CTA buttons should have been constructed already, we now hook up their functionality
-                    final CTAButton ctaButton = (CTAButton) nodeView.ctaLayout.getChildAt(ctaButtonIndex);
+                    final CTAButton ctaButton = (CTAButton) helpNodeView.ctaLayout.getChildAt(ctaButtonIndex);
 
                     ctaButton.setOnClickListener(new View.OnClickListener()
                     {
@@ -240,7 +234,7 @@ public final class HelpFragment extends InjectedFragment
                     ctaButtonIndex++;
                 } else if (nodeType.equals(HelpNode.HelpNodeType.CONTACT))
                 {
-                    nodeView.contactButton.setOnClickListener(new View.OnClickListener()
+                    helpNodeView.contactButton.setOnClickListener(new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View v)

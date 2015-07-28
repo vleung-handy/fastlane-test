@@ -8,24 +8,19 @@
     tools:context=".HelpFragment"
     >
 
-    <RelativeLayout
-        android:id="@+id/banner_content"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+    <include layout="@layout/element_help_node_banner"
+             android:id="@+id/help_banner_view"
         />
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/banner_content">
+        android:layout_below="@id/help_banner_view">
 
-        <RelativeLayout
-            android:id="@+id/help_page_content"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            >
-        </RelativeLayout>
+        <include layout="@layout/element_help_node"
+                 android:id="@+id/help_node_view"
+            />
 
     </ScrollView>
 
