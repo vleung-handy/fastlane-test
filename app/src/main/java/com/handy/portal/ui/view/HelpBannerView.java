@@ -13,14 +13,14 @@ import com.handy.portal.model.HelpNode;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class HelpNodeNavView
+public final class HelpBannerView
 {
     protected ViewGroup parentViewGroup;
     protected Activity activity;
 
     protected int getLayoutResourceId()
     {
-        return R.layout.element_help_node_nav;
+        return R.layout.element_help_node_banner;
     }
 
     @InjectView(R.id.back_img)
@@ -28,7 +28,7 @@ public final class HelpNodeNavView
     @InjectView(R.id.nav_text)
     public TextView navText;
 
-    public void initView(ViewGroup parentViewGroup, Activity activity)
+    public HelpBannerView(ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
@@ -38,64 +38,41 @@ public final class HelpNodeNavView
 
     public void updateDisplay(HelpNode helpNode)
     {
-        constructNodeView(helpNode, this.parentViewGroup);
-    }
-
-    ///////////////////
-
-    public void constructView(HelpNode helpNode, ViewGroup parentViewGroup, Activity activity)
-    {
-        this.parentViewGroup = parentViewGroup;
-        this.activity = activity;
-
-        LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
-
-        ButterKnife.inject(this, parentViewGroup);
-
-        constructHelpNodeView(helpNode);
-    }
-
-    protected void constructHelpNodeView(HelpNode helpNode)
-    {
-        constructNodeView(helpNode, this.parentViewGroup);
-    }
-
-    private void constructNodeView(final HelpNode node, final ViewGroup container)
-    {
-        if (node == null)
+        if (helpNode == null)
         {
             System.err.println("Tried to construct a node view for a null node");
             return;
         }
 
-        switch (node.getType())
+        switch (helpNode.getType())
         {
-            case "root":
+            case HelpNode.HelpNodeType.ROOT:
             {
-                layoutForArticle(node);
+                layoutForArticle(helpNode);
                 backImage.setVisibility(View.GONE);
             }
             break;
 
-            case "navigation":
-            case "dynamic-bookings-navigation":
-            case "booking":
+
+            case HelpNode.HelpNodeType.NAVIGATION:
+            case HelpNode.HelpNodeType.BOOKINGS_NAV:
+            case HelpNode.HelpNodeType.BOOKING:
             {
-                layoutForNavigation(node);
+                layoutForNavigation(helpNode);
                 backImage.setVisibility(View.VISIBLE);
             }
             break;
 
-            case "article":
+            case HelpNode.HelpNodeType.ARTICLE:
             {
-                layoutForArticle(node);
+                layoutForArticle(helpNode);
                 backImage.setVisibility(View.VISIBLE);
             }
             break;
 
             default:
             {
-                System.err.println("Unrecognized node type : " + node.getType());
+                System.err.println("Unrecognized node type : " + helpNode.getType());
                 backImage.setVisibility(View.VISIBLE);
             }
             break;
@@ -104,7 +81,7 @@ public final class HelpNodeNavView
 
     private void layoutForNavigation(final HelpNode node)
     {
-        if (node.getType().equals("booking"))
+        if (node.getType().equals(HelpNode.HelpNodeType.BOOKING))
         {
            navText.setText(activity.getString(R.string.help));
         }

@@ -7,15 +7,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.handy.portal.R;
-import com.handy.portal.model.HelpNode;
-import com.handy.portal.manager.LoginManager;
 import com.handy.portal.model.Booking;
-import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.widget.BasicInputTextView;
 import com.handy.portal.ui.widget.EmailInputTextView;
 import com.handy.portal.ui.widget.FirstNameInputTextView;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -23,53 +18,37 @@ import butterknife.InjectView;
 public final class HelpContactView
 {
     @InjectView(R.id.send_message_button)
-    Button sendMessageButton;
+    public Button sendMessageButton;
     @InjectView(R.id.help_contact_user_name_text)
-    FirstNameInputTextView nameText;
+    public FirstNameInputTextView nameText;
     @InjectView(R.id.help_contact_email_text)
-    EmailInputTextView emailText;
+    public EmailInputTextView emailText;
     @InjectView(R.id.help_contact_comment_text)
-    BasicInputTextView commentText;
+    public BasicInputTextView commentText;
 
     @InjectView(R.id.name_layout)
     ViewGroup nameLayout;
     @InjectView(R.id.email_layout)
     ViewGroup emailLayout;
 
-    @Inject
-    LoginManager loginManager;
-
-    protected ViewGroup parentViewGroup;
-    protected Activity activity;
-    protected HelpContactFragment helpFragment;
-
     protected int getLayoutResourceId()
     {
         return R.layout.element_help_contact;
     }
 
-    public void constructView(HelpNode helpNode, ViewGroup parentViewGroup, Activity activity, HelpContactFragment helpFragment)
+    public HelpContactView(ViewGroup parentViewGroup, Activity activity)
     {
-        this.parentViewGroup = parentViewGroup;
-        this.activity = activity;
-        this.helpFragment = helpFragment;
-
         LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
-
         ButterKnife.inject(this, parentViewGroup);
 
-        constructHelpNodeContactView();
-    }
-
-    public void constructHelpNodeContactView()
-    {
-        prepopulateUserData();
-    }
-
-    private void prepopulateUserData()
-    {
+        //TODO: Get User model passed in when we start receiving it
         Booking.User user = new Booking.User();
 
+        prepopulateUserData(user);
+    }
+
+    private void prepopulateUserData(Booking.User user)
+    {
         if (user != null)
         {
             //TODO: Get the real user from loginmanager when we start receiving full user data

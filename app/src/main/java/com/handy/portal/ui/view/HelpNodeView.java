@@ -29,39 +29,37 @@ public final class HelpNodeView
         return R.layout.element_help_node;
     }
 
-    @InjectView(R.id.info_text)
-    TextView infoText;
-    @InjectView(R.id.nav_options_layout)
-    public LinearLayout navOptionsLayout;
     @InjectView(R.id.info_layout)
     RelativeLayout infoLayout;
+    @InjectView(R.id.info_text)
+    TextView infoText;
     @InjectView(R.id.cta_layout)
     public ViewGroup ctaLayout;
     @InjectView(R.id.contact_button)
     public Button contactButton;
+    @InjectView(R.id.nav_options_layout)
+    public LinearLayout navOptionsLayout;
 
-    public void initView(ViewGroup parentViewGroup, Activity activity)
+    public HelpNodeView(ViewGroup parentViewGroup, Activity activity)
     {
         this.parentViewGroup = parentViewGroup;
         this.activity = activity;
-
         LayoutInflater.from(activity).inflate(getLayoutResourceId(), parentViewGroup);
-
         ButterKnife.inject(this, parentViewGroup);
     }
 
     public void updateDisplay(HelpNode helpNode)
     {
-        constructNodeView(helpNode, this.parentViewGroup);
+        updateDisplay(helpNode, this.parentViewGroup);
     }
 
 //View Construction
 
-    private void constructNodeView(final HelpNode node, final ViewGroup container)
+    private void updateDisplay(final HelpNode node, final ViewGroup container)
     {
-        //clear out the stuff that should be cleared
-        navOptionsLayout.removeAllViews();
+        //clear out the existing ctas and navigation buttons
         ctaLayout.removeAllViews();
+        navOptionsLayout.removeAllViews();
 
         if (node == null)
         {
@@ -190,7 +188,9 @@ public final class HelpNodeView
     private void addCtaButton(final HelpNode node)
     {
         int newChildIndex = ctaLayout.getChildCount(); //new index is equal to the old count since the new count is +1
-        final CTAButton ctaButton = (CTAButton) ((ViewGroup) activity.getLayoutInflater().inflate(R.layout.fragment_cta_button_template, ctaLayout)).getChildAt(newChildIndex);
+        final CTAButton ctaButton = (CTAButton) ((ViewGroup) LayoutInflater.from(activity).inflate(R.layout.fragment_cta_button_template, ctaLayout)).getChildAt(newChildIndex);
+
+
         ctaButton.initFromHelpNode(node, null); //TODO: Get real login/auth token?
     }
 

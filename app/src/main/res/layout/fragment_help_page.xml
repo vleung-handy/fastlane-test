@@ -9,7 +9,7 @@
     >
 
     <RelativeLayout
-        android:id="@+id/nav_content"
+        android:id="@+id/banner_content"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         />
@@ -18,7 +18,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/nav_content">
+        android:layout_below="@id/banner_content">
 
         <RelativeLayout
             android:id="@+id/help_page_content"

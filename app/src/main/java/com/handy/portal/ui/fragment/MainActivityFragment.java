@@ -173,6 +173,8 @@ public class MainActivityFragment extends InjectedFragment
             swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS
                                                     || targetTab == MainViewTab.HELP
                                                     || targetTab == MainViewTab.HELP_CONTACT);
+
+            //want to be able to navigate back from help tab to previous tab
             swapFragmentArguments.clearBackStack = !(targetTab == MainViewTab.HELP || targetTab == MainViewTab.HELP_CONTACT);
 
             swapFragment(swapFragmentArguments);

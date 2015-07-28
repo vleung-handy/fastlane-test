@@ -5,20 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.ui.view.HelpContactView;
 import com.handy.portal.model.HelpNode;
-import com.handy.portal.ui.view.HelpNodeNavView;
-import com.handy.portal.ui.widget.BasicInputTextView;
-import com.handy.portal.ui.widget.EmailInputTextView;
-import com.handy.portal.ui.widget.FirstNameInputTextView;
+import com.handy.portal.ui.view.HelpBannerView;
+import com.handy.portal.ui.view.HelpContactView;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
@@ -35,8 +30,6 @@ import retrofit.mime.TypedInput;
 
 public final class HelpContactFragment extends InjectedFragment
 {
-    public static final String EXTRA_HELP_NODE = "com.handy.handy.EXTRA_HELP_NODE";
-    public static final String EXTRA_HELP_PATH = "com.handy.handy.EXTRA_HELP_PATH";
     private static final String HELP_CONTACT_FORM_DISPOSITION = "help-contact-form-disposition";
     private static final String HELP_CONTACT_FORM_NAME = "name";
     private static final String HELP_CONTACT_FORM_EMAIL = "email";
@@ -48,17 +41,15 @@ public final class HelpContactFragment extends InjectedFragment
     @InjectView(R.id.contact_page_content)
     RelativeLayout contactPageContent;
 
-    @InjectView(R.id.nav_content)
-    RelativeLayout navContent;
+    @InjectView(R.id.banner_content)
+    RelativeLayout bannerContent;
 
     private HelpNode associatedNode;
     private String path;
     private String bookingId;
 
-    private View associatedView;
-
     private HelpContactView contactView;
-    private HelpNodeNavView navView;
+    private HelpBannerView helpBannerView;
 
     @Override
     protected List<String> requiredArguments()
@@ -89,33 +80,27 @@ public final class HelpContactFragment extends InjectedFragment
         this.path = getArguments().getString(BundleKeys.PATH);
 
         //optional arg booking id
-        if(getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
         {
             this.bookingId = getArguments().getString(BundleKeys.BOOKING_ID);
-        }
-        else
+        } else
         {
             this.bookingId = "";
         }
 
-        contactView = new HelpContactView();
-        navView = new HelpNodeNavView();
-
-        constructViews(this.associatedNode);
+        //Neither display here needs additional information to construct their view
+        contactView = new HelpContactView(contactPageContent, getActivity());
+        helpBannerView = new HelpBannerView(bannerContent, getActivity());
+        helpBannerView.backImage.setVisibility(View.VISIBLE);
 
         assignClickListeners(view);
-
-        associatedView = view;
 
         return view;
     }
 
     private void assignClickListeners(View view)
     {
-        ImageView backImage = (ImageView) view.findViewById(R.id.back_img);
-        Button sendMessageButton = (Button) view.findViewById(R.id.send_message_button);
-
-        sendMessageButton.setOnClickListener(new View.OnClickListener()
+        contactView.sendMessageButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
@@ -125,7 +110,7 @@ public final class HelpContactFragment extends InjectedFragment
         });
 
         final Activity activity = this.getActivity();
-        backImage.setOnClickListener(new View.OnClickListener()
+        helpBannerView.backImage.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
@@ -135,39 +120,23 @@ public final class HelpContactFragment extends InjectedFragment
         });
     }
 
-
-
-    //construct the views
-    private void constructViews(HelpNode node)
-    {
-        contactPageContent.removeAllViews();
-        navContent.removeAllViews();
-
-        contactView.constructView(node, contactPageContent, getActivity(), this);
-        navView.constructView(node, navContent, getActivity());
-    }
-
     private void onSendMessageButtonClick()
     {
         Boolean allValid = true;
 
-        FirstNameInputTextView nameText = (FirstNameInputTextView) associatedView.findViewById(R.id.help_contact_user_name_text);
-        EmailInputTextView emailText = (EmailInputTextView) associatedView.findViewById(R.id.help_contact_email_text);
-        BasicInputTextView commentText = (BasicInputTextView) associatedView.findViewById(R.id.help_contact_comment_text);
-
-        allValid &= nameText.validate();
-        allValid &= emailText.validate();
-        allValid &= commentText.validate();
+        allValid &= contactView.nameText.validate();
+        allValid &= contactView.emailText.validate();
+        allValid &= contactView.commentText.validate();
 
         if (allValid)
         {
-            sendContactFormData(nameText.getString(), emailText.getString(), commentText.getString(), this.associatedNode);
+            sendContactFormData(contactView.nameText.getString(), contactView.emailText.getString(), contactView.commentText.getString(), this.associatedNode);
         }
     }
 
     private void sendContactFormData(String name, String email, String comment, HelpNode associatedNode)
     {
-        HashMap<String, String> contactFormInfo = parseHelpNode(associatedNode);
+        HashMap<String, String> contactFormInfo = extractDispositions(associatedNode);
 
         //add contact form information
         contactFormInfo.put(HELP_CONTACT_FORM_NAME, name);
@@ -198,9 +167,9 @@ public final class HelpContactFragment extends InjectedFragment
         bus.post(new HandyEvent.RequestNotifyHelpContact(body));
     }
 
-    private HashMap<String, String> parseHelpNode(HelpNode node)
+    private HashMap<String, String> extractDispositions(HelpNode node)
     {
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         for (HelpNode childNode : node.getChildren())
         {
             if (childNode.getType().equals(HELP_CONTACT_FORM_DISPOSITION))
@@ -211,25 +180,38 @@ public final class HelpContactFragment extends InjectedFragment
         return params;
     }
 
-    private void returnToHomeScreen()
+    private void returnToJobsScreen()
     {
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.JOBS));
+    }
+
+    private void returnToBookingDetails(String bookingId)
+    {
+        Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.BOOKING_ID, bookingId);
+        HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
+        bus.post(event);
     }
 
     @Subscribe
     public void onReceiveNotifyHelpContactSuccess(HandyEvent.ReceiveNotifyHelpContactSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        returnToHomeScreen();
+        if (bookingId == null || bookingId.isEmpty())
+        {
+            returnToJobsScreen();
+        } else
+        {
+            returnToBookingDetails(bookingId);
+        }
+
         showToast(getString(R.string.contact_received));
     }
 
     @Subscribe
     public void onReceiveNotifyHelpContactError(HandyEvent.ReceiveNotifyHelpContactError event)
     {
-        //TODO: Get them to resubmit?
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(getString(R.string.an_error_has_occurred));
     }
-
 }

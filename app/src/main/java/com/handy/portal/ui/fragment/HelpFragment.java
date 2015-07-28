@@ -11,9 +11,9 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.HelpNode;
-import com.handy.portal.ui.view.HelpNodeNavView;
-import com.handy.portal.ui.view.HelpNodeView;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.view.HelpBannerView;
+import com.handy.portal.ui.view.HelpNodeView;
 import com.handy.portal.ui.widget.CTAButton;
 import com.squareup.otto.Subscribe;
 
@@ -22,7 +22,6 @@ import java.util.HashMap;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-
 public final class HelpFragment extends InjectedFragment
 {
     private final static String PATH_SEPARATOR = "->";
@@ -30,13 +29,22 @@ public final class HelpFragment extends InjectedFragment
     @InjectView(R.id.help_page_content)
     RelativeLayout helpPageContent;
 
-    @InjectView(R.id.nav_content)
-    RelativeLayout navContent;
+    @InjectView(R.id.banner_content)
+    RelativeLayout bannerContent;
 
-    private HelpNodeNavView nodeNavView; //upper banner and nav controls
+    private HelpBannerView helpBannerView; //upper banner and nav controls
     private HelpNodeView nodeView; //main node display
-    private String currentBookingId; //optional, if help request is associated with a booking
-    private String currentPath; //what nodes have we traversed to get to the current node?
+    private String currentBookingId; //optional param, if help request is associated with a booking
+    private String currentPath; //what nodes have we traversed to get to the current node
+
+/*
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+    }
+*/
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -55,21 +63,19 @@ public final class HelpFragment extends InjectedFragment
             this.currentBookingId = "";
         }
 
-        currentPath = "";
-
         if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
         {
             bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), this.currentBookingId));
         } else
         {
-            //null = request root
+            //null id means request root
             bus.post(new HandyEvent.RequestHelpNode(null, this.currentBookingId));
         }
 
-        nodeView = new HelpNodeView();
-        nodeView.initView(helpPageContent, getActivity());
-        nodeNavView = new HelpNodeNavView();
-        nodeNavView.initView(navContent, getActivity());
+        currentPath = "";
+
+        nodeView = new HelpNodeView(helpPageContent, getActivity());
+        helpBannerView = new HelpBannerView(bannerContent, getActivity());
 
         return view;
     }
@@ -78,7 +84,7 @@ public final class HelpFragment extends InjectedFragment
     private void trackPath(HelpNode node)
     {
         String nodeId = Integer.toString(node.getId());
-        currentPath += PATH_SEPARATOR + nodeId;
+        currentPath +=  (!currentPath.isEmpty() ? PATH_SEPARATOR : "" ) + nodeId;
     }
 
     //Event Listeners
@@ -92,7 +98,7 @@ public final class HelpFragment extends InjectedFragment
             return;
         }
         trackPath(helpNode);
-        constructNodeView(helpNode);
+        updateDisplay(helpNode);
     }
 
     @Subscribe
@@ -103,9 +109,9 @@ public final class HelpFragment extends InjectedFragment
     }
 
 //View Construction
-    private void constructNodeView(final HelpNode node)
+    private void updateDisplay(final HelpNode node)
     {
-        nodeNavView.updateDisplay(node);
+        helpBannerView.updateDisplay(node);
         nodeView.updateDisplay(node);
         setupClickListeners(node);
     }
@@ -147,7 +153,7 @@ public final class HelpFragment extends InjectedFragment
 
     private void setupNavigationClickListeners()
     {
-        nodeNavView.backImage.setOnClickListener(new View.OnClickListener()
+        helpBannerView.backImage.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
@@ -185,7 +191,7 @@ public final class HelpFragment extends InjectedFragment
                             }
                         });
 
-                        //Request data for node, will trigger a display
+                        //Request data for node, will trigger a display when it returns
                         requestNodeData(childNode);
                     }
                 }
@@ -240,7 +246,7 @@ public final class HelpFragment extends InjectedFragment
                         public void onClick(View v)
                         {
                             Bundle arguments = new Bundle();
-                            arguments.putString(BundleKeys.PATH, currentPath); //TODO: What is the real path data that help contact cares about?
+                            arguments.putString(BundleKeys.PATH, currentPath);
                             arguments.putParcelable(BundleKeys.HELP_NODE, child);
                             HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
                             bus.post(navigateEvent);
