@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.model.HelpNode;
 
@@ -43,7 +44,7 @@ public final class HelpBannerView extends InjectedRelativeLayout
     {
         if (helpNode == null)
         {
-            System.err.println("Tried to construct a node view for a null node");
+            Crashlytics.log("Tried to construct a help banner view for a null node");
             return;
         }
 
@@ -75,7 +76,7 @@ public final class HelpBannerView extends InjectedRelativeLayout
 
             default:
             {
-                System.err.println("Unrecognized node type : " + helpNode.getType());
+                Crashlytics.log("Unrecognized node type : " + helpNode.getType());
                 backImage.setVisibility(View.VISIBLE);
             }
             break;

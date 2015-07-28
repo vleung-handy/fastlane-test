@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -34,21 +35,13 @@ public final class HelpFragment extends InjectedFragment
     private String currentBookingId; //optional param, if help request is associated with a booking
     private String currentPath; //what nodes have we traversed to get to the current node
 
-/*
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-    }
-*/
-
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
     {
         final View view = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_help_page, container, false);
+
         ButterKnife.inject(this, view);
 
         if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
@@ -81,28 +74,6 @@ public final class HelpFragment extends InjectedFragment
         currentPath +=  (!currentPath.isEmpty() ? PATH_SEPARATOR : "" ) + nodeId;
     }
 
-    //Event Listeners
-    @Subscribe
-    public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
-    {
-        HelpNode helpNode = event.helpNode;
-        if (helpNode == null)
-        {
-            System.err.println("The help node returned from the data was null, didn't parse properly?");
-            return;
-        }
-        trackPath(helpNode);
-        updateDisplay(helpNode);
-    }
-
-    @Subscribe
-    public void onReceiveHelpNodeError(HandyEvent.ReceiveHelpNodeError event)
-    {
-        //TODO: Hardcoded string
-        showToast(R.string.error_connectivity);
-    }
-
-//View Construction
     private void updateDisplay(final HelpNode node)
     {
         helpBannerView.updateDisplay(node);
@@ -110,19 +81,7 @@ public final class HelpFragment extends InjectedFragment
         setupClickListeners(node);
     }
 
-    public void requestNodeData(final HelpNode node)
-    {
-        if (node.getType().equals(HelpNode.HelpNodeType.BOOKING))
-        {
-            currentBookingId = Integer.toString(node.getId()); //TODO: What is this? Does this make sense? It seems odd.....
-            bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), null));
-        } else
-        {
-            bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
-        }
-    }
-
-    public void setupClickListeners(HelpNode helpNode)
+    private void setupClickListeners(HelpNode helpNode)
     {
         setupNavigationClickListeners();
 
@@ -193,10 +152,20 @@ public final class HelpFragment extends InjectedFragment
         }
     }
 
-
-    public void setupArticleClickListeners(HelpNode helpNode)
+    private void requestNodeData(final HelpNode node)
     {
+        if (node.getType().equals(HelpNode.HelpNodeType.BOOKING))
+        {
+            currentBookingId = Integer.toString(node.getId()); //TODO: What is this? Does this make sense? It seems odd.....
+            bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), null));
+        } else
+        {
+            bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
+        }
+    }
 
+    private void setupArticleClickListeners(HelpNode helpNode)
+    {
         if (helpNode.getChildren().size() > 0)
         {
             int ctaButtonIndex = 0;
@@ -205,7 +174,7 @@ public final class HelpFragment extends InjectedFragment
                 String nodeType = child.getType();
                 if (nodeType == null)
                 {
-                    System.err.println("HelpNode " + child.getId() + " has null data");
+                    Crashlytics.log("HelpNode " + child.getId() + " has null data");
                     continue;
                 }
 
@@ -249,5 +218,21 @@ public final class HelpFragment extends InjectedFragment
                 }
             }
         }
+    }
+
+//Event Listeners
+
+    @Subscribe
+    public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
+    {
+        HelpNode helpNode = event.helpNode;
+        trackPath(helpNode);
+        updateDisplay(helpNode);
+    }
+
+    @Subscribe
+    public void onReceiveHelpNodeError(HandyEvent.ReceiveHelpNodeError event)
+    {
+        showToast(R.string.error_connectivity);
     }
 }

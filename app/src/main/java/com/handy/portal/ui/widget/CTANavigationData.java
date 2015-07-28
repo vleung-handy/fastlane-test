@@ -1,5 +1,6 @@
 package com.handy.portal.ui.widget;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.model.HelpNode;
 
 import org.json.JSONObject;
@@ -47,7 +48,7 @@ public final class CTANavigationData
         }
         catch (Exception e)
         {
-            System.err.println("initFromHelpNode : Could not parse node content into JSON : " + e);
+            Crashlytics.logException(e);
         }
 
         this.loginToken = (loginToken != null ? loginToken : "");

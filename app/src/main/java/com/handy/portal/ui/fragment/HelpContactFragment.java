@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -69,7 +70,7 @@ public final class HelpContactFragment extends InjectedFragment
         //should have passed along an associated node and a path
         if (!validateRequiredArguments())
         {
-            System.err.println("Can not construct Help Contact Form, missing requirements");
+            Crashlytics.log("Can not construct Help Contact Form, missing requirements");
             return view;
         }
 
@@ -191,6 +192,8 @@ public final class HelpContactFragment extends InjectedFragment
         HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
         bus.post(event);
     }
+
+//Event Listeners
 
     @Subscribe
     public void onReceiveNotifyHelpContactSuccess(HandyEvent.ReceiveNotifyHelpContactSuccess event)

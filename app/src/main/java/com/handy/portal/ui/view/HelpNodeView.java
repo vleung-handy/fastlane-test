@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.ui.widget.CTAButton;
@@ -54,7 +55,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
         if (node == null)
         {
-            System.err.println("Tried to construct a node view for a null node");
             return;
         }
 
@@ -77,7 +77,7 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
             default:
             {
-                System.err.println("Unrecognized node type : " + node.getType());
+                Crashlytics.log("Unrecognized node type : " + node.getType());
             }
             break;
         }
@@ -103,7 +103,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
         {
             if (child.getType() == null)
             {
-                System.err.println("HelpNode " + child.getId() + " has null data");
                 continue;
             }
 
@@ -120,7 +119,7 @@ public final class HelpNodeView extends InjectedRelativeLayout
                 //TODO: Re-enable CTAs when we support them
                 //ctaLayout.setVisibility(View.VISIBLE);
                 //addCtaButton(child);
-                System.err.println("No support for CTAs, required for node : " + child.getId());
+                Crashlytics.log("No support for CTAs, required for node : " + child.getId());
             } else if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
             {
                 contactButton.setVisibility(View.VISIBLE);
