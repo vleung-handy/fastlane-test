@@ -97,9 +97,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentModifier provideEnvironmentModifier(final BuildConfigWrapper buildConfigWrapper, final PrefsManager prefsManager)
+    final EnvironmentModifier provideEnvironmentModifier(final BuildConfigWrapper buildConfigWrapper)
     {
-        return new EnvironmentModifier(context, buildConfigWrapper, prefsManager);
+        return new EnvironmentModifier(context, buildConfigWrapper);
     }
 
     @Provides
