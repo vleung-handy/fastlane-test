@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
@@ -31,6 +32,8 @@ public class SplashActivity extends BaseActivity
     PrefsManager prefsManager;
     @Inject
     HandyRetrofitEndpoint endpoint;
+    @Inject
+    BuildConfigWrapper buildConfigWrapper;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
@@ -43,6 +46,15 @@ public class SplashActivity extends BaseActivity
         {
             // this needs to happen first so we have more insight in case something bad happens after this line
             Crashlytics.setUserIdentifier(providerId);
+        }
+
+        if (buildConfigWrapper.isDebug())
+        {
+            String authToken = getIntent().getDataString();
+            if (authToken != null)
+            {
+                prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
+            }
         }
 
         String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
