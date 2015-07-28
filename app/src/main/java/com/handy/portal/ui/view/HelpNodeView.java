@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -110,21 +109,19 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
             if (child.getType().equals(HelpNode.HelpNodeType.FAQ))
             {
-                info += "<br/><br/><b>" + activity.getString(R.string.related_faq) + ":</b>";
+                info += "<br/><br/><b>" + getContext().getString(R.string.related_faq) + ":</b>";
 
                 for (final HelpNode faqChild : child.getChildren())
                 {
                     info += "<br/><a href=" + faqChild.getContent() + ">" + faqChild.getLabel() + "</a>";
                 }
-            }
-            else if (child.getType().equals(HelpNode.HelpNodeType.CTA))
+            } else if (child.getType().equals(HelpNode.HelpNodeType.CTA))
             {
                 //TODO: Re-enable CTAs when we support them
-                    //ctaLayout.setVisibility(View.VISIBLE);
-                    //addCtaButton(child);
+                //ctaLayout.setVisibility(View.VISIBLE);
+                //addCtaButton(child);
                 System.err.println("No support for CTAs, required for node : " + child.getId());
-            }
-            else if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
+            } else if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
             {
                 contactButton.setVisibility(View.VISIBLE);
             }
@@ -145,8 +142,7 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
             if (helpNode.getType().equals(HelpNode.HelpNodeType.BOOKING))
             {
-                navView = activity.getLayoutInflater()
-                        .inflate(R.layout.list_item_help_booking_nav, navOptionsLayout, false);
+                navView = inflate(R.layout.list_item_help_booking_nav, navOptionsLayout);
 
                 TextView textView = (TextView) navView.findViewById(R.id.service_text);
                 textView.setText(helpNode.getService());
@@ -157,11 +153,11 @@ public final class HelpNodeView extends InjectedRelativeLayout
                 textView = (TextView) navView.findViewById(R.id.time_text);
                 textView.setText(TextUtils.formatDate(helpNode.getStartDate(), "h:mmaaa \u2013 ")
                         + TextUtils.formatDecimal(helpNode.getHours(), "#.# ")
-                        + activity.getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
+                        + getContext().getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
             } else
             {
-                navView = activity.getLayoutInflater()
-                        .inflate(R.layout.list_item_help_nav, navOptionsLayout, false);
+                navView = inflate(R.layout.list_item_help_nav, navOptionsLayout);
+
                 final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
                 textView.setText(helpNode.getLabel());
             }
@@ -179,13 +175,8 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
     private void addCtaButton(final HelpNode node)
     {
-        int newChildIndex = ctaLayout.getChildCount(); //new index is equal to the old count since the new count is +1
-        final CTAButton ctaButton = (CTAButton) ((ViewGroup) LayoutInflater.from(activity).inflate(R.layout.fragment_cta_button_template, ctaLayout)).getChildAt(newChildIndex);
+        final CTAButton ctaButton = (CTAButton) inflate(R.layout.fragment_cta_button_template, ctaLayout);
         ctaButton.initFromHelpNode(node, null); //TODO: Get real login/auth token?
-
-    //don't need activity just need context
-        //View.inflate(getContext(), R.layout.fragment_cta_button_template, ctaLayout);
-
     }
 
 }

@@ -86,7 +86,7 @@ public final class HelpBannerView extends InjectedRelativeLayout
     {
         if (node.getType().equals(HelpNode.HelpNodeType.BOOKING))
         {
-           navText.setText(activity.getString(R.string.help));
+           navText.setText(getContext().getString(R.string.help));
         }
         else
         {
