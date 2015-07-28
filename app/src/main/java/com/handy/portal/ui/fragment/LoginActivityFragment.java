@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,12 +20,10 @@ import android.widget.TextView;
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
-import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.LoginDetails;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
@@ -40,7 +36,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 import static com.handy.portal.core.EnvironmentModifier.Environment;
 
@@ -201,32 +196,6 @@ public class LoginActivityFragment extends InjectedFragment
         });
     }
 
-    @OnLongClick(R.id.logo)
-    protected boolean impersonateProvider()
-    {
-        if (!buildConfigWrapper.isDebug()) return true;
-
-        final EditText input = new EditText(getActivity());
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        new AlertDialog.Builder(getActivity())
-                .setTitle("Enter provider ID")
-                .setView(input)
-                .setPositiveButton("Log In", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which)
-                    {
-                        prefsManager.setString(PrefsKey.USER_CREDENTIALS_ID, input.getText().toString());
-                        startActivity(new Intent(getActivity(), SplashActivity.class));
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-
-        return true;
-    }
-
     private void goToUrl(String url)
     {
         Uri uriUrl = Uri.parse(url);
@@ -353,7 +322,7 @@ public class LoginActivityFragment extends InjectedFragment
         changeState(LoginState.COMPLETE);
 
         //Set cookies to enable seamless access in our webview
-        if (loginDetails.getUserCredentials() != null)
+        if (loginDetails.getAuthToken() != null)
         {
             CookieSyncManager.createInstance(getActivity());
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());

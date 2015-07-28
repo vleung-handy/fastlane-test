@@ -8,6 +8,7 @@ import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
@@ -54,8 +55,6 @@ public abstract class DataManager
 
     public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
 
-    //Help Center - not real yet
-
     public abstract void getHelpInfo(String nodeId,
                                     String bookingId,
                                     final DataManager.Callback<HelpNodeWrapper> cb);
@@ -65,6 +64,8 @@ public abstract class DataManager
                                     final DataManager.Callback<HelpNodeWrapper> cb);
 
     public abstract void createHelpCase(TypedInput body, final Callback<Void> cb);
+
+    public abstract void getProviderInfo(Callback<Provider> cb);
 
     public abstract String getBaseUrl();
 

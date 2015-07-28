@@ -228,7 +228,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         HandyEvent.ReceiveLoginSuccess event = mock(HandyEvent.ReceiveLoginSuccess.class);
         event.loginDetails = mock(LoginDetails.class);
         when(event.loginDetails.getSuccess()).thenReturn(isValid);
-        when(event.loginDetails.getUserCredentials()).thenReturn(credentials);
+        when(event.loginDetails.getAuthToken()).thenReturn(credentials);
         when(event.loginDetails.getUserCredentialsCookie()).thenReturn(credentialsCookie);
         fragment.onLoginRequestSuccess(event);
     }
