@@ -101,21 +101,6 @@ public class MainActivityFragment extends InjectedFragment
         loadingOverlayView.setOverlayVisibility(event.isVisible);
     }
 
-    private void initWebViewFragment(String url)
-    {
-        webViewFragment = new PortalWebViewFragment();
-
-        //pass along the target
-        Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.TARGET_URL, url);
-
-        SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
-        swapFragmentArguments.argumentsBundle = arguments;
-        swapFragmentArguments.overrideFragment = webViewFragment;
-
-        swapFragment(swapFragmentArguments);
-    }
-
     private void registerButtonListeners()
     {
         scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULE));
@@ -156,11 +141,11 @@ public class MainActivityFragment extends InjectedFragment
 
         updateSelectedTabButton(targetTab);
 
+        SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
+
         if (targetTab.isNativeTab())
         {
             webViewFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
-
-            SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
 
             //don't use transition if don't have anything to transition from
             if (currentTab != null)
@@ -181,13 +166,6 @@ public class MainActivityFragment extends InjectedFragment
             //want to be able to navigate back from help tab to previous tab
             swapFragmentArguments.clearBackStack = !(targetTab == MainViewTab.HELP || targetTab == MainViewTab.HELP_CONTACT);
 
-            if(currentTab != null)
-            {
-                System.out.println("ttab : " + targetTab.toString() + " : ctab " + currentTab.toString());
-            }
-
-            System.out.println("Should pop back stack once?  : " + swapFragmentArguments.popBackStack);
-
             swapFragment(swapFragmentArguments);
         }
         else
@@ -204,19 +182,32 @@ public class MainActivityFragment extends InjectedFragment
 
             if (webViewFragment == null)
             {
-                initWebViewFragment(url);
+                webViewFragment = new PortalWebViewFragment();
+
+                //pass along the target
+                Bundle arguments = new Bundle();
+                arguments.putString(BundleKeys.TARGET_URL, url);
+
+                swapFragmentArguments.argumentsBundle = arguments;
+                swapFragmentArguments.overrideFragment = webViewFragment;
+                swapFragmentArguments.clearBackStack = true;
+
+                swapFragment(swapFragmentArguments);
             }
             else
             {
+                //don't need to do any fragment swapping just open the new url
                 webViewFragment.openPortalUrl(url);
             }
         }
 
-        if (targetTab != MainViewTab.DETAILS)
+        //if clearing the back stack also clear the on back pressed listener stack
+        if(swapFragmentArguments.clearBackStack)
         {
             ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-            currentTab = targetTab;
         }
+
+        currentTab = targetTab;
     }
 
     private void clearFragmentBackStack()
@@ -231,24 +222,10 @@ public class MainActivityFragment extends InjectedFragment
     {
         clearingBackStack = true;
         FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-
-        System.out.println("See original stack");
-        for(int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
+        if(supportFragmentManager.getBackStackEntryCount() > 0)
         {
-            System.out.println(supportFragmentManager.getBackStackEntryAt(i).toString());
+            supportFragmentManager.popBackStackImmediate();
         }
-
-        int backStackCount = supportFragmentManager.getBackStackEntryCount();
-        System.out.println( backStackCount + "  Going to pop a backstack node : " + supportFragmentManager.getBackStackEntryAt(backStackCount - 1).toString());
-
-        supportFragmentManager.popBackStackImmediate();
-
-        System.out.println("See modified stack");
-        for(int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
-        {
-            System.out.println(supportFragmentManager.getBackStackEntryAt(i).toString());
-        }
-
         clearingBackStack = false;
     }
 

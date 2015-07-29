@@ -50,9 +50,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
     public void updateDisplay(final HelpNode node)
     {
         //clear out the existing ctas and navigation buttons
-
-        System.out.println("Update display for node : " + node.getId() + " : " + node.getType());
-
         ctaLayout.removeAllViews();
         navOptionsLayout.removeAllViews();
 

@@ -30,8 +30,8 @@ public class HelpManager
 
         //TODO: we don't currently have a way to query to see if a node is changed so we rely on our cache decaying every day
         this.helpNodeCache = CacheBuilder.newBuilder()
-                .weakKeys()
                 .maximumSize(10000)
+                .weakKeys()
                 .expireAfterWrite(1, TimeUnit.DAYS)
                 .build();
     }

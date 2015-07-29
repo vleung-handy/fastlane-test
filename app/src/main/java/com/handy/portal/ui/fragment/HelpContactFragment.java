@@ -88,14 +88,32 @@ public final class HelpContactFragment extends InjectedFragment
         }
 
         //TODO: Get real user data when we have that model
-        Booking.User user = new Booking.User();
-        helpContactView.updateDisplay(user);
+        helpContactView.updateDisplay(this.associatedNode, null);
 
         helpBannerView.updateDisplay();
 
         assignClickListeners(view);
 
+        addOnBackListener(this.associatedNode);
+
         return view;
+    }
+
+    private void addOnBackListener(final HelpNode helpNode)
+    {
+        //setup the back listener to be able to return to here
+        ((BaseActivity) getActivity()).addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
+        {
+            @Override
+            public void onBackPressed()
+            {
+                //navigate back to original help node
+                Bundle arguments = new Bundle();
+                arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(helpNode.getId()));
+                HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments);
+                bus.post(event);
+            }
+        });
     }
 
     private void assignClickListeners(View view)

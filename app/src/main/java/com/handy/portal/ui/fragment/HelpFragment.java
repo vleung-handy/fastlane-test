@@ -55,10 +55,9 @@ public final class HelpFragment extends InjectedFragment
             this.currentBookingId = "";
         }
 
-        String nodeIdToRequest = null;
-        System.out.println("Help fragment on create view last node id : " + lastNodeId);
+        String nodeIdToRequest = null; //default is to request null which will get us our root node
 
-        if(false)
+        if(false) //in the future we may want to remember the last node we saw
         {
             nodeIdToRequest = lastNodeId;
             lastNodeId = null;
@@ -66,11 +65,12 @@ public final class HelpFragment extends InjectedFragment
 
         if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
         {
-            System.out.println("Override to node id : " + getArguments().getString(BundleKeys.HELP_NODE_ID));
             nodeIdToRequest = getArguments().getString(BundleKeys.HELP_NODE_ID);
         }
 
-        bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), this.currentBookingId));
+        System.out.println("On create view request node : " + nodeIdToRequest);
+
+        bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, this.currentBookingId));
 
         currentPath = "";
 
@@ -78,6 +78,14 @@ public final class HelpFragment extends InjectedFragment
 
         return view;
     }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        System.out.println("Help fragment on resume : " + MainActivityFragment.clearingBackStack);
+    }
+
 
     //TODO: Make this smarter and recognize back tracking
     private void trackPath(HelpNode node)

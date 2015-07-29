@@ -165,6 +165,11 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         onBackPressedListenerStack.clear();
     }
 
+    public void popOnBackPressedListenerStack()
+    {
+        onBackPressedListenerStack.pop();
+    }
+
     public interface OnBackPressedListener
     {
         void onBackPressed();
