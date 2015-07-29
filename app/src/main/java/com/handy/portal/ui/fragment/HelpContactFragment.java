@@ -11,8 +11,8 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.HelpNode;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.view.HelpBannerView;
 import com.handy.portal.ui.view.HelpContactView;
 import com.squareup.otto.Subscribe;
@@ -194,7 +194,6 @@ public final class HelpContactFragment extends InjectedFragment
     }
 
 //Event Listeners
-
     @Subscribe
     public void onReceiveNotifyHelpContactSuccess(HandyEvent.ReceiveNotifyHelpContactSuccess event)
     {

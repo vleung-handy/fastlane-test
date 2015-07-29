@@ -38,6 +38,7 @@ public final class HelpBannerView extends InjectedRelativeLayout
     public void updateDisplay()
     {
         backImage.setVisibility(View.VISIBLE);
+        navText.setText(R.string.contact_us);
     }
 
     public void updateDisplay(HelpNode helpNode)
@@ -52,7 +53,7 @@ public final class HelpBannerView extends InjectedRelativeLayout
         {
             case HelpNode.HelpNodeType.ROOT:
             {
-                layoutForArticle(helpNode);
+                layoutForRoot();
                 backImage.setVisibility(View.GONE);
             }
             break;
@@ -98,6 +99,11 @@ public final class HelpBannerView extends InjectedRelativeLayout
     private void layoutForArticle(final HelpNode node)
     {
         navText.setText(node.getLabel());
+    }
+
+    private void layoutForRoot()
+    {
+        navText.setText(R.string.help);
     }
 
 }

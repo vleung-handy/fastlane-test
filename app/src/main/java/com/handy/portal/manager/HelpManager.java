@@ -69,11 +69,6 @@ public class HelpManager
             public void onError(DataManager.DataManagerError error)
             {
                 bus.post(new HandyEvent.ReceiveHelpNodeError(error));
-
-                if(error.getType() != DataManager.DataManagerError.Type.NETWORK)
-                {
-                    //TODO: should we invalidate cache?
-                }
             }
         });
     }
@@ -83,6 +78,8 @@ public class HelpManager
     {
         String nodeId = event.nodeId;
         String bookingId = event.bookingId;
+
+        //TODO: Currently we send null to request root on the server, this is a bit hacky and does not allow us to cache the root node which is silly
 
         if(nodeId != null) //nulls will crash our cache on the getIfPresentCall
         {
@@ -107,11 +104,6 @@ public class HelpManager
             public void onError(DataManager.DataManagerError error)
             {
                 bus.post(new HandyEvent.ReceiveHelpBookingNodeError(error));
-
-                if (error.getType() != DataManager.DataManagerError.Type.NETWORK)
-                {
-                    //TODO: should we invalidate cache?
-                }
             }
         });
 

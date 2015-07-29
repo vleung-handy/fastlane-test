@@ -103,7 +103,6 @@ public interface HandyRetrofitService
     @PUT(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/remove")
     void removeBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-
   //********Help Center********
   String SELF_SERVICE_PATH = "/self_service/";
 

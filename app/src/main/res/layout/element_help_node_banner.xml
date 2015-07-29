@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <com.handy.portal.ui.view.HelpBannerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/help_node_content"
-    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     >
-
-    <TextView
-        android:id="@+id/nav_text"
-        android:paddingRight="44dp"
-        android:paddingLeft="44dp"
-        android:text="@string/help"
-        style="@style/TextView.Navbar" />
 
     <ImageView
         android:id="@+id/back_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleX="-1"
-        android:padding="15dp"
-        android:src="@drawable/ic_chevron"
-        android:visibility="gone"
+        android:layout_gravity="start|center_vertical"
         android:contentDescription="@string/back"
-        android:layout_gravity="start|center_vertical" />
+        android:padding="15dp"
+        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+        android:background="@color/handy_blue"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/nav_text"
+        style="@style/TextView.HelpNavBar"
+        android:layout_toEndOf="@id/back_img"
+        android:layout_toRightOf="@id/back_img"
+        android:text="@string/help"
+        android:gravity="center_vertical"
+        />
 
 </com.handy.portal.ui.view.HelpBannerView>

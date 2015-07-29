@@ -3,23 +3,50 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/handy_bg">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <RelativeLayout
-        android:id="@+id/info_layout"
+        android:id="@+id/contact_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/cell_booking_last_rounded"
         android:paddingBottom="5dp"
         >
+
+        <TextView
+            android:id="@+id/subject_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_padding"
+            android:layout_marginRight="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="@string/help_center_subject"
+            />
+
+        <TextView
+            android:id="@+id/subject_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_padding"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@id/subject_title_text"
+            android:layout_toEndOf="@id/subject_title_text"
+            />
 
         <RelativeLayout
             android:id="@+id/name_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            style="@style/BookingsCell">
+            style="@style/BookingsCell"
+            android:layout_below="@id/subject_text"
+            >
 
             <ImageView
                 android:id="@+id/name_icon"
@@ -106,16 +133,21 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:background="@null"
-                style="@style/EditText.Last.Comment" />
+                style="@style/EditText.Last.Comment"
+                android:layout_marginBottom="40dp"
+                />
 
         </LinearLayout>
 
     </RelativeLayout>
 
     <Button
-        android:layout_below="@id/info_layout"
+        android:layout_below="@id/contact_layout"
+        android:layout_marginTop="40dp"
         android:id="@+id/send_message_button"
         android:text="@string/send_message"
-        style="@style/Button.Green" />
+        android:layout_margin="@dimen/default_padding"
+        style="@style/Button.Green.Round"
+        />
 
 </com.handy.portal.ui.view.HelpContactView>

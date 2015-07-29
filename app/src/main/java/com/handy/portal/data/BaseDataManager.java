@@ -165,8 +165,8 @@ public final class BaseDataManager extends DataManager
     //********Help Center********
     @Override
     public void getHelpInfo(String nodeId,
-                     String bookingId,
-                    final Callback<HelpNodeWrapper> cb)
+                            String bookingId,
+                            final Callback<HelpNodeWrapper> cb)
     {
         service.getHelpInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
     }

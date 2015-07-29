@@ -229,7 +229,7 @@
     <style name="EditText.Email">
         <item name="android:inputType">textEmailAddress</item>
         <item name="android:singleLine">true</item>
-        <item name="android:hint">@string/email</item>
+        <item name="android:hint">@string/your_email</item>
         <item name="android:maxLength">100</item>
     </style>
 
@@ -466,6 +466,20 @@
         <item name="android:singleLine">true</item>
         <item name="android:background">@drawable/nav_bar</item>
         <item name="android:textColor">@color/black</item>
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="TextView.HelpNavBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@color/handy_blue</item>
+        <item name="android:textColor">@color/white</item>
         <item name="fontPath">fonts/CircularStd-Book.otf</item>
         <item name="android:textSize">18sp</item>
         <item name="android:paddingTop">0dp</item>

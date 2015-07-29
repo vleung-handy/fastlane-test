@@ -172,10 +172,21 @@ public class MainActivityFragment extends InjectedFragment
             swapFragmentArguments.argumentsBundle = argumentsBundle;
             swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS
                                                     || targetTab == MainViewTab.HELP
-                                                    || targetTab == MainViewTab.HELP_CONTACT);
+                                                    || targetTab == MainViewTab.HELP_CONTACT
+                                                    );
+
+            //TODO: HACK: Ugh. We are going to spend some time thinking about back nav with the help/help contact.
+            swapFragmentArguments.popBackStack = (currentTab == MainViewTab.HELP_CONTACT);
 
             //want to be able to navigate back from help tab to previous tab
             swapFragmentArguments.clearBackStack = !(targetTab == MainViewTab.HELP || targetTab == MainViewTab.HELP_CONTACT);
+
+            if(currentTab != null)
+            {
+                System.out.println("ttab : " + targetTab.toString() + " : ctab " + currentTab.toString());
+            }
+
+            System.out.println("Should pop back stack once?  : " + swapFragmentArguments.popBackStack);
 
             swapFragment(swapFragmentArguments);
         }
@@ -213,6 +224,31 @@ public class MainActivityFragment extends InjectedFragment
         clearingBackStack = true;
         FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
         supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); //clears out the whole stack
+        clearingBackStack = false;
+    }
+
+    private void popFragmentBackStack()
+    {
+        clearingBackStack = true;
+        FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
+
+        System.out.println("See original stack");
+        for(int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
+        {
+            System.out.println(supportFragmentManager.getBackStackEntryAt(i).toString());
+        }
+
+        int backStackCount = supportFragmentManager.getBackStackEntryCount();
+        System.out.println( backStackCount + "  Going to pop a backstack node : " + supportFragmentManager.getBackStackEntryAt(backStackCount - 1).toString());
+
+        supportFragmentManager.popBackStackImmediate();
+
+        System.out.println("See modified stack");
+        for(int i = 0; i < supportFragmentManager.getBackStackEntryCount(); i++)
+        {
+            System.out.println(supportFragmentManager.getBackStackEntryAt(i).toString());
+        }
+
         clearingBackStack = false;
     }
 
@@ -265,6 +301,11 @@ public class MainActivityFragment extends InjectedFragment
 
     private void swapFragment(SwapFragmentArguments swapArguments)
     {
+        if(swapArguments.popBackStack)
+        {
+            popFragmentBackStack();
+        }
+
         if(swapArguments.clearBackStack)
         {
             clearFragmentBackStack();

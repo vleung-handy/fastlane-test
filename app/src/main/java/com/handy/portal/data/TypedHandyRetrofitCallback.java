@@ -127,26 +127,4 @@ class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
         super(callback);
     }
 
-//    @Override
-//    public void success(JSONObject response)
-//    {
-//    }
-//
-//    EmptyHandyRetroFitCallback()
-//    {
-//        super(new EmptyCallback());
-//    }
-//
-//    public static class EmptyCallback implements DataManager.Callback<Void>
-//    {
-//        @Override
-//        public void onSuccess(Void response)
-//        {
-//        }
-//
-//        @Override
-//        public void onError(DataManager.DataManagerError error)
-//        {
-//        }
-//    }
 }

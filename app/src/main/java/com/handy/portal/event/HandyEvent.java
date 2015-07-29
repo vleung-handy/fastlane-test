@@ -593,6 +593,7 @@ public abstract class HandyEvent
     }
 
     //Help Contact Message
+    @Track("pro help contact form submitted")
     public static class RequestNotifyHelpContact extends HandyEvent
     {
         public TypedInput body;

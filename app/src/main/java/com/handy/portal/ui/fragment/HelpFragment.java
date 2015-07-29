@@ -35,6 +35,8 @@ public final class HelpFragment extends InjectedFragment
     private String currentBookingId; //optional param, if help request is associated with a booking
     private String currentPath; //what nodes have we traversed to get to the current node
 
+    private String lastNodeId = "";
+
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
@@ -53,16 +55,26 @@ public final class HelpFragment extends InjectedFragment
             this.currentBookingId = "";
         }
 
-        if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
+        String nodeIdToRequest = null;
+        System.out.println("Help fragment on create view last node id : " + lastNodeId);
+
+        if(false)
         {
-            bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), this.currentBookingId));
-        } else
-        {
-            //null id means request root
-            bus.post(new HandyEvent.RequestHelpNode(null, this.currentBookingId));
+            nodeIdToRequest = lastNodeId;
+            lastNodeId = null;
         }
 
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
+        {
+            System.out.println("Override to node id : " + getArguments().getString(BundleKeys.HELP_NODE_ID));
+            nodeIdToRequest = getArguments().getString(BundleKeys.HELP_NODE_ID);
+        }
+
+        bus.post(new HandyEvent.RequestHelpNode(getArguments().getString(BundleKeys.HELP_NODE_ID), this.currentBookingId));
+
         currentPath = "";
+
+        setupNavigationClickListeners();
 
         return view;
     }
@@ -83,8 +95,6 @@ public final class HelpFragment extends InjectedFragment
 
     private void setupClickListeners(HelpNode helpNode)
     {
-        setupNavigationClickListeners();
-
         switch (helpNode.getType())
         {
             case HelpNode.HelpNodeType.ROOT:
@@ -143,7 +153,6 @@ public final class HelpFragment extends InjectedFragment
                                 bus.post(new HandyEvent.RequestHelpNode(Integer.toString(helpNode.getId()), null));
                             }
                         });
-
                         //Request data for node, will trigger a display when it returns
                         requestNodeData(childNode);
                     }
@@ -152,19 +161,7 @@ public final class HelpFragment extends InjectedFragment
         }
     }
 
-    private void requestNodeData(final HelpNode node)
-    {
-        if (node.getType().equals(HelpNode.HelpNodeType.BOOKING))
-        {
-            currentBookingId = Integer.toString(node.getId()); //TODO: What is this? Does this make sense? It seems odd.....
-            bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), null));
-        } else
-        {
-            bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
-        }
-    }
-
-    private void setupArticleClickListeners(HelpNode helpNode)
+    private void setupArticleClickListeners(final HelpNode helpNode)
     {
         if (helpNode.getChildren().size() > 0)
         {
@@ -210,7 +207,7 @@ public final class HelpFragment extends InjectedFragment
                         {
                             Bundle arguments = new Bundle();
                             arguments.putString(BundleKeys.PATH, currentPath);
-                            arguments.putParcelable(BundleKeys.HELP_NODE, child);
+                            arguments.putParcelable(BundleKeys.HELP_NODE, helpNode);
                             HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
                             bus.post(navigateEvent);
                         }
@@ -220,12 +217,25 @@ public final class HelpFragment extends InjectedFragment
         }
     }
 
+    private void requestNodeData(final HelpNode node)
+    {
+        if (node.getType().equals(HelpNode.HelpNodeType.BOOKING))
+        {
+            currentBookingId = Integer.toString(node.getId()); //TODO: What is this? Does this make sense? It seems odd.....
+            bus.post(new HandyEvent.RequestHelpBookingNode(Integer.toString(node.getId()), null));
+        } else
+        {
+            bus.post(new HandyEvent.RequestHelpNode(Integer.toString(node.getId()), null));
+        }
+    }
+
 //Event Listeners
 
     @Subscribe
     public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
     {
         HelpNode helpNode = event.helpNode;
+        lastNodeId = Integer.toString(helpNode.getId());
         trackPath(helpNode);
         updateDisplay(helpNode);
     }

@@ -13,4 +13,5 @@ public class SwapFragmentArguments
     public TransitionStyle transitionStyle;
     public boolean addToBackStack;
     public boolean clearBackStack;
+    public boolean popBackStack;
 }
