@@ -37,10 +37,15 @@ public final class HelpFragment extends InjectedFragment
 
     private String lastNodeId = "";
 
+    private String nodeIdToRequest = null;
+
+
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
     {
+        //TODO: Should we bother inflating if we're popping the fragment stack?
+
         final View view = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_help_page, container, false);
 
@@ -55,22 +60,18 @@ public final class HelpFragment extends InjectedFragment
             this.currentBookingId = "";
         }
 
-        String nodeIdToRequest = null; //default is to request null which will get us our root node
+        this.nodeIdToRequest = null; //default is to request null which will get us our root node
 
         if(false) //in the future we may want to remember the last node we saw
         {
-            nodeIdToRequest = lastNodeId;
+            this.nodeIdToRequest = lastNodeId;
             lastNodeId = null;
         }
 
         if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
         {
-            nodeIdToRequest = getArguments().getString(BundleKeys.HELP_NODE_ID);
+            this.nodeIdToRequest = getArguments().getString(BundleKeys.HELP_NODE_ID);
         }
-
-        System.out.println("On create view request node : " + nodeIdToRequest);
-
-        bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, this.currentBookingId));
 
         currentPath = "";
 
@@ -83,7 +84,10 @@ public final class HelpFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        System.out.println("Help fragment on resume : " + MainActivityFragment.clearingBackStack);
+        if(!MainActivityFragment.clearingBackStack)
+        {
+            bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, this.currentBookingId));
+        }
     }
 
 
