@@ -1,30 +1,23 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.google.common.io.CharStreams;
 import com.handy.portal.R;
-import com.handy.portal.model.TermsDetails;
-import com.handy.portal.manager.TermsManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.TermsManager;
+import com.handy.portal.model.TermsDetails;
 import com.handy.portal.ui.activity.SplashActivity;
+import com.handy.portal.ui.element.HandyWebView;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.squareup.otto.Subscribe;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import javax.inject.Inject;
 
@@ -35,15 +28,11 @@ import butterknife.OnClick;
 
 public class TermsFragment extends InjectedFragment
 {
-    private static final String ASSETS_BASE_URL = "file:///android_asset/";
-    private static final String TERMS_TEMPLATE_HTML = "terms_template.html";
-    private static final String UTF_8 = "UTF-8";
-
     @InjectView(R.id.loading_overlay)
     protected LoadingOverlayView loadingOverlay;
 
     @InjectView(R.id.terms_webview)
-    protected WebView termsWebview;
+    protected HandyWebView termsWebView;
 
     @InjectView(R.id.accept_button)
     protected Button acceptButton;
@@ -134,9 +123,7 @@ public class TermsFragment extends InjectedFragment
 
             instructionsText.setText(newestTermsDetails.getInstructions());
 
-            String htmlContent = wrapContent(newestTermsDetails.getContent());
-            termsWebview.loadDataWithBaseURL(ASSETS_BASE_URL, htmlContent, "text/html", UTF_8, null);
-            overrideTermsWebviewUrlLoading();
+            termsWebView.loadHtml(newestTermsDetails.getContent());
 
             bus.post(new HandyEvent.TermsDisplayed(newestTermsDetails.getCode()));
         }
@@ -148,37 +135,4 @@ public class TermsFragment extends InjectedFragment
         }
     }
 
-    private void overrideTermsWebviewUrlLoading()
-    {
-        termsWebview.setWebViewClient(new WebViewClient()
-        {
-            public boolean shouldOverrideUrlLoading(WebView view, String url)
-            {
-                if (url != null)
-                {
-                    view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        });
-    }
-
-    private String wrapContent(String content)
-    {
-        String template = "%s"; // fall back to just displaying without html wrapping
-        try
-        {
-            InputStream stream = getActivity().getAssets().open(TERMS_TEMPLATE_HTML);
-            template = CharStreams.toString(new InputStreamReader(stream, UTF_8));
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return String.format(template, content);
-    }
 }

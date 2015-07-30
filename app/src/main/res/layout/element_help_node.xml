@@ -11,7 +11,7 @@
     <RelativeLayout
         android:id="@+id/info_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/cell_booking_last_rounded">
 
         <TextView
@@ -21,6 +21,10 @@
             android:padding="@dimen/default_padding"
             style="@style/TextView" />
 
+        <com.handy.portal.ui.element.HandyWebView
+            android:id="@+id/help_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
         <Button
             android:id="@+id/contact_button"
             android:layout_marginLeft="@dimen/default_margin"

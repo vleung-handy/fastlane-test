@@ -1,8 +1,6 @@
 package com.handy.portal.ui.view;
 
 import android.content.Context;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.model.HelpNode;
+import com.handy.portal.ui.element.HandyWebView;
 import com.handy.portal.ui.widget.CTAButton;
 import com.handy.portal.util.TextUtils;
 
@@ -21,10 +20,10 @@ import butterknife.InjectView;
 
 public final class HelpNodeView extends InjectedRelativeLayout
 {
+    @InjectView(R.id.help_webview)
+    protected HandyWebView helpWebView;
     @InjectView(R.id.info_layout)
     RelativeLayout infoLayout;
-    @InjectView(R.id.info_text)
-    TextView infoText;
     @InjectView(R.id.cta_layout)
     public ViewGroup ctaLayout;
     @InjectView(R.id.contact_button)
@@ -52,6 +51,7 @@ public final class HelpNodeView extends InjectedRelativeLayout
         //clear out the existing ctas and navigation buttons
         ctaLayout.removeAllViews();
         navOptionsLayout.removeAllViews();
+        helpWebView.clearHtml();//prevent user from seeing previous article's content
 
         if (node == null)
         {
@@ -86,46 +86,13 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
     private void layoutForArticle(final HelpNode node)
     {
-        infoLayout.setVisibility(View.VISIBLE);
 
-        String info = node.getContent();
-
+        ctaLayout.setVisibility(View.GONE);
+        contactButton.setVisibility(View.GONE);
         //Turn these off, children nodes can turn them on
-        ctaLayout.setVisibility(View.INVISIBLE);
-        contactButton.setVisibility(View.INVISIBLE);
 
-        //TODO: Any inline images from the HTML are displayed as placeholders, need to figure out how to grab the images and display them
-        infoText.setText(TextUtils.trim(Html.fromHtml(info)));
-
-        //TODO: this determine what happens when you click on inline links, currently crashing on emulator?
-        infoText.setMovementMethod(LinkMovementMethod.getInstance());
-
-        for (final HelpNode child : node.getChildren())
-        {
-            if (child.getType() == null)
-            {
-                continue;
-            }
-
-            if (child.getType().equals(HelpNode.HelpNodeType.FAQ))
-            {
-                info += "<br/><br/><b>" + getContext().getString(R.string.related_faq) + ":</b>";
-
-                for (final HelpNode faqChild : child.getChildren())
-                {
-                    info += "<br/><a href=" + faqChild.getContent() + ">" + faqChild.getLabel() + "</a>";
-                }
-            } else if (child.getType().equals(HelpNode.HelpNodeType.CTA))
-            {
-                //TODO: Re-enable CTAs when we support them
-                //ctaLayout.setVisibility(View.VISIBLE);
-                //addCtaButton(child);
-                Crashlytics.log("No support for CTAs, required for node : " + child.getId());
-            } else if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
-            {
-                contactButton.setVisibility(View.VISIBLE);
-            }
-        }
+        helpWebView.loadHtml(node.getContent());
+        infoLayout.setVisibility(View.VISIBLE);
     }
 
     private void layoutNavList(final HelpNode node)
