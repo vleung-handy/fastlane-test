@@ -3,7 +3,6 @@ package com.handy.portal.ui.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -23,8 +22,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
     protected HandyWebView helpWebView;
     @InjectView(R.id.info_layout)
     RelativeLayout infoLayout;
-    @InjectView(R.id.cta_layout)
-    public ViewGroup ctaLayout;
     @InjectView(R.id.contact_button)
     public Button contactButton;
     @InjectView(R.id.nav_options_layout)
@@ -48,7 +45,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
     public void updateDisplay(final HelpNode node)
     {
         //clear out the existing ctas and navigation buttons
-        ctaLayout.removeAllViews();
         navOptionsLayout.removeAllViews();
         helpWebView.clearHtml();//prevent user from seeing previous article's content
 
@@ -86,7 +82,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
     private void layoutForArticle(final HelpNode node)
     {
 
-        ctaLayout.setVisibility(View.GONE);
         contactButton.setVisibility(View.GONE);
         //Turn these off, children nodes can turn them on
 
