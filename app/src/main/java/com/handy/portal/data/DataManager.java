@@ -56,12 +56,12 @@ public abstract class DataManager
     public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
 
     public abstract void getHelpInfo(String nodeId,
-                                    String bookingId,
-                                    final DataManager.Callback<HelpNodeWrapper> cb);
+                                     String bookingId,
+                                     final DataManager.Callback<HelpNodeWrapper> cb);
 
     public abstract void getHelpBookingsInfo(String nodeId,
-                                    String bookingId,
-                                    final DataManager.Callback<HelpNodeWrapper> cb);
+                                             String bookingId,
+                                             final DataManager.Callback<HelpNodeWrapper> cb);
 
     public abstract void createHelpCase(TypedInput body, final Callback<Void> cb);
 

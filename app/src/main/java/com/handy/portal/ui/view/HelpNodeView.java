@@ -95,6 +95,12 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
         for (final HelpNode child : node.getChildren())
         {
+            if (child.getType() == null)
+            {
+                Crashlytics.log("HelpNode " + child.getId() + " has null data");
+                continue;
+            }
+
             if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
             {
                 contactButton.setVisibility(View.VISIBLE);

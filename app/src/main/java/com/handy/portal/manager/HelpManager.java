@@ -43,7 +43,7 @@ public class HelpManager
 
         //TODO: Currently we send null to request root on the server, this is a bit hacky and does not allow us to cache the root node which is silly
 
-        if(nodeId != null) //nulls will crash our cache on the getIfPresentCall
+        if (nodeId != null) //nulls will crash our cache on the getIfPresentCall
         {
             final HelpNode cachedHelpNode = helpNodeCache.getIfPresent(nodeId);
             if (cachedHelpNode != null)
@@ -80,7 +80,7 @@ public class HelpManager
 
         //TODO: Currently we send null to request root on the server, this is a bit hacky and does not allow us to cache the root node which is silly
 
-        if(nodeId != null) //nulls will crash our cache on the getIfPresentCall
+        if (nodeId != null) //nulls will crash our cache on the getIfPresentCall
         {
             final HelpNode cachedHelpNode = helpNodeCache.getIfPresent(nodeId);
             if (cachedHelpNode != null)

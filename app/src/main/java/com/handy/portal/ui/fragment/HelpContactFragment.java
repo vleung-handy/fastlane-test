@@ -82,7 +82,8 @@ public final class HelpContactFragment extends InjectedFragment
         if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
         {
             this.bookingId = getArguments().getString(BundleKeys.BOOKING_ID);
-        } else
+        }
+        else
         {
             this.bookingId = "";
         }
@@ -94,26 +95,7 @@ public final class HelpContactFragment extends InjectedFragment
 
         assignClickListeners(view);
 
-        addOnBackListener(this.associatedNode);
-
         return view;
-    }
-
-    private void addOnBackListener(final HelpNode helpNode)
-    {
-        //setup the back listener to be able to return to here
-        ((BaseActivity) getActivity()).addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
-        {
-            @Override
-            public void onBackPressed()
-            {
-                //navigate back to original help node
-                Bundle arguments = new Bundle();
-                arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(helpNode.getId()));
-                HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments);
-                bus.post(event);
-            }
-        });
     }
 
     private void assignClickListeners(View view)
@@ -211,7 +193,7 @@ public final class HelpContactFragment extends InjectedFragment
         bus.post(event);
     }
 
-//Event Listeners
+    //Event Listeners
     @Subscribe
     public void onReceiveNotifyHelpContactSuccess(HandyEvent.ReceiveNotifyHelpContactSuccess event)
     {
@@ -219,7 +201,8 @@ public final class HelpContactFragment extends InjectedFragment
         if (bookingId == null || bookingId.isEmpty())
         {
             returnToJobsScreen();
-        } else
+        }
+        else
         {
             returnToBookingDetails(bookingId);
         }

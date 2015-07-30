@@ -103,11 +103,11 @@ public interface HandyRetrofitService
     @PUT(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/remove")
     void removeBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-  //********Help Center********
-  String SELF_SERVICE_PATH = "/self_service/";
+    //********Help Center********
+    String SELF_SERVICE_PATH = "/self_service/";
 
     @GET(SELF_SERVICE_PATH + "node_details")
-    //empty id returns root?
+        //empty id returns root?
     void getHelpInfo(@Query("id") String nodeId,
                      @Query("booking_id") String bookingId,
                      HandyRetrofitCallback cb);
