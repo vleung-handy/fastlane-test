@@ -155,16 +155,13 @@ public class MainActivityFragment extends InjectedFragment
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
             swapFragmentArguments.argumentsBundle = argumentsBundle;
-            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS
-                                                    || targetTab == MainViewTab.HELP
-                                                    || targetTab == MainViewTab.HELP_CONTACT
-                                                    );
 
-            //TODO: HACK: Ugh. We are going to spend some time thinking about back nav with the help/help contact.
-            swapFragmentArguments.popBackStack = (currentTab == MainViewTab.HELP_CONTACT);
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
+            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
+            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
 
-            //want to be able to navigate back from help tab to previous tab
-            swapFragmentArguments.clearBackStack = !(targetTab == MainViewTab.HELP || targetTab == MainViewTab.HELP_CONTACT);
+            swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
 
             swapFragment(swapFragmentArguments);
         }
@@ -202,7 +199,7 @@ public class MainActivityFragment extends InjectedFragment
         }
 
         //if clearing the back stack also clear the on back pressed listener stack
-        if(swapFragmentArguments.clearBackStack)
+        if (swapFragmentArguments.clearBackStack)
         {
             ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
         }
@@ -215,17 +212,6 @@ public class MainActivityFragment extends InjectedFragment
         clearingBackStack = true;
         FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
         supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); //clears out the whole stack
-        clearingBackStack = false;
-    }
-
-    private void popFragmentBackStack()
-    {
-        clearingBackStack = true;
-        FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-        if(supportFragmentManager.getBackStackEntryCount() > 0)
-        {
-            supportFragmentManager.popBackStackImmediate();
-        }
         clearingBackStack = false;
     }
 
@@ -278,12 +264,7 @@ public class MainActivityFragment extends InjectedFragment
 
     private void swapFragment(SwapFragmentArguments swapArguments)
     {
-        if(swapArguments.popBackStack)
-        {
-            popFragmentBackStack();
-        }
-
-        if(swapArguments.clearBackStack)
+        if (swapArguments.clearBackStack)
         {
             clearFragmentBackStack();
         }
