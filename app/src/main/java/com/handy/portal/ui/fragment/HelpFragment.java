@@ -72,6 +72,7 @@ public final class HelpFragment extends InjectedFragment
         super.onResume();
         if (!MainActivityFragment.clearingBackStack)
         {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, this.currentBookingId));
         }
     }
@@ -187,6 +188,7 @@ public final class HelpFragment extends InjectedFragment
     @Subscribe
     public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
     {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         HelpNode helpNode = event.helpNode;
         trackPath(helpNode);
         updateDisplay(helpNode);
@@ -195,6 +197,7 @@ public final class HelpFragment extends InjectedFragment
     @Subscribe
     public void onReceiveHelpNodeError(HandyEvent.ReceiveHelpNodeError event)
     {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(R.string.error_connectivity);
     }
 }
