@@ -22,6 +22,8 @@ import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -58,10 +60,41 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
         registerButtonListeners();
+        registerBackStackListener();
         transitionOverlayView.init();
         loadingOverlayView.init();
 
+
         return view;
+    }
+
+    private void registerBackStackListener()
+    {
+        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener()
+        {
+            @Override
+            public void onBackStackChanged()
+            {
+                List<Fragment> fragments = getFragmentManager().getFragments();
+                if (fragments.size() == 4 && fragments.get(fragments.size() - 1) == null)
+                {
+                    // hack for when returning to claimed booking details view from help tab
+                    boolean isScheduleTab = true;
+                    for (Fragment fragment : fragments)
+                    {
+                        if (fragment != null)
+                        {
+                            isScheduleTab &= (fragment instanceof MainActivityFragment || fragment instanceof ScheduledBookingsFragment || fragment instanceof BookingDetailsFragment);
+                        }
+                    }
+
+                    if (isScheduleTab)
+                    {
+                        scheduleButton.setChecked(true);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -74,7 +107,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             tab = savedInstanceState.getString(BundleKeys.TAB);
         }
-        switchToTab(MainViewTab.valueOf(tab));
+        switchToTab(MainViewTab.valueOf(tab), false);
     }
 
     @Override
@@ -92,7 +125,7 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
-        switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride);
+        switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride, false);
     }
 
     @Subscribe
@@ -121,21 +154,21 @@ public class MainActivityFragment extends InjectedFragment
         @Override
         public void onClick(View view)
         {
-            switchToTab(tab);
+            switchToTab(tab, true);
         }
     }
 
-    private void switchToTab(MainViewTab tab)
+    private void switchToTab(MainViewTab tab, boolean userTriggered)
     {
-        switchToTab(tab, null);
+        switchToTab(tab, null, userTriggered);
     }
 
-    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle)
+    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, boolean userTriggered)
     {
-        switchToTab(targetTab, argumentsBundle, null);
+        switchToTab(targetTab, argumentsBundle, null, userTriggered);
     }
 
-    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle)
+    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
         trackSwitchToTab(targetTab);
 
@@ -156,10 +189,17 @@ public class MainActivityFragment extends InjectedFragment
             swapFragmentArguments.targetClassType = targetTab.getClassType();
             swapFragmentArguments.argumentsBundle = argumentsBundle;
 
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
-            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
-            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+            if (userTriggered)
+            {
+                swapFragmentArguments.addToBackStack = false;
+            }
+            else
+            {
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
+                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
+                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+            }
 
             swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
 
@@ -198,11 +238,7 @@ public class MainActivityFragment extends InjectedFragment
             }
         }
 
-        //if clearing the back stack also clear the on back pressed listener stack
-        if (swapFragmentArguments.clearBackStack)
-        {
-            ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-        }
+        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
 
         currentTab = targetTab;
     }
