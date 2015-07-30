@@ -29,6 +29,8 @@
         android:textColor="@color/white"
         android:layout_centerVertical="true"
         android:text="@string/help"
+        android:singleLine="true"
+        android:ellipsize="end"
         />
 
 </com.handy.portal.ui.view.HelpBannerView>
