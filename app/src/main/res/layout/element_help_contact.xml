@@ -60,6 +60,7 @@
 
             <com.handy.portal.ui.widget.FirstNameInputTextView
                 android:id="@+id/help_contact_user_name_text"
+                android:textCursorDrawable="@null"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:layout_toRightOf="@id/name_icon"
@@ -93,6 +94,7 @@
 
             <com.handy.portal.ui.widget.EmailInputTextView
                 android:id="@+id/help_contact_email_text"
+                android:textCursorDrawable="@null"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:layout_toRightOf="@id/email_icon"
@@ -124,6 +126,7 @@
 
             <com.handy.portal.ui.widget.BasicInputTextView
                 android:id="@+id/help_contact_comment_text"
+                android:textCursorDrawable="@null"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:hint="@string/contact_form_hint"
