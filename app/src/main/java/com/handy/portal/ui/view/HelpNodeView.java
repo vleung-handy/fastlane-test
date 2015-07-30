@@ -13,7 +13,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.ui.element.HandyWebView;
-import com.handy.portal.ui.widget.CTAButton;
 import com.handy.portal.util.TextUtils;
 
 import butterknife.InjectView;
@@ -93,6 +92,14 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
         helpWebView.loadHtml(node.getContent());
         infoLayout.setVisibility(View.VISIBLE);
+
+        for (final HelpNode child : node.getChildren())
+        {
+            if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
+            {
+                contactButton.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void layoutNavList(final HelpNode node)
@@ -137,12 +144,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
             count++;
         }
-    }
-
-    private void addCtaButton(final HelpNode node)
-    {
-        final CTAButton ctaButton = (CTAButton) inflate(R.layout.fragment_cta_button_template, ctaLayout);
-        ctaButton.initFromHelpNode(node, null); //TODO: Get real login/auth token?
     }
 
 }
