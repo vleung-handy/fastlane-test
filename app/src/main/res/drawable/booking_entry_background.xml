@@ -27,7 +27,7 @@
             </item>
             <item android:bottom="1px">
                 <shape android:shape="rectangle">
-                    <stroke android:width="1px" android:color="@color/cell_selected" />
+                    <stroke android:width="1px" android:color="@color/white_pressed" />
                     <solid android:color="@color/white_pressed" />
                 </shape>
             </item>
