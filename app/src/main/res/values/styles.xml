@@ -520,11 +520,11 @@
 
     <style name="BookingsCell">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/cell_booking</item>
         <item name="android:textSize">@dimen/default_text_size</item>
-        <item name="android:padding">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
     </style>
 
     <style name="BookingsCell.End">
