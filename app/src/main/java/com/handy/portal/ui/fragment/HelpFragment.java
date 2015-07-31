@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -17,6 +18,7 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public final class HelpFragment extends InjectedFragment
 {
@@ -24,9 +26,14 @@ public final class HelpFragment extends InjectedFragment
 
     @InjectView(R.id.help_node_view)
     HelpNodeView helpNodeView;
-
     @InjectView(R.id.help_banner_view)
     HelpBannerView helpBannerView;
+    @InjectView(R.id.scroll_view)
+    View scrollView;
+    @InjectView(R.id.fetch_error_view)
+    View errorView;
+    @InjectView(R.id.fetch_error_text)
+    TextView errorText;
 
     private String currentBookingId; //optional param, if help request is associated with a booking
     private String currentPath; //what nodes have we traversed to get to the current node
@@ -47,16 +54,21 @@ public final class HelpFragment extends InjectedFragment
 
         if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
         {
-            this.currentBookingId = getArguments().getString(BundleKeys.BOOKING_ID);
+            currentBookingId = getArguments().getString(BundleKeys.BOOKING_ID);
         }
         else
         {
-            this.currentBookingId = "";
+            currentBookingId = "";
         }
 
         if (getArguments() != null && getArguments().containsKey(BundleKeys.HELP_NODE_ID))
         {
-            this.nodeIdToRequest = getArguments().getString(BundleKeys.HELP_NODE_ID);
+            nodeIdToRequest = getArguments().getString(BundleKeys.HELP_NODE_ID);
+        }
+
+        if (nodeIdToRequest == null)
+        {
+            helpBannerView.navText.setText(R.string.help);
         }
 
         currentPath = "";
@@ -73,7 +85,7 @@ public final class HelpFragment extends InjectedFragment
         if (!MainActivityFragment.clearingBackStack)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, this.currentBookingId));
+            bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, currentBookingId));
         }
     }
 
@@ -189,6 +201,7 @@ public final class HelpFragment extends InjectedFragment
     public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        scrollView.setVisibility(View.VISIBLE);
         HelpNode helpNode = event.helpNode;
         trackPath(helpNode);
         updateDisplay(helpNode);
@@ -198,6 +211,16 @@ public final class HelpFragment extends InjectedFragment
     public void onReceiveHelpNodeError(HandyEvent.ReceiveHelpNodeError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(R.string.error_connectivity);
+        scrollView.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+        errorText.setText(R.string.error_fetching_connectivity_issue);
+    }
+
+    @OnClick(R.id.try_again_button)
+    public void doTryAgain()
+    {
+        errorView.setVisibility(View.GONE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, currentBookingId));
     }
 }
