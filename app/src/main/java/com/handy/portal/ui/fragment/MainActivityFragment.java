@@ -22,8 +22,6 @@ import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -60,41 +58,11 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
         registerButtonListeners();
-        registerBackStackListener();
         transitionOverlayView.init();
         loadingOverlayView.init();
 
 
         return view;
-    }
-
-    private void registerBackStackListener()
-    {
-        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener()
-        {
-            @Override
-            public void onBackStackChanged()
-            {
-                List<Fragment> fragments = getFragmentManager().getFragments();
-                if (fragments.size() == 4 && fragments.get(fragments.size() - 1) == null)
-                {
-                    // hack for when returning to claimed booking details view from help tab
-                    boolean isScheduleTab = true;
-                    for (Fragment fragment : fragments)
-                    {
-                        if (fragment != null)
-                        {
-                            isScheduleTab &= (fragment instanceof MainActivityFragment || fragment instanceof ScheduledBookingsFragment || fragment instanceof BookingDetailsFragment);
-                        }
-                    }
-
-                    if (isScheduleTab)
-                    {
-                        scheduleButton.setChecked(true);
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -197,7 +165,6 @@ public class MainActivityFragment extends InjectedFragment
             {
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
-                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
             }
 
