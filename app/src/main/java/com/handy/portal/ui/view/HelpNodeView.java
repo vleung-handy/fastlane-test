@@ -3,6 +3,7 @@ package com.handy.portal.ui.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,7 +22,7 @@ public final class HelpNodeView extends InjectedRelativeLayout
     @InjectView(R.id.help_webview)
     protected HandyWebView helpWebView;
     @InjectView(R.id.info_layout)
-    RelativeLayout infoLayout;
+    protected RelativeLayout infoLayout;
     @InjectView(R.id.contact_button)
     public Button contactButton;
     @InjectView(R.id.nav_options_layout)
@@ -81,12 +82,21 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
     private void layoutForArticle(final HelpNode node)
     {
-
-        contactButton.setVisibility(View.GONE);
+        contactButton.setVisibility(GONE);
         //Turn these off, children nodes can turn them on
 
-        helpWebView.loadHtml(node.getContent());
-        infoLayout.setVisibility(View.VISIBLE);
+        helpWebView.loadHtml(node.getContent(), new HandyWebView.InvalidateCallback()
+        {
+            @Override
+            public void invalidate()
+            {
+                if (infoLayout.getVisibility() != VISIBLE)
+                {
+                    infoLayout.setAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in));
+                    infoLayout.setVisibility(VISIBLE);
+                }
+            }
+        });
 
         for (final HelpNode child : node.getChildren())
         {
@@ -98,15 +108,15 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
             if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
             {
-                contactButton.setVisibility(View.VISIBLE);
+                contactButton.setVisibility(VISIBLE);
             }
         }
     }
 
     private void layoutNavList(final HelpNode node)
     {
-        infoLayout.setVisibility(View.GONE);
-        navOptionsLayout.setVisibility(View.VISIBLE);
+        infoLayout.setVisibility(GONE);
+        navOptionsLayout.setVisibility(VISIBLE);
 
         for (final HelpNode helpNode : node.getChildren())
         {
@@ -126,7 +136,8 @@ public final class HelpNodeView extends InjectedRelativeLayout
                 textView.setText(TextUtils.formatDate(helpNode.getStartDate(), "h:mmaaa \u2013 ")
                         + TextUtils.formatDecimal(helpNode.getHours(), "#.# ")
                         + getContext().getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
-            } else
+            }
+            else
             {
                 navView = inflate(R.layout.list_item_help_nav, navOptionsLayout);
 

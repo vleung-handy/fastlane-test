@@ -3,6 +3,7 @@ package com.handy.portal.ui.element;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,6 +22,8 @@ public class HandyWebView extends WebView //TODO: refactor class name
     private static final String TEMPLATE_HTML = "webview_template.html";
     private static final String UTF_8 = "UTF-8";
     private static final String TEMPLATE_PLACEHOLDER = "{{content}}";
+    @Nullable
+    private InvalidateCallback invalidateCallback;
 
     public HandyWebView(Context context)
     {
@@ -47,6 +50,12 @@ public class HandyWebView extends WebView //TODO: refactor class name
 
     public void loadHtml(String htmlBody)
     {
+        loadHtml(htmlBody, null);
+    }
+
+    public void loadHtml(String htmlBody, @Nullable InvalidateCallback invalidateCallback)
+    {
+        this.invalidateCallback = invalidateCallback;
         String htmlContent = wrapContent(htmlBody);
         loadDataWithBaseURL(ASSETS_BASE_URL, htmlContent, "text/html", UTF_8, null);
     }
@@ -75,23 +84,42 @@ public class HandyWebView extends WebView //TODO: refactor class name
             {
                 if (url != null)
                 {
-                    try{
+                    try
+                    {
                         view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                    }catch(Exception e){
+                    } catch (Exception e)
+                    {
                         Crashlytics.log("Attempted to open " + url);
                         Crashlytics.logException(e);
                     }
                     return true;
-                } else
+                }
+                else
                 {
                     return false;
                 }
             }
 
             @Override
-            public void onPageFinished(WebView webView, String url){
+            public void onPageFinished(WebView webView, String url)
+            {
                 super.onPageFinished(webView, url);
             }
         });
+    }
+
+    @Override
+    public void invalidate()
+    {
+        super.invalidate();
+        if (getContentHeight() > 0 && invalidateCallback != null)
+        {
+            invalidateCallback.invalidate();
+        }
+    }
+
+    public interface InvalidateCallback
+    {
+        void invalidate();
     }
 }
