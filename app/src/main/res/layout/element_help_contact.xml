@@ -14,38 +14,45 @@
         android:paddingBottom="5dp"
         >
 
-        <TextView
-            android:id="@+id/subject_title_text"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginBottom="@dimen/default_padding"
-            android:layout_marginLeft="@dimen/default_padding"
-            android:layout_marginRight="8dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textColor="@color/black"
-            style="@style/TextView.Bold"
-            android:textSize="14sp"
-            android:text="@string/help_center_subject"
-            />
+            android:id="@+id/subject_title_layout"
+            android:elevation="2sp">
 
-        <TextView
-            android:id="@+id/subject_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginBottom="@dimen/default_padding"
-            android:textColor="@color/black"
-            android:layout_toRightOf="@id/subject_title_text"
-            android:layout_toEndOf="@id/subject_title_text"
-            android:text="This is something here"
-            android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/subject_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginBottom="@dimen/default_padding"
+                android:layout_marginLeft="@dimen/default_padding"
+                android:layout_marginRight="8dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/black"
+                style="@style/TextView.Bold"
+                android:textSize="14sp"
+                android:text="@string/help_center_subject"
+                />
+
+            <TextView
+                android:id="@+id/subject_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginBottom="@dimen/default_padding"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@id/subject_title_text"
+                android:layout_toEndOf="@id/subject_title_text"
+                android:textSize="14sp"/>
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/name_layout"
             style="@style/BookingsCell"
-            android:layout_below="@id/subject_text"
+            android:layout_below="@+id/subject_title_layout"
             >
 
             <ImageView
