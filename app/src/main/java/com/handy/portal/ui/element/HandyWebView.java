@@ -91,7 +91,6 @@ public class HandyWebView extends WebView //TODO: refactor class name
             @Override
             public void onPageFinished(WebView webView, String url){
                 super.onPageFinished(webView, url);
-                webView.bringToFront();//hacky fix for Android 4.4.4 where bottom navigation bar is sometimes not displayed
             }
         });
     }
