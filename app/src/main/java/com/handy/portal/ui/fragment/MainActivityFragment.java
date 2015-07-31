@@ -63,6 +63,14 @@ public class MainActivityFragment extends InjectedFragment
         transitionOverlayView.init();
         loadingOverlayView.init();
 
+        /*
+            below logic is needed to workaround a bug in android 4.4 that cause webview artifacts to show.
+            setting this at the help view or webview level does not fully work (complex webview pages didn't load)
+        */
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
+        {
+            view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
 
         return view;
     }
@@ -330,11 +338,7 @@ public class MainActivityFragment extends InjectedFragment
         //Animate the transition, animations must come before the .replace call
         if (swapArguments.transitionStyle != null)
         {
-            if (Build.VERSION.SDK_INT != Build.VERSION_CODES.KITKAT)
-            {
-                //the line below causes issues in rendering navigation tab with webview in Android 4.4
-                transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
-            }
+            transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
 
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())

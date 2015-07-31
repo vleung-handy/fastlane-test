@@ -28,19 +28,19 @@ public class HandyWebView extends WebView //TODO: refactor class name
     public HandyWebView(Context context)
     {
         super(context);
-        overrideWebViewUrlLoading();
+        init();
     }
 
     public HandyWebView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
-        overrideWebViewUrlLoading();
+        init();
     }
 
     public HandyWebView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
-        overrideWebViewUrlLoading();
+        init();
     }
 
     public void clearHtml()
@@ -75,7 +75,7 @@ public class HandyWebView extends WebView //TODO: refactor class name
         }
     }
 
-    private void overrideWebViewUrlLoading()
+    private void init()
     {
         setWebViewClient(new WebViewClient()
         {
@@ -93,8 +93,7 @@ public class HandyWebView extends WebView //TODO: refactor class name
                         Crashlytics.logException(e);
                     }
                     return true;
-                }
-                else
+                } else
                 {
                     return false;
                 }
