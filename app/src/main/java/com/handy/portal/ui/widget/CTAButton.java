@@ -9,9 +9,6 @@ import com.handy.portal.model.HelpNode;
 
 public final class CTAButton extends Button
 {
-//    @Inject
-//    NavigationManager navigationManager;
-
     public CTANavigationData navigationData;
     public String nodeLabel;
     public int nodeId;
