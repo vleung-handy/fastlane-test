@@ -59,11 +59,38 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
         registerButtonListeners();
+        registerBackStackListener();
         transitionOverlayView.init();
         loadingOverlayView.init();
 
 
         return view;
+    }
+
+    private void registerBackStackListener()
+    {
+        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener()
+        {
+            @Override
+            public void onBackStackChanged()
+            {
+                FragmentManager fragmentManager = getFragmentManager();
+                if (fragmentManager.getBackStackEntryCount() == 1)
+                {
+                    boolean isScheduleFragmentIdle = false;
+                    for (Fragment fragment : fragmentManager.getFragments())
+                    {
+                        isScheduleFragmentIdle |= fragment instanceof ScheduledBookingsFragment;
+                    }
+
+                    FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(0);
+                    if (isScheduleFragmentIdle && BookingDetailsFragment.class.getName().equals(backStackEntry.getName()))
+                    {
+                        scheduleButton.setChecked(true);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -166,6 +193,7 @@ public class MainActivityFragment extends InjectedFragment
             {
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
+                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
             }
 
@@ -300,9 +328,10 @@ public class MainActivityFragment extends InjectedFragment
         }
 
         //Animate the transition, animations must come before the .replace call
-        if (swapArguments.transitionStyle != null )
+        if (swapArguments.transitionStyle != null)
         {
-            if(Build.VERSION.SDK_INT != Build.VERSION_CODES.KITKAT){
+            if (Build.VERSION.SDK_INT != Build.VERSION_CODES.KITKAT)
+            {
                 //the line below causes issues in rendering navigation tab with webview in Android 4.4
                 transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
             }
@@ -319,9 +348,9 @@ public class MainActivityFragment extends InjectedFragment
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.main_container, newFragment);
 
-        if (swapArguments.addToBackStack)
+        if (swapArguments.addToBackStack && newFragment != null)
         {
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(newFragment.getClass().getName());
         }
         else
         {
