@@ -18,13 +18,15 @@
             android:id="@+id/subject_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_padding"
-            android:layout_marginRight="0dp"
-            android:layout_marginEnd="0dp"
+            android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:layout_marginRight="8dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="@color/black"
-            android:textStyle="bold"
+            style="@style/TextView.Bold"
+            android:textSize="14sp"
             android:text="@string/help_center_subject"
             />
 
@@ -32,13 +34,13 @@
             android:id="@+id/subject_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_padding"
-            android:layout_marginLeft="0dp"
-            android:layout_marginStart="0dp"
+            android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginBottom="@dimen/default_padding"
             android:textColor="@color/black"
             android:layout_toRightOf="@id/subject_title_text"
             android:layout_toEndOf="@id/subject_title_text"
-            />
+            android:text="This is something here"
+            android:textSize="14sp"/>
 
         <RelativeLayout
             android:id="@+id/name_layout"
