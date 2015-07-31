@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -299,9 +300,12 @@ public class MainActivityFragment extends InjectedFragment
         }
 
         //Animate the transition, animations must come before the .replace call
-        if (swapArguments.transitionStyle != null)
+        if (swapArguments.transitionStyle != null )
         {
-            transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
+            if(Build.VERSION.SDK_INT != Build.VERSION_CODES.KITKAT){
+                //the line below causes issues in rendering navigation tab with webview in Android 4.4
+                transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
+            }
 
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())
