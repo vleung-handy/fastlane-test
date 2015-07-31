@@ -213,16 +213,7 @@ public class MainActivityFragment extends InjectedFragment
     //analytics event
     private void trackSwitchToTab(MainViewTab targetTab)
     {
-        String analyticsPageData;
-        if (targetTab.isNativeTab())
-        {
-            analyticsPageData = targetTab.getClassType().toString();
-        }
-        else
-        {
-            analyticsPageData = targetTab.getTarget().getValue();
-        }
-        bus.post(new HandyEvent.Navigation(analyticsPageData));
+        bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
     }
 
     //Update the visuals to show the correct selected button
