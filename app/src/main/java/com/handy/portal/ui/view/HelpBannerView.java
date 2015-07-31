@@ -58,7 +58,6 @@ public final class HelpBannerView extends InjectedRelativeLayout
             }
             break;
 
-
             case HelpNode.HelpNodeType.NAVIGATION:
             case HelpNode.HelpNodeType.BOOKINGS_NAV:
             case HelpNode.HelpNodeType.BOOKING:

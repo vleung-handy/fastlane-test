@@ -108,9 +108,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
         infoLayout.setVisibility(View.GONE);
         navOptionsLayout.setVisibility(View.VISIBLE);
 
-        int count = 0;
-        int size = node.getChildren().size();
-
         for (final HelpNode helpNode : node.getChildren())
         {
             final View navView;
@@ -136,14 +133,6 @@ public final class HelpNodeView extends InjectedRelativeLayout
                 final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
                 textView.setText(helpNode.getLabel());
             }
-
-            //round out the visuals of the last cell
-            if (count == size - 1)
-            {
-                navView.setBackgroundResource((R.drawable.cell_booking_last_rounded));
-            }
-
-            count++;
         }
     }
 

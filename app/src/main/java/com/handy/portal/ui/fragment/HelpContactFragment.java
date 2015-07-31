@@ -1,10 +1,12 @@
 package com.handy.portal.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -12,7 +14,6 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.HelpNode;
-import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.view.HelpBannerView;
 import com.handy.portal.ui.view.HelpContactView;
 import com.squareup.otto.Subscribe;
@@ -115,6 +116,7 @@ public final class HelpContactFragment extends InjectedFragment
             @Override
             public void onClick(final View v)
             {
+                dismissKeyboard();
                 activity.onBackPressed();
             }
         });
@@ -130,7 +132,18 @@ public final class HelpContactFragment extends InjectedFragment
 
         if (allValid)
         {
+            dismissKeyboard();
             sendContactFormData(helpContactView.nameText.getString(), helpContactView.emailText.getString(), helpContactView.commentText.getString(), this.associatedNode);
+        }
+    }
+
+    private void dismissKeyboard()
+    {
+        View currentFocus = getActivity().getCurrentFocus();
+        if (currentFocus != null)
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
         }
     }
 
