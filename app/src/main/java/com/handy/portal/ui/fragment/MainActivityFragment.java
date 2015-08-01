@@ -23,6 +23,8 @@ import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -82,23 +84,35 @@ public class MainActivityFragment extends InjectedFragment
             @Override
             public void onBackStackChanged()
             {
-                FragmentManager fragmentManager = getFragmentManager();
-                if (fragmentManager.getBackStackEntryCount() == 1)
+                // traverse the fragment stack from top to bottom and activate the first relevant tab
+                List<Fragment> fragments = getFragmentManager().getFragments();
+                for (int i = fragments.size() - 1; i >= 0; i--)
                 {
-                    boolean isScheduleFragmentIdle = false;
-                    for (Fragment fragment : fragmentManager.getFragments())
+                    if (updateSelectedTabButton(fragments.get(i)))
                     {
-                        isScheduleFragmentIdle |= fragment instanceof ScheduledBookingsFragment;
-                    }
-
-                    FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(0);
-                    if (isScheduleFragmentIdle && BookingDetailsFragment.class.getName().equals(backStackEntry.getName()))
-                    {
-                        scheduleButton.setChecked(true);
+                        break;
                     }
                 }
             }
         });
+    }
+
+    private boolean updateSelectedTabButton(Fragment fragment)
+    {
+        return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
+               selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
+               selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, profileButton) ||
+               selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
+    }
+
+    private boolean selectTabIfFragmentMatches(Fragment fragment, Class<? extends Fragment> fragmentClass, RadioButton tab)
+    {
+        if (fragmentClass.isInstance(fragment))
+        {
+            tab.setChecked(true);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -176,8 +190,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         trackSwitchToTab(targetTab);
 
-        updateSelectedTabButton(targetTab);
-
         SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
 
         if (targetTab.isNativeTab())
@@ -241,6 +253,8 @@ public class MainActivityFragment extends InjectedFragment
                 webViewFragment.openPortalUrl(url);
             }
         }
+
+        updateSelectedTabButton(targetTab);
 
         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
 
@@ -352,9 +366,9 @@ public class MainActivityFragment extends InjectedFragment
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.main_container, newFragment);
 
-        if (swapArguments.addToBackStack && newFragment != null)
+        if (swapArguments.addToBackStack)
         {
-            transaction.addToBackStack(newFragment.getClass().getName());
+            transaction.addToBackStack(null);
         }
         else
         {
