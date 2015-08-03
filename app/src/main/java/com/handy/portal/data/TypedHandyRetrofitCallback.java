@@ -5,6 +5,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
 import com.handy.portal.model.ConfigParams;
@@ -34,12 +35,15 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
         {
             TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
             returnData = gsonBuilder.fromJson((response.toString()), typeToken.getType());
-
         } catch (JsonSyntaxException e)
         {
             Crashlytics.logException(e);
         }
-        callback.onSuccess(returnData);
+
+        if(callback != null)
+        {
+            callback.onSuccess(returnData);
+        }
     }
 }
 
@@ -108,29 +112,19 @@ class ConfigParamResponseHandyRetroFitCallback extends TypedHandyRetrofitCallbac
     }
 }
 
+class HelpNodeResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<HelpNodeWrapper>
+{
+    HelpNodeResponseHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
 class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 {
-
-    @Override
-    public void success(JSONObject response)
+    EmptyHandyRetroFitCallback(DataManager.Callback callback)
     {
+        super(callback);
     }
 
-    EmptyHandyRetroFitCallback()
-    {
-        super(new EmptyCallback());
-    }
-
-    public static class EmptyCallback implements DataManager.Callback<Void>
-    {
-        @Override
-        public void onSuccess(Void response)
-        {
-        }
-
-        @Override
-        public void onError(DataManager.DataManagerError error)
-        {
-        }
-    }
 }

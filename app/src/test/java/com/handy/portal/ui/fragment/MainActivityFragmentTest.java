@@ -6,7 +6,6 @@ import android.view.View;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,11 +54,10 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void whenHelpButtonClicked_thenLoadWebView() throws Exception
+    public void whenHelpButtonClicked_thenLoadHelpFragment() throws Exception
     {
         activityFragmentView.findViewById(R.id.button_help).performClick();
-
-        assertThat(getScreenFragment(), instanceOf(PortalWebViewFragment.class));
+        assertThat(getScreenFragment(), instanceOf(HelpFragment.class));
     }
 
     @Test

@@ -77,7 +77,7 @@ public abstract class InputTextField extends EditText
         return isHighlighted;
     }
 
-    abstract boolean validate();
+    public abstract boolean validate();
 
     public String getString()
     {

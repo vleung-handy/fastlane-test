@@ -9,6 +9,7 @@ import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.model.HelpNode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
@@ -22,6 +23,8 @@ import com.handy.portal.model.UpdateDetails;
 
 import java.util.Date;
 import java.util.List;
+
+import retrofit.mime.TypedInput;
 
 public abstract class HandyEvent
 {
@@ -529,6 +532,93 @@ public abstract class HandyEvent
         }
     }
 
+    //Help Node
+    public static class RequestHelpNode extends HandyEvent
+    {
+        public String nodeId;
+        public String bookingId;
+
+        public RequestHelpNode(String nodeId, String bookingId)
+        {
+            this.nodeId = nodeId;
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class ReceiveHelpNodeSuccess extends ReceiveSuccessEvent
+    {
+        public HelpNode helpNode;
+        public ReceiveHelpNodeSuccess(HelpNode helpNode)
+        {
+            this.helpNode = helpNode;
+        }
+    }
+
+    public static class ReceiveHelpNodeError extends ReceiveErrorEvent
+    {
+        public ReceiveHelpNodeError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    //Help Booking Node
+    public static class RequestHelpBookingNode extends HandyEvent
+    {
+        public String nodeId;
+        public String bookingId;
+
+        public RequestHelpBookingNode(String nodeId, String bookingId)
+        {
+            this.nodeId = nodeId;
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class ReceiveHelpBookingNodeSuccess extends ReceiveSuccessEvent
+    {
+        public HelpNode helpNode;
+        public ReceiveHelpBookingNodeSuccess(HelpNode helpNode)
+        {
+            this.helpNode = helpNode;
+        }
+    }
+
+    public static class ReceiveHelpBookingNodeError extends ReceiveErrorEvent
+    {
+        public ReceiveHelpBookingNodeError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    //Help Contact Message
+    @Track("pro help contact form submitted")
+    public static class RequestNotifyHelpContact extends HandyEvent
+    {
+        public TypedInput body;
+
+        public RequestNotifyHelpContact(TypedInput body)
+        {
+            this.body = body;
+        }
+    }
+
+    public static class ReceiveNotifyHelpContactSuccess extends ReceiveSuccessEvent
+    {
+        public ReceiveNotifyHelpContactSuccess()
+        {
+        }
+    }
+
+    public static class ReceiveNotifyHelpContactError extends ReceiveErrorEvent
+    {
+        public ReceiveNotifyHelpContactError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
     @Track("cancel customer no show")
     public static class RequestCancelNoShow extends RequestEvent
     {
@@ -559,7 +649,6 @@ public abstract class HandyEvent
             this.error = error;
         }
     }
-
 
 //Pure analytics events,
 //TODO: when possible these should track the actual events instead of having duplicate unnecessary and get rid of duped analytics events

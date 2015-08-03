@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/cell_booking">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/circle_teal"
+        android:visibility="gone"
+        android:contentDescription="navigation" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/service_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Service"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:freezesText="false"
+            android:textColor="@color/steel"
+            android:textAllCaps="true"
+            style="@style/TextView.Small.Med" />
+
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_below="@id/service_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:freezesText="false"
+            style="@style/TextView.Med" />
+
+        <TextView
+            android:id="@+id/time_text"
+            android:layout_below="@id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:freezesText="false"
+            style="@style/TextView" />
+
+    </RelativeLayout>
+
+</LinearLayout>

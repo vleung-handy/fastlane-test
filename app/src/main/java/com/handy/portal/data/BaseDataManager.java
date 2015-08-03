@@ -4,6 +4,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingSummaryResponse;
@@ -23,6 +24,8 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import retrofit.mime.TypedInput;
 
 public final class BaseDataManager extends DataManager
 {
@@ -153,10 +156,35 @@ public final class BaseDataManager extends DataManager
         service.getConfigParams(getUserId(), keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }
 
+    @Override
     public final void sendVersionInformation(Map<String, String> versionInfo)
     {
-        service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback());
+        service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback(null));
     }
+
+    //********Help Center********
+    @Override
+    public void getHelpInfo(String nodeId,
+                            String bookingId,
+                            final Callback<HelpNodeWrapper> cb)
+    {
+        service.getHelpInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getHelpBookingsInfo(String nodeId,
+                                    String bookingId,
+                                    final Callback<HelpNodeWrapper> cb)
+    {
+        service.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void createHelpCase(TypedInput body, final Callback<Void> cb)
+    {
+        service.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
+    }
+    //********End Help Center********
 
     private String getUserId()
     {

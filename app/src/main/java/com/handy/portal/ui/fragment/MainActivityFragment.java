@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +22,8 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -48,7 +51,7 @@ public class MainActivityFragment extends InjectedFragment
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
-    public static boolean clearingBackStack;
+    public static boolean clearingBackStack = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,10 +61,58 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
         registerButtonListeners();
+        registerBackStackListener();
         transitionOverlayView.init();
         loadingOverlayView.init();
 
+        /*
+            below logic is needed to workaround a bug in android 4.4 that cause webview artifacts to show.
+            setting this at the help view or webview level does not fully work (complex webview pages didn't load)
+        */
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
+        {
+            view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
         return view;
+    }
+
+    private void registerBackStackListener()
+    {
+        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener()
+        {
+            @Override
+            public void onBackStackChanged()
+            {
+                // traverse the fragment stack from top to bottom and activate the first relevant tab
+                List<Fragment> fragments = getFragmentManager().getFragments();
+                for (int i = fragments.size() - 1; i >= 0; i--)
+                {
+                    if (updateSelectedTabButton(fragments.get(i)))
+                    {
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    private boolean updateSelectedTabButton(Fragment fragment)
+    {
+        return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
+               selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
+               selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, profileButton) ||
+               selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
+    }
+
+    private boolean selectTabIfFragmentMatches(Fragment fragment, Class<? extends Fragment> fragmentClass, RadioButton tab)
+    {
+        if (fragmentClass.isInstance(fragment))
+        {
+            tab.setChecked(true);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -74,7 +125,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             tab = savedInstanceState.getString(BundleKeys.TAB);
         }
-        switchToTab(MainViewTab.valueOf(tab));
+        switchToTab(MainViewTab.valueOf(tab), false);
     }
 
     @Override
@@ -92,28 +143,13 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
-        switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride);
+        switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride, false);
     }
 
     @Subscribe
     public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
     {
         loadingOverlayView.setOverlayVisibility(event.isVisible);
-    }
-
-    private void initWebViewFragment(String url)
-    {
-        webViewFragment = new PortalWebViewFragment();
-
-        //pass along the target
-        Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.TARGET_URL, url);
-
-        SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
-        swapFragmentArguments.argumentsBundle = arguments;
-        swapFragmentArguments.overrideFragment = webViewFragment;
-
-        swapFragment(swapFragmentArguments);
     }
 
     private void registerButtonListeners()
@@ -136,31 +172,29 @@ public class MainActivityFragment extends InjectedFragment
         @Override
         public void onClick(View view)
         {
-            switchToTab(tab);
+            switchToTab(tab, true);
         }
     }
 
-    private void switchToTab(MainViewTab tab)
+    private void switchToTab(MainViewTab tab, boolean userTriggered)
     {
-        switchToTab(tab, null);
+        switchToTab(tab, null, userTriggered);
     }
 
-    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle)
+    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, boolean userTriggered)
     {
-        switchToTab(targetTab, argumentsBundle, null);
+        switchToTab(targetTab, argumentsBundle, null, userTriggered);
     }
 
-    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle)
+    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
         trackSwitchToTab(targetTab);
 
-        updateSelectedTabButton(targetTab);
+        SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
 
         if (targetTab.isNativeTab())
         {
             webViewFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
-
-            SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
 
             //don't use transition if don't have anything to transition from
             if (currentTab != null)
@@ -170,7 +204,21 @@ public class MainActivityFragment extends InjectedFragment
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
             swapFragmentArguments.argumentsBundle = argumentsBundle;
-            swapFragmentArguments.addToBackStack = (targetTab == MainViewTab.DETAILS);
+
+            if (userTriggered)
+            {
+                swapFragmentArguments.addToBackStack = false;
+            }
+            else
+            {
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
+                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
+                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+            }
+
+            swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
+
             swapFragment(swapFragmentArguments);
         }
         else
@@ -187,19 +235,30 @@ public class MainActivityFragment extends InjectedFragment
 
             if (webViewFragment == null)
             {
-                initWebViewFragment(url);
+                webViewFragment = new PortalWebViewFragment();
+
+                //pass along the target
+                Bundle arguments = new Bundle();
+                arguments.putString(BundleKeys.TARGET_URL, url);
+
+                swapFragmentArguments.argumentsBundle = arguments;
+                swapFragmentArguments.overrideFragment = webViewFragment;
+                swapFragmentArguments.clearBackStack = true;
+
+                swapFragment(swapFragmentArguments);
             }
             else
             {
+                //don't need to do any fragment swapping just open the new url
                 webViewFragment.openPortalUrl(url);
             }
         }
 
-        if (targetTab != MainViewTab.DETAILS)
-        {
-            ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-            currentTab = targetTab;
-        }
+        updateSelectedTabButton(targetTab);
+
+        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
+
+        currentTab = targetTab;
     }
 
     private void clearFragmentBackStack()
@@ -259,7 +318,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void swapFragment(SwapFragmentArguments swapArguments)
     {
-        clearFragmentBackStack();
+        if (swapArguments.clearBackStack)
+        {
+            clearFragmentBackStack();
+        }
 
         //replace the existing fragment with the new fragment
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -304,7 +366,7 @@ public class MainActivityFragment extends InjectedFragment
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.main_container, newFragment);
 
-        if(swapArguments.addToBackStack)
+        if (swapArguments.addToBackStack)
         {
             transaction.addToBackStack(null);
         }

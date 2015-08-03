@@ -134,7 +134,10 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         {
             onBackPressedListenerStack.pop().onBackPressed();
         }
-        else super.onBackPressed();
+        else
+        {
+            super.onBackPressed();
+        }
     }
 
     @Override

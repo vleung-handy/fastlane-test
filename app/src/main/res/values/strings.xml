@@ -196,7 +196,7 @@
     <string name="i_still_need_help">I Still Need Help</string>
     <string name="contact_us">Contact Us</string>
     <string name="send_message">Send Message</string>
-    <string name="contact_form_hint">Tell us how we can help</string>
+    <string name="contact_form_hint">Please describe your issue</string>
     <string name="please_login">Please log in</string>
     <string name="back">Back</string>
     <string name="contact_received">Message sent! \nWe\u2019ll follow up shortly.</string>
@@ -312,5 +312,7 @@
     <string name="ok">OK</string>
 
     <string name="unable_to_fetch_user">Unable to fetch your information. Please try again.</string>
+    <string name="help_center_subject">Subject: </string>
+    <string name="your_email">Your Email</string>
 
 </resources>

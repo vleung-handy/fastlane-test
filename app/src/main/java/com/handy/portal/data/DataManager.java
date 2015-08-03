@@ -1,5 +1,6 @@
 package com.handy.portal.data;
 
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
@@ -13,6 +14,8 @@ import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 
 import java.util.Map;
+
+import retrofit.mime.TypedInput;
 
 public abstract class DataManager
 {
@@ -51,6 +54,16 @@ public abstract class DataManager
     public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);
 
     public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
+
+    public abstract void getHelpInfo(String nodeId,
+                                     String bookingId,
+                                     final DataManager.Callback<HelpNodeWrapper> cb);
+
+    public abstract void getHelpBookingsInfo(String nodeId,
+                                             String bookingId,
+                                             final DataManager.Callback<HelpNodeWrapper> cb);
+
+    public abstract void createHelpCase(TypedInput body, final Callback<Void> cb);
 
     public abstract void getProviderInfo(Callback<Provider> cb);
 

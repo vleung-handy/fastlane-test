@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/handy_bg"
+    tools:context=".HelpFragment">
+
+    <include
+        android:id="@+id/help_banner_view"
+        layout="@layout/element_help_node_banner"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/help_banner_view"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/layout_fetch_error"/>
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <include
+                android:id="@+id/help_node_view"
+                layout="@layout/element_help_node"/>
+
+        </ScrollView>
+    </LinearLayout>
+
+</RelativeLayout>
