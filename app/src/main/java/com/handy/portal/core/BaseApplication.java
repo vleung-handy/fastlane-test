@@ -14,6 +14,8 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.manager.HelpContactManager;
+import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
@@ -52,6 +54,10 @@ public class BaseApplication extends Application
     TermsManager termsManager;
     @Inject
     ConfigManager configManager;
+    @Inject
+    HelpManager helpManager;
+    @Inject
+    HelpContactManager helpContactManager;
 
     @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;

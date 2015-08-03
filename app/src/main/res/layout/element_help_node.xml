@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.view.HelpNodeView
+    android:id="@+id/help_node_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/cell_booking_last_rounded"
+        android:paddingBottom="26dp"
+        android:visibility="invisible">
+
+        <com.handy.portal.ui.element.HandyWebView
+            android:id="@+id/help_webview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/contact_button"
+            style="@style/Button.Green.Round"
+            android:layout_below="@id/help_webview"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:text="@string/i_still_need_help"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/nav_options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_layout"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        android:visibility="gone"/>
+
+</com.handy.portal.ui.view.HelpNodeView>

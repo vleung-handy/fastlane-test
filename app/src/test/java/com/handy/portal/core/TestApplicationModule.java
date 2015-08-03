@@ -17,6 +17,8 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.HelpContactFragment;
+import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
@@ -40,7 +42,9 @@ import static org.mockito.Mockito.mock;
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
         ScheduledBookingsFragment.class,
-        BookingDetailsFragment.class
+        BookingDetailsFragment.class,
+        HelpFragment.class,
+        HelpContactFragment.class,
 }, library = true)
 public class TestApplicationModule
 {

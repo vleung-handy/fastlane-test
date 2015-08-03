@@ -13,6 +13,15 @@
         -->
     </style>
 
+    <style name="MenuButtonLayout">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:paddingBottom">18dp</item>
+    </style>
+
     <style name="Banner">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">48dp</item>
@@ -46,7 +55,7 @@
     <style name="Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/xlarge_text_size</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
         <item name="android:paddingLeft">16dp</item>
@@ -220,7 +229,7 @@
     <style name="EditText.Email">
         <item name="android:inputType">textEmailAddress</item>
         <item name="android:singleLine">true</item>
-        <item name="android:hint">@string/email</item>
+        <item name="android:hint">@string/your_email</item>
         <item name="android:maxLength">100</item>
     </style>
 
@@ -465,6 +474,20 @@
         <item name="android:paddingRight">16dp</item>
     </style>
 
+    <style name="TextView.HelpNavBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@color/handy_blue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
     <style name="TextView.BookingsHeader">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -497,11 +520,11 @@
 
     <style name="BookingsCell">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/cell_booking</item>
         <item name="android:textSize">@dimen/default_text_size</item>
-        <item name="android:padding">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
     </style>
 
     <style name="BookingsCell.End">

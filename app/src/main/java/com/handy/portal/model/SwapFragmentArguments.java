@@ -12,4 +12,5 @@ public class SwapFragmentArguments
     public Bundle argumentsBundle;
     public TransitionStyle transitionStyle;
     public boolean addToBackStack;
+    public boolean clearBackStack;
 }

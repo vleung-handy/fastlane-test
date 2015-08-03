@@ -1,5 +1,7 @@
 package com.handy.portal.constant;
 
+import com.handy.portal.ui.fragment.HelpContactFragment;
+import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
@@ -10,8 +12,10 @@ public enum MainViewTab
     JOBS(null, AvailableBookingsFragment.class),
     SCHEDULE(null, ScheduledBookingsFragment.class),
     PROFILE(PortalWebViewFragment.Target.PROFILE, null),
-    HELP(PortalWebViewFragment.Target.HELP, null),
-    DETAILS(null, BookingDetailsFragment.class),;
+    HELP(null, HelpFragment.class),
+    DETAILS(null, BookingDetailsFragment.class),
+    HELP_CONTACT(null, HelpContactFragment.class),
+    ;
 
     private PortalWebViewFragment.Target target;
     private Class classType;
