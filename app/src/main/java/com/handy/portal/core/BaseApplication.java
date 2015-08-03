@@ -22,6 +22,9 @@ import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
+import com.urbanairship.AirshipConfigOptions;
+import com.urbanairship.UAirship;
+import com.urbanairship.push.notifications.DefaultNotificationFactory;
 
 import javax.inject.Inject;
 
@@ -71,6 +74,7 @@ public class BaseApplication extends Application
 
         startNewRelic();
         startCrashlytics();
+        startUrbanAirship();
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(TextUtils.Fonts.CIRCULAR_BOOK)
@@ -176,6 +180,29 @@ public class BaseApplication extends Application
         {
             Crashlytics.start(this);
         }
+    }
+
+    protected void startUrbanAirship()
+    {
+        final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
+        options.inProduction = !BuildConfig.DEBUG;
+
+        UAirship.takeOff(this, options, new UAirship.OnReadyCallback()
+        {
+            @Override
+            public void onAirshipReady(final UAirship airship)
+            {
+                final DefaultNotificationFactory defaultNotificationFactory =
+                        new DefaultNotificationFactory(getApplicationContext());
+
+                defaultNotificationFactory.setColor(getResources().getColor(R.color.handy_blue));
+                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
+
+                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
+                airship.getPushManager().setPushEnabled(false);
+                airship.getPushManager().setUserNotificationsEnabled(false);
+            }
+        });
     }
 
     protected void createObjectGraph()
