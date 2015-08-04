@@ -188,7 +188,7 @@ public final class BaseDataManager extends DataManager
 
     private String getUserId()
     {
-        String id = prefsManager.getString(PrefsKey.PROVIDER_ID, null);
+        String id = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID, null);//TODO: don't get the provider id this way
         if (id == null)
         {
             Crashlytics.log("ID not found");

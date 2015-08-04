@@ -12,6 +12,10 @@ public class ProviderManager
     private final Bus bus;
     private final DataManager dataManager;
     private final PrefsManager prefsManager;
+    private Provider activeProvider;
+    private long timestampCacheInitializedMs;
+    private long CACHE_TIME_MS = 600000; //invalidate contact info after an hour (currently can only change it via emailing us)
+    //TODO: implement a more formal cache management system?
 
     public ProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
@@ -21,23 +25,47 @@ public class ProviderManager
         bus.register(this);
     }
 
+    private void setCacheData(Provider provider){
+        timestampCacheInitializedMs = System.currentTimeMillis();
+        activeProvider = provider;
+        prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, provider.getId());//TODO: don't need this if we can make sure it is same as provider id from login
+
+    }
+
+    private boolean isCacheValid(){
+        if(activeProvider == null || System.currentTimeMillis() - timestampCacheInitializedMs > CACHE_TIME_MS){
+            return false;
+        }
+        return true;
+    }
+
     @Subscribe
     public void onRequestUserInfo(HandyEvent.RequestProviderInfo event)
     {
-        dataManager.getProviderInfo(new DataManager.Callback<Provider>()
-        {
-            @Override
-            public void onSuccess(Provider provider)
+        if(!isCacheValid()){
+            dataManager.getProviderInfo(new DataManager.Callback<Provider>()
             {
-                prefsManager.setString(PrefsKey.PROVIDER_ID, provider.getId());
-                bus.post(new HandyEvent.ReceiveProviderInfoSuccess(provider));
-            }
+                @Override
+                public void onSuccess(Provider provider)//TODO: need a way to sync this and provider id received from onLoginSuccess!
+                {
+                    setCacheData(provider);
+                    bus.post(new HandyEvent.ReceiveProviderInfoSuccess(getCachedActiveProvider()));
+                }
 
-            @Override
-            public void onError(DataManager.DataManagerError error)
-            {
-                bus.post(new HandyEvent.ReceiveProviderInfoError(error));
-            }
-        });
+                @Override
+                public void onError(DataManager.DataManagerError error)
+                {
+                    bus.post(new HandyEvent.ReceiveProviderInfoError(error));
+                }
+            });
+        }else{
+            bus.post(new HandyEvent.ReceiveProviderInfoSuccess(getCachedActiveProvider()));
+        }
+
+    }
+
+    private Provider getCachedActiveProvider()
+    {
+        return activeProvider;
     }
 }

@@ -2,14 +2,13 @@ package com.handy.portal.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.HelpNode;
+import com.handy.portal.model.Provider;
 import com.handy.portal.ui.widget.BasicInputTextView;
 import com.handy.portal.ui.widget.EmailInputTextView;
 import com.handy.portal.ui.widget.FirstNameInputTextView;
@@ -50,10 +49,9 @@ public final class HelpContactView extends InjectedRelativeLayout
         super(context, attrs, defStyle);
     }
 
-    public void updateDisplay(HelpNode node, Booking.User user)
+    public void updateDisplay(HelpNode node)
     {
         populateSubjectData(node);
-        prepopulateUserData(user);
     }
 
     private void populateSubjectData(HelpNode node)
@@ -61,28 +59,25 @@ public final class HelpContactView extends InjectedRelativeLayout
         subjectText.setText(node.getLabel());
     }
 
-    private void prepopulateUserData(Booking.User user)
+    private void setUserFieldsEditable(boolean editable){
+        //TODO: make it grey when disabled
+        this.nameText.setEnabled(editable);
+        this.emailText.setEnabled(editable);
+    }
+
+    public void prepopulateProviderData(Provider provider)//TODO: set data by making it listen to event that indicates provider data was successfully retrieved
     {
-        if (user == null)
+        if (provider == null)
         {
             this.nameText.setText("");
             this.emailText.setText("");
+            setUserFieldsEditable(true);
         }
         else
         {
-            this.nameText.setText(user.getFullName());
-            this.emailText.setText(user.getEmail());
-
-            //Hide the name and email fields if they are prepopulated so the user can not alter them
-            //Validating them off prepopulated data, not hiding if the prepop data would prevent validation
-            if (nameText.validate())
-            {
-                this.nameLayout.setVisibility(View.GONE);
-            }
-            if (emailText.validate())
-            {
-                this.emailLayout.setVisibility(View.GONE);
-            }
+            this.nameText.setText(provider.getFullName());
+            this.emailText.setText(provider.getEmail());
+            setUserFieldsEditable(false);
         }
     }
 }

@@ -41,13 +41,6 @@ public class SplashActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        String providerId = prefsManager.getString(PrefsKey.PROVIDER_ID, null);
-        if (providerId != null)
-        {
-            // this needs to happen first so we have more insight in case something bad happens after this line
-            Crashlytics.setUserIdentifier(providerId);
-        }
-
         if (buildConfigWrapper.isDebug())
         {
             String authToken = getIntent().getDataString();
@@ -71,11 +64,8 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            if (providerId == null)
-            {
-                requestUserInfo();
-            }
-            else
+            requestUserInfo();
+            if(prefsManager.getString(PrefsKey.LAST_PROVIDER_ID)!=null)//TODO: when will provider id be null when authtoken isn't? investigate/clean this up
             {
                 checkForTerms();
             }
@@ -90,6 +80,7 @@ public class SplashActivity extends BaseActivity
     @Subscribe
     public void onReceiveUserInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
+        //
         // at this point, ProviderManager should have set the provider ID in prefs
         launchActivity(SplashActivity.class);
     }

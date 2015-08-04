@@ -17,9 +17,11 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
@@ -328,6 +330,12 @@ public class LoginActivityFragment extends InjectedFragment
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
             CookieSyncManager.getInstance().sync();
         }
+
+        String providerId = loginDetails.getProviderId();
+        prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);//TODO: we need to move away from using PrefsKeky.LAST_PROVIDER_ID for non-crashlytics stuff
+
+        // this needs to happen first so we have more insight in case something bad happens after this line
+        Crashlytics.setUserIdentifier(providerId);
 
         startActivity(new Intent(this.getActivity(), SplashActivity.class));
     }
