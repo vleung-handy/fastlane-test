@@ -77,13 +77,16 @@ public class SplashActivity extends BaseActivity
         else
         {
             //TODO: SplashActivity is always relaunched when user info is received or when terms are accepted (bad!). when we move away from that gross logic, refactor this hacky section!
-            if(providerManager.getCachedActiveProvider()!=null){//already received provider info. fatal problem if provider object returned from service call is null
+            if (providerManager.getCachedActiveProvider() != null)
+            {//already received provider info. fatal problem if provider object returned from service call is null
             /*
             hack to perform check terms + request user synchronously (since both launch activities in callback, can cause issues if async) without causing circular dependency
             note that checkForTerms needs providerId, so must be performed after provider info is received
              */
                 checkForTerms();
-            }else{
+            }
+            else
+            {
                 requestUserInfo();
             }
 
