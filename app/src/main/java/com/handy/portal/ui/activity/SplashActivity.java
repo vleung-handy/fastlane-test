@@ -64,8 +64,12 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
+            String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+            // this needs to happen first so we have more insight in case something bad happens after this line
+            Crashlytics.setUserIdentifier(providerId);
+
             requestUserInfo();
-            if(prefsManager.getString(PrefsKey.LAST_PROVIDER_ID)!=null)//TODO: when will provider id be null when authtoken isn't? investigate/clean this up
+            if(providerId!=null)//TODO: when will provider id be null when authtoken isn't? investigate/clean this up
             {
                 checkForTerms();
             }
