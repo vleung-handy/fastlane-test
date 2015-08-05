@@ -14,6 +14,7 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.squareup.otto.Subscribe;
 
@@ -31,6 +32,8 @@ public class SplashActivity extends BaseActivity
     @Inject
     PrefsManager prefsManager;
     @Inject
+    ProviderManager providerManager;
+    @Inject
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
@@ -40,6 +43,15 @@ public class SplashActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        /*
+        TODO: it is sufficient to only call Crashlytics.setUserIdentifier here because
+        we currently use gross logic to relaunch SplashActivity after the providerId is updated (and after terms are accepted)
+        We may need to move these lines to other places when we move away from that gross logic
+        */
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        Crashlytics.setUserIdentifier(providerId);
+
 
         if (buildConfigWrapper.isDebug())
         {
@@ -64,15 +76,17 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-            // this needs to happen first so we have more insight in case something bad happens after this line
-            Crashlytics.setUserIdentifier(providerId);
-
-            requestUserInfo();
-            if(providerId!=null)//TODO: when will provider id be null when authtoken isn't? investigate/clean this up
-            {
+            //TODO: SplashActivity is always relaunched when user info is received or when terms are accepted (bad!). when we move away from that gross logic, refactor this hacky section!
+            if(providerManager.getCachedActiveProvider()!=null){//already received provider info. fatal problem if provider object returned from service call is null
+            /*
+            hack to perform check terms + request user synchronously (since both launch activities in callback, can cause issues if async) without causing circular dependency
+            note that checkForTerms needs providerId, so must be performed after provider info is received
+             */
                 checkForTerms();
+            }else{
+                requestUserInfo();
             }
+
         }
     }
 
