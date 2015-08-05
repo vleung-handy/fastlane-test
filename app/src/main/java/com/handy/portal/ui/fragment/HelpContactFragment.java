@@ -249,4 +249,9 @@ public final class HelpContactFragment extends InjectedFragment
         helpContactView.prepopulateProviderData(provider);
 
     }
+    @Subscribe
+    public void onReceiveProviderInfoFailure(HandyEvent.ReceiveProviderInfoError event)
+    {
+        helpContactView.prepopulateProviderData(null);
+    }
 }

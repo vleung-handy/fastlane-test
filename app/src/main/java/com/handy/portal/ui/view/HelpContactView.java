@@ -60,7 +60,6 @@ public final class HelpContactView extends InjectedRelativeLayout
     }
 
     private void setUserFieldsEditable(boolean editable){
-        //TODO: make it grey when disabled
         this.nameText.setEnabled(editable);
         this.emailText.setEnabled(editable);
     }
