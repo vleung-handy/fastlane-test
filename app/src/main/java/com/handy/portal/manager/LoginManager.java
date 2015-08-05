@@ -72,7 +72,7 @@ public class LoginManager
 
     private void saveLoginDetails(final LoginDetails loginDetails)
     {
-        prefsManager.setString(PrefsKey.PROVIDER_ID, loginDetails.getProviderId());
+        prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, loginDetails.getProviderId());
         prefsManager.setString(PrefsKey.AUTH_TOKEN, loginDetails.getAuthToken());
     }
 

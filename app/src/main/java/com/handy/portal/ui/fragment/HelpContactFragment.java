@@ -14,6 +14,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.HelpNode;
+import com.handy.portal.model.Provider;
 import com.handy.portal.ui.view.HelpBannerView;
 import com.handy.portal.ui.view.HelpContactView;
 import com.squareup.otto.Subscribe;
@@ -60,6 +61,18 @@ public final class HelpContactFragment extends InjectedFragment
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        bus.post(new HandyEvent.RequestProviderInfo());
+        /*
+        gross hack
+        have to do bus post here because
+        we invalidate the provider cache since we have no way of knowing when provider info is updated,
+        and bus is only registered in super.onResume()
+         */
+    }
+
+    @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
     {
@@ -89,10 +102,9 @@ public final class HelpContactFragment extends InjectedFragment
             this.bookingId = "";
         }
 
-        //TODO: Get real user data when we have that model
-        helpContactView.updateDisplay(this.associatedNode, null);
+        helpContactView.updateDisplay(this.associatedNode);
 
-        helpBannerView.updateDisplay();
+        helpBannerView.updateDisplay();//TODO: can we call this inside updateDisplay(HelpNode) instead?
 
         assignClickListeners(view);
 
@@ -228,5 +240,18 @@ public final class HelpContactFragment extends InjectedFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(getString(R.string.an_error_has_occurred));
+    }
+
+    @Subscribe
+    public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
+    {
+        Provider provider = event.provider;
+        helpContactView.prepopulateProviderData(provider);
+
+    }
+    @Subscribe
+    public void onReceiveProviderInfoFailure(HandyEvent.ReceiveProviderInfoError event)
+    {
+        helpContactView.prepopulateProviderData(null);
     }
 }
