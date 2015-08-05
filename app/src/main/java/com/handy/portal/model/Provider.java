@@ -1,11 +1,8 @@
 package com.handy.portal.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
-public class Provider implements Parcelable
+public class Provider
 {
     @SerializedName("id")
     private String id;
@@ -47,13 +44,4 @@ public class Provider implements Parcelable
         return firstName + " " + lastName;
     }
 
-    @Override
-    public final int describeContents(){
-        return 0;
-    }
-
-    @Override
-    public final void writeToParcel(final Parcel out, final int flags) {
-        out.writeStringArray(new String[]{id, email, firstName, lastName});
-    }
 }
