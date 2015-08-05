@@ -61,15 +61,13 @@ public final class HelpContactFragment extends InjectedFragment
     }
 
     @Override
-    public void onResume(){
+    public void onResume()
+    {
         super.onResume();
-        bus.post(new HandyEvent.RequestProviderInfo());
-        /*
-        gross hack
-        have to do bus post here because
-        we invalidate the provider cache since we have no way of knowing when provider info is updated,
-        and bus is only registered in super.onResume()
-         */
+        if(!MainActivityFragment.clearingBackStack)
+        {
+            bus.post(new HandyEvent.RequestProviderInfo());
+        }
     }
 
     @Override
@@ -146,6 +144,10 @@ public final class HelpContactFragment extends InjectedFragment
         {
             dismissKeyboard();
             sendContactFormData(helpContactView.nameText.getString(), helpContactView.emailText.getString(), helpContactView.commentText.getString(), this.associatedNode);
+        }
+        else
+        {
+            showToast(R.string.ensure_fields_valid);
         }
     }
 

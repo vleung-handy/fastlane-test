@@ -59,24 +59,22 @@ public final class HelpContactView extends InjectedRelativeLayout
         subjectText.setText(node.getLabel());
     }
 
-    private void setUserFieldsEditable(boolean editable){
-        this.nameText.setEnabled(editable);
-        this.emailText.setEnabled(editable);
-    }
-
-    public void prepopulateProviderData(Provider provider)//TODO: set data by making it listen to event that indicates provider data was successfully retrieved
+    public void prepopulateProviderData(Provider provider)
     {
-        if (provider == null)
+        System.out.println("ZZZ Prepop provider : " + provider);
+
+        if (provider != null)
         {
-            this.nameText.setText("");
-            this.emailText.setText("");
-            setUserFieldsEditable(true);
+            this.nameText.setEnabled(!this.nameText.validate());
+            this.emailText.setEnabled(!this.nameText.validate());
         }
         else
         {
-            this.nameText.setText(provider.getFullName());
-            this.emailText.setText(provider.getEmail());
-            setUserFieldsEditable(false);
+            this.nameText.setText("");
+            this.emailText.setText("");
         }
+
+        this.nameText.setEnabled(!this.nameText.validate());
+        this.emailText.setEnabled(!this.emailText.validate());
     }
 }

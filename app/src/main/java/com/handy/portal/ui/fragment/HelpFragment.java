@@ -71,7 +71,14 @@ public final class HelpFragment extends InjectedFragment
             helpBannerView.navText.setText(R.string.help);
         }
 
-        currentPath = "";
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.PATH))
+        {
+            currentPath = getArguments().getString(BundleKeys.PATH);
+        }
+        else
+        {
+            currentPath = "";
+        }
 
         setupBackClickListener();
 
@@ -156,6 +163,7 @@ public final class HelpFragment extends InjectedFragment
                     {
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
+                        arguments.putString(BundleKeys.PATH, currentPath);
                         bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
                     }
                 }
