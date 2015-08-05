@@ -64,7 +64,7 @@ public class ProviderManager
 
     }
 
-    private Provider getCachedActiveProvider()
+    public Provider getCachedActiveProvider()
     {
         return activeProvider;
     }
