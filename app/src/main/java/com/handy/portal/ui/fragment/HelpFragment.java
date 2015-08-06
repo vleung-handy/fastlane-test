@@ -100,7 +100,7 @@ public final class HelpFragment extends InjectedFragment
     private void trackPath(HelpNode node)
     {
         //Don't add the root node to the path as per CX spec
-        if(node.getType().equals(HelpNode.HelpNodeType.ROOT))
+        if(!node.getType().equals(HelpNode.HelpNodeType.ROOT))
         {
             currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + node.getLabel();
         }
