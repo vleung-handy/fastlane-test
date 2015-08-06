@@ -14,6 +14,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.HelpNode;
+import com.handy.portal.model.Provider;
 import com.handy.portal.ui.view.HelpBannerView;
 import com.handy.portal.ui.view.HelpContactView;
 import com.squareup.otto.Subscribe;
@@ -38,6 +39,7 @@ public final class HelpContactFragment extends InjectedFragment
     private static final String HELP_CONTACT_FORM_DESCRIPTION = "description";
     private static final String HELP_CONTACT_FORM_PATH = "path";
     private static final String HELP_CONTACT_FORM_BOOKING_ID = "booking_id";
+
     private static final String SALESFORCE_DATA_WRAPPER_KEY = "salesforce_data";
 
     @InjectView(R.id.help_contact_view)
@@ -57,6 +59,16 @@ public final class HelpContactFragment extends InjectedFragment
         requiredArguments.add(BundleKeys.HELP_NODE);
         requiredArguments.add(BundleKeys.PATH);
         return requiredArguments;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if(!MainActivityFragment.clearingBackStack)
+        {
+            bus.post(new HandyEvent.RequestProviderInfo());
+        }
     }
 
     @Override
@@ -89,10 +101,9 @@ public final class HelpContactFragment extends InjectedFragment
             this.bookingId = "";
         }
 
-        //TODO: Get real user data when we have that model
-        helpContactView.updateDisplay(this.associatedNode, null);
+        helpContactView.updateDisplay(this.associatedNode);
 
-        helpBannerView.updateDisplay();
+        helpBannerView.updateDisplay(); //TODO: can we call this inside updateDisplay(HelpNode) instead?
 
         assignClickListeners(view);
 
@@ -134,6 +145,10 @@ public final class HelpContactFragment extends InjectedFragment
         {
             dismissKeyboard();
             sendContactFormData(helpContactView.nameText.getString(), helpContactView.emailText.getString(), helpContactView.commentText.getString(), this.associatedNode);
+        }
+        else
+        {
+            showToast(R.string.ensure_fields_valid);
         }
     }
 
@@ -228,5 +243,18 @@ public final class HelpContactFragment extends InjectedFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(getString(R.string.an_error_has_occurred));
+    }
+
+    @Subscribe
+    public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
+    {
+        Provider provider = event.provider;
+        helpContactView.prepopulateProviderData(provider);
+
+    }
+    @Subscribe
+    public void onReceiveProviderInfoFailure(HandyEvent.ReceiveProviderInfoError event)
+    {
+        helpContactView.prepopulateProviderData(null);
     }
 }

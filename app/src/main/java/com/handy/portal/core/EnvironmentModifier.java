@@ -18,7 +18,7 @@ public class EnvironmentModifier
             {
                 Properties properties = PropertiesReader.getProperties(context, "override.properties");
                 boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
-                String environment = properties.getProperty("environment", "S");
+                String environment = properties.getProperty("environment", "S").toUpperCase();
 
                 this.pinRequestEnabled = !disablePinRequest;
                 this.environment = Environment.valueOf(environment);

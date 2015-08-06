@@ -85,7 +85,7 @@ public class TermsFragment extends InjectedFragment
     @OnClick(R.id.try_again_button)
     protected void doCheckForTermsAgain()
     {
-        startActivity(new Intent(this.getActivity(), SplashActivity.class));
+        startActivity(new Intent(this.getActivity(), SplashActivity.class));//TODO: we should not have to relaunch SplashActivity and go through its flow to check for terms again
     }
 
     @OnCheckedChanged(R.id.accept_checkbox)

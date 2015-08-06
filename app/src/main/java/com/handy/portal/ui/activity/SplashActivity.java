@@ -14,6 +14,7 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.squareup.otto.Subscribe;
 
@@ -31,6 +32,8 @@ public class SplashActivity extends BaseActivity
     @Inject
     PrefsManager prefsManager;
     @Inject
+    ProviderManager providerManager;
+    @Inject
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
@@ -41,10 +44,10 @@ public class SplashActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        String providerId = prefsManager.getString(PrefsKey.PROVIDER_ID, null);
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
         if (providerId != null)
         {
-            // this needs to happen first so we have more insight in case something bad happens after this line
+            // needs to happen immediately just in case anything bad happens after this line
             Crashlytics.setUserIdentifier(providerId);
         }
 
@@ -54,8 +57,18 @@ public class SplashActivity extends BaseActivity
             if (authToken != null)
             {
                 prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
+                CookieSyncManager.createInstance(this);
+                CookieManager.getInstance().setCookie(endpoint.getBaseUrl(), "user_credentials=" + authToken);
+                CookieSyncManager.getInstance().sync();
             }
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
 
         String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
         String authTokenFromCookieManager = getAuthTokenFromCookieManager();
@@ -71,18 +84,20 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            if (providerId == null)
-            {
-                requestUserInfo();
-            }
-            else
+            // TODO: SplashActivity is always relaunched when user info is received or when terms are accepted. When we move away from that logic, refactor this section.
+            if (providerManager.getCachedActiveProvider() != null)
             {
                 checkForTerms();
             }
+            else
+            {
+                requestProviderInfo();
+            }
+
         }
     }
 
-    private void requestUserInfo()
+    private void requestProviderInfo()
     {
         bus.post(new HandyEvent.RequestProviderInfo());
     }
@@ -110,7 +125,7 @@ public class SplashActivity extends BaseActivity
                 {
                     findViewById(R.id.progress_spinner).setVisibility(View.VISIBLE);
                     findViewById(R.id.fetch_error_view).setVisibility(View.GONE);
-                    requestUserInfo();
+                    requestProviderInfo();
                 }
             });
         }
@@ -156,13 +171,6 @@ public class SplashActivity extends BaseActivity
 
         launchedNext = true;
         finish();
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        bus.register(this);
     }
 
     @Override

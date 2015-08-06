@@ -148,7 +148,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private String getLoggedInUserId()
     {
-        return prefsManager.getString(PrefsKey.PROVIDER_ID);
+        return prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
     private void requestBookingDetails(String bookingId)
