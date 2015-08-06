@@ -44,14 +44,12 @@ public class SplashActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        /*
-        TODO: it is sufficient to only call Crashlytics.setUserIdentifier here because
-        we currently use gross logic to relaunch SplashActivity after the providerId is updated (and after terms are accepted)
-        We may need to move these lines to other places when we move away from that gross logic
-        */
         String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        Crashlytics.setUserIdentifier(providerId);
-
+        if (providerId != null)
+        {
+            // needs to happen immediately just in case anything bad happens after this line
+            Crashlytics.setUserIdentifier(providerId);
+        }
 
         if (buildConfigWrapper.isDebug())
         {
@@ -64,6 +62,13 @@ public class SplashActivity extends BaseActivity
                 CookieSyncManager.getInstance().sync();
             }
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
 
         String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
         String authTokenFromCookieManager = getAuthTokenFromCookieManager();
@@ -79,24 +84,20 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            //TODO: SplashActivity is always relaunched when user info is received or when terms are accepted (bad!). when we move away from that gross logic, refactor this hacky section!
+            // TODO: SplashActivity is always relaunched when user info is received or when terms are accepted. When we move away from that logic, refactor this section.
             if (providerManager.getCachedActiveProvider() != null)
-            {//already received provider info. fatal problem if provider object returned from service call is null
-            /*
-            hack to perform check terms + request user synchronously (since both launch activities in callback, can cause issues if async) without causing circular dependency
-            note that checkForTerms needs providerId, so must be performed after provider info is received
-             */
+            {
                 checkForTerms();
             }
             else
             {
-                requestUserInfo();
+                requestProviderInfo();
             }
 
         }
     }
 
-    private void requestUserInfo()
+    private void requestProviderInfo()
     {
         bus.post(new HandyEvent.RequestProviderInfo());
     }
@@ -124,7 +125,7 @@ public class SplashActivity extends BaseActivity
                 {
                     findViewById(R.id.progress_spinner).setVisibility(View.VISIBLE);
                     findViewById(R.id.fetch_error_view).setVisibility(View.GONE);
-                    requestUserInfo();
+                    requestProviderInfo();
                 }
             });
         }
@@ -170,13 +171,6 @@ public class SplashActivity extends BaseActivity
 
         launchedNext = true;
         finish();
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        bus.register(this);
     }
 
     @Override
