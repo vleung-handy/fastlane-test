@@ -99,7 +99,11 @@ public final class HelpFragment extends InjectedFragment
     //TODO: Make this smarter and recognize back tracking
     private void trackPath(HelpNode node)
     {
-        currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + node.getLabel();
+        //Don't add the root node to the path as per CX spec
+        if(node.getType().equals(HelpNode.HelpNodeType.ROOT))
+        {
+            currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + node.getLabel();
+        }
     }
 
     private void updateDisplay(final HelpNode node)
