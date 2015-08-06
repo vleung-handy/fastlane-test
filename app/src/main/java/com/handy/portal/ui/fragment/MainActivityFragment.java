@@ -85,7 +85,7 @@ public class MainActivityFragment extends InjectedFragment
             public void onBackStackChanged()
             {
                 // traverse the fragment stack from top to bottom and activate the first relevant tab
-                List<Fragment> fragments = getFragmentManager().getFragments();
+                List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
                 for (int i = fragments.size() - 1; i >= 0; i--)
                 {
                     if (updateSelectedTabButton(fragments.get(i)))
