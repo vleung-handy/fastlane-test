@@ -13,7 +13,7 @@
     <color name="handy_love">#F9002E</color>
     <color name="tertiary_grey">#9CABB5</color>
     <color name="disabled">#4D9CABB5</color>
-    <color name="disabled_text">#9CABB5</color>
+    <color name="disabled_text">#434343</color>
     <color name="nav_bg">#1D1D1D</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>
