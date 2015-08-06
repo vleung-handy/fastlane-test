@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -63,8 +62,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
-
-    private int previousDatesScrollPosition;
 
     //should use date without time for these entries, see Utils.getDateWithoutTime
     private Map<Date, DateButtonView> dateButtonMap;
@@ -126,24 +123,10 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
         {
             dateButtonMap.get(selectedDay).performClick();
-            scrollDatesToPreviousPosition();
         } else if (getDatesLayout().getChildCount() > 0)
         {
             getDatesLayout().getChildAt(0).performClick();
         }
-    }
-
-    private void scrollDatesToPreviousPosition()
-    {
-        final HorizontalScrollView scrollView = (HorizontalScrollView) getDatesLayout().getParent();
-        scrollView.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                scrollView.scrollTo(previousDatesScrollPosition, 0);
-            }
-        });
     }
 
     private void initDateButtons(List<BookingSummary> bookingSummaries)
@@ -217,7 +200,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 if (booking != null)
                 {
                     bus.post(new HandyEvent.BookingSelected(getTrackingType(), booking.getId()));
-                    previousDatesScrollPosition = ((HorizontalScrollView) getDatesLayout().getParent()).getScrollX();
                     showBookingDetails(booking);
                 }
             }
