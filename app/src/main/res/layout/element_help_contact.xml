@@ -49,7 +49,10 @@
 
         </RelativeLayout>
 
+
+        <!-- not removing name layout even though invisible because might need later -->
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/name_layout"
             style="@style/BookingsCell"
             android:layout_below="@+id/subject_title_layout"
@@ -77,9 +80,10 @@
                 android:paddingTop="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:textColor="@color/edit_text_enabled_black_disabled_grey"
+                android:textColor="@color/black"
                 android:background="@null"
-                style="@style/EditText.FirstName" />
+                style="@style/EditText.FirstName"
+                />
 
         </RelativeLayout>
 
@@ -111,7 +115,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:background="@null"
-                android:textColor="@color/edit_text_enabled_black_disabled_grey"
+                android:textColor="@color/black"
                 style="@style/EditText.Email" />
 
         </RelativeLayout>
