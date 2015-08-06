@@ -315,4 +315,6 @@
     <string name="help_center_subject">Subject: </string>
     <string name="your_email">Your Email</string>
 
+    <string name="ensure_fields_valid">Please ensure all fields are filled out correctly</string>
+
 </resources>

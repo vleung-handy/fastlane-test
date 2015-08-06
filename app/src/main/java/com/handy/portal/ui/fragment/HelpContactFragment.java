@@ -39,6 +39,9 @@ public final class HelpContactFragment extends InjectedFragment
     private static final String HELP_CONTACT_FORM_DESCRIPTION = "description";
     private static final String HELP_CONTACT_FORM_PATH = "path";
     private static final String HELP_CONTACT_FORM_BOOKING_ID = "booking_id";
+    private static final String HELP_CONTACT_FORM_ORIGIN = "origin";
+    private static final String SALESFORCE_CASE_ORIGIN = "web"; //yes this is coming from mobile but still labeled web as per CX team
+
     private static final String SALESFORCE_DATA_WRAPPER_KEY = "salesforce_data";
 
     @InjectView(R.id.help_contact_view)
@@ -61,15 +64,13 @@ public final class HelpContactFragment extends InjectedFragment
     }
 
     @Override
-    public void onResume(){
+    public void onResume()
+    {
         super.onResume();
-        bus.post(new HandyEvent.RequestProviderInfo());
-        /*
-        gross hack
-        have to do bus post here because
-        we invalidate the provider cache since we have no way of knowing when provider info is updated,
-        and bus is only registered in super.onResume()
-         */
+        if(!MainActivityFragment.clearingBackStack)
+        {
+            bus.post(new HandyEvent.RequestProviderInfo());
+        }
     }
 
     @Override
@@ -104,7 +105,7 @@ public final class HelpContactFragment extends InjectedFragment
 
         helpContactView.updateDisplay(this.associatedNode);
 
-        helpBannerView.updateDisplay();//TODO: can we call this inside updateDisplay(HelpNode) instead?
+        helpBannerView.updateDisplay(); //TODO: can we call this inside updateDisplay(HelpNode) instead?
 
         assignClickListeners(view);
 
@@ -147,6 +148,10 @@ public final class HelpContactFragment extends InjectedFragment
             dismissKeyboard();
             sendContactFormData(helpContactView.nameText.getString(), helpContactView.emailText.getString(), helpContactView.commentText.getString(), this.associatedNode);
         }
+        else
+        {
+            showToast(R.string.ensure_fields_valid);
+        }
     }
 
     private void dismissKeyboard()
@@ -169,6 +174,7 @@ public final class HelpContactFragment extends InjectedFragment
         contactFormInfo.put(HELP_CONTACT_FORM_DESCRIPTION, comment);
         contactFormInfo.put(HELP_CONTACT_FORM_PATH, path);
         contactFormInfo.put(HELP_CONTACT_FORM_BOOKING_ID, bookingId);
+        contactFormInfo.put(HELP_CONTACT_FORM_ORIGIN, SALESFORCE_CASE_ORIGIN);
 
         JSONObject salesforceWrapper = new JSONObject();
         try
