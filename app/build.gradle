@@ -33,8 +33,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 24
-        versionName "0.5.0"
+        versionCode 25
+        versionName "0.5.1"
         multiDexEnabled true
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
@@ -68,19 +68,19 @@ android {
         stable {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.5.0"
+            versionName "0.5.1"
             signingConfig signingConfigs.prod
         }
         beta {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.5.0b"
+            versionName "0.5.1b"
             signingConfig signingConfigs.prod
         }
         store {
             applicationId 'com.handybook.handy_portal'
             manifestPlaceholders = [PACKAGE_NAME: "com.handybook.handy_portal"]
-            versionName "0.5.0p"
+            versionName "0.5.1p"
             signingConfig signingConfigs.playstore
         }
 
