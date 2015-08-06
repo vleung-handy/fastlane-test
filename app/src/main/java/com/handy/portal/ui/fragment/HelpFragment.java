@@ -22,7 +22,7 @@ import butterknife.OnClick;
 
 public final class HelpFragment extends InjectedFragment
 {
-    private final static String PATH_SEPARATOR = "->";
+    private final static String PATH_SEPARATOR = " > ";
 
     @InjectView(R.id.help_node_view)
     HelpNodeView helpNodeView;
@@ -36,7 +36,7 @@ public final class HelpFragment extends InjectedFragment
     TextView errorText;
 
     private String currentBookingId; //optional param, if help request is associated with a booking
-    private String currentPath; //what nodes have we traversed to get to the current node
+    private String currentPathNodeLabels; //what nodes have we traversed to get to the current node
 
     private String nodeIdToRequest = null;
 
@@ -73,11 +73,11 @@ public final class HelpFragment extends InjectedFragment
 
         if (getArguments() != null && getArguments().containsKey(BundleKeys.PATH))
         {
-            currentPath = getArguments().getString(BundleKeys.PATH);
+            currentPathNodeLabels = getArguments().getString(BundleKeys.PATH);
         }
         else
         {
-            currentPath = "";
+            currentPathNodeLabels = "";
         }
 
         setupBackClickListener();
@@ -99,8 +99,7 @@ public final class HelpFragment extends InjectedFragment
     //TODO: Make this smarter and recognize back tracking
     private void trackPath(HelpNode node)
     {
-        String nodeId = Integer.toString(node.getId());
-        currentPath += (!currentPath.isEmpty() ? PATH_SEPARATOR : "") + nodeId;
+        currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + node.getLabel();
     }
 
     private void updateDisplay(final HelpNode node)
@@ -163,7 +162,7 @@ public final class HelpFragment extends InjectedFragment
                     {
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
-                        arguments.putString(BundleKeys.PATH, currentPath);
+                        arguments.putString(BundleKeys.PATH, currentPathNodeLabels);
                         bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
                     }
                 }
@@ -192,8 +191,8 @@ public final class HelpFragment extends InjectedFragment
                         public void onClick(View v)
                         {
                             Bundle arguments = new Bundle();
-                            arguments.putString(BundleKeys.PATH, currentPath);
-                            arguments.putParcelable(BundleKeys.HELP_NODE, helpNode);
+                            arguments.putString(BundleKeys.PATH, currentPathNodeLabels);
+                            arguments.putParcelable(BundleKeys.HELP_NODE, child);
                             HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
                             bus.post(navigateEvent);
                         }
