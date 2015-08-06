@@ -61,12 +61,10 @@ public final class HelpContactView extends InjectedRelativeLayout
 
     public void prepopulateProviderData(Provider provider)
     {
-        System.out.println("ZZZ Prepop provider : " + provider);
-
         if (provider != null)
         {
-            this.nameText.setEnabled(!this.nameText.validate());
-            this.emailText.setEnabled(!this.nameText.validate());
+            this.nameText.setText(provider.getFullName());
+            this.emailText.setText(provider.getEmail());
         }
         else
         {
