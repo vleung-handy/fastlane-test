@@ -22,6 +22,8 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.urbanairship.AirshipConfigOptions;
+import com.urbanairship.UAirship;
+import com.urbanairship.push.notifications.DefaultNotificationFactory;
 
 import javax.inject.Inject;
 
@@ -162,24 +164,28 @@ public class BaseApplication extends Application
 
         System.out.println("ZZZ starting urban airship");
 
-//        UAirship.takeOff(this, options, new UAirship.OnReadyCallback()
-//        {
-//            @Override
-//            public void onAirshipReady(final UAirship airship)
-//            {
-//                System.out.println("ZZZ on airship ready");
-//
-//                final DefaultNotificationFactory defaultNotificationFactory =
-//                        new DefaultNotificationFactory(getApplicationContext());
-//
-//                defaultNotificationFactory.setColor(getResources().getColor(R.color.handy_blue));
-//                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
-//
-//                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
-//                airship.getPushManager().setPushEnabled(false);
-//                airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
-//            }
-//        });
+        UAirship.takeOff(this, options, new UAirship.OnReadyCallback()
+        {
+            @Override
+            public void onAirshipReady(final UAirship airship)
+            {
+                System.out.println("ZZZ on airship ready");
+
+                final DefaultNotificationFactory defaultNotificationFactory =
+                        new DefaultNotificationFactory(getApplicationContext());
+
+                defaultNotificationFactory.setColor(getResources().getColor(R.color.handy_blue));
+                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
+
+                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
+                airship.getPushManager().setPushEnabled(false);
+                airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
+
+
+                //testing UA
+                System.out.println("ZZZ urban airship channel id : " + UAirship.shared().getPushManager().getChannelId());
+            }
+        });
     }
 
     protected void createObjectGraph()

@@ -21,7 +21,6 @@ import com.handy.portal.ui.widget.ProgressDialog;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-import com.urbanairship.UAirship;
 
 import java.util.Stack;
 
@@ -107,11 +106,6 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
-
-
-        //testing UA
-        System.out.println("ZZZ urban airship channel id : " + UAirship.shared().getPushManager().getChannelId());
-
     }
 
     @Override
