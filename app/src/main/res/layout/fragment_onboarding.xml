@@ -8,9 +8,11 @@
 
     <ImageView
         android:id="@+id/body"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
+        android:onClick="nextStep"
         android:scaleType="centerCrop"/>
 
     <ImageView
@@ -19,5 +21,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:scaleType="centerCrop"/>
+
+    <TextView
+        android:layout_marginTop="16dp"
+        android:id="@+id/tooltip_top"
+        android:layout_alignParentTop="true"
+        style="@style/Tooltip"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_marginBottom="16dp"
+        android:id="@+id/tooltip_bottom"
+        android:layout_above="@+id/footer"
+        style="@style/Tooltip"
+        android:visibility="gone"/>
 
 </RelativeLayout>
