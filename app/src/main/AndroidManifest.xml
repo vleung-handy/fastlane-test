@@ -100,6 +100,20 @@
             </intent-filter>
         </receiver>
 
+        <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
+        <!-- Replace the receiver below with your package and class name -->
+
+        <receiver android:name="receiver.HandyIntentReceiver"
+                  android:exported="false">
+            <intent-filter>
+                <action android:name="com.urbanairship.push.CHANNEL_UPDATED" />
+                <action android:name="com.urbanairship.push.OPENED" />
+                <action android:name="com.urbanairship.push.RECEIVED" />
+                <action android:name="com.urbanairship.push.DISMISSED" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+
         <!-- REQUIRED for Landing Pages
             - For more customization details, see com.urbanairship.actions.LandingPageActivity -->
         <activity
