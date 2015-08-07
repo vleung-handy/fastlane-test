@@ -23,8 +23,6 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.urbanairship.AirshipConfigOptions;
-import com.urbanairship.UAirship;
-import com.urbanairship.push.notifications.DefaultNotificationFactory;
 
 import javax.inject.Inject;
 
@@ -81,24 +79,6 @@ public class BaseApplication extends Application
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
-//        final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
-//        options.inProduction = BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD);
-//
-//        UAirship.takeOff(this, options, new UAirship.OnReadyCallback() {
-//            @Override
-//            public void onAirshipReady(final UAirship airship) {
-//                final DefaultNotificationFactory defaultNotificationFactory =
-//                        new DefaultNotificationFactory(getApplicationContext());
-//
-//                defaultNotificationFactory.setColor(getResources().getColor(R.color.handy_blue));
-//                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
-//
-//                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
-//                airship.getPushManager().setPushEnabled(false);
-//                airship.getPushManager().setUserNotificationsEnabled(false);
-//            }
-//        });
-//
 //        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)) {
 //            NewRelic.withApplicationToken("AA7a37dccf925fd1e474142399691d1b6b3f84648b").start(this);
 //        }
@@ -187,22 +167,26 @@ public class BaseApplication extends Application
         final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
         options.inProduction = !BuildConfig.DEBUG;
 
-        UAirship.takeOff(this, options, new UAirship.OnReadyCallback()
-        {
-            @Override
-            public void onAirshipReady(final UAirship airship)
-            {
-                final DefaultNotificationFactory defaultNotificationFactory =
-                        new DefaultNotificationFactory(getApplicationContext());
+        System.out.println("ZZZ starting urban airship");
 
-                defaultNotificationFactory.setColor(getResources().getColor(R.color.handy_blue));
-                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
-
-                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
-                airship.getPushManager().setPushEnabled(false);
-                airship.getPushManager().setUserNotificationsEnabled(false);
-            }
-        });
+//        UAirship.takeOff(this, options, new UAirship.OnReadyCallback()
+//        {
+//            @Override
+//            public void onAirshipReady(final UAirship airship)
+//            {
+//                System.out.println("ZZZ on airship ready");
+//
+//                final DefaultNotificationFactory defaultNotificationFactory =
+//                        new DefaultNotificationFactory(getApplicationContext());
+//
+//                defaultNotificationFactory.setColor(getResources().getColor(R.color.handy_blue));
+//                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
+//
+//                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
+//                airship.getPushManager().setPushEnabled(false);
+//                airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
+//            }
+//        });
     }
 
     protected void createObjectGraph()
