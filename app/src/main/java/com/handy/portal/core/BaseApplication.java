@@ -186,6 +186,7 @@ public class BaseApplication extends Application
                 System.out.println("ZZZ urban airship channel id : " + UAirship.shared().getPushManager().getChannelId());
             }
         });
+
     }
 
     protected void createObjectGraph()

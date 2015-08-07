@@ -34,8 +34,10 @@
 
     <!-- GCM Messaging -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
+    <!-- This app has permission to register with GCM and receive message -->
+    <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <application
         android:name=".core.BaseApplication"
@@ -111,7 +113,9 @@
         <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
         <!-- Replace the receiver below with your package and class name -->
 
+
         <!--
+
         <receiver android:name="receiver.HandyIntentReceiver"
                   android:exported="false">
             <intent-filter>
@@ -122,7 +126,9 @@
                 <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
+
         -->
+
 
         <!-- REQUIRED for Landing Pages
             - For more customization details, see com.urbanairship.actions.LandingPageActivity -->
@@ -164,12 +170,6 @@
             android:exported="true"
             android:multiprocess="true" />
 
-
-        <!-- REQUIRED for Google Play Services (GCM)-->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
         <!-- REQUIRED for PlayServiceUtils.handleAnyPlayServicesError to handle Google Play Services recoverable errors. -->
         <activity
             android:name="com.urbanairship.google.PlayServicesErrorActivity"
@@ -186,8 +186,6 @@
                 <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
-
-
 
     </application>
 
