@@ -7,13 +7,14 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingSummary;
-import com.handy.portal.model.BookingSummaryResponse;
+import com.handy.portal.model.BookingList;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -24,13 +25,8 @@ public class BookingManager
     private final Bus bus;
     private final DataManager dataManager;
 
-    // will change type when we want access to bookings for a specific day, right now, we're just dumping all
-    private final Cache<CacheKey, List<BookingSummary>> bookingsCache;
-
-    private enum CacheKey {
-        AVAILABLE_BOOKINGS,
-        SCHEDULED_BOOKINGS
-    }
+    private final Cache<Date, List<Booking>> availableBookingsCache;
+    private final Cache<Date, List<Booking>> scheduledBookingsCache;
 
     @Inject
     public BookingManager(final Bus bus, final DataManager dataManager)
@@ -39,10 +35,14 @@ public class BookingManager
         this.bus.register(this);
         this.dataManager = dataManager;
 
-        this.bookingsCache = CacheBuilder.newBuilder()
-                .weakKeys()
-                .maximumSize(10000)
-                .expireAfterWrite(2, TimeUnit.MINUTES)
+        this.availableBookingsCache = CacheBuilder.newBuilder()
+                .maximumSize(1000)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .build();
+
+        this.scheduledBookingsCache = CacheBuilder.newBuilder()
+                .maximumSize(1000)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build();
     }
 
@@ -69,36 +69,31 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 bus.post(new HandyEvent.ReceiveBookingDetailsError(error));
-
-                //if not a network error invalidate the caches so we don't let them try to get details on the same booking
-                if(error.getType() != DataManager.DataManagerError.Type.NETWORK)
-                {
-                    bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                    bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
-                }
             }
         });
     }
 
     @Subscribe
-    public void onRequestAvailableBookings(HandyEvent.RequestAvailableBookings event)
+    public void onRequestAvailableBookings(final HandyEvent.RequestAvailableBookings event)
     {
-        final List<BookingSummary> cachedBookingSummaries = bookingsCache.getIfPresent(CacheKey.AVAILABLE_BOOKINGS);
-        if (cachedBookingSummaries != null)
+        final Date day = Utils.getDateWithoutTime(event.date);
+
+        final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
+        if (cachedBookings != null)
         {
-            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookingSummaries));
+            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings));
         }
         else
         {
-            dataManager.getAvailableBookings(
-                    new DataManager.Callback<BookingSummaryResponse>()
+            dataManager.getAvailableBookings(event.date,
+                    new DataManager.Callback<BookingList>()
                     {
                         @Override
-                        public void onSuccess(final BookingSummaryResponse bookingSummaryResponse)
+                        public void onSuccess(final BookingList bookingList)
                         {
-                            List<BookingSummary> bookingSummaries = bookingSummaryResponse.getBookingSummaries();
-                            bookingsCache.put(CacheKey.AVAILABLE_BOOKINGS, bookingSummaries);
-                            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookingSummaries));
+                            List<Booking> bookings = bookingList.getBookings();
+                            availableBookingsCache.put(day, bookings);
+                            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings));
                         }
 
                         @Override
@@ -114,22 +109,24 @@ public class BookingManager
     @Subscribe
     public void onRequestScheduledBookings(HandyEvent.RequestScheduledBookings event)
     {
-        final List<BookingSummary> cachedBookingSummaries = bookingsCache.getIfPresent(CacheKey.SCHEDULED_BOOKINGS);
-        if (cachedBookingSummaries != null)
+        final Date day = Utils.getDateWithoutTime(event.date);
+
+        final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
+        if (cachedBookings != null)
         {
-            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookingSummaries));
+            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings));
         }
         else
         {
-            dataManager.getScheduledBookings(
-                    new DataManager.Callback<BookingSummaryResponse>()
+            dataManager.getScheduledBookings(event.date,
+                    new DataManager.Callback<BookingList>()
                     {
                         @Override
-                        public void onSuccess(final BookingSummaryResponse bookingSummaryResponse)
+                        public void onSuccess(final BookingList bookingList)
                         {
-                            List<BookingSummary> bookingSummaries = bookingSummaryResponse.getBookingSummaries();
-                            bookingsCache.put(CacheKey.SCHEDULED_BOOKINGS, bookingSummaries);
-                            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookingSummaries));
+                            List<Booking> bookings = bookingList.getBookings();
+                            scheduledBookingsCache.put(day, bookings);
+                            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings));
                         }
 
                         @Override
@@ -145,15 +142,16 @@ public class BookingManager
     @Subscribe
     public void onRequestClaimJob(HandyEvent.RequestClaimJob event)
     {
-        String bookingId = event.bookingId;
+        String bookingId = event.booking.getId();
+        final Date day = Utils.getDateWithoutTime(event.booking.getStartDate());
 
         dataManager.claimBooking(bookingId, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                availableBookingsCache.invalidate(day);
+                scheduledBookingsCache.invalidate(day);
                 bus.post(new HandyEvent.ReceiveClaimJobSuccess(booking));
             }
 
@@ -161,8 +159,8 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                availableBookingsCache.invalidate(day);
+                scheduledBookingsCache.invalidate(day);
                 bus.post(new HandyEvent.ReceiveClaimJobError(error));
             }
         });
@@ -171,15 +169,16 @@ public class BookingManager
     @Subscribe
     public void onRequestRemoveJob(HandyEvent.RequestRemoveJob event)
     {
-        String bookingId = event.bookingId;
+        String bookingId = event.booking.getId();
+        final Date day = Utils.getDateWithoutTime(event.booking.getStartDate());
 
         dataManager.removeBooking(bookingId, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                availableBookingsCache.invalidate(day);
+                scheduledBookingsCache.invalidate(day);
                 bus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
             }
 
@@ -187,8 +186,8 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                bookingsCache.invalidate(CacheKey.AVAILABLE_BOOKINGS);
-                bookingsCache.invalidate(CacheKey.SCHEDULED_BOOKINGS);
+                availableBookingsCache.invalidate(day);
+                scheduledBookingsCache.invalidate(day);
                 bus.post(new HandyEvent.ReceiveRemoveJobError(error));
             }
         });
@@ -197,7 +196,7 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyOnMyWay(HandyEvent.RequestNotifyJobOnMyWay event)
     {
-        String bookingId = event.bookingId;
+        String bookingId = event.booking.getId();
         LocationData locationData = event.locationData;
 
         dataManager.notifyOnMyWayBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
@@ -219,7 +218,7 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyCheckIn(HandyEvent.RequestNotifyJobCheckIn event)
     {
-        String bookingId = event.bookingId;
+        String bookingId = event.booking.getId();
         LocationData locationData = event.locationData;
 
         dataManager.notifyCheckInBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
@@ -242,7 +241,7 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyCheckOut(HandyEvent.RequestNotifyJobCheckOut event)
     {
-        String bookingId = event.bookingId;
+        String bookingId = event.booking.getId();
         LocationData locationData = event.locationData;
 
         dataManager.notifyCheckOutBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
@@ -264,7 +263,7 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyUpdateArrivalTime(HandyEvent.RequestNotifyJobUpdateArrivalTime event)
     {
-        String bookingId = event.bookingId;
+        String bookingId = event.booking.getId();
         Booking.ArrivalTimeOption arrivalTimeOption = event.arrivalTimeOption;
 
         dataManager.notifyUpdateArrivalTimeBooking(bookingId, arrivalTimeOption, new DataManager.Callback<Booking>()

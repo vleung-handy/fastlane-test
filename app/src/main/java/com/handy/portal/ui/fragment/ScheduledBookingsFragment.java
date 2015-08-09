@@ -63,9 +63,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected HandyEvent getRequestEvent()
+    protected HandyEvent getRequestEvent(Date day)
     {
-        return new HandyEvent.RequestScheduledBookings();
+        return new HandyEvent.RequestScheduledBookings(day);
     }
 
     @Override
@@ -137,6 +137,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             }
         }
         return false;
+    }
+
+    @Override
+    protected int numberOfDaysToDisplay()
+    {
+        return 28;
     }
 
     @Subscribe

@@ -14,13 +14,12 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingSummary;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.util.DateTimeUtils;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,11 +51,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract String getTrackingType();
 
-    protected abstract HandyEvent getRequestEvent();
+    protected abstract HandyEvent getRequestEvent(Date day);
 
     protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
 
     protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
+
+    protected abstract int numberOfDaysToDisplay();
 
     protected abstract void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings);
 
@@ -81,8 +82,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
             if (targetDateTime > 0)
             {
-                this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
-                this.selectedDay = DateTimeUtils.getDateWithoutTime(this.selectedDay);
+                this.selectedDay = DateTimeUtils.getDateWithoutTime(new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME)));
             }
         }
 
@@ -93,74 +93,69 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void onResume()
     {
         super.onResume();
-        if(!MainActivityFragment.clearingBackStack)
+        if (!MainActivityFragment.clearingBackStack)
         {
-            requestBookings();
+            initDateButtons();
+
+            if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
+            {
+                dateButtonMap.get(selectedDay).performClick();
+            }
+            else
+            {
+                getDatesLayout().getChildAt(0).performClick();
+            }
         }
     }
 
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookings();
+        requestBookings(selectedDay);
     }
 
-    protected void requestBookings()
+    protected void requestBookings(Date day)
     {
         fetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(getRequestEvent());
+        bus.post(getRequestEvent(day));
     }
 
     protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        List<BookingSummary> bookingSummaries = event.bookingSummaries;
-        initDateButtons(bookingSummaries);
+        displayBookings(event.bookings, selectedDay);
 
         bookingsContentView.setVisibility(View.VISIBLE);
-
-        if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
-        {
-            dateButtonMap.get(selectedDay).performClick();
-        } else if (getDatesLayout().getChildCount() > 0)
-        {
-            getDatesLayout().getChildAt(0).performClick();
-        }
     }
 
-    private void initDateButtons(List<BookingSummary> bookingSummaries)
+    private void initDateButtons()
     {
         LinearLayout datesLayout = getDatesLayout();
-
-        //remove existing date buttons
         datesLayout.removeAllViews();
 
-        dateButtonMap = new HashMap<>(bookingSummaries.size());
+        dateButtonMap = new HashMap<>(numberOfDaysToDisplay());
 
         Context context = getActivity();
 
-        for (final BookingSummary bookingSummary : bookingSummaries)
+        for (int i = 0; i < numberOfDaysToDisplay(); i++)
         {
             LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
             final DateButtonView dateButtonView = (DateButtonView) datesLayout.getChildAt(datesLayout.getChildCount() - 1);
 
-            final List<Booking> bookingsForDay = new ArrayList<>(bookingSummary.getBookings());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DATE, i);
+            final Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
 
-            Collections.sort(bookingsForDay); //date, ascending
-
-            boolean requestedJobsThisDay = showRequestedIndicator(bookingsForDay);
-            boolean claimedJobsThisDay = showClaimedIndicator(bookingsForDay);
-
-            final Date day = bookingSummary.getDate();
-            dateButtonView.init(day, requestedJobsThisDay, claimedJobsThisDay);
+            dateButtonView.init(day);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
-                    displayBookings(bookingsForDay, day);
+                    requestBookings(day);
                 }
             });
 
@@ -181,6 +176,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void displayBookings(List<Booking> bookings, Date dateOfBookings)
     {
+        Collections.sort(bookings);
+
+        // TODO: move this out to a handler that requests other-day bookings in the background
+        DateButtonView dateButtonView = dateButtonMap.get(dateOfBookings);
+        dateButtonView.showRequestedIndicator(showRequestedIndicator(bookings));
+        dateButtonView.showClaimedIndicator(showClaimedIndicator(bookings));
+
         getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);

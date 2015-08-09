@@ -46,9 +46,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected HandyEvent getRequestEvent()
+    protected HandyEvent getRequestEvent(Date day)
     {
-        return new HandyEvent.RequestAvailableBookings();
+        return new HandyEvent.RequestAvailableBookings(day);
     }
 
     @Override
@@ -74,6 +74,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected boolean showClaimedIndicator(List<Booking> bookingsForDay)
     {
         return false;
+    }
+
+    @Override
+    protected int numberOfDaysToDisplay()
+    {
+        return 7;
     }
 
     @Override

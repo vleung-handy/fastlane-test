@@ -558,38 +558,38 @@ public class BookingDetailsFragment extends InjectedFragment
     private void requestClaimJob(String bookingId)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(bookingId));
+        bus.post(new HandyEvent.RequestClaimJob(associatedBooking));
     }
 
     private void requestRemoveJob(String bookingId)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestRemoveJob(bookingId));
+        bus.post(new HandyEvent.RequestRemoveJob(associatedBooking));
     }
 
     private void requestNotifyOnMyWayJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
+        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(associatedBooking, locationData));
     }
 
     private void requestNotifyCheckInJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
+        bus.post(new HandyEvent.RequestNotifyJobCheckIn(associatedBooking, locationData));
     }
 
     private void requestNotifyCheckOutJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, locationData));
+        bus.post(new HandyEvent.RequestNotifyJobCheckOut(associatedBooking, locationData));
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
         slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
+        bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(associatedBooking, arrivalTimeOption));
     }
 
     private void requestReportNoShow()

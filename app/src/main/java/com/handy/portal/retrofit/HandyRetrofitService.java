@@ -1,5 +1,6 @@
 package com.handy.portal.retrofit;
 
+import java.util.Date;
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -37,10 +38,10 @@ public interface HandyRetrofitService
     void getConfigParams(@Query("key[]") String[] key, HandyRetrofitCallback cb);
 
     @GET(BOOKINGS_PATH + "?available=true")
-    void getAvailableBookings(HandyRetrofitCallback cb);
+    void getAvailableBookings(@Query("date") Date date, HandyRetrofitCallback cb);
 
     @GET(BOOKINGS_PATH)
-    void getScheduledBookings(HandyRetrofitCallback cb);
+    void getScheduledBookings(@Query("date") Date date, HandyRetrofitCallback cb);
 
     @PUT(BOOKINGS_PATH + "{booking_id}/claim")
     void claimBooking(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
