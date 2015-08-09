@@ -1,0 +1,5 @@
+#!/bin/bash
+LOCAL_IP=`ifconfig | grep inet.*broadcast | cut -d ' ' -f 2`
+sed -i '' 's/https:\/\/{0}-handybook\.hbinternal\.com/http:\/\/'$LOCAL_IP':3000/' app/src/main/assets/config.debug.properties
+echo 'Now pointing to '$LOCAL_IP
+
