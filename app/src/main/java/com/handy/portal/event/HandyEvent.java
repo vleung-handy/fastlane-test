@@ -287,38 +287,46 @@ public abstract class HandyEvent
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
         public List<Booking> bookings;
+        public Date day;
     }
 
     public static class ReceiveAvailableBookingsSuccess extends ReceiveBookingsSuccess
     {
-        public ReceiveAvailableBookingsSuccess(List<Booking> bookings)
+        public ReceiveAvailableBookingsSuccess(List<Booking> bookings, Date day)
         {
             this.bookings = bookings;
+            this.day = day;
         }
     }
 
     public static class ReceiveScheduledBookingsSuccess extends ReceiveBookingsSuccess
     {
-        public ReceiveScheduledBookingsSuccess(List<Booking> bookings)
+        public ReceiveScheduledBookingsSuccess(List<Booking> bookings, Date day)
         {
             this.bookings = bookings;
+            this.day = day;
         }
     }
 
-    public static class ReceiveAvailableBookingsError extends ReceiveErrorEvent
+    public static class ReceiveBookingsError extends ReceiveErrorEvent
     {
-        public ReceiveAvailableBookingsError(DataManager.DataManagerError error)
+        public Date day;
+    }
+
+    public static class ReceiveAvailableBookingsError extends ReceiveBookingsError
+    {
+        public ReceiveAvailableBookingsError(DataManager.DataManagerError error, Date day)
         {
+            this.day = day;
             this.error = error;
         }
     }
 
-    public static class ReceiveScheduledBookingsError extends ReceiveErrorEvent
+    public static class ReceiveScheduledBookingsError extends ReceiveBookingsError
     {
-        public final DataManager.DataManagerError error;
-
-        public ReceiveScheduledBookingsError(DataManager.DataManagerError error)
+        public ReceiveScheduledBookingsError(DataManager.DataManagerError error, Date day)
         {
+            this.day = day;
             this.error = error;
         }
     }

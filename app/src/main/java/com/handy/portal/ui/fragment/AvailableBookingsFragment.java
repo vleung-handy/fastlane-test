@@ -1,11 +1,9 @@
 package com.handy.portal.ui.fragment;
 
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
@@ -104,15 +102,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
-            errorText.setText(R.string.error_fetching_connectivity_issue);
-        }
-        else
-        {
-            errorText.setText(R.string.error_fetching_available_jobs);
-        }
-        fetchErrorView.setVisibility(View.VISIBLE);
+        handleBookingsRetrievalError(event);
     }
 }

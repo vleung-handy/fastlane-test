@@ -81,7 +81,7 @@ public class BookingManager
         final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
         if (cachedBookings != null)
         {
-            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings));
+            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
         }
         else
         {
@@ -93,13 +93,13 @@ public class BookingManager
                         {
                             List<Booking> bookings = bookingList.getBookings();
                             availableBookingsCache.put(day, bookings);
-                            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings));
+                            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings, day));
                         }
 
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            bus.post(new HandyEvent.ReceiveAvailableBookingsError(error));
+                            bus.post(new HandyEvent.ReceiveAvailableBookingsError(error, day));
                         }
                     }
             );
@@ -114,7 +114,7 @@ public class BookingManager
         final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
         if (cachedBookings != null)
         {
-            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings));
+            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
         }
         else
         {
@@ -126,13 +126,13 @@ public class BookingManager
                         {
                             List<Booking> bookings = bookingList.getBookings();
                             scheduledBookingsCache.put(day, bookings);
-                            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings));
+                            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
                         }
 
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            bus.post(new HandyEvent.ReceiveScheduledBookingsError(error));
+                            bus.post(new HandyEvent.ReceiveScheduledBookingsError(error, day));
                         }
                     }
             );

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingElementView;
@@ -61,6 +62,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings);
 
+    protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
+
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
 
@@ -105,6 +108,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             {
                 getDatesLayout().getChildAt(0).performClick();
             }
+
+            requestBookingsForOtherDays();
         }
     }
 
@@ -112,6 +117,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void doRequestBookingsAgain()
     {
         requestBookings(selectedDay);
+        requestBookingsForOtherDays();
     }
 
     protected void requestBookings(Date day)
@@ -121,12 +127,55 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         bus.post(getRequestEvent(day));
     }
 
+    private void requestBookingsForOtherDays()
+    {
+        for (int i = 0; i < numberOfDaysToDisplay(); i++)
+        {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DATE, i);
+            Date day = Utils.getDateWithoutTime(calendar.getTime());
+
+            if (!day.equals(selectedDay))
+            {
+                requestBookings(day);
+            }
+        }
+    }
+
     protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        displayBookings(event.bookings, selectedDay);
 
-        bookingsContentView.setVisibility(View.VISIBLE);
+        List<Booking> bookings = event.bookings;
+        Collections.sort(bookings);
+
+        DateButtonView dateButtonView = dateButtonMap.get(event.day);
+        dateButtonView.showRequestedIndicator(showRequestedIndicator(bookings));
+        dateButtonView.showClaimedIndicator(showClaimedIndicator(bookings));
+
+        if (selectedDay.equals(event.day))
+        {
+            displayBookings(bookings, selectedDay);
+            bookingsContentView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event)
+    {
+        if (selectedDay.equals(event.day))
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+            {
+                errorText.setText(R.string.error_fetching_connectivity_issue);
+            }
+            else
+            {
+                errorText.setText(R.string.error_fetching_available_jobs);
+            }
+            fetchErrorView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initDateButtons()
@@ -176,20 +225,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void displayBookings(List<Booking> bookings, Date dateOfBookings)
     {
-        Collections.sort(bookings);
-
-        // TODO: move this out to a handler that requests other-day bookings in the background
-        DateButtonView dateButtonView = dateButtonMap.get(dateOfBookings);
-        dateButtonView.showRequestedIndicator(showRequestedIndicator(bookings));
-        dateButtonView.showClaimedIndicator(showClaimedIndicator(bookings));
-
         getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
         setupCTAButton(bookings, dateOfBookings);
     }
-
-    protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
     private void initListClickListener()
     {

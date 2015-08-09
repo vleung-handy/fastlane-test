@@ -10,10 +10,9 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.ScheduledBookingElementView;
@@ -126,14 +125,11 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     //All bookings not in the past on this page should cause the claimed indicator to appear
     protected boolean showClaimedIndicator(List<Booking> bookingsForDay)
     {
-        if (bookingsForDay.size() > 0)
+        for (Booking b : bookingsForDay)
         {
-            for (Booking b : bookingsForDay)
+            if (!b.isEnded())
             {
-                if (!b.isEnded())
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -148,15 +144,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
-            errorText.setText(R.string.error_fetching_connectivity_issue);
-        }
-        else
-        {
-            errorText.setText(R.string.error_fetching_available_jobs);
-        }
-        fetchErrorView.setVisibility(View.VISIBLE);
+        handleBookingsRetrievalError(event);
     }
 }
