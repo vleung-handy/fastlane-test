@@ -14,8 +14,9 @@ public class Provider
     private String lastName;
     @SerializedName("show_onboarding")
     private boolean showOnboarding;
+    @SerializedName("country")
+    private String country;
 
-//TODO: add more fields
     public String getId()
     {
         return id;
@@ -49,5 +50,10 @@ public class Provider
     public boolean showOnboarding()
     {
         return showOnboarding;
+    }
+
+    public String getCountry()
+    {
+        return country;
     }
 }
