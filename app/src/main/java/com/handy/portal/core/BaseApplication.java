@@ -162,15 +162,11 @@ public class BaseApplication extends Application
         final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
         options.inProduction = !BuildConfig.DEBUG;
 
-        System.out.println("ZZZ starting urban airship");
-
         UAirship.takeOff(this, options, new UAirship.OnReadyCallback()
         {
             @Override
             public void onAirshipReady(final UAirship airship)
             {
-                System.out.println("ZZZ on airship ready");
-
                 final DefaultNotificationFactory defaultNotificationFactory =
                         new DefaultNotificationFactory(getApplicationContext());
 
@@ -178,12 +174,8 @@ public class BaseApplication extends Application
                 defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
 
                 airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
-                airship.getPushManager().setPushEnabled(false);
+                airship.getPushManager().setPushEnabled(true);
                 airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
-
-
-                //testing UA
-                System.out.println("ZZZ urban airship channel id : " + UAirship.shared().getPushManager().getChannelId());
             }
         });
 
