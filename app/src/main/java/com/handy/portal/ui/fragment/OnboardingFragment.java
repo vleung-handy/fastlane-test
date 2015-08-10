@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -12,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.ui.activity.OnboardingActivity;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -28,13 +28,30 @@ public class OnboardingFragment extends Fragment
     @InjectView(R.id.tooltip_bottom)
     TextView bottomTooltip;
 
-    private OnboardingActivity.Step step;
+    private int tooltipStringId;
+    private TooltipPlacement tooltipPlacement;
+    private int bodyDrawableId;
+    private int footerDrawableId;
 
-    public static OnboardingFragment newInstance(OnboardingActivity.Step step)
+    public static OnboardingFragment newInstance(int bodyDrawableId, int footerDrawableId)
     {
         OnboardingFragment onboardingFragment = new OnboardingFragment();
-        onboardingFragment.step = step;
+        onboardingFragment.bodyDrawableId = bodyDrawableId;
+        onboardingFragment.footerDrawableId = footerDrawableId;
+        onboardingFragment.tooltipStringId = -1;
         return onboardingFragment;
+    }
+
+    public enum TooltipPlacement
+    {
+        TOP, BOTTOM
+    }
+
+    public OnboardingFragment withTooltip(int tooltipStringId, @NonNull TooltipPlacement tooltipPlacement)
+    {
+        this.tooltipStringId = tooltipStringId;
+        this.tooltipPlacement = tooltipPlacement;
+        return this;
     }
 
     @Nullable
@@ -45,16 +62,16 @@ public class OnboardingFragment extends Fragment
         ViewGroup fragmentViewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_onboarding, container, false);
 
         ButterKnife.inject(this, fragmentViewGroup);
-        body.setImageResource(step.getBodyDrawableId());
-        footer.setImageResource(step.getFooterDrawableId());
+        body.setImageResource(bodyDrawableId);
+        footer.setImageResource(footerDrawableId);
 
-        initTooltip(topTooltip, step.getTopTooltipStringId());
-        initTooltip(bottomTooltip, step.getBottomTooltipStringId());
-
-        int overlayLayout = step.getOverlayLayout();
-        if (overlayLayout != -1)
+        if (tooltipPlacement == TooltipPlacement.TOP)
         {
-            inflater.inflate(overlayLayout, fragmentViewGroup, true);
+            initTooltip(topTooltip, tooltipStringId);
+        }
+        if (tooltipPlacement == TooltipPlacement.BOTTOM)
+        {
+            initTooltip(bottomTooltip, tooltipStringId);
         }
 
         return fragmentViewGroup;
@@ -62,11 +79,8 @@ public class OnboardingFragment extends Fragment
 
     private void initTooltip(TextView tooltip, int tooltipStringId)
     {
-        if (tooltipStringId != -1)
-        {
-            tooltip.setText(Html.fromHtml(getString(tooltipStringId)));
-            tooltip.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_and_grow_in));
-            tooltip.setVisibility(View.VISIBLE);
-        }
+        tooltip.setText(Html.fromHtml(getString(tooltipStringId)));
+        tooltip.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_and_grow_in));
+        tooltip.setVisibility(View.VISIBLE);
     }
 }
