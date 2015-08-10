@@ -1,6 +1,8 @@
 package com.handy.portal.core;
 
 
+import android.app.Application;
+
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
@@ -10,6 +12,7 @@ import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
+import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -45,6 +48,8 @@ import static org.mockito.Mockito.mock;
         BookingDetailsFragment.class,
         HelpFragment.class,
         HelpContactFragment.class,
+        UrbanAirshipManager.class,
+
 }, library = true)
 public class TestApplicationModule
 {
@@ -83,6 +88,12 @@ public class TestApplicationModule
     final Bus provideBus()
     {
         return mock(Bus.class);
+    }
+
+    @Provides
+    final Application provideApplication()
+    {
+        return mock(Application.class);
     }
 
     @Provides
@@ -149,5 +160,11 @@ public class TestApplicationModule
     final GoogleManager provideGoogleService()
     {
         return mock(GoogleManager.class);
+    }
+
+    @Provides
+    final UrbanAirshipManager providerUrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
+    {
+        return mock(UrbanAirshipManager.class);
     }
 }

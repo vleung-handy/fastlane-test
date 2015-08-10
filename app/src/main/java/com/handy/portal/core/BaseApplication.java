@@ -11,20 +11,21 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpContactManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
+import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
-import com.urbanairship.AirshipConfigOptions;
-import com.urbanairship.UAirship;
-import com.urbanairship.push.notifications.DefaultNotificationFactory;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -61,9 +62,19 @@ public class BaseApplication extends Application
     HelpManager helpManager;
     @Inject
     HelpContactManager helpContactManager;
-
+    @Inject
+    PrefsManager prefsManager;
+    @Inject
+    UrbanAirshipManager urbanAirshipManager;
     @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
+
+    @Inject
+    Bus bus;
+
+
+
+
 
     @Override
     public final void onCreate()
@@ -74,7 +85,9 @@ public class BaseApplication extends Application
 
         startNewRelic();
         startCrashlytics();
-        startUrbanAirship();
+
+        //Start UA
+        bus.post(new HandyEvent.StartUrbanAirship());
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(TextUtils.Fonts.CIRCULAR_BOOK)
@@ -162,30 +175,6 @@ public class BaseApplication extends Application
         {
             Crashlytics.start(this);
         }
-    }
-
-    protected void startUrbanAirship()
-    {
-        final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
-        options.inProduction = !BuildConfig.DEBUG;
-
-        UAirship.takeOff(this, options, new UAirship.OnReadyCallback()
-        {
-            @Override
-            public void onAirshipReady(final UAirship airship)
-            {
-                final DefaultNotificationFactory defaultNotificationFactory =
-                        new DefaultNotificationFactory(getApplicationContext());
-
-                defaultNotificationFactory.setColor(getResources().getColor(R.color.handy_blue));
-                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
-
-                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
-                airship.getPushManager().setPushEnabled(true);
-                airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
-            }
-        });
-
     }
 
     protected void createObjectGraph()

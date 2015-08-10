@@ -1,5 +1,6 @@
 package com.handy.portal.core;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
@@ -11,6 +12,7 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
@@ -79,15 +81,18 @@ import retrofit.converter.GsonConverter;
         HelpFragment.class,
         HelpContactFragment.class,
         SupportActionViewConstructor.class,
+        UrbanAirshipManager.class,
 })
 public final class ApplicationModule
 {
+    private final Application application;
     private final Context context;
     private final Properties configs;
 
-    public ApplicationModule(final Context context)
+    public ApplicationModule(final Application application)
     {
-        this.context = context.getApplicationContext();
+        this.application = application;
+        this.context = this.application.getApplicationContext();
         configs = PropertiesReader.getConfigProperties(context);
     }
 
@@ -167,19 +172,26 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final Bus provideBus(final Mixpanel mixpanel)
+    {
+        return new MainBus(mixpanel);
+    }
+
+    @Provides
+    @Singleton
+    final Application providerApplication()
+    {
+        return this.application;
+    }
+
+    @Provides
+    @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
                                          final PrefsManager prefsManager
     )
     {
         return new BaseDataManager(service, endpoint, prefsManager);
-    }
-
-    @Provides
-    @Singleton
-    final Bus provideBus(final Mixpanel mixpanel)
-    {
-        return new MainBus(mixpanel);
     }
 
     @Provides
@@ -271,6 +283,13 @@ public final class ApplicationModule
     final GoogleManager provideGoogleService()
     {
         return new GoogleManager(this.context);
+    }
+
+    @Provides
+    @Singleton
+    final UrbanAirshipManager providerUrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
+    {
+        return new UrbanAirshipManager(bus, dataManager, prefsManager, associatedApplication);
     }
 
     private String getDeviceId()
