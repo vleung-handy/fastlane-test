@@ -11,6 +11,7 @@ import android.view.View;
 import com.handy.portal.R;
 import com.handy.portal.ui.fragment.InitialOnboardingFragment;
 import com.handy.portal.ui.fragment.OnboardingFragment;
+import com.handy.portal.ui.fragment.TerminalOnboardingFragment;
 
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -27,7 +28,7 @@ public class OnboardingActivity extends FragmentActivity
             OnboardingFragment.newInstance(R.drawable.onboarding_4, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_4, TOP),
             OnboardingFragment.newInstance(R.drawable.onboarding_5, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_5, TOP),
             OnboardingFragment.newInstance(R.drawable.onboarding_6, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_6, TOP),
-//            OnboardingFragment.newInstance(new Step(R.drawable.onboarding_7, R.drawable.onboarding_menu_blur, -1, -1, R.layout.onboarding_overlay_terminal)),
+            TerminalOnboardingFragment.newInstance(R.drawable.onboarding_7),
     };
 
     @Override
@@ -56,7 +57,9 @@ public class OnboardingActivity extends FragmentActivity
         }
         else
         {
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
     }
 
