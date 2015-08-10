@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.ui.fragment.InitialOnboardingFragment;
 import com.handy.portal.ui.fragment.OnboardingFragment;
 
 import butterknife.ButterKnife;
@@ -19,7 +20,7 @@ import static com.handy.portal.ui.fragment.OnboardingFragment.TooltipPlacement.*
 public class OnboardingActivity extends FragmentActivity
 {
     private static final Fragment[] STEPS = {
-//            OnboardingFragment.newInstance(new Step(R.drawable.onboarding_0, R.drawable.onboarding_menu_blur, -1, -1, R.layout.onboarding_overlay_initial)),
+            InitialOnboardingFragment.newInstance(R.drawable.onboarding_0, "Carl"),
             OnboardingFragment.newInstance(R.drawable.onboarding_1, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_1, TOP),
             OnboardingFragment.newInstance(R.drawable.onboarding_2, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_2, TOP),
             OnboardingFragment.newInstance(R.drawable.onboarding_3, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_3, BOTTOM),

@@ -59,9 +59,9 @@ public class OnboardingFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        ViewGroup fragmentViewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_onboarding, container, false);
+        View view = inflater.inflate(R.layout.fragment_onboarding, container, false);
 
-        ButterKnife.inject(this, fragmentViewGroup);
+        ButterKnife.inject(this, view);
         body.setImageResource(bodyDrawableId);
         footer.setImageResource(footerDrawableId);
 
@@ -74,7 +74,7 @@ public class OnboardingFragment extends Fragment
             initTooltip(bottomTooltip, tooltipStringId);
         }
 
-        return fragmentViewGroup;
+        return view;
     }
 
     private void initTooltip(TextView tooltip, int tooltipStringId)

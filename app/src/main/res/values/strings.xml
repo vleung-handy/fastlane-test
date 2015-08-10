@@ -324,7 +324,7 @@
     <string name="step_5"><![CDATA[When you arrive at the job, tap the <b>Check In</b> button. If you ever need help, just use the <b>I Need Help</b> button.]]></string>
     <string name="step_6"><![CDATA[Great work! Now that the job\u2019s done, just <b>Check Out</b>.]]></string>
     <string name="step_final">That\u2019s it! Thanks for following along. Now we\u2019ll take you to your Available Jobs to claim your first job. Good luck!</string>
-    <string name="welcome">Welcome to Handy, Stephanie!</string>
+    <string name="welcome">Welcome to Handy, %s!</string>
     <string name="lets_walk_through_the_app">Before you claim your first job, let\u2019s walk through the app.</string>
     <string name="start_claiming_jobs">Start Claiming Jobs</string>
 
