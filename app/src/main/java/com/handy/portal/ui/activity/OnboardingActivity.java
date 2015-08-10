@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.ui.fragment.InitialOnboardingFragment;
 import com.handy.portal.ui.fragment.OnboardingFragment;
@@ -28,6 +30,8 @@ public class OnboardingActivity extends BaseActivity
 {
     @Inject
     ProviderManager providerManager;
+    @Inject
+    PrefsManager prefsManager;
 
     private List<Fragment> steps;
 
@@ -76,6 +80,8 @@ public class OnboardingActivity extends BaseActivity
         }
         else
         {
+            prefsManager.setBoolean(PrefsKey.ONBOARDING_COMPLETED, true);
+
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

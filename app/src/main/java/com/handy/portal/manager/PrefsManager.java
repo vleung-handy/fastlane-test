@@ -25,6 +25,16 @@ public class PrefsManager
         return(prefs.getString(prefsKey.getKey(), defaultValue));
     }
 
+    public boolean getBoolean(PrefsKey prefsKey, boolean defaultValue)
+    {
+        return(prefs.getBoolean(prefsKey.getKey(), defaultValue));
+    }
+
+    public void setBoolean(PrefsKey prefsKey, boolean value)
+    {
+        prefs.edit().putBoolean(prefsKey.getKey(), value).apply();
+    }
+
     public void setString(PrefsKey prefsKey, String value)
     {
         prefs.edit().putString(prefsKey.getKey(), value).apply();
