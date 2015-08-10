@@ -12,8 +12,8 @@ public class Provider
     private String firstName;
     @SerializedName("last_name")
     private String lastName;
-    @SerializedName("show_onboarding")
-    private boolean showOnboarding;
+    @SerializedName("onboarding_enabled")
+    private boolean onboardingEnabled;
     @SerializedName("country")
     private String country;
 
@@ -47,9 +47,9 @@ public class Provider
         return firstName + " " + lastName;
     }
 
-    public boolean showOnboarding()
+    public boolean isOnboardingEnabled()
     {
-        return showOnboarding;
+        return onboardingEnabled;
     }
 
     public String getCountry()

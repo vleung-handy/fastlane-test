@@ -217,7 +217,7 @@ public class SplashActivity extends BaseActivity
         {
             Provider provider = providerManager.getCachedActiveProvider();
             boolean onboardingCompleted = prefsManager.getBoolean(PrefsKey.ONBOARDING_COMPLETED, false);
-            if (provider.showOnboarding() && !onboardingCompleted)
+            if (provider.isOnboardingEnabled() && !onboardingCompleted)
             {
                 launchActivity(OnboardingActivity.class);
             }
