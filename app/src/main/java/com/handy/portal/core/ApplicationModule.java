@@ -11,6 +11,7 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
@@ -79,6 +80,7 @@ import retrofit.converter.GsonConverter;
         HelpFragment.class,
         HelpContactFragment.class,
         SupportActionViewConstructor.class,
+        OnboardingActivity.class,
 })
 public final class ApplicationModule
 {
