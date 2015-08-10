@@ -80,9 +80,9 @@ public class OnboardingFragment extends Fragment
     }
 
     @OnClick(R.id.body)
-    public void nextStep()
+    public void showNextStep()
     {
-        ((OnboardingActivity) getActivity()).nextStep();
+        ((OnboardingActivity) getActivity()).showNextStep();
     }
 
     private void initTooltip(ViewGroup tooltipContainer)

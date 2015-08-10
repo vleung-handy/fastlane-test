@@ -49,8 +49,8 @@ public class InitialOnboardingFragment extends Fragment
     }
 
     @OnClick(R.id.get_started_button)
-    public void nextStep()
+    public void showNextStep()
     {
-        ((OnboardingActivity) getActivity()).nextStep();
+        ((OnboardingActivity) getActivity()).showNextStep();
     }
 }

@@ -54,8 +54,8 @@ public class TerminalOnboardingFragment extends Fragment
     }
 
     @OnClick(R.id.start_claiming_button)
-    public void nextStep()
+    public void showNextStep()
     {
-        ((OnboardingActivity) getActivity()).nextStep();
+        ((OnboardingActivity) getActivity()).showNextStep();
     }
 }

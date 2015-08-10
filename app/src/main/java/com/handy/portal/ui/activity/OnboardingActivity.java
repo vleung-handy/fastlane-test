@@ -44,7 +44,7 @@ public class OnboardingActivity extends BaseActivity
         ButterKnife.inject(this);
 
         initSteps();
-        nextStep();
+        showNextStep();
     }
 
     private void initSteps()
@@ -68,7 +68,7 @@ public class OnboardingActivity extends BaseActivity
         steps.add(TerminalOnboardingFragment.newInstance(R.drawable.onboarding_7));
     }
 
-    public void nextStep()
+    public void showNextStep()
     {
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if (backStackEntryCount < steps.size())
