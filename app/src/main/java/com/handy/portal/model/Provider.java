@@ -56,4 +56,9 @@ public class Provider
     {
         return country;
     }
+
+    public boolean isUk()
+    {
+        return "GB".equals(getCountry());
+    }
 }

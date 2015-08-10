@@ -11,6 +11,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.Provider;
 import com.handy.portal.ui.fragment.InitialOnboardingFragment;
 import com.handy.portal.ui.fragment.OnboardingFragment;
 import com.handy.portal.ui.fragment.TerminalOnboardingFragment;
@@ -49,20 +50,17 @@ public class OnboardingActivity extends BaseActivity
 
     private void initSteps()
     {
-        steps = new ArrayList<>();
-        steps.add(InitialOnboardingFragment.newInstance(isUk() ? R.drawable.onboarding_0_uk : R.drawable.onboarding_0, providerManager.getCachedActiveProvider().getFirstName()));
-        steps.add(OnboardingFragment.newInstance(isUk() ? R.drawable.onboarding_1_uk : R.drawable.onboarding_1, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_1, R.string.step_1_of_7, TOP));
-        steps.add(OnboardingFragment.newInstance(isUk() ? R.drawable.onboarding_2_uk : R.drawable.onboarding_2, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_2, R.string.step_2_of_7, TOP));
-        steps.add(OnboardingFragment.newInstance(isUk() ? R.drawable.onboarding_3_uk : R.drawable.onboarding_3, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_3, R.string.step_3_of_7, BOTTOM));
-        steps.add(OnboardingFragment.newInstance(isUk() ? R.drawable.onboarding_4_uk : R.drawable.onboarding_4, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_4, R.string.step_4_of_7, TOP));
-        steps.add(OnboardingFragment.newInstance(isUk() ? R.drawable.onboarding_5_uk : R.drawable.onboarding_5, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_5, R.string.step_5_of_7, TOP));
-        steps.add(OnboardingFragment.newInstance(isUk() ? R.drawable.onboarding_6_uk : R.drawable.onboarding_6, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_6, R.string.step_6_of_7, TOP));
-        steps.add(TerminalOnboardingFragment.newInstance(isUk() ? R.drawable.onboarding_7_uk : R.drawable.onboarding_7));
-    }
+        Provider provider = providerManager.getCachedActiveProvider();
 
-    private boolean isUk()
-    {
-        return "GB".equals(providerManager.getCachedActiveProvider().getCountry());
+        steps = new ArrayList<>();
+        steps.add(InitialOnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_0_uk : R.drawable.onboarding_0, providerManager.getCachedActiveProvider().getFirstName()));
+        steps.add(OnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_1_uk : R.drawable.onboarding_1, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_1, R.string.step_1_of_7, TOP));
+        steps.add(OnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_2_uk : R.drawable.onboarding_2, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_2, R.string.step_2_of_7, TOP));
+        steps.add(OnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_3_uk : R.drawable.onboarding_3, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_3, R.string.step_3_of_7, BOTTOM));
+        steps.add(OnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_4_uk : R.drawable.onboarding_4, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_4, R.string.step_4_of_7, TOP));
+        steps.add(OnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_5_uk : R.drawable.onboarding_5, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_5, R.string.step_5_of_7, TOP));
+        steps.add(OnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_6_uk : R.drawable.onboarding_6, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_6, R.string.step_6_of_7, TOP));
+        steps.add(TerminalOnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_7_uk : R.drawable.onboarding_7));
     }
 
     public void nextStep(View view)
