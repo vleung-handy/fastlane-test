@@ -194,6 +194,16 @@ public abstract class HandyEvent
         }
     }
 
+    public static class ProviderIdUpdated extends HandyEvent
+    {
+        public final String providerId;
+
+        public ProviderIdUpdated(String providerId)
+        {
+            this.providerId = providerId;
+        }
+    }
+
 //Update and Version Management
 
     public static class RequestUpdateCheck extends RequestEvent
@@ -858,4 +868,10 @@ public abstract class HandyEvent
             this.actionName = action.getActionName();
         }
     }
+
+    //Request that Urban Airship takes off
+    public static class StartUrbanAirship extends HandyEvent
+    {
+    }
+
 }
