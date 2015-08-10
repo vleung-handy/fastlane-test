@@ -11,10 +11,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.handy.portal.R;
+import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.view.TooltipView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class OnboardingFragment extends Fragment
 {
@@ -75,6 +77,12 @@ public class OnboardingFragment extends Fragment
         }
 
         return view;
+    }
+
+    @OnClick(R.id.body)
+    public void nextStep()
+    {
+        ((OnboardingActivity) getActivity()).nextStep();
     }
 
     private void initTooltip(ViewGroup tooltipContainer)

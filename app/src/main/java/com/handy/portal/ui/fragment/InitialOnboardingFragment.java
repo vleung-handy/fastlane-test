@@ -10,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.ui.activity.OnboardingActivity;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class InitialOnboardingFragment extends Fragment
 {
@@ -44,5 +46,11 @@ public class InitialOnboardingFragment extends Fragment
         welcomeText.setText(String.format(getString(R.string.welcome), providerName));
 
         return view;
+    }
+
+    @OnClick(R.id.get_started_button)
+    public void nextStep()
+    {
+        ((OnboardingActivity) getActivity()).nextStep();
     }
 }

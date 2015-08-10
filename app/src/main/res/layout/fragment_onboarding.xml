@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
-        android:onClick="nextStep"
         android:scaleType="centerCrop"/>
 
     <ImageView

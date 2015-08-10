@@ -10,9 +10,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.handy.portal.R;
+import com.handy.portal.ui.activity.OnboardingActivity;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class TerminalOnboardingFragment extends Fragment
 {
@@ -43,5 +45,11 @@ public class TerminalOnboardingFragment extends Fragment
         jobCompleteImage.setVisibility(View.VISIBLE);
 
         return view;
+    }
+
+    @OnClick(R.id.start_claiming_button)
+    public void nextStep()
+    {
+        ((OnboardingActivity) getActivity()).nextStep();
     }
 }

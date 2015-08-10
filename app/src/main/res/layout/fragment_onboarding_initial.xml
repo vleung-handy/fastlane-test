@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
-        android:onClick="nextStep"
         android:scaleType="centerCrop"/>
 
     <ImageView
@@ -60,11 +59,11 @@
             android:textSize="18sp"/>
 
         <Button
+            android:id="@+id/get_started_button"
             style="@style/Button.Green.Round"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="32dp"
-            android:onClick="nextStep"
             android:text="@string/get_started"/>
 
     </LinearLayout>

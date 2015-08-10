@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
@@ -43,7 +42,7 @@ public class OnboardingActivity extends BaseActivity
         ButterKnife.inject(this);
 
         initSteps();
-        nextStep(null);
+        nextStep();
     }
 
     private void initSteps()
@@ -61,7 +60,7 @@ public class OnboardingActivity extends BaseActivity
         steps.add(TerminalOnboardingFragment.newInstance(provider.isUk() ? R.drawable.onboarding_7_uk : R.drawable.onboarding_7));
     }
 
-    public void nextStep(View view)
+    public void nextStep()
     {
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if (backStackEntryCount < steps.size())
