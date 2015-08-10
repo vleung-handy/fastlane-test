@@ -1,6 +1,5 @@
 package com.handy.portal.ui.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,7 +21,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.handy.portal.ui.fragment.OnboardingFragment.TooltipPlacement.BOTTOM;
 import static com.handy.portal.ui.fragment.OnboardingFragment.TooltipPlacement.TOP;
@@ -84,12 +82,6 @@ public class OnboardingActivity extends BaseActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase)
-    {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
