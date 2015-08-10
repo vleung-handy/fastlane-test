@@ -1,11 +1,13 @@
 package com.handy.portal.ui.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
@@ -73,7 +75,27 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
             @Subscribe
             public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
             {
-                //TODO: Handle receive update available errors
+                String message = event.error.getMessage();
+                if(message!=null){
+                    Toast.makeText(BaseActivity.this, event.error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Subscribe
+            public void onReceiveEnableApplication(HandyEvent.RequestEnableApplication event){
+                String packageName = event.packageName;
+                String promptMessage = event.infoMessage;
+                Context context = BaseActivity.this;
+                Toast.makeText(context, promptMessage, Toast.LENGTH_SHORT).show();
+                try {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(Uri.parse("package:" + packageName));
+                    context.startActivity(intent);
+
+                } catch ( ActivityNotFoundException e ) {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+                    context.startActivity(intent);
+                }
             }
         };
 
@@ -187,7 +209,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
 
     public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
-        if(event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate())
+        if(event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate()) //TODO: there seems to be a lot of redundant updateDetails.getShouldUpdate() calls. clean this up
         {
             startActivity(new Intent(this, PleaseUpdateActivity.class));
         }

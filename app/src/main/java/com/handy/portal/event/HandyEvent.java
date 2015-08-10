@@ -223,6 +223,16 @@ public abstract class HandyEvent
         }
     }
 
+    public static class RequestEnableApplication extends RequestEvent
+    {
+        public String packageName;
+        public String infoMessage;
+        public RequestEnableApplication(String packageName, String infoMessage){
+            this.packageName = packageName;
+            this.infoMessage = infoMessage;
+        }
+    }
+
     public static class DownloadUpdateSuccessful extends HandyEvent
     {
     }
