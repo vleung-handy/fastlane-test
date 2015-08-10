@@ -8,9 +8,6 @@ import android.widget.RelativeLayout;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by cdavis on 7/28/15.
- */
 public class InjectedRelativeLayout extends RelativeLayout
 {
     public InjectedRelativeLayout(final Context context)

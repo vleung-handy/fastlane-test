@@ -22,12 +22,12 @@ public class OnboardingActivity extends FragmentActivity
 {
     private static final Fragment[] STEPS = {
             InitialOnboardingFragment.newInstance(R.drawable.onboarding_0, "Carl"),
-            OnboardingFragment.newInstance(R.drawable.onboarding_1, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_1, TOP),
-            OnboardingFragment.newInstance(R.drawable.onboarding_2, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_2, TOP),
-            OnboardingFragment.newInstance(R.drawable.onboarding_3, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_3, BOTTOM),
-            OnboardingFragment.newInstance(R.drawable.onboarding_4, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_4, TOP),
-            OnboardingFragment.newInstance(R.drawable.onboarding_5, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_5, TOP),
-            OnboardingFragment.newInstance(R.drawable.onboarding_6, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_6, TOP),
+            OnboardingFragment.newInstance(R.drawable.onboarding_1, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_1, R.string.step_1_of_7, TOP),
+            OnboardingFragment.newInstance(R.drawable.onboarding_2, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_2, R.string.step_2_of_7, TOP),
+            OnboardingFragment.newInstance(R.drawable.onboarding_3, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_3, R.string.step_3_of_7, BOTTOM),
+            OnboardingFragment.newInstance(R.drawable.onboarding_4, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_4, R.string.step_4_of_7, TOP),
+            OnboardingFragment.newInstance(R.drawable.onboarding_5, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_5, R.string.step_5_of_7, TOP),
+            OnboardingFragment.newInstance(R.drawable.onboarding_6, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_6, R.string.step_6_of_7, TOP),
             TerminalOnboardingFragment.newInstance(R.drawable.onboarding_7),
     };
 

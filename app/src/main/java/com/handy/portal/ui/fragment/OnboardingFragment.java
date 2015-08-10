@@ -1,7 +1,6 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -10,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.ui.view.TooltipView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -24,11 +23,12 @@ public class OnboardingFragment extends Fragment
     @InjectView(R.id.footer)
     ImageView footer;
     @InjectView(R.id.tooltip_top)
-    TextView topTooltip;
+    ViewGroup topTooltipContainer;
     @InjectView(R.id.tooltip_bottom)
-    TextView bottomTooltip;
+    ViewGroup bottomTooltipContainer;
 
-    private int tooltipStringId;
+    private int tooltipTextId;
+    private int tooltipSubtextId;
     private TooltipPlacement tooltipPlacement;
     private int bodyDrawableId;
     private int footerDrawableId;
@@ -38,7 +38,6 @@ public class OnboardingFragment extends Fragment
         OnboardingFragment onboardingFragment = new OnboardingFragment();
         onboardingFragment.bodyDrawableId = bodyDrawableId;
         onboardingFragment.footerDrawableId = footerDrawableId;
-        onboardingFragment.tooltipStringId = -1;
         return onboardingFragment;
     }
 
@@ -47,9 +46,10 @@ public class OnboardingFragment extends Fragment
         TOP, BOTTOM
     }
 
-    public OnboardingFragment withTooltip(int tooltipStringId, @NonNull TooltipPlacement tooltipPlacement)
+    public OnboardingFragment withTooltip(int tooltipTextId, int tooltipSubtextId, TooltipPlacement tooltipPlacement)
     {
-        this.tooltipStringId = tooltipStringId;
+        this.tooltipTextId = tooltipTextId;
+        this.tooltipSubtextId = tooltipSubtextId;
         this.tooltipPlacement = tooltipPlacement;
         return this;
     }
@@ -67,20 +67,23 @@ public class OnboardingFragment extends Fragment
 
         if (tooltipPlacement == TooltipPlacement.TOP)
         {
-            initTooltip(topTooltip, tooltipStringId);
+            initTooltip(topTooltipContainer);
         }
         if (tooltipPlacement == TooltipPlacement.BOTTOM)
         {
-            initTooltip(bottomTooltip, tooltipStringId);
+            initTooltip(bottomTooltipContainer);
         }
 
         return view;
     }
 
-    private void initTooltip(TextView tooltip, int tooltipStringId)
+    private void initTooltip(ViewGroup tooltipContainer)
     {
-        tooltip.setText(Html.fromHtml(getString(tooltipStringId)));
-        tooltip.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_and_grow_in));
-        tooltip.setVisibility(View.VISIBLE);
+        TooltipView tooltip = (TooltipView) tooltipContainer.findViewById(R.id.tooltip);
+
+        tooltip.setContent(Html.fromHtml(getString(tooltipTextId)), getString(tooltipSubtextId));
+
+        tooltipContainer.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_and_grow_in));
+        tooltipContainer.setVisibility(View.VISIBLE);
     }
 }
