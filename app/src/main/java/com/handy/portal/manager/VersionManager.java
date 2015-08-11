@@ -203,7 +203,7 @@ public class VersionManager
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadReferenceId);
             Cursor cursor = downloadManager.query(query);
-            if (cursor.moveToFirst())
+            if (cursor!=null && cursor.moveToFirst())
             {
                 return cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
             }
