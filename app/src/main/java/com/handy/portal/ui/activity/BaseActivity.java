@@ -64,7 +64,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         final Intent intent = getIntent();
         final Uri data = intent.getData();
 
-        busEventListener = new Object()
+        busEventListener = new Object()//TODO: put these methods into a service
         {
             @Subscribe
             public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
@@ -89,15 +89,15 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
                 String promptMessage = event.infoMessage;
                 Context context = BaseActivity.this;
                 Toast.makeText(context, promptMessage, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 try
                 {
-                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     intent.setData(Uri.parse("package:" + packageName));
-                    context.startActivity(intent);
-
+                    context.startActivity(intent);//activity may not be found, may throw exception
                 } catch (ActivityNotFoundException e)
                 {
-                    Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+                    intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
                     context.startActivity(intent);
                 }
             }
