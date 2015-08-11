@@ -42,6 +42,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Override
     public void onResume()
     {
+        System.out.println("ZZZZ fragment resume " + this);
         super.onResume();
         this.bus.register(this);
     }
@@ -49,6 +50,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Override
     public void onPause()
     {
+        System.out.println("ZZZZ fragment pause " + this);
         this.bus.unregister(this);
         super.onPause();
     }

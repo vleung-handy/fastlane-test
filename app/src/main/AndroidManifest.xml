@@ -58,6 +58,14 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <data android:scheme="com.handy.portal" android:host="deeplink" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.activity.LoginActivity"
@@ -91,8 +99,21 @@
 
     <!-- URBAN AIRSHIP -->
 
-        <!-- REQUIRED for Action.startActivityForResult -->
+        <!-- Parsing deep links from push notifications
+
+            <activity android:name=".ui.activity.ParseDeepLinkActivity">
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW"/>
+                    <data android:scheme="com.handy.portal" android:host="deeplink" />
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <category android:name="android.intent.category.BROWSABLE"/>
+                </intent-filter>
+            </activity>
+        -->
+
+        <!-- REQUIRED for Action.startActivityForResult
         <activity android:name="com.urbanairship.actions.ActionActivity" />
+         -->
 
         <!-- REQUIRED for Urban Airship Push -->
         <activity android:name="com.urbanairship.CoreActivity" />
@@ -110,28 +131,8 @@
             </intent-filter>
         </receiver>
 
-        <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
-        <!-- Replace the receiver below with your package and class name -->
-
-
-        <!--
-
-        <receiver android:name="receiver.HandyIntentReceiver"
-                  android:exported="false">
-            <intent-filter>
-                <action android:name="com.urbanairship.push.CHANNEL_UPDATED" />
-                <action android:name="com.urbanairship.push.OPENED" />
-                <action android:name="com.urbanairship.push.RECEIVED" />
-                <action android:name="com.urbanairship.push.DISMISSED" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
-
-        -->
-
-
         <!-- REQUIRED for Landing Pages
-            - For more customization details, see com.urbanairship.actions.LandingPageActivity -->
+            - For more customization details, see com.urbanairship.actions.LandingPageActivity
         <activity
             android:name="com.urbanairship.actions.LandingPageActivity"
             android:exported="false">
@@ -147,17 +148,22 @@
             </intent-filter>
         </activity>
 
+-->
+
+
         <!-- REQUIRED for Urban Airship -->
         <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service" />
 
-        <!-- Required for analytics -->
+        <!-- Required for analytics
         <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service" />
+        -->
 
         <!-- Required for Actions -->
         <service android:name="com.urbanairship.actions.ActionService" />
 
-        <!-- Required for Rich Push -->
+        <!-- Required for Rich Push
         <service android:name="com.urbanairship.richpush.RichPushUpdateService" />
+        -->
 
         <!-- OPTIONAL for Urban Airship Location (for segments support) -->
         <service android:name="com.urbanairship.location.LocationService" android:label="Segments Service" />

@@ -3,6 +3,7 @@ package com.handy.portal.core;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
@@ -26,6 +27,7 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
+import com.urbanairship.util.UriUtils;
 
 import javax.inject.Inject;
 
@@ -100,6 +102,49 @@ public class BaseApplication extends Application
 //        else {
 //            NewRelic.withApplicationToken("AAbaf8c55fb9788d1664e82661d94bc18ea7c39aa6").start(this);
 //        }
+
+        System.out.println("Checking uri validation");
+
+
+        String a1 = "http://deeplink/booking_details?{Booking Id}";
+        Uri uri = UriUtils.parse(a1);
+        if(a1 != null)
+        {
+            System.out.println(" a 1 is good");
+        }
+
+
+
+        a1 = "deeplink/available_jobs";
+        uri = UriUtils.parse(a1);
+        if(a1 != null)
+        {
+            System.out.println(" a 2 is good");
+        }
+
+
+        a1 = "//deeplink/available_jobs";
+        uri = UriUtils.parse(a1);
+        if(a1 != null)
+        {
+            System.out.println(" a 3 is good");
+        }
+
+        a1 = "http://deeplink/booking_details?";
+        uri = UriUtils.parse(a1);
+        if(a1 != null)
+        {
+            System.out.println(" a 4 is good");
+        }
+
+        a1 = "http://deeplink/booking_details?2745";
+        uri = UriUtils.parse(a1);
+        if(a1 != null)
+        {
+            System.out.println(" a 5 is good");
+        }
+
+
 
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks()
