@@ -77,7 +77,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
             {
                 String message = event.error.getMessage();
                 if(message!=null){
-                    Toast.makeText(BaseActivity.this, event.error.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseActivity.this, event.error.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -86,7 +86,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
                 String packageName = event.packageName;
                 String promptMessage = event.infoMessage;
                 Context context = BaseActivity.this;
-                Toast.makeText(context, promptMessage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, promptMessage, Toast.LENGTH_LONG).show();
                 try {
                     Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     intent.setData(Uri.parse("package:" + packageName));

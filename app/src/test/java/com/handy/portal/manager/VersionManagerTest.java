@@ -12,6 +12,7 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
@@ -73,7 +74,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
 
         Context applicationSpy = spy(RuntimeEnvironment.application);
         when(applicationSpy.getPackageManager()).thenReturn(packageManager);
-        when(packageManager.getApplicationEnabledSetting(VersionManager.DOWNLOAD_MANAGER_PACKAGE_NAME)).thenReturn(PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
+        when(packageManager.getApplicationEnabledSetting(CheckApplicationCapabilitiesUtils.DOWNLOAD_MANAGER_PACKAGE_NAME)).thenReturn(PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
 
         versionManager = new VersionManager(applicationSpy, bus, dataManager, prefsManager, buildConfigWrapper);
 

@@ -18,6 +18,7 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -33,9 +34,6 @@ public class VersionManager
     //TODO: parameterize these strings
     public static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
     private static final String APK_FILE_NAME = "handy-pro-latest.apk";
-
-    @VisibleForTesting
-    protected static final String DOWNLOAD_MANAGER_PACKAGE_NAME = "com.android.providers.downloads";
 
     // This backoff duration is used to prevent the app from executing download repeatedly when
     // download fails. It is used to check whether there was a download attempt recently and if so,
@@ -92,10 +90,10 @@ public class VersionManager
     @Subscribe
     public void onUpdateCheckRequest(HandyEvent.RequestUpdateCheck event)
     {
-        if (isDownloadManagerEnabled())
+        if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context))
         {
             // prevent download prompts from showing continuously if download fails if download manager is already enabled
-            if (isExternalStorageWritable())
+            if (CheckApplicationCapabilitiesUtils.isExternalStorageWritable())
             {
                 // TODO: Make request back-offs better
                 long now = new Date().getTime();
@@ -136,7 +134,7 @@ public class VersionManager
         }
         else
         {
-            bus.post(new HandyEvent.RequestEnableApplication(DOWNLOAD_MANAGER_PACKAGE_NAME, context.getString(R.string.error_update_failed_download_manager_disabled)));
+            bus.post(new HandyEvent.RequestEnableApplication(CheckApplicationCapabilitiesUtils.DOWNLOAD_MANAGER_PACKAGE_NAME, context.getString(R.string.error_update_failed_download_manager_disabled)));
         }
 
 
@@ -152,30 +150,6 @@ public class VersionManager
     public void onReceiveLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
     {
         dataManager.sendVersionInformation(getVersionInfo());
-    }
-
-    public boolean isExternalStorageWritable()
-    {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
-    public boolean isDownloadManagerEnabled()
-    {
-        try
-        {
-            int state = context.getPackageManager().getApplicationEnabledSetting(DOWNLOAD_MANAGER_PACKAGE_NAME);
-            //is there a way to just check if there is a package that handles downloads?
-            return !(state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED ||
-                    state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
-                    || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED);
-        } catch (Exception e)
-        {
-            //package not found
-            e.printStackTrace();
-            return false;
-        }
-
     }
 
     public void downloadApk(String apkUrl)
@@ -224,7 +198,7 @@ public class VersionManager
 
     private int getDownloadStatus()
     {
-        if (isDownloadManagerEnabled())
+        if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context))
         {
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadReferenceId);
