@@ -18,6 +18,7 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -30,6 +31,7 @@ import javax.inject.Inject;
 
 public class VersionManager
 {
+    //TODO: parameterize these strings
     public static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
     private static final String APK_FILE_NAME = "handy-pro-latest.apk";
 
@@ -44,6 +46,9 @@ public class VersionManager
     private final BuildConfigWrapper buildConfigWrapper;
     private DataManager dataManager;
     private PrefsManager prefsManager;
+    private DownloadManager downloadManager;
+
+    private long downloadReferenceId;
 
     @Inject
     public VersionManager(final Context context, final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final BuildConfigWrapper buildConfigWrapper)
@@ -56,9 +61,6 @@ public class VersionManager
         this.buildConfigWrapper = buildConfigWrapper;
         this.downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
-
-    private long downloadReferenceId;
-    private DownloadManager downloadManager;
 
     public Uri getNewApkUri()
     {
@@ -88,36 +90,54 @@ public class VersionManager
     @Subscribe
     public void onUpdateCheckRequest(HandyEvent.RequestUpdateCheck event)
     {
-        // TODO: Make request back-offs better
-        long now = new Date().getTime();
-        if (lastUpdateCheckTimeMillis > 0 && now - lastUpdateCheckTimeMillis < UPDATE_CHECK_BACKOFF_DURATION_MILLIS)
+        if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context))
         {
-            return;
+            // prevent download prompts from showing continuously if download fails if download manager is already enabled
+            if (CheckApplicationCapabilitiesUtils.isExternalStorageWritable())
+            {
+                // TODO: Make request back-offs better
+                long now = new Date().getTime();
+                if (lastUpdateCheckTimeMillis > 0 && now - lastUpdateCheckTimeMillis < UPDATE_CHECK_BACKOFF_DURATION_MILLIS)
+                {
+                    return;
+                }
+
+                lastUpdateCheckTimeMillis = now;
+
+                PackageInfo pkgInfo = getPackageInfoFromActivity(event.sender);
+                dataManager.checkForUpdates(buildConfigWrapper.getFlavor(), pkgInfo.versionCode, new DataManager.Callback<UpdateDetails>()
+                        {
+                            @Override
+                            public void onSuccess(final UpdateDetails updateDetails)
+                            {
+                                if (updateDetails.getShouldUpdate())
+                                {
+                                    downloadApk(updateDetails.getDownloadUrl());
+                                    bus.post(new HandyEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                }
+                            }
+
+                            @Override
+                            public void onError(final DataManager.DataManagerError error)
+                            {
+                                bus.post(new HandyEvent.ReceiveUpdateAvailableError(error));
+                            }
+                        }
+                );
+            }
+            else
+            {
+                bus.post(new HandyEvent.ReceiveUpdateAvailableError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.OTHER,
+                        context.getString(R.string.error_update_failed_unwritable))));
+            }
+
+        }
+        else
+        {
+            bus.post(new HandyEvent.RequestEnableApplication(CheckApplicationCapabilitiesUtils.DOWNLOAD_MANAGER_PACKAGE_NAME, context.getString(R.string.error_update_failed_download_manager_disabled)));
         }
 
-        lastUpdateCheckTimeMillis = now;
 
-        PackageInfo pkgInfo = getPackageInfoFromActivity(event.sender);
-
-        dataManager.checkForUpdates(buildConfigWrapper.getFlavor(), pkgInfo.versionCode, new DataManager.Callback<UpdateDetails>()
-                {
-                    @Override
-                    public void onSuccess(final UpdateDetails updateDetails)
-                    {
-                        if (updateDetails.getShouldUpdate())
-                        {
-                            downloadApk(updateDetails.getDownloadUrl());
-                            bus.post(new HandyEvent.ReceiveUpdateAvailableSuccess(updateDetails));
-                        }
-                    }
-
-                    @Override
-                    public void onError(final DataManager.DataManagerError error)
-                    {
-                        bus.post(new HandyEvent.ReceiveUpdateAvailableError(error));
-                    }
-                }
-        );
     }
 
     @Subscribe
@@ -127,7 +147,8 @@ public class VersionManager
     }
 
     @Subscribe
-    public void onReceiveLoginSuccess(HandyEvent.ReceiveLoginSuccess event) {
+    public void onReceiveLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
+    {
         dataManager.sendVersionInformation(getVersionInfo());
     }
 
@@ -141,7 +162,6 @@ public class VersionManager
         {
             oldApkFile.delete();
         }
-
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
                 .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
                 .setMimeType(APK_MIME_TYPE)
@@ -178,13 +198,17 @@ public class VersionManager
 
     private int getDownloadStatus()
     {
-        DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterById(downloadReferenceId);
-        Cursor cursor = downloadManager.query(query);
-        if (cursor.moveToFirst())
+        if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context))
         {
-            return cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+            DownloadManager.Query query = new DownloadManager.Query();
+            query.setFilterById(downloadReferenceId);
+            Cursor cursor = downloadManager.query(query);
+            if (cursor!=null && cursor.moveToFirst())
+            {
+                return cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+            }
         }
+
         return -1;
     }
 
@@ -201,7 +225,8 @@ public class VersionManager
         return pInfo;
     }
 
-    private HashMap<String, String> getVersionInfo() {
+    private HashMap<String, String> getVersionInfo()
+    {
         PackageInfo pInfo = getPackageInfoFromActivity(context);
         HashMap<String, String> info = new HashMap<>();
         info.put("user_id", prefsManager.getString(PrefsKey.LAST_PROVIDER_ID));

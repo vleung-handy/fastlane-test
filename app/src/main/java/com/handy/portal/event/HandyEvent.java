@@ -209,6 +209,7 @@ public abstract class HandyEvent
     public static class ReceiveUpdateAvailableSuccess extends ReceiveSuccessEvent
     {
         public UpdateDetails updateDetails;
+
         public ReceiveUpdateAvailableSuccess(UpdateDetails updateDetails)
         {
             this.updateDetails = updateDetails;
@@ -220,6 +221,18 @@ public abstract class HandyEvent
         public ReceiveUpdateAvailableError(DataManager.DataManagerError error)
         {
             this.error = error;
+        }
+    }
+
+    public static class RequestEnableApplication extends RequestEvent
+    {
+        public String packageName;
+        public String infoMessage;
+
+        public RequestEnableApplication(String packageName, String infoMessage)
+        {
+            this.packageName = packageName;
+            this.infoMessage = infoMessage;
         }
     }
 
@@ -350,6 +363,7 @@ public abstract class HandyEvent
     public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
     {
         public LocationData locationData;
+
         public RequestNotifyJobOnMyWay(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
@@ -361,6 +375,7 @@ public abstract class HandyEvent
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
         public LocationData locationData;
+
         public RequestNotifyJobCheckIn(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
@@ -372,6 +387,7 @@ public abstract class HandyEvent
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
         public LocationData locationData;
+
         public RequestNotifyJobCheckOut(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
@@ -548,6 +564,7 @@ public abstract class HandyEvent
     public static class ReceiveHelpNodeSuccess extends ReceiveSuccessEvent
     {
         public HelpNode helpNode;
+
         public ReceiveHelpNodeSuccess(HelpNode helpNode)
         {
             this.helpNode = helpNode;
@@ -578,6 +595,7 @@ public abstract class HandyEvent
     public static class ReceiveHelpBookingNodeSuccess extends ReceiveSuccessEvent
     {
         public HelpNode helpNode;
+
         public ReceiveHelpBookingNodeSuccess(HelpNode helpNode)
         {
             this.helpNode = helpNode;
