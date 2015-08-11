@@ -27,6 +27,8 @@
     <string name="login_help_email_subject">Change Pro Phone Number</string>
     <string name="login_help_choose_email_client">Choose an Email Client</string>
 
+    <string name="error_update_failed_download_manager_disabled">Update failed. Please enable Download Manager.</string>
+    <string name="error_update_failed_unwritable">Update failed. Your external storage is not writable. Please make sure USB storage mode is off.</string>
     <string name="error_connectivity">The server could not be reached, please ensure you have a data connection and try again</string>
 
     <string name="job">Job</string>
