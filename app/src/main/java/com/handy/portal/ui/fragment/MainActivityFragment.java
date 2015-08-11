@@ -1,5 +1,7 @@
 package com.handy.portal.ui.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -52,6 +54,66 @@ public class MainActivityFragment extends InjectedFragment
     private PortalWebViewFragment webViewFragment = null;
 
     public static boolean clearingBackStack = false;
+
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        //deep link push notification may have come in
+        checkForDeepLinkIntent();
+    }
+
+    private void checkForDeepLinkIntent()
+    {
+        Intent intent = getActivity().getIntent();
+        if (intent != null && intent.getData() != null)
+        {
+            Uri intentUri = intent.getData();
+            if(intentUri.getHost().equals("deeplink"))
+            {
+                openDeepLink(intent.getData());
+            }
+        }
+    }
+
+    private void openDeepLink(Uri deepLink)
+    {
+        if (deepLink == null || !deepLink.getHost().equals("deeplink"))
+        {
+            return;
+        }
+
+        String path = deepLink.getPath();
+
+        System.out.println("See uri : " + deepLink);
+        System.out.println("See path : " + path);
+        System.out.println("See query : " + deepLink.getQuery());
+        System.out.println("See host : " + deepLink.getHost());
+
+        switch(path)
+        {
+            case "/available_jobs":
+            {
+                System.out.println("Switching to jobs tab");
+                switchToTab(MainViewTab.JOBS, true);
+            }
+            break;
+
+            case "/booking_details":
+            {
+                Bundle bundle = new Bundle();
+                String bookingId = deepLink.getQuery();
+                bundle.putString(BundleKeys.BOOKING_ID, bookingId);
+                System.out.println("Switching to details tab for booking " + bookingId + " directly");
+                switchToTab(MainViewTab.DETAILS, bundle, true);
+            }
+            break;
+
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,6 +187,8 @@ public class MainActivityFragment extends InjectedFragment
         {
             tab = savedInstanceState.getString(BundleKeys.TAB);
         }
+
+        System.out.println("On view state restored : " + MainViewTab.valueOf(tab));
         switchToTab(MainViewTab.valueOf(tab), false);
     }
 
@@ -143,6 +207,8 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
+        System.out.println("ZZZ hear navigate to tab event " + event.targetTab + " : " + event.toString());
+
         switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride, false);
     }
 
@@ -188,6 +254,9 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
+
+        System.out.println("ZZZ : Switch to tab " + targetTab + " : " + argumentsBundle + " " + userTriggered);
+
         trackSwitchToTab(targetTab);
 
         SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
