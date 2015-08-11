@@ -107,7 +107,6 @@ tasks.withType(Test) {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.guava:guava:18.0'
