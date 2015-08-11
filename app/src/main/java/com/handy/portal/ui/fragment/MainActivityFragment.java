@@ -188,7 +188,6 @@ public class MainActivityFragment extends InjectedFragment
             tab = savedInstanceState.getString(BundleKeys.TAB);
         }
 
-        System.out.println("On view state restored : " + MainViewTab.valueOf(tab));
         switchToTab(MainViewTab.valueOf(tab), false);
     }
 
@@ -207,8 +206,6 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
-        System.out.println("ZZZ hear navigate to tab event " + event.targetTab + " : " + event.toString());
-
         switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride, false);
     }
 
@@ -254,9 +251,6 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
-
-        System.out.println("ZZZ : Switch to tab " + targetTab + " : " + argumentsBundle + " " + userTriggered);
-
         trackSwitchToTab(targetTab);
 
         SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
