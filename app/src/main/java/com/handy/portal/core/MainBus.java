@@ -6,7 +6,6 @@ import android.os.Looper;
 import com.handy.portal.analytics.Mixpanel;
 import com.squareup.otto.Bus;
 import com.squareup.otto.DeadEvent;
-import com.squareup.otto.ThreadEnforcer;
 
 final class MainBus extends Bus
 {
@@ -15,7 +14,6 @@ final class MainBus extends Bus
 
     public MainBus(final Mixpanel mixpanel)
     {
-        super(ThreadEnforcer.ANY); //allow push notification actions to post to the event bus
         this.mixpanel = mixpanel;
     }
 
