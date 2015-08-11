@@ -37,7 +37,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
 
     //According to android docs this is the preferred way of accessing location instead of using LocationManager
     //will also let us do geofencing and reverse address lookup which is nice
-        //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
+    //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
 
@@ -76,23 +76,27 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
             public void onReceiveUpdateAvailableError(HandyEvent.ReceiveUpdateAvailableError event)
             {
                 String message = event.error.getMessage();
-                if(message!=null){
+                if (message != null)
+                {
                     Toast.makeText(BaseActivity.this, event.error.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Subscribe
-            public void onReceiveEnableApplication(HandyEvent.RequestEnableApplication event){
+            public void onReceiveEnableApplication(HandyEvent.RequestEnableApplication event)
+            {
                 String packageName = event.packageName;
                 String promptMessage = event.infoMessage;
                 Context context = BaseActivity.this;
                 Toast.makeText(context, promptMessage, Toast.LENGTH_LONG).show();
-                try {
+                try
+                {
                     Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     intent.setData(Uri.parse("package:" + packageName));
                     context.startActivity(intent);
 
-                } catch ( ActivityNotFoundException e ) {
+                } catch (ActivityNotFoundException e)
+                {
                     Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
                     context.startActivity(intent);
                 }
@@ -110,7 +114,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         super.onStart();
         allowCallbacks = true;
 
-        if(this.googleApiClient != null)
+        if (this.googleApiClient != null)
         {
             this.googleApiClient.connect();
         }
@@ -122,7 +126,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         super.onStop();
         allowCallbacks = false;
 
-        if(this.googleApiClient != null)
+        if (this.googleApiClient != null)
         {
             this.googleApiClient.connect();
         }
@@ -209,7 +213,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
 
     public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
     {
-        if(event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate()) //TODO: there seems to be a lot of redundant updateDetails.getShouldUpdate() calls. clean this up
+        if (event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate()) //TODO: there seems to be a lot of redundant updateDetails.getShouldUpdate() calls. clean this up
         {
             startActivity(new Intent(this, PleaseUpdateActivity.class));
         }
@@ -225,7 +229,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
     protected synchronized void buildGoogleApiClient()
     {
         //client is static across activities
-        if(googleApiClient == null)
+        if (googleApiClient == null)
         {
             int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
             if (resultCode == ConnectionResult.SUCCESS)
