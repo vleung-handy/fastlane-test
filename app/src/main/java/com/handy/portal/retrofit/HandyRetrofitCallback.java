@@ -118,8 +118,6 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
     {
         if (callback != null)
         {
-            Crashlytics.logException(new HandyRetrofitCallbackError(callback, error));
-
             final DataManagerError err;
             if (error.isNetworkError())
             {
@@ -127,6 +125,7 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
             }
             else
             {
+                Crashlytics.logException(new HandyRetrofitCallbackError(callback, error));//only log if not network error
                 int resp = 0;
                 if (error != null)
                 {
