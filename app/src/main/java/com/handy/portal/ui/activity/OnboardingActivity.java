@@ -84,6 +84,7 @@ public class OnboardingActivity extends BaseActivity
         else
         {
             prefsManager.setBoolean(PrefsKey.ONBOARDING_COMPLETED, true);
+            prefsManager.setBoolean(PrefsKey.ONBOARDING_NEEDED, false);
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
