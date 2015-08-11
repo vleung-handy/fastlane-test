@@ -33,7 +33,9 @@ public class VersionManager
     //TODO: parameterize these strings
     public static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
     private static final String APK_FILE_NAME = "handy-pro-latest.apk";
-    private static final String DOWNLOAD_MANAGER_PACKAGE_NAME = "com.android.providers.downloads";
+
+    @VisibleForTesting
+    protected static final String DOWNLOAD_MANAGER_PACKAGE_NAME = "com.android.providers.downloads";
 
     // This backoff duration is used to prevent the app from executing download repeatedly when
     // download fails. It is used to check whether there was a download attempt recently and if so,
@@ -91,8 +93,9 @@ public class VersionManager
     public void onUpdateCheckRequest(HandyEvent.RequestUpdateCheck event)
     {
         if (isDownloadManagerEnabled())
-        { // prevent download prompts from showing continuously if download fails if download manager is already enabled
-            if (isExternalStorageWriteable())
+        {
+            // prevent download prompts from showing continuously if download fails if download manager is already enabled
+            if (isExternalStorageWritable())
             {
                 // TODO: Make request back-offs better
                 long now = new Date().getTime();
@@ -151,24 +154,28 @@ public class VersionManager
         dataManager.sendVersionInformation(getVersionInfo());
     }
 
-    private boolean isExternalStorageWriteable()
+    public boolean isExternalStorageWritable()
     {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    private boolean isDownloadManagerEnabled()
+    public boolean isDownloadManagerEnabled()
     {
-        int state = context.getPackageManager().getApplicationEnabledSetting(DOWNLOAD_MANAGER_PACKAGE_NAME);
-
-        if (state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED ||
-                state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
-                || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED)
+        try
         {
+            int state = context.getPackageManager().getApplicationEnabledSetting(DOWNLOAD_MANAGER_PACKAGE_NAME);
+            //is there a way to just check if there is a package that handles downloads?
+            return !(state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED ||
+                    state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
+                    || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED);
+        } catch (Exception e)
+        {
+            //package not found
+            e.printStackTrace();
             return false;
-
         }
-        return true;
+
     }
 
     public void downloadApk(String apkUrl)

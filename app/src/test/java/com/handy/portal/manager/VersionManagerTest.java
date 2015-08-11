@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Environment;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.UpdateDetails;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
@@ -21,6 +23,7 @@ import org.mockito.Mock;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowDownloadManager;
+import org.robolectric.shadows.ShadowEnvironment;
 
 import java.util.List;
 
@@ -31,6 +34,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -50,6 +54,8 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     private Activity activity;
     @Mock
     private UpdateDetails updateDetails;
+    @Mock
+    private PackageManager packageManager;
 
     @Captor
     private ArgumentCaptor<DataManager.Callback<UpdateDetails>> updateCheckCallbackCaptor;
@@ -64,11 +70,18 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     public void setUp() throws Exception
     {
         initMocks(this);
-        versionManager = new VersionManager(RuntimeEnvironment.application, bus, dataManager, prefsManager, buildConfigWrapper);
+
+        Context applicationSpy = spy(RuntimeEnvironment.application);
+        when(applicationSpy.getPackageManager()).thenReturn(packageManager);
+        when(packageManager.getApplicationEnabledSetting(VersionManager.DOWNLOAD_MANAGER_PACKAGE_NAME)).thenReturn(PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
+
+        versionManager = new VersionManager(applicationSpy, bus, dataManager, prefsManager, buildConfigWrapper);
 
         reset(bus);
 
-        downloadManager = shadowOf((DownloadManager) RuntimeEnvironment.application.getSystemService(Context.DOWNLOAD_SERVICE));
+        downloadManager = shadowOf((DownloadManager) applicationSpy.getSystemService(Context.DOWNLOAD_SERVICE));
+
+        ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
 
         versionManager.onUpdateCheckRequest(new HandyEvent.RequestUpdateCheck(activity));
         verify(dataManager).checkForUpdates(anyString(), anyInt(), updateCheckCallbackCaptor.capture());
