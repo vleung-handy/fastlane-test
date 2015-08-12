@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
@@ -156,12 +155,6 @@ public class BaseApplication extends Application
     protected void attachBaseContext(Context base)
     {
         super.attachBaseContext(base);
-        installMultiDex();
-    }
-
-    protected void installMultiDex()
-    {
-        MultiDex.install(this);
     }
 
     protected void startNewRelic()

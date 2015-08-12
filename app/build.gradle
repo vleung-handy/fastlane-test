@@ -35,7 +35,6 @@ android {
         targetSdkVersion 21
         versionCode 26
         versionName "0.5.2"
-        multiDexEnabled true
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
@@ -59,7 +58,8 @@ android {
             minifyEnabled true
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-rules-debug.pro'
             applicationIdSuffix ".debug"
         }
     }
@@ -68,19 +68,19 @@ android {
         stable {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.5.2"
+            versionName defaultConfig.versionName
             signingConfig signingConfigs.prod
         }
         beta {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.5.2b"
+            versionName defaultConfig.versionName + "b"
             signingConfig signingConfigs.prod
         }
         store {
             applicationId 'com.handybook.handy_portal'
             manifestPlaceholders = [PACKAGE_NAME: "com.handybook.handy_portal"]
-            versionName "0.5.2p"
+            versionName defaultConfig.versionName + "p"
             signingConfig signingConfigs.playstore
         }
 
@@ -107,7 +107,6 @@ tasks.withType(Test) {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.guava:guava:18.0'

@@ -20,8 +20,4 @@ public class TestBaseApplication extends BaseApplication
     {
     }
 
-    @Override
-    protected void installMultiDex()
-    {
-    }
 }
