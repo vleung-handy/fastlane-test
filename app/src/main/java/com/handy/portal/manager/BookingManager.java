@@ -42,7 +42,7 @@ public class BookingManager
         this.bookingsCache = CacheBuilder.newBuilder()
                 .weakKeys()
                 .maximumSize(10000)
-                .expireAfterWrite(1, TimeUnit.MINUTES)
+                .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
     }
 
