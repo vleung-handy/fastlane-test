@@ -1,11 +1,11 @@
 package com.handy.portal.ui.constructor;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +16,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
@@ -48,7 +48,7 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
     @Override
     protected Class getFragmentClass()
     {
-        return MapFragment.class;
+        return SupportMapFragment.class;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
     {
         if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext()))
         {
-            MapFragment mapFragment = (MapFragment) fragment;
+            SupportMapFragment mapFragment = (SupportMapFragment) fragment;
             if (mapFragment != null)
             {
                 mapFragment.getMapAsync(this);
