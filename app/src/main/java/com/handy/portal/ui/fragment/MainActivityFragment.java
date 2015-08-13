@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -64,15 +63,6 @@ public class MainActivityFragment extends InjectedFragment
         registerBackStackListener();
         transitionOverlayView.init();
         loadingOverlayView.init();
-
-        /*
-            below logic is needed to workaround a bug in android 4.4 that cause webview artifacts to show.
-            setting this at the help view or webview level does not fully work (complex webview pages didn't load)
-        */
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
-        {
-            view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
 
         return view;
     }
