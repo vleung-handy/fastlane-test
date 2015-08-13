@@ -108,8 +108,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             {
                 getDatesLayout().getChildAt(0).performClick();
             }
-
-            requestBookingsForOtherDays();
         }
     }
 
@@ -117,7 +115,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void doRequestBookingsAgain()
     {
         requestBookings(selectedDay);
-        requestBookingsForOtherDays();
     }
 
     protected void requestBookings(Date day)
@@ -158,6 +155,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         {
             displayBookings(bookings, selectedDay);
             bookingsContentView.setVisibility(View.VISIBLE);
+            requestBookingsForOtherDays();
         }
     }
 
