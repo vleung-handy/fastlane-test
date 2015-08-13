@@ -142,16 +142,16 @@ dependencies {
     //SecurePrefs storage
     compile 'com.scottyab:secure-preferences-lib:0.1.1'
 
-    // Urban Airship SDK
+    //Urban Airship SDK
     compile 'com.urbanairship.android:urbanairship-sdk:6.1.+'
 
-    // Recommended for in-app messaging
+    //Recommended for in-app messaging
     compile 'com.android.support:cardview-v7:22.2.0'
 
-    // Recommended for location services
+    //Recommended for location services
     compile 'com.google.android.gms:play-services-location:7.5.0'
 
-    // Required for Android (GCM) push notifications
+    //Required for Android (GCM) push notifications
     compile 'com.google.android.gms:play-services-gcm:7.5.0'
 
     //Testing

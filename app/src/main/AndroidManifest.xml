@@ -87,8 +87,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc" />
 
-
-
     <!-- URBAN AIRSHIP -->
 
         <!-- REQUIRED for Action.startActivityForResult -->
@@ -110,27 +108,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
-        <!-- Replace the receiver below with your package and class name -->
-
-
-        <!--
-
-        <receiver android:name="receiver.HandyIntentReceiver"
-                  android:exported="false">
-            <intent-filter>
-                <action android:name="com.urbanairship.push.CHANNEL_UPDATED" />
-                <action android:name="com.urbanairship.push.OPENED" />
-                <action android:name="com.urbanairship.push.RECEIVED" />
-                <action android:name="com.urbanairship.push.DISMISSED" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
-
-        -->
-
-
-        <!-- REQUIRED for Landing Pages
+        <!-- REQUIRED for Urban Airship Landing Pages
             - For more customization details, see com.urbanairship.actions.LandingPageActivity -->
         <activity
             android:name="com.urbanairship.actions.LandingPageActivity"
@@ -150,19 +128,19 @@
         <!-- REQUIRED for Urban Airship -->
         <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service" />
 
-        <!-- Required for analytics -->
+        <!-- REQUIRED for Urban Airship Analytics -->
         <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service" />
 
-        <!-- Required for Actions -->
+        <!-- REQUIRED for Urban Airship Actions -->
         <service android:name="com.urbanairship.actions.ActionService" />
 
-        <!-- Required for Rich Push -->
+        <!-- REQUIRED for Urban Airship Rich Push -->
         <service android:name="com.urbanairship.richpush.RichPushUpdateService" />
 
         <!-- OPTIONAL for Urban Airship Location (for segments support) -->
         <service android:name="com.urbanairship.location.LocationService" android:label="Segments Service" />
 
-        <!-- This is required for persisting preferences related to push and location -->
+        <!-- OPTIONAL for Urban Airship this is required for persisting preferences related to push and location -->
         <provider
             android:name="com.urbanairship.UrbanAirshipProvider"
             android:authorities="${applicationId}.urbanairship.provider"
@@ -170,7 +148,7 @@
             android:exported="true"
             android:multiprocess="true" />
 
-        <!-- REQUIRED for PlayServiceUtils.handleAnyPlayServicesError to handle Google Play Services recoverable errors. -->
+        <!-- REQUIRED for Urban Airship for PlayServiceUtils.handleAnyPlayServicesError to handle Google Play Services recoverable errors. -->
         <activity
             android:name="com.urbanairship.google.PlayServicesErrorActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

@@ -179,7 +179,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final Application providerApplication()
+    final Application provideApplication()
     {
         return this.application;
     }
@@ -287,7 +287,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final UrbanAirshipManager providerUrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
+    final UrbanAirshipManager provideUrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return new UrbanAirshipManager(bus, dataManager, prefsManager, associatedApplication);
     }
