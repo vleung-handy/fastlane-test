@@ -114,13 +114,16 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookings(selectedDay);
+        requestBookings(selectedDay, true);
     }
 
-    protected void requestBookings(Date day)
+    protected void requestBookings(Date day, boolean showOverlay)
     {
         fetchErrorView.setVisibility(View.GONE);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        if (showOverlay)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        }
         bus.post(getRequestEvent(day));
     }
 
@@ -135,7 +138,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
             if (!day.equals(selectedDay))
             {
-                requestBookings(day);
+                requestBookings(day, false);
             }
         }
     }
@@ -202,7 +205,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 {
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
-                    requestBookings(day);
+                    requestBookings(day, true);
                 }
             });
 
