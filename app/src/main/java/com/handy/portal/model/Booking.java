@@ -35,6 +35,11 @@ public class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("price")
     private float price;
 
+    @SerializedName("check_in_summary")
+    private CheckInSummary checkInSummary;
+    @SerializedName("eta_lateness_minutes")
+    private Integer providerMinutesLate;//value returned from server can be null
+
     @SerializedName("laundry_status")
     private LaundryStatus laundryStatus;
     @SerializedName("address")
@@ -278,6 +283,16 @@ public class Booking implements Parcelable, Comparable<Booking>
         return "GB".equalsIgnoreCase(country);
     }
 
+    public CheckInSummary getCheckInSummary()
+    {
+        return checkInSummary;
+    }
+
+    public Integer getProviderMinutesLate()
+    {
+        return providerMinutesLate;
+    }
+
     //providerId = 0, no one assigned can claim, otherwise is already claimed
     public static final String NO_PROVIDER_ASSIGNED = "0";
 
@@ -289,7 +304,7 @@ public class Booking implements Parcelable, Comparable<Booking>
         UNAVAILABLE,
     }
 
-    public enum ArrivalTimeOption
+    public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
         /* KEEP IN SYNC WITH SERVER VALUES */
         EARLY_30_MINUTES(R.string.arrival_time_early_30, "-30"),
@@ -641,6 +656,25 @@ public class Booking implements Parcelable, Comparable<Booking>
         public List<String> getItems()
         {
             return items;
+        }
+    }
+
+    public static class CheckInSummary
+    {
+        @SerializedName("is_checked_in")
+        private boolean isCheckedIn; //false if checked out or on my way
+
+        @SerializedName("time")
+        private Date checkInTime;
+
+        public Date getCheckInTime()
+        {
+            return checkInTime;
+        }
+
+        public boolean isCheckedIn()
+        {
+            return isCheckedIn;
         }
     }
 

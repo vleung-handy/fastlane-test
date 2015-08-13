@@ -18,7 +18,7 @@ import com.handy.portal.model.BookingSummary;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.DateButtonView;
-import com.handy.portal.util.Utils;
+import com.handy.portal.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +82,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             if (targetDateTime > 0)
             {
                 this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
-                this.selectedDay = Utils.getDateWithoutTime(this.selectedDay);
+                this.selectedDay = DateTimeUtils.getDateWithoutTime(this.selectedDay);
             }
         }
 
