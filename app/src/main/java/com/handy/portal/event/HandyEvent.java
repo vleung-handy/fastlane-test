@@ -336,10 +336,12 @@ public abstract class HandyEvent
     public static class RequestBookingDetails extends HandyEvent
     {
         public String bookingId;
+        public Date date;
 
-        public RequestBookingDetails(String bookingId)
+        public RequestBookingDetails(String bookingId, Date date)
         {
             this.bookingId = bookingId;
+            this.date = date;
         }
     }
 
@@ -377,6 +379,7 @@ public abstract class HandyEvent
         public final Booking booking;
         public RequestRemoveJob(Booking booking)
         {
+            this.bookingId = booking.getId();
             this.booking = booking;
         }
     }

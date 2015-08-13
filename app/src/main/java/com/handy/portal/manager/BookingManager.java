@@ -53,7 +53,7 @@ public class BookingManager
     //listens and responds to requests to claim / cancel
 
     @Subscribe
-    public void onRequestBookingDetails(HandyEvent.RequestBookingDetails event)
+    public void onRequestBookingDetails(final HandyEvent.RequestBookingDetails event)
     {
         String bookingId = event.bookingId;
 
@@ -69,6 +69,12 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 bus.post(new HandyEvent.ReceiveBookingDetailsError(error));
+                if (event.date != null && error.getType() != DataManager.DataManagerError.Type.NETWORK)
+                {
+                    Date day = Utils.getDateWithoutTime(event.date);
+                    availableBookingsCache.invalidate(day);
+                    scheduledBookingsCache.invalidate(day);
+                }
             }
         });
     }
