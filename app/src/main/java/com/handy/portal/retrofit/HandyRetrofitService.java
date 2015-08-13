@@ -20,7 +20,7 @@ public interface HandyRetrofitService
     String SESSIONS_PATH = "/sessions/";
     String BOOKINGS_PATH = "/bookings/";
 
-    @GET("/check_updates")
+    @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
 
     @GET("/check_terms")
