@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.view.TooltipView
+    android:id="@+id/tooltip"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tooltip_text"
+        style="@style/Tooltip"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/tooltip_subtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tooltip_text"
+        android:gravity="end"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="4dp"
+        android:textColor="@color/white"
+        android:textSize="12sp"/>
+
+</com.handy.portal.ui.view.TooltipView>

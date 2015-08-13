@@ -15,6 +15,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.squareup.otto.Subscribe;
 
@@ -214,7 +215,17 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            launchActivity(MainActivity.class);
+            Provider provider = providerManager.getCachedActiveProvider();
+            boolean onboardingNeeded = prefsManager.getBoolean(PrefsKey.ONBOARDING_NEEDED, false);
+            boolean onboardingCompleted = prefsManager.getBoolean(PrefsKey.ONBOARDING_COMPLETED, false);
+            if (provider.isOnboardingEnabled() && onboardingNeeded && !onboardingCompleted)
+            {
+                launchActivity(OnboardingActivity.class);
+            }
+            else
+            {
+                launchActivity(MainActivity.class);
+            }
         }
     }
 
