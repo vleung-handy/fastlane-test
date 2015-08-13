@@ -37,12 +37,12 @@ public class BookingManager
 
         this.availableBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
-                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
 
         this.scheduledBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
-                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
     }
 
