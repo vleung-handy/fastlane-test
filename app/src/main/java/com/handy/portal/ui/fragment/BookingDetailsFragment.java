@@ -405,7 +405,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             case CLAIM:
             {
-                requestClaimJob(this.associatedBooking.getId());
+                requestClaimJob(this.associatedBooking);
             }
             break;
 
@@ -435,7 +435,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
             case REMOVE:
             {
-                requestRemoveJob(this.associatedBooking.getId());
+                requestRemoveJob(this.associatedBooking);
             }
             break;
 
@@ -555,41 +555,41 @@ public class BookingDetailsFragment extends InjectedFragment
 
     //Service request bus posts
     //
-    private void requestClaimJob(String bookingId)
+    private void requestClaimJob(Booking booking)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(associatedBooking));
+        bus.post(new HandyEvent.RequestClaimJob(booking));
     }
 
-    private void requestRemoveJob(String bookingId)
+    private void requestRemoveJob(Booking booking)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestRemoveJob(associatedBooking));
+        bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
 
     private void requestNotifyOnMyWayJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(associatedBooking, locationData));
+        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
     }
 
     private void requestNotifyCheckInJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckIn(associatedBooking, locationData));
+        bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
     }
 
     private void requestNotifyCheckOutJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckOut(associatedBooking, locationData));
+        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, locationData));
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
         slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(associatedBooking, arrivalTimeOption));
+        bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
     }
 
     private void requestReportNoShow()

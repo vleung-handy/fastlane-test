@@ -127,7 +127,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         bus.post(getRequestEvent(day));
     }
 
-    private void requestBookingsForOtherDays()
+    private void requestBookingsForOtherDays(Date dayToExclude)
     {
         for (int i = 0; i < numberOfDaysToDisplay(); i++)
         {
@@ -136,7 +136,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             calendar.add(Calendar.DATE, i);
             Date day = Utils.getDateWithoutTime(calendar.getTime());
 
-            if (!day.equals(selectedDay))
+            if (!day.equals(dayToExclude))
             {
                 requestBookings(day, false);
             }
@@ -158,7 +158,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         {
             displayBookings(bookings, selectedDay);
             bookingsContentView.setVisibility(View.VISIBLE);
-            requestBookingsForOtherDays();
+            requestBookingsForOtherDays(selectedDay);
         }
     }
 

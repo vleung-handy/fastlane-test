@@ -196,10 +196,9 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyOnMyWay(HandyEvent.RequestNotifyJobOnMyWay event)
     {
-        String bookingId = event.booking.getId();
         LocationData locationData = event.locationData;
 
-        dataManager.notifyOnMyWayBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyOnMyWayBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -218,10 +217,9 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyCheckIn(HandyEvent.RequestNotifyJobCheckIn event)
     {
-        String bookingId = event.booking.getId();
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckInBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckInBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -241,10 +239,9 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyCheckOut(HandyEvent.RequestNotifyJobCheckOut event)
     {
-        String bookingId = event.booking.getId();
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckOutBooking(bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckOutBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -263,10 +260,9 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyUpdateArrivalTime(HandyEvent.RequestNotifyJobUpdateArrivalTime event)
     {
-        String bookingId = event.booking.getId();
         Booking.ArrivalTimeOption arrivalTimeOption = event.arrivalTimeOption;
 
-        dataManager.notifyUpdateArrivalTimeBooking(bookingId, arrivalTimeOption, new DataManager.Callback<Booking>()
+        dataManager.notifyUpdateArrivalTimeBooking(event.bookingId, arrivalTimeOption, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)

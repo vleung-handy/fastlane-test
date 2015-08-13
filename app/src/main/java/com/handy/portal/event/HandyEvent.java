@@ -33,7 +33,7 @@ public abstract class HandyEvent
 
     public abstract static class RequestBookingActionEvent extends RequestEvent
     {
-        public Booking booking;
+        public String bookingId;
     }
 
     public abstract static class ReceiveSuccessEvent extends HandyEvent
@@ -363,8 +363,10 @@ public abstract class HandyEvent
 
     public static class RequestClaimJob extends RequestBookingActionEvent
     {
+        public final Booking booking;
         public RequestClaimJob(Booking booking)
         {
+            this.bookingId = booking.getId();
             this.booking = booking;
         }
     }
@@ -372,6 +374,7 @@ public abstract class HandyEvent
     @Track("cancel claim confirmation accepted")
     public static class RequestRemoveJob extends RequestBookingActionEvent
     {
+        public final Booking booking;
         public RequestRemoveJob(Booking booking)
         {
             this.booking = booking;
@@ -382,9 +385,9 @@ public abstract class HandyEvent
     public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
     {
         public LocationData locationData;
-        public RequestNotifyJobOnMyWay(Booking booking, LocationData locationData)
+        public RequestNotifyJobOnMyWay(String bookingId, LocationData locationData)
         {
-            this.booking = booking;
+            this.bookingId = bookingId;
             this.locationData = locationData;
         }
     }
@@ -393,9 +396,9 @@ public abstract class HandyEvent
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
         public LocationData locationData;
-        public RequestNotifyJobCheckIn(Booking booking, LocationData locationData)
+        public RequestNotifyJobCheckIn(String bookingId, LocationData locationData)
         {
-            this.booking = booking;
+            this.bookingId = bookingId;
             this.locationData = locationData;
         }
     }
@@ -404,9 +407,9 @@ public abstract class HandyEvent
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
         public LocationData locationData;
-        public RequestNotifyJobCheckOut(Booking booking, LocationData locationData)
+        public RequestNotifyJobCheckOut(String bookingId, LocationData locationData)
         {
-            this.booking = booking;
+            this.bookingId = bookingId;
             this.locationData = locationData;
         }
     }
@@ -417,9 +420,9 @@ public abstract class HandyEvent
         @TrackField("time_submitted")
         public Booking.ArrivalTimeOption arrivalTimeOption;
 
-        public RequestNotifyJobUpdateArrivalTime(Booking booking, Booking.ArrivalTimeOption arrivalTimeOption)
+        public RequestNotifyJobUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
         {
-            this.booking = booking;
+            this.bookingId = bookingId;
             this.arrivalTimeOption = arrivalTimeOption;
         }
     }
