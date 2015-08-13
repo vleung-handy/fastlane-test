@@ -298,10 +298,10 @@ public final class ApplicationModule
     }
 
     @Provides
-    final CustomDeepLinkAction provideCustomDeepLinkAction(final Bus bus)
+    final CustomDeepLinkAction provideCustomDeepLinkAction()
 
     {
-        return new CustomDeepLinkAction(bus);
+        return new CustomDeepLinkAction();
     }
 
     private String getDeviceId()

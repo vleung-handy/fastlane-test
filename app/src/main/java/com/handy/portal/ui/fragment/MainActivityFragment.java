@@ -56,6 +56,11 @@ public class MainActivityFragment extends InjectedFragment
     public static boolean clearingBackStack = false;
 
 
+    public static final String URI_HOST_DEEPLINK = "deeplink";
+    public static final String URI_PATH_AVAILABLE_JOBS = "/available_jobs";
+    public static final String URI_PATH_BOOKING_DETAILS = "/booking_details";
+
+
     @Override
     public void onResume()
     {
@@ -71,7 +76,7 @@ public class MainActivityFragment extends InjectedFragment
         if (intent != null && intent.getData() != null)
         {
             Uri intentUri = intent.getData();
-            if(intentUri.getHost().equals("deeplink"))
+            if(intentUri.getHost().equals(URI_HOST_DEEPLINK))
             {
                 openDeepLink(intent.getData());
             }
@@ -80,33 +85,33 @@ public class MainActivityFragment extends InjectedFragment
 
     private void openDeepLink(Uri deepLink)
     {
-        if (deepLink == null || !deepLink.getHost().equals("deeplink"))
+        if (deepLink == null || !deepLink.getHost().equals(URI_HOST_DEEPLINK))
         {
             return;
         }
 
         String path = deepLink.getPath();
 
+        /* Debugging help while testing UA, take out before we merge to dev
         System.out.println("See uri : " + deepLink);
         System.out.println("See path : " + path);
         System.out.println("See query : " + deepLink.getQuery());
         System.out.println("See host : " + deepLink.getHost());
+        */
 
         switch(path)
         {
-            case "/available_jobs":
+            case URI_PATH_AVAILABLE_JOBS:
             {
-                System.out.println("Switching to jobs tab");
                 switchToTab(MainViewTab.JOBS, true);
             }
             break;
 
-            case "/booking_details":
+            case URI_PATH_BOOKING_DETAILS:
             {
                 Bundle bundle = new Bundle();
                 String bookingId = deepLink.getQuery();
                 bundle.putString(BundleKeys.BOOKING_ID, bookingId);
-                System.out.println("Switching to details tab for booking " + bookingId + " directly");
                 switchToTab(MainViewTab.DETAILS, bundle, true);
             }
             break;

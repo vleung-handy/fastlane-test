@@ -3,8 +3,6 @@ package com.handy.portal.action;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.squareup.otto.Bus;
-import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.actions.Action;
 import com.urbanairship.actions.ActionArguments;
@@ -19,13 +17,9 @@ import javax.inject.Inject;
  */
 public class CustomDeepLinkAction extends Action
 {
-    private Bus bus;
-
     @Inject
-    public CustomDeepLinkAction(final Bus bus)
+    public CustomDeepLinkAction()
     {
-        this.bus = bus;
-        this.bus.register(this);
     }
 
     @Override
@@ -37,10 +31,9 @@ public class CustomDeepLinkAction extends Action
         if(arguments.getSituation() == Situation.PUSH_OPENED)
         {
             Uri uri = UriUtils.parse(arguments.getValue().getString());
-            Logger.info("Opening URI: " + uri);
             //Intent should get grabbed by our main activity
             Intent intent = new Intent("android.intent.action.VIEW", uri);
-            intent.addFlags(268435456);
+            intent.addFlags(268435456); //I'm not sure what this is but this code was copied from UA example
             UAirship.getApplicationContext().startActivity(intent);
             return ActionResult.newResult(arguments.getValue());
         }
