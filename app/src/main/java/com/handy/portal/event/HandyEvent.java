@@ -410,7 +410,7 @@ public abstract class HandyEvent
 
 //Job Action Receive Successes
 
-    @Track("update arrival time")
+    @Track("eta")
     public static class ReceiveNotifyJobUpdateArrivalTimeSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobUpdateArrivalTimeSuccess(Booking booking)

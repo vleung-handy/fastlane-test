@@ -46,7 +46,7 @@ public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstru
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         String formattedDate = dateFormat.format(startDate);
 
-        String formattedTime = DateTimeUtils.formatDateTo12hrClock(startDate) + " - " + DateTimeUtils.formatDateTo12hrClock(endDate);
+        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " - " + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         dateText.setText(getPrependByStartDate(startDate) + formattedDate.toUpperCase());
         timeText.setText(formattedTime.toUpperCase());

@@ -93,9 +93,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         long currentTime = DateTimeUtils.getDateWithoutTime(new Date()).getTime();
         long dateOfBookingsTime = dateOfBookings.getTime();
         long dateDifference = dateOfBookingsTime - currentTime;
-        final long millisecondsInHour = 3600000;
         final Integer hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if (bookingsForDay.size() == 0 && dateDifference < millisecondsInHour * hoursSpanningAvailableBookings)
+        if (bookingsForDay.size() == 0 && dateDifference < DateTimeUtils.MILLISECONDS_IN_HOUR * hoursSpanningAvailableBookings)
         {
             findJobsForDayButton.setVisibility(View.VISIBLE);
         }

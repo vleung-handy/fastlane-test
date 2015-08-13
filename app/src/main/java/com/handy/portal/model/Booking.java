@@ -38,7 +38,7 @@ public class Booking implements Parcelable, Comparable<Booking>
     @SerializedName("check_in_summary")
     private CheckInSummary checkInSummary;
     @SerializedName("eta_lateness_minutes")
-    private Integer providerMinutesLate;
+    private Integer providerMinutesLate;//value returned from server can be null
 
     @SerializedName("laundry_status")
     private LaundryStatus laundryStatus;

@@ -11,7 +11,10 @@ public final class DateTimeUtils
     //TODO: refactor code throughout the app to put date formats here
     private static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
 
-    public static String formatDateTo12hrClock(Date date)
+    public final static int MILLISECONDS_IN_MINUTE = 60000;
+    public final static long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE*60;
+
+    public static String formatDateTo12HourClock(Date date)
     {
         if (date == null) return null;
         return CLOCK_FORMATTER_12HR.format(date);
