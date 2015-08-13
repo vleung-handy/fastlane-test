@@ -276,6 +276,9 @@
     <string name="arrival_time_late_15">I\u2019ll be 15 minutes late</string>
     <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
 
+    <string name="booking_details_check_in_time_msg">\u2713 Checked in at %1$s</string>
+    <string name="booking_details_eta_msg">Estimated arrival time: %1$s</string>
+
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
     <string name="omw_failure">There was a problem updating your status. Please try again.</string>
     <string name="check_in_success">Thanks for checking in!</string>

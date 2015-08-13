@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.Booking;
-import com.handy.portal.util.Utils;
+import com.handy.portal.util.DateTimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,7 +25,6 @@ public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstru
     protected TextView dateText;
 
     private static final String DATE_FORMAT = "E, MMM d";
-    private static final String TIME_FORMAT = "h:mm a";
     private static final String INTERPUNCT = "\u00B7";
 
     public BookingDetailsDateViewConstructor(@NonNull Context context, Bundle arguments)
@@ -47,8 +46,7 @@ public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstru
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         String formattedDate = dateFormat.format(startDate);
 
-        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
-        String formattedTime = timeFormat.format(startDate) + " - " + timeFormat.format(endDate);
+        String formattedTime = DateTimeUtils.formatDateTo12hrClock(startDate) + " - " + DateTimeUtils.formatDateTo12hrClock(endDate);
 
         dateText.setText(getPrependByStartDate(startDate) + formattedDate.toUpperCase());
         timeText.setText(formattedTime.toUpperCase());
@@ -65,14 +63,14 @@ public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstru
 
         Date currentTime = calendar.getTime();
 
-        if(Utils.equalCalendarDates(currentTime, bookingStartDate))
+        if (DateTimeUtils.equalCalendarDates(currentTime, bookingStartDate))
         {
             prepend = (getContext().getString(R.string.today) + " " + INTERPUNCT + " ").toUpperCase();
         }
 
         calendar.add(Calendar.DATE, 1);
         Date tomorrowTime = calendar.getTime();
-        if(Utils.equalCalendarDates(tomorrowTime, bookingStartDate))
+        if (DateTimeUtils.equalCalendarDates(tomorrowTime, bookingStartDate))
         {
             prepend = (getContext().getString(R.string.tomorrow) + " " + INTERPUNCT + " ").toUpperCase();
         }

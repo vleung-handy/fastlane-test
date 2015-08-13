@@ -410,6 +410,15 @@ public abstract class HandyEvent
 
 //Job Action Receive Successes
 
+    @Track("update arrival time")
+    public static class ReceiveNotifyJobUpdateArrivalTimeSuccess extends ReceiveBookingSuccessEvent
+    {
+        public ReceiveNotifyJobUpdateArrivalTimeSuccess(Booking booking)
+        {
+            this.booking = booking;
+        }
+    }
+
     @Track("claim job")
     public static class ReceiveClaimJobSuccess extends ReceiveBookingSuccessEvent
     {
@@ -450,15 +459,6 @@ public abstract class HandyEvent
     public static class ReceiveNotifyJobCheckoutSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobCheckoutSuccess(Booking booking)
-        {
-            this.booking = booking;
-        }
-    }
-
-    @Track("eta")
-    public static class ReceiveNotifyJobUpdateArrivalTimeSuccess extends ReceiveBookingSuccessEvent
-    {
-        public ReceiveNotifyJobUpdateArrivalTimeSuccess(Booking booking)
         {
             this.booking = booking;
         }
