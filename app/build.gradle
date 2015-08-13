@@ -65,7 +65,7 @@ android {
     }
 
     productFlavors {
-        basic {
+        hosted {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
             versionName defaultConfig.versionName
