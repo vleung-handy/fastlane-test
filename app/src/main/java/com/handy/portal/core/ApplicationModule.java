@@ -180,7 +180,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final Application providerApplication()
+    final Application provideApplication()
     {
         return this.application;
     }
@@ -299,6 +299,7 @@ public final class ApplicationModule
 
     @Provides
     final CustomDeepLinkAction provideCustomDeepLinkAction(final Bus bus)
+
     {
         return new CustomDeepLinkAction(bus);
     }
