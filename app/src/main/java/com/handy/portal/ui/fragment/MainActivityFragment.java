@@ -83,6 +83,7 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+    //TODO: Is it possible to shift the logic that manages our fragment stack and deep links to relevant services to get them out of this fragment?
     private void openDeepLink(Uri deepLink)
     {
         if (deepLink == null || !deepLink.getHost().equals(URI_HOST_DEEPLINK))
