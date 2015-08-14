@@ -10,6 +10,8 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.ui.element.AvailableBookingElementView;
+import com.handy.portal.ui.element.BookingElementMediator;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -25,6 +27,8 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     View noBookingsView;
     @InjectView(R.id.complementary_bookings_banner_close_button)
     View closeButton;
+    @InjectView(R.id.complementary_bookings)
+    ViewGroup complementaryBookingView;
 
     @Nullable
     @Override
@@ -72,5 +76,10 @@ public class ComplementaryBookingsFragment extends InjectedFragment
 
     private void displayBookings(List<Booking> bookings)
     {
+        for (Booking booking : bookings)
+        {
+            BookingElementMediator bem = new BookingElementMediator(getActivity(), booking, null, complementaryBookingView, AvailableBookingElementView.class);
+            complementaryBookingView.addView(bem.getAssociatedView());
+        }
     }
 }
