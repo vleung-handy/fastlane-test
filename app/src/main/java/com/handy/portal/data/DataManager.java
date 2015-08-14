@@ -4,6 +4,7 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingsListWrapper;
+import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -69,6 +70,8 @@ public abstract class DataManager
     public abstract void getProviderInfo(Callback<Provider> cb);
 
     public abstract String getBaseUrl();
+
+    public abstract void getComplementaryBookings(String bookingId, Callback<BookingsWrapper> callback);
 
     public interface Callback<T>
     {

@@ -32,18 +32,8 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/loading_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/handy_bg"
-        android:gravity="center"
-        android:visibility="gone">
+    <include layout="@layout/merge_loading"/>
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"/>
-    </LinearLayout>
+    <include layout="@layout/layout_available_bookings_empty"/>
 
 </LinearLayout>

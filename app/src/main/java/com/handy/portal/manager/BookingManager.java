@@ -171,6 +171,25 @@ public class BookingManager
     }
 
     @Subscribe
+    public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
+    {
+        dataManager.getComplementaryBookings(event.bookingId, new DataManager.Callback<BookingsWrapper>()
+        {
+            @Override
+            public void onSuccess(BookingsWrapper bookingsWrapper)
+            {
+                List<Booking> bookings = bookingsWrapper.getBookings();
+                bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+            }
+        });
+    }
+
+    @Subscribe
     public void onRequestClaimJob(HandyEvent.RequestClaimJob event)
     {
         String bookingId = event.booking.getId();

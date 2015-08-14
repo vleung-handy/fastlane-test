@@ -891,6 +891,24 @@ public abstract class HandyEvent
         }
     }
 
+    public static class RequestComplementaryBookings extends RequestBookingActionEvent
+    {
+        public RequestComplementaryBookings(String bookingId)
+        {
+            this.bookingId = bookingId;
+        }
+    }
+
+    public static class ReceiveComplementaryBookingsSuccess
+    {
+        public final List<Booking> bookings;
+
+        public ReceiveComplementaryBookingsSuccess(List<Booking> bookings)
+        {
+            this.bookings = bookings;
+        }
+    }
+
     //Request that Urban Airship takes off
     public static class StartUrbanAirship extends HandyEvent
     {

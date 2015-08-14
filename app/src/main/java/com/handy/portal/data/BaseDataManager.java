@@ -4,6 +4,7 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingsListWrapper;
+import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -53,6 +54,12 @@ public final class BaseDataManager extends DataManager
     public final void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
         service.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public final void getComplementaryBookings(String bookingId, Callback<BookingsWrapper> cb)
+    {
+        service.getComplementaryBookings(bookingId, new BookingsWrapperRetroFitCallback(cb));
     }
 
     @Override

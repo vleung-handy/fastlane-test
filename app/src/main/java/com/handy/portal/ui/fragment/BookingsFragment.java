@@ -68,6 +68,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     //should use date without time for these entries, see Utils.getDateWithoutTime
     private Map<Date, DateButtonView> dateButtonMap;
     protected Date selectedDay;
+    protected List<Booking> bookingsForSelectedDay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -225,6 +226,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void displayBookings(List<Booking> bookings, Date dateOfBookings)
     {
+        bookingsForSelectedDay = bookings;
         getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
