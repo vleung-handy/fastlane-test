@@ -83,11 +83,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         return daysSpanningAvailableBookings + 1; // plus today
     }
 
-    @Override
-    protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
+    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
-        //do nothing, no ctas on this page, yet, maybe a refresh button
-        //we should track how often pros see 0 jobs available
     }
 
     @Subscribe

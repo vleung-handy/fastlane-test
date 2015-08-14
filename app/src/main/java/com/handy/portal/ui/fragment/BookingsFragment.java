@@ -58,7 +58,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract int numberOfDaysToDisplay();
 
-    protected abstract void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings);
+    protected abstract void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings);
 
     protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
@@ -228,7 +228,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
-        setupCTAButton(bookings, dateOfBookings);
+        afterDisplayBookings(bookings, dateOfBookings);
     }
 
     private void initListClickListener()

@@ -39,6 +39,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @InjectView(R.id.find_jobs_for_day_button)
     protected Button findJobsForDayButton;
 
+    @InjectView(R.id.find_matching_jobs_button_container)
+    protected ViewGroup findMatchingJobsButtonContainer;
+
     protected LinearLayout getDatesLayout()
     {
         return scheduledJobsDatesScrollViewLayout;
@@ -86,9 +89,10 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
+    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
-        //don't show the CTA if we're outside of our available bookings length range
+
+        //show Find Jobs and Find Matching Jobs buttons only if we're inside of our available bookings length range
         long currentTime = DateTimeUtils.getDateWithoutTime(new Date()).getTime();
         long dateOfBookingsTime = dateOfBookings.getTime();
         long dateDifference = dateOfBookingsTime - currentTime;
@@ -101,6 +105,16 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         {
             findJobsForDayButton.setVisibility(View.GONE);
         }
+
+        if (bookingsForDay.size() == 1 && dateDifference < DateTimeUtils.MILLISECONDS_IN_HOUR * hoursSpanningAvailableBookings)
+        {
+            findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            findMatchingJobsButtonContainer.setVisibility(View.GONE);
+        }
+
     }
 
     @OnClick(R.id.find_jobs_for_day_button)
