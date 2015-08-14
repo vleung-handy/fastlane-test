@@ -104,9 +104,9 @@ public class MainActivityFragment extends InjectedFragment
     private boolean updateSelectedTabButton(Fragment fragment)
     {
         return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
-               selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
-               selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, profileButton) ||
-               selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
+                selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
+                selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, profileButton) ||
+                selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
     }
 
     private boolean selectTabIfFragmentMatches(Fragment fragment, Class<? extends Fragment> fragmentClass, RadioButton tab)
@@ -124,7 +124,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onViewStateRestored(savedInstanceState);
 
-        String tab = MainViewTab.JOBS.name();
+        String tab = MainViewTab.AVAILABLE_JOBS.name();
         if (savedInstanceState != null && savedInstanceState.containsKey(BundleKeys.TAB))
         {
             tab = savedInstanceState.getString(BundleKeys.TAB);
@@ -159,8 +159,8 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerButtonListeners()
     {
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULE));
-        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.JOBS));
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
         profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
         helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
     }
@@ -216,6 +216,7 @@ public class MainActivityFragment extends InjectedFragment
             }
             else
             {
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.MATCHING_JOBS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
@@ -288,12 +289,12 @@ public class MainActivityFragment extends InjectedFragment
         {
             switch (targetTab)
             {
-                case JOBS:
+                case AVAILABLE_JOBS:
                 {
                     jobsButton.toggle();
                 }
                 break;
-                case SCHEDULE:
+                case SCHEDULED_JOBS:
                 {
                     scheduleButton.toggle();
                 }
@@ -348,7 +349,12 @@ public class MainActivityFragment extends InjectedFragment
         //Animate the transition, animations must come before the .replace call
         if (swapArguments.transitionStyle != null)
         {
-            transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
+            transaction.setCustomAnimations(
+                    swapArguments.transitionStyle.getIncomingAnimId(),
+                    swapArguments.transitionStyle.getOutgoingAnimId(),
+                    swapArguments.transitionStyle.getPopIncomingAnimId(),
+                    swapArguments.transitionStyle.getPopOutgoingAnimId()
+            );
 
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())

@@ -215,7 +215,7 @@ public final class HelpContactFragment extends InjectedFragment
 
     private void returnToJobsScreen()
     {
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.JOBS));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
     }
 
     private void returnToBookingDetails(String bookingId)

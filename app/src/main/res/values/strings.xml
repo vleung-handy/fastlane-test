@@ -345,5 +345,6 @@
 
     <string name="find_jobs_close_to_your_claimed_job">Find jobs close to your claimed job</string>
     <string name="find_matching_jobs">Find Matching Jobs</string>
+    <string name="matching_jobs">Matching Jobs</string>
 
 </resources>

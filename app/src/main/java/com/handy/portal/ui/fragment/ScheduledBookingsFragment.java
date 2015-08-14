@@ -118,7 +118,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @OnClick(R.id.find_jobs_for_day_button)
-    public void onFindJobsButtonClicked(View v)
+    public void onFindJobsButtonClicked()
     {
         TransitionStyle transitionStyle = TransitionStyle.TAB_TO_TAB;
         long epochTime = selectedDay.getTime();
@@ -126,7 +126,17 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.JOBS, arguments, transitionStyle));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, arguments, transitionStyle));
+    }
+
+    @OnClick(R.id.find_matching_jobs_button)
+    public void onFindMatchingJobsButtonClicked()
+    {
+        Bundle arguments = new Bundle();
+        long time = selectedDay.getTime();
+        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, time);
+
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.MATCHING_JOBS, arguments, TransitionStyle.SLIDE_UP));
     }
 
     @Override
