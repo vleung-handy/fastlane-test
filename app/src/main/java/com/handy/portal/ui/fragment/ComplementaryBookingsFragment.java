@@ -29,8 +29,10 @@ public class ComplementaryBookingsFragment extends InjectedFragment
 {
     @InjectView(R.id.loading_overlay)
     View loadingOverlay;
-    @InjectView(R.id.available_bookings_empty)
+    @InjectView(R.id.complementary_bookings_empty)
     View noBookingsView;
+    @InjectView(R.id.complementary_bookings_banner_text)
+    TextView bannerText;
     @InjectView(R.id.complementary_bookings_banner_close_button)
     View closeButton;
     @InjectView(R.id.earlier_bookings)
@@ -40,9 +42,9 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     @InjectView(R.id.claimed_bookings)
     ViewGroup claimedBookingsContainer;
     @InjectView(R.id.fetch_error_view)
-    protected View errorView;
+    View errorView;
     @InjectView(R.id.fetch_error_text)
-    protected TextView errorText;
+    TextView errorText;
 
     private Booking claimedBooking;
 
@@ -77,8 +79,16 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         requestComplementaryBookings();
     }
 
+    @OnClick(R.id.all_jobs_button)
+    public void onGoToAllJobsClicked()
+    {
+        Bundle arguments = new Bundle();
+        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, claimedBooking.getStartDate().getTime());
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, arguments));
+    }
+
     @OnClick(R.id.try_again_button)
-    public void onRetryComplementaryBookings()
+    public void onTryAgainClicked()
     {
         requestComplementaryBookings();
     }
@@ -96,10 +106,12 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         loadingOverlay.setVisibility(View.GONE);
         if (event.bookings.isEmpty())
         {
+            bannerText.setText(R.string.no_matching_jobs);
             noBookingsView.setVisibility(View.VISIBLE);
         }
         else
         {
+            bannerText.setText(getString(R.string.n_matching_jobs, event.bookings.size()));
             displayBookings(event.bookings);
         }
     }

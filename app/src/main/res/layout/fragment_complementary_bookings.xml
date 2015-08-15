@@ -34,7 +34,7 @@
 
     <include layout="@layout/merge_loading"/>
 
-    <include layout="@layout/layout_available_bookings_empty"/>
+    <include layout="@layout/layout_complementary_bookings_empty"/>
 
     <include layout="@layout/layout_fetch_error"/>
 
