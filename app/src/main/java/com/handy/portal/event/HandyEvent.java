@@ -910,6 +910,10 @@ public abstract class HandyEvent
         }
     }
 
+    public static class ReceiveComplementaryBookingsError extends ReceiveErrorEvent
+    {
+    }
+
     //Request that Urban Airship takes off
     public static class StartUrbanAirship extends HandyEvent
     {

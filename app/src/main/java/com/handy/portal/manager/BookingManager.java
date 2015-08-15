@@ -199,6 +199,7 @@ public class BookingManager
                 @Override
                 public void onError(DataManager.DataManagerError error)
                 {
+                    bus.post(new HandyEvent.ReceiveComplementaryBookingsError());
                 }
             });
         }

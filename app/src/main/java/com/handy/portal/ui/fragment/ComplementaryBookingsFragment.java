@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class ComplementaryBookingsFragment extends InjectedFragment
 {
@@ -37,6 +39,10 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     ViewGroup laterBookingsContainer;
     @InjectView(R.id.claimed_bookings)
     ViewGroup claimedBookingsContainer;
+    @InjectView(R.id.fetch_error_view)
+    protected View errorView;
+    @InjectView(R.id.fetch_error_text)
+    protected TextView errorText;
 
     private Booking claimedBooking;
 
@@ -68,6 +74,19 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        requestComplementaryBookings();
+    }
+
+    @OnClick(R.id.try_again_button)
+    public void onRetryComplementaryBookings()
+    {
+        requestComplementaryBookings();
+    }
+
+    private void requestComplementaryBookings()
+    {
+        errorView.setVisibility(View.GONE);
+        loadingOverlay.setVisibility(View.VISIBLE);
         bus.post(new HandyEvent.RequestComplementaryBookings(claimedBooking));
     }
 
@@ -83,6 +102,14 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         {
             displayBookings(event.bookings);
         }
+    }
+
+    @Subscribe
+    public void onReceiveComplementaryBookingsError(HandyEvent.ReceiveComplementaryBookingsError event)
+    {
+        loadingOverlay.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+        errorText.setText(R.string.error_fetching_connectivity_issue);
     }
 
     private void displayBookings(List<Booking> bookings)
