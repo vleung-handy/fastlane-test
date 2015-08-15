@@ -68,7 +68,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        bus.post(new HandyEvent.RequestComplementaryBookings(claimedBooking.getId()));
+        bus.post(new HandyEvent.RequestComplementaryBookings(claimedBooking));
     }
 
     @Subscribe

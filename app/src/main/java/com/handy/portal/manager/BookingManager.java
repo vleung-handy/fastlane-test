@@ -29,6 +29,7 @@ public class BookingManager
 
     private final Cache<Date, List<Booking>> availableBookingsCache;
     private final Cache<Date, List<Booking>> scheduledBookingsCache;
+    private final Cache<Date, List<Booking>> complementaryBookingsCache;
 
     @Inject
     public BookingManager(final Bus bus, final DataManager dataManager)
@@ -44,6 +45,11 @@ public class BookingManager
 
         this.scheduledBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
+                .expireAfterWrite(2, TimeUnit.MINUTES)
+                .build();
+
+        this.complementaryBookingsCache = CacheBuilder.newBuilder()
+                .maximumSize(100)
                 .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
     }
@@ -173,20 +179,29 @@ public class BookingManager
     @Subscribe
     public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
     {
-        dataManager.getComplementaryBookings(event.bookingId, new DataManager.Callback<BookingsWrapper>()
+        final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
+        List<Booking> cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
+        if (cachedComplementaryBookings != null)
         {
-            @Override
-            public void onSuccess(BookingsWrapper bookingsWrapper)
+            bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(cachedComplementaryBookings));
+        }
+        else
+        {
+            dataManager.getComplementaryBookings(event.bookingId, new DataManager.Callback<BookingsWrapper>()
             {
-                List<Booking> bookings = bookingsWrapper.getBookings();
-                bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
-            }
+                @Override
+                public void onSuccess(BookingsWrapper bookingsWrapper)
+                {
+                    List<Booking> bookings = bookingsWrapper.getBookings();
+                    bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
+                }
 
-            @Override
-            public void onError(DataManager.DataManagerError error)
-            {
-            }
-        });
+                @Override
+                public void onError(DataManager.DataManagerError error)
+                {
+                }
+            });
+        }
     }
 
     @Subscribe
