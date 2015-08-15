@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementMediator;
+import com.handy.portal.ui.element.BookingElementView;
+import com.handy.portal.ui.element.ScheduledBookingElementView;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -27,14 +31,22 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     View noBookingsView;
     @InjectView(R.id.complementary_bookings_banner_close_button)
     View closeButton;
-    @InjectView(R.id.complementary_bookings)
-    ViewGroup complementaryBookingView;
+    @InjectView(R.id.earlier_bookings)
+    ViewGroup earlierBookingsContainer;
+    @InjectView(R.id.later_bookings)
+    ViewGroup laterBookingsContainer;
+    @InjectView(R.id.claimed_bookings)
+    ViewGroup claimedBookingsContainer;
+
+    private Booking claimedBooking;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        claimedBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
 
         View view = inflater.inflate(R.layout.fragment_complementary_bookings, container, false);
         ButterKnife.inject(this, view);
@@ -56,7 +68,6 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        Booking claimedBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
         bus.post(new HandyEvent.RequestComplementaryBookings(claimedBooking.getId()));
     }
 
@@ -76,10 +87,44 @@ public class ComplementaryBookingsFragment extends InjectedFragment
 
     private void displayBookings(List<Booking> bookings)
     {
+        View claimedBookingEntryView = createBookingEntryView(claimedBooking, claimedBookingsContainer, ScheduledBookingElementView.class);
+        claimedBookingsContainer.addView(claimedBookingEntryView);
+        claimedBookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(bus, claimedBooking));
+        claimedBookingEntryView.findViewById(R.id.booking_entry_claimed_indicator).setVisibility(View.VISIBLE);
+
         for (Booking booking : bookings)
         {
-            BookingElementMediator bem = new BookingElementMediator(getActivity(), booking, null, complementaryBookingView, AvailableBookingElementView.class);
-            complementaryBookingView.addView(bem.getAssociatedView());
+            ViewGroup container = booking.getStartDate().before(claimedBooking.getStartDate()) ? earlierBookingsContainer : laterBookingsContainer;
+            View bookingEntryView = createBookingEntryView(booking, container, AvailableBookingElementView.class);
+            container.addView(bookingEntryView);
+
+            bookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(bus, booking));
+        }
+    }
+
+    private View createBookingEntryView(Booking booking, ViewGroup container, Class<? extends BookingElementView> viewClass)
+    {
+        BookingElementMediator mediator = new BookingElementMediator(getActivity(), booking, null, container, viewClass);
+        return mediator.getAssociatedView();
+    }
+
+    private static class ShowBookingDetailsClickListener implements View.OnClickListener
+    {
+        private final Bus bus;
+        private final Booking booking;
+
+        ShowBookingDetailsClickListener(Bus bus, Booking booking)
+        {
+            this.bus = bus;
+            this.booking = booking;
+        }
+
+        @Override
+        public void onClick(View view)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+            bus.post(new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
         }
     }
 }
