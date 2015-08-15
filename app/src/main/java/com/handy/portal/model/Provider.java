@@ -57,8 +57,8 @@ public class Provider
         return country;
     }
 
-    public boolean isUk()
+    public boolean isUK()
     {
-        return "GB".equals(getCountry());
+        return "GB".equalsIgnoreCase(getCountry());
     }
 }

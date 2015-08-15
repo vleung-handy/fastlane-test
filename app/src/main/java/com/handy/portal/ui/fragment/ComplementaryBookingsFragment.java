@@ -56,8 +56,8 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        String bookingId = getArguments().getString(BundleKeys.BOOKING_ID);
-        bus.post(new HandyEvent.RequestComplementaryBookings(bookingId));
+        Booking claimedBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
+        bus.post(new HandyEvent.RequestComplementaryBookings(claimedBooking.getId()));
     }
 
     @Subscribe

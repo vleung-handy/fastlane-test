@@ -1,19 +1,21 @@
 package com.handy.portal.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class Booking implements Comparable<Booking>
+public class Booking implements Comparable<Booking>, Serializable
 {
     @SerializedName("id")
     private String id;
@@ -27,10 +29,6 @@ public class Booking implements Comparable<Booking>
     private String status;
     @SerializedName("end_date")
     private Date endDate;
-    @SerializedName("hours")
-    private float hours;
-    @SerializedName("price")
-    private float price;
 
     @SerializedName("check_in_summary")
     private CheckInSummary checkInSummary;
@@ -74,7 +72,7 @@ public class Booking implements Comparable<Booking>
     @SerializedName("distance")
     private String distance; // pre-formatted string used for relative searches (e.g. booking A is 5 miles away from booking B)
 
-    public int compareTo(Booking other)
+    public int compareTo(@NonNull Booking other)
     {
         if (getProviderId().equals(NO_PROVIDER_ASSIGNED))
         {
@@ -262,6 +260,51 @@ public class Booking implements Comparable<Booking>
     //providerId = 0, no one assigned can claim, otherwise is already claimed
     public static final String NO_PROVIDER_ASSIGNED = "0";
 
+    public void setService(String service)
+    {
+        this.service = service;
+    }
+
+    public void setServiceInfo(ServiceInfo serviceInfo)
+    {
+        this.serviceInfo = serviceInfo;
+    }
+
+    public void setStartDate(Date startDate)
+    {
+        this.startDate = startDate;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
+    public void setEndDate(Date endDate)
+    {
+        this.endDate = endDate;
+    }
+
+    public void setProviderId(String providerId)
+    {
+        this.providerId = providerId;
+    }
+
+    public void setPartner(String partner)
+    {
+        this.partner = partner;
+    }
+
+    public void setCountry(String country)
+    {
+        this.country = country;
+    }
+
+    public void setUser(User user)
+    {
+        this.user = user;
+    }
+
     //Basic booking statuses inferrable from providerId
     public enum BookingStatus
     {
@@ -349,7 +392,7 @@ public class Booking implements Comparable<Booking>
         }
     }
 
-    public static class Action
+    public static class Action implements Serializable
     {
         // KEEP IN SYNC WITH SERVER VALUES
         public static final String ACTION_CLAIM = "claim";
@@ -379,8 +422,6 @@ public class Booking implements Comparable<Booking>
         private String warningText; //Indicates a popup should be shown with this message to confirm action
         @SerializedName("enabled")
         private boolean enabled;
-        @SerializedName("deep_link_type")
-        private String deepLinkType;
         @SerializedName("deep_link_data")
         private String deepLinkData;
 
@@ -404,24 +445,38 @@ public class Booking implements Comparable<Booking>
             return enabled;
         }
 
-        public String getDeepLinkType()
-        {
-            return deepLinkType;
-        }
-
         public String getDeepLinkData()
         {
             return deepLinkData;
         }
+
+        public void setActionName(String actionName)
+        {
+            this.actionName = actionName;
+        }
+
+        public void setHelperText(String helperText)
+        {
+            this.helperText = helperText;
+        }
+
+        public void setWarningText(String warningText)
+        {
+            this.warningText = warningText;
+        }
+
+        public void setEnabled(boolean enabled)
+        {
+            this.enabled = enabled;
+        }
+
+        public void setDeepLinkData(String deepLinkData)
+        {
+            this.deepLinkData = deepLinkData;
+        }
     }
 
-    public static Booking fromJson(final String json)
-    {
-        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
-                .fromJson(json, Booking.class);
-    }
-
-    public static class User
+    public static class User implements Serializable
     {
         @SerializedName("email")
         private String email;
@@ -455,9 +510,23 @@ public class Booking implements Comparable<Booking>
             return firstName + " " + lastName;
         }
 
+        public void setEmail(String email)
+        {
+            this.email = email;
+        }
+
+        public void setFirstName(String firstName)
+        {
+            this.firstName = firstName;
+        }
+
+        public void setLastName(String lastName)
+        {
+            this.lastName = lastName;
+        }
     }
 
-    public static class PaymentInfo
+    public static class PaymentInfo implements Serializable
     {
         @SerializedName("amount")
         private int amount;
@@ -489,9 +558,39 @@ public class Booking implements Comparable<Booking>
         {
             return currencySuffix;
         }
+
+        public void setAmount(int amount)
+        {
+            this.amount = amount;
+        }
+
+        public void setAdjustedAmount(int adjustedAmount)
+        {
+            this.adjustedAmount = adjustedAmount;
+        }
+
+        public String getCurrencyCode()
+        {
+            return currencyCode;
+        }
+
+        public void setCurrencyCode(String currencyCode)
+        {
+            this.currencyCode = currencyCode;
+        }
+
+        public void setCurrencySymbol(String currencySymbol)
+        {
+            this.currencySymbol = currencySymbol;
+        }
+
+        public void setCurrencySuffix(String currencySuffix)
+        {
+            this.currencySuffix = currencySuffix;
+        }
     }
 
-    public static class BookingInstruction
+    public static class BookingInstruction implements Serializable
     {
         @SerializedName("description")
         private String description;
@@ -507,9 +606,19 @@ public class Booking implements Comparable<Booking>
         {
             return machineName;
         }
+
+        public void setDescription(String description)
+        {
+            this.description = description;
+        }
+
+        public void setMachineName(String machineName)
+        {
+            this.machineName = machineName;
+        }
     }
 
-    public static class BookingInstructionGroup
+    public static class BookingInstructionGroup implements Serializable
     {
         public static String GROUP_ENTRY_METHOD = "entry_method";
         public static String GROUP_LINENS_LAUNDRY = "linens_laundry";
@@ -539,9 +648,24 @@ public class Booking implements Comparable<Booking>
         {
             return items;
         }
+
+        public void setGroup(String group)
+        {
+            this.group = group;
+        }
+
+        public void setLabel(String label)
+        {
+            this.label = label;
+        }
+
+        public void setItems(List<String> items)
+        {
+            this.items = items;
+        }
     }
 
-    public static class CheckInSummary
+    public static class CheckInSummary implements Serializable
     {
         @SerializedName("is_checked_in")
         private boolean isCheckedIn; //false if checked out or on my way
@@ -558,9 +682,19 @@ public class Booking implements Comparable<Booking>
         {
             return isCheckedIn;
         }
+
+        public void setIsCheckedIn(boolean isCheckedIn)
+        {
+            this.isCheckedIn = isCheckedIn;
+        }
+
+        public void setCheckInTime(Date checkInTime)
+        {
+            this.checkInTime = checkInTime;
+        }
     }
 
-    public static class ServiceInfo
+    public static class ServiceInfo implements Serializable
     {
         private static final String MACHINE_NAME_CLEANING = "home_cleaning";
 
@@ -583,9 +717,19 @@ public class Booking implements Comparable<Booking>
         {
             return MACHINE_NAME_CLEANING.equalsIgnoreCase(machineName);
         }
+
+        public void setMachineName(String machineName)
+        {
+            this.machineName = machineName;
+        }
+
+        public void setDisplayName(String displayName)
+        {
+            this.displayName = displayName;
+        }
     }
 
-    public static class Address
+    public static class Address implements Serializable
     {
         @SerializedName("address1")
         private String address1;
@@ -652,9 +796,69 @@ public class Booking implements Comparable<Booking>
         {
             return (getAddress1() + (getAddress2() != null ? " " + getAddress2() : ""));
         }
+
+        public void setAddress1(String address1)
+        {
+            this.address1 = address1;
+        }
+
+        public void setAddress2(String address2)
+        {
+            this.address2 = address2;
+        }
+
+        public void setCity(String city)
+        {
+            this.city = city;
+        }
+
+        public void setState(String state)
+        {
+            this.state = state;
+        }
+
+        public String getCountry()
+        {
+            return country;
+        }
+
+        public void setCountry(String country)
+        {
+            this.country = country;
+        }
+
+        public void setZip(String zip)
+        {
+            this.zip = zip;
+        }
+
+        public void setLatitude(float latitude)
+        {
+            this.latitude = latitude;
+        }
+
+        public void setLongitude(float longitude)
+        {
+            this.longitude = longitude;
+        }
+
+        public void setShortRegion(String shortRegion)
+        {
+            this.shortRegion = shortRegion;
+        }
+
+        public int getRegionId()
+        {
+            return regionId;
+        }
+
+        public void setRegionId(int regionId)
+        {
+            this.regionId = regionId;
+        }
     }
 
-    public static class ExtraInfoWrapper
+    public static class ExtraInfoWrapper implements Serializable
     {
         public ExtraInfo getExtraInfo()
         {
@@ -665,16 +869,29 @@ public class Booking implements Comparable<Booking>
         private ExtraInfo extraInfo;
         @SerializedName("quantity")
         private int quantity;
+
+        public void setExtraInfo(ExtraInfo extraInfo)
+        {
+            this.extraInfo = extraInfo;
+        }
+
+        public void setQuantity(int quantity)
+        {
+            this.quantity = quantity;
+        }
     }
 
-    public static class ExtraInfo
+    public static class ExtraInfo implements Serializable
     {
+        //cleaning supplies are in their own category apart from all other extras
+        public static final String TYPE_CLEANING_SUPPLIES = "cleaning_supplies";
+
         @SerializedName("category")
         private String category;
         @SerializedName("fee")
         private String fee;
-        @SerializedName("hrs")
-        private String hrs;
+        @SerializedName("hours")
+        private String hours;
         @SerializedName("id")
         private int id;
         @SerializedName("machine_name")
@@ -692,9 +909,9 @@ public class Booking implements Comparable<Booking>
             return fee;
         }
 
-        public String getHrs()
+        public String getHours()
         {
-            return hrs;
+            return hours;
         }
 
         public int getId()
@@ -712,7 +929,34 @@ public class Booking implements Comparable<Booking>
             return name;
         }
 
-        //cleaning supplies are in their own category apart from all other extras
-        public static final String TYPE_CLEANING_SUPPLIES = "cleaning_supplies";
+        public void setCategory(String category)
+        {
+            this.category = category;
+        }
+
+        public void setFee(String fee)
+        {
+            this.fee = fee;
+        }
+
+        public void setHours(String hours)
+        {
+            this.hours = hours;
+        }
+
+        public void setId(int id)
+        {
+            this.id = id;
+        }
+
+        public void setMachineName(String machineName)
+        {
+            this.machineName = machineName;
+        }
+
+        public void setName(String name)
+        {
+            this.name = name;
+        }
     }
 }
