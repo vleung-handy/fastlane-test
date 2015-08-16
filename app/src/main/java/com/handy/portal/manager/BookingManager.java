@@ -10,7 +10,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingList;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
-import com.handy.portal.util.Utils;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -71,7 +71,7 @@ public class BookingManager
                 bus.post(new HandyEvent.ReceiveBookingDetailsError(error));
                 if (event.date != null && error.getType() != DataManager.DataManagerError.Type.NETWORK)
                 {
-                    Date day = Utils.getDateWithoutTime(event.date);
+                    Date day = DateTimeUtils.getDateWithoutTime(event.date);
                     availableBookingsCache.invalidate(day);
                     scheduledBookingsCache.invalidate(day);
                 }
@@ -82,7 +82,7 @@ public class BookingManager
     @Subscribe
     public void onRequestAvailableBookings(final HandyEvent.RequestAvailableBookings event)
     {
-        final Date day = Utils.getDateWithoutTime(event.date);
+        final Date day = DateTimeUtils.getDateWithoutTime(event.date);
 
         final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
         if (cachedBookings != null)
@@ -115,7 +115,7 @@ public class BookingManager
     @Subscribe
     public void onRequestScheduledBookings(HandyEvent.RequestScheduledBookings event)
     {
-        final Date day = Utils.getDateWithoutTime(event.date);
+        final Date day = DateTimeUtils.getDateWithoutTime(event.date);
 
         final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
         if (cachedBookings != null)
@@ -149,7 +149,7 @@ public class BookingManager
     public void onRequestClaimJob(HandyEvent.RequestClaimJob event)
     {
         String bookingId = event.booking.getId();
-        final Date day = Utils.getDateWithoutTime(event.booking.getStartDate());
+        final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
         dataManager.claimBooking(bookingId, new DataManager.Callback<Booking>()
         {
@@ -176,7 +176,7 @@ public class BookingManager
     public void onRequestRemoveJob(HandyEvent.RequestRemoveJob event)
     {
         String bookingId = event.booking.getId();
-        final Date day = Utils.getDateWithoutTime(event.booking.getStartDate());
+        final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
         dataManager.removeBooking(bookingId, new DataManager.Callback<Booking>()
         {

@@ -134,7 +134,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
             calendar.add(Calendar.DATE, i);
-            Date day = Utils.getDateWithoutTime(calendar.getTime());
+            Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
 
             if (!day.equals(dayToExclude))
             {
