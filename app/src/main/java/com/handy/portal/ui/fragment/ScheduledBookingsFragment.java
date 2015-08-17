@@ -114,7 +114,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 findJobsForDayButton.setVisibility(View.GONE);
             }
 
-            if (bookingsForDay.size() == 1 && providerManager.getCachedActiveProvider().isComplementaryJobsEnabled())
+            if (bookingsForDay.size() == 1 && providerManager.getActiveProvider().isComplementaryJobsEnabled())
             {
                 findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
             }
