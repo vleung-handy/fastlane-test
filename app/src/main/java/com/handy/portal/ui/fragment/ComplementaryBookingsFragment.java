@@ -50,6 +50,8 @@ public class ComplementaryBookingsFragment extends InjectedFragment
 
     private Booking claimedBooking;
 
+    private static final String BOOKING_SOURCE = "matching jobs";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -170,6 +172,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         {
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+            arguments.putString(BundleKeys.BOOKING_SOURCE, BOOKING_SOURCE);
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
         }
     }

@@ -566,8 +566,14 @@ public class BookingDetailsFragment extends InjectedFragment
     //
     private void requestClaimJob(Booking booking)
     {
+        String source = "";
+        if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
+        {
+            source = getArguments().getString(BundleKeys.BOOKING_SOURCE, "");
+        }
+
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(booking));
+        bus.post(new HandyEvent.RequestClaimJob(booking, source));
     }
 
     private void requestRemoveJob(Booking booking)

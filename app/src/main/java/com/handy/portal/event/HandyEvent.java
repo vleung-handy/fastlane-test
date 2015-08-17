@@ -376,10 +376,12 @@ public abstract class HandyEvent
     public static class RequestClaimJob extends RequestBookingActionEvent
     {
         public final Booking booking;
-        public RequestClaimJob(Booking booking)
+        public final String source;
+        public RequestClaimJob(Booking booking, String source)
         {
             this.bookingId = booking.getId();
             this.booking = booking;
+            this.source = source;
         }
     }
 
@@ -454,9 +456,13 @@ public abstract class HandyEvent
     @Track("claim job")
     public static class ReceiveClaimJobSuccess extends ReceiveBookingSuccessEvent
     {
-        public ReceiveClaimJobSuccess(Booking booking)
+        @TrackField("source")
+        private String source;
+
+        public ReceiveClaimJobSuccess(Booking booking, String source)
         {
             this.booking = booking;
+            this.source = source;
         }
     }
 

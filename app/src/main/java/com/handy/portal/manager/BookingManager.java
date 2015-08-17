@@ -206,7 +206,7 @@ public class BookingManager
     }
 
     @Subscribe
-    public void onRequestClaimJob(HandyEvent.RequestClaimJob event)
+    public void onRequestClaimJob(final HandyEvent.RequestClaimJob event)
     {
         String bookingId = event.booking.getId();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
@@ -217,7 +217,7 @@ public class BookingManager
             public void onSuccess(Booking booking)
             {
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveClaimJobSuccess(booking));
+                bus.post(new HandyEvent.ReceiveClaimJobSuccess(booking, event.source));
             }
 
             @Override
