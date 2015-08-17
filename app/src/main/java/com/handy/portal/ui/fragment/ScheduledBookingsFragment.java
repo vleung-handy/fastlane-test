@@ -11,6 +11,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.BookingElementView;
@@ -22,11 +23,16 @@ import com.squareup.otto.Subscribe;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
+    @Inject
+    ProviderManager providerManager;
+
     @InjectView(R.id.scheduled_jobs_list_view)
     protected BookingListView scheduledJobsListView;
 
@@ -97,22 +103,25 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         long dateOfBookingsTime = dateOfBookings.getTime();
         long dateDifference = dateOfBookingsTime - currentTime;
         final Integer hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if (bookingsForDay.size() == 0 && dateDifference < DateTimeUtils.MILLISECONDS_IN_HOUR * hoursSpanningAvailableBookings)
+        if (dateDifference < DateTimeUtils.MILLISECONDS_IN_HOUR * hoursSpanningAvailableBookings)
         {
-            findJobsForDayButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            findJobsForDayButton.setVisibility(View.GONE);
-        }
+            if (bookingsForDay.size() == 0)
+            {
+                findJobsForDayButton.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                findJobsForDayButton.setVisibility(View.GONE);
+            }
 
-        if (bookingsForDay.size() == 1 && dateDifference < DateTimeUtils.MILLISECONDS_IN_HOUR * hoursSpanningAvailableBookings)
-        {
-            findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            findMatchingJobsButtonContainer.setVisibility(View.GONE);
+            if (bookingsForDay.size() == 1 && providerManager.getCachedActiveProvider().isComplementaryJobsEnabled())
+            {
+                findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                findMatchingJobsButtonContainer.setVisibility(View.GONE);
+            }
         }
 
     }
