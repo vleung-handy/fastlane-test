@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
+import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
@@ -17,11 +18,12 @@ import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementMediator;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.ScheduledBookingElementView;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -47,6 +49,9 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     View errorView;
     @InjectView(R.id.fetch_error_text)
     TextView errorText;
+
+    @Inject
+    Mixpanel mixpanel;
 
     private Booking claimedBooking;
 
@@ -110,11 +115,13 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         loadingOverlay.setVisibility(View.GONE);
         if (event.bookings.isEmpty())
         {
+            mixpanel.track("no complementary jobs found");
             bannerText.setText(R.string.no_matching_jobs);
             noBookingsView.setVisibility(View.VISIBLE);
         }
         else
         {
+            mixpanel.track("complementary jobs found");
             bannerText.setText(getString(R.string.n_matching_jobs, event.bookings.size()));
             displayBookings(Lists.newArrayList(event.bookings));
         }
@@ -136,7 +143,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
 
         View claimedBookingEntryView = createBookingEntryView(claimedBooking, claimedBookingsContainer, ScheduledBookingElementView.class);
         claimedBookingsContainer.addView(claimedBookingEntryView);
-        claimedBookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(bus, claimedBooking));
+        claimedBookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(claimedBooking));
         claimedBookingEntryView.findViewById(R.id.booking_entry_claimed_indicator).setVisibility(View.VISIBLE);
 
         Collections.sort(bookings);
@@ -146,7 +153,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
             View bookingEntryView = createBookingEntryView(booking, container, AvailableBookingElementView.class);
             container.addView(bookingEntryView);
 
-            bookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(bus, booking));
+            bookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(booking));
         }
     }
 
@@ -156,20 +163,22 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         return mediator.getAssociatedView();
     }
 
-    private static class ShowBookingDetailsClickListener implements View.OnClickListener
+    private class ShowBookingDetailsClickListener implements View.OnClickListener
     {
-        private final Bus bus;
         private final Booking booking;
 
-        ShowBookingDetailsClickListener(Bus bus, Booking booking)
+        ShowBookingDetailsClickListener(Booking booking)
         {
-            this.bus = bus;
             this.booking = booking;
         }
 
         @Override
         public void onClick(View view)
         {
+            if (!booking.getId().equals(claimedBooking.getId()))
+            {
+                mixpanel.track("complementary job clicked");
+            }
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
             arguments.putString(BundleKeys.BOOKING_SOURCE, BOOKING_SOURCE);
