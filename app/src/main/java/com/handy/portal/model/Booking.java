@@ -305,6 +305,16 @@ public class Booking implements Comparable<Booking>, Serializable
         this.user = user;
     }
 
+    public String getDistance()
+    {
+        return distance;
+    }
+
+    public void setDistance(String distance)
+    {
+        this.distance = distance;
+    }
+
     //Basic booking statuses inferrable from providerId
     public enum BookingStatus
     {
