@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -19,6 +20,7 @@ import com.handy.portal.ui.element.ScheduledBookingElementView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -112,7 +114,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         else
         {
             bannerText.setText(getString(R.string.n_matching_jobs, event.bookings.size()));
-            displayBookings(event.bookings);
+            displayBookings(Lists.newArrayList(event.bookings));
         }
     }
 
@@ -126,11 +128,16 @@ public class ComplementaryBookingsFragment extends InjectedFragment
 
     private void displayBookings(List<Booking> bookings)
     {
+        claimedBookingsContainer.removeAllViews();
+        earlierBookingsContainer.removeAllViews();
+        laterBookingsContainer.removeAllViews();
+
         View claimedBookingEntryView = createBookingEntryView(claimedBooking, claimedBookingsContainer, ScheduledBookingElementView.class);
         claimedBookingsContainer.addView(claimedBookingEntryView);
         claimedBookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(bus, claimedBooking));
         claimedBookingEntryView.findViewById(R.id.booking_entry_claimed_indicator).setVisibility(View.VISIBLE);
 
+        Collections.sort(bookings);
         for (Booking booking : bookings)
         {
             ViewGroup container = booking.getStartDate().before(claimedBooking.getStartDate()) ? earlierBookingsContainer : laterBookingsContainer;
