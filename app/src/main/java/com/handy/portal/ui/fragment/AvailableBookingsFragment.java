@@ -10,6 +10,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -78,7 +79,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected int numberOfDaysToDisplay()
     {
-        return (configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 144) / 24) + 1;
+        int daysSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 144) / DateTimeUtils.HOURS_IN_DAY;
+        return daysSpanningAvailableBookings + 1; // plus today
     }
 
     @Override
