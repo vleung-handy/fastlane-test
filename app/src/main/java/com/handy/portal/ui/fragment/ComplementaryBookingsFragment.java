@@ -56,7 +56,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
 
     private Booking claimedBooking;
 
-    private static final String BOOKING_SOURCE = "matching jobs";
+    public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
 
     @Nullable
     @Override
@@ -189,7 +189,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
             }
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-            arguments.putString(BundleKeys.BOOKING_SOURCE, BOOKING_SOURCE);
+            arguments.putString(BundleKeys.BOOKING_SOURCE, COMPLEMENTARY_JOBS_SOURCE_NAME);
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
         }
     }

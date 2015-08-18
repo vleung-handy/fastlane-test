@@ -26,6 +26,7 @@ import org.robolectric.util.ActivityController;
 import java.util.Date;
 import java.util.List;
 
+import static com.handy.portal.ui.fragment.ComplementaryBookingsFragment.COMPLEMENTARY_JOBS_SOURCE_NAME;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -89,11 +90,19 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void onClaimBookingSuccess_switchToJobsTab() throws Exception
+    public void onClaimAvailableBookingSuccess_switchToJobsTab() throws Exception
     {
-        fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(booking));
+        fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(booking, null));
 
         assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.AVAILABLE_JOBS));
+    }
+
+    @Test
+    public void onClaimComplementaryBookingSuccess_switchToScheduleTab() throws Exception
+    {
+        fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(booking, COMPLEMENTARY_JOBS_SOURCE_NAME));
+
+        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
     }
 
     @Test

@@ -457,7 +457,7 @@ public abstract class HandyEvent
     public static class ReceiveClaimJobSuccess extends ReceiveBookingSuccessEvent
     {
         @TrackField("source")
-        private String source;
+        public String source;
 
         public ReceiveClaimJobSuccess(Booking booking, String source)
         {
