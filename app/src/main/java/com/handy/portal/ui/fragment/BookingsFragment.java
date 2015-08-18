@@ -33,9 +33,6 @@ import butterknife.OnClick;
 
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends InjectedFragment
 {
-    @InjectView(R.id.bookings_content)
-    protected View bookingsContentView;
-
     @InjectView(R.id.fetch_error_view)
     protected View fetchErrorView;
 
@@ -157,7 +154,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         if (selectedDay.equals(event.day))
         {
             displayBookings(bookings, selectedDay);
-            bookingsContentView.setVisibility(View.VISIBLE);
             requestBookingsForOtherDays(selectedDay);
         }
     }
