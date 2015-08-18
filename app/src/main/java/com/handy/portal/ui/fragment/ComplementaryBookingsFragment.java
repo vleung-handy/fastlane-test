@@ -12,6 +12,7 @@ import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
@@ -132,7 +133,14 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     {
         loadingOverlay.setVisibility(View.GONE);
         errorView.setVisibility(View.VISIBLE);
-        errorText.setText(R.string.error_fetching_connectivity_issue);
+        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        {
+            errorText.setText(R.string.error_fetching_connectivity_issue);
+        }
+        else
+        {
+            errorText.setText(R.string.error_fetching_connectivity_issue);
+        }
     }
 
     private void displayBookings(List<Booking> bookings)

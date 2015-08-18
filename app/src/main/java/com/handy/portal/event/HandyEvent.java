@@ -918,6 +918,10 @@ public abstract class HandyEvent
 
     public static class ReceiveComplementaryBookingsError extends ReceiveErrorEvent
     {
+        public ReceiveComplementaryBookingsError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
     }
 
     //Request that Urban Airship takes off
