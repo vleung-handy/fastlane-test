@@ -52,20 +52,21 @@
                 android:id="@+id/earlier_bookings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="9dp"
                 android:orientation="vertical"/>
 
             <LinearLayout
                 android:id="@+id/claimed_bookings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="1dp"
                 android:orientation="vertical"/>
 
             <LinearLayout
                 android:id="@+id/later_bookings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical"/>
 
         </LinearLayout>

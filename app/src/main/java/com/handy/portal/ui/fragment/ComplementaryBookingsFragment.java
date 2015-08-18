@@ -163,6 +163,24 @@ public class ComplementaryBookingsFragment extends InjectedFragment
 
             bookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(booking));
         }
+
+        hideOrShowContainers(claimedBookingsContainer, earlierBookingsContainer, laterBookingsContainer);
+    }
+
+    private void hideOrShowContainers(ViewGroup... viewGroups)
+    {
+        for (ViewGroup viewGroup : viewGroups)
+        {
+            if (viewGroup.getChildCount() > 0)
+            {
+                viewGroup.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                viewGroup.setVisibility(View.GONE);
+            }
+
+        }
     }
 
     private View createBookingEntryView(Booking booking, ViewGroup container, Class<? extends BookingElementView> viewClass)

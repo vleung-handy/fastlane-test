@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/subtitle_grey"
             android:textSize="14sp"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
