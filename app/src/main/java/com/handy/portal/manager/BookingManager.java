@@ -72,8 +72,7 @@ public class BookingManager
                 if (event.date != null && error.getType() != DataManager.DataManagerError.Type.NETWORK)
                 {
                     Date day = DateTimeUtils.getDateWithoutTime(event.date);
-                    availableBookingsCache.invalidate(day);
-                    scheduledBookingsCache.invalidate(day);
+                    invalidateCachesForDay(day);
                 }
             }
         });
@@ -156,8 +155,7 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                availableBookingsCache.invalidate(day);
-                scheduledBookingsCache.invalidate(day);
+                invalidateCachesForDay(day);
                 bus.post(new HandyEvent.ReceiveClaimJobSuccess(booking));
             }
 
@@ -165,8 +163,7 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                availableBookingsCache.invalidate(day);
-                scheduledBookingsCache.invalidate(day);
+                invalidateCachesForDay(day);
                 bus.post(new HandyEvent.ReceiveClaimJobError(error));
             }
         });
@@ -183,8 +180,7 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                availableBookingsCache.invalidate(day);
-                scheduledBookingsCache.invalidate(day);
+                invalidateCachesForDay(day);
                 bus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
             }
 
@@ -192,8 +188,7 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                availableBookingsCache.invalidate(day);
-                scheduledBookingsCache.invalidate(day);
+                invalidateCachesForDay(day);
                 bus.post(new HandyEvent.ReceiveRemoveJobError(error));
             }
         });
@@ -331,5 +326,11 @@ public class BookingManager
         noShowParams.put(NoShowKey.ACCURACY, locationParamsMap.get(LocationKey.ACCURACY));
         noShowParams.put(NoShowKey.ACTIVE, Boolean.toString(active));
         return noShowParams;
+    }
+
+    private void invalidateCachesForDay(Date day)
+    {
+        availableBookingsCache.invalidate(day);
+        scheduledBookingsCache.invalidate(day);
     }
 }
