@@ -7,7 +7,7 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingList;
+import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.util.DateTimeUtils;
@@ -92,12 +92,12 @@ public class BookingManager
         else
         {
             dataManager.getAvailableBookings(event.date,
-                    new DataManager.Callback<BookingList>()
+                    new DataManager.Callback<BookingsWrapper>()
                     {
                         @Override
-                        public void onSuccess(final BookingList bookingList)
+                        public void onSuccess(final BookingsWrapper bookingsWrapper)
                         {
-                            List<Booking> bookings = bookingList.getBookings();
+                            List<Booking> bookings = bookingsWrapper.getBookings();
                             availableBookingsCache.put(day, bookings);
                             bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings, day));
                         }
@@ -125,12 +125,12 @@ public class BookingManager
         else
         {
             dataManager.getScheduledBookings(event.date,
-                    new DataManager.Callback<BookingList>()
+                    new DataManager.Callback<BookingsWrapper>()
                     {
                         @Override
-                        public void onSuccess(final BookingList bookingList)
+                        public void onSuccess(final BookingsWrapper bookingsWrapper)
                         {
-                            List<Booking> bookings = bookingList.getBookings();
+                            List<Booking> bookings = bookingsWrapper.getBookings();
                             scheduledBookingsCache.put(day, bookings);
                             bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
                         }

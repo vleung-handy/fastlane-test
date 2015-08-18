@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingList;
+import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -56,7 +56,7 @@ class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking>
     }
 }
 
-class BookingSummaryResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingList>
+class BookingSummaryResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingsWrapper>
 {
     BookingSummaryResponseHandyRetroFitCallback(DataManager.Callback callback)
     {
