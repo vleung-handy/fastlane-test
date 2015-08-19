@@ -65,16 +65,10 @@ android {
     }
 
     productFlavors {
-        stable {
+        hosted {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
             versionName defaultConfig.versionName
-            signingConfig signingConfigs.prod
-        }
-        beta {
-            applicationId "com.handy.portal"
-            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName defaultConfig.versionName + "b"
             signingConfig signingConfigs.prod
         }
         store {

@@ -1,16 +1,16 @@
 package com.handy.portal.ui.fragment;
 
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -46,9 +46,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected HandyEvent getRequestEvent()
+    protected HandyEvent getRequestEvent(List<Date> dates)
     {
-        return new HandyEvent.RequestAvailableBookings();
+        return new HandyEvent.RequestAvailableBookings(dates);
     }
 
     @Override
@@ -77,6 +77,13 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
+    protected int numberOfDaysToDisplay()
+    {
+        int daysSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 144) / DateTimeUtils.HOURS_IN_DAY;
+        return daysSpanningAvailableBookings + 1; // plus today
+    }
+
+    @Override
     protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
     {
         //do nothing, no ctas on this page, yet, maybe a refresh button
@@ -98,15 +105,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
-            errorText.setText(R.string.error_fetching_connectivity_issue);
-        }
-        else
-        {
-            errorText.setText(R.string.error_fetching_available_jobs);
-        }
-        fetchErrorView.setVisibility(View.VISIBLE);
+        handleBookingsRetrievalError(event);
     }
 }

@@ -107,6 +107,7 @@ public class SplashActivity extends BaseActivity
     public void onReceiveUserInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
         // at this point, ProviderManager should have set the provider ID in prefs
+        configManager.init();
         launchActivity(SplashActivity.class);
     }
 

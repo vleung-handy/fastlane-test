@@ -1,5 +1,6 @@
 package com.handy.portal.retrofit;
 
+import java.util.Date;
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -16,78 +17,60 @@ import retrofit.mime.TypedInput;
 
 public interface HandyRetrofitService
 {
-    //***************
-    //PORTAL
-    //***************
-
-  /*
-    GET     /api/portal/provider/:id/jobs(.:format) # available jobs
-    GET     /api/portal/provider/:id/schedule(.:format) # provider's schedule
-    POST   /api/portal/provider/:provider_id/bookings/:id/claim(.:format) # claim a booking
-    GET     /api/portal/provider/:provider_id/bookings/:id(.:format) # booking details
-
-    http://localhost:3000/api/portal/provider/8/jobs?apiver=1
-
-    claim_api_portal_provider_booking POST      /api/portal/provider/:provider_id/bookings/:id/claim(.:format)                                           api/portal/v1/providers#claim {:format=>:json}
-    on_my_way_api_portal_provider_booking POST  /api/portal/provider/:provider_id/bookings/:id/on_my_way(.:format)                                       api/portal/v1/providers#on_my_way {:format=>:json}
-     check_in_api_portal_provider_booking POST  /api/portal/provider/:provider_id/bookings/:id/check_in(.:format)                                        api/portal/v1/providers#check_in {:format=>:json}
-    check_out_api_portal_provider_booking POST  /api/portal/provider/:provider_id/bookings/:id/check_out(.:format)                                       api/portal/v1/providers#check_out {:format=>:json}
-  */
-
-    //http://localhost:3000/api/portal/v1/providers/8/bookings                  //scheduled
-    //http://localhost:3000/api/portal/v1/providers/8/bookings?available=true   //available
-
-    String PROVIDERS_PATH = "/providers/";
     String SESSIONS_PATH = "/sessions/";
+    String BOOKINGS_PATH = "/bookings/";
 
-    @GET("/check_updates")
+    @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "{provider_id}/check_terms")
-    void checkTerms(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
+    @GET("/check_terms")
+    void checkTerms(HandyRetrofitCallback cb);
 
     @Multipart
-    @POST(PROVIDERS_PATH + "{provider_id}/accept_terms")
-    void acceptTerms(@Path("provider_id") String providerId, @Part("code") String termsCode, HandyRetrofitCallback handyRetrofitCallback);
+    @POST("/accept_terms")
+    void acceptTerms(@Part("code") String termsCode, HandyRetrofitCallback handyRetrofitCallback);
 
     @FormUrlEncoded
     @POST("/log_version_info")
     void sendVersionInformation(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "{provider_id}/config_params")
-    void getConfigParams(@Path("provider_id") String providerId, @Query("key[]") String[] key, HandyRetrofitCallback cb);
+    @GET("/config_params")
+    void getConfigParams(@Query("key[]") String[] key, HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "{provider_id}/bookings?available=true")
-    void getAvailableBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
+    @GET(BOOKINGS_PATH + "?available=true")
+    void getAvailableBookings(@Query("date[]") Date[] date, HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "{provider_id}/bookings")
-    void getScheduledBookings(@Path("provider_id") String providerId, HandyRetrofitCallback cb);
+    @GET(BOOKINGS_PATH)
+    void getScheduledBookings(@Query("date[]") Date[] date, HandyRetrofitCallback cb);
 
-    @PUT(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/claim")
-    void claimBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+    @PUT(BOOKINGS_PATH + "{booking_id}/claim")
+    void claimBooking(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}")
-    void getBookingDetails(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
-
-    @FormUrlEncoded
-    @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/on_my_way")
-    void notifyOnMyWay(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
+    @GET(BOOKINGS_PATH + "{booking_id}")
+    void getBookingDetails(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
-    @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/check_in")
-    void checkIn(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
+    @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")
+    void notifyOnMyWay(@Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
-    @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/check_out")
-    void checkOut(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
+    @POST(BOOKINGS_PATH + "{booking_id}/check_in")
+    void checkIn(@Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
-    @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/customer_no_show")
-    void reportNoShow(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+    @POST(BOOKINGS_PATH + "{booking_id}/check_out")
+    void checkOut(@Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(BOOKINGS_PATH + "{booking_id}/customer_no_show")
+    void reportNoShow(@Path("booking_id") String bookingId, @FieldMap Map<String, String> params, HandyRetrofitCallback cb);
 
     @Multipart
-    @POST(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/eta")
-    void updateArrivalTime(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, @Part("lateness") String latenessValue, HandyRetrofitCallback cb);
+    @POST(BOOKINGS_PATH + "{booking_id}/eta")
+    void updateArrivalTime(@Path("booking_id") String bookingId, @Part("lateness") String latenessValue, HandyRetrofitCallback cb);
+
+    @PUT(BOOKINGS_PATH + "{booking_id}/remove")
+    void removeBooking(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
     @Multipart
     @POST(SESSIONS_PATH + "request_pin")
@@ -100,14 +83,10 @@ public interface HandyRetrofitService
     @GET(SESSIONS_PATH + "provider_info")
     void getProviderInfo(HandyRetrofitCallback cb);
 
-    @PUT(PROVIDERS_PATH + "{provider_id}/bookings/{booking_id}/remove")
-    void removeBooking(@Path("provider_id") String providerId, @Path("booking_id") String bookingId, HandyRetrofitCallback cb);
-
     //********Help Center********
     String SELF_SERVICE_PATH = "/self_service/";
 
     @GET(SELF_SERVICE_PATH + "node_details")
-        //empty id returns root?
     void getHelpInfo(@Query("id") String nodeId,
                      @Query("booking_id") String bookingId,
                      HandyRetrofitCallback cb);

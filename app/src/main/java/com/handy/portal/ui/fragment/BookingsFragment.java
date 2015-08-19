@@ -9,18 +9,19 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingSummary;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.util.DateTimeUtils;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,9 +34,6 @@ import butterknife.OnClick;
 
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends InjectedFragment
 {
-    @InjectView(R.id.bookings_content)
-    protected View bookingsContentView;
-
     @InjectView(R.id.fetch_error_view)
     protected View fetchErrorView;
 
@@ -52,13 +50,17 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract String getTrackingType();
 
-    protected abstract HandyEvent getRequestEvent();
+    protected abstract HandyEvent getRequestEvent(List<Date> dates);
 
     protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
 
     protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
 
+    protected abstract int numberOfDaysToDisplay();
+
     protected abstract void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings);
+
+    protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
@@ -81,8 +83,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
             if (targetDateTime > 0)
             {
-                this.selectedDay = new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME));
-                this.selectedDay = DateTimeUtils.getDateWithoutTime(this.selectedDay);
+                this.selectedDay = DateTimeUtils.getDateWithoutTime(new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME)));
             }
         }
 
@@ -93,74 +94,117 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void onResume()
     {
         super.onResume();
-        if(!MainActivityFragment.clearingBackStack)
+        if (!MainActivityFragment.clearingBackStack)
         {
-            requestBookings();
+            initDateButtons();
+
+            if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
+            {
+                dateButtonMap.get(selectedDay).performClick();
+            }
+            else
+            {
+                getDatesLayout().getChildAt(0).performClick();
+            }
         }
     }
 
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookings();
+        requestBookings(Lists.newArrayList(selectedDay), true);
     }
 
-    protected void requestBookings()
+    protected void requestBookings(List<Date> dates, boolean showOverlay)
     {
         fetchErrorView.setVisibility(View.GONE);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(getRequestEvent());
+        if (showOverlay)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        }
+        bus.post(getRequestEvent(dates));
+    }
+
+    private void requestBookingsForOtherDays(Date dayToExclude)
+    {
+        List<Date> dates = Lists.newArrayList();
+        for (int i = 0; i < numberOfDaysToDisplay(); i++)
+        {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DATE, i);
+            Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
+
+            if (!day.equals(dayToExclude))
+            {
+                dates.add(day);
+            }
+        }
+        requestBookings(dates, false);
     }
 
     protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        List<BookingSummary> bookingSummaries = event.bookingSummaries;
-        initDateButtons(bookingSummaries);
 
-        bookingsContentView.setVisibility(View.VISIBLE);
+        List<Booking> bookings = event.bookings;
+        Collections.sort(bookings);
 
-        if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
+        DateButtonView dateButtonView = dateButtonMap.get(event.day);
+        dateButtonView.showRequestedIndicator(showRequestedIndicator(bookings));
+        dateButtonView.showClaimedIndicator(showClaimedIndicator(bookings));
+
+        if (selectedDay.equals(event.day))
         {
-            dateButtonMap.get(selectedDay).performClick();
-        } else if (getDatesLayout().getChildCount() > 0)
-        {
-            getDatesLayout().getChildAt(0).performClick();
+            displayBookings(bookings, selectedDay);
+            requestBookingsForOtherDays(selectedDay);
         }
     }
 
-    private void initDateButtons(List<BookingSummary> bookingSummaries)
+    protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event)
+    {
+        if (event.days.contains(selectedDay))
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+            {
+                errorText.setText(R.string.error_fetching_connectivity_issue);
+            }
+            else
+            {
+                errorText.setText(R.string.error_fetching_available_jobs);
+            }
+            fetchErrorView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initDateButtons()
     {
         LinearLayout datesLayout = getDatesLayout();
-
-        //remove existing date buttons
         datesLayout.removeAllViews();
 
-        dateButtonMap = new HashMap<>(bookingSummaries.size());
+        dateButtonMap = new HashMap<>(numberOfDaysToDisplay());
 
         Context context = getActivity();
 
-        for (final BookingSummary bookingSummary : bookingSummaries)
+        for (int i = 0; i < numberOfDaysToDisplay(); i++)
         {
             LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
             final DateButtonView dateButtonView = (DateButtonView) datesLayout.getChildAt(datesLayout.getChildCount() - 1);
 
-            final List<Booking> bookingsForDay = new ArrayList<>(bookingSummary.getBookings());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DATE, i);
+            final Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
 
-            Collections.sort(bookingsForDay); //date, ascending
-
-            boolean requestedJobsThisDay = showRequestedIndicator(bookingsForDay);
-            boolean claimedJobsThisDay = showClaimedIndicator(bookingsForDay);
-
-            final Date day = bookingSummary.getDate();
-            dateButtonView.init(day, requestedJobsThisDay, claimedJobsThisDay);
+            dateButtonView.init(day);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
-                    displayBookings(bookingsForDay, day);
+                    requestBookings(Lists.newArrayList(day), true);
                 }
             });
 
@@ -187,8 +231,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         setupCTAButton(bookings, dateOfBookings);
     }
 
-    protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
-
     private void initListClickListener()
     {
         getBookingListView().setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -210,6 +252,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     {
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+        arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
         HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
         bus.post(event);
     }

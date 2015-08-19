@@ -10,14 +10,11 @@
         style="@style/Banner"
         android:text="@string/scheduled_jobs"/>
 
-    <include layout="@layout/layout_fetch_error"/>
-
     <LinearLayout
         android:id="@+id/bookings_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <HorizontalScrollView
             android:id="@+id/scheduled_bookings_dates_scroll_view"
@@ -33,6 +30,8 @@
             </LinearLayout>
 
         </HorizontalScrollView>
+
+        <include layout="@layout/layout_fetch_error"/>
 
         <include layout="@layout/layout_scheduled_bookings_empty"/>
 
