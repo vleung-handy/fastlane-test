@@ -13,6 +13,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpContactManager;
 import com.handy.portal.manager.HelpManager;
@@ -67,10 +68,11 @@ public class BaseApplication extends Application
     UrbanAirshipManager urbanAirshipManager;
     @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
+    @Inject
+    MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
 
     @Inject
     Bus bus;
-
 
     @Override
     public final void onCreate()

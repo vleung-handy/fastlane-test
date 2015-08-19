@@ -1,7 +1,5 @@
 package com.handy.portal.ui.fragment;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +32,9 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
+    @Inject
+    HandyRetrofitEndpoint endpoint;
+
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -47,79 +48,24 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
 
-    @Inject
-    HandyRetrofitEndpoint endpoint;
-
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
     public static boolean clearingBackStack = false;
 
-
-    public static final String URI_HOST_DEEPLINK = "deeplink";
-    public static final String URI_PATH_AVAILABLE_JOBS = "/available_jobs";
-    public static final String URI_PATH_BOOKING_DETAILS = "/booking_details";
-
-
     @Override
     public void onResume()
     {
         super.onResume();
-
-        //deep link push notification may have come in
-        checkForDeepLinkIntent();
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
     }
 
-    private void checkForDeepLinkIntent()
+    @Override
+    public void onPause()
     {
-        Intent intent = getActivity().getIntent();
-        if (intent != null && intent.getData() != null)
-        {
-            Uri intentUri = intent.getData();
-            if(intentUri.getHost().equals(URI_HOST_DEEPLINK))
-            {
-                openDeepLink(intent.getData());
-            }
-        }
+        super.onPause();
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
     }
-
-    //TODO: Is it possible to shift the logic that manages our fragment stack and deep links to relevant services to get them out of this fragment?
-    private void openDeepLink(Uri deepLink)
-    {
-        if (deepLink == null || !deepLink.getHost().equals(URI_HOST_DEEPLINK))
-        {
-            return;
-        }
-
-        String path = deepLink.getPath();
-
-        /* Debugging help while testing UA, take out before we merge to dev
-        System.out.println("See uri : " + deepLink);
-        System.out.println("See path : " + path);
-        System.out.println("See query : " + deepLink.getQuery());
-        System.out.println("See host : " + deepLink.getHost());
-        */
-
-        switch(path)
-        {
-            case URI_PATH_AVAILABLE_JOBS:
-            {
-                switchToTab(MainViewTab.JOBS, true);
-            }
-            break;
-
-            case URI_PATH_BOOKING_DETAILS:
-            {
-                Bundle bundle = new Bundle();
-                String bookingId = deepLink.getQuery();
-                bundle.putString(BundleKeys.BOOKING_ID, bookingId);
-                switchToTab(MainViewTab.DETAILS, bundle, true);
-            }
-            break;
-
-        }
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

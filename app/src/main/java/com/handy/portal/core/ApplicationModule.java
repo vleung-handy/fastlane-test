@@ -15,6 +15,7 @@ import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
@@ -26,6 +27,7 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -83,6 +85,8 @@ import retrofit.converter.GsonConverter;
         HelpContactFragment.class,
         SupportActionViewConstructor.class,
         UrbanAirshipManager.class,
+        DeepLinkService.class,
+        MainActivityFragmentNavigationHelper.class
 })
 public final class ApplicationModule
 {
@@ -302,6 +306,13 @@ public final class ApplicationModule
 
     {
         return new CustomDeepLinkAction();
+    }
+
+    @Provides
+    @Singleton
+    final MainActivityFragmentNavigationHelper provideFragmentNavigationManager(Bus bus)
+    {
+        return new MainActivityFragmentNavigationHelper(bus);
     }
 
     private String getDeviceId()

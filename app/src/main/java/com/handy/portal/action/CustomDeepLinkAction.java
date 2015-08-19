@@ -3,6 +3,8 @@ package com.handy.portal.action;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.crashlytics.android.Crashlytics;
+import com.handy.portal.service.DeepLinkService;
 import com.urbanairship.UAirship;
 import com.urbanairship.actions.Action;
 import com.urbanairship.actions.ActionArguments;
@@ -31,10 +33,17 @@ public class CustomDeepLinkAction extends Action
         if(arguments.getSituation() == Situation.PUSH_OPENED)
         {
             Uri uri = UriUtils.parse(arguments.getValue().getString());
-            //Intent should get grabbed by our main activity
-            Intent intent = new Intent("android.intent.action.VIEW", uri);
+
+            if(uri == null)
+            {
+                Crashlytics.log("Deep link had a malformed URI : " + arguments.getValue().getString() + " aborting processing of deep link");
+                return ActionResult.newEmptyResult();
+            }
+
+            Intent intent = new Intent("com.handy.portal.DeepLinkBroadcast", uri, UAirship.getApplicationContext(), DeepLinkService.class);
             intent.addFlags(268435456); //I'm not sure what this is but this code was copied from UA example
-            UAirship.getApplicationContext().startActivity(intent);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES); //allows started of manually stopped apps or never launched apps
+            UAirship.getApplicationContext().startService(intent);
             return ActionResult.newResult(arguments.getValue());
         }
         return ActionResult.newEmptyResult();

@@ -3,7 +3,6 @@ package com.handy.portal.manager;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.constant.PrefsKey;
