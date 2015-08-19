@@ -97,31 +97,31 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
+        findMatchingJobsButtonContainer.setVisibility(View.GONE);
+        bus.post(new HandyEvent.RequestProviderInfo());
 
-        //show Find Jobs and Find Matching Jobs buttons only if we're inside of our available bookings length range
-        long currentTime = DateTimeUtils.getDateWithoutTime(new Date()).getTime();
-        long dateOfBookingsTime = dateOfBookings.getTime();
-        long dateDifference = dateOfBookingsTime - currentTime;
+        //show Find Jobs buttons only if we're inside of our available bookings length range
         int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if (dateDifference <= DateTimeUtils.MILLISECONDS_IN_HOUR * hoursSpanningAvailableBookings)
+        if (bookingsForDay.size() == 0 && DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
         {
-            if (bookingsForDay.size() == 0)
-            {
-                findJobsForDayButton.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                findJobsForDayButton.setVisibility(View.GONE);
-            }
+            findJobsForDayButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            findJobsForDayButton.setVisibility(View.GONE);
+        }
+    }
 
-            if (bookingsForDay.size() == 1 && providerManager.getActiveProvider().isComplementaryJobsEnabled())
-            {
-                findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                findMatchingJobsButtonContainer.setVisibility(View.GONE);
-            }
+    @Subscribe
+    public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
+    {
+        if (bookingsForSelectedDay == null || selectedDay == null) return;
+
+        //show Find Matching Jobs buttons only if we're inside of our available bookings length range
+        int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
+        if (event.provider.isComplementaryJobsEnabled() && bookingsForSelectedDay.size() == 1 && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings))
+        {
+            findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
         }
     }
 

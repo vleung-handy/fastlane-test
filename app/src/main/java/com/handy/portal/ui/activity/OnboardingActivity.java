@@ -49,7 +49,7 @@ public class OnboardingActivity extends BaseActivity
 
     private void initSteps()
     {
-        Provider provider = providerManager.getActiveProvider();
+        Provider provider = providerManager.getCachedActiveProvider();
         if (provider.isUK())
         {
             Configuration configuration = new Configuration();

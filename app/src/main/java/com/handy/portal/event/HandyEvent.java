@@ -903,6 +903,7 @@ public abstract class HandyEvent
         public RequestComplementaryBookings(Booking booking)
         {
             this.booking = booking;
+            this.bookingId = booking.getId();
         }
     }
 

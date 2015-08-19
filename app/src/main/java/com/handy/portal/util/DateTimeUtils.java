@@ -15,6 +15,14 @@ public final class DateTimeUtils
     public final static int MILLISECONDS_IN_MINUTE = 60000;
     public final static long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE * 60;
 
+    public static boolean isDateWithinXHoursFromNow(Date date, int hours)
+    {
+        long currentTime = DateTimeUtils.getDateWithoutTime(new Date()).getTime();
+        long dateOfBookingsTime = date.getTime();
+        long dateDifference = dateOfBookingsTime - currentTime;
+        return dateDifference <= DateTimeUtils.MILLISECONDS_IN_HOUR * hours;
+    }
+
     public static String formatDateTo12HourClock(Date date)
     {
         if (date == null) return null;

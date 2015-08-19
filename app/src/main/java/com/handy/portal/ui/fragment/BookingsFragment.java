@@ -97,6 +97,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         super.onResume();
         if (!MainActivityFragment.clearingBackStack)
         {
+            bus.post(new HandyEvent.RequestProviderInfo());
+
             initDateButtons();
 
             if (selectedDay != null && dateButtonMap.containsKey(selectedDay))

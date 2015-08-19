@@ -86,7 +86,7 @@ public class SplashActivity extends BaseActivity
         else
         {
             // TODO: SplashActivity is always relaunched when user info is received or when terms are accepted. When we move away from that logic, refactor this section.
-            if (providerManager.getActiveProvider() != null)
+            if (providerManager.getCachedActiveProvider() != null)
             {
                 checkForTerms();
             }
@@ -216,7 +216,7 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            Provider provider = providerManager.getActiveProvider();
+            Provider provider = providerManager.getCachedActiveProvider();
             boolean onboardingNeeded = prefsManager.getBoolean(PrefsKey.ONBOARDING_NEEDED, false);
             boolean onboardingCompleted = prefsManager.getBoolean(PrefsKey.ONBOARDING_COMPLETED, false);
             if (provider.isOnboardingEnabled() && onboardingNeeded && !onboardingCompleted)
