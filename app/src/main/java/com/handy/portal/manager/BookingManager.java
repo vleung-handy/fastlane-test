@@ -7,6 +7,7 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
@@ -14,6 +15,7 @@ import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -81,30 +83,42 @@ public class BookingManager
     @Subscribe
     public void onRequestAvailableBookings(final HandyEvent.RequestAvailableBookings event)
     {
-        final Date day = DateTimeUtils.getDateWithoutTime(event.date);
-
-        final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
-        if (cachedBookings != null)
+        final List<Date> datesToRequest = new ArrayList<>();
+        for (Date date : event.dates)
         {
-            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
+            final Date day = DateTimeUtils.getDateWithoutTime(date);
+            final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
+            if (cachedBookings != null)
+            {
+                bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
+            }
+            else
+            {
+                datesToRequest.add(day);
+            }
         }
-        else
+
+        if (!datesToRequest.isEmpty())
         {
-            dataManager.getAvailableBookings(event.date,
-                    new DataManager.Callback<BookingsWrapper>()
+            dataManager.getAvailableBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
+                    new DataManager.Callback<BookingsListWrapper>()
                     {
                         @Override
-                        public void onSuccess(final BookingsWrapper bookingsWrapper)
+                        public void onSuccess(final BookingsListWrapper bookingsListWrapper)
                         {
-                            List<Booking> bookings = bookingsWrapper.getBookings();
-                            availableBookingsCache.put(day, bookings);
-                            bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings, day));
+                            for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                            {
+                                Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                List<Booking> bookings = bookingsWrapper.getBookings();
+                                availableBookingsCache.put(day, bookings);
+                                bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings, day));
+                            }
                         }
 
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            bus.post(new HandyEvent.ReceiveAvailableBookingsError(error, day));
+                            bus.post(new HandyEvent.ReceiveAvailableBookingsError(error, datesToRequest));
                         }
                     }
             );
@@ -114,30 +128,42 @@ public class BookingManager
     @Subscribe
     public void onRequestScheduledBookings(HandyEvent.RequestScheduledBookings event)
     {
-        final Date day = DateTimeUtils.getDateWithoutTime(event.date);
-
-        final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
-        if (cachedBookings != null)
+        final List<Date> datesToRequest = new ArrayList<>();
+        for (Date date : event.dates)
         {
-            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
+            final Date day = DateTimeUtils.getDateWithoutTime(date);
+            final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
+            if (cachedBookings != null)
+            {
+                bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
+            }
+            else
+            {
+                datesToRequest.add(day);
+            }
         }
-        else
+
+        if (!datesToRequest.isEmpty())
         {
-            dataManager.getScheduledBookings(event.date,
-                    new DataManager.Callback<BookingsWrapper>()
+            dataManager.getScheduledBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
+                    new DataManager.Callback<BookingsListWrapper>()
                     {
                         @Override
-                        public void onSuccess(final BookingsWrapper bookingsWrapper)
+                        public void onSuccess(final BookingsListWrapper bookingsListWrapper)
                         {
-                            List<Booking> bookings = bookingsWrapper.getBookings();
-                            scheduledBookingsCache.put(day, bookings);
-                            bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
+                            for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                            {
+                                Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                List<Booking> bookings = bookingsWrapper.getBookings();
+                                scheduledBookingsCache.put(day, bookings);
+                                bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
+                            }
                         }
 
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            bus.post(new HandyEvent.ReceiveScheduledBookingsError(error, day));
+                            bus.post(new HandyEvent.ReceiveScheduledBookingsError(error, datesToRequest));
                         }
                     }
             );

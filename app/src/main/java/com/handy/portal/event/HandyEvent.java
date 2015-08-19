@@ -266,21 +266,21 @@ public abstract class HandyEvent
 
     public static class RequestAvailableBookings extends RequestEvent
     {
-        public final Date date;
+        public final List<Date> dates;
 
-        public RequestAvailableBookings(Date date)
+        public RequestAvailableBookings(List<Date> dates)
         {
-            this.date = date;
+            this.dates = dates;
         }
     }
 
     public static class RequestScheduledBookings extends RequestEvent
     {
-        public final Date date;
+        public final List<Date> dates;
 
-        public RequestScheduledBookings(Date date)
+        public RequestScheduledBookings(List<Date> dates)
         {
-            this.date = date;
+            this.dates = dates;
         }
     }
 
@@ -310,23 +310,23 @@ public abstract class HandyEvent
 
     public static class ReceiveBookingsError extends ReceiveErrorEvent
     {
-        public Date day;
+        public List<Date> days;
     }
 
     public static class ReceiveAvailableBookingsError extends ReceiveBookingsError
     {
-        public ReceiveAvailableBookingsError(DataManager.DataManagerError error, Date day)
+        public ReceiveAvailableBookingsError(DataManager.DataManagerError error, List<Date> days)
         {
-            this.day = day;
+            this.days = days;
             this.error = error;
         }
     }
 
     public static class ReceiveScheduledBookingsError extends ReceiveBookingsError
     {
-        public ReceiveScheduledBookingsError(DataManager.DataManagerError error, Date day)
+        public ReceiveScheduledBookingsError(DataManager.DataManagerError error, List<Date> days)
         {
-            this.day = day;
+            this.days = days;
             this.error = error;
         }
     }

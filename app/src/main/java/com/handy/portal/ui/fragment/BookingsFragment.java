@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -49,7 +50,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract String getTrackingType();
 
-    protected abstract HandyEvent getRequestEvent(Date day);
+    protected abstract HandyEvent getRequestEvent(List<Date> dates);
 
     protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
 
@@ -111,21 +112,22 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookings(selectedDay, true);
+        requestBookings(Lists.newArrayList(selectedDay), true);
     }
 
-    protected void requestBookings(Date day, boolean showOverlay)
+    protected void requestBookings(List<Date> dates, boolean showOverlay)
     {
         fetchErrorView.setVisibility(View.GONE);
         if (showOverlay)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
-        bus.post(getRequestEvent(day));
+        bus.post(getRequestEvent(dates));
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)
     {
+        List<Date> dates = Lists.newArrayList();
         for (int i = 0; i < numberOfDaysToDisplay(); i++)
         {
             Calendar calendar = Calendar.getInstance();
@@ -135,9 +137,10 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
             if (!day.equals(dayToExclude))
             {
-                requestBookings(day, false);
+                dates.add(day);
             }
         }
+        requestBookings(dates, false);
     }
 
     protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
@@ -160,7 +163,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event)
     {
-        if (selectedDay.equals(event.day))
+        if (event.days.contains(selectedDay))
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
@@ -201,7 +204,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 {
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
-                    requestBookings(day, true);
+                    requestBookings(Lists.newArrayList(day), true);
                 }
             });
 
