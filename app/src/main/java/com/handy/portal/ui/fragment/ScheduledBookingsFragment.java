@@ -123,7 +123,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 findMatchingJobsButtonContainer.setVisibility(View.GONE);
             }
         }
-
     }
 
     @OnClick(R.id.find_jobs_for_day_button)
@@ -144,7 +143,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, bookingsForSelectedDay.get(0));
 
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.MATCHING_JOBS, arguments, TransitionStyle.SLIDE_UP));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP));
     }
 
     @Override

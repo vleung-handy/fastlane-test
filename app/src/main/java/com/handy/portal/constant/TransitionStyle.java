@@ -2,6 +2,7 @@ package com.handy.portal.constant;
 
 import com.handy.portal.R;
 
+//have information about the anims and overlays that override the defaults
 public enum TransitionStyle
 {
     JOB_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_CLAIM_SUCCESS),

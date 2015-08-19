@@ -12,11 +12,12 @@ public enum MainViewTab
 {
     AVAILABLE_JOBS(null, AvailableBookingsFragment.class),
     SCHEDULED_JOBS(null, ScheduledBookingsFragment.class),
+    COMPLEMENTARY_JOBS(null, ComplementaryBookingsFragment.class),
     PROFILE(PortalWebViewFragment.Target.PROFILE, null),
     HELP(null, HelpFragment.class),
     DETAILS(null, BookingDetailsFragment.class),
     HELP_CONTACT(null, HelpContactFragment.class),
-    MATCHING_JOBS(null, ComplementaryBookingsFragment.class);
+    ;
 
     private PortalWebViewFragment.Target target;
     private Class classType;

@@ -216,7 +216,7 @@ public class MainActivityFragment extends InjectedFragment
             }
             else
             {
-                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.MATCHING_JOBS;
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
