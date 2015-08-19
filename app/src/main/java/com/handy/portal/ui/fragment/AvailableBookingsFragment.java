@@ -102,6 +102,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event)
     {
-        handleBookingsRetrievalError(event);
+        handleBookingsRetrievalError(event, R.string.error_fetching_available_jobs);
     }
 }

@@ -162,7 +162,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
-    protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event)
+    protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
         if (event.days.contains(selectedDay))
         {
@@ -173,7 +173,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
             else
             {
-                errorText.setText(R.string.error_fetching_available_jobs);
+                errorText.setText(errorStateStringId);
             }
             fetchErrorView.setVisibility(View.VISIBLE);
         }

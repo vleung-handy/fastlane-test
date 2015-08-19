@@ -10,7 +10,6 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
@@ -177,15 +176,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
-            errorText.setText(R.string.error_fetching_connectivity_issue);
-        }
-        else
-        {
-            errorText.setText(R.string.error_fetching_available_jobs);
-        }
-        fetchErrorView.setVisibility(View.VISIBLE);
+        handleBookingsRetrievalError(event, R.string.error_fetching_scheduled_jobs);
     }
 }
