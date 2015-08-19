@@ -70,7 +70,7 @@ public class Booking implements Comparable<Booking>, Serializable
     private String proNote;
 
     @SerializedName("distance")
-    private String distance; // pre-formatted string used for relative searches (e.g. booking A is 5 miles away from booking B)
+    private String formattedDistance;
 
     public int compareTo(@NonNull Booking other)
     {
@@ -305,14 +305,14 @@ public class Booking implements Comparable<Booking>, Serializable
         this.user = user;
     }
 
-    public String getDistance()
+    public String getFormattedDistance()
     {
-        return distance;
+        return formattedDistance;
     }
 
-    public void setDistance(String distance)
+    public void setFormattedDistance(String formattedDistance)
     {
-        this.distance = distance;
+        this.formattedDistance = formattedDistance;
     }
 
     //Basic booking statuses inferrable from providerId
