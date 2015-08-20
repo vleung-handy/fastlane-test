@@ -33,7 +33,7 @@ public class ProviderManager
 
     public void init()
     {
-        onRequestProviderInfo(null);
+        requestProviderInfo();
     }
 
     @Subscribe
