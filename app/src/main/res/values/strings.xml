@@ -350,6 +350,7 @@
     <string name="matching_jobs">Matching Jobs</string>
     <string name="no_matching_jobs">No Matching Jobs</string>
     <string name="n_matching_jobs">%1$d Matching Jobs</string>
+    <string name="one_matching_job">1 Matching Job</string>
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
 

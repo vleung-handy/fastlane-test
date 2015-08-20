@@ -123,7 +123,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         else
         {
             mixpanel.track("complementary jobs found");
-            bannerText.setText(getString(R.string.n_matching_jobs, event.bookings.size()));
+            bannerText.setText(event.bookings.size() == 1 ? getString(R.string.one_matching_job) : getString(R.string.n_matching_jobs, event.bookings.size()));
             displayBookings(Lists.newArrayList(event.bookings));
         }
     }
