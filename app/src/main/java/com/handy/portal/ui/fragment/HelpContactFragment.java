@@ -200,6 +200,11 @@ public final class HelpContactFragment extends InjectedFragment
         HashMap<String, String> params = new HashMap<>();
         for (HelpNode childNode : node.getChildren())
         {
+            if(childNode == null || childNode.getType() == null)
+            {
+                continue;
+            }
+
             if (childNode.getType().equals(HELP_CONTACT_FORM_DISPOSITION))
             {
                 params.put(childNode.getLabel(), childNode.getContent());

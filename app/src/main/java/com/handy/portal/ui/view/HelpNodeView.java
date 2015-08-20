@@ -98,15 +98,20 @@ public final class HelpNodeView extends InjectedRelativeLayout
             }
         });
 
-        for (final HelpNode child : node.getChildren())
+        for (final HelpNode childNode : node.getChildren())
         {
-            if (child.getType() == null)
+            if(childNode == null)
             {
-                Crashlytics.log("HelpNode " + child.getId() + " has null data");
                 continue;
             }
 
-            if (child.getType().equals(HelpNode.HelpNodeType.CONTACT))
+            if (childNode.getType() == null)
+            {
+                Crashlytics.log("HelpNode " + childNode.getId() + " has null type data");
+                continue;
+            }
+
+            if (childNode.getType().equals(HelpNode.HelpNodeType.CONTACT))
             {
                 contactButton.setVisibility(VISIBLE);
             }
@@ -118,31 +123,36 @@ public final class HelpNodeView extends InjectedRelativeLayout
         infoLayout.setVisibility(GONE);
         navOptionsLayout.setVisibility(VISIBLE);
 
-        for (final HelpNode helpNode : node.getChildren())
+        for (final HelpNode childNode : node.getChildren())
         {
             final View navView;
 
-            if (helpNode.getType().equals(HelpNode.HelpNodeType.BOOKING))
+            if(childNode == null || childNode.getType() == null)
+            {
+                continue;
+            }
+
+            if (childNode.getType().equals(HelpNode.HelpNodeType.BOOKING))
             {
                 navView = inflate(R.layout.list_item_help_booking_nav, navOptionsLayout);
 
                 TextView textView = (TextView) navView.findViewById(R.id.service_text);
-                textView.setText(helpNode.getService());
+                textView.setText(childNode.getService());
 
                 textView = (TextView) navView.findViewById(R.id.date_text);
-                textView.setText(TextUtils.formatDate(helpNode.getStartDate(), "EEEE',' MMMM d"));
+                textView.setText(TextUtils.formatDate(childNode.getStartDate(), "EEEE',' MMMM d"));
 
                 textView = (TextView) navView.findViewById(R.id.time_text);
-                textView.setText(TextUtils.formatDate(helpNode.getStartDate(), "h:mmaaa \u2013 ")
-                        + TextUtils.formatDecimal(helpNode.getHours(), "#.# ")
-                        + getContext().getResources().getQuantityString(R.plurals.hour, (int) helpNode.getHours()));
+                textView.setText(TextUtils.formatDate(childNode.getStartDate(), "h:mmaaa \u2013 ")
+                        + TextUtils.formatDecimal(childNode.getHours(), "#.# ")
+                        + getContext().getResources().getQuantityString(R.plurals.hour, (int) childNode.getHours()));
             }
             else
             {
                 navView = inflate(R.layout.list_item_help_nav, navOptionsLayout);
 
                 final TextView textView = (TextView) navView.findViewById(R.id.nav_item_text);
-                textView.setText(helpNode.getLabel());
+                textView.setText(childNode.getLabel());
             }
         }
     }
