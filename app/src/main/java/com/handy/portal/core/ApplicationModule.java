@@ -13,14 +13,12 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.ui.fragment.HelpContactFragment;
-import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
@@ -33,6 +31,7 @@ import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
@@ -88,7 +87,7 @@ import retrofit.converter.GsonConverter;
         SupportActionViewConstructor.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
-        MainActivityFragmentNavigationHelper.class
+        MainActivityFragmentNavigationHelper.class,
         OnboardingActivity.class,
 })
 public final class ApplicationModule
