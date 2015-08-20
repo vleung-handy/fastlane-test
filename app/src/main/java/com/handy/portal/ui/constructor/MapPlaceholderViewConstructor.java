@@ -1,14 +1,17 @@
 package com.handy.portal.ui.constructor;
 
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.ViewGroup;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.model.Booking;
+import com.handy.portal.util.UIUtils;
 
-public class MapPlaceholderViewConstructor extends BookingDetailsViewConstructor
+public class MapPlaceholderViewConstructor extends DetailMapViewConstructor
 {
 
     public MapPlaceholderViewConstructor(@NonNull Context context, Bundle arguments)
@@ -16,14 +19,11 @@ public class MapPlaceholderViewConstructor extends BookingDetailsViewConstructor
         super(context, arguments);
     }
 
-    protected int getLayoutResourceId()
+    @Override
+    protected void inflateMapView(RelativeLayout mapViewStub)
     {
-        return R.layout.element_map_placeholder;
+        View view = ((LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.element_map_placeholder, null);
+        UIUtils.replaceView(mapViewStub, view);
     }
 
-    @Override
-    protected boolean constructView(ViewGroup container, Booking item)
-    {
-        return true;
-    }
 }

@@ -13,6 +13,8 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.ui.fragment.HelpContactFragment;
+import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
@@ -87,6 +89,7 @@ import retrofit.converter.GsonConverter;
         UrbanAirshipManager.class,
         DeepLinkService.class,
         MainActivityFragmentNavigationHelper.class
+        OnboardingActivity.class,
 })
 public final class ApplicationModule
 {
@@ -192,11 +195,10 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
-                                         final HandyRetrofitEndpoint endpoint,
-                                         final PrefsManager prefsManager
+                                         final HandyRetrofitEndpoint endpoint
     )
     {
-        return new BaseDataManager(service, endpoint, prefsManager);
+        return new BaseDataManager(service, endpoint);
     }
 
     @Provides

@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.text.format.Time;
 import android.util.TypedValue;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -14,9 +13,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public final class Utils
 {
@@ -46,32 +42,6 @@ public final class Utils
         {
             return false;
         }
-    }
-
-    public static boolean equalCalendarDates(final Date date1, final Date date2)
-    {
-        final Time time = new Time();
-        time.set(date1.getTime());
-
-        final int thenYear = time.year;
-        final int thenMonth = time.month;
-        final int thenMonthDay = time.monthDay;
-
-        time.set(date2.getTime());
-
-        return (thenYear == time.year) && (thenMonth == time.month)
-                && (thenMonthDay == time.monthDay);
-    }
-
-    public static Date getDateWithoutTime(final Date date)
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
     }
 
     public static void extendHitArea(final View view, final View parent, final int extra)

@@ -113,6 +113,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
     private String requestedBookingId;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
+    private Date associatedBookingDate;
 
     private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
 
@@ -128,8 +129,16 @@ public class BookingDetailsFragment extends InjectedFragment
 
         if (validateRequiredArguments())
         {
-            this.requestedBookingId = getArguments().getString(BundleKeys.BOOKING_ID);
-            requestBookingDetails(this.requestedBookingId);
+            Bundle arguments = getArguments();
+            this.requestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
+
+            if (arguments.containsKey(BundleKeys.BOOKING_DATE))
+            {
+                long bookingDateLong = arguments.getLong(BundleKeys.BOOKING_DATE, 0L);
+                this.associatedBookingDate = new Date(bookingDateLong);
+            }
+
+            requestBookingDetails(this.requestedBookingId, this.associatedBookingDate);
         }
         else
         {
@@ -151,11 +160,11 @@ public class BookingDetailsFragment extends InjectedFragment
         return prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
-    private void requestBookingDetails(String bookingId)
+    private void requestBookingDetails(String bookingId, Date bookingDate)
     {
         fetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestBookingDetails(bookingId));
+        bus.post(new HandyEvent.RequestBookingDetails(bookingId, bookingDate));
     }
 
 //Display Creation / Updating
@@ -240,7 +249,7 @@ public class BookingDetailsFragment extends InjectedFragment
     @OnClick(R.id.try_again_button)
     public void onClickRequestDetails()
     {
-        requestBookingDetails(this.requestedBookingId);
+        requestBookingDetails(this.requestedBookingId, this.associatedBookingDate);
     }
 
     //Can not use @onclick b/c the button does not exist at injection time
@@ -405,7 +414,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             case CLAIM:
             {
-                requestClaimJob(this.associatedBooking.getId());
+                requestClaimJob(this.associatedBooking);
             }
             break;
 
@@ -435,7 +444,7 @@ public class BookingDetailsFragment extends InjectedFragment
 
             case REMOVE:
             {
-                requestRemoveJob(this.associatedBooking.getId());
+                requestRemoveJob(this.associatedBooking);
             }
             break;
 
@@ -555,16 +564,16 @@ public class BookingDetailsFragment extends InjectedFragment
 
     //Service request bus posts
     //
-    private void requestClaimJob(String bookingId)
+    private void requestClaimJob(Booking booking)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(bookingId));
+        bus.post(new HandyEvent.RequestClaimJob(booking));
     }
 
-    private void requestRemoveJob(String bookingId)
+    private void requestRemoveJob(Booking booking)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestRemoveJob(bookingId));
+        bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
 
     private void requestNotifyOnMyWayJob(String bookingId, LocationData locationData)

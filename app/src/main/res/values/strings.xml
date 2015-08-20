@@ -276,6 +276,9 @@
     <string name="arrival_time_late_15">I\u2019ll be 15 minutes late</string>
     <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
 
+    <string name="booking_details_check_in_time_msg">\u2713 Checked in at %1$s</string>
+    <string name="booking_details_eta_msg">Estimated arrival time: %1$s</string>
+
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
     <string name="omw_failure">There was a problem updating your status. Please try again.</string>
     <string name="check_in_success">Thanks for checking in!</string>
@@ -318,5 +321,26 @@
     <string name="your_email">Your Email</string>
 
     <string name="ensure_fields_valid">Please ensure all fields are filled out correctly</string>
+
+    <string name="step_1"><![CDATA[This is what an <b>available job</b> looks like. View more job details by tapping it.]]></string>
+    <string name="step_2"><![CDATA[Tap <b>Claim Job</b> to add a job to your schedule \u2014 don\u2019t worry, this is just practice!]]></string>
+    <string name="step_3"><![CDATA[Once you\u2019ve claimed a job, it goes into the <b>Schedule tab</b> and the full address is unlocked. Tap the job to view its details.]]></string>
+    <string name="step_4"><![CDATA[When you are ready to head to a job, tap <b>On My Way</b> so customers know to expect you.]]></string>
+    <string name="step_5"><![CDATA[When you arrive at the job, tap the <b>Check In</b> button.]]></string>
+    <string name="step_6"><![CDATA[If you ever need help, just use the <b>I Need Help</b> button.]]></string>
+    <string name="step_7"><![CDATA[Here\u2019s where you can address any issues you may have during a job. Tap anywhere to get back to job details.]]></string>
+    <string name="step_8"><![CDATA[Great work! When you\u2019ve finished the job and are ready to leave, just <b>Check Out</b>.]]></string>
+    <string name="step_final"><![CDATA[That\u2019s it! Thanks for following along. Now we\u2019ll take you to your <b>Available Jobs</b> to claim your first job. Good luck!]]></string>
+    <string name="welcome">Welcome to Handy, %s!</string>
+    <string name="lets_walk_through_the_app">Before you claim your first job, let\u2019s walk through the app.</string>
+    <string name="start_claiming_jobs">Start Claiming Jobs</string>
+    <string name="step_1_of_9">1 of 9</string>
+    <string name="step_2_of_9">2 of 9</string>
+    <string name="step_3_of_9">3 of 9</string>
+    <string name="step_4_of_9">4 of 9</string>
+    <string name="step_5_of_9">5 of 9</string>
+    <string name="step_6_of_9">6 of 9</string>
+    <string name="step_7_of_9">7 of 9</string>
+    <string name="step_8_of_9">8 of 9</string>
 
 </resources>
