@@ -23,6 +23,9 @@ public class AvailableBookingElementView extends BookingElementView
     @InjectView(R.id.booking_entry_payment_text)
     protected TextView paymentText;
 
+    @InjectView(R.id.booking_entry_cents_text)
+    protected TextView centsPaymentText;
+
     @InjectView(R.id.booking_entry_payment_bonus_text)
     protected TextView bonusPaymentText;
 
@@ -60,10 +63,10 @@ public class AvailableBookingElementView extends BookingElementView
         ButterKnife.inject(this, convertView);
 
         //Payment
-        UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));
+        UIUtils.setPaymentInfo(paymentText, centsPaymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));
 
         //Bonus Payment
-        UIUtils.setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
+        UIUtils.setPaymentInfo(bonusPaymentText, null, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
 
         //Area
         bookingAreaTextView.setText(booking.getAddress().getShortRegion());

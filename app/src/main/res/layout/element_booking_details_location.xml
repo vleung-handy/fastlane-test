@@ -50,11 +50,7 @@
 
         </LinearLayout>
 
-
-
     </RelativeLayout>
-
-
 
     <TextView
         android:id="@+id/booking_details_location_text"
@@ -82,26 +78,42 @@
         android:layout_below="@+id/booking_details_location_text"
         />
 
-    <TextView
-        android:id="@+id/booking_details_payment_text"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
         android:layout_alignTop="@id/booking_details_location_text"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textSize="30sp"
-        android:textColor="@color/black"/>
+        android:gravity="top">
 
-    <TextView
-        android:id="@+id/booking_details_payment_bonus_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:layout_below="@+id/booking_details_payment_text"
-        android:layout_alignParentRight="true"
-        style="@style/TextView.Bold"
-        android:textColor="@color/subtitle_grey"
-        android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/booking_details_cents_text"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_marginTop="4sp"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/booking_details_payment_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/booking_details_cents_text"
+            android:layout_toStartOf="@id/booking_details_cents_text"
+            android:textSize="30sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/booking_details_payment_bonus_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/booking_details_payment_text"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            style="@style/TextView.Bold"
+            android:textColor="@color/subtitle_grey"
+            android:textSize="12sp"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

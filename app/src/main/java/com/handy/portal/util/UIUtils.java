@@ -13,6 +13,8 @@ import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.activity.BaseActivity;
 
+import java.text.DecimalFormat;
+
 public final class UIUtils
 {
     public static ViewGroup getParent(View view)
@@ -52,17 +54,38 @@ public final class UIUtils
 
     }
 
-    public static void setPaymentInfo(TextView textView, Booking.PaymentInfo paymentInfo, String format)
+    public static void setPaymentInfo(TextView dollarTextView, TextView centsTextView, Booking.PaymentInfo paymentInfo, String format)
     {
-        if (paymentInfo != null && paymentInfo.getAdjustedAmount() > 0)
+        if (paymentInfo != null && paymentInfo.getAmount() > 0)
         {
-            String paymentString = TextUtils.formatPrice(paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol(), paymentInfo.getCurrencySuffix());
-            textView.setText(String.format(format, paymentString));
-            textView.setVisibility(View.VISIBLE);
+            int amount = paymentInfo.getAmount();
+            double centsAmount = (amount % 100) * 0.01;
+            int dollarAmount = amount / 100;
+
+            if (centsTextView != null)
+            {
+                if (centsAmount > 0)
+                {
+                    centsTextView.setText(new DecimalFormat(".00").format(centsAmount));
+                    centsTextView.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    centsTextView.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            String paymentString = TextUtils.formatPrice(dollarAmount, paymentInfo.getCurrencySymbol(), paymentInfo.getCurrencySuffix());
+            dollarTextView.setText(String.format(format, paymentString));
+            dollarTextView.setVisibility(View.VISIBLE);
         }
         else
         {
-            textView.setVisibility(View.INVISIBLE);
+            dollarTextView.setVisibility(View.INVISIBLE);
+            if (centsTextView != null)
+            {
+                centsTextView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
