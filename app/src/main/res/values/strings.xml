@@ -329,7 +329,7 @@
     <string name="step_5"><![CDATA[When you arrive at the job, tap the <b>Check In</b> button.]]></string>
     <string name="step_6"><![CDATA[If you ever need help, just use the <b>I Need Help</b> button.]]></string>
     <string name="step_7"><![CDATA[Here\u2019s where you can address any issues you may have during a job. Tap anywhere to get back to job details.]]></string>
-    <string name="step_8"><![CDATA[Great work! When you’ve finished the job and are ready to leave, just <b>Check Out</b>.]]></string>
+    <string name="step_8"><![CDATA[Great work! When you\u2019ve finished the job and are ready to leave, just <b>Check Out</b>.]]></string>
     <string name="step_final"><![CDATA[That\u2019s it! Thanks for following along. Now we\u2019ll take you to your <b>Available Jobs</b> to claim your first job. Good luck!]]></string>
     <string name="welcome">Welcome to Handy, %s!</string>
     <string name="lets_walk_through_the_app">Before you claim your first job, let\u2019s walk through the app.</string>
