@@ -28,6 +28,9 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
     @InjectView(R.id.booking_details_payment_text)
     protected TextView paymentText;
 
+    @InjectView(R.id.booking_details_cents_text)
+    protected TextView centsText;
+
     @InjectView(R.id.booking_details_payment_bonus_text)
     protected TextView paymentBonusText;
 
@@ -71,8 +74,8 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
             serviceText.setText(serviceInfo.getDisplayName());
         }
 
-        UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider(), getContext().getString(R.string.payment_value));
-        UIUtils.setPaymentInfo(paymentBonusText, booking.getBonusPaymentToProvider(), getContext().getString(R.string.bonus_payment_value));
+        UIUtils.setPaymentInfo(paymentText, centsText, booking.getPaymentToProvider(), getContext().getString(R.string.payment_value));
+        UIUtils.setPaymentInfo(paymentBonusText, null, booking.getBonusPaymentToProvider(), getContext().getString(R.string.bonus_payment_value));
 
         //Partner takes priority over requested
         if(booking.getPartner() != null)

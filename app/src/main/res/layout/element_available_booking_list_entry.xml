@@ -126,12 +126,29 @@
         android:paddingEnd="20dp"
         android:paddingRight="20dp">
 
-        <TextView
-            android:id="@+id/booking_entry_payment_text"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/title_grey"
-            android:textSize="30sp"/>
+            android:gravity="top">
+
+            <TextView
+                android:id="@+id/booking_entry_payment_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/title_grey"
+                android:textSize="30sp"/>
+
+            <TextView
+                android:id="@+id/booking_entry_cents_text"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@id/booking_entry_payment_text"
+                android:layout_toEndOf="@id/booking_entry_payment_text"
+                android:layout_height="wrap_content"
+                android:textColor="@color/title_grey"
+                android:layout_marginTop="4sp"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/booking_entry_payment_bonus_text"

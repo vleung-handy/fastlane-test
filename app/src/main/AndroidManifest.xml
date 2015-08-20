@@ -15,10 +15,6 @@
         android:glEsVersion="0x00020000"
         android:required="true"/>
 
-    <!--Contact permissions -->
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-
     <!-- Urban airship additional permissions -->
     <!-- Keeps the processor from sleeping when a message is received. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
