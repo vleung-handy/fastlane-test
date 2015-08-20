@@ -35,13 +35,27 @@ final class MainBus extends Bus
     }
 
     @Override
-    public void post(Object event)
+    public void post(final Object event)
     {
-        if (!(event instanceof DeadEvent))
+        if (Looper.myLooper() == Looper.getMainLooper())
         {
-            mixpanel.trackEvent(event); // side effect
+            if (!(event instanceof DeadEvent))
+            {
+                mixpanel.trackEvent(event); // side effect
+            }
+            super.post(event);
         }
-        super.post(event);
+        else
+        {
+            mHandler.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    MainBus.super.post(event);
+                }
+            });
+        }
     }
 
 }

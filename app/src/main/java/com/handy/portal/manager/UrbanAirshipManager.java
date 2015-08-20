@@ -5,6 +5,7 @@ import android.app.Application;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
+import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -12,6 +13,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
+import com.urbanairship.actions.DeepLinkAction;
 import com.urbanairship.push.notifications.DefaultNotificationFactory;
 
 /**
@@ -23,14 +25,16 @@ public class UrbanAirshipManager
     private final DataManager dataManager;
     private final PrefsManager prefsManager;
     private final Application associatedApplication;
+    private final CustomDeepLinkAction customDeepLinkAction;
 
-    public UrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
+    public UrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication, final CustomDeepLinkAction customDeepLinkAction)
     {
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
         this.prefsManager = prefsManager;
         this.associatedApplication = associatedApplication;
+        this.customDeepLinkAction = customDeepLinkAction;
     }
 
     @Subscribe
@@ -72,6 +76,10 @@ public class UrbanAirshipManager
                 {
                     setAlias(providerId);
                 }
+
+               //Override the default action otherwise it tries to openurl all of our deep links
+                //Init the deep link listener, must be done after takeoff
+                UAirship.shared().getActionRegistry().getEntry(DeepLinkAction.DEFAULT_REGISTRY_NAME).setDefaultAction(customDeepLinkAction);
             }
         });
     }

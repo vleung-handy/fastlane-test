@@ -32,6 +32,9 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
+    @Inject
+    HandyRetrofitEndpoint endpoint;
+
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -45,13 +48,24 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
 
-    @Inject
-    HandyRetrofitEndpoint endpoint;
-
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
     public static boolean clearingBackStack = false;
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,6 +139,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             tab = savedInstanceState.getString(BundleKeys.TAB);
         }
+
         switchToTab(MainViewTab.valueOf(tab), false);
     }
 
