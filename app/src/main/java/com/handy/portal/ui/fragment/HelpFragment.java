@@ -157,6 +157,11 @@ public final class HelpFragment extends InjectedFragment
         for (int i = 0; i < helpNode.getChildren().size(); i++)
         {
             final HelpNode childNode = helpNode.getChildren().get(i);
+            if(childNode == null || childNode.getType() == null)
+            {
+                continue;
+            }
+
             final View navView = helpNodeView.navOptionsLayout.getChildAt(i);
 
             navView.setOnClickListener(new View.OnClickListener()
@@ -184,12 +189,17 @@ public final class HelpFragment extends InjectedFragment
     {
         if (helpNode.getChildren().size() > 0)
         {
-            for (final HelpNode child : helpNode.getChildren())
+            for (final HelpNode childNode : helpNode.getChildren())
             {
-                String nodeType = child.getType();
+                if(childNode == null)
+                {
+                    continue;
+                }
+
+                String nodeType = childNode.getType();
                 if (nodeType == null)
                 {
-                    Crashlytics.log("HelpNode " + child.getId() + " has null data");
+                    Crashlytics.log("HelpNode " + childNode.getId() + " has null data");
                     continue;
                 }
 
@@ -202,7 +212,7 @@ public final class HelpFragment extends InjectedFragment
                         {
                             Bundle arguments = new Bundle();
                             arguments.putString(BundleKeys.PATH, currentPathNodeLabels);
-                            arguments.putParcelable(BundleKeys.HELP_NODE, child);
+                            arguments.putParcelable(BundleKeys.HELP_NODE, childNode);
                             HandyEvent.NavigateToTab navigateEvent = new HandyEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
                             bus.post(navigateEvent);
                         }
