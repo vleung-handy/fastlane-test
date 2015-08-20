@@ -83,6 +83,11 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         return daysSpanningAvailableBookings + 1; // plus today
     }
 
+    @Override
+    protected void beforeRequestBookings()
+    {
+    }
+
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
     }

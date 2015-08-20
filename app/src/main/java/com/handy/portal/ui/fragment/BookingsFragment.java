@@ -58,6 +58,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract int numberOfDaysToDisplay();
 
+    protected abstract void beforeRequestBookings();
+
     protected abstract void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings);
 
     protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
@@ -207,6 +209,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 {
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
+                    beforeRequestBookings();
                     requestBookings(Lists.newArrayList(day), true);
                 }
             });

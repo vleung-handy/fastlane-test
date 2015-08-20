@@ -39,12 +39,12 @@ public class BookingManager
         this.dataManager = dataManager;
 
         this.availableBookingsCache = CacheBuilder.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(100)
                 .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
 
         this.scheduledBookingsCache = CacheBuilder.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(100)
                 .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
 
@@ -180,7 +180,7 @@ public class BookingManager
     public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
     {
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
-        List<Booking> cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
+        final List<Booking> cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
         if (cachedComplementaryBookings != null)
         {
             bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(cachedComplementaryBookings));
@@ -193,6 +193,7 @@ public class BookingManager
                 public void onSuccess(BookingsWrapper bookingsWrapper)
                 {
                     List<Booking> bookings = bookingsWrapper.getBookings();
+                    complementaryBookingsCache.put(day, bookings);
                     bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
                 }
 

@@ -89,6 +89,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
+    protected void beforeRequestBookings()
+    {
+        findMatchingJobsButtonContainer.setVisibility(View.GONE);
+    }
+
+    @Override
     protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
         return ScheduledBookingElementView.class;
@@ -97,7 +103,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
-        findMatchingJobsButtonContainer.setVisibility(View.GONE);
         bus.post(new HandyEvent.RequestProviderInfo());
 
         //show Find Jobs buttons only if we're inside of our available bookings length range
