@@ -12,6 +12,7 @@ public class ProviderManager
     private final Bus bus;
     private final DataManager dataManager;
     private final PrefsManager prefsManager;
+
     private Provider activeProvider;
     private long timestampCacheInitializedMs;
     private long CACHE_TIME_MS = 600000; //invalidate contact info after an hour (currently can only change it via emailing us)
@@ -25,15 +26,19 @@ public class ProviderManager
         bus.register(this);
     }
 
-    private void setCacheData(Provider provider){
+    private void setCacheData(Provider provider)
+    {
         timestampCacheInitializedMs = System.currentTimeMillis();
         activeProvider = provider;
         prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, provider.getId());//TODO: don't need this if we can make sure it is same as provider id from login
 
+        bus.post(new HandyEvent.ProviderIdUpdated(activeProvider.getId()));
     }
 
-    private boolean isCacheValid(){
-        if(activeProvider == null || System.currentTimeMillis() - timestampCacheInitializedMs > CACHE_TIME_MS){
+    private boolean isCacheValid()
+    {
+        if (activeProvider == null || System.currentTimeMillis() - timestampCacheInitializedMs > CACHE_TIME_MS)
+        {
             return false;
         }
         return true;
@@ -42,7 +47,8 @@ public class ProviderManager
     @Subscribe
     public void onRequestUserInfo(HandyEvent.RequestProviderInfo event)
     {
-        if(!isCacheValid()){
+        if (!isCacheValid())
+        {
             dataManager.getProviderInfo(new DataManager.Callback<Provider>()
             {
                 @Override
@@ -58,7 +64,8 @@ public class ProviderManager
                     bus.post(new HandyEvent.ReceiveProviderInfoError(error));
                 }
             });
-        }else{
+        } else
+        {
             bus.post(new HandyEvent.ReceiveProviderInfoSuccess(getCachedActiveProvider()));
         }
 

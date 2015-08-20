@@ -10,17 +10,22 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpContactManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
+import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -57,9 +62,17 @@ public class BaseApplication extends Application
     HelpManager helpManager;
     @Inject
     HelpContactManager helpContactManager;
-
+    @Inject
+    PrefsManager prefsManager;
+    @Inject
+    UrbanAirshipManager urbanAirshipManager;
     @Inject
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
+    @Inject
+    MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
+
+    @Inject
+    Bus bus;
 
     @Override
     public final void onCreate()
@@ -71,36 +84,20 @@ public class BaseApplication extends Application
         startNewRelic();
         startCrashlytics();
 
+        //Start UA
+        bus.post(new HandyEvent.StartUrbanAirship());
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(TextUtils.Fonts.CIRCULAR_BOOK)
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
-//        final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
-//        options.inProduction = BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD);
-//
-//        UAirship.takeOff(this, options, new UAirship.OnReadyCallback() {
-//            @Override
-//            public void onAirshipReady(final UAirship airship) {
-//                final DefaultNotificationFactory defaultNotificationFactory =
-//                        new DefaultNotificationFactory(getApplicationContext());
-//
-//                defaultNotificationFactory.setColor(getResources().getColor(R.color.handy_blue));
-//                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
-//
-//                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
-//                airship.getPushManager().setPushEnabled(false);
-//                airship.getPushManager().setUserNotificationsEnabled(false);
-//            }
-//        });
-//
 //        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)) {
 //            NewRelic.withApplicationToken("AA7a37dccf925fd1e474142399691d1b6b3f84648b").start(this);
 //        }
 //        else {
 //            NewRelic.withApplicationToken("AAbaf8c55fb9788d1664e82661d94bc18ea7c39aa6").start(this);
 //        }
-
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks()
         {
