@@ -52,9 +52,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract HandyEvent getRequestEvent(List<Date> dates);
 
-    protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
+    protected abstract boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay);
 
-    protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
+    protected abstract boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay);
 
     protected abstract int numberOfDaysToDisplay();
 
@@ -112,6 +112,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             {
                 dateButtonMap.get(selectedDay).performClick();
             }
+
+            requestBookingsForOtherDays(selectedDay);
         }
     }
 
@@ -157,13 +159,12 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         Collections.sort(bookings);
 
         DateButtonView dateButtonView = dateButtonMap.get(event.day);
-        dateButtonView.showRequestedIndicator(showRequestedIndicator(bookings));
-        dateButtonView.showClaimedIndicator(showClaimedIndicator(bookings));
+        dateButtonView.showRequestedIndicator(shouldShowRequestedIndicator(bookings));
+        dateButtonView.showClaimedIndicator(shouldShowClaimedIndicator(bookings));
 
         if (selectedDay.equals(event.day))
         {
             displayBookings(bookings, selectedDay);
-            requestBookingsForOtherDays(selectedDay);
         }
     }
 

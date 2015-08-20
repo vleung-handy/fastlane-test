@@ -152,14 +152,14 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected boolean showRequestedIndicator(List<Booking> bookingsForDay)
+    protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay)
     {
         return false;
     }
 
     @Override
     //All bookings not in the past on this page should cause the claimed indicator to appear
-    protected boolean showClaimedIndicator(List<Booking> bookingsForDay)
+    protected boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay)
     {
         for (Booking b : bookingsForDay)
         {
