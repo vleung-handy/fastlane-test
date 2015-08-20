@@ -673,9 +673,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         try
         {
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:" + phoneNumber));
-            startActivity(callIntent);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)));
         } catch (ActivityNotFoundException activityException)
         {
             Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
