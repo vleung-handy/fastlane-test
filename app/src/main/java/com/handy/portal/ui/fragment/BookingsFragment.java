@@ -103,13 +103,14 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
             initDateButtons();
 
-            if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
+            if (selectedDay == null || !dateButtonMap.containsKey(selectedDay))
+            {
+                selectedDay = DateTimeUtils.getDateWithoutTime(new Date());
+            }
+
+            if (dateButtonMap.containsKey(selectedDay))
             {
                 dateButtonMap.get(selectedDay).performClick();
-            }
-            else
-            {
-                getDatesLayout().getChildAt(0).performClick();
             }
         }
     }
