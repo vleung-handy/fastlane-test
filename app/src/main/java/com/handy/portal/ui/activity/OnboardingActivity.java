@@ -59,13 +59,15 @@ public class OnboardingActivity extends BaseActivity
 
         steps = new ArrayList<>();
         steps.add(InitialOnboardingFragment.newInstance(R.drawable.onboarding_0, provider.getFirstName()));
-        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_1, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_1, R.string.step_1_of_7, TOP));
-        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_2, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_2, R.string.step_2_of_7, TOP));
-        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_3, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_3, R.string.step_3_of_7, BOTTOM));
-        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_4, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_4, R.string.step_4_of_7, TOP));
-        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_5, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_5, R.string.step_5_of_7, TOP));
-        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_6, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_6, R.string.step_6_of_7, TOP));
-        steps.add(TerminalOnboardingFragment.newInstance(R.drawable.onboarding_7));
+        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_1, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_1, R.string.step_1_of_9, TOP));
+        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_2, R.drawable.onboarding_menu_jobs).withTooltip(R.string.step_2, R.string.step_2_of_9, TOP));
+        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_3, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_3, R.string.step_3_of_9, BOTTOM));
+        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_4, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_4, R.string.step_4_of_9, TOP));
+        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_5, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_5, R.string.step_5_of_9, TOP));
+        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_6, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_6, R.string.step_6_of_9, TOP));
+        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_7, R.drawable.onboarding_help_menu).withTooltip(R.string.step_7, R.string.step_7_of_9, TOP));
+        steps.add(OnboardingFragment.newInstance(R.drawable.onboarding_8, R.drawable.onboarding_menu_schedule).withTooltip(R.string.step_8, R.string.step_8_of_9, TOP));
+        steps.add(TerminalOnboardingFragment.newInstance(R.drawable.onboarding_final));
     }
 
     public void showNextStep()
