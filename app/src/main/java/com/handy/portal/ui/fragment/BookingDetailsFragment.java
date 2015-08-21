@@ -66,8 +66,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-import static com.handy.portal.ui.fragment.ComplementaryBookingsFragment.COMPLEMENTARY_JOBS_SOURCE_NAME;
-
 public class BookingDetailsFragment extends InjectedFragment
 {
     //Layouts points for fragment, the various elements are childed to these
@@ -729,9 +727,8 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         if (event.booking.getProviderId().equals(getLoggedInUserId()))
         {
-            MainViewTab targetTab = event.source != null && event.source.equals(COMPLEMENTARY_JOBS_SOURCE_NAME) ? MainViewTab.SCHEDULED_JOBS : MainViewTab.AVAILABLE_JOBS;
             TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
-            returnToTab(targetTab, event.booking.getStartDate().getTime(), transitionStyle);
+            returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle);
         }
         else
         {
