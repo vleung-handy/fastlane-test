@@ -68,7 +68,7 @@ public class DeepLinkService extends IntentService
         {
             case URI_PATH_AVAILABLE_JOBS:
             {
-                HandyEvent.NavigateToTab navigateToTab = new HandyEvent.NavigateToTab(MainViewTab.JOBS);
+                HandyEvent.NavigateToTab navigateToTab = new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS);
                 bus.post(navigateToTab);
             }
             break;

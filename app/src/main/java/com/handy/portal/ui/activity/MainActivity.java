@@ -5,10 +5,16 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ProviderManager;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 public class MainActivity extends BaseActivity
 {
+    @Inject
+    ProviderManager providerManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -21,7 +27,8 @@ public class MainActivity extends BaseActivity
     {
         super.onResume();
         bus.register(this);
-        configManager.init();
+        configManager.prefetch();
+        providerManager.prefetch();
         checkForTerms();
     }
 

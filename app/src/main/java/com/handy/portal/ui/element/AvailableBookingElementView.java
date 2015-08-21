@@ -50,6 +50,9 @@ public class AvailableBookingElementView extends BookingElementView
     @InjectView(R.id.booking_entry_end_date_text)
     protected TextView endTimeText;
 
+    @InjectView(R.id.booking_entry_distance_text)
+    protected TextView formattedDistanceText;
+
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
         boolean isRequested = booking.getIsRequested();
@@ -85,6 +88,14 @@ public class AvailableBookingElementView extends BookingElementView
         else
         {
             bookingServiceTextView.setText(serviceInfo.getDisplayName());
+        }
+
+        //Distance
+        String formattedDistance = booking.getFormattedDistance();
+        if (formattedDistance != null)
+        {
+            formattedDistanceText.setText(formattedDistance);
+            formattedDistanceText.setVisibility(View.VISIBLE);
         }
 
         //Requested Provider

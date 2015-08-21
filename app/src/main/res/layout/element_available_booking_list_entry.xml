@@ -55,9 +55,9 @@
         android:layout_marginLeft="14dp"
         android:layout_marginStart="14dp"
         android:layout_toEndOf="@+id/booking_entry_time_layout"
-        android:layout_toLeftOf="@+id/booking_entry_payment_layout"
+        android:layout_toLeftOf="@+id/booking_entry_right_layout"
         android:layout_toRightOf="@+id/booking_entry_time_layout"
-        android:layout_toStartOf="@+id/booking_entry_payment_layout"
+        android:layout_toStartOf="@+id/booking_entry_right_layout"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -116,7 +116,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/booking_entry_payment_layout"
+        android:id="@+id/booking_entry_right_layout"
         android:layout_width="100dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
@@ -125,6 +125,14 @@
         android:orientation="vertical"
         android:paddingEnd="20dp"
         android:paddingRight="20dp">
+
+        <TextView
+            android:id="@+id/booking_entry_distance_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/subtitle_grey"
+            android:textSize="14sp"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"

@@ -143,7 +143,7 @@ public class BookingDetailsFragment extends InjectedFragment
         else
         {
             showToast(R.string.an_error_has_occurred);
-            returnToTab(MainViewTab.JOBS, 0, TransitionStyle.REFRESH_TAB);
+            returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB);
         }
 
         return view;
@@ -566,8 +566,14 @@ public class BookingDetailsFragment extends InjectedFragment
     //
     private void requestClaimJob(Booking booking)
     {
+        String source = "";
+        if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
+        {
+            source = getArguments().getString(BundleKeys.BOOKING_SOURCE, "");
+        }
+
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(booking));
+        bus.post(new HandyEvent.RequestClaimJob(booking, source));
     }
 
     private void requestRemoveJob(Booking booking)
@@ -722,7 +728,7 @@ public class BookingDetailsFragment extends InjectedFragment
         if (event.booking.getProviderId().equals(getLoggedInUserId()))
         {
             TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
-            returnToTab(MainViewTab.JOBS, event.booking.getStartDate().getTime(), transitionStyle);
+            returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle);
         }
         else
         {
@@ -746,7 +752,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             //TODO: can't currently remove series using portal endpoint so only removing the single job
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
-            returnToTab(MainViewTab.SCHEDULE, event.booking.getStartDate().getTime(), transitionStyle);
+            returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle);
         }
         else
         {
@@ -806,7 +812,7 @@ public class BookingDetailsFragment extends InjectedFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         //return to schedule page
-        returnToTab(MainViewTab.SCHEDULE, this.associatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+        returnToTab(MainViewTab.SCHEDULED_JOBS, this.associatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
 
         showToast(R.string.check_out_success, Toast.LENGTH_LONG);
     }
@@ -973,7 +979,7 @@ public class BookingDetailsFragment extends InjectedFragment
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULE, arguments, TransitionStyle.REFRESH_TAB));
+                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
                     }
                 });
 
@@ -1030,7 +1036,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             showToast(errorMessage, Toast.LENGTH_LONG);
             //don't have a day to return to just return to time zero, first day in list
-            returnToTab(MainViewTab.JOBS, 0, TransitionStyle.REFRESH_TAB);
+            returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB);
         }
         else
         {

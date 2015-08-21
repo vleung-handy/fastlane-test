@@ -10,9 +10,9 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.ScheduledBookingElementView;
@@ -38,6 +38,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     @InjectView(R.id.find_jobs_for_day_button)
     protected Button findJobsForDayButton;
+
+    @InjectView(R.id.find_matching_jobs_button_container)
+    protected ViewGroup findMatchingJobsButtonContainer;
 
     protected LinearLayout getDatesLayout()
     {
@@ -80,20 +83,25 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
+    protected void beforeRequestBookings()
+    {
+        findMatchingJobsButtonContainer.setVisibility(View.GONE);
+    }
+
+    @Override
     protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
         return ScheduledBookingElementView.class;
     }
 
     @Override
-    protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
+    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
-        //don't show the CTA if we're outside of our available bookings length range
-        long currentTime = DateTimeUtils.getDateWithoutTime(new Date()).getTime();
-        long dateOfBookingsTime = dateOfBookings.getTime();
-        long dateDifference = dateOfBookingsTime - currentTime;
-        final Integer hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if (bookingsForDay.size() == 0 && dateDifference < DateTimeUtils.MILLISECONDS_IN_HOUR * hoursSpanningAvailableBookings)
+        bus.post(new HandyEvent.RequestProviderInfo());
+
+        //show Find Jobs buttons only if we're inside of our available bookings length range
+        int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
+        if (bookingsForDay.size() == 0 && DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
         {
             findJobsForDayButton.setVisibility(View.VISIBLE);
         }
@@ -103,8 +111,21 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
     }
 
+    @Subscribe
+    public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
+    {
+        if (bookingsForSelectedDay == null || selectedDay == null) return;
+
+        //show Find Matching Jobs buttons only if we're inside of our available bookings length range
+        int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
+        if (event.provider.isComplementaryJobsEnabled() && bookingsForSelectedDay.size() == 1 && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings))
+        {
+            findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
     @OnClick(R.id.find_jobs_for_day_button)
-    public void onFindJobsButtonClicked(View v)
+    public void onFindJobsButtonClicked()
     {
         TransitionStyle transitionStyle = TransitionStyle.TAB_TO_TAB;
         long epochTime = selectedDay.getTime();
@@ -112,18 +133,27 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.JOBS, arguments, transitionStyle));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, arguments, transitionStyle));
+    }
+
+    @OnClick(R.id.find_matching_jobs_button)
+    public void onFindMatchingJobsButtonClicked()
+    {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING, bookingsForSelectedDay.get(0));
+
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP));
     }
 
     @Override
-    protected boolean showRequestedIndicator(List<Booking> bookingsForDay)
+    protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay)
     {
         return false;
     }
 
     @Override
     //All bookings not in the past on this page should cause the claimed indicator to appear
-    protected boolean showClaimedIndicator(List<Booking> bookingsForDay)
+    protected boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay)
     {
         for (Booking b : bookingsForDay)
         {
@@ -144,6 +174,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
-        handleBookingsRetrievalError(event);
+        handleBookingsRetrievalError(event, R.string.error_fetching_scheduled_jobs);
     }
 }

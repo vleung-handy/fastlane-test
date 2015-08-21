@@ -52,13 +52,15 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract HandyEvent getRequestEvent(List<Date> dates);
 
-    protected abstract boolean showRequestedIndicator(List<Booking> bookingsForDay);
+    protected abstract boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay);
 
-    protected abstract boolean showClaimedIndicator(List<Booking> bookingsForDay);
+    protected abstract boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay);
 
     protected abstract int numberOfDaysToDisplay();
 
-    protected abstract void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings);
+    protected abstract void beforeRequestBookings();
+
+    protected abstract void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings);
 
     protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
@@ -68,6 +70,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     //should use date without time for these entries, see Utils.getDateWithoutTime
     private Map<Date, DateButtonView> dateButtonMap;
     protected Date selectedDay;
+    protected List<Booking> bookingsForSelectedDay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,16 +99,21 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         super.onResume();
         if (!MainActivityFragment.clearingBackStack)
         {
+            bus.post(new HandyEvent.RequestProviderInfo());
+
             initDateButtons();
 
-            if (selectedDay != null && dateButtonMap.containsKey(selectedDay))
+            if (selectedDay == null || !dateButtonMap.containsKey(selectedDay))
+            {
+                selectedDay = DateTimeUtils.getDateWithoutTime(new Date());
+            }
+
+            if (dateButtonMap.containsKey(selectedDay))
             {
                 dateButtonMap.get(selectedDay).performClick();
             }
-            else
-            {
-                getDatesLayout().getChildAt(0).performClick();
-            }
+
+            requestBookingsForOtherDays(selectedDay);
         }
     }
 
@@ -151,17 +159,16 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         Collections.sort(bookings);
 
         DateButtonView dateButtonView = dateButtonMap.get(event.day);
-        dateButtonView.showRequestedIndicator(showRequestedIndicator(bookings));
-        dateButtonView.showClaimedIndicator(showClaimedIndicator(bookings));
+        dateButtonView.showRequestedIndicator(shouldShowRequestedIndicator(bookings));
+        dateButtonView.showClaimedIndicator(shouldShowClaimedIndicator(bookings));
 
         if (selectedDay.equals(event.day))
         {
             displayBookings(bookings, selectedDay);
-            requestBookingsForOtherDays(selectedDay);
         }
     }
 
-    protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event)
+    protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
         if (event.days.contains(selectedDay))
         {
@@ -172,7 +179,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
             else
             {
-                errorText.setText(R.string.error_fetching_available_jobs);
+                errorText.setText(errorStateStringId);
             }
             fetchErrorView.setVisibility(View.VISIBLE);
         }
@@ -204,6 +211,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 {
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
+                    beforeRequestBookings();
                     requestBookings(Lists.newArrayList(day), true);
                 }
             });
@@ -225,10 +233,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void displayBookings(List<Booking> bookings, Date dateOfBookings)
     {
+        bookingsForSelectedDay = bookings;
         getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
-        setupCTAButton(bookings, dateOfBookings);
+        afterDisplayBookings(bookings, dateOfBookings);
     }
 
     private void initListClickListener()

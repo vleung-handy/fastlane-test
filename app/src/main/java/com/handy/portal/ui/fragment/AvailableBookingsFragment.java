@@ -64,14 +64,14 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected boolean showRequestedIndicator(List<Booking> bookingsForDay)
+    protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay)
     {
         //Bookings are sorted such that the requested bookings show up first so we just need to check the first one
         return bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
     }
 
     @Override
-    protected boolean showClaimedIndicator(List<Booking> bookingsForDay)
+    protected boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay)
     {
         return false;
     }
@@ -84,10 +84,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
+    protected void beforeRequestBookings()
     {
-        //do nothing, no ctas on this page, yet, maybe a refresh button
-        //we should track how often pros see 0 jobs available
+    }
+
+    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
+    {
     }
 
     @Subscribe
@@ -105,6 +107,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event)
     {
-        handleBookingsRetrievalError(event);
+        handleBookingsRetrievalError(event, R.string.error_fetching_available_jobs);
     }
 }

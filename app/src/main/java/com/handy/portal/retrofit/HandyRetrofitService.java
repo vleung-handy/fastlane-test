@@ -46,6 +46,9 @@ public interface HandyRetrofitService
     @PUT(BOOKINGS_PATH + "{booking_id}/claim")
     void claimBooking(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
+    @GET(BOOKINGS_PATH + "{booking_id}/complementary")
+    void getComplementaryBookings(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
     @GET(BOOKINGS_PATH + "{booking_id}")
     void getBookingDetails(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 

@@ -89,11 +89,11 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void onClaimBookingSuccess_switchToJobsTab() throws Exception
+    public void onClaimBookingSuccess_switchToScheduleTab() throws Exception
     {
-        fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(booking));
+        fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(booking, null));
 
-        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.JOBS));
+        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
         // the event below depends on the event above being called to set the associated booking
         fragment.onNotifyCheckOutJobRequestReceived(new HandyEvent.ReceiveNotifyJobCheckoutSuccess(null));
 
-        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULE));
+        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_out_success)));
     }
 

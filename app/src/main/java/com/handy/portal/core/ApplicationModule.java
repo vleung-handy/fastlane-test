@@ -38,6 +38,7 @@ import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
@@ -89,6 +90,7 @@ import retrofit.converter.GsonConverter;
         DeepLinkService.class,
         MainActivityFragmentNavigationHelper.class,
         OnboardingActivity.class,
+        ComplementaryBookingsFragment.class,
 })
 public final class ApplicationModule
 {

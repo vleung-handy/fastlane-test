@@ -376,10 +376,12 @@ public abstract class HandyEvent
     public static class RequestClaimJob extends RequestBookingActionEvent
     {
         public final Booking booking;
-        public RequestClaimJob(Booking booking)
+        public final String source;
+        public RequestClaimJob(Booking booking, String source)
         {
             this.bookingId = booking.getId();
             this.booking = booking;
+            this.source = source;
         }
     }
 
@@ -454,9 +456,13 @@ public abstract class HandyEvent
     @Track("claim job")
     public static class ReceiveClaimJobSuccess extends ReceiveBookingSuccessEvent
     {
-        public ReceiveClaimJobSuccess(Booking booking)
+        @TrackField("source")
+        public String source;
+
+        public ReceiveClaimJobSuccess(Booking booking, String source)
         {
             this.booking = booking;
+            this.source = source;
         }
     }
 
@@ -888,6 +894,34 @@ public abstract class HandyEvent
         {
             this.action = action;
             this.actionName = action.getActionName();
+        }
+    }
+
+    public static class RequestComplementaryBookings extends RequestBookingActionEvent
+    {
+        public final Booking booking;
+        public RequestComplementaryBookings(Booking booking)
+        {
+            this.booking = booking;
+            this.bookingId = booking.getId();
+        }
+    }
+
+    public static class ReceiveComplementaryBookingsSuccess
+    {
+        public final List<Booking> bookings;
+
+        public ReceiveComplementaryBookingsSuccess(List<Booking> bookings)
+        {
+            this.bookings = bookings;
+        }
+    }
+
+    public static class ReceiveComplementaryBookingsError extends ReceiveErrorEvent
+    {
+        public ReceiveComplementaryBookingsError(DataManager.DataManagerError error)
+        {
+            this.error = error;
         }
     }
 

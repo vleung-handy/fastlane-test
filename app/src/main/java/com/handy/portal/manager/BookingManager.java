@@ -29,6 +29,7 @@ public class BookingManager
 
     private final Cache<Date, List<Booking>> availableBookingsCache;
     private final Cache<Date, List<Booking>> scheduledBookingsCache;
+    private final Cache<Date, List<Booking>> complementaryBookingsCache;
 
     @Inject
     public BookingManager(final Bus bus, final DataManager dataManager)
@@ -38,12 +39,17 @@ public class BookingManager
         this.dataManager = dataManager;
 
         this.availableBookingsCache = CacheBuilder.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(100)
                 .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
 
         this.scheduledBookingsCache = CacheBuilder.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(100)
+                .expireAfterWrite(2, TimeUnit.MINUTES)
+                .build();
+
+        this.complementaryBookingsCache = CacheBuilder.newBuilder()
+                .maximumSize(100)
                 .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
     }
@@ -171,7 +177,37 @@ public class BookingManager
     }
 
     @Subscribe
-    public void onRequestClaimJob(HandyEvent.RequestClaimJob event)
+    public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
+    {
+        final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
+        final List<Booking> cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
+        if (cachedComplementaryBookings != null)
+        {
+            bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(cachedComplementaryBookings));
+        }
+        else
+        {
+            dataManager.getComplementaryBookings(event.bookingId, new DataManager.Callback<BookingsWrapper>()
+            {
+                @Override
+                public void onSuccess(BookingsWrapper bookingsWrapper)
+                {
+                    List<Booking> bookings = bookingsWrapper.getBookings();
+                    complementaryBookingsCache.put(day, bookings);
+                    bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
+                }
+
+                @Override
+                public void onError(DataManager.DataManagerError error)
+                {
+                    bus.post(new HandyEvent.ReceiveComplementaryBookingsError(error));
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void onRequestClaimJob(final HandyEvent.RequestClaimJob event)
     {
         String bookingId = event.booking.getId();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
@@ -182,7 +218,7 @@ public class BookingManager
             public void onSuccess(Booking booking)
             {
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveClaimJobSuccess(booking));
+                bus.post(new HandyEvent.ReceiveClaimJobSuccess(booking, event.source));
             }
 
             @Override
@@ -358,5 +394,6 @@ public class BookingManager
     {
         availableBookingsCache.invalidate(day);
         scheduledBookingsCache.invalidate(day);
+        complementaryBookingsCache.invalidate(day);
     }
 }

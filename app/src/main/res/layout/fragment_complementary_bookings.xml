@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/handy_bg"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/complementary_bookings_banner"
+        style="@style/Banner"
+        android:text="@string/matching_jobs">
+
+        <TextView
+            android:id="@+id/complementary_bookings_banner_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/matching_jobs"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+        <ImageButton
+            android:id="@+id/complementary_bookings_banner_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@color/handy_blue"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@drawable/ic_x_white"/>
+
+    </RelativeLayout>
+
+    <include layout="@layout/merge_loading"/>
+
+    <include layout="@layout/layout_complementary_bookings_empty"/>
+
+    <include layout="@layout/layout_fetch_error"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/complementary_bookings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/earlier_bookings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="9dp"
+                android:orientation="vertical"/>
+
+            <LinearLayout
+                android:id="@+id/claimed_bookings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:orientation="vertical"/>
+
+            <LinearLayout
+                android:id="@+id/later_bookings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

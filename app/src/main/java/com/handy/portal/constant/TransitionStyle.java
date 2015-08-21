@@ -2,11 +2,7 @@ package com.handy.portal.constant;
 
 import com.handy.portal.R;
 
-/**
- * Created by cdavis on 6/2/15.
- */
 //have information about the anims and overlays that override the defaults
-//
 public enum TransitionStyle
 {
     JOB_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_CLAIM_SUCCESS),
@@ -19,17 +15,21 @@ public enum TransitionStyle
     NATIVE_TO_WEBVIEW(R.anim.fade_in, R.anim.fade_out),
     WEBVIEW_TO_NATIVE(R.anim.fade_in, R.anim.fade_out),
     REFRESH_TAB(R.anim.fade_in, R.anim.fade_out),
-    NONE()
-    ;
+    SLIDE_UP(R.anim.slide_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_down),
+    NONE();
 
     private int incomingAnimId;
     private int outgoingAnimId;
+    private int popIncomingAnimId;
+    private int popOutgoingAnimId;
     private OverlayStyle overlayStyle;
 
     TransitionStyle()
     {
         this.incomingAnimId = R.anim.none;
         this.outgoingAnimId = R.anim.none;
+        this.popIncomingAnimId = R.anim.none;
+        this.popOutgoingAnimId = R.anim.none;
         this.overlayStyle = OverlayStyle.NONE;
     }
 
@@ -47,16 +47,47 @@ public enum TransitionStyle
         this.overlayStyle = overlayStyle;
     }
 
-    public boolean shouldShowOverlay()
+    TransitionStyle(int incomingAnimId, int outgoingAnimId, int popIncomingAnimId, int popOutgoingAnimId)
     {
-        return(overlayStyle.shouldShowOverlay());
+        this(incomingAnimId, outgoingAnimId);
+        this.popIncomingAnimId = popIncomingAnimId;
+        this.popOutgoingAnimId = popOutgoingAnimId;
     }
 
-    public int getOverlayStringId() { return overlayStyle.getOverlayStringId();}
-    public int getOverlayImageId() { return overlayStyle.getOverlayImageId(); }
+    public boolean shouldShowOverlay()
+    {
+        return (overlayStyle.shouldShowOverlay());
+    }
 
-    public int getIncomingAnimId() { return incomingAnimId; }
-    public int getOutgoingAnimId() { return outgoingAnimId; }
+    public int getOverlayStringId()
+    {
+        return overlayStyle.getOverlayStringId();
+    }
+
+    public int getOverlayImageId()
+    {
+        return overlayStyle.getOverlayImageId();
+    }
+
+    public int getIncomingAnimId()
+    {
+        return incomingAnimId;
+    }
+
+    public int getOutgoingAnimId()
+    {
+        return outgoingAnimId;
+    }
+
+    public int getPopIncomingAnimId()
+    {
+        return popIncomingAnimId;
+    }
+
+    public int getPopOutgoingAnimId()
+    {
+        return popOutgoingAnimId;
+    }
 
 }
 
