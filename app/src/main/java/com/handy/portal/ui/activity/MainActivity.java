@@ -27,8 +27,8 @@ public class MainActivity extends BaseActivity
     {
         super.onResume();
         bus.register(this);
-        configManager.init();
-        providerManager.init();
+        configManager.prefetch();
+        providerManager.prefetch();
         checkForTerms();
     }
 

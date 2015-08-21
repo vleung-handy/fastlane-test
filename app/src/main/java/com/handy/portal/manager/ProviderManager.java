@@ -31,7 +31,7 @@ public class ProviderManager
         bus.register(this);
     }
 
-    public void init()
+    public void prefetch()
     {
         requestProviderInfo();
     }

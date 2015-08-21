@@ -20,7 +20,7 @@ public class ConfigManager
         this.configParams = new ConfigParams();
     }
 
-    public void init()
+    public void prefetch()
     {
         dataManager.getConfigParams(CONFIG_PARAM_KEYS, new DataManager.Callback<ConfigParams>()
         {
