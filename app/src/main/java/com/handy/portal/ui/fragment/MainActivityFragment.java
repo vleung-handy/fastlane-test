@@ -124,13 +124,10 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onViewStateRestored(savedInstanceState);
 
-        String tab = MainViewTab.AVAILABLE_JOBS.name();
-        if (savedInstanceState != null && savedInstanceState.containsKey(BundleKeys.TAB))
+        if (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB))
         {
-            tab = savedInstanceState.getString(BundleKeys.TAB);
+            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
-
-        switchToTab(MainViewTab.valueOf(tab), false);
     }
 
     @Override
