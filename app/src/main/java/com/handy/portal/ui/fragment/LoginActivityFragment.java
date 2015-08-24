@@ -30,6 +30,7 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -201,7 +202,7 @@ public class LoginActivityFragment extends InjectedFragment
     {
         Uri uriUrl = Uri.parse(url);
         Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-        startActivity(launchBrowser);
+        Utils.safeLaunchIntent(launchBrowser, this.getActivity());
     }
 
 

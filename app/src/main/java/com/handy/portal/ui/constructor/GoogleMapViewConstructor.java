@@ -29,6 +29,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
 import com.handy.portal.util.UIUtils;
+import com.handy.portal.util.Utils;
 
 import java.util.Locale;
 
@@ -183,6 +184,6 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=%d&q=%s",
                 target.latitude, target.longitude, DEFAULT_ZOOM_LEVEL, fullAddress);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        getContext().startActivity(intent);
+        Utils.safeLaunchIntent(intent, getContext());
     }
 }

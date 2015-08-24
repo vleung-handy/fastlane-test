@@ -98,7 +98,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
                 } catch (ActivityNotFoundException e)
                 {
                     intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
-                    context.startActivity(intent);
+                    Utils.safeLaunchIntent(intent, context);
                 }
             }
         };

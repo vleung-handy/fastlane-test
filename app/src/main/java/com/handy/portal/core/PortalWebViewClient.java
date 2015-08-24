@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
 public class PortalWebViewClient extends WebViewClient
@@ -42,13 +42,13 @@ public class PortalWebViewClient extends WebViewClient
         else if (url.startsWith("tel:"))
         {
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
-            parentFragment.startActivity(intent);
+            Utils.safeLaunchIntent(intent, parentFragment.getActivity());
             return true;
         }
         else if (url.startsWith("sms:"))
         {
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
-            parentFragment.startActivity(intent);
+            Utils.safeLaunchIntent(intent, parentFragment.getActivity());
             return true;
         }
 

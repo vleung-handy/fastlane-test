@@ -10,6 +10,7 @@ import android.webkit.WebViewClient;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.common.io.CharStreams;
+import com.handy.portal.util.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,7 +87,7 @@ public class HandyWebView extends WebView //TODO: refactor class name
                 {
                     try
                     {
-                        view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), view.getContext());
                     } catch (Exception e)
                     {
                         Crashlytics.log("Attempted to open " + url);

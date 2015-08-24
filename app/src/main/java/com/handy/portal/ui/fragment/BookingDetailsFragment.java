@@ -313,7 +313,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 public void onClick(View v)
                 {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_SERVICES_INSTALL_URL));
-                    startActivity(browserIntent);
+                    Utils.safeLaunchIntent(browserIntent, BookingDetailsFragment.this.getActivity());
                 }
             });
         }
@@ -679,7 +679,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         try
         {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)));
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), this.getActivity());
         } catch (ActivityNotFoundException activityException)
         {
             Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
@@ -691,7 +691,7 @@ public class BookingDetailsFragment extends InjectedFragment
     {
         try
         {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)));
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), this.getActivity());
         } catch (ActivityNotFoundException activityException)
         {
             Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
