@@ -13,6 +13,7 @@ repositories {
     mavenCentral()
     maven { url 'http://download.crashlytics.com/maven' }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "http://dl.bintray.com/urbanairship/android" }
     flatDir {
         dirs 'libs'
     }
@@ -33,9 +34,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 26
-        versionName "0.5.2"
-        multiDexEnabled true
+        versionCode 27
+        versionName "0.5.3"
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
@@ -59,28 +59,23 @@ android {
             minifyEnabled true
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-rules-debug.pro'
             applicationIdSuffix ".debug"
         }
     }
 
     productFlavors {
-        stable {
+        hosted {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.5.2"
-            signingConfig signingConfigs.prod
-        }
-        beta {
-            applicationId "com.handy.portal"
-            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName "0.5.2b"
+            versionName defaultConfig.versionName
             signingConfig signingConfigs.prod
         }
         store {
             applicationId 'com.handybook.handy_portal'
             manifestPlaceholders = [PACKAGE_NAME: "com.handybook.handy_portal"]
-            versionName "0.5.2p"
+            versionName defaultConfig.versionName + "p"
             signingConfig signingConfigs.playstore
         }
 
@@ -107,26 +102,57 @@ tasks.withType(Test) {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:multidex:1.0.0'
+
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:support-v4:22.0.0'
+
+    //Google play services
+    compile 'com.google.android.gms:play-services:7.5.0'
+
+    //Guava
     compile 'com.google.guava:guava:18.0'
+
+    //Square libraries, butterknife, dagger, retrofit
     compile 'com.jakewharton:butterknife:5.1.2'
     compile 'com.squareup.dagger:dagger:1.2.2'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile 'com.squareup:otto:1.3.5'
-    compile 'com.mixpanel.android:mixpanel-android:4.4.1@aar'
     compile 'com.squareup.okhttp:okhttp:2.1.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
+
+    //Mixpanel analytics
+    compile 'com.mixpanel.android:mixpanel-android:4.4.1@aar'
+
+    //Custom font display
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-    compile 'com.google.android.gms:play-services:7.0.0'
+
+    //Crashyltics client crash reporting
     compile 'com.crashlytics.android:crashlytics:1.1.13'
+
+    //New relic crash reporting
     compile 'com.newrelic.agent.android:android-agent:5.1.2'
+
+    //SecurePrefs storage
     compile 'com.scottyab:secure-preferences-lib:0.1.1'
 
+    //Urban Airship SDK
+    compile 'com.urbanairship.android:urbanairship-sdk:6.1.+'
+
+    //Recommended for in-app messaging
+    compile 'com.android.support:cardview-v7:22.2.0'
+
+    //Recommended for location services
+    compile 'com.google.android.gms:play-services-location:7.5.0'
+
+    //Required for Android (GCM) push notifications
+    compile 'com.google.android.gms:play-services-gcm:7.5.0'
+
+    //Testing
     testCompile 'org.robolectric:robolectric:3.0-rc3'
     testCompile 'org.robolectric:shadows-support-v4:3.0-rc3'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'
+
+
 }

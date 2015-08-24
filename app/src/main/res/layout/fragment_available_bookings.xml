@@ -1,9 +1,3 @@
-<com.handy.portal.ui.layout.SlideUpPanelContainer
-    android:id="@+id/slide_up_panel_container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
@@ -16,14 +10,11 @@
         style="@style/Banner"
         android:text="@string/available_jobs"/>
 
-    <include layout="@layout/layout_fetch_error"/>
-
     <LinearLayout
         android:id="@+id/bookings_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <HorizontalScrollView
             android:id="@+id/available_bookings_dates_scroll_view"
@@ -40,18 +31,18 @@
 
         </HorizontalScrollView>
 
+        <include layout="@layout/layout_fetch_error"/>
+
         <include layout="@layout/layout_available_bookings_empty"/>
 
         <com.handy.portal.ui.element.BookingListView
             android:id="@+id/available_jobs_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="1dp"
             android:divider="@color/white_trans"
-            android:dividerHeight="1dp"/>
+            android:dividerHeight="1dp"
+            android:paddingTop="1dp"/>
 
     </LinearLayout>
 
 </LinearLayout>
-
-    </com.handy.portal.ui.layout.SlideUpPanelContainer>

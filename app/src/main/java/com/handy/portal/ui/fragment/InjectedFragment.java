@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 
 public class InjectedFragment extends android.support.v4.app.Fragment
 {
-    protected boolean allowCallbacks;
     protected Toast toast;
 
     @Inject
@@ -28,7 +27,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Inject
     GoogleManager googleManager;
     @Inject
-    protected Bus bus;
+    Bus bus;
     @Inject
     ConfigManager configManager;
 
@@ -58,20 +57,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     {
         ButterKnife.reset(this);
         super.onDestroyView();
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        allowCallbacks = true;
-    }
-
-    @Override
-    public void onStop()
-    {
-        allowCallbacks = false;
-        super.onStop();
     }
 
     //Each fragment if it requires arguments from the bundles should override this list

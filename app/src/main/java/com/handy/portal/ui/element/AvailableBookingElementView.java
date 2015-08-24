@@ -23,6 +23,9 @@ public class AvailableBookingElementView extends BookingElementView
     @InjectView(R.id.booking_entry_payment_text)
     protected TextView paymentText;
 
+    @InjectView(R.id.booking_entry_cents_text)
+    protected TextView centsPaymentText;
+
     @InjectView(R.id.booking_entry_payment_bonus_text)
     protected TextView bonusPaymentText;
 
@@ -47,6 +50,9 @@ public class AvailableBookingElementView extends BookingElementView
     @InjectView(R.id.booking_entry_end_date_text)
     protected TextView endTimeText;
 
+    @InjectView(R.id.booking_entry_distance_text)
+    protected TextView formattedDistanceText;
+
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
         boolean isRequested = booking.getIsRequested();
@@ -60,10 +66,10 @@ public class AvailableBookingElementView extends BookingElementView
         ButterKnife.inject(this, convertView);
 
         //Payment
-        UIUtils.setPaymentInfo(paymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));
+        UIUtils.setPaymentInfo(paymentText, centsPaymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));
 
         //Bonus Payment
-        UIUtils.setPaymentInfo(bonusPaymentText, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
+        UIUtils.setPaymentInfo(bonusPaymentText, null, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
 
         //Area
         bookingAreaTextView.setText(booking.getAddress().getShortRegion());
@@ -82,6 +88,14 @@ public class AvailableBookingElementView extends BookingElementView
         else
         {
             bookingServiceTextView.setText(serviceInfo.getDisplayName());
+        }
+
+        //Distance
+        String formattedDistance = booking.getFormattedDistance();
+        if (formattedDistance != null)
+        {
+            formattedDistanceText.setText(formattedDistance);
+            formattedDistanceText.setVisibility(View.VISIBLE);
         }
 
         //Requested Provider

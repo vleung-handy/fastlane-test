@@ -10,14 +10,11 @@
         style="@style/Banner"
         android:text="@string/scheduled_jobs"/>
 
-    <include layout="@layout/layout_fetch_error"/>
-
     <LinearLayout
         android:id="@+id/bookings_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <HorizontalScrollView
             android:id="@+id/scheduled_bookings_dates_scroll_view"
@@ -34,15 +31,46 @@
 
         </HorizontalScrollView>
 
+        <include layout="@layout/layout_fetch_error"/>
+
         <include layout="@layout/layout_scheduled_bookings_empty"/>
 
         <com.handy.portal.ui.element.BookingListView
             android:id="@+id/scheduled_jobs_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="1dp"
             android:divider="@color/white_trans"
-            android:dividerHeight="1dp"/>
+            android:dividerHeight="1dp"
+            android:paddingTop="1dp"/>
+
+        <LinearLayout
+            android:id="@+id/find_matching_jobs_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/find_matching_jobs_button"
+                style="@style/Button.PartnerBlueEmpty.Round"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_search"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_search"
+                android:text="@string/find_matching_jobs"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
+                android:text="@string/find_jobs_close_to_your_claimed_job"
+                android:textColor="@color/subtitle_grey"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

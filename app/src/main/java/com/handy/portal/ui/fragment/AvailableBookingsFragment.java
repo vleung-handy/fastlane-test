@@ -1,16 +1,16 @@
 package com.handy.portal.ui.fragment;
 
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -46,9 +46,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected HandyEvent getRequestEvent()
+    protected HandyEvent getRequestEvent(List<Date> dates)
     {
-        return new HandyEvent.RequestAvailableBookings();
+        return new HandyEvent.RequestAvailableBookings(dates);
     }
 
     @Override
@@ -64,23 +64,32 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected boolean showRequestedIndicator(List<Booking> bookingsForDay)
+    protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay)
     {
         //Bookings are sorted such that the requested bookings show up first so we just need to check the first one
         return bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
     }
 
     @Override
-    protected boolean showClaimedIndicator(List<Booking> bookingsForDay)
+    protected boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay)
     {
         return false;
     }
 
     @Override
-    protected void setupCTAButton(List<Booking> bookingsForDay, Date dateOfBookings)
+    protected int numberOfDaysToDisplay()
     {
-        //do nothing, no ctas on this page, yet, maybe a refresh button
-        //we should track how often pros see 0 jobs available
+        int daysSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 144) / DateTimeUtils.HOURS_IN_DAY;
+        return daysSpanningAvailableBookings + 1; // plus today
+    }
+
+    @Override
+    protected void beforeRequestBookings()
+    {
+    }
+
+    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
+    {
     }
 
     @Subscribe
@@ -98,15 +107,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
-            errorText.setText(R.string.error_fetching_connectivity_issue);
-        }
-        else
-        {
-            errorText.setText(R.string.error_fetching_available_jobs);
-        }
-        fetchErrorView.setVisibility(View.VISIBLE);
+        handleBookingsRetrievalError(event, R.string.error_fetching_available_jobs);
     }
 }

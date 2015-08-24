@@ -1,22 +1,21 @@
 package com.handy.portal.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class Booking implements Parcelable, Comparable<Booking>
+public class Booking implements Comparable<Booking>, Serializable
 {
     @SerializedName("id")
     private String id;
@@ -30,19 +29,14 @@ public class Booking implements Parcelable, Comparable<Booking>
     private String status;
     @SerializedName("end_date")
     private Date endDate;
-    @SerializedName("hours")
-    private float hours;
-    @SerializedName("price")
-    private float price;
 
-    @SerializedName("laundry_status")
-    private LaundryStatus laundryStatus;
+    @SerializedName("check_in_summary")
+    private CheckInSummary checkInSummary;
+    @SerializedName("eta_lateness_minutes")
+    private Integer providerMinutesLate;//value returned from server can be null
+
     @SerializedName("address")
     private Address address;
-    @SerializedName("billed_status")
-    private String billedStatus;
-    @SerializedName("payment_hash")
-    private ArrayList<LineItem> paymentInfo;
 
     @SerializedName("is_requested")
     private boolean isRequested;
@@ -52,7 +46,6 @@ public class Booking implements Parcelable, Comparable<Booking>
     private PaymentInfo bonusPayment;
     @SerializedName("frequency")
     private int frequency;
-
 
     @SerializedName("provider_id")
     private String providerId;
@@ -68,17 +61,18 @@ public class Booking implements Parcelable, Comparable<Booking>
     private String bookingPhone;
 
     @SerializedName("booking_instructions")
-    private List<BookingInstruction> bookingInstructions; //Customer Details
+    private List<BookingInstruction> bookingInstructions;
     @SerializedName("booking_instruction_groups")
-    private List<BookingInstructionGroup> bookingInstructionGroups; //Customer Details
+    private List<BookingInstructionGroup> bookingInstructionGroups;
     @SerializedName("booking_extras")
-    private ArrayList<ExtraInfoWrapper> extrasInfo; //Extras
-    @SerializedName("description")
-    private String description; //Customer Request
+    private ArrayList<ExtraInfoWrapper> extrasInfo;
     @SerializedName("msg_to_pro")
-    private String proNote;       //Customer Request
+    private String proNote;
 
-    public int compareTo(Booking other)
+    @SerializedName("distance")
+    private String formattedDistance;
+
+    public int compareTo(@NonNull Booking other)
     {
         if (getProviderId().equals(NO_PROVIDER_ASSIGNED))
         {
@@ -139,11 +133,6 @@ public class Booking implements Parcelable, Comparable<Booking>
         return bonusPayment;
     }
 
-    public String getDescription()
-    {
-        return description;
-    }
-
     public boolean getIsRequested()
     {
         return isRequested;
@@ -152,11 +141,6 @@ public class Booking implements Parcelable, Comparable<Booking>
     public String getId()
     {
         return id;
-    }
-
-    public void setId(final String id)
-    {
-        this.id = id;
     }
 
     public boolean isStarted()
@@ -206,11 +190,6 @@ public class Booking implements Parcelable, Comparable<Booking>
         return endDate;
     }
 
-    public float getPrice()
-    {
-        return price;
-    }
-
     public Address getAddress()
     {
         return address;
@@ -219,21 +198,6 @@ public class Booking implements Parcelable, Comparable<Booking>
     public String getProviderId()
     {
         return providerId;
-    }
-
-    public LaundryStatus getLaundryStatus()
-    {
-        return laundryStatus;
-    }
-
-    public String getBilledStatus()
-    {
-        return billedStatus;
-    }
-
-    public ArrayList<LineItem> getPaymentInfo()
-    {
-        return paymentInfo;
     }
 
     public ArrayList<ExtraInfoWrapper> getExtrasInfo()
@@ -278,8 +242,23 @@ public class Booking implements Parcelable, Comparable<Booking>
         return "GB".equalsIgnoreCase(country);
     }
 
+    public CheckInSummary getCheckInSummary()
+    {
+        return checkInSummary;
+    }
+
+    public Integer getProviderMinutesLate()
+    {
+        return providerMinutesLate;
+    }
+
     //providerId = 0, no one assigned can claim, otherwise is already claimed
     public static final String NO_PROVIDER_ASSIGNED = "0";
+
+    public String getFormattedDistance()
+    {
+        return formattedDistance;
+    }
 
     //Basic booking statuses inferrable from providerId
     public enum BookingStatus
@@ -289,7 +268,7 @@ public class Booking implements Parcelable, Comparable<Booking>
         UNAVAILABLE,
     }
 
-    public enum ArrivalTimeOption
+    public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
         /* KEEP IN SYNC WITH SERVER VALUES */
         EARLY_30_MINUTES(R.string.arrival_time_early_30, "-30"),
@@ -368,7 +347,7 @@ public class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-    public static class Action
+    public static class Action implements Serializable
     {
         // KEEP IN SYNC WITH SERVER VALUES
         public static final String ACTION_CLAIM = "claim";
@@ -398,8 +377,6 @@ public class Booking implements Parcelable, Comparable<Booking>
         private String warningText; //Indicates a popup should be shown with this message to confirm action
         @SerializedName("enabled")
         private boolean enabled;
-        @SerializedName("deep_link_type")
-        private String deepLinkType;
         @SerializedName("deep_link_data")
         private String deepLinkData;
 
@@ -423,97 +400,13 @@ public class Booking implements Parcelable, Comparable<Booking>
             return enabled;
         }
 
-        public String getDeepLinkType()
-        {
-            return deepLinkType;
-        }
-
         public String getDeepLinkData()
         {
             return deepLinkData;
         }
     }
 
-    private Booking(final Parcel in)
-    {
-        final String[] stringData = new String[8];
-        in.readStringArray(stringData);
-        id = stringData[0];
-        service = stringData[1];
-
-        try
-        {
-            laundryStatus = LaundryStatus.valueOf(stringData[2]);
-        } catch (IllegalArgumentException x)
-        {
-            laundryStatus = null;
-        }
-
-        proNote = stringData[3];
-        billedStatus = stringData[4];
-
-        //final int[] intData = new int[1];
-        //in.readIntArray(intData);
-
-
-        final float[] floatData = new float[2];
-        in.readFloatArray(floatData);
-        hours = floatData[0];
-        price = floatData[1];
-
-        startDate = new Date(in.readLong());
-        address = in.readParcelable(Address.class.getClassLoader());
-
-        paymentInfo = new ArrayList<LineItem>();
-        in.readTypedList(paymentInfo, LineItem.CREATOR);
-
-//        extrasInfo = new ArrayList<ExtraInfo>();
-//        in.readTypedList(extrasInfo, ExtraInfo.CREATOR);
-    }
-
-    public static Booking fromJson(final String json)
-    {
-        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
-                .fromJson(json, Booking.class);
-    }
-
-    @Override
-    public void writeToParcel(final Parcel out, final int flags)
-    {
-        out.writeStringArray(new String[]{
-                id, service, laundryStatus != null
-                ? laundryStatus.name() : "", proNote,
-                billedStatus
-        });
-
-        out.writeIntArray(new int[]{});
-        out.writeFloatArray(new float[]{hours, price});
-        out.writeLong(startDate.getTime());
-        out.writeParcelable(address, 0);
-        out.writeTypedList(paymentInfo);
-        //out.writeTypedList(extrasInfo);
-    }
-
-    @Override
-    public int describeContents()
-    {
-        return 0;
-    }
-
-    public static final Creator CREATOR = new Creator()
-    {
-        public Booking createFromParcel(final Parcel in)
-        {
-            return new Booking(in);
-        }
-
-        public Booking[] newArray(final int size)
-        {
-            return new Booking[size];
-        }
-    };
-
-    public static class User
+    public static class User implements Serializable
     {
         @SerializedName("email")
         private String email;
@@ -521,9 +414,6 @@ public class Booking implements Parcelable, Comparable<Booking>
         private String firstName;
         @SerializedName("last_name")
         private String lastName;
-        //TODO: We are currently receiving the real phone number which we don't want to expose, we should make sure we are getting twillo or nothing
-        //@SerializedName("phone_str")
-        //private String phoneNumberString;
 
         public String getEmail()
         {
@@ -540,11 +430,6 @@ public class Booking implements Parcelable, Comparable<Booking>
             return lastName;
         }
 
-        /*public String getPhoneNumberString()
-        {
-            return phoneNumberString;
-        }*/
-
         public String getAbbreviatedName()
         {
             return firstName + (lastName.isEmpty() ? "" : " " + lastName.charAt(0) + ".");
@@ -554,10 +439,9 @@ public class Booking implements Parcelable, Comparable<Booking>
         {
             return firstName + " " + lastName;
         }
-
     }
 
-    public static class PaymentInfo
+    public static class PaymentInfo implements Serializable
     {
         @SerializedName("amount")
         private int amount;
@@ -589,9 +473,14 @@ public class Booking implements Parcelable, Comparable<Booking>
         {
             return currencySuffix;
         }
+
+        public String getCurrencyCode()
+        {
+            return currencyCode;
+        }
     }
 
-    public static class BookingInstruction
+    public static class BookingInstruction implements Serializable
     {
         @SerializedName("description")
         private String description;
@@ -607,12 +496,9 @@ public class Booking implements Parcelable, Comparable<Booking>
         {
             return machineName;
         }
-
-        //filter out based on machine name
-
     }
 
-    public static class BookingInstructionGroup
+    public static class BookingInstructionGroup implements Serializable
     {
         public static String GROUP_ENTRY_METHOD = "entry_method";
         public static String GROUP_LINENS_LAUNDRY = "linens_laundry";
@@ -644,7 +530,26 @@ public class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-    public static class ServiceInfo
+    public static class CheckInSummary implements Serializable
+    {
+        @SerializedName("is_checked_in")
+        private boolean isCheckedIn; //false if checked out or on my way
+
+        @SerializedName("time")
+        private Date checkInTime;
+
+        public Date getCheckInTime()
+        {
+            return checkInTime;
+        }
+
+        public boolean isCheckedIn()
+        {
+            return isCheckedIn;
+        }
+    }
+
+    public static class ServiceInfo implements Serializable
     {
         private static final String MACHINE_NAME_CLEANING = "home_cleaning";
 
@@ -669,7 +574,7 @@ public class Booking implements Parcelable, Comparable<Booking>
         }
     }
 
-    public static class Address implements Parcelable
+    public static class Address implements Serializable
     {
         @SerializedName("address1")
         private String address1;
@@ -737,198 +642,18 @@ public class Booking implements Parcelable, Comparable<Booking>
             return (getAddress1() + (getAddress2() != null ? " " + getAddress2() : ""));
         }
 
-        private Address(final Parcel in)
+        public String getCountry()
         {
-            final String[] stringData = new String[5];
-            in.readStringArray(stringData);
-            address1 = stringData[0];
-            address2 = stringData[1];
-            city = stringData[2];
-            state = stringData[3];
-            zip = stringData[4];
+            return country;
         }
 
-        @Override
-        public void writeToParcel(final Parcel out, final int flags)
+        public int getRegionId()
         {
-            out.writeStringArray(new String[]{address1, address2, city, state, zip});
+            return regionId;
         }
-
-        @Override
-        public int describeContents()
-        {
-            return 0;
-        }
-
-        public static final Creator CREATOR = new Creator()
-        {
-            public Address createFromParcel(final Parcel in)
-            {
-                return new Address(in);
-            }
-
-            public Address[] newArray(final int size)
-            {
-                return new Address[size];
-            }
-        };
     }
 
-    public static class Provider implements Parcelable
-    {
-        @SerializedName("status")
-        private int status;
-        @SerializedName("first_name")
-        private String firstName;
-        @SerializedName("last_name")
-        private String lastName;
-        @SerializedName("phone")
-        private String phone;
-
-        public int getStatus()
-        {
-            return status;
-        }
-
-        final void setStatus(final int status)
-        {
-            this.status = status;
-        }
-
-        public String getFirstName()
-        {
-            return firstName;
-        }
-
-        final void setFirstName(final String firstName)
-        {
-            this.firstName = firstName;
-        }
-
-        public String getLastName()
-        {
-            return lastName;
-        }
-
-        final void setLastName(final String lastName)
-        {
-            this.lastName = lastName;
-        }
-
-        public String getPhone()
-        {
-            return phone;
-        }
-
-        final void setPhone(final String phone)
-        {
-            this.phone = phone;
-        }
-
-        private Provider(final Parcel in)
-        {
-            final int[] intData = new int[1];
-            in.readIntArray(intData);
-            status = intData[0];
-
-            final String[] stringData = new String[3];
-            in.readStringArray(stringData);
-            firstName = stringData[0];
-            lastName = stringData[1];
-            phone = stringData[2];
-        }
-
-        @Override
-        public void writeToParcel(final Parcel out, final int flags)
-        {
-            out.writeIntArray(new int[]{status});
-            out.writeStringArray(new String[]{firstName, lastName, phone});
-        }
-
-        @Override
-        public int describeContents()
-        {
-            return 0;
-        }
-
-        public static final Creator CREATOR = new Creator()
-        {
-            public Provider createFromParcel(final Parcel in)
-            {
-                return new Provider(in);
-            }
-
-            public Provider[] newArray(final int size)
-            {
-                return new Provider[size];
-            }
-        };
-    }
-
-    public static class LineItem implements Parcelable
-    {
-        @SerializedName("order")
-        private int order;
-        @SerializedName("label")
-        private String label;
-        @SerializedName("amount")
-        private String amount;
-
-        public int getOrder()
-        {
-            return order;
-        }
-
-        public String getLabel()
-        {
-            return label;
-        }
-
-        public String getAmount()
-        {
-            return amount;
-        }
-
-        private LineItem(final Parcel in)
-        {
-            final int[] intData = new int[1];
-            in.readIntArray(intData);
-            order = intData[0];
-
-            final String[] stringData = new String[2];
-            in.readStringArray(stringData);
-            label = stringData[0];
-            amount = stringData[1];
-        }
-
-        @Override
-        public void writeToParcel(final Parcel out, final int flags)
-        {
-            out.writeIntArray(new int[]{order});
-            out.writeStringArray(new String[]{label, amount});
-        }
-
-        @Override
-        public int describeContents()
-        {
-            return 0;
-        }
-
-        public static final Creator CREATOR = new Creator()
-        {
-            public LineItem createFromParcel(final Parcel in)
-            {
-                return new LineItem(in);
-            }
-
-            public LineItem[] newArray(final int size)
-            {
-                return new LineItem[size];
-            }
-        };
-    }
-
-    public static class ExtraInfoWrapper
+    public static class ExtraInfoWrapper implements Serializable
     {
         public ExtraInfo getExtraInfo()
         {
@@ -939,18 +664,19 @@ public class Booking implements Parcelable, Comparable<Booking>
         private ExtraInfo extraInfo;
         @SerializedName("quantity")
         private int quantity;
-
-
     }
 
-    public static class ExtraInfo
+    public static class ExtraInfo implements Serializable
     {
+        //cleaning supplies are in their own category apart from all other extras
+        public static final String TYPE_CLEANING_SUPPLIES = "cleaning_supplies";
+
         @SerializedName("category")
         private String category;
         @SerializedName("fee")
         private String fee;
-        @SerializedName("hrs")
-        private String hrs;
+        @SerializedName("hours")
+        private String hours;
         @SerializedName("id")
         private int id;
         @SerializedName("machine_name")
@@ -968,9 +694,9 @@ public class Booking implements Parcelable, Comparable<Booking>
             return fee;
         }
 
-        public String getHrs()
+        public String getHours()
         {
-            return hrs;
+            return hours;
         }
 
         public int getId()
@@ -987,17 +713,5 @@ public class Booking implements Parcelable, Comparable<Booking>
         {
             return name;
         }
-
-        //cleaning supplies are in their own category apart from all other extras
-        public static final String TYPE_CLEANING_SUPPLIES = "cleaning_supplies";
-    }
-
-    public enum LaundryStatus
-    {
-        @SerializedName("ready_for_pickup") READY_FOR_PICKUP,
-        @SerializedName("in_progress") IN_PROGRESS,
-        @SerializedName("out_for_delivery") OUT_FOR_DELIVERY,
-        @SerializedName("delivered") DELIVERED,
-        @SerializedName("skipped") SKIPPED
     }
 }

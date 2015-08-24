@@ -26,9 +26,12 @@ public class ApplicationOnResumeWatcher
     public void onActivityResume(HandyEvent.ActivityResumed event)
     {
         Date now = new Date();
-        if(lastOnPause == null) {
+        if (lastOnPause == null)
+        {
             bus.post(new HandyEvent.ApplicationResumed(event.sender));
-        } else if (Math.abs(now.getTime() - lastOnPause.getTime()) > TRANSITION_THRESHOLD) {
+        }
+        else if (Math.abs(now.getTime() - lastOnPause.getTime()) > TRANSITION_THRESHOLD)
+        {
             bus.post(new HandyEvent.ApplicationResumed(event.sender));
         }
     }

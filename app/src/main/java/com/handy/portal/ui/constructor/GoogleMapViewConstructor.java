@@ -1,6 +1,6 @@
 package com.handy.portal.ui.constructor;
 
-import android.app.Fragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,15 +9,17 @@ import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
@@ -26,11 +28,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.Booking.BookingStatus;
+import com.handy.portal.util.UIUtils;
 
 import java.util.Locale;
 
-public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContainerConstructor implements OnMapReadyCallback
+public class GoogleMapViewConstructor extends DetailMapViewConstructor implements OnMapReadyCallback
 {
     private static final int DEFAULT_ZOOM_LEVEL = 15;
     private static final float OVERLAY_RADIUS_METERS = 500f;
@@ -46,17 +48,24 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
     }
 
     @Override
-    protected Class getFragmentClass()
+    protected void inflateMapView(RelativeLayout mapViewStub)
     {
-        return MapFragment.class;
+        try
+        {
+            SupportMapFragment fragment = SupportMapFragment.class.newInstance();
+            UIUtils.replaceViewWithFragment(getContext(), mapViewStub, fragment);
+            onFragmentCreated(fragment);
+        } catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
-    @Override
-    protected void onFragmentCreated(Fragment fragment)
+    protected void onFragmentCreated(SupportMapFragment mapFragment)
     {
         if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext()))
         {
-            MapFragment mapFragment = (MapFragment) fragment;
+
             if (mapFragment != null)
             {
                 mapFragment.getMapAsync(this);
@@ -81,9 +90,9 @@ public class GoogleMapViewConstructor extends BookingDetailsViewFragmentContaine
     @Override
     protected boolean constructView(ViewGroup container, Booking booking)
     {
-        BookingStatus bookingStatus = (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
+        Booking.BookingStatus bookingStatus = (Booking.BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
         this.container = container;
-        this.useRestrictedView = bookingStatus != BookingStatus.CLAIMED;
+        this.useRestrictedView = bookingStatus != Booking.BookingStatus.CLAIMED;
         this.booking = booking;
 
         return true;

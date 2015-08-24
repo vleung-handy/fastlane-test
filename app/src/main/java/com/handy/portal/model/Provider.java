@@ -12,8 +12,13 @@ public class Provider
     private String firstName;
     @SerializedName("last_name")
     private String lastName;
+    @SerializedName("country")
+    private String country;
+    @SerializedName("onboarding_enabled")
+    private boolean onboardingEnabled;
+    @SerializedName("complementary_jobs_enabled")
+    private boolean complementaryJobsEnabled;
 
-//TODO: add more fields
     public String getId()
     {
         return id;
@@ -44,4 +49,23 @@ public class Provider
         return firstName + " " + lastName;
     }
 
+    public boolean isOnboardingEnabled()
+    {
+        return onboardingEnabled;
+    }
+
+    public String getCountry()
+    {
+        return country;
+    }
+
+    public boolean isUK()
+    {
+        return "GB".equalsIgnoreCase(getCountry());
+    }
+
+    public boolean isComplementaryJobsEnabled()
+    {
+        return complementaryJobsEnabled;
+    }
 }

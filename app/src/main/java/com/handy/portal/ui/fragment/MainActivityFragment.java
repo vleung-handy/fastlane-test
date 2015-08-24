@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +31,9 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
+    @Inject
+    HandyRetrofitEndpoint endpoint;
+
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -45,13 +47,24 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
 
-    @Inject
-    HandyRetrofitEndpoint endpoint;
-
     private MainViewTab currentTab = null;
     private PortalWebViewFragment webViewFragment = null;
 
     public static boolean clearingBackStack = false;
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,15 +78,6 @@ public class MainActivityFragment extends InjectedFragment
         transitionOverlayView.init();
         loadingOverlayView.init();
 
-        /*
-            below logic is needed to workaround a bug in android 4.4 that cause webview artifacts to show.
-            setting this at the help view or webview level does not fully work (complex webview pages didn't load)
-        */
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
-        {
-            view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-
         return view;
     }
 
@@ -85,7 +89,7 @@ public class MainActivityFragment extends InjectedFragment
             public void onBackStackChanged()
             {
                 // traverse the fragment stack from top to bottom and activate the first relevant tab
-                List<Fragment> fragments = getFragmentManager().getFragments();
+                List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
                 for (int i = fragments.size() - 1; i >= 0; i--)
                 {
                     if (updateSelectedTabButton(fragments.get(i)))
@@ -100,9 +104,9 @@ public class MainActivityFragment extends InjectedFragment
     private boolean updateSelectedTabButton(Fragment fragment)
     {
         return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
-               selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
-               selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, profileButton) ||
-               selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
+                selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
+                selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, profileButton) ||
+                selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
     }
 
     private boolean selectTabIfFragmentMatches(Fragment fragment, Class<? extends Fragment> fragmentClass, RadioButton tab)
@@ -120,12 +124,10 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onViewStateRestored(savedInstanceState);
 
-        String tab = MainViewTab.JOBS.name();
-        if (savedInstanceState != null && savedInstanceState.containsKey(BundleKeys.TAB))
+        if (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB))
         {
-            tab = savedInstanceState.getString(BundleKeys.TAB);
+            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
-        switchToTab(MainViewTab.valueOf(tab), false);
     }
 
     @Override
@@ -154,8 +156,8 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerButtonListeners()
     {
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULE));
-        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.JOBS));
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
         profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
         helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
     }
@@ -211,6 +213,7 @@ public class MainActivityFragment extends InjectedFragment
             }
             else
             {
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
@@ -283,12 +286,12 @@ public class MainActivityFragment extends InjectedFragment
         {
             switch (targetTab)
             {
-                case JOBS:
+                case AVAILABLE_JOBS:
                 {
                     jobsButton.toggle();
                 }
                 break;
-                case SCHEDULE:
+                case SCHEDULED_JOBS:
                 {
                     scheduleButton.toggle();
                 }
@@ -343,7 +346,12 @@ public class MainActivityFragment extends InjectedFragment
         //Animate the transition, animations must come before the .replace call
         if (swapArguments.transitionStyle != null)
         {
-            transaction.setCustomAnimations(swapArguments.transitionStyle.getIncomingAnimId(), swapArguments.transitionStyle.getOutgoingAnimId());
+            transaction.setCustomAnimations(
+                    swapArguments.transitionStyle.getIncomingAnimId(),
+                    swapArguments.transitionStyle.getOutgoingAnimId(),
+                    swapArguments.transitionStyle.getPopIncomingAnimId(),
+                    swapArguments.transitionStyle.getPopOutgoingAnimId()
+            );
 
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())

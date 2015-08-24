@@ -1,14 +1,12 @@
 package com.handy.portal.data;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
-import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.model.HelpNodeWrapper;
-import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingSummaryResponse;
+import com.handy.portal.model.BookingsListWrapper;
+import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
@@ -21,6 +19,7 @@ import com.handy.portal.retrofit.HandyRetrofitService;
 
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -31,14 +30,12 @@ public final class BaseDataManager extends DataManager
 {
     private final HandyRetrofitService service;
     private final HandyRetrofitEndpoint endpoint;
-    private final PrefsManager prefsManager;
 
     @Inject
-    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint, final PrefsManager prefsManager)
+    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint)
     {
         this.service = service;
         this.endpoint = endpoint;
-        this.prefsManager = prefsManager;
     }
 
     @Override
@@ -48,63 +45,69 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void getAvailableBookings(final Callback<BookingSummaryResponse> cb)
+    public final void getAvailableBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
-        service.getAvailableBookings(getUserId(), new BookingSummaryResponseHandyRetroFitCallback(cb));
+        service.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void getScheduledBookings(final Callback<BookingSummaryResponse> cb)
+    public final void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
-        service.getScheduledBookings(getUserId(), new BookingSummaryResponseHandyRetroFitCallback(cb));
+        service.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public final void getComplementaryBookings(String bookingId, Callback<BookingsWrapper> cb)
+    {
+        service.getComplementaryBookings(bookingId, new BookingsWrapperRetroFitCallback(cb));
     }
 
     @Override
     public final void claimBooking(String bookingId, final Callback<Booking> cb)
     {
-        service.claimBooking(getUserId(), bookingId, new BookingHandyRetroFitCallback(cb));
+        service.claimBooking(bookingId, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
     public final void removeBooking(String bookingId, final Callback<Booking> cb)
     {
-        service.removeBooking(getUserId(), bookingId, new BookingHandyRetroFitCallback(cb));
+        service.removeBooking(bookingId, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
     public final void getBookingDetails(String bookingId, final Callback<Booking> cb)
     {
-        service.getBookingDetails(getUserId(), bookingId, new BookingHandyRetroFitCallback(cb));
+        service.getBookingDetails(bookingId, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
     public final void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.notifyOnMyWay(getUserId(), bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.notifyOnMyWay(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
     public final void notifyCheckInBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.checkIn(getUserId(), bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.checkIn(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
     public final void notifyCheckOutBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.checkOut(getUserId(), bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.checkOut(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
     public final void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)
     {
-        service.updateArrivalTime(getUserId(), bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
+        service.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
     public void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb)
     {
-        service.reportNoShow(getUserId(), bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
@@ -134,13 +137,13 @@ public final class BaseDataManager extends DataManager
     @Override
     public void checkForTerms(final Callback<TermsDetails> cb)
     {
-        service.checkTerms(getUserId(), new TermsDetailsResponseHandyRetroFitCallback(cb));
+        service.checkTerms(new TermsDetailsResponseHandyRetroFitCallback(cb));
     }
 
     @Override
     public void acceptTerms(String termsCode, final Callback<Void> cb)
     {
-        service.acceptTerms(getUserId(), termsCode, new HandyRetrofitCallback(cb)
+        service.acceptTerms(termsCode, new HandyRetrofitCallback(cb)
         {
             @Override
             public void success(JSONObject response)
@@ -153,7 +156,7 @@ public final class BaseDataManager extends DataManager
     @Override
     public void getConfigParams(String[] keys, Callback<ConfigParams> cb)
     {
-        service.getConfigParams(getUserId(), keys, new ConfigParamResponseHandyRetroFitCallback(cb));
+        service.getConfigParams(keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }
 
     @Override
@@ -185,14 +188,4 @@ public final class BaseDataManager extends DataManager
         service.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
     }
     //********End Help Center********
-
-    private String getUserId()
-    {
-        String id = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID, null);//TODO: don't get the provider id this way
-        if (id == null)
-        {
-            Crashlytics.log("ID not found");
-        }
-        return id;
-    }
 }

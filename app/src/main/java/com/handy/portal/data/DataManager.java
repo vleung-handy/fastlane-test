@@ -1,11 +1,12 @@
 package com.handy.portal.data;
 
-import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingSummaryResponse;
+import com.handy.portal.model.BookingsListWrapper;
+import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
@@ -13,6 +14,7 @@ import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 
+import java.util.Date;
 import java.util.Map;
 
 import retrofit.mime.TypedInput;
@@ -30,9 +32,9 @@ public abstract class DataManager
 
     public abstract void sendVersionInformation(Map<String, String> info);
 
-    public abstract void getAvailableBookings(Callback<BookingSummaryResponse> cb);
+    public abstract void getAvailableBookings(Date[] date, Callback<BookingsListWrapper> cb);
 
-    public abstract void getScheduledBookings(Callback<BookingSummaryResponse> cb);
+    public abstract void getScheduledBookings(Date[] date, Callback<BookingsListWrapper> cb);
 
     public abstract void claimBooking(String bookingId, Callback<Booking> cb);
 
@@ -68,6 +70,8 @@ public abstract class DataManager
     public abstract void getProviderInfo(Callback<Provider> cb);
 
     public abstract String getBaseUrl();
+
+    public abstract void getComplementaryBookings(String bookingId, Callback<BookingsWrapper> callback);
 
     public interface Callback<T>
     {

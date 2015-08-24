@@ -5,15 +5,16 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingSummaryResponse;
+import com.handy.portal.model.BookingsListWrapper;
+import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.UpdateDetails;
-import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
@@ -40,7 +41,7 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
             Crashlytics.logException(e);
         }
 
-        if(callback != null)
+        if (callback != null)
         {
             callback.onSuccess(returnData);
         }
@@ -56,9 +57,18 @@ class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking>
     }
 }
 
-class BookingSummaryResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingSummaryResponse>
+class BookingsListWrapperHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingsListWrapper>
 {
-    BookingSummaryResponseHandyRetroFitCallback(DataManager.Callback callback)
+    BookingsListWrapperHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class BookingsWrapperRetroFitCallback extends TypedHandyRetrofitCallback<BookingsWrapper>
+{
+    public BookingsWrapperRetroFitCallback(DataManager.Callback<BookingsWrapper> callback)
     {
         super(callback);
     }

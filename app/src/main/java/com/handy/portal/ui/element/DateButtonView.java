@@ -55,12 +55,9 @@ public class DateButtonView extends RelativeLayout implements Checkable
         super(context, attrs, defStyle);
     }
 
-    public void init(Date date, boolean requestedJobsThisDay, boolean claimedJobsThisDay)
+    public void init(Date date)
     {
         ButterKnife.inject(this);
-
-        requestedIndicator.setVisibility(requestedJobsThisDay ? View.VISIBLE : View.GONE);
-        claimedJobExistsIndicator.setVisibility(claimedJobsThisDay ? View.VISIBLE : View.GONE);
 
         selectedDayIndicator.setVisibility(View.INVISIBLE);
 
@@ -79,6 +76,16 @@ public class DateButtonView extends RelativeLayout implements Checkable
 
         dayOfWeekText.setText(formattedDate[1]);
         dayOfMonthText.setText(formattedDate[2]);
+    }
+
+    public void showRequestedIndicator(boolean show)
+    {
+        requestedIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    public void showClaimedIndicator(boolean show)
+    {
+        claimedJobExistsIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private static int[] DRAWABLE_STATE_CHECKED = {android.R.attr.state_checked};
