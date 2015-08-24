@@ -67,7 +67,7 @@ public class HandyWebView extends WebView //TODO: refactor class name
         {
             InputStream stream = this.getContext().getAssets().open(TEMPLATE_HTML);
             String template = CharStreams.toString(new InputStreamReader(stream, UTF_8));
-            return template==null ? "" : template.replace(TEMPLATE_PLACEHOLDER, content);
+            return content==null ? "" : template.replace(TEMPLATE_PLACEHOLDER, content);
 
         } catch (IOException e)
         {
