@@ -107,7 +107,7 @@ dependencies {
     compile 'com.android.support:support-v4:22.0.0'
 
     //Google play services
-    compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.google.android.gms:play-services:7.8.0'
 
     //Guava
     compile 'com.google.guava:guava:18.0'
