@@ -1,11 +1,14 @@
 package com.handy.portal.ui.element;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.util.TextUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,6 +36,10 @@ public class BookingDetailsJobInstructionsSectionEntryView extends RelativeLayou
     public void init(String message)
     {
         ButterKnife.inject(this);
-        entryText.setText(message);
+        String formattedMessage = TextUtils.formatHtmlLinks(message);
+        formattedMessage = TextUtils.formatHtmlLineBreaks(formattedMessage);
+
+        entryText.setText(Html.fromHtml(formattedMessage));
+        entryText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

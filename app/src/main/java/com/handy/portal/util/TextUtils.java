@@ -15,6 +15,8 @@ import java.util.Hashtable;
 
 public final class TextUtils
 {
+    private static final String URL_PATTERN = "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
+
     public static final class Fonts {
         public static final String CIRCULAR_BOLD = "fonts/CircularStd-Bold.otf";
         public static final String CIRCULAR_BOOK = "fonts/CircularStd-Book.otf";
@@ -34,6 +36,16 @@ public final class TextUtils
             }
             return cache.get(name);
         }
+    }
+
+    public static String formatHtmlLinks(String text)
+    {
+        return text.replaceAll(URL_PATTERN, "<a href=\"$1\">$1</a>");
+    }
+
+    public static String formatHtmlLineBreaks(String text)
+    {
+        return text.replaceAll("\\r\\n", "<br>").replaceAll("\\n", "<br>");
     }
 
     public static String formatPrice(final int price, final String currencyChar)

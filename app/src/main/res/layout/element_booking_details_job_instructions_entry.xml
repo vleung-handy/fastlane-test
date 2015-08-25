@@ -23,6 +23,8 @@
         android:layout_toEndOf="@id/booking_details_job_instructions_entry_icon"
         android:layout_toRightOf="@id/booking_details_job_instructions_entry_icon"
         android:textColor="@color/black"
+        android:textIsSelectable="true"
+        android:textColorLink="@color/handy_blue"
         android:textSize="16sp"/>
 
 </com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionEntryView>
