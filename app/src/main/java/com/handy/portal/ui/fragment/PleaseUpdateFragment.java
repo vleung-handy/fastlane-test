@@ -10,8 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.manager.VersionManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.VersionManager;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -66,6 +67,6 @@ public class PleaseUpdateFragment extends InjectedFragment
         Intent installIntent = new Intent(Intent.ACTION_VIEW);
         installIntent.setDataAndType(versionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
         installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(installIntent);
+        Utils.safeLaunchIntent(installIntent, this.getActivity());
     }
 }

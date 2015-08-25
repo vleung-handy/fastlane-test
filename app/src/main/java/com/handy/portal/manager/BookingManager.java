@@ -1,5 +1,6 @@
 package com.handy.portal.manager;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.constant.LocationKey;
@@ -115,6 +116,7 @@ public class BookingManager
                             for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
                             {
                                 Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                Crashlytics.log("Received available bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
                                 availableBookingsCache.put(day, bookings);
                                 bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings, day));
@@ -160,6 +162,7 @@ public class BookingManager
                             for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
                             {
                                 Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                Crashlytics.log("Received scheduled bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
                                 scheduledBookingsCache.put(day, bookings);
                                 bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
