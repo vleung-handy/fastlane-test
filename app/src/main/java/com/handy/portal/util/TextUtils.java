@@ -36,13 +36,9 @@ public final class TextUtils
         }
     }
 
-    public static String formatPrice(final float price, final String currencyChar,
-                                     final String currencySuffix)
+    public static String formatPrice(final int price, final String currencyChar)
     {
-        final DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return (currencyChar != null ? currencyChar : "$")
-                + decimalFormat.format(price)
-                + (currencySuffix != null ? currencySuffix : "");
+        return (currencyChar != null ? currencyChar : "$") + price;
     }
 
     public static String formatPhone(String phone, final String prefix)
