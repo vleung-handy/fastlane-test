@@ -8,14 +8,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.util.TextUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class BookingDetailsJobInstructionsSectionEntryView extends RelativeLayout
 {
-    private static final String URL_PATTERN = "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
-
     @InjectView(R.id.booking_details_job_instructions_entry_text)
     protected TextView entryText;
 
@@ -37,9 +36,9 @@ public class BookingDetailsJobInstructionsSectionEntryView extends RelativeLayou
     public void init(String message)
     {
         ButterKnife.inject(this);
-        String formattedMessage = message.replaceAll(URL_PATTERN, "<a href=\"$1\">$1</a>")
-                .replaceAll("\\r\\n", "<br>")
-                .replaceAll("\\n", "<br>");
+        String formattedMessage = TextUtils.formatHtmlLinks(message);
+        formattedMessage = TextUtils.formatHtmlLineBreaks(formattedMessage);
+
         entryText.setText(Html.fromHtml(formattedMessage));
         entryText.setMovementMethod(LinkMovementMethod.getInstance());
     }
