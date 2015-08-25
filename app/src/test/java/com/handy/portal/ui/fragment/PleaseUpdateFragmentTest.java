@@ -9,6 +9,7 @@ import com.handy.portal.manager.VersionManager;
 
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.robolectric.util.SupportFragmentTestUtil;
@@ -38,6 +39,7 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
         initMocks(this);
     }
 
+    @Test
     public void whenDownloadButtonClicked_thenSendInstallIntent() throws Exception
     {
         Uri mockUri = mock(Uri.class);
