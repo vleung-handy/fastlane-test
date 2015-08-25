@@ -66,8 +66,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private List<BookingInstructionGroup> bookingInstructionGroups;
     @SerializedName("booking_extras")
     private ArrayList<ExtraInfoWrapper> extrasInfo;
-    @SerializedName("msg_to_pro")
-    private String proNote;
+    @SerializedName("description")
+    private String description;
 
     @SerializedName("distance")
     private String formattedDistance;
@@ -170,11 +170,6 @@ public class Booking implements Comparable<Booking>, Serializable
         return frequency > 0;
     }
 
-    public String getProNote()
-    {
-        return proNote;
-    }
-
     public String getService()
     {
         return service;
@@ -258,6 +253,11 @@ public class Booking implements Comparable<Booking>, Serializable
     public String getFormattedDistance()
     {
         return formattedDistance;
+    }
+
+    public String getDescription()
+    {
+        return description;
     }
 
     //Basic booking statuses inferrable from providerId

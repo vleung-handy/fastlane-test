@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
@@ -51,9 +52,19 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
     protected boolean constructView(ViewGroup container, Booking booking)
     {
         BookingStatus bookingStatus = (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
-        boolean fullDetails = !booking.getServiceInfo().isHomeCleaning() || (bookingStatus == BookingStatus.CLAIMED);
+        boolean isHomeCleaning = booking.getServiceInfo().isHomeCleaning();
+        boolean fullDetails = !isHomeCleaning || (bookingStatus == BookingStatus.CLAIMED);
 
         boolean jobInstructionsSectionConstructed = false; //if we don't add any sections we will not add the view
+
+        //Show description field regardless of claim status if the booking is not for cleaning (e.g. furniture assembly)
+        if (!isHomeCleaning && booking.getDescription() != null)
+        {
+            BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
+            sectionView.init(getContext().getString(R.string.description), R.drawable.ic_details_notes, Lists.newArrayList(booking.getDescription()));
+
+            jobInstructionsSectionConstructed = true;
+        }
 
         //Special section for "Supplies" extras (UK only)
         List<Booking.ExtraInfoWrapper> cleaningSuppliesExtrasInfo = booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES);

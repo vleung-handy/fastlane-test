@@ -144,6 +144,7 @@
     <string name="save">Save</string>
     <string name="available">Available</string>
     <string name="extras">Extras</string>
+    <string name="description">Description</string>
     <string name="apply">Apply</string>
     <string name="promo_code_opt">Promo Code (optional)</string>
     <string name="remove">Remove</string>
