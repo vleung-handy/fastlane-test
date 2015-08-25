@@ -1,21 +1,48 @@
 package com.handy.portal.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.TouchDelegate;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 
-public final class Utils
+public final class Utils //TODO: we should reorganize these methods into more specific util classes
 {
+    //returns true if the intent was successfully launched
+    public static boolean safeLaunchIntent(Intent intent, Context context)
+    {
+        if (context == null)
+        {
+            Crashlytics.logException(new Exception("Trying to launch an intent with a null context!"));
+        }
+        else if (intent.resolveActivity(context.getPackageManager()) != null)
+        {
+            context.startActivity(intent);
+            return true;
+        }
+        else //no activity found to handle the intent
+        {
+            //note: this must be called from the UI thread
+            Toast toast = Toast.makeText(context, R.string.error_no_intent_handler_found, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            Crashlytics.logException(new Exception("No activity found to handle the intent " + intent.toString()));
+        }
+        return false;
+    }
+
     public static void inject(Context context, Object object)
     {
         ((BaseApplication) context.getApplicationContext()).inject(object);
