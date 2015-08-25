@@ -25,7 +25,7 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     {
         if (context == null)
         {
-            Crashlytics.log("Trying to launch an intent with a null context!");
+            Crashlytics.logException(new Exception("Trying to launch an intent with a null context!"));
         }
         else if (intent.resolveActivity(context.getPackageManager()) != null)
         {
@@ -38,7 +38,7 @@ public final class Utils //TODO: we should reorganize these methods into more sp
             Toast toast = Toast.makeText(context, R.string.error_no_intent_handler_found, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
-            Crashlytics.log("No activity found to handle the intent " + intent.toString());
+            Crashlytics.logException(new Exception("No activity found to handle the intent " + intent.toString()));
         }
         return false;
     }
