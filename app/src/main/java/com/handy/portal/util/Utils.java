@@ -32,16 +32,13 @@ public final class Utils //TODO: we should reorganize these methods into more sp
             context.startActivity(intent);
             return true;
         }
-        else if (context.getApplicationContext() == null)
-        {
-            Crashlytics.log("Trying to show a toast with a null application context!");
-        }
         else //no activity found to handle the intent
         {
-            //context.getApplicationContext() is the UI thread context
-            Toast toast = Toast.makeText(context.getApplicationContext(), R.string.error_no_intent_handler_found, Toast.LENGTH_SHORT);
+            //note: this must be called from the UI thread
+            Toast toast = Toast.makeText(context, R.string.error_no_intent_handler_found, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
+            Crashlytics.log("No activity found to handle the intent " + intent.toString());
         }
         return false;
     }

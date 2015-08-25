@@ -176,7 +176,6 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         map.addMarker(marker);
     }
 
-    //TODO: This is failing on emulator, no activity to handle the intent
     private void openNativeMap(LatLng target, String fullAddress)
     {
         //Query format: lat,long,?optionalZoomLevel&q=address
