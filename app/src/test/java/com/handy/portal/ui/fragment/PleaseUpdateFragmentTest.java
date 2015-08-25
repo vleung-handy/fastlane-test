@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
+@Ignore //TODO: re-enable when we can mock intent.resolveActivity(context.getPackageManager())
 public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
 {
     @Mock
@@ -37,7 +38,6 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
         initMocks(this);
     }
 
-    @Ignore //TODO: re-enable when we can mock intent.resolveActivity(context.getPackageManager())
     public void whenDownloadButtonClicked_thenSendInstallIntent() throws Exception
     {
         Uri mockUri = mock(Uri.class);
