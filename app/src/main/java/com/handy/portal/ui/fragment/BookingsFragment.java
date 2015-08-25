@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -125,6 +126,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected void requestBookings(List<Date> dates, boolean showOverlay)
     {
+        Crashlytics.log("Requesting bookings for the following dates" + dates.toString());
         fetchErrorView.setVisibility(View.GONE);
         if (showOverlay)
         {
@@ -159,8 +161,15 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         Collections.sort(bookings);
 
         DateButtonView dateButtonView = dateButtonMap.get(event.day);
-        dateButtonView.showRequestedIndicator(shouldShowRequestedIndicator(bookings));
-        dateButtonView.showClaimedIndicator(shouldShowClaimedIndicator(bookings));
+        if (dateButtonView != null)
+        {
+            dateButtonView.showRequestedIndicator(shouldShowRequestedIndicator(bookings));
+            dateButtonView.showClaimedIndicator(shouldShowClaimedIndicator(bookings));
+        }
+        else
+        {
+            Crashlytics.logException(new RuntimeException("Date button for " + event.day + " not found"));
+        }
 
         if (selectedDay.equals(event.day))
         {

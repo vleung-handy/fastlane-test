@@ -133,11 +133,14 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        if (outState == null)
+        if (currentTab != null)
         {
-            outState = new Bundle();
+            if (outState == null)
+            {
+                outState = new Bundle();
+            }
+            outState.putString(BundleKeys.TAB, currentTab.name());
         }
-        outState.putString(BundleKeys.TAB, currentTab.name());
         super.onSaveInstanceState(outState);
     }
 
