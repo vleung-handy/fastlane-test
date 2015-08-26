@@ -10,6 +10,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.util.DateTimeUtils;
@@ -217,13 +218,17 @@ public class BookingManager
         String bookingType = event.booking.getType();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
+<<<<<<< refs/heads/develop
         dataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<Booking>()
+=======
+        dataManager.claimBooking(bookingId, new DataManager.Callback<BookingClaimDetails>()
+>>>>>>> HEAD~6
         {
             @Override
-            public void onSuccess(Booking booking)
+            public void onSuccess(BookingClaimDetails bookingClaimDetails)
             {
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveClaimJobSuccess(booking, event.source));
+                bus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
             }
 
             @Override

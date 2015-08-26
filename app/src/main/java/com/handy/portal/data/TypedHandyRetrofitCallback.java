@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -52,6 +53,14 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
 class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking>
 {
     BookingHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class BookingClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingClaimDetails>
+{
+    BookingClaimHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

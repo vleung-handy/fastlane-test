@@ -280,6 +280,12 @@
     <string name="arrival_time_late_15">I\u2019ll be 15 minutes late</string>
     <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
 
+    <string name="booking_details_claim_target_msg">At least %1$d more to go</string>
+    <string name="booking_details_claim_target_reached_msg">Feel free to claim even more jobs before they\u2019re snatched up</string>
+    <string name="booking_details_claim_target_title">Job claimed!</string>
+    <string name="booking_details_claim_target_reached_title">Congratulations!</string>
+    <string name="booking_details_claim_target_expected_pay_label">Expected pay in next %1$d days</string>
+
     <string name="booking_details_check_in_time_msg">\u2713 Checked in at %1$s</string>
     <string name="booking_details_eta_msg">Estimated arrival time: %1$s</string>
 
