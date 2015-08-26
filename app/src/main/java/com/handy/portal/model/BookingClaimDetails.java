@@ -36,7 +36,7 @@ public class BookingClaimDetails implements Serializable
         @SerializedName("claim_target_days_expected_payment")
         private Integer numDaysExpectedPayment; //number of days the expected provider pay represents
         @SerializedName("expected_payment_to_provider_next_x_days")
-        private Booking.PaymentInfo paymentInfo;
+        private PaymentInfo paymentInfo;
 
         public Integer getNumJobsClaimed()
         {
@@ -59,7 +59,7 @@ public class BookingClaimDetails implements Serializable
                     && numJobsClaimed <= numBookingsThreshold;
         }
 
-        public Booking.PaymentInfo getPaymentInfo()
+        public PaymentInfo getPaymentInfo()
         {
             return paymentInfo;
         }
