@@ -92,6 +92,7 @@ public class ClaimTargetDialogFragment extends DialogFragment
         {
             ImageView view = (ImageView) LayoutInflater.from(this.getActivity()).inflate(R.layout.element_claim_target_progress_icon, null);
             view.setImageResource(i < numClaims ? R.drawable.icon_check_small : R.drawable.icon_empty_small);
+            view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)); //the identical params in resource xml don't work
             progressIconsContainer.addView(view);
         }
         progressIconsContainer.setWeightSum(totalNumIcons);
