@@ -21,7 +21,7 @@ import com.handy.portal.util.TextUtils;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class ClaimTargetDialogFragment extends DialogFragment //TODO: cleanup
+public class ClaimTargetDialogFragment extends DialogFragment
 {
 
     @InjectView(R.id.claim_target_frame_layout)
@@ -92,11 +92,10 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: cleanup
         {
             ImageView view = (ImageView) LayoutInflater.from(this.getActivity()).inflate(R.layout.element_claim_target_progress_icon, null);
             view.setImageResource(i < numClaims ? R.drawable.icon_check_small : R.drawable.icon_empty_small);
-            view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)); //TODO: is this necessary?
             progressIconsContainer.addView(view);
         }
         progressIconsContainer.setWeightSum(totalNumIcons);
-        progressIconsContainer.invalidate();//TODO: is this necessary?
+        progressIconsContainer.invalidate();
     }
 
     @Override
@@ -132,9 +131,9 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: cleanup
                 }
             }
         };
-        long animationDuration = 500;//TODO: make this not hard-coded. currently have no way of accessing dialog's animation listeners
-        long waitTime = 5000;
-        handler.postDelayed(runnable, waitTime + animationDuration);
+        long fadeInAnimationDuration = 300;//TODO: make this not hard-coded. currently have no way of accessing dialog's animation listeners, and cannot access style resource file attributes easily
+        long waitTime = 2000;
+        handler.postDelayed(runnable, waitTime + fadeInAnimationDuration);
     }
 
     public void onStart()//dialog becomes visible

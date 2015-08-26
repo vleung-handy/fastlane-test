@@ -5,9 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/black_trans"
-    android:clipChildren="false"
-    android:clipToPadding="false">
+    android:background="@color/black_trans">
 
     <!-- TODO: test to see if clip* is still necessary -->
     <LinearLayout android:id="@+id/claim_target_window_layout"
@@ -15,8 +13,6 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:background="@color/white"
-                  android:clipChildren="false"
-                  android:clipToPadding="false"
                   android:orientation="vertical"
         >
 
@@ -25,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/white"
-            android:clipChildren="false"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="30dp"
