@@ -67,7 +67,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay)
     {
         //Bookings are sorted such that the requested bookings show up first so we just need to check the first one
-        return bookingsForDay.size() > 0 && bookingsForDay.get(0).getIsRequested();
+        return bookingsForDay.size() > 0 && bookingsForDay.get(0).isRequested();
     }
 
     @Override

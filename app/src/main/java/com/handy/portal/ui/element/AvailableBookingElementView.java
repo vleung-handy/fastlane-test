@@ -55,7 +55,7 @@ public class AvailableBookingElementView extends BookingElementView
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
-        boolean isRequested = booking.getIsRequested();
+        boolean isRequested = booking.isRequested();
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null)
@@ -72,7 +72,14 @@ public class AvailableBookingElementView extends BookingElementView
         UIUtils.setPaymentInfo(bonusPaymentText, null, booking.getBonusPaymentToProvider(), parentContext.getString(R.string.bonus_payment_value));
 
         //Area
-        bookingAreaTextView.setText(booking.getAddress().getShortRegion());
+        if (booking.isProxy())
+        {
+            bookingAreaTextView.setText(booking.getZipClusterName());
+        }
+        else
+        {
+            bookingAreaTextView.setText(booking.getAddress().getShortRegion());
+        }
 
         //Service or frequency for home cleaning jobs
         Booking.ServiceInfo serviceInfo = booking.getServiceInfo();

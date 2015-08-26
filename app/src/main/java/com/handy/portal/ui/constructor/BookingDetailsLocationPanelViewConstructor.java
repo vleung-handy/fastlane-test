@@ -55,14 +55,7 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
     {
         BookingStatus bookingStatus = (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
 
-        if(bookingStatus == BookingStatus.AVAILABLE)
-        {
-            locationText.setText(booking.getAddress().getShortRegion() + "\n" + booking.getAddress().getZip());
-        }
-        else
-        {
-            locationText.setText(booking.getAddress().getStreetAddress() + "\n" + booking.getAddress().getZip());
-        }
+        locationText.setText(booking.getFormattedLocation(bookingStatus));
 
         Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
         if (serviceInfo.isHomeCleaning())
@@ -78,12 +71,12 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
         UIUtils.setPaymentInfo(paymentBonusText, null, booking.getBonusPaymentToProvider(), getContext().getString(R.string.bonus_payment_value));
 
         //Partner takes priority over requested
-        if(booking.getPartner() != null)
+        if (booking.getPartner() != null)
         {
             partnerText.setVisibility(booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ? View.VISIBLE : View.GONE);
             requestedLayout.setVisibility(View.GONE);
         }
-        else if(booking.getIsRequested())
+        else if (booking.isRequested())
         {
             partnerText.setVisibility(View.GONE);
             requestedLayout.setVisibility(View.VISIBLE);
