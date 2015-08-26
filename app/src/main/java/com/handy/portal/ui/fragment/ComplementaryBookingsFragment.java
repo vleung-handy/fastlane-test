@@ -207,6 +207,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
             }
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+            arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType());
             arguments.putString(BundleKeys.BOOKING_SOURCE, COMPLEMENTARY_JOBS_SOURCE_NAME);
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
         }

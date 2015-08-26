@@ -6,7 +6,7 @@ import java.util.List;
 
 public class BookingsListWrapper
 {
-    @SerializedName("bookings_days")
+    @SerializedName("job_days")
     private List<BookingsWrapper> bookingsWrappers;
 
     public final List<BookingsWrapper> getBookingsWrappers()

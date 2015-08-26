@@ -65,8 +65,9 @@ public class BookingManager
     public void onRequestBookingDetails(final HandyEvent.RequestBookingDetails event)
     {
         String bookingId = event.bookingId;
+        String type = event.type;
 
-        dataManager.getBookingDetails(bookingId, new DataManager.Callback<Booking>()
+        dataManager.getBookingDetails(bookingId, type, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -213,9 +214,10 @@ public class BookingManager
     public void onRequestClaimJob(final HandyEvent.RequestClaimJob event)
     {
         String bookingId = event.booking.getId();
+        String bookingType = event.booking.getType();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
-        dataManager.claimBooking(bookingId, new DataManager.Callback<Booking>()
+        dataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -238,9 +240,10 @@ public class BookingManager
     public void onRequestRemoveJob(HandyEvent.RequestRemoveJob event)
     {
         String bookingId = event.booking.getId();
+        String bookingType = event.booking.getType();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
-        dataManager.removeBooking(bookingId, new DataManager.Callback<Booking>()
+        dataManager.removeBooking(bookingId, bookingType, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)

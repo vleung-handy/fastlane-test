@@ -112,6 +112,7 @@ public class BookingDetailsFragment extends InjectedFragment
     PrefsManager prefsManager;
 
     private String requestedBookingId;
+    private String requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
 
@@ -131,6 +132,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             Bundle arguments = getArguments();
             this.requestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
+            this.requestedBookingType = arguments.getString(BundleKeys.BOOKING_TYPE);
 
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
@@ -138,7 +140,7 @@ public class BookingDetailsFragment extends InjectedFragment
                 this.associatedBookingDate = new Date(bookingDateLong);
             }
 
-            requestBookingDetails(this.requestedBookingId, this.associatedBookingDate);
+            requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
         }
         else
         {
@@ -152,7 +154,7 @@ public class BookingDetailsFragment extends InjectedFragment
     @Override
     protected List<String> requiredArguments()
     {
-        return Lists.newArrayList(BundleKeys.BOOKING_ID);
+        return Lists.newArrayList(BundleKeys.BOOKING_ID, BundleKeys.BOOKING_TYPE);
     }
 
     private String getLoggedInUserId()
@@ -160,11 +162,11 @@ public class BookingDetailsFragment extends InjectedFragment
         return prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
-    private void requestBookingDetails(String bookingId, Date bookingDate)
+    private void requestBookingDetails(String bookingId, String type, Date bookingDate)
     {
         fetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestBookingDetails(bookingId, bookingDate));
+        bus.post(new HandyEvent.RequestBookingDetails(bookingId, type, bookingDate));
     }
 
 //Display Creation / Updating
@@ -249,7 +251,7 @@ public class BookingDetailsFragment extends InjectedFragment
     @OnClick(R.id.try_again_button)
     public void onClickRequestDetails()
     {
-        requestBookingDetails(this.requestedBookingId, this.associatedBookingDate);
+        requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
     }
 
     //Can not use @onclick b/c the button does not exist at injection time

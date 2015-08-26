@@ -17,8 +17,13 @@ import java.util.List;
 
 public class Booking implements Comparable<Booking>, Serializable
 {
+    public static final String TYPE_BOOKING_PROXY = "booking_proxy";
+    public static final String TYPE_BOOKING = "booking";
+
     @SerializedName("id")
     private String id;
+    @SerializedName("type")
+    private String type;
     @SerializedName("service_name")
     private String service;
     @SerializedName("service")
@@ -258,6 +263,11 @@ public class Booking implements Comparable<Booking>, Serializable
     public String getDescription()
     {
         return description;
+    }
+
+    public String getType()
+    {
+        return type;
     }
 
     //Basic booking statuses inferrable from providerId

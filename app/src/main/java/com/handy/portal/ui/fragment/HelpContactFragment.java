@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -22,7 +23,6 @@ import com.squareup.otto.Subscribe;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,14 +51,12 @@ public final class HelpContactFragment extends InjectedFragment
     private HelpNode associatedNode;
     private String path;
     private String bookingId;
+    private String bookingType;
 
     @Override
     protected List<String> requiredArguments()
     {
-        List<String> requiredArguments = new ArrayList<>();
-        requiredArguments.add(BundleKeys.HELP_NODE);
-        requiredArguments.add(BundleKeys.PATH);
-        return requiredArguments;
+        return Lists.newArrayList(BundleKeys.HELP_NODE, BundleKeys.PATH);
     }
 
     @Override
@@ -83,18 +81,20 @@ public final class HelpContactFragment extends InjectedFragment
         //should have passed along an associated node and a path
         if (!validateRequiredArguments())
         {
-            Crashlytics.log("Can not construct Help Contact Form, missing requirements");
+            Crashlytics.logException(new RuntimeException("Cannot construct Help Contact Form, missing requirements"));
             return view;
         }
 
         //required arguments
-        this.associatedNode = getArguments().getParcelable(BundleKeys.HELP_NODE);
-        this.path = getArguments().getString(BundleKeys.PATH);
+        Bundle arguments = getArguments();
+        this.associatedNode = arguments.getParcelable(BundleKeys.HELP_NODE);
+        this.path = arguments.getString(BundleKeys.PATH);
 
         //optional argument booking id
-        if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING_ID))
+        if (arguments != null && arguments.containsKey(BundleKeys.BOOKING_ID))
         {
-            this.bookingId = getArguments().getString(BundleKeys.BOOKING_ID);
+            this.bookingId = arguments.getString(BundleKeys.BOOKING_ID);
+            this.bookingType = arguments.getString(BundleKeys.BOOKING_TYPE);
         }
         else
         {
@@ -218,10 +218,11 @@ public final class HelpContactFragment extends InjectedFragment
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
     }
 
-    private void returnToBookingDetails(String bookingId)
+    private void returnToBookingDetails(String bookingId, String bookingType)
     {
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
+        arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
         HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
         bus.post(event);
     }
@@ -237,7 +238,7 @@ public final class HelpContactFragment extends InjectedFragment
         }
         else
         {
-            returnToBookingDetails(bookingId);
+            returnToBookingDetails(bookingId, bookingType);
         }
 
         showToast(getString(R.string.contact_received));
