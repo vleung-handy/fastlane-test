@@ -742,14 +742,17 @@ public class BookingDetailsFragment extends InjectedFragment
         if (bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
 >>>>>>> HEAD~6
         {
-            if(bookingClaimDetails.shouldShowClaimTarget()){
+            if (bookingClaimDetails.shouldShowClaimTarget())
+            {
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
                 ClaimTargetDialogFragment claimTargetDialogFragment = new ClaimTargetDialogFragment();
                 claimTargetDialogFragment.setDisplayData(claimTargetInfo);
                 claimTargetDialogFragment.show(getFragmentManager(), "fragment_claim_target");
 
                 returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null);
-            }else{
+            }
+            else
+            {
                 TransitionStyle transitionStyle = (bookingClaimDetails.getBooking().isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
                 returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), transitionStyle);
 
