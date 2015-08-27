@@ -17,8 +17,13 @@ import java.util.List;
 
 public class Booking implements Comparable<Booking>, Serializable
 {
+    public static final String TYPE_BOOKING_PROXY = "booking_proxy";
+    public static final String TYPE_BOOKING = "booking";
+
     @SerializedName("id")
     private String id;
+    @SerializedName("type")
+    private String type;
     @SerializedName("service_name")
     private String service;
     @SerializedName("service")
@@ -71,16 +76,21 @@ public class Booking implements Comparable<Booking>, Serializable
 
     @SerializedName("distance")
     private String formattedDistance;
+    @SerializedName("location_name")
+    private String locationName;
+    @SerializedName("claimed_by_me")
+    private boolean claimedByMe;
 
     public int compareTo(@NonNull Booking other)
     {
-        if (getProviderId().equals(NO_PROVIDER_ASSIGNED))
+        boolean isComparingWithProxy = this.isProxy() || other.isProxy();
+        if (!isComparingWithProxy && getProviderId().equals(NO_PROVIDER_ASSIGNED))
         {
-            if (this.getIsRequested() && !other.getIsRequested())
+            if (this.isRequested() && !other.isRequested())
             {
                 return -1;
             }
-            if (!this.getIsRequested() && other.getIsRequested())
+            if (!this.isRequested() && other.isRequested())
             {
                 return 1;
             }
@@ -133,7 +143,7 @@ public class Booking implements Comparable<Booking>, Serializable
         return bonusPayment;
     }
 
-    public boolean getIsRequested()
+    public boolean isRequested()
     {
         return isRequested;
     }
@@ -260,6 +270,26 @@ public class Booking implements Comparable<Booking>, Serializable
         return description;
     }
 
+    public String getType()
+    {
+        return type;
+    }
+
+    public String getLocationName()
+    {
+        return locationName;
+    }
+
+    public boolean isClaimedByMe()
+    {
+        return claimedByMe;
+    }
+
+    public boolean isProxy()
+    {
+        return getType().equals(TYPE_BOOKING_PROXY);
+    }
+
     //Basic booking statuses inferrable from providerId
     public enum BookingStatus
     {
@@ -307,9 +337,30 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+    public String getFormattedLocation(BookingStatus bookingStatus)
+    {
+        if (this.isProxy())
+        {
+            return getLocationName();
+        }
+        else if (bookingStatus == BookingStatus.AVAILABLE)
+        {
+            return getAddress().getShortRegion() + "\n" + getAddress().getZip();
+        }
+        else
+        {
+            return getAddress().getStreetAddress() + "\n" + getAddress().getZip();
+        }
+    }
+
     //TODO: I don't like having all this business logic in the client, we should get authoritative statuses from the server
     public BookingStatus inferBookingStatus(String userId)
     {
+        if (this.isProxy())
+        {
+            return isClaimedByMe() ? BookingStatus.CLAIMED : BookingStatus.AVAILABLE;
+        }
+
         String assignedProvider = getProviderId();
         boolean bookingIsStarted = isStarted();
 

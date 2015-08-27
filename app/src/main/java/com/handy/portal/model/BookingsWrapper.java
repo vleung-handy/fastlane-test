@@ -9,7 +9,7 @@ public class BookingsWrapper
 {
     @SerializedName("date")
     private Date date;
-    @SerializedName("bookings")
+    @SerializedName("jobs")
     private List<Booking> bookings;
 
     public final Date getDate()

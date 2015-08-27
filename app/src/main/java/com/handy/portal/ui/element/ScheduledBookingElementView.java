@@ -53,11 +53,19 @@ public class ScheduledBookingElementView extends BookingElementView
 
         ButterKnife.inject(this, convertView);
 
-        //Address
-        addressTextView.setText(booking.getAddress().getStreetAddress());
-
-        //Area
-        bookingRegionText.setText(booking.getAddress().getShortRegion());
+        if (booking.isProxy())
+        {
+            //Show general location instead of address for proxies
+            addressTextView.setText(booking.getLocationName());
+            bookingRegionText.setVisibility(View.GONE);
+        }
+        else
+        {
+            //Address
+            addressTextView.setText(booking.getAddress().getStreetAddress());
+            //Area
+            bookingRegionText.setText(booking.getAddress().getShortRegion());
+        }
 
         //Claimed
         claimedIndicatorLayout.setVisibility(booking.isEnded() ? View.GONE : View.VISIBLE);

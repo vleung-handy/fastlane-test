@@ -36,11 +36,11 @@ public abstract class DataManager
 
     public abstract void getScheduledBookings(Date[] date, Callback<BookingsListWrapper> cb);
 
-    public abstract void claimBooking(String bookingId, Callback<Booking> cb);
+    public abstract void claimBooking(String bookingId, String type, Callback<Booking> cb);
 
-    public abstract void getBookingDetails(String bookingId, Callback<Booking> cb);
+    public abstract void removeBooking(String bookingId, String type, Callback<Booking> cb);
 
-    public abstract void removeBooking(String bookingId, Callback<Booking> cb);
+    public abstract void getBookingDetails(String bookingId, String type, Callback<Booking> cb);
 
     public abstract void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 

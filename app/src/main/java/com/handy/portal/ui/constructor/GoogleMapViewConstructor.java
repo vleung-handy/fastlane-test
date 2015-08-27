@@ -104,9 +104,12 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
     {
         if (booking != null)
         {
-            float latitude = booking.getAddress().getLatitude();
-            float longitude = booking.getAddress().getLongitude();
-            this.target = new LatLng(latitude, longitude);
+            if (!booking.isProxy())
+            {
+                float latitude = booking.getAddress().getLatitude();
+                float longitude = booking.getAddress().getLongitude();
+                this.target = new LatLng(latitude, longitude);
+            }
             focusMap(map, target);
         }
 

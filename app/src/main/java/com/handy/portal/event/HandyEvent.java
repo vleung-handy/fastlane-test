@@ -345,12 +345,14 @@ public abstract class HandyEvent
 
     public static class RequestBookingDetails extends HandyEvent
     {
-        public String bookingId;
-        public Date date;
+        public final String bookingId;
+        public final String type;
+        public final Date date;
 
-        public RequestBookingDetails(String bookingId, Date date)
+        public RequestBookingDetails(String bookingId, String type, Date date)
         {
             this.bookingId = bookingId;
+            this.type = type;
             this.date = date;
         }
     }

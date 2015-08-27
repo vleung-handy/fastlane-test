@@ -56,6 +56,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
 
         Bundle args = new Bundle();
         args.putString(BundleKeys.BOOKING_ID, "123456");
+        args.putString(BundleKeys.BOOKING_TYPE, Booking.TYPE_BOOKING);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = activityController.get().getSupportFragmentManager();
