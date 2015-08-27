@@ -734,7 +734,7 @@ public class BookingDetailsFragment extends InjectedFragment
     public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.booking.getProviderId().equals(getLoggedInUserId()))
+        if (event.booking.isClaimedByMe() || event.booking.getProviderId().equals(getLoggedInUserId()))
         {
             TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
             returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle);
