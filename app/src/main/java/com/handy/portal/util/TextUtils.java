@@ -24,7 +24,7 @@ public final class TextUtils
     }
 
     private static final Hashtable<String, Typeface> cache = new Hashtable<>();
-    private static String defaultCurrencySymbol = "$";
+    private static final String defaultCurrencySymbol = "$";
 
     public static Typeface get(final Context c, final String name)
     {
