@@ -74,7 +74,7 @@ public class AvailableBookingElementView extends BookingElementView
         //Area
         if (booking.isProxy())
         {
-            bookingAreaTextView.setText(booking.getZipClusterName());
+            bookingAreaTextView.setText(booking.getLocationName());
         }
         else
         {

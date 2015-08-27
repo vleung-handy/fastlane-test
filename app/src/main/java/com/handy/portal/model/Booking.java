@@ -76,8 +76,8 @@ public class Booking implements Comparable<Booking>, Serializable
 
     @SerializedName("distance")
     private String formattedDistance;
-    @SerializedName("zipcluster_name")
-    private String zipClusterName;
+    @SerializedName("location_name")
+    private String locationName;
     @SerializedName("claimed_by_me")
     private boolean claimedByMe;
 
@@ -275,9 +275,9 @@ public class Booking implements Comparable<Booking>, Serializable
         return type;
     }
 
-    public String getZipClusterName()
+    public String getLocationName()
     {
-        return zipClusterName;
+        return locationName;
     }
 
     public boolean isClaimedByMe()
@@ -341,7 +341,7 @@ public class Booking implements Comparable<Booking>, Serializable
     {
         if (this.isProxy())
         {
-            return getZipClusterName();
+            return getLocationName();
         }
         else if (bookingStatus == BookingStatus.AVAILABLE)
         {
