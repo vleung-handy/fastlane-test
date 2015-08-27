@@ -44,8 +44,9 @@ public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConst
 
             case CLAIMED:
             {
+                String bookingIdSuffix = booking.isProxy() ? "P" : "";
+                jobIdText.setText(getContext().getString(R.string.job_num) + booking.getId() + bookingIdSuffix);
                 bannerText.setText(R.string.your_job);
-                jobIdText.setText(getContext().getString(R.string.job_num) + booking.getId());
             }
             break;
 
