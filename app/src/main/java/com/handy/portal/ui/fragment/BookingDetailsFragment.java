@@ -757,7 +757,7 @@ public class BookingDetailsFragment extends InjectedFragment
     public void onReceiveRemoveJobSuccess(final HandyEvent.ReceiveRemoveJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
+        if (!event.booking.isClaimedByMe() || event.booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
         {
             //TODO: can't currently remove series using portal endpoint so only removing the single job
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
