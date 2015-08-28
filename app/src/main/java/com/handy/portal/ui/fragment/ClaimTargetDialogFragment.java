@@ -80,7 +80,7 @@ public class ClaimTargetDialogFragment extends DialogFragment
         textExpectedPayLabel.setText(getResources().getString(R.string.booking_details_claim_target_expected_pay_label, claimTargetInfo.getNumDaysExpectedPayment()));
 
         PaymentInfo paymentInfo = claimTargetInfo.getPaymentInfo();
-        textExpectedPayDollars.setText(TextUtils.formatPriceDollarsOnly(paymentInfo.getAmount(), paymentInfo.getCurrencySymbol(), paymentInfo.getCurrencySuffix()));
+        textExpectedPayDollars.setText(TextUtils.formatPrice(paymentInfo.getAmount(), paymentInfo.getCurrencySymbol()));
 
     }
 

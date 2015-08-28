@@ -39,7 +39,6 @@ public final class TextUtils
         }
     }
 
-<<<<<<< refs/heads/develop
     public static String formatHtmlLinks(String text)
     {
         return text.replaceAll(URL_PATTERN, "<a href=\"$1\">$1</a>");
@@ -52,24 +51,7 @@ public final class TextUtils
 
     public static String formatPrice(final int price, final String currencyChar)
     {
-        return (currencyChar != null ? currencyChar : "$") + price;
-=======
-    public static String formatPriceDollarsOnly(final int price, final String currencyChar,
-                                                final String currencySuffix)
-    {
-        return (currencyChar != null ? currencyChar : defaultCurrencySymbol)
-                + price
-                + (currencySuffix != null ? currencySuffix : "");
-    }
-
-    public static String formatPrice(final float price, final String currencyChar,
-                                     final String currencySuffix)
-    {
-        final DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return (currencyChar != null ? currencyChar : defaultCurrencySymbol)
-                + decimalFormat.format(price)
-                + (currencySuffix != null ? currencySuffix : "");
->>>>>>> HEAD~6
+        return (currencyChar != null ? currencyChar : defaultCurrencySymbol) + price;
     }
 
     public static String formatPhone(String phone, final String prefix)

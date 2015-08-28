@@ -218,11 +218,7 @@ public class BookingManager
         String bookingType = event.booking.getType();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
-<<<<<<< refs/heads/develop
-        dataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<Booking>()
-=======
-        dataManager.claimBooking(bookingId, new DataManager.Callback<BookingClaimDetails>()
->>>>>>> HEAD~6
+        dataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<BookingClaimDetails>()
         {
             @Override
             public void onSuccess(BookingClaimDetails bookingClaimDetails)

@@ -735,12 +735,9 @@ public class BookingDetailsFragment extends InjectedFragment
     public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-<<<<<<< refs/heads/develop
-        if (event.booking.isClaimedByMe() || event.booking.getProviderId().equals(getLoggedInUserId()))
-=======
         BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
-        if (bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
->>>>>>> HEAD~6
+
+        if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
         {
             if (bookingClaimDetails.shouldShowClaimTarget())
             {

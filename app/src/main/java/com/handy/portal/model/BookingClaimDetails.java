@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class BookingClaimDetails implements Serializable
 {
-    @SerializedName("booking_details")
+    @SerializedName("job_details")
     private Booking booking;
 
     @SerializedName("claim_target_info")

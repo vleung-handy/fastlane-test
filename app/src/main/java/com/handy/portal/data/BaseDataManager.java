@@ -64,9 +64,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void claimBooking(String bookingId, String type, final Callback<Booking> cb)
+    public final void claimBooking(String bookingId, String type, final Callback<BookingClaimDetails> cb)
     {
-        service.claimBooking(bookingId, type, new BookingHandyRetroFitCallback(cb));
+        service.claimBooking(bookingId, type, new BookingClaimHandyRetroFitCallback(cb));
     }
 
     @Override
