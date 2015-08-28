@@ -88,7 +88,6 @@ public class ClaimTargetDialogFragment extends DialogFragment
     {
         int numClaims = claimTargetInfo.getNumJobsClaimed();
         int totalNumIcons = claimTargetInfo.getNumBookingsThreshold();
-        if (progressIconsContainer == null) return;//should not happen. test only
         progressIconsContainer.removeAllViews();
         for (int i = 0; i < totalNumIcons; i++)
         {
