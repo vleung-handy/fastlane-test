@@ -192,7 +192,7 @@ public class BookingManager
         }
         else
         {
-            dataManager.getComplementaryBookings(event.bookingId, new DataManager.Callback<BookingsWrapper>()
+            dataManager.getComplementaryBookings(event.booking.getId(), event.booking.getType(), new DataManager.Callback<BookingsWrapper>()
             {
                 @Override
                 public void onSuccess(BookingsWrapper bookingsWrapper)

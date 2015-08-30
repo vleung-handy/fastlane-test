@@ -72,7 +72,7 @@ public abstract class DataManager
 
     public abstract String getBaseUrl();
 
-    public abstract void getComplementaryBookings(String bookingId, Callback<BookingsWrapper> callback);
+    public abstract void getComplementaryBookings(String bookingId, String type, Callback<BookingsWrapper> callback);
 
     public interface Callback<T>
     {

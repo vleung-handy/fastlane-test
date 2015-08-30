@@ -58,9 +58,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void getComplementaryBookings(String bookingId, Callback<BookingsWrapper> cb)
+    public final void getComplementaryBookings(String bookingId, String type, Callback<BookingsWrapper> cb)
     {
-        service.getComplementaryBookings(bookingId, new BookingsWrapperRetroFitCallback(cb));
+        service.getComplementaryBookings(bookingId, type, new BookingsWrapperRetroFitCallback(cb));
     }
 
     @Override
