@@ -231,20 +231,13 @@ public class BookingDetailsFragment extends InjectedFragment
         viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor(getActivity(), arguments));
 
         //show either the real map or a placeholder image depending on if we have google play services
-        if (booking.isProxy())
+        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
         {
-            mapLayout.setVisibility(View.GONE);
+            viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
         }
         else
         {
-            if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
-            {
-                viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
-            }
-            else
-            {
-                viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
-            }
+            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
         }
 
         viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));

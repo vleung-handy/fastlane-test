@@ -80,6 +80,10 @@ public class Booking implements Comparable<Booking>, Serializable
     private String locationName;
     @SerializedName("claimed_by_me")
     private boolean claimedByMe;
+    @SerializedName("midpoint")
+    private Coordinates midpoint;
+    @SerializedName("radius")
+    private float radius;
 
     public int compareTo(@NonNull Booking other)
     {
@@ -288,6 +292,16 @@ public class Booking implements Comparable<Booking>, Serializable
     public boolean isProxy()
     {
         return getType().equals(TYPE_BOOKING_PROXY);
+    }
+
+    public Coordinates getMidpoint()
+    {
+        return midpoint;
+    }
+
+    public float getRadius()
+    {
+        return radius;
     }
 
     //Basic booking statuses inferrable from providerId
@@ -726,4 +740,23 @@ public class Booking implements Comparable<Booking>, Serializable
             return name;
         }
     }
+
+    public static class Coordinates
+    {
+        @SerializedName("latitude")
+        private float latitude;
+        @SerializedName("longitude")
+        private float longitude;
+
+        public float getLatitude()
+        {
+            return latitude;
+        }
+
+        public float getLongitude()
+        {
+            return longitude;
+        }
+    }
+
 }
