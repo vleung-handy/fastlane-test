@@ -236,6 +236,7 @@
     <string name="supplies">Supplies</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="full_details_after_claim">Additional details will be displayed after claiming</string>
+    <string name="full_details_available_on_date">Full details available on\n%1$s</string>
     <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs</string>

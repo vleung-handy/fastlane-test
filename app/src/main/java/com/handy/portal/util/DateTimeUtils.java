@@ -10,6 +10,7 @@ public final class DateTimeUtils
 {
     //TODO: refactor code throughout the app to put date formats here
     private static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
+    private static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int MILLISECONDS_IN_MINUTE = 60000;
@@ -27,6 +28,12 @@ public final class DateTimeUtils
     {
         if (date == null) return null;
         return CLOCK_FORMATTER_12HR.format(date);
+    }
+
+    public static String formatDetailedDate(Date date)
+    {
+        if (date == null) return null;
+        return DETAILED_DATE_FORMATTER.format(date);
     }
 
     public static boolean equalCalendarDates(final Date date1, final Date date2)

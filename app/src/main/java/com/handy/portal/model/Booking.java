@@ -34,6 +34,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private String status;
     @SerializedName("end_date")
     private Date endDate;
+    @SerializedName("reveal_date")
+    private Date revealDate;
 
     @SerializedName("check_in_summary")
     private CheckInSummary checkInSummary;
@@ -302,6 +304,11 @@ public class Booking implements Comparable<Booking>, Serializable
     public float getRadius()
     {
         return radius;
+    }
+
+    public Date getRevealDate()
+    {
+        return revealDate;
     }
 
     //Basic booking statuses inferrable from providerId
