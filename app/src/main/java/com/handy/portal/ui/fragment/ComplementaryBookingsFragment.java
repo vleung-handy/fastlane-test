@@ -81,9 +81,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         else
         {
             showToast(R.string.error_fetching_matching_jobs);
-            Bundle arguments = new Bundle();
-            arguments.putLong(BundleKeys.DATE_EPOCH_TIME, 0);
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments));
+            bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
         }
 
         loadingOverlay.setVisibility(View.VISIBLE);
