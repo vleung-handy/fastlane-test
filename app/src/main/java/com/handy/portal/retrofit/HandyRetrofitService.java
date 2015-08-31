@@ -53,8 +53,8 @@ public interface HandyRetrofitService
     @GET(JOBS_PATH + "{id}")
     void getBookingDetails(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
-    @GET(BOOKINGS_PATH + "{booking_id}/complementary")
-    void getComplementaryBookings(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+    @GET(JOBS_PATH + "{id}/complementary_jobs")
+    void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")

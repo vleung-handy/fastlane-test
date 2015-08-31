@@ -17,8 +17,11 @@ import java.util.List;
 
 public class Booking implements Comparable<Booking>, Serializable
 {
-    public static final String TYPE_BOOKING_PROXY = "booking_proxy";
-    public static final String TYPE_BOOKING = "booking";
+    public enum BookingType
+    {
+        BOOKING_PROXY,
+        BOOKING,;
+    }
 
     @SerializedName("id")
     private String id;
@@ -34,6 +37,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private String status;
     @SerializedName("end_date")
     private Date endDate;
+    @SerializedName("reveal_date")
+    private Date revealDate;
 
     @SerializedName("check_in_summary")
     private CheckInSummary checkInSummary;
@@ -80,6 +85,10 @@ public class Booking implements Comparable<Booking>, Serializable
     private String locationName;
     @SerializedName("claimed_by_me")
     private boolean claimedByMe;
+    @SerializedName("midpoint")
+    private Coordinates midpoint;
+    @SerializedName("radius")
+    private float radius;
 
     public int compareTo(@NonNull Booking other)
     {
@@ -270,9 +279,9 @@ public class Booking implements Comparable<Booking>, Serializable
         return description;
     }
 
-    public String getType()
+    public BookingType getType()
     {
-        return type;
+        return BookingType.valueOf(type.toUpperCase());
     }
 
     public String getLocationName()
@@ -287,7 +296,22 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public boolean isProxy()
     {
-        return getType().equals(TYPE_BOOKING_PROXY);
+        return getType() == BookingType.BOOKING_PROXY;
+    }
+
+    public Coordinates getMidpoint()
+    {
+        return midpoint;
+    }
+
+    public float getRadius()
+    {
+        return radius;
+    }
+
+    public Date getRevealDate()
+    {
+        return revealDate;
     }
 
     //Basic booking statuses inferrable from providerId
@@ -726,4 +750,23 @@ public class Booking implements Comparable<Booking>, Serializable
             return name;
         }
     }
+
+    public static class Coordinates
+    {
+        @SerializedName("latitude")
+        private float latitude;
+        @SerializedName("longitude")
+        private float longitude;
+
+        public float getLatitude()
+        {
+            return latitude;
+        }
+
+        public float getLongitude()
+        {
+            return longitude;
+        }
+    }
+
 }

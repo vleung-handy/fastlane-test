@@ -44,7 +44,11 @@ public abstract class DetailMapViewConstructor extends BookingDetailsViewConstru
         Integer providerMinutesLate = booking.getProviderMinutesLate();
 
         boolean overlayTextVisible = true;
-        if (checkInSummary != null && checkInSummary.isCheckedIn())
+        if (booking.getRevealDate() != null)
+        {
+            setMapOverlayText(getContext().getResources().getString(R.string.full_details_available_on_date, DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
+        }
+        else if (checkInSummary != null && checkInSummary.isCheckedIn())
         {
             setMapOverlayText(getContext().getResources().getString(R.string.booking_details_check_in_time_msg, DateTimeUtils.formatDateTo12HourClock(checkInSummary.getCheckInTime())));
         }

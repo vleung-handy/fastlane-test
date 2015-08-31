@@ -15,6 +15,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementMediator;
 import com.handy.portal.ui.element.BookingElementView;
@@ -22,6 +23,7 @@ import com.handy.portal.ui.element.ScheduledBookingElementView;
 import com.squareup.otto.Subscribe;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -55,6 +57,10 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     Mixpanel mixpanel;
 
     private Booking claimedBooking;
+    private List<Booking> complementaryBookings;
+    private String bookingId;
+    private BookingType bookingType;
+    private Date bookingDate;
 
     public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
 
@@ -64,10 +70,20 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        claimedBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
-
         View view = inflater.inflate(R.layout.fragment_complementary_bookings, container, false);
         ButterKnife.inject(this, view);
+
+        if (validateRequiredArguments())
+        {
+            bookingId = getArguments().getString(BundleKeys.BOOKING_ID);
+            bookingType = BookingType.valueOf(getArguments().getString(BundleKeys.BOOKING_TYPE));
+            bookingDate = new Date(getArguments().getLong(BundleKeys.BOOKING_DATE));
+        }
+        else
+        {
+            showToast(R.string.error_fetching_matching_jobs);
+            bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
+        }
 
         loadingOverlay.setVisibility(View.VISIBLE);
         closeButton.setOnClickListener(new View.OnClickListener()
@@ -83,10 +99,19 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     }
 
     @Override
+    protected List<String> requiredArguments()
+    {
+        return Lists.newArrayList(BundleKeys.BOOKING_ID, BundleKeys.BOOKING_TYPE, BundleKeys.BOOKING_DATE);
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
-        requestComplementaryBookings();
+        if (!MainActivityFragment.clearingBackStack)
+        {
+            requestComplementaryBookings();
+        }
     }
 
     @OnClick(R.id.all_jobs_button)
@@ -107,14 +132,41 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     {
         errorView.setVisibility(View.GONE);
         loadingOverlay.setVisibility(View.VISIBLE);
-        bus.post(new HandyEvent.RequestComplementaryBookings(claimedBooking));
+        bus.post(new HandyEvent.RequestBookingDetails(bookingId, bookingType, bookingDate));
+        bus.post(new HandyEvent.RequestComplementaryBookings(bookingId, bookingType, bookingDate));
+    }
+
+
+    @Subscribe
+    public void onReceiveBookingDetailsSuccess(HandyEvent.ReceiveBookingDetailsSuccess event)
+    {
+        claimedBooking = event.booking;
+        if (isDataReady())
+        {
+            displayResults();
+        }
     }
 
     @Subscribe
     public void onReceiveComplementaryBookingsSuccess(HandyEvent.ReceiveComplementaryBookingsSuccess event)
     {
+        complementaryBookings = event.bookings;
+        if (isDataReady())
+        {
+            displayResults();
+        }
+    }
+
+    private boolean isDataReady()
+    {
+        return complementaryBookings != null && claimedBooking != null;
+    }
+
+
+    private void displayResults()
+    {
         loadingOverlay.setVisibility(View.GONE);
-        if (event.bookings.isEmpty())
+        if (complementaryBookings.isEmpty())
         {
             mixpanel.track("no complementary jobs found");
             bannerText.setText(R.string.no_matching_jobs);
@@ -123,17 +175,28 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         else
         {
             mixpanel.track("complementary jobs found");
-            bannerText.setText(event.bookings.size() == 1 ? getString(R.string.one_matching_job) : getString(R.string.n_matching_jobs, event.bookings.size()));
-            displayBookings(Lists.newArrayList(event.bookings));
+            bannerText.setText(complementaryBookings.size() == 1 ? getString(R.string.one_matching_job) : getString(R.string.n_matching_jobs, complementaryBookings.size()));
+            displayBookings(Lists.newArrayList(complementaryBookings));
         }
+    }
+
+    @Subscribe
+    public void onReceiveBookingDetailsError(HandyEvent.ReceiveBookingDetailsError event)
+    {
+        displayErrorView(event.error);
     }
 
     @Subscribe
     public void onReceiveComplementaryBookingsError(HandyEvent.ReceiveComplementaryBookingsError event)
     {
+        displayErrorView(event.error);
+    }
+
+    private void displayErrorView(DataManager.DataManagerError error)
+    {
         loadingOverlay.setVisibility(View.GONE);
         errorView.setVisibility(View.VISIBLE);
-        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        if (error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {
             errorText.setText(R.string.error_fetching_connectivity_issue);
         }
@@ -207,7 +270,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
             }
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-            arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType());
+            arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
             arguments.putString(BundleKeys.BOOKING_SOURCE, COMPLEMENTARY_JOBS_SOURCE_NAME);
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
         }

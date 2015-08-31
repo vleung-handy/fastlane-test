@@ -8,6 +8,7 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.BookingClaimDetails;
@@ -66,7 +67,7 @@ public class BookingManager
     public void onRequestBookingDetails(final HandyEvent.RequestBookingDetails event)
     {
         String bookingId = event.bookingId;
-        String type = event.type;
+        BookingType type = event.type;
 
         dataManager.getBookingDetails(bookingId, type, new DataManager.Callback<Booking>()
         {
@@ -184,7 +185,7 @@ public class BookingManager
     @Subscribe
     public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
     {
-        final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
+        final Date day = DateTimeUtils.getDateWithoutTime(event.date);
         final List<Booking> cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
         if (cachedComplementaryBookings != null)
         {
@@ -192,7 +193,7 @@ public class BookingManager
         }
         else
         {
-            dataManager.getComplementaryBookings(event.bookingId, new DataManager.Callback<BookingsWrapper>()
+            dataManager.getComplementaryBookings(event.bookingId, event.type, new DataManager.Callback<BookingsWrapper>()
             {
                 @Override
                 public void onSuccess(BookingsWrapper bookingsWrapper)
@@ -215,7 +216,7 @@ public class BookingManager
     public void onRequestClaimJob(final HandyEvent.RequestClaimJob event)
     {
         String bookingId = event.booking.getId();
-        String bookingType = event.booking.getType();
+        BookingType bookingType = event.booking.getType();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
         dataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<BookingClaimDetails>()
@@ -241,7 +242,7 @@ public class BookingManager
     public void onRequestRemoveJob(HandyEvent.RequestRemoveJob event)
     {
         String bookingId = event.booking.getId();
-        String bookingType = event.booking.getType();
+        BookingType bookingType = event.booking.getType();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
         dataManager.removeBooking(bookingId, bookingType, new DataManager.Callback<Booking>()

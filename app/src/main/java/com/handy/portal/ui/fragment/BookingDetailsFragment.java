@@ -35,6 +35,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
+import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -113,7 +114,7 @@ public class BookingDetailsFragment extends InjectedFragment
     PrefsManager prefsManager;
 
     private String requestedBookingId;
-    private String requestedBookingType;
+    private BookingType requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
 
@@ -133,15 +134,13 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             Bundle arguments = getArguments();
             this.requestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
-            this.requestedBookingType = arguments.getString(BundleKeys.BOOKING_TYPE);
+            this.requestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
 
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
                 long bookingDateLong = arguments.getLong(BundleKeys.BOOKING_DATE, 0L);
                 this.associatedBookingDate = new Date(bookingDateLong);
             }
-
-            requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
         }
         else
         {
@@ -150,6 +149,16 @@ public class BookingDetailsFragment extends InjectedFragment
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if (!MainActivityFragment.clearingBackStack)
+        {
+            requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
+        }
     }
 
     @Override
@@ -163,7 +172,7 @@ public class BookingDetailsFragment extends InjectedFragment
         return prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
-    private void requestBookingDetails(String bookingId, String type, Date bookingDate)
+    private void requestBookingDetails(String bookingId, BookingType type, Date bookingDate)
     {
         fetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -231,20 +240,13 @@ public class BookingDetailsFragment extends InjectedFragment
         viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor(getActivity(), arguments));
 
         //show either the real map or a placeholder image depending on if we have google play services
-        if (booking.isProxy())
+        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
         {
-            mapLayout.setVisibility(View.GONE);
+            viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
         }
         else
         {
-            if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
-            {
-                viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
-            }
-            else
-            {
-                viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
-            }
+            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
         }
 
         viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));

@@ -52,7 +52,6 @@ public final class UIUtils
         fragmentTransaction.replace(view.getId(), fragment);
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
-
     }
 
     public static void setPaymentInfo(TextView dollarTextView, TextView centsTextView, PaymentInfo paymentInfo, String format)

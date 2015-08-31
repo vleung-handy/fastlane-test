@@ -118,7 +118,10 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         //show Find Matching Jobs buttons only if we're inside of our available bookings length range
         int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if (event.provider.isComplementaryJobsEnabled() && bookingsForSelectedDay.size() == 1 && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings))
+        if (event.provider.isComplementaryJobsEnabled()
+                && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings)
+                && bookingsForSelectedDay.size() == 1
+                && !bookingsForSelectedDay.get(0).isProxy()) // currently disable "Find Matching Jobs" for proxies
         {
             findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
         }
@@ -139,8 +142,11 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @OnClick(R.id.find_matching_jobs_button)
     public void onFindMatchingJobsButtonClicked()
     {
+        Booking booking = bookingsForSelectedDay.get(0);
         Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING, bookingsForSelectedDay.get(0));
+        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+        arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
+        arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
 
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP));
     }
