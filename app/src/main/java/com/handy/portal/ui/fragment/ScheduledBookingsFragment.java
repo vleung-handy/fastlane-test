@@ -118,7 +118,10 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         //show Find Matching Jobs buttons only if we're inside of our available bookings length range
         int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if (event.provider.isComplementaryJobsEnabled() && bookingsForSelectedDay.size() == 1 && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings))
+        if (event.provider.isComplementaryJobsEnabled()
+                && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings)
+                && bookingsForSelectedDay.size() == 1
+                && !bookingsForSelectedDay.get(0).isProxy()) // currently disable "Find Matching Jobs" for proxies
         {
             findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
         }
