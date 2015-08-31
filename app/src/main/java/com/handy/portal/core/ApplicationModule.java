@@ -159,6 +159,7 @@ public final class ApplicationModule
                         }
 
                         request.addHeader("Authorization", auth);
+                        request.addHeader("Accept", "application/json");
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
                         request.addQueryParam("apiver", "1");
