@@ -5,6 +5,7 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -63,9 +64,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void claimBooking(String bookingId, String type, final Callback<Booking> cb)
+    public final void claimBooking(String bookingId, String type, final Callback<BookingClaimDetails> cb)
     {
-        service.claimBooking(bookingId, type, new BookingHandyRetroFitCallback(cb));
+        service.claimBooking(bookingId, type, new BookingClaimHandyRetroFitCallback(cb));
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
@@ -456,14 +457,15 @@ public abstract class HandyEvent
     }
 
     @Track("claim job")
-    public static class ReceiveClaimJobSuccess extends ReceiveBookingSuccessEvent
+    public static class ReceiveClaimJobSuccess extends ReceiveSuccessEvent
     {
         @TrackField("source")
         public String source;
+        public BookingClaimDetails bookingClaimDetails;
 
-        public ReceiveClaimJobSuccess(Booking booking, String source)
+        public ReceiveClaimJobSuccess(BookingClaimDetails bookingClaimDetails, String source)
         {
-            this.booking = booking;
+            this.bookingClaimDetails = bookingClaimDetails;
             this.source = source;
         }
     }

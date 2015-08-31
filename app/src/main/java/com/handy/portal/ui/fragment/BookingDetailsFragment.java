@@ -35,6 +35,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
@@ -734,10 +735,25 @@ public class BookingDetailsFragment extends InjectedFragment
     public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.booking.isClaimedByMe() || event.booking.getProviderId().equals(getLoggedInUserId()))
+        BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
+
+        if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
         {
-            TransitionStyle transitionStyle = (event.booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
-            returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle);
+            if (bookingClaimDetails.shouldShowClaimTarget())
+            {
+                BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
+                ClaimTargetDialogFragment claimTargetDialogFragment = new ClaimTargetDialogFragment();
+                claimTargetDialogFragment.setDisplayData(claimTargetInfo);
+                claimTargetDialogFragment.show(getFragmentManager(), "fragment_claim_target");
+
+                returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null);
+            }
+            else
+            {
+                TransitionStyle transitionStyle = (bookingClaimDetails.getBooking().isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
+                returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), transitionStyle);
+
+            }
         }
         else
         {

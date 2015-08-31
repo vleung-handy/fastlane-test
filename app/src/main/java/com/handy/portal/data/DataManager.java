@@ -3,6 +3,7 @@ package com.handy.portal.data;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigParams;
@@ -36,7 +37,7 @@ public abstract class DataManager
 
     public abstract void getScheduledBookings(Date[] date, Callback<BookingsListWrapper> cb);
 
-    public abstract void claimBooking(String bookingId, String type, Callback<Booking> cb);
+    public abstract void claimBooking(String bookingId, String type, Callback<BookingClaimDetails> cb);
 
     public abstract void removeBooking(String bookingId, String type, Callback<Booking> cb);
 
