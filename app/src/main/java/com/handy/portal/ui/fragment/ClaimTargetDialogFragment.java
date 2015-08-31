@@ -47,8 +47,8 @@ public class ClaimTargetDialogFragment extends DialogFragment
 
     final Handler handler = new Handler();
     private BookingClaimDetails.ClaimTargetInfo claimTargetInfo;
-    private final static long fadeInAnimationDuration = 300; //TODO: make this not hard-coded. currently have no way of accessing dialog's animation listeners, and cannot access style resource file attributes easily
-    private final static long showDurationMs = 2500;
+    private final static long FADE_IN_ANIMATION_DURATION = 300; //TODO: make this not hard-coded. currently have no way of accessing dialog's animation listeners, and cannot access style resource file attributes easily
+    private final static long SHOW_DURATION_MS = 2500;
 
     public ClaimTargetDialogFragment()
     {
@@ -133,7 +133,7 @@ public class ClaimTargetDialogFragment extends DialogFragment
                 }
             }
         };
-        handler.postDelayed(runnable, showDurationMs + fadeInAnimationDuration);
+        handler.postDelayed(runnable, SHOW_DURATION_MS + FADE_IN_ANIMATION_DURATION);
     }
 
     public void onStart()//dialog becomes visible

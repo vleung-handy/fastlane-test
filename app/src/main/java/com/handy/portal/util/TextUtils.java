@@ -24,7 +24,7 @@ public final class TextUtils
     }
 
     private static final Hashtable<String, Typeface> cache = new Hashtable<>();
-    private static final String defaultCurrencySymbol = "$";
+    private static final String DEFAULT_CURRENCY_SYMBOL = "$";
 
     public static Typeface get(final Context c, final String name)
     {
@@ -51,7 +51,7 @@ public final class TextUtils
 
     public static String formatPrice(final int price, final String currencyChar)
     {
-        return (currencyChar != null ? currencyChar : defaultCurrencySymbol) + price;
+        return (currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL) + price;
     }
 
     public static String formatPhone(String phone, final String prefix)
