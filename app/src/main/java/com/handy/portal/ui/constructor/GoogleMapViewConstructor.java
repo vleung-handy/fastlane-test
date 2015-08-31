@@ -36,7 +36,7 @@ import java.util.Locale;
 public class GoogleMapViewConstructor extends DetailMapViewConstructor implements OnMapReadyCallback
 {
     private static final int DEFAULT_ZOOM_LEVEL = 15;
-    private static final float OVERLAY_RADIUS_METERS = 500f;
+    private static final float DEFAULT_RADIUS_METERS = 500f;
     private static final double MILES_IN_ONE_METER = 0.000621371;
     private static final int ONE_MILE_ZOOM_LEVEL = 14;
 
@@ -177,8 +177,7 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         map.moveCamera(cameraUpdate);
         if (booking.isProxy() || this.useRestrictedView)
         {
-            float radius = booking.isProxy() ? booking.getRadius() : OVERLAY_RADIUS_METERS;
-            showRangeOverlay(map, target, radius);
+            showRangeOverlay(map, target, getRadius());
         }
         else
         {
@@ -207,9 +206,14 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         return booking.isProxy() ? calculateZoomLevelFromRadius() : DEFAULT_ZOOM_LEVEL;
     }
 
+    private float getRadius()
+    {
+        return booking.getRadius() > 0 ? booking.getRadius() : DEFAULT_RADIUS_METERS;
+    }
+
     private int calculateZoomLevelFromRadius()
     {
-        return (int) (Math.round(ONE_MILE_ZOOM_LEVEL - Math.log(booking.getRadius() * MILES_IN_ONE_METER) / Math.log(Math.E)) - 1);
+        return (int) (Math.round(ONE_MILE_ZOOM_LEVEL - Math.log(getRadius() * MILES_IN_ONE_METER) / Math.log(Math.E)) - 1);
     }
 
     private void openNativeMap(LatLng target, String fullAddress)
