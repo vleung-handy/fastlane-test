@@ -184,7 +184,7 @@ public class BookingManager
     @Subscribe
     public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
     {
-        final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
+        final Date day = DateTimeUtils.getDateWithoutTime(event.date);
         final List<Booking> cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
         if (cachedComplementaryBookings != null)
         {
@@ -192,7 +192,7 @@ public class BookingManager
         }
         else
         {
-            dataManager.getComplementaryBookings(event.booking.getId(), event.booking.getType(), new DataManager.Callback<BookingsWrapper>()
+            dataManager.getComplementaryBookings(event.bookingId, event.type, new DataManager.Callback<BookingsWrapper>()
             {
                 @Override
                 public void onSuccess(BookingsWrapper bookingsWrapper)

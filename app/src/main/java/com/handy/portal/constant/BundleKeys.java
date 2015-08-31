@@ -2,7 +2,6 @@ package com.handy.portal.constant;
 
 public class BundleKeys
 {
-    public static final String BOOKING = "booking";
     public static final String BOOKING_ID = "booking_id";
     public static final String BOOKING_TYPE = "booking_type";
     public static final String BOOKING_DATE = "booking_date";

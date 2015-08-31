@@ -139,8 +139,11 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @OnClick(R.id.find_matching_jobs_button)
     public void onFindMatchingJobsButtonClicked()
     {
+        Booking booking = bookingsForSelectedDay.get(0);
         Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING, bookingsForSelectedDay.get(0));
+        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+        arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType());
+        arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
 
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP));
     }

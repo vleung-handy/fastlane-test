@@ -140,8 +140,6 @@ public class BookingDetailsFragment extends InjectedFragment
                 long bookingDateLong = arguments.getLong(BundleKeys.BOOKING_DATE, 0L);
                 this.associatedBookingDate = new Date(bookingDateLong);
             }
-
-            requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
         }
         else
         {
@@ -150,6 +148,16 @@ public class BookingDetailsFragment extends InjectedFragment
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if (!MainActivityFragment.clearingBackStack)
+        {
+            requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
+        }
     }
 
     @Override

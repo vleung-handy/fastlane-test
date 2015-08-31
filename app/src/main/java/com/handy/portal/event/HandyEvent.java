@@ -903,11 +903,14 @@ public abstract class HandyEvent
 
     public static class RequestComplementaryBookings extends RequestBookingActionEvent
     {
-        public final Booking booking;
-        public RequestComplementaryBookings(Booking booking)
+        public final String type;
+        public final Date date;
+
+        public RequestComplementaryBookings(String bookingId, String type, Date date)
         {
-            this.booking = booking;
-            this.bookingId = booking.getId();
+            this.bookingId = bookingId;
+            this.type = type;
+            this.date = date;
         }
     }
 
