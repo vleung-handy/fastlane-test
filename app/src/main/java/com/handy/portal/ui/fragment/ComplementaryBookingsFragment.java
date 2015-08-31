@@ -15,6 +15,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementMediator;
 import com.handy.portal.ui.element.BookingElementView;
@@ -58,7 +59,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     private Booking claimedBooking;
     private List<Booking> complementaryBookings;
     private String bookingId;
-    private String bookingType;
+    private BookingType bookingType;
     private Date bookingDate;
 
     public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
@@ -75,7 +76,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         if (validateRequiredArguments())
         {
             bookingId = getArguments().getString(BundleKeys.BOOKING_ID);
-            bookingType = getArguments().getString(BundleKeys.BOOKING_TYPE);
+            bookingType = BookingType.valueOf(getArguments().getString(BundleKeys.BOOKING_TYPE));
             bookingDate = new Date(getArguments().getLong(BundleKeys.BOOKING_DATE));
         }
         else
@@ -269,7 +270,7 @@ public class ComplementaryBookingsFragment extends InjectedFragment
             }
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-            arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType());
+            arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
             arguments.putString(BundleKeys.BOOKING_SOURCE, COMPLEMENTARY_JOBS_SOURCE_NAME);
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
         }

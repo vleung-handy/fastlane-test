@@ -8,7 +8,7 @@ import android.os.Bundle;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -79,7 +79,7 @@ public class DeepLinkService extends IntentService
                 Bundle bundle = new Bundle();
                 String bookingId = deepLink.getQuery();
                 bundle.putString(BundleKeys.BOOKING_ID, bookingId);
-                bundle.putString(BundleKeys.BOOKING_TYPE, Booking.TYPE_BOOKING);
+                bundle.putString(BundleKeys.BOOKING_TYPE, BookingType.BOOKING.toString());
                 HandyEvent.NavigateToTab navigateToTab = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, bundle);
                 bus.post(navigateToTab);
             }

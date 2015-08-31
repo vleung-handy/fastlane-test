@@ -3,6 +3,7 @@ package com.handy.portal.data;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
@@ -37,11 +38,11 @@ public abstract class DataManager
 
     public abstract void getScheduledBookings(Date[] date, Callback<BookingsListWrapper> cb);
 
-    public abstract void claimBooking(String bookingId, String type, Callback<BookingClaimDetails> cb);
+    public abstract void claimBooking(String bookingId, BookingType type, Callback<BookingClaimDetails> cb);
 
-    public abstract void removeBooking(String bookingId, String type, Callback<Booking> cb);
+    public abstract void removeBooking(String bookingId, BookingType type, Callback<Booking> cb);
 
-    public abstract void getBookingDetails(String bookingId, String type, Callback<Booking> cb);
+    public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
 
     public abstract void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
@@ -72,7 +73,7 @@ public abstract class DataManager
 
     public abstract String getBaseUrl();
 
-    public abstract void getComplementaryBookings(String bookingId, String type, Callback<BookingsWrapper> callback);
+    public abstract void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> callback);
 
     public interface Callback<T>
     {

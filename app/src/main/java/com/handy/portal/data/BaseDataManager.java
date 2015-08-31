@@ -3,6 +3,7 @@ package com.handy.portal.data;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.BookingClaimDetails;
@@ -58,27 +59,27 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void getComplementaryBookings(String bookingId, String type, Callback<BookingsWrapper> cb)
+    public final void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> cb)
     {
-        service.getComplementaryBookings(bookingId, type, new BookingsWrapperRetroFitCallback(cb));
+        service.getComplementaryBookings(bookingId, type.toString().toLowerCase(), new BookingsWrapperRetroFitCallback(cb));
     }
 
     @Override
-    public final void claimBooking(String bookingId, String type, final Callback<BookingClaimDetails> cb)
+    public final void claimBooking(String bookingId, BookingType type, final Callback<BookingClaimDetails> cb)
     {
-        service.claimBooking(bookingId, type, new BookingClaimHandyRetroFitCallback(cb));
+        service.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void removeBooking(String bookingId, String type, final Callback<Booking> cb)
+    public final void removeBooking(String bookingId, BookingType type, final Callback<Booking> cb)
     {
-        service.removeBooking(bookingId, type, new BookingHandyRetroFitCallback(cb));
+        service.removeBooking(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void getBookingDetails(String bookingId, String type, final Callback<Booking> cb)
+    public final void getBookingDetails(String bookingId, BookingType type, final Callback<Booking> cb)
     {
-        service.getBookingDetails(bookingId, type, new BookingHandyRetroFitCallback(cb));
+        service.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override

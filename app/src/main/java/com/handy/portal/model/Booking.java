@@ -17,8 +17,11 @@ import java.util.List;
 
 public class Booking implements Comparable<Booking>, Serializable
 {
-    public static final String TYPE_BOOKING_PROXY = "booking_proxy";
-    public static final String TYPE_BOOKING = "booking";
+    public enum BookingType
+    {
+        BOOKING_PROXY,
+        BOOKING,;
+    }
 
     @SerializedName("id")
     private String id;
@@ -276,9 +279,9 @@ public class Booking implements Comparable<Booking>, Serializable
         return description;
     }
 
-    public String getType()
+    public BookingType getType()
     {
-        return type;
+        return BookingType.valueOf(type.toUpperCase());
     }
 
     public String getLocationName()
@@ -293,7 +296,7 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public boolean isProxy()
     {
-        return getType().equals(TYPE_BOOKING_PROXY);
+        return getType() == BookingType.BOOKING_PROXY;
     }
 
     public Coordinates getMidpoint()

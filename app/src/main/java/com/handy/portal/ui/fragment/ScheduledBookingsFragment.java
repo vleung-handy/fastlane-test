@@ -145,7 +145,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         Booking booking = bookingsForSelectedDay.get(0);
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-        arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType());
+        arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
 
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP));

@@ -12,6 +12,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
+import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.LocationData;
@@ -347,10 +348,10 @@ public abstract class HandyEvent
     public static class RequestBookingDetails extends HandyEvent
     {
         public final String bookingId;
-        public final String type;
+        public final BookingType type;
         public final Date date;
 
-        public RequestBookingDetails(String bookingId, String type, Date date)
+        public RequestBookingDetails(String bookingId, BookingType type, Date date)
         {
             this.bookingId = bookingId;
             this.type = type;
@@ -903,10 +904,10 @@ public abstract class HandyEvent
 
     public static class RequestComplementaryBookings extends RequestBookingActionEvent
     {
-        public final String type;
+        public final BookingType type;
         public final Date date;
 
-        public RequestComplementaryBookings(String bookingId, String type, Date date)
+        public RequestComplementaryBookings(String bookingId, BookingType type, Date date)
         {
             this.bookingId = bookingId;
             this.type = type;
