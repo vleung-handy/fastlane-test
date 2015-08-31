@@ -38,6 +38,7 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
     private static final int DEFAULT_ZOOM_LEVEL = 15;
     private static final float OVERLAY_RADIUS_METERS = 500f;
     private static final double MILES_IN_ONE_METER = 0.000621371;
+    private static final int ONE_MILE_ZOOM_LEVEL = 14;
 
     private Booking booking;
     private boolean useRestrictedView;
@@ -208,7 +209,7 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
 
     private int calculateZoomLevelFromRadius()
     {
-        return (int) (Math.round(14 - Math.log(booking.getRadius() * MILES_IN_ONE_METER) / Math.log(Math.E)) - 1);
+        return (int) (Math.round(ONE_MILE_ZOOM_LEVEL - Math.log(booking.getRadius() * MILES_IN_ONE_METER) / Math.log(Math.E)) - 1);
     }
 
     private void openNativeMap(LatLng target, String fullAddress)
