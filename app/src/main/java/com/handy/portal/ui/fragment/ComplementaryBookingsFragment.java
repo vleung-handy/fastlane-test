@@ -140,23 +140,30 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     public void onReceiveBookingDetailsSuccess(HandyEvent.ReceiveBookingDetailsSuccess event)
     {
         claimedBooking = event.booking;
-        tryDisplayingResults();
+        if (isDataReady())
+        {
+            displayResults();
+        }
     }
 
     @Subscribe
     public void onReceiveComplementaryBookingsSuccess(HandyEvent.ReceiveComplementaryBookingsSuccess event)
     {
         complementaryBookings = event.bookings;
-        tryDisplayingResults();
+        if (isDataReady())
+        {
+            displayResults();
+        }
     }
 
-    private void tryDisplayingResults()
+    private boolean isDataReady()
     {
-        if (complementaryBookings == null || claimedBooking == null)
-        {
-            return;
-        }
+        return complementaryBookings != null && claimedBooking != null;
+    }
 
+
+    private void displayResults()
+    {
         loadingOverlay.setVisibility(View.GONE);
         if (complementaryBookings.isEmpty())
         {
