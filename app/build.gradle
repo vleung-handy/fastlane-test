@@ -34,8 +34,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 28
-        versionName "0.5.4"
+        versionCode 29
+        versionName "0.5.5"
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
@@ -143,10 +143,10 @@ dependencies {
     compile 'com.android.support:cardview-v7:22.2.0'
 
     //Recommended for location services
-    compile 'com.google.android.gms:play-services-location:7.5.0'
+    compile 'com.google.android.gms:play-services-location:7.8.0'
 
     //Required for Android (GCM) push notifications
-    compile 'com.google.android.gms:play-services-gcm:7.5.0'
+    compile 'com.google.android.gms:play-services-gcm:7.8.0'
 
     //Testing
     testCompile 'org.robolectric:robolectric:3.0-rc3'

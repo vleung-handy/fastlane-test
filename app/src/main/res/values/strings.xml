@@ -236,6 +236,8 @@
     <string name="supplies">Supplies</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="full_details_after_claim">Additional details will be displayed after claiming</string>
+    <string name="full_details_available_on_date">Full details available on\n%1$s</string>
+    <string name="full_details_and_more_available_on_date"><![CDATA[Full job details, including exact address, will be available on <b>%1$s</b>. We\u2019ll send you a reminder at that time.]]></string>
     <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs</string>
@@ -279,6 +281,12 @@
     <string name="arrival_time_late_10">I\u2019ll be 10 minutes late</string>
     <string name="arrival_time_late_15">I\u2019ll be 15 minutes late</string>
     <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
+
+    <string name="booking_details_claim_target_msg">Nice! Keep claiming to hit your first 5 jobs.</string>
+    <string name="booking_details_claim_target_reached_msg">Feel free to claim even more jobs before they\u2019re snatched up</string>
+    <string name="booking_details_claim_target_title">Job claimed!</string>
+    <string name="booking_details_claim_target_reached_title">Congratulations!</string>
+    <string name="booking_details_claim_target_expected_pay_label">Expected pay in next %1$d days</string>
 
     <string name="booking_details_check_in_time_msg">\u2713 Checked in at %1$s</string>
     <string name="booking_details_eta_msg">Estimated arrival time: %1$s</string>

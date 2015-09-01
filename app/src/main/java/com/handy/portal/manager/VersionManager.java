@@ -19,6 +19,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -38,7 +39,7 @@ public class VersionManager
     // This backoff duration is used to prevent the app from executing download repeatedly when
     // download fails. It is used to check whether there was a download attempt recently and if so,
     // doesn't execute the update process.
-    private static final int UPDATE_CHECK_BACKOFF_DURATION_MILLIS = 300000; // 5 minutes
+    private static final int UPDATE_CHECK_BACKOFF_DURATION_MILLIS = DateTimeUtils.MILLISECONDS_IN_MINUTE*5; // 5 minutes
     private long lastUpdateCheckTimeMillis = 0;
 
     private final Context context;

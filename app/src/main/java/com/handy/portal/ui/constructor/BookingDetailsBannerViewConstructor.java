@@ -14,6 +14,8 @@ import butterknife.InjectView;
 
 public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConstructor
 {
+    private static final String BOOKING_PROXY_ID_PREFIX = "P";
+
     @InjectView(R.id.booking_details_banner_text)
     protected TextView bannerText;
 
@@ -44,8 +46,9 @@ public class BookingDetailsBannerViewConstructor extends BookingDetailsViewConst
 
             case CLAIMED:
             {
+                String bookingIdPrefix = booking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
+                jobIdText.setText(getContext().getString(R.string.job_num) + bookingIdPrefix + booking.getId());
                 bannerText.setText(R.string.your_job);
-                jobIdText.setText(getContext().getString(R.string.job_num) + booking.getId());
             }
             break;
 

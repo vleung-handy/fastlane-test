@@ -50,7 +50,7 @@ public class OnboardingActivity extends BaseActivity
     private void initSteps()
     {
         Provider provider = providerManager.getCachedActiveProvider();
-        if (provider.isUK())
+        if (provider!=null && provider.isUK())
         {
             Configuration configuration = new Configuration();
             configuration.locale = Locale.UK;

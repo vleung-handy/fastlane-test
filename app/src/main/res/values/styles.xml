@@ -13,6 +13,11 @@
         -->
     </style>
 
+    <style name="dialog_animation_slide_down_up_from_top">
+        <item name="android:windowEnterAnimation">@anim/slide_down_from_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_up_to_top</item>
+    </style>
+
     <style name="MenuButtonLayout">
         <item name="android:layout_width">64dp</item>
         <item name="android:layout_height">match_parent</item>

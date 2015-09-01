@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 
 import java.text.DecimalFormat;
@@ -51,10 +52,9 @@ public final class UIUtils
         fragmentTransaction.replace(view.getId(), fragment);
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
-
     }
 
-    public static void setPaymentInfo(TextView dollarTextView, TextView centsTextView, Booking.PaymentInfo paymentInfo, String format)
+    public static void setPaymentInfo(TextView dollarTextView, TextView centsTextView, PaymentInfo paymentInfo, String format)
     {
         if (paymentInfo != null && paymentInfo.getAmount() > 0)
         {

@@ -17,8 +17,16 @@ import java.util.List;
 
 public class Booking implements Comparable<Booking>, Serializable
 {
+    public enum BookingType
+    {
+        BOOKING_PROXY,
+        BOOKING,;
+    }
+
     @SerializedName("id")
     private String id;
+    @SerializedName("type")
+    private String type;
     @SerializedName("service_name")
     private String service;
     @SerializedName("service")
@@ -29,6 +37,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private String status;
     @SerializedName("end_date")
     private Date endDate;
+    @SerializedName("reveal_date")
+    private Date revealDate;
 
     @SerializedName("check_in_summary")
     private CheckInSummary checkInSummary;
@@ -71,16 +81,25 @@ public class Booking implements Comparable<Booking>, Serializable
 
     @SerializedName("distance")
     private String formattedDistance;
+    @SerializedName("location_name")
+    private String locationName;
+    @SerializedName("claimed_by_me")
+    private boolean claimedByMe;
+    @SerializedName("midpoint")
+    private Coordinates midpoint;
+    @SerializedName("radius")
+    private float radius;
 
     public int compareTo(@NonNull Booking other)
     {
-        if (getProviderId().equals(NO_PROVIDER_ASSIGNED))
+        boolean isComparingWithProxy = this.isProxy() || other.isProxy();
+        if (!isComparingWithProxy && getProviderId().equals(NO_PROVIDER_ASSIGNED))
         {
-            if (this.getIsRequested() && !other.getIsRequested())
+            if (this.isRequested() && !other.isRequested())
             {
                 return -1;
             }
-            if (!this.getIsRequested() && other.getIsRequested())
+            if (!this.isRequested() && other.isRequested())
             {
                 return 1;
             }
@@ -133,7 +152,7 @@ public class Booking implements Comparable<Booking>, Serializable
         return bonusPayment;
     }
 
-    public boolean getIsRequested()
+    public boolean isRequested()
     {
         return isRequested;
     }
@@ -260,6 +279,41 @@ public class Booking implements Comparable<Booking>, Serializable
         return description;
     }
 
+    public BookingType getType()
+    {
+        return BookingType.valueOf(type.toUpperCase());
+    }
+
+    public String getLocationName()
+    {
+        return locationName;
+    }
+
+    public boolean isClaimedByMe()
+    {
+        return claimedByMe;
+    }
+
+    public boolean isProxy()
+    {
+        return getType() == BookingType.BOOKING_PROXY;
+    }
+
+    public Coordinates getMidpoint()
+    {
+        return midpoint;
+    }
+
+    public float getRadius()
+    {
+        return radius;
+    }
+
+    public Date getRevealDate()
+    {
+        return revealDate;
+    }
+
     //Basic booking statuses inferrable from providerId
     public enum BookingStatus
     {
@@ -307,9 +361,30 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+    public String getFormattedLocation(BookingStatus bookingStatus)
+    {
+        if (this.isProxy())
+        {
+            return getLocationName();
+        }
+        else if (bookingStatus == BookingStatus.AVAILABLE)
+        {
+            return getAddress().getShortRegion() + "\n" + getAddress().getZip();
+        }
+        else
+        {
+            return getAddress().getStreetAddress() + "\n" + getAddress().getZip();
+        }
+    }
+
     //TODO: I don't like having all this business logic in the client, we should get authoritative statuses from the server
     public BookingStatus inferBookingStatus(String userId)
     {
+        if (this.isProxy())
+        {
+            return isClaimedByMe() ? BookingStatus.CLAIMED : BookingStatus.AVAILABLE;
+        }
+
         String assignedProvider = getProviderId();
         boolean bookingIsStarted = isStarted();
 
@@ -438,45 +513,6 @@ public class Booking implements Comparable<Booking>, Serializable
         public String getFullName()
         {
             return firstName + " " + lastName;
-        }
-    }
-
-    public static class PaymentInfo implements Serializable
-    {
-        @SerializedName("amount")
-        private int amount;
-        @SerializedName("adjusted_amount")
-        private int adjustedAmount;
-        @SerializedName("code")
-        private String currencyCode;
-        @SerializedName("symbol")
-        private String currencySymbol;
-        @SerializedName("suffix")
-        private String currencySuffix;
-
-        public int getAmount()
-        {
-            return amount;
-        }
-
-        public int getAdjustedAmount()
-        {
-            return adjustedAmount;
-        }
-
-        public String getCurrencySymbol()
-        {
-            return currencySymbol;
-        }
-
-        public String getCurrencySuffix()
-        {
-            return currencySuffix;
-        }
-
-        public String getCurrencyCode()
-        {
-            return currencyCode;
         }
     }
 
@@ -714,4 +750,23 @@ public class Booking implements Comparable<Booking>, Serializable
             return name;
         }
     }
+
+    public static class Coordinates
+    {
+        @SerializedName("latitude")
+        private float latitude;
+        @SerializedName("longitude")
+        private float longitude;
+
+        public float getLatitude()
+        {
+            return latitude;
+        }
+
+        public float getLongitude()
+        {
+            return longitude;
+        }
+    }
+
 }

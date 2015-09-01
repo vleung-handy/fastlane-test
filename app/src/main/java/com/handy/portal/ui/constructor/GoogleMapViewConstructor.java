@@ -36,7 +36,9 @@ import java.util.Locale;
 public class GoogleMapViewConstructor extends DetailMapViewConstructor implements OnMapReadyCallback
 {
     private static final int DEFAULT_ZOOM_LEVEL = 15;
-    private static final float OVERLAY_RADIUS_METERS = 500f;
+    private static final float DEFAULT_RADIUS_METERS = 500f;
+    private static final double MILES_IN_ONE_METER = 0.000621371;
+    private static final int ONE_MILE_ZOOM_LEVEL = 14;
 
     private Booking booking;
     private boolean useRestrictedView;
@@ -104,10 +106,8 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
     {
         if (booking != null)
         {
-            float latitude = booking.getAddress().getLatitude();
-            float longitude = booking.getAddress().getLongitude();
-            this.target = new LatLng(latitude, longitude);
-            focusMap(map, target);
+            this.target = getLatLng();
+            focusMap(map, this.target);
         }
 
         if (this.useRestrictedView)
@@ -135,24 +135,49 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
                 @Override
                 public void onMapClick(LatLng point)
                 {
-                    String queryAddress = booking.getAddress().getStreetAddress() + " " + booking.getAddress().getZip();
+                    String queryAddress;
+                    if (booking.isProxy())
+                    {
+                        queryAddress = booking.getMidpoint().getLatitude() + "," + booking.getMidpoint().getLongitude();
+                    }
+                    else
+                    {
+                        queryAddress = booking.getFormattedLocation(Booking.BookingStatus.CLAIMED);
+                    }
                     openNativeMap(target, queryAddress);
                 }
             });
         }
     }
 
+    private LatLng getLatLng()
+    {
+        float latitude;
+        float longitude;
+        if (booking.isProxy())
+        {
+            latitude = booking.getMidpoint().getLatitude();
+            longitude = booking.getMidpoint().getLongitude();
+        }
+        else
+        {
+            latitude = booking.getAddress().getLatitude();
+            longitude = booking.getAddress().getLongitude();
+        }
+        return new LatLng(latitude, longitude);
+    }
+
     private void focusMap(GoogleMap map, LatLng target)
     {
         CameraPosition targetCameraPosition = new CameraPosition.Builder().
                 target(target).
-                zoom(DEFAULT_ZOOM_LEVEL).
+                zoom(getZoomLevel()).
                 build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
         map.moveCamera(cameraUpdate);
-        if (this.useRestrictedView)
+        if (booking.isProxy() || this.useRestrictedView)
         {
-            showRangeOverlay(map, target);
+            showRangeOverlay(map, target, getRadius());
         }
         else
         {
@@ -160,11 +185,11 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         }
     }
 
-    private void showRangeOverlay(GoogleMap map, LatLng target)
+    private void showRangeOverlay(GoogleMap map, LatLng target, float radius)
     {
         GroundOverlayOptions groundOverlay = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_radius))
-                .position(target, OVERLAY_RADIUS_METERS);
+                .position(target, radius);
         map.addGroundOverlay(groundOverlay);
     }
 
@@ -176,12 +201,27 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         map.addMarker(marker);
     }
 
+    private int getZoomLevel()
+    {
+        return booking.isProxy() ? calculateZoomLevelFromRadius() : DEFAULT_ZOOM_LEVEL;
+    }
+
+    private float getRadius()
+    {
+        return booking.getRadius() > 0 ? booking.getRadius() : DEFAULT_RADIUS_METERS;
+    }
+
+    private int calculateZoomLevelFromRadius()
+    {
+        return (int) (Math.round(ONE_MILE_ZOOM_LEVEL - Math.log(getRadius() * MILES_IN_ONE_METER) / Math.log(Math.E)) - 1);
+    }
+
     private void openNativeMap(LatLng target, String fullAddress)
     {
         //Query format: lat,long,?optionalZoomLevel&q=address
-        //the lat long are used to bias the search querys address and are used as a fallback if address not found
+        //the lat long are used to bias the search queries address and are used as a fallback if address not found
         String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=%d&q=%s",
-                target.latitude, target.longitude, DEFAULT_ZOOM_LEVEL, fullAddress);
+                target.latitude, target.longitude, getZoomLevel(), fullAddress);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         Utils.safeLaunchIntent(intent, getContext());
     }

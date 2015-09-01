@@ -12,6 +12,8 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
+import com.handy.portal.model.Booking.BookingType;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
@@ -345,12 +347,14 @@ public abstract class HandyEvent
 
     public static class RequestBookingDetails extends HandyEvent
     {
-        public String bookingId;
-        public Date date;
+        public final String bookingId;
+        public final BookingType type;
+        public final Date date;
 
-        public RequestBookingDetails(String bookingId, Date date)
+        public RequestBookingDetails(String bookingId, BookingType type, Date date)
         {
             this.bookingId = bookingId;
+            this.type = type;
             this.date = date;
         }
     }
@@ -454,14 +458,15 @@ public abstract class HandyEvent
     }
 
     @Track("claim job")
-    public static class ReceiveClaimJobSuccess extends ReceiveBookingSuccessEvent
+    public static class ReceiveClaimJobSuccess extends ReceiveSuccessEvent
     {
         @TrackField("source")
         public String source;
+        public BookingClaimDetails bookingClaimDetails;
 
-        public ReceiveClaimJobSuccess(Booking booking, String source)
+        public ReceiveClaimJobSuccess(BookingClaimDetails bookingClaimDetails, String source)
         {
-            this.booking = booking;
+            this.bookingClaimDetails = bookingClaimDetails;
             this.source = source;
         }
     }
@@ -899,11 +904,14 @@ public abstract class HandyEvent
 
     public static class RequestComplementaryBookings extends RequestBookingActionEvent
     {
-        public final Booking booking;
-        public RequestComplementaryBookings(Booking booking)
+        public final BookingType type;
+        public final Date date;
+
+        public RequestComplementaryBookings(String bookingId, BookingType type, Date date)
         {
-            this.booking = booking;
-            this.bookingId = booking.getId();
+            this.bookingId = bookingId;
+            this.type = type;
+            this.date = date;
         }
     }
 

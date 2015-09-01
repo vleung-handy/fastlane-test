@@ -19,6 +19,7 @@ public interface HandyRetrofitService
 {
     String SESSIONS_PATH = "/sessions/";
     String BOOKINGS_PATH = "/bookings/";
+    String JOBS_PATH = "/jobs/";
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
@@ -37,20 +38,23 @@ public interface HandyRetrofitService
     @GET("/config_params")
     void getConfigParams(@Query("key[]") String[] key, HandyRetrofitCallback cb);
 
-    @GET(BOOKINGS_PATH + "?available=true")
-    void getAvailableBookings(@Query("date[]") Date[] date, HandyRetrofitCallback cb);
+    @GET(JOBS_PATH + "/available_jobs")
+    void getAvailableBookings(@Query("dates[]") Date[] dates, HandyRetrofitCallback cb);
 
-    @GET(BOOKINGS_PATH)
-    void getScheduledBookings(@Query("date[]") Date[] date, HandyRetrofitCallback cb);
+    @GET(JOBS_PATH + "/scheduled_jobs")
+    void getScheduledBookings(@Query("dates[]") Date[] date, HandyRetrofitCallback cb);
 
-    @PUT(BOOKINGS_PATH + "{booking_id}/claim")
-    void claimBooking(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+    @PUT(JOBS_PATH + "{id}/claim")
+    void claimBooking(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
-    @GET(BOOKINGS_PATH + "{booking_id}/complementary")
-    void getComplementaryBookings(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+    @PUT(JOBS_PATH + "{id}/remove")
+    void removeBooking(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
-    @GET(BOOKINGS_PATH + "{booking_id}")
-    void getBookingDetails(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+    @GET(JOBS_PATH + "{id}")
+    void getBookingDetails(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
+
+    @GET(JOBS_PATH + "{id}/complementary_jobs")
+    void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")
@@ -71,9 +75,6 @@ public interface HandyRetrofitService
     @Multipart
     @POST(BOOKINGS_PATH + "{booking_id}/eta")
     void updateArrivalTime(@Path("booking_id") String bookingId, @Part("lateness") String latenessValue, HandyRetrofitCallback cb);
-
-    @PUT(BOOKINGS_PATH + "{booking_id}/remove")
-    void removeBooking(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
     @Multipart
     @POST(SESSIONS_PATH + "request_pin")

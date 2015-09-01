@@ -3,10 +3,13 @@ package com.handy.portal.ui.constructor;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
@@ -14,6 +17,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView;
+import com.handy.portal.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +30,8 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
 {
     @InjectView(R.id.booking_details_job_instructions_list_layout)
     protected LinearLayout instructionsLayout;
+    @InjectView(R.id.job_instructions_reveal_notice)
+    protected TextView revealNotice;
 
     private static final Map<String, Integer> GROUP_ICONS;
     static
@@ -56,6 +62,14 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
         boolean fullDetails = !isHomeCleaning || (bookingStatus == BookingStatus.CLAIMED);
 
         boolean jobInstructionsSectionConstructed = false; //if we don't add any sections we will not add the view
+
+        if (booking.getRevealDate() != null && booking.isClaimedByMe())
+        {
+            Spanned noticeText = Html.fromHtml(getContext().getResources().getString(R.string.full_details_and_more_available_on_date, DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
+            revealNotice.setText(noticeText);
+            revealNotice.setVisibility(View.VISIBLE);
+            jobInstructionsSectionConstructed = true;
+        }
 
         //Show description field regardless of claim status if the booking is not for cleaning (e.g. furniture assembly)
         if (!isHomeCleaning && booking.getDescription() != null)

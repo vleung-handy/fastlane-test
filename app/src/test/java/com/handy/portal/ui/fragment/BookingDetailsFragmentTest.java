@@ -10,6 +10,8 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.MainActivity;
 
 import org.hamcrest.Matcher;
@@ -41,6 +43,12 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
 {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Booking booking;
+    @Mock
+    private BookingClaimDetails bookingClaimDetails;
+    @Mock
+    private BookingClaimDetails.ClaimTargetInfo claimTargetInfo;
+    @Mock
+    private PaymentInfo claimTargetPaymentInfo;
     @Captor
     private ArgumentCaptor<Object> captor;
 
@@ -56,6 +64,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
 
         Bundle args = new Bundle();
         args.putString(BundleKeys.BOOKING_ID, "123456");
+        args.putString(BundleKeys.BOOKING_TYPE, Booking.BookingType.BOOKING.toString());
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = activityController.get().getSupportFragmentManager();
@@ -71,6 +80,15 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
         when(booking.inferBookingStatus(anyString())).thenReturn(Booking.BookingStatus.CLAIMED);
         when(booking.getStartDate()).thenReturn(new Date());
         when(booking.getEndDate()).thenReturn(new Date());
+
+        when(bookingClaimDetails.getBooking()).thenReturn(booking);
+        when(claimTargetInfo.getNumBookingsThreshold()).thenReturn(5);
+        when(claimTargetInfo.getNumDaysExpectedPayment()).thenReturn(7);
+        when(claimTargetInfo.getNumJobsClaimed()).thenReturn(3);
+        when(claimTargetPaymentInfo.getAmount()).thenReturn(180);
+        when(claimTargetPaymentInfo.getCurrencySymbol()).thenReturn("$");
+        when(claimTargetInfo.getPaymentInfo()).thenReturn(claimTargetPaymentInfo);
+        when(bookingClaimDetails.getClaimTargetInfo()).thenReturn(claimTargetInfo);
     }
 
     @Test
@@ -91,7 +109,13 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void onClaimBookingSuccess_switchToScheduleTab() throws Exception
     {
-        fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(booking, null));
+        when(bookingClaimDetails.shouldShowClaimTarget()).thenReturn(false); //case when claim target is not shown
+        fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, null));
+
+        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
+
+        when(bookingClaimDetails.shouldShowClaimTarget()).thenReturn(true); //case when claim target is shown
+        fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, null));
 
         assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
     }
