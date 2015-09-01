@@ -95,7 +95,7 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
     {
         Booking.BookingStatus bookingStatus = (Booking.BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
         this.container = container;
-        this.useRestrictedView = !booking.isProxy() && bookingStatus != Booking.BookingStatus.CLAIMED;
+        this.useRestrictedView = bookingStatus != Booking.BookingStatus.CLAIMED;
         this.booking = booking;
 
         return true;
