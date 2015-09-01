@@ -75,7 +75,7 @@ public class ClaimTargetDialogFragment extends DialogFragment
         else
         {
             claimTargetTitle.setText(getResources().getString(R.string.booking_details_claim_target_title));
-            textClaimTarget.setText(getResources().getString(R.string.booking_details_claim_target_msg));
+            textClaimTarget.setText(getResources().getString(R.string.booking_details_claim_target_msg, bookingsThreshold));
         }
         textExpectedPayLabel.setText(getResources().getString(R.string.booking_details_claim_target_expected_pay_label, claimTargetInfo.getNumDaysExpectedPayment()));
 

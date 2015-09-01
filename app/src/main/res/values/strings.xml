@@ -282,7 +282,7 @@
     <string name="arrival_time_late_15">I\u2019ll be 15 minutes late</string>
     <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
 
-    <string name="booking_details_claim_target_msg">Nice! Keep claiming to hit your first 5 jobs.</string>
+    <string name="booking_details_claim_target_msg">Nice! Keep claiming to hit your first %1$d jobs.</string>
     <string name="booking_details_claim_target_reached_msg">Feel free to claim even more jobs before they\u2019re snatched up</string>
     <string name="booking_details_claim_target_title">Job claimed!</string>
     <string name="booking_details_claim_target_reached_title">Congratulations!</string>
