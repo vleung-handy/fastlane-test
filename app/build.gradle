@@ -34,8 +34,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 28
-        versionName "0.5.4"
+        versionCode 29
+        versionName "0.5.5"
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
