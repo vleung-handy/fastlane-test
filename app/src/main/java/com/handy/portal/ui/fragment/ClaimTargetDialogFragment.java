@@ -48,7 +48,7 @@ public class ClaimTargetDialogFragment extends DialogFragment
     final Handler handler = new Handler();
     private BookingClaimDetails.ClaimTargetInfo claimTargetInfo;
     private final static long FADE_IN_ANIMATION_DURATION = 300; //TODO: make this not hard-coded. currently have no way of accessing dialog's animation listeners, and cannot access style resource file attributes easily
-    private final static long SHOW_DURATION_MS = 2500;
+    private final static long SHOW_DURATION_MS = 3500;
 
     public ClaimTargetDialogFragment()
     {
@@ -75,7 +75,7 @@ public class ClaimTargetDialogFragment extends DialogFragment
         else
         {
             claimTargetTitle.setText(getResources().getString(R.string.booking_details_claim_target_title));
-            textClaimTarget.setText(getResources().getString(R.string.booking_details_claim_target_msg, bookingsThreshold - numClaims));
+            textClaimTarget.setText(getResources().getString(R.string.booking_details_claim_target_msg));
         }
         textExpectedPayLabel.setText(getResources().getString(R.string.booking_details_claim_target_expected_pay_label, claimTargetInfo.getNumDaysExpectedPayment()));
 
