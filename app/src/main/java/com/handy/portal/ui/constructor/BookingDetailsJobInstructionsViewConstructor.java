@@ -63,7 +63,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
 
         boolean jobInstructionsSectionConstructed = false; //if we don't add any sections we will not add the view
 
-        if (booking.getRevealDate() != null)
+        if (booking.getRevealDate() != null && booking.isClaimedByMe())
         {
             Spanned noticeText = Html.fromHtml(getContext().getResources().getString(R.string.full_details_and_more_available_on_date, DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
             revealNotice.setText(noticeText);
