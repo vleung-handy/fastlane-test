@@ -44,7 +44,7 @@ public abstract class DetailMapViewConstructor extends BookingDetailsViewConstru
         Integer providerMinutesLate = booking.getProviderMinutesLate();
 
         boolean overlayTextVisible = true;
-        if (booking.getRevealDate() != null)
+        if (booking.getRevealDate() != null && booking.isClaimedByMe())
         {
             setMapOverlayText(getContext().getResources().getString(R.string.full_details_available_on_date, DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
         }
