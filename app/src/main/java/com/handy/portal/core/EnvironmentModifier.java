@@ -10,28 +10,19 @@ public class EnvironmentModifier
     private String environmentPrefix = DEFAULT_ENVIRONMENT_PREFIX;
     private boolean pinRequestEnabled = true;
 
-    public EnvironmentModifier(Context context, BuildConfigWrapper buildConfigWrapper)
+    public EnvironmentModifier(Context context)
     {
-        // only allow environment overrides on debug builds
-        if (buildConfigWrapper.isDebug())
+        try
         {
-            try
-            {
-                Properties properties = PropertiesReader.getProperties(context, "override.properties");
-                boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
-                String environment = properties.getProperty("environment", DEFAULT_ENVIRONMENT_PREFIX);
+            Properties properties = PropertiesReader.getProperties(context, "override.properties");
+            boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
+            String environment = properties.getProperty("environment", DEFAULT_ENVIRONMENT_PREFIX);
 
-                this.pinRequestEnabled = !disablePinRequest;
-                this.environmentPrefix = environment;
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
+            this.pinRequestEnabled = !disablePinRequest;
+            this.environmentPrefix = environment;
+        } catch (Exception e)
         {
-            throw new RuntimeException("Attempted to instantiate EnvironmentModifier on a non-debug build");
+            e.printStackTrace();
         }
     }
 
