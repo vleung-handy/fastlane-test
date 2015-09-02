@@ -6,7 +6,8 @@ import java.util.Properties;
 
 public class EnvironmentModifier
 {
-    private String environment = "s";
+    private static final String DEFAULT_ENVIRONMENT_PREFIX = "s";
+    private String environmentPrefix = DEFAULT_ENVIRONMENT_PREFIX;
     private boolean pinRequestEnabled = true;
 
     public EnvironmentModifier(Context context, BuildConfigWrapper buildConfigWrapper)
@@ -18,21 +19,25 @@ public class EnvironmentModifier
             {
                 Properties properties = PropertiesReader.getProperties(context, "override.properties");
                 boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
-                String environment = properties.getProperty("environment", "s");
+                String environment = properties.getProperty("environment", DEFAULT_ENVIRONMENT_PREFIX);
 
                 this.pinRequestEnabled = !disablePinRequest;
-                this.environment = environment;
+                this.environmentPrefix = environment;
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
+        else
+        {
+            throw new RuntimeException("Attempted to instantiate EnvironmentModifier on a non-debug build");
+        }
     }
 
     public String getEnvironmentPrefix()
     {
-        return environment;
+        return environmentPrefix;
     }
 
     public boolean pinRequestEnabled()
@@ -42,7 +47,7 @@ public class EnvironmentModifier
 
     public void setEnvironmentPrefix(String environmentPrefix)
     {
-        this.environment = environmentPrefix;
+        this.environmentPrefix = environmentPrefix;
     }
 
     public enum Environment
