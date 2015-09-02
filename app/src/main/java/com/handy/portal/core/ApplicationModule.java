@@ -114,9 +114,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentModifier provideEnvironmentModifier(final BuildConfigWrapper buildConfigWrapper)
+    final EnvironmentModifier provideEnvironmentModifier()
     {
-        return new EnvironmentModifier(context, buildConfigWrapper);
+        return new EnvironmentModifier(context);
     }
 
     @Provides
