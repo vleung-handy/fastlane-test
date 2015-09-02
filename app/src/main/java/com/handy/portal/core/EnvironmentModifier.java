@@ -6,7 +6,8 @@ import java.util.Properties;
 
 public class EnvironmentModifier
 {
-    private Environment environment = Environment.S;
+    private static final String DEFAULT_ENVIRONMENT_PREFIX = "s";
+    private String environmentPrefix = DEFAULT_ENVIRONMENT_PREFIX;
     private boolean pinRequestEnabled = true;
 
     public EnvironmentModifier(Context context, BuildConfigWrapper buildConfigWrapper)
@@ -18,21 +19,25 @@ public class EnvironmentModifier
             {
                 Properties properties = PropertiesReader.getProperties(context, "override.properties");
                 boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
-                String environment = properties.getProperty("environment", "S").toUpperCase();
+                String environment = properties.getProperty("environment", DEFAULT_ENVIRONMENT_PREFIX);
 
                 this.pinRequestEnabled = !disablePinRequest;
-                this.environment = Environment.valueOf(environment);
+                this.environmentPrefix = environment;
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
+        else
+        {
+            throw new RuntimeException("Attempted to instantiate EnvironmentModifier on a non-debug build");
+        }
     }
 
-    public Environment getEnvironment()
+    public String getEnvironmentPrefix()
     {
-        return environment;
+        return environmentPrefix;
     }
 
     public boolean pinRequestEnabled()
@@ -40,19 +45,14 @@ public class EnvironmentModifier
         return pinRequestEnabled;
     }
 
-    public void setEnvironment(Environment environment)
+    public void setEnvironmentPrefix(String environmentPrefix)
     {
-        this.environment = environment;
+        this.environmentPrefix = environmentPrefix;
     }
 
     public enum Environment
     {
-        S, Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10;
-
-        public String getName()
-        {
-            return this.toString();
-        }
+        S, Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12;
 
         public String getPrefix()
         {
