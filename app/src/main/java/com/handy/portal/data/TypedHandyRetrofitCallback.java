@@ -6,15 +6,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
@@ -115,9 +115,9 @@ class UpdateDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallb
     }
 }
 
-class TermsDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<TermsDetails>
+class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<TermsDetailsGroup>
 {
-    TermsDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
+    TermsDetailsGroupResponseHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

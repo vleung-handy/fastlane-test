@@ -1,8 +1,8 @@
 package com.handy.portal.manager;
 
-import com.handy.portal.model.TermsDetails;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.TermsDetailsGroup;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -13,7 +13,7 @@ public class TermsManager
     private final DataManager dataManager;
     private final Bus bus;
 
-    private TermsDetails newestTermsDetails;
+    private TermsDetailsGroup newestTermsDetailsGroup;
 
     @Inject
     public TermsManager(final Bus bus, final DataManager dataManager)
@@ -23,35 +23,35 @@ public class TermsManager
         this.bus.register(this);
     }
 
-    public TermsDetails getNewestTermsDetails()
+    public TermsDetailsGroup getNewestTermsDetailsGroup()
     {
-        return newestTermsDetails;
+        return newestTermsDetailsGroup;
     }
 
     @Subscribe
     public void onCheckTermsRequest(HandyEvent.RequestCheckTerms event)
     {
-        dataManager.checkForTerms(
-                new DataManager.Callback<TermsDetails>()
+        dataManager.checkForAllPendingTerms(
+                new DataManager.Callback<TermsDetailsGroup>()
                 {
                     @Override
-                    public void onSuccess(TermsDetails termsDetails)
+                    public void onSuccess(TermsDetailsGroup termsDetailsGroup)
                     {
-                        newestTermsDetails = termsDetails;
-                        bus.post(new HandyEvent.ReceiveCheckTermsSuccess(termsDetails));
+                        newestTermsDetailsGroup = termsDetailsGroup;
+                        bus.post(new HandyEvent.ReceiveCheckTermsSuccess(termsDetailsGroup));
                     }
 
                     @Override
                     public void onError(DataManager.DataManagerError error)
                     {
-                        newestTermsDetails = null;
+                        newestTermsDetailsGroup = null;
                         bus.post(new HandyEvent.ReceiveCheckTermsError());
                     }
                 });
     }
 
     @Subscribe
-    public void onAcceptTerms(HandyEvent.AcceptTerms event)
+    public void onAcceptTerms(final HandyEvent.AcceptTerms event)
     {
         dataManager.acceptTerms(event.termsDetails.getCode(),
                 new DataManager.Callback<Void>()
@@ -59,8 +59,7 @@ public class TermsManager
                     @Override
                     public void onSuccess(Void response)
                     {
-                        newestTermsDetails = null;
-                        bus.post(new HandyEvent.AcceptTermsSuccess());
+                        bus.post(new HandyEvent.AcceptTermsSuccess(event.termsDetails.getCode()));
                     }
 
                     @Override

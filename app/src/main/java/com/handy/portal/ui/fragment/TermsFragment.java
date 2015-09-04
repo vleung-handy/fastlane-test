@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.TermsManager;
@@ -55,6 +56,8 @@ public class TermsFragment extends InjectedFragment
     @Inject
     TermsManager termsManager;
 
+    private int activeTermsIndex = 0; //TODO: use an iterator instead!
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -63,9 +66,24 @@ public class TermsFragment extends InjectedFragment
 
         ButterKnife.inject(this, view);
 
-        initView();
+        initView(getActiveTermsDetails());
 
         return view;
+    }
+
+    private TermsDetails getActiveTermsDetails()
+    {
+        if (termsManager.getNewestTermsDetailsGroup() != null && activeTermsIndex < termsManager.getNewestTermsDetailsGroup().getTermsDetails().length)
+        {
+            return termsManager.getNewestTermsDetailsGroup().getTermsDetails()[activeTermsIndex];
+        }
+        return null;
+    }
+
+    private TermsDetails nextTerm()
+    {
+        activeTermsIndex++;
+        return getActiveTermsDetails();
     }
 
     @OnClick(R.id.accept_button)
@@ -74,7 +92,7 @@ public class TermsFragment extends InjectedFragment
         if (acceptCheckbox.isChecked())
         {
             loadingOverlay.setOverlayVisibility(true);
-            bus.post(new HandyEvent.AcceptTerms(termsManager.getNewestTermsDetails()));
+            bus.post(new HandyEvent.AcceptTerms(getActiveTermsDetails()));
         }
         else
         {
@@ -100,10 +118,27 @@ public class TermsFragment extends InjectedFragment
     @Subscribe
     public void onAcceptTermsSuccess(HandyEvent.AcceptTermsSuccess event)
     {
-        Intent intent = new Intent(this.getActivity(), SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        TermsDetails activeTerms = getActiveTermsDetails();
+        if (activeTerms != null && activeTerms.getCode().equals(event.getTermsCode())) //just in case event is fired twice for the same term
+        {
+            TermsDetails nextTerms = nextTerm();
+            if (nextTerms == null) //no more terms to accept
+            {
+                Intent intent = new Intent(this.getActivity(), SplashActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+            else
+            {
+                initView(nextTerms);
+            }
+        }
+        else
+        {
+            Crashlytics.log("User tried to accept the same terms twice"); //this shouldn't happen since there's an overlay immediately after user presses accept
+            loadingOverlay.setOverlayVisibility(false);
+        }
     }
 
     @Subscribe
@@ -113,19 +148,19 @@ public class TermsFragment extends InjectedFragment
         showToast(R.string.error_accepting_terms);
     }
 
-    private void initView()
+    private void initView(TermsDetails termsDetails)
     {
-        TermsDetails newestTermsDetails = termsManager.getNewestTermsDetails();
-
-        if (newestTermsDetails != null)
+        if (termsDetails != null)
         {
-            acceptButton.setText(newestTermsDetails.getAction());
+            termsLayout.setVisibility(View.INVISIBLE);
+            acceptButton.setText(termsDetails.getAction());
+            instructionsText.setText(termsDetails.getInstructions());
+            termsWebView.loadHtml(termsDetails.getContent());
+            acceptCheckbox.setChecked(false);
+            acceptCheckbox.setTextColor(getResources().getColor(R.color.black));
+            termsLayout.setVisibility(View.VISIBLE);
 
-            instructionsText.setText(newestTermsDetails.getInstructions());
-
-            termsWebView.loadHtml(newestTermsDetails.getContent());
-
-            bus.post(new HandyEvent.TermsDisplayed(newestTermsDetails.getCode()));
+            bus.post(new HandyEvent.TermsDisplayed(termsDetails.getCode()));
         }
         else
         {
@@ -133,6 +168,7 @@ public class TermsFragment extends InjectedFragment
             errorLayout.setVisibility(View.VISIBLE);
             errorText.setText(R.string.error_loading);
         }
+        loadingOverlay.setOverlayVisibility(false);
     }
 
 }

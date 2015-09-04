@@ -20,6 +20,7 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 
 import java.util.Date;
@@ -262,11 +263,11 @@ public abstract class HandyEvent
 
     public static class ReceiveCheckTermsSuccess extends ReceiveSuccessEvent
     {
-        public final TermsDetails termsDetails;
+        public final TermsDetailsGroup termsDetailsGroup;
 
-        public ReceiveCheckTermsSuccess(@NonNull TermsDetails termsDetails)
+        public ReceiveCheckTermsSuccess(@NonNull TermsDetailsGroup termsDetailsGroup)
         {
-            this.termsDetails = termsDetails;
+            this.termsDetailsGroup = termsDetailsGroup;
         }
     }
 
@@ -381,6 +382,7 @@ public abstract class HandyEvent
     {
         public final Booking booking;
         public final String source;
+
         public RequestClaimJob(Booking booking, String source)
         {
             this.bookingId = booking.getId();
@@ -393,6 +395,7 @@ public abstract class HandyEvent
     public static class RequestRemoveJob extends RequestBookingActionEvent
     {
         public final Booking booking;
+
         public RequestRemoveJob(Booking booking)
         {
             this.bookingId = booking.getId();
@@ -404,6 +407,7 @@ public abstract class HandyEvent
     public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
     {
         public LocationData locationData;
+
         public RequestNotifyJobOnMyWay(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
@@ -415,6 +419,7 @@ public abstract class HandyEvent
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
         public LocationData locationData;
+
         public RequestNotifyJobCheckIn(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
@@ -426,6 +431,7 @@ public abstract class HandyEvent
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
         public LocationData locationData;
+
         public RequestNotifyJobCheckOut(String bookingId, LocationData locationData)
         {
             this.bookingId = bookingId;
@@ -886,6 +892,17 @@ public abstract class HandyEvent
 
     public static class AcceptTermsSuccess extends HandyEvent
     {
+        private String termsCode;
+
+        public AcceptTermsSuccess(String termsCode)
+        {
+            this.termsCode = termsCode;
+        }
+
+        public String getTermsCode()
+        {
+            return termsCode;
+        }
     }
 
     @Track("support action triggered")
@@ -941,6 +958,7 @@ public abstract class HandyEvent
     public static class UpdateMainActivityFragmentActive extends HandyEvent
     {
         public boolean active;
+
         public UpdateMainActivityFragmentActive(boolean active)
         {
             this.active = active;
