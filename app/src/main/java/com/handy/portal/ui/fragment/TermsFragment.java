@@ -66,7 +66,7 @@ public class TermsFragment extends InjectedFragment
 
         ButterKnife.inject(this, view);
 
-        initView(getActiveTermsDetails());
+        updateView(getActiveTermsDetails());
 
         return view;
     }
@@ -131,7 +131,7 @@ public class TermsFragment extends InjectedFragment
             }
             else
             {
-                initView(nextTerms);
+                updateView(nextTerms);
             }
         }
         else
@@ -148,7 +148,7 @@ public class TermsFragment extends InjectedFragment
         showToast(R.string.error_accepting_terms);
     }
 
-    private void initView(TermsDetails termsDetails)
+    private void updateView(TermsDetails termsDetails)
     {
         if (termsDetails != null)
         {
