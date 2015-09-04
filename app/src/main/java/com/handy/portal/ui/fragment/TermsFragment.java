@@ -136,7 +136,7 @@ public class TermsFragment extends InjectedFragment
         }
         else
         {
-            Crashlytics.log("User tried to accept the same terms twice"); //this shouldn't happen since there's an overlay immediately after user presses accept
+            Crashlytics.logException(new Exception("User tried to accept the same terms twice")); //this shouldn't happen since there's an overlay immediately after user presses accept
             loadingOverlay.setOverlayVisibility(false);
         }
     }
