@@ -242,7 +242,7 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
             }
             else
             {
-                Crashlytics.log("No Google Play Services, can not get locational data");
+                Crashlytics.logException(new Exception("No Google Play Services, cannot get locational data"));
             }
         }
     }

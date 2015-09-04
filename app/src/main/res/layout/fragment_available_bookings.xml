@@ -5,11 +5,6 @@
               android:orientation="vertical"
               tools:context=".AvailableBookingsFragment">
 
-    <TextView
-        android:id="@+id/available_bookings_banner_text"
-        style="@style/Banner"
-        android:text="@string/available_jobs"/>
-
     <LinearLayout
         android:id="@+id/bookings_content"
         android:layout_width="match_parent"

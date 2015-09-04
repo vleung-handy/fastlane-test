@@ -5,33 +5,6 @@
               android:background="@color/handy_bg"
               android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/complementary_bookings_banner"
-        style="@style/Banner"
-        android:text="@string/matching_jobs">
-
-        <TextView
-            android:id="@+id/complementary_bookings_banner_text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/matching_jobs"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-
-        <ImageButton
-            android:id="@+id/complementary_bookings_banner_close_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/handy_blue"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:src="@drawable/ic_x_white"/>
-
-    </RelativeLayout>
-
     <include layout="@layout/merge_loading"/>
 
     <include layout="@layout/layout_complementary_bookings_empty"/>

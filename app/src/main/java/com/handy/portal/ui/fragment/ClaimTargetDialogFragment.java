@@ -21,9 +21,8 @@ import com.handy.portal.util.TextUtils;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class ClaimTargetDialogFragment extends DialogFragment
+public class ClaimTargetDialogFragment extends DialogFragment //TODO: extend from TransientOverlayDialogFragment
 {
-
     @InjectView(R.id.claim_target_frame_layout)
     protected FrameLayout frameLayout;
 

@@ -1,12 +1,10 @@
 package com.handy.portal.ui.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.common.collect.Lists;
@@ -16,8 +14,8 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.Provider;
-import com.handy.portal.ui.view.HelpBannerView;
 import com.handy.portal.ui.view.HelpContactView;
+import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
@@ -31,7 +29,7 @@ import butterknife.InjectView;
 import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedInput;
 
-public final class HelpContactFragment extends InjectedFragment
+public final class HelpContactFragment extends ActionBarFragment
 {
     private static final String HELP_CONTACT_FORM_DISPOSITION = "help-contact-form-disposition";
     private static final String HELP_CONTACT_FORM_NAME = "name";
@@ -45,14 +43,17 @@ public final class HelpContactFragment extends InjectedFragment
     @InjectView(R.id.help_contact_view)
     HelpContactView helpContactView;
 
-    @InjectView(R.id.help_banner_view)
-    HelpBannerView helpBannerView;
-
     private HelpNode associatedNode;
     private String path;
     private String bookingId;
     private String bookingType;
 
+    @Override
+    public void onCreate(Bundle savedInstance)
+    {
+        super.onCreate(savedInstance);
+
+    }
     @Override
     protected List<String> requiredArguments()
     {
@@ -63,6 +64,7 @@ public final class HelpContactFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        setActionBar(R.string.contact_us, true);
         if(!MainActivityFragment.clearingBackStack)
         {
             bus.post(new HandyEvent.RequestProviderInfo());
@@ -103,8 +105,6 @@ public final class HelpContactFragment extends InjectedFragment
 
         helpContactView.updateDisplay(this.associatedNode);
 
-        helpBannerView.updateDisplay(); //TODO: can we call this inside updateDisplay(HelpNode) instead?
-
         assignClickListeners(view);
 
         return view;
@@ -122,15 +122,6 @@ public final class HelpContactFragment extends InjectedFragment
         });
 
         final Activity activity = this.getActivity();
-        helpBannerView.backImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                dismissKeyboard();
-                activity.onBackPressed();
-            }
-        });
     }
 
     private void onSendMessageButtonClick()
@@ -143,7 +134,7 @@ public final class HelpContactFragment extends InjectedFragment
 
         if (allValid)
         {
-            dismissKeyboard();
+            UIUtils.dismissKeyboard(getActivity());
             sendContactFormData(helpContactView.nameText.getString(), helpContactView.emailText.getString(), helpContactView.commentText.getString(), this.associatedNode);
         }
         else
@@ -152,15 +143,6 @@ public final class HelpContactFragment extends InjectedFragment
         }
     }
 
-    private void dismissKeyboard()
-    {
-        View currentFocus = getActivity().getCurrentFocus();
-        if (currentFocus != null)
-        {
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-        }
-    }
 
     private void sendContactFormData(String name, String email, String comment, HelpNode associatedNode)
     {

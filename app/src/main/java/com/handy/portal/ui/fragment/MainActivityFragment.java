@@ -19,7 +19,6 @@ import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
-import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -29,7 +28,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivityFragment extends InjectedFragment
+public class MainActivityFragment extends ActionBarFragment //TODO: should we hide action bar when this starts?
 {
     @Inject
     HandyRetrofitEndpoint endpoint;
@@ -42,13 +41,11 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton profileButton;
     @InjectView(R.id.button_help)
     RadioButton helpButton;
-    @InjectView(R.id.transition_overlay)
-    TransitionOverlayView transitionOverlayView;
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
 
     private MainViewTab currentTab = null;
-    private PortalWebViewFragment webViewFragment = null;
+    private ProfileFragment profileFragment = null;
 
     public static boolean clearingBackStack = false;
 
@@ -75,7 +72,6 @@ public class MainActivityFragment extends InjectedFragment
         ButterKnife.inject(this, view);
         registerButtonListeners();
         registerBackStackListener();
-        transitionOverlayView.init();
         loadingOverlayView.init();
 
         return view;
@@ -105,7 +101,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
                 selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
-                selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, profileButton) ||
+                selectTabIfFragmentMatches(fragment, ProfileFragment.class, profileButton) ||
                 selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
     }
 
@@ -199,7 +195,7 @@ public class MainActivityFragment extends InjectedFragment
 
         if (targetTab.isNativeTab())
         {
-            webViewFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
+            profileFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
 
             //don't use transition if don't have anything to transition from
             if (currentTab != null)
@@ -239,16 +235,16 @@ public class MainActivityFragment extends InjectedFragment
                 url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getTarget().getValue();
             }
 
-            if (webViewFragment == null)
+            if (profileFragment == null)
             {
-                webViewFragment = new PortalWebViewFragment();
+                profileFragment = new ProfileFragment();
 
                 //pass along the target
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.TARGET_URL, url);
 
                 swapFragmentArguments.argumentsBundle = arguments;
-                swapFragmentArguments.overrideFragment = webViewFragment;
+                swapFragmentArguments.overrideFragment = profileFragment;
                 swapFragmentArguments.clearBackStack = true;
 
                 swapFragment(swapFragmentArguments);
@@ -256,7 +252,7 @@ public class MainActivityFragment extends InjectedFragment
             else
             {
                 //don't need to do any fragment swapping just open the new url
-                webViewFragment.openPortalUrl(url);
+                profileFragment.openPortalUrl(url);
             }
         }
 
@@ -359,8 +355,8 @@ public class MainActivityFragment extends InjectedFragment
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())
             {
-                transitionOverlayView.setupOverlay(swapArguments.transitionStyle);
-                transitionOverlayView.showThenHideOverlay();
+                TransientOverlayDialogFragment overlayDialogFragment = TransientOverlayDialogFragment.newInstance(R.layout.fragment_transition_overlay, R.anim.overlay_fade_in_then_out);
+                overlayDialogFragment.show(getFragmentManager(), "overlay dialog fragment");
             }
         }
 
