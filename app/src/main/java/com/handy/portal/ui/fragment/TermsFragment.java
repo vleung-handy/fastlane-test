@@ -56,7 +56,7 @@ public class TermsFragment extends InjectedFragment
     @Inject
     TermsManager termsManager;
 
-    private int activeTermsIndex = 0; //TODO: use an iterator instead!
+    private int activeTermsIndex = 0;
 
     @Nullable
     @Override
@@ -152,13 +152,11 @@ public class TermsFragment extends InjectedFragment
     {
         if (termsDetails != null)
         {
-            termsLayout.setVisibility(View.INVISIBLE);
             acceptButton.setText(termsDetails.getAction());
             instructionsText.setText(termsDetails.getInstructions());
             termsWebView.loadHtml(termsDetails.getContent());
             acceptCheckbox.setChecked(false);
             acceptCheckbox.setTextColor(getResources().getColor(R.color.black));
-            termsLayout.setVisibility(View.VISIBLE);
 
             bus.post(new HandyEvent.TermsDisplayed(termsDetails.getCode()));
         }
