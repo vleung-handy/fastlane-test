@@ -139,9 +139,9 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
     }
 
     @Override
-    public void onResume()
+    public void onResumeFragments()
     {
-        super.onResume();
+        super.onResumeFragments();
         this.bus.register(busEventListener);
         checkForUpdates();
         postActivityResumeEvent(); //do not disable this
