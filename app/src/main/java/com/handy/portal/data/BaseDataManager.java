@@ -4,15 +4,15 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -137,9 +137,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void checkForTerms(final Callback<TermsDetails> cb)
+    public void checkForAllPendingTerms(final Callback<TermsDetailsGroup> cb)
     {
-        service.checkTerms(new TermsDetailsResponseHandyRetroFitCallback(cb));
+        service.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
     }
 
     @Override

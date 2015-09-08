@@ -208,9 +208,9 @@ public class SplashActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event)
+    public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event) //TODO: we check terms in MainActivity also! need to consolidate
     {
-        if (event.termsDetails.getCode() != null)
+        if (event.termsDetailsGroup != null && event.termsDetailsGroup.hasTerms())
         {
             launchActivity(TermsActivity.class);
         }

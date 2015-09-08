@@ -48,7 +48,7 @@ public class MainActivity extends BaseActivity
     public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event)
     {
         //if the code is null we don't need to to show anything
-        if (event.termsDetails.getCode() != null)
+        if (event.termsDetailsGroup != null && event.termsDetailsGroup.hasTerms())
         {
             startActivity(new Intent(this, TermsActivity.class));
         }

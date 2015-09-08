@@ -12,7 +12,7 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 
@@ -26,7 +26,7 @@ public abstract class DataManager
     //Portal
     public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
 
-    public abstract void checkForTerms(Callback<TermsDetails> cb);
+    public abstract void checkForAllPendingTerms(Callback<TermsDetailsGroup> cb);
 
     public abstract void acceptTerms(String termsCode, Callback<Void> cb);
 
