@@ -13,7 +13,6 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.HelpNode;
-import com.handy.portal.ui.view.HelpBannerView;
 import com.handy.portal.ui.view.HelpNodeView;
 import com.squareup.otto.Subscribe;
 
@@ -21,14 +20,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public final class HelpFragment extends InjectedFragment
+public final class HelpFragment extends ActionBarFragment
 {
     private final static String PATH_SEPARATOR = " > ";
 
     @InjectView(R.id.help_node_view)
     HelpNodeView helpNodeView;
-    @InjectView(R.id.help_banner_view)
-    HelpBannerView helpBannerView;
     @InjectView(R.id.scroll_view)
     View scrollView;
     @InjectView(R.id.fetch_error_view)
@@ -41,6 +38,13 @@ public final class HelpFragment extends InjectedFragment
 
     private String nodeIdToRequest = null;
 
+    private String title = "";
+
+    @Override
+    public void onCreate(Bundle savedInstance)
+    {
+        super.onCreate(savedInstance);
+    }
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -72,11 +76,6 @@ public final class HelpFragment extends InjectedFragment
             nodeIdToRequest = getArguments().getString(BundleKeys.HELP_NODE_ID);
         }
 
-        if (nodeIdToRequest == null)
-        {
-            helpBannerView.navText.setText(R.string.help);
-        }
-
         if (getArguments() != null && getArguments().containsKey(BundleKeys.PATH))
         {
             currentPathNodeLabels = getArguments().getString(BundleKeys.PATH);
@@ -86,15 +85,16 @@ public final class HelpFragment extends InjectedFragment
             currentPathNodeLabels = "";
         }
 
-        setupBackClickListener();
-
+        title = "";
         return view;
     }
+
 
     @Override
     public void onResume()
     {
         super.onResume();
+
         if (!MainActivityFragment.clearingBackStack)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -106,15 +106,44 @@ public final class HelpFragment extends InjectedFragment
     private void trackPath(HelpNode node)
     {
         //Don't add the root node to the path as per CX spec
-        if(!node.getType().equals(HelpNode.HelpNodeType.ROOT))
+        if (!node.getType().equals(HelpNode.HelpNodeType.ROOT))
         {
             currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + node.getLabel();
         }
     }
 
+    private void updateActionBar(HelpNode node)
+    {
+        switch (node.getType())
+        {
+            case HelpNode.HelpNodeType.ROOT:
+            case HelpNode.HelpNodeType.BOOKING:
+            {
+                title = getResources().getString(R.string.help);
+            }
+            break;
+
+            case HelpNode.HelpNodeType.NAVIGATION:
+            case HelpNode.HelpNodeType.BOOKINGS_NAV:
+            case HelpNode.HelpNodeType.ARTICLE:
+            {
+                title = node.getLabel();
+            }
+            break;
+
+            default:
+            {
+                Crashlytics.log("Unrecognized node type : " + node.getType());
+            }
+            break;
+        }
+        boolean enabled = !HelpNode.HelpNodeType.ROOT.equals(node.getType());
+        setActionBar(title, enabled);
+    }
+
     private void updateDisplay(final HelpNode node)
     {
-        helpBannerView.updateDisplay(node);
+        updateActionBar(node);
         helpNodeView.updateDisplay(node);
         setupClickListeners(node);
     }
@@ -140,24 +169,12 @@ public final class HelpFragment extends InjectedFragment
         }
     }
 
-    private void setupBackClickListener()
-    {
-        helpBannerView.backImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                getActivity().onBackPressed();
-            }
-        });
-    }
-
     private void setupNavigationListClickListeners(final HelpNode helpNode)
     {
         for (int i = 0; i < helpNode.getChildren().size(); i++)
         {
             final HelpNode childNode = helpNode.getChildren().get(i);
-            if(childNode == null || childNode.getType() == null)
+            if (childNode == null || childNode.getType() == null)
             {
                 continue;
             }
@@ -191,7 +208,7 @@ public final class HelpFragment extends InjectedFragment
         {
             for (final HelpNode childNode : helpNode.getChildren())
             {
-                if(childNode == null)
+                if (childNode == null)
                 {
                     continue;
                 }

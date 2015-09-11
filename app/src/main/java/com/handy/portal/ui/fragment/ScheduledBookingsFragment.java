@@ -42,6 +42,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @InjectView(R.id.find_matching_jobs_button_container)
     protected ViewGroup findMatchingJobsButtonContainer;
 
+    public void onResume()
+    {
+        super.onResume();
+        setActionBar(R.string.scheduled_jobs, false);
+    }
+
     protected LinearLayout getDatesLayout()
     {
         return scheduledJobsDatesScrollViewLayout;

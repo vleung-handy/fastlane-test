@@ -6,14 +6,11 @@
                 android:background="@color/white"
                 tools:context=".HelpContactFragment"
     >
-    <include layout="@layout/element_help_node_banner"
-             android:id="@+id/help_banner_view"
-        />
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/help_banner_view">
+        android:layout_height="match_parent">
         <include layout="@layout/element_help_contact"
                  android:id="@+id/help_contact_view"
             />

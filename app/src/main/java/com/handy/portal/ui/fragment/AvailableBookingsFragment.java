@@ -29,6 +29,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @InjectView(R.id.available_bookings_empty)
     protected ViewGroup noAvailableBookingsLayout;
 
+    public void onResume()
+    {
+        super.onResume();
+        setActionBar(R.string.available_jobs, false);
+    }
+
     protected BookingListView getBookingListView()
     {
         return availableJobsListView;

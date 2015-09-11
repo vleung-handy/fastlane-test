@@ -5,11 +5,6 @@
               android:orientation="vertical"
               tools:context=".ScheduledBookingsFragment">
 
-    <TextView
-        android:id="@+id/scheduled_bookings_banner_text"
-        style="@style/Banner"
-        android:text="@string/scheduled_jobs"/>
-
     <LinearLayout
         android:id="@+id/bookings_content"
         android:layout_width="match_parent"

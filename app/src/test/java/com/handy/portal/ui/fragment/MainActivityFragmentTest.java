@@ -50,7 +50,7 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     public void whenProfileButtonClicked_thenLoadWebView() throws Exception
     {
         activityFragmentView.findViewById(R.id.button_profile).performClick();
-        assertThat(getScreenFragment(), instanceOf(PortalWebViewFragment.class));
+        assertThat(getScreenFragment(), instanceOf(ProfileFragment.class));
     }
 
     @Test
