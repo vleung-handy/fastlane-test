@@ -248,6 +248,18 @@ public abstract class HandyEvent
         }
     }
 
+    @Track("google play services availability")
+    public static class GooglePlayServicesAvailabilityCheck extends HandyEvent
+    {
+        @TrackField("available")
+        public final boolean available;
+
+        public GooglePlayServicesAvailabilityCheck(boolean available)
+        {
+            this.available = available;
+        }
+    }
+
     public static class DownloadUpdateSuccessful extends HandyEvent
     {
     }
