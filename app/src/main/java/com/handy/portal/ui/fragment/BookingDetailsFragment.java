@@ -172,7 +172,6 @@ public class BookingDetailsFragment extends ActionBarFragment
                 {
                     case AVAILABLE:
                     {
-
                         titleStringId = R.string.available_job;
                     }
                     break;
@@ -258,8 +257,6 @@ public class BookingDetailsFragment extends ActionBarFragment
                 vg.removeAllViews();
             }
         }
-
-        //banner layout is not under the details layout as it sticks to the top
     }
 
     //Use view constructors on layouts to generate the elements inside the layouts, we do not currently maintain a linkage to the resulting view

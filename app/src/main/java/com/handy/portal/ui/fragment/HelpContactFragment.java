@@ -49,12 +49,6 @@ public final class HelpContactFragment extends ActionBarFragment
     private String bookingType;
 
     @Override
-    public void onCreate(Bundle savedInstance)
-    {
-        super.onCreate(savedInstance);
-
-    }
-    @Override
     protected List<String> requiredArguments()
     {
         return Lists.newArrayList(BundleKeys.HELP_NODE, BundleKeys.PATH);

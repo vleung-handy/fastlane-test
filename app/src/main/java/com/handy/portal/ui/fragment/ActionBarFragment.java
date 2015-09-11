@@ -48,11 +48,16 @@ public class ActionBarFragment extends InjectedFragment //TODO: refine. this is 
         getActionBar().setTitle(charSequence);
     }
 
-    public void setActionBar(int titleStringId, boolean backButtonEnabled)
+    public void setActionBar(String titleString, boolean backButtonEnabled)
     {
-        setActionBarTitle(titleStringId);
+        setActionBarTitle(titleString);
         setBackButtonEnabled(backButtonEnabled);
         setOptionsMenuEnabled(true);
+    }
+
+    public void setActionBar(int titleStringId, boolean backButtonEnabled)
+    {
+        setActionBar(getResources().getString(titleStringId), backButtonEnabled);
     }
 
     public void invalidateOptionsMenu()

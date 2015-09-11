@@ -138,9 +138,7 @@ public final class HelpFragment extends ActionBarFragment
             break;
         }
         boolean enabled = !HelpNode.HelpNodeType.ROOT.equals(node.getType());
-        setOptionsMenuEnabled(enabled);
-        setBackButtonEnabled(enabled);
-        setActionBarTitle(title);
+        setActionBar(title, enabled);
     }
 
     private void updateDisplay(final HelpNode node)
