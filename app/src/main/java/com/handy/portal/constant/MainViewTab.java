@@ -5,6 +5,7 @@ import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
+import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 
@@ -13,6 +14,7 @@ public enum MainViewTab
     AVAILABLE_JOBS(null, AvailableBookingsFragment.class),
     SCHEDULED_JOBS(null, ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(null, ComplementaryBookingsFragment.class),
+    PAYMENTS(null, PaymentsFragment.class),
     PROFILE(PortalWebViewFragment.Target.PROFILE, null),
     HELP(null, HelpFragment.class),
     DETAILS(null, BookingDetailsFragment.class),

@@ -37,6 +37,8 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
     RadioButton scheduleButton;
+    @InjectView(R.id.button_payments)
+    RadioButton paymentsButton;
     @InjectView(R.id.button_profile)
     RadioButton profileButton;
     @InjectView(R.id.button_help)
@@ -101,6 +103,7 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
     {
         return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
                 selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
+                selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, paymentsButton) ||
                 selectTabIfFragmentMatches(fragment, ProfileFragment.class, profileButton) ||
                 selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
     }
@@ -155,8 +158,9 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
 
     private void registerButtonListeners()
     {
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
         jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
         profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
         helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
     }
@@ -293,6 +297,11 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
                 case SCHEDULED_JOBS:
                 {
                     scheduleButton.toggle();
+                }
+                break;
+                case PAYMENTS:
+                {
+                    paymentsButton.toggle();
                 }
                 break;
                 case PROFILE:
