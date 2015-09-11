@@ -103,7 +103,7 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
     {
         return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
                 selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
-                selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, paymentsButton) ||
+                selectTabIfFragmentMatches(fragment, PaymentsFragment.class, paymentsButton) ||
                 selectTabIfFragmentMatches(fragment, ProfileFragment.class, profileButton) ||
                 selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
     }
