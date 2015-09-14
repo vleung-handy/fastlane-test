@@ -366,4 +366,8 @@
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
 
+    <!-- menu items -->
+    <string name="update_banking_information">Update banking information</string>
+    <string name="email_income_verification">Email income verification</string>
+
 </resources>

@@ -12,6 +12,7 @@ public class ProfileFragment extends PortalWebViewFragment
     {
     }
 
+    @Override
     public void onResume()
     {
         super.onResume();

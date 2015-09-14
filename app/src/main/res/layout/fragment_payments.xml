@@ -5,9 +5,4 @@
     android:orientation="vertical"
     tools:context=".PaymentsFragment">
 
-    <TextView
-        android:id="@+id/payments_banner_text"
-        style="@style/Banner"
-        android:text="@string/payments"/>
-
 </LinearLayout>
