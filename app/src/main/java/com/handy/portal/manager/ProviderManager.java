@@ -6,6 +6,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.SuccessWrapper;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -50,6 +51,41 @@ public class ProviderManager
         }
     }
 
+    @Subscribe
+    public void onSendIncomeVerification(HandyEvent.SendIncomeVerification event)
+    {
+        Provider cachedProvider = getCachedActiveProvider();
+
+        if (cachedProvider != null)
+        {
+            dataManager.getSendIncomeVerification(cachedProvider.getId(), new DataManager.Callback<SuccessWrapper>()
+            {
+                @Override
+                public void onSuccess(SuccessWrapper response)
+                {
+                    if (response.getSuccess())
+                    {
+                        bus.post(new HandyEvent.SendIncomeVerificationSuccess());
+                    }
+                    else
+                    {
+                        bus.post(new HandyEvent.SendIncomeVerificationError());
+                    }
+                }
+
+                @Override
+                public void onError(DataManager.DataManagerError error)
+                {
+                    bus.post(new HandyEvent.SendIncomeVerificationError());
+                }
+            });
+        }
+        else
+        {
+            bus.post(new HandyEvent.SendIncomeVerificationError());
+        }
+    }
+
     private void requestProviderInfo()
     {
         dataManager.getProviderInfo(new DataManager.Callback<Provider>()
@@ -70,7 +106,6 @@ public class ProviderManager
             }
         });
     }
-
 
     public Provider getCachedActiveProvider()
     {

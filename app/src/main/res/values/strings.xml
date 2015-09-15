@@ -56,6 +56,9 @@
     <string name="job_remove_success">Success! Job removed!</string>
     <string name="series_remove_success">Success! Series removed!</string>
 
+    <string name="send_verification_success">Your work verification has been sent.</string>
+    <string name="send_verification_failed">Oops! There was an error sending your income verification. Please try again.</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>

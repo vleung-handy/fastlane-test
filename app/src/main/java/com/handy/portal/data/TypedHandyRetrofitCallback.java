@@ -14,6 +14,7 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -145,5 +146,14 @@ class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
     {
         super(callback);
     }
-
 }
+
+class SuccessWrapperRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
+{
+    SuccessWrapperRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+

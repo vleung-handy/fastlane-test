@@ -364,7 +364,9 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())
             {
-                TransientOverlayDialogFragment overlayDialogFragment = TransientOverlayDialogFragment.newInstance(R.layout.fragment_transition_overlay, R.anim.overlay_fade_in_then_out);
+                CharSequence text = getText(swapArguments.transitionStyle.getOverlayStringId());
+                TransientOverlayDialogFragment overlayDialogFragment =TransientOverlayDialogFragment
+                    .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapArguments.transitionStyle.getOverlayStringId());
                 overlayDialogFragment.show(getFragmentManager(), "overlay dialog fragment");
             }
         }
