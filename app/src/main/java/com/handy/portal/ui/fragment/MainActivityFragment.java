@@ -218,6 +218,7 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
             {
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
@@ -295,6 +296,11 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
                 }
                 break;
                 case SCHEDULED_JOBS:
+                {
+                    scheduleButton.toggle();
+                }
+                break;
+                case DETAILS:
                 {
                     scheduleButton.toggle();
                 }

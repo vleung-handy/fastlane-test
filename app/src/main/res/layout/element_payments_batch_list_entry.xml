@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.element.payments.PaymentsBatchListItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@drawable/list_entry_background"
+    android:divider="?android:attr/dividerHorizontal"
+    android:dividerHeight="1dp"
+    android:padding="@dimen/default_padding"
+    android:stretchColumns="1"
+    >
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/payments_batch_list_item_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Aug 23 - Aug 30"
+            android:textAppearance="@style/HandyTextAppearanceTitle"/>
+
+        <TextView
+            android:id="@+id/payments_batch_list_item_dollar_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="$100"
+            android:textAppearance="@style/HandyTextAppearanceTitle"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/payments_batch_list_item_job_info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="2 jobs, 4 withholdings"
+            android:textAppearance="@style/HandyTextAppearanceSubtitle"/>
+
+        <TextView
+            android:id="@+id/payments_batch_list_item_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="PENDING"
+            android:textAllCaps="true"
+            android:textAppearance="@style/HandyTextAppearanceSubtitle"/>
+    </TableRow>
+
+
+</com.handy.portal.ui.element.payments.PaymentsBatchListItemView>

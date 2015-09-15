@@ -17,6 +17,8 @@ import com.handy.portal.model.Provider;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
@@ -38,15 +40,17 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
         {
             TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
             returnData = gsonBuilder.fromJson((response.toString()), typeToken.getType());
+            if (callback != null)
+            {
+                callback.onSuccess(returnData);
+            }
         } catch (JsonSyntaxException e)
         {
             Crashlytics.logException(e);
+            callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER, e.getMessage()));
         }
 
-        if (callback != null)
-        {
-            callback.onSuccess(returnData);
-        }
+
     }
 }
 
@@ -54,6 +58,22 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
 class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking>
 {
     BookingHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class PaymentBatchesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentBatches>
+{
+    PaymentBatchesRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<AnnualPaymentSummaries>
+{
+    AnnualPaymentSummariesRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

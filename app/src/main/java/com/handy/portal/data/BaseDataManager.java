@@ -16,6 +16,8 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -86,6 +88,18 @@ public final class BaseDataManager extends DataManager
     public final void getBookingDetails(String bookingId, BookingType type, final Callback<Booking> cb)
     {
         service.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public final void getPaymentBatches(Date startDate, Date endDate, final Callback<PaymentBatches> cb)
+    {
+        service.getPaymentBatches(startDate, endDate, new PaymentBatchesRetroFitCallback(cb));
+    }
+
+    @Override
+    public final void getAnnualPaymentSummaries(final Callback<AnnualPaymentSummaries> cb)
+    {
+        service.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
     }
 
     @Override

@@ -20,7 +20,6 @@ public interface HandyRetrofitService
     String SESSIONS_PATH = "/sessions/";
     String BOOKINGS_PATH = "/bookings/";
     String JOBS_PATH = "/jobs/";
-    String PROVIDERS_PATH = "/providers/";
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
@@ -53,6 +52,13 @@ public interface HandyRetrofitService
 
     @GET(JOBS_PATH + "{id}")
     void getBookingDetails(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
+
+    @GET("/payments")
+    void getPaymentBatches(@Query("date_range_start") Date startDate, @Query("date_range_end") Date endDate, HandyRetrofitCallback cb);
+
+    @GET("/payments/annual_summaries")
+    void getAnnualPaymentSummaries(HandyRetrofitCallback cb);
+
 
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);

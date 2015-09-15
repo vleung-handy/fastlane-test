@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.element.payments.PaymentsDetailGroupView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:background="@color/transparent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:layout_gravity="center_vertical"
+    android:padding="4dp"
+    android:orientation="horizontal"
+    >
+    <!--TODO: clean up colors-->
+    <!--TODO: remove placeholder data-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textAllCaps="true"
+        android:text="Completed jobs (4)"
+        android:textAppearance="@style/HandyTextAppearanceSmall"
+        android:id="@+id/payments_detail_group_title_text"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:text="$165"
+        android:textAppearance="@style/HandyTextAppearanceSmall"
+        android:id="@+id/payments_detail_group_payments_text"
+        />
+</com.handy.portal.ui.element.payments.PaymentsDetailGroupView>

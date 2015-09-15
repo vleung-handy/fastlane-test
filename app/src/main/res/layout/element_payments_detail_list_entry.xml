@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.element.payments.PaymentsDetailItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@drawable/list_entry_background"
+    android:divider="?android:attr/dividerHorizontal"
+    android:dividerHeight="1dp"
+    android:padding="@dimen/default_padding"
+    android:orientation="horizontal"
+    >
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="40dp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/HandyTextAppearanceMedium"
+            android:text="Aug"
+            android:id="@+id/payments_detail_month_text"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/HandyTextAppearanceTitle"
+            android:text="31"
+            android:id="@+id/payments_detail_date_text"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/HandyTextAppearanceTitle"
+            android:text="Upper West Side"
+            android:id="@+id/payments_detail_location_text"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/HandyTextAppearanceSubtitle"
+            android:text="8:00 am \u00B7 3 hours"
+            android:id="@+id/payments_detail_time_text"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textAppearance="@style/HandyTextAppearanceTitle"
+            android:text="$45"
+            android:id="@+id/payments_detail_payment_text"/>
+    </LinearLayout>
+</com.handy.portal.ui.element.payments.PaymentsDetailItemView>

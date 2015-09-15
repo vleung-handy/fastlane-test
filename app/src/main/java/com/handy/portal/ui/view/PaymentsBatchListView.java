@@ -1,0 +1,61 @@
+package com.handy.portal.ui.view;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.handy.portal.R;
+import com.handy.portal.model.payments.NeoPaymentBatch;
+import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.ui.adapter.PaymentBatchElementAdapter;
+import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
+
+public final class PaymentsBatchListView extends ListView
+{
+
+    public PaymentsBatchListView(final Context context)
+    {
+        super(context);
+    }
+
+    public PaymentsBatchListView(final Context context, final AttributeSet attrs)
+    {
+        super(context, attrs);
+    }
+
+    public PaymentsBatchListView(final Context context, final AttributeSet attrs, final int defStyle)
+    {
+        super(context, attrs, defStyle);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+    {
+        int heightMeasureSpec_custom = View.MeasureSpec.makeMeasureSpec(
+                Integer.MAX_VALUE >> 2, View.MeasureSpec.AT_MOST);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec_custom);
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.height = getMeasuredHeight();
+    }
+    public void populateList(PaymentBatches paymentBatches)
+    {
+        PaymentBatchElementAdapter itemsAdapter = new PaymentBatchElementAdapter(
+                getContext(),
+                paymentBatches);
+        setAdapter(itemsAdapter);
+    }
+
+    public void repopulate(PaymentBatches paymentBatches)
+    {
+        removeAllViews();
+        NeoPaymentBatch neoPaymentBatch[] = paymentBatches.getNeoPaymentBatches();
+        for(int i = 0; i< neoPaymentBatch.length; i++){
+
+            PaymentsBatchListItemView paymentsBatchListItemView = (PaymentsBatchListItemView) inflate(getContext(), R.layout.element_payments_batch_list_entry, null);
+            paymentsBatchListItemView.updateDisplay(neoPaymentBatch[i]);
+            addView(paymentsBatchListItemView);
+        }
+    }
+}

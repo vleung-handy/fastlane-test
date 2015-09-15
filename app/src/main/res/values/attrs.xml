@@ -5,5 +5,4 @@
     <declare-styleable name="BasicInputTextView">
         <attr name="minLength" format="integer"/>
     </declare-styleable>
-
 </resources>

@@ -16,6 +16,8 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.PaymentBatches;
 
 import java.util.Date;
 import java.util.Map;
@@ -77,6 +79,10 @@ public abstract class DataManager
     public abstract String getBaseUrl();
 
     public abstract void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> callback);
+
+    public abstract void getPaymentBatches(Date startDate, Date endDate, Callback<PaymentBatches> callback);
+
+    public abstract void getAnnualPaymentSummaries(Callback<AnnualPaymentSummaries> callback);
 
     public interface Callback<T>
     {
