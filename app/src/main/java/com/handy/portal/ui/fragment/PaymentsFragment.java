@@ -1,8 +1,12 @@
 package com.handy.portal.ui.fragment;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.handy.portal.R;
@@ -10,14 +14,33 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public final class PaymentsFragment extends PortalWebViewFragment
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+public final class PaymentsFragment extends ActionBarFragment
 {
+    @InjectView(R.id.slide_up_panel_container)
+    protected SlideUpPanelContainer slideUpPanelContainer;
+
     @Inject
     HandyRetrofitEndpoint endpoint;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
+    {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_payments, null);
+
+        ButterKnife.inject(this, view);
+
+        return view;
+    }
 
     @Override
     public void onResume()

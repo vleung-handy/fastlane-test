@@ -118,6 +118,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
 
+    @Override
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
@@ -154,6 +155,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         return view;
     }
 
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.menu_booking_details, menu);
