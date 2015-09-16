@@ -39,9 +39,7 @@ public final class PaymentsFragment extends PortalWebViewFragment
         switch (item.getItemId())
         {
             case R.id.action_update_banking:
-                String url = endpoint.getBaseUrl() + "/portal/home?goto=profile";
-                Toast.makeText(getActivity(), url, Toast.LENGTH_SHORT).show();
-                openPortalUrl(url);
+                bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REFRESH_TAB));
                 return true;
             case R.id.action_email_verification:
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
