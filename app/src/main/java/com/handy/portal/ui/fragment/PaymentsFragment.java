@@ -2,18 +2,19 @@ package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.manager.PaymentsManager;
@@ -21,14 +22,10 @@ import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.view.PaymentsBatchListView;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.TextUtils;
-import com.squareup.otto.Subscribe;
-import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -38,7 +35,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class PaymentsFragment extends PortalWebViewFragment implements AdapterView.OnItemClickListener
+public final class PaymentsFragment extends ActionBarFragment implements AdapterView.OnItemClickListener
 {
     @Inject
     HandyRetrofitEndpoint endpoint;
@@ -172,13 +169,15 @@ public final class PaymentsFragment extends PortalWebViewFragment implements Ada
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        PaymentBatch paymentBatch = (PaymentBatch)paymentsBatchListView.getAdapter().getItem(position);
-        if(paymentBatch instanceof NeoPaymentBatch)
+        PaymentBatch paymentBatch = (PaymentBatch) paymentsBatchListView.getAdapter().getItem(position);
+        if (paymentBatch instanceof NeoPaymentBatch)
         {
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments));
         }
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
