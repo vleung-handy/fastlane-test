@@ -25,7 +25,7 @@ import butterknife.InjectView;
 public final class PaymentsFragment extends ActionBarFragment
 {
     @InjectView(R.id.slide_up_panel_container)
-    protected SlideUpPanelContainer slideUpPanelContainer;
+    SlideUpPanelContainer slideUpPanelContainer;
 
     @Inject
     HandyRetrofitEndpoint endpoint;
@@ -66,7 +66,7 @@ public final class PaymentsFragment extends ActionBarFragment
                 return true;
             case R.id.action_email_verification:
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                bus.post(new HandyEvent.SendIncomeVerification());
+                bus.post(new HandyEvent.RequestSendIncomeVerification());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -74,14 +74,14 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onSendIncomeVerificationSuccess(HandyEvent.SendIncomeVerificationSuccess event)
+    public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENTS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
     }
 
     @Subscribe
-    public void onSendIncomeVerificationError(HandyEvent.SendIncomeVerificationError event)
+    public void onSendIncomeVerificationError(HandyEvent.ReceiveSendIncomeVerificationError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Toast.makeText(getActivity(), R.string.send_verification_failed, Toast.LENGTH_SHORT).show();

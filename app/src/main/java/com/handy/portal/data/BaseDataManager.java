@@ -78,8 +78,8 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getSendIncomeVerification(String providerId, Callback<SuccessWrapper> cb) {
-        service.getSendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
+    public void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb) {
+        service.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
     }
 
     @Override

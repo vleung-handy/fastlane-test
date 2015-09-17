@@ -43,7 +43,7 @@ public abstract class DataManager
 
     public abstract void removeBooking(String bookingId, BookingType type, Callback<Booking> cb);
 
-    public abstract void getSendIncomeVerification(String providerId, Callback<SuccessWrapper> cb);
+    public abstract void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb);
 
     public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
 

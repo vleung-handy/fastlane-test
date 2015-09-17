@@ -58,7 +58,7 @@ public interface HandyRetrofitService
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}/send_income_verification")
-    void getSendIncomeVerification(@Path("id") String providerId, HandyRetrofitCallback cb);
+    void sendIncomeVerification(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")
