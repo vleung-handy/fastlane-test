@@ -196,6 +196,18 @@ public abstract class HandyEvent
         }
     }
 
+    public static class RequestSendIncomeVerification extends RequestEvent
+    {
+    }
+
+    public static class ReceiveSendIncomeVerificationSuccess extends ReceiveSuccessEvent
+    {
+    }
+
+    public static class ReceiveSendIncomeVerificationError extends ReceiveErrorEvent
+    {
+    }
+
     public static class ProviderIdUpdated extends HandyEvent
     {
         public final String providerId;

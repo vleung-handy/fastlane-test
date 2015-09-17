@@ -9,6 +9,7 @@ public enum TransitionStyle
     JOB_REMOVE_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_REMOVE_SUCCESS),
     SERIES_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.SERIES_CLAIM_SUCCESS),
     SERIES_REMOVE_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.SERIES_REMOVE_SUCCESS),
+    SEND_VERIFICAITON_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.SEND_VERIFICATION_SUCCESS),
     TAB_TO_TAB(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
     JOB_LIST_TO_DETAILS(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
     NATIVE_TO_NATIVE(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),

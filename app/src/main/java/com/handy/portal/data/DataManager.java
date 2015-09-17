@@ -12,6 +12,7 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
@@ -41,6 +42,8 @@ public abstract class DataManager
     public abstract void claimBooking(String bookingId, BookingType type, Callback<BookingClaimDetails> cb);
 
     public abstract void removeBooking(String bookingId, BookingType type, Callback<Booking> cb);
+
+    public abstract void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb);
 
     public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
 

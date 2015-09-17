@@ -43,6 +43,7 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
@@ -91,6 +92,7 @@ import retrofit.converter.GsonConverter;
         MainActivityFragmentNavigationHelper.class,
         OnboardingActivity.class,
         ComplementaryBookingsFragment.class,
+        PaymentsFragment.class,
 })
 public final class ApplicationModule
 {

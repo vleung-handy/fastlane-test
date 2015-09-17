@@ -12,6 +12,7 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
@@ -74,6 +75,11 @@ public final class BaseDataManager extends DataManager
     public final void removeBooking(String bookingId, BookingType type, final Callback<Booking> cb)
     {
         service.removeBooking(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb) {
+        service.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
     }
 
     @Override

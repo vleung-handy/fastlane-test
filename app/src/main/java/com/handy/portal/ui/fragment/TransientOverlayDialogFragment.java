@@ -9,51 +9,37 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class TransientOverlayDialogFragment extends DialogFragment
 {
-    private int viewId;
     private int animationId = R.anim.overlay_fade_in_then_out;
+    private int imageId = R.drawable.ic_success_circle;
+    private int textId;
 
-    public TransientOverlayDialogFragment()
-    {
-    }
+    @InjectView(R.id.transition_overlay_image)
+    ImageView icon;
+    @InjectView(R.id.transition_overlay_text)
+    TextView display;
 
-    public static TransientOverlayDialogFragment newInstance(int viewId, int animationId)
+    public static TransientOverlayDialogFragment newInstance(int animationId, int imageId, int textId)
     {
         TransientOverlayDialogFragment transientOverlayDialogFragment = new TransientOverlayDialogFragment();
-        transientOverlayDialogFragment.setResourceIds(viewId, animationId);
+        transientOverlayDialogFragment.setResources(animationId, imageId, textId);
         return transientOverlayDialogFragment;
     }
 
-    public void setResourceIds(int viewId, int animationId)
-    {
-        setViewId(viewId);
-        setAnimationId(animationId);
-    }
-
-    public int getAnimationId()
-    {
-        return animationId;
-    }
-
-    public void setAnimationId(int animationId)
+    private void setResources(int animationId, int imageId, int textId)
     {
         this.animationId = animationId;
-    }
-
-    public int getViewId()
-    {
-        return viewId;
-    }
-
-    public void setViewId(int viewId)
-    {
-        this.viewId = viewId;
+        this.imageId = imageId;
+        this.textId = textId;
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -75,8 +61,12 @@ public class TransientOverlayDialogFragment extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View view = inflater.inflate(getViewId(), container, false);
+        View view = inflater.inflate(R.layout.fragment_transition_overlay, container, false);
         ButterKnife.inject(this, view);
+
+        icon.setImageResource(imageId);
+        display.setText(textId);
+
         return view;
     }
 
@@ -84,7 +74,7 @@ public class TransientOverlayDialogFragment extends DialogFragment
     {
         View view = getView();
         view.setVisibility(View.VISIBLE);
-        Animation animation = AnimationUtils.loadAnimation(view.getContext(), getAnimationId());
+        Animation animation = AnimationUtils.loadAnimation(view.getContext(), animationId);
         view.startAnimation(animation);
         animation.setAnimationListener(new Animation.AnimationListener()
         {
@@ -102,7 +92,6 @@ public class TransientOverlayDialogFragment extends DialogFragment
             @Override
             public void onAnimationRepeat(Animation animation)
             {
-
             }
         });
     }

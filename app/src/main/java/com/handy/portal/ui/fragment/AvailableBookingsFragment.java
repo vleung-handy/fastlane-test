@@ -29,6 +29,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @InjectView(R.id.available_bookings_empty)
     protected ViewGroup noAvailableBookingsLayout;
 
+    @Override
     public void onResume()
     {
         super.onResume();

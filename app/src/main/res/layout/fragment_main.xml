@@ -18,7 +18,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/light_grey"
         android:orientation="horizontal"
-        android:weightSum="4">
+        android:weightSum="5">
 
         <RadioButton
             android:id="@+id/button_jobs"
@@ -34,6 +34,14 @@
             android:checked="false"
             android:drawableTop="@drawable/tab_button_schedule"
             android:text="@string/tab_schedule"/>
+        <RadioButton
+            android:id="@+id/button_payments"
+            style="@style/TabButton"
+            android:layout_weight="1"
+            android:checked="false"
+            android:drawableTop="@drawable/tab_button_payments"
+            android:text="@string/tab_payments"/>
+
         <RadioButton
             android:id="@+id/button_profile"
             style="@style/TabButton"

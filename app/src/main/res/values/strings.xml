@@ -56,6 +56,9 @@
     <string name="job_remove_success">Success! Job removed!</string>
     <string name="series_remove_success">Success! Series removed!</string>
 
+    <string name="send_verification_success">Your work verification has been sent.</string>
+    <string name="send_verification_failed">Oops! There was an error sending your income verification. Please try again.</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>
@@ -220,6 +223,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tab_jobs">Jobs</string>
     <string name="tab_schedule">Schedule</string>
+    <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
@@ -228,6 +232,7 @@
     <string name="available_job">Available Job</string>
     <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
     <string name="payment_value">%s</string>
+    <string name="payments">Payments</string>
     <string name="bonus_payment_value">+ %s BONUS</string>
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
@@ -363,5 +368,9 @@
     <string name="one_matching_job">1 Matching Job</string>
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
+
+    <!-- menu items -->
+    <string name="update_banking_information">Update banking information</string>
+    <string name="email_income_verification">Email income verification</string>
 
 </resources>
