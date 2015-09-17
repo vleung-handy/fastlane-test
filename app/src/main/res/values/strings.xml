@@ -373,4 +373,10 @@
     <string name="update_banking_information">Update banking information</string>
     <string name="email_income_verification">Email income verification</string>
 
+    <!--TEST ONLY, REMOVE LATER-->
+    <string-array name="test_year_spinner">
+        <item>2015</item>
+        <item>2014</item>
+        <item>2013</item>
+    </string-array>
 </resources>

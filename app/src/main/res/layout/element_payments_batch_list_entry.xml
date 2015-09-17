@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="Aug 23 - Aug 30"
-            android:textAppearance="@style/HandyTextAppearanceTitle"/>
+            android:textSize="@dimen/large_text_size"
+            android:textAppearance="@style/TextView.Bold"/>
 
         <TextView
             android:id="@+id/payments_batch_list_item_dollar_amount_text"
@@ -45,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="2 jobs, 4 withholdings"
+            android:textSize="@dimen/default_text_size"
             android:textAppearance="@style/HandyTextAppearanceSubtitle"/>
 
         <TextView

@@ -7,6 +7,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="vertical"
+                  android:id="@+id/payments_content_container"
                   android:background="@color/white_pressed"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent">
@@ -17,17 +18,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageButton
-                android:background="@android:color/transparent"
+                android:background="@null"
                 android:layout_gravity="center"
+                android:id="@+id/payments_toggle_year_button"
                 android:src="@drawable/ic_date_toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            <!--<Spinner-->
+                <!--android:entries="@array/test_year_spinner"-->
+                <!--android:id="@+id/select_year_spinner"-->
+                <!--android:spinnerMode="dropdown"-->
+                <!--android:textColor="@color/title_grey"-->
+                <!--android:theme="?android:attr/textAppearanceSmall"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"/>-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="2015 \u00B7 YTD \u00B7 25 jobs \u00B7 $2560"
+                android:text="2015  \u00B7  YTD  \u00B7  25 jobs  \u00B7  $2560"
                 android:textColor="@color/title_grey"
                 android:id="@+id/element_payments_year_summary_text"/>
 
@@ -49,12 +59,14 @@
 
         <TextView
             android:id="@+id/payments_loading"
+            android:layout_margin="@dimen/default_margin"
             android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Loading..."
-            android:textAppearance="@style/HandyTextAppearanceMedium"/>
+            android:textColor="@color/shadow_grey"
+            android:textSize="@dimen/xlarge_text_size"/>
 
         <TextView
             android:id="@+id/payments_no_history_text"

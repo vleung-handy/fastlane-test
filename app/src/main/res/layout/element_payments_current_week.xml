@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textColor="@color/handy_green"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="@style/TextView.Medium.Bold"
         android:layout_marginBottom="@dimen/row_margin"
         android:text="\u25CF CURRENT PAY WEEK"
         android:id="@+id/textView6"/>
@@ -19,7 +19,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/HandyTextAppearanceTitle"
+        android:textSize="@dimen/xlarge_text_size"
+        android:textAppearance="@style/TextView.Bold"
         android:text="Mon, Aug 31 - Sun, Sept 6"
         android:layout_marginBottom="@dimen/default_margin"
         android:id="@+id/payments_current_week_date_range_text"/>
@@ -79,7 +80,7 @@
                     android:id="@+id/textView10"/>
                 <ImageButton
                     android:background="@android:color/transparent"
-                    android:paddingLeft="2dp"
+                    android:paddingLeft="@dimen/extra_padding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_help_circle"
@@ -153,7 +154,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|left"
                     android:textColor="@color/subtitle_grey"
-                    android:textAppearance="@style/HandyTextAppearanceMedium"
+                    android:textAppearance="@style/HandyTextAppearanceSmall"
                     android:text="Remaining Withholdings"
                     android:layout_weight="1"
                     android:id="@+id/textView13"/>
@@ -168,7 +169,7 @@
                 android:layout_gravity="center|right"
                 android:layout_weight="1"
                 android:textColor="@color/subtitle_grey"
-                android:textAppearance="@style/HandyTextAppearanceMedium"
+                android:textAppearance="@style/HandyTextAppearanceSmall"
                 android:text="-$100"
                 android:id="@+id/payments_current_week_remaining_withholdings"/>
         </TableRow>

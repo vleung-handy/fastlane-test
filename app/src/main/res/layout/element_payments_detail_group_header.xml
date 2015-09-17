@@ -28,7 +28,7 @@
         android:layout_weight="1"
         android:gravity="right"
         android:text="$165"
-        android:textAppearance="@style/HandyTextAppearanceSmall"
+        android:textAppearance="@style/HandyTextAppearanceMedium"
         android:id="@+id/payments_detail_group_payments_text"
         />
 </com.handy.portal.ui.element.payments.PaymentsDetailGroupView>

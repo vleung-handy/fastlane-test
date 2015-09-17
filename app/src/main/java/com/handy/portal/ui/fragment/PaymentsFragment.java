@@ -47,6 +47,9 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     @InjectView(R.id.payments_scroll_view)
     NestedScrollView scrollView;
 
+    @InjectView(R.id.payments_content_container)
+    View contentContainer;
+
     @InjectView(R.id.payments_batch_list_view)
     PaymentsBatchListView paymentsBatchListView;
 
@@ -73,6 +76,9 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     @InjectView(R.id.payments_current_week_remaining_withholdings)
     TextView currentWeekRemainingWithholdingsText;
+
+//    @InjectView(R.id.select_year_spinner)
+//    Spinner selectYearSpinner;
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -119,6 +125,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     private void requestPaymentsInfo()
     {
+        scrollView.setVisibility(View.GONE);
         requestAnnualPaymentSummaries();
         requestPaymentBatches();
     }
@@ -130,7 +137,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         //these are only arbitrary dummy dates
         Date startDate = new Date();
-        startDate = new Date(startDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*300);//TODO: REMOVE - TEST ONLY
+        startDate = new Date(startDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*180);//TODO: REMOVE - TEST ONLY
         Date endDate = new Date();
         loadingText.setVisibility(View.VISIBLE);
         bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
@@ -143,7 +150,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getAnnualPaymentSummaries()[0];
 
         //TODO: use formatter
-        yearSummaryText.setText(paymentSummary.getYear() + " ⋅ YTD ⋅ " + paymentSummary.getNumCompletedJobs() + " jobs ⋅ " + TextUtils.formatPrice(paymentSummary.getNetEarnings().getAmount()/100, paymentSummary.getNetEarnings().getCurrencySymbol()));
+        yearSummaryText.setText(paymentSummary.getYear() + "  ⋅  YTD  ⋅  " + paymentSummary.getNumCompletedJobs() + " jobs  ⋅  " + TextUtils.formatPrice(paymentSummary.getNetEarnings().getAmount()/100, paymentSummary.getNetEarnings().getCurrencySymbol()));
     }
 
     private void updateCurrentPayWeekView(PaymentBatches paymentBatches)
@@ -174,15 +181,13 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         PaymentBatches paymentBatches = event.getPaymentBatches();
         updatePaymentsView(paymentBatches);
-
-//        paymentsBatchListView.repopulate(paymentBatches);
-        //populate the batch list view
     }
 
     @Subscribe
     public void onReceiveAnnualPaymentSummariesSuccess(PaymentEvents.ReceiveAnnualPaymentSummariesSuccess event)
     {
         updateYearSummaryText(event.getAnnualPaymentSummaries());
+        scrollView.setVisibility(View.VISIBLE);
     }
 
 

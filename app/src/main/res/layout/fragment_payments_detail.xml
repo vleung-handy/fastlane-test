@@ -29,13 +29,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/default_margin"
                     android:text="Mon, Aug 31 - Sun, Sept 6"
-                    android:textAppearance="@style/HandyTextAppearanceTitle"
                     android:textSize="@dimen/xlarge_text_size"
-                    android:textStyle="bold"/>
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/black"
+                    />
             </TableRow>
 
             <TableRow
-                android:layout_marginBottom="@dimen/default_padding"
                 android:weightSum="2"
                 >
 
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Total Payment"
-                    android:textAppearance="@style/HandyTextAppearanceTitle"
+                    android:textAppearance="@style/HandyTextAppearanceMedium"
                     android:textStyle="normal"/>
 
                 <TextView
@@ -56,8 +56,7 @@
                     android:layout_weight="1"
                     android:text="$50"
                     android:textAppearance="@style/HandyTextAppearanceTitle"
-                    android:textColor="@color/requested_green"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/requested_green"/>
             </TableRow>
         </TableLayout>
 
