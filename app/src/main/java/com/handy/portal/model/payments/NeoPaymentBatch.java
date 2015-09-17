@@ -27,23 +27,23 @@ public class NeoPaymentBatch extends PaymentBatch
     private String currencySymbol;
 
 
-    public int getWithholdings()
+    public int getNumWithholdings()
     {
-        return withholdings;
+        return numWithholdings;
     }
 
-    @SerializedName("completed_jobs")
-    private int completedJobs;
+    @SerializedName("num_completed_jobs")
+    private int numCompletedJobs;
 
-    @SerializedName("withholdings")
-    private int withholdings;
+    @SerializedName("num_withholdings")
+    private int numWithholdings;
 
-    @SerializedName("total_amount")
-    private int totalAmount;
+    @SerializedName("net_earnings_total_amount")
+    private int netEarningsTotalAmount;
 
 
-    @SerializedName("earnings_total_amount")
-    private int earningsTotalAmount;
+    @SerializedName("gross_earnings_total_amount")
+    private int grossEarningsTotalAmount;
 
     @SerializedName("withholdings_total_amount")
     private int withholdingsTotalAmount;
@@ -54,18 +54,18 @@ public class NeoPaymentBatch extends PaymentBatch
     @SerializedName("payment_groups")
     private PaymentGroup paymentGroups[];
 
-    public int getEarningsTotalAmount()
+    public int getGrossEarningsTotalAmount()
     {
-        return earningsTotalAmount;
+        return grossEarningsTotalAmount;
     }
 
     public int getWithholdingsTotalAmount()
     {
         return withholdingsTotalAmount;
     }
-    public int getCompletedJobs()
+    public int getNumCompletedJobs()
     {
-        return completedJobs;
+        return numCompletedJobs;
     }
 
     public int getBatchId()
@@ -93,9 +93,9 @@ public class NeoPaymentBatch extends PaymentBatch
         return currencySymbol;
     }
 
-    public int getTotalAmount()
+    public int getNetEarningsTotalAmount()
     {
-        return totalAmount;
+        return netEarningsTotalAmount;
     }
 
     public int getRemainingWithholdingDollarAmount()
@@ -116,6 +116,6 @@ public class NeoPaymentBatch extends PaymentBatch
 
     public int getTotalAmountDollars()
     {
-        return totalAmount /100;
+        return netEarningsTotalAmount /100;
     }
 }

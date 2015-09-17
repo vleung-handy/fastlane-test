@@ -6,7 +6,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentGroup;
+import com.handy.portal.util.TextUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -40,10 +42,10 @@ public class PaymentsDetailGroupView extends LinearLayout
         ButterKnife.inject(this);
     }
 
-    public void updateDisplay(PaymentGroup paymentGroup)
+    public void updateDisplay(PaymentGroup paymentGroup, NeoPaymentBatch paymentBatch)
     {
         titleText.setText(paymentGroup.getLabel() + " (" + paymentGroup.getPayments().length + ")");
-        paymentsText.setText("$" + paymentGroup.getDollarAmount());
+        paymentsText.setText(TextUtils.formatPrice(paymentGroup.getDollarAmount(), paymentBatch.getCurrencySymbol()));
     }
 
 }

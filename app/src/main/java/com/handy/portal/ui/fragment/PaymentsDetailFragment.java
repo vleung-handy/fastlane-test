@@ -26,7 +26,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     PaymentsManager paymentsManager;
 
     @InjectView(R.id.payments_detail_list_view)
-    PaymentDetailExandableListView paymentDetailExandableListView;
+    PaymentDetailExandableListView paymentDetailExandableListView; //using ExpandableListView because it is the only ListView that offers group view support
 
     @InjectView(R.id.payment_detail_date_range_text)
     TextView paymentDetailDateRangeText;

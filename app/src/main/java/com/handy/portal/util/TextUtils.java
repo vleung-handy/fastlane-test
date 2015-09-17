@@ -51,7 +51,7 @@ public final class TextUtils
 
     public static String formatPrice(final int price, final String currencyChar)
     {
-        return (currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL) + price;
+        return (price < 0 ? "-" : "") + (currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL) + Math.abs(price);
     }
 
     public static String formatPhone(String phone, final String prefix)

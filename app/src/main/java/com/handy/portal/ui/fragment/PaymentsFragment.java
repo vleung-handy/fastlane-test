@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,11 +43,18 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     @Inject
     PaymentsManager paymentsManager;
+
+    @InjectView(R.id.payments_scroll_view)
+    NestedScrollView scrollView;
+
     @InjectView(R.id.payments_batch_list_view)
     PaymentsBatchListView paymentsBatchListView;
 
     @InjectView(R.id.element_payments_year_summary_text)
     TextView yearSummaryText;
+
+    @InjectView(R.id.payments_loading)
+    TextView loadingText;
 
     @InjectView(R.id.payments_no_history_text)
     TextView paymentsNoHistoryText;
@@ -88,6 +96,14 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         super.onViewCreated(view, savedInstanceState);
         paymentsBatchListView.setOnItemClickListener(this);
+        paymentsBatchListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener()
+        {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
+            {
+                scrollView.smoothScrollTo(0, 0);
+            }
+        });
     }
 
     @Override
@@ -114,8 +130,9 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         //these are only arbitrary dummy dates
         Date startDate = new Date();
-        startDate = new Date(startDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*300);//TEST ONLY
+        startDate = new Date(startDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*300);//TODO: REMOVE - TEST ONLY
         Date endDate = new Date();
+        loadingText.setVisibility(View.VISIBLE);
         bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
     }
     private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries)
@@ -124,6 +141,8 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
         //show only most recent year for now
         AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getAnnualPaymentSummaries()[0];
+
+        //TODO: use formatter
         yearSummaryText.setText(paymentSummary.getYear() + " ⋅ YTD ⋅ " + paymentSummary.getNumCompletedJobs() + " jobs ⋅ " + TextUtils.formatPrice(paymentSummary.getNetEarnings().getAmount()/100, paymentSummary.getNetEarnings().getCurrencySymbol()));
     }
 
@@ -147,8 +166,9 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         updateCurrentPayWeekView(paymentBatches);
         paymentsBatchListView.populateList(paymentBatches);
         paymentsNoHistoryText.setVisibility(!paymentBatches.isEmpty() ? View.GONE : View.VISIBLE);
-
+        loadingText.setVisibility(View.GONE);
     }
+
     @Subscribe
     public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
     {

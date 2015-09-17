@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:padding="@dimen/default_padding"
               android:layout_width="match_parent"
-              android:background="@color/white"
+              android:background="@drawable/background_shadow_border"
               android:layout_height="wrap_content">
 
     <TextView
@@ -12,7 +12,8 @@
         android:textStyle="bold"
         android:textColor="@color/handy_green"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="\u00B7 CURRENT PAY WEEK"
+        android:layout_marginBottom="@dimen/row_margin"
+        android:text="\u25CF CURRENT PAY WEEK"
         android:id="@+id/textView6"/>
 
     <TextView
@@ -27,7 +28,6 @@
         android:stretchColumns="1"
         android:showDividers="middle"
         android:divider="?android:attr/dividerHorizontal"
-        android:paddingBottom="@dimen/default_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TableRow
@@ -77,11 +77,12 @@
                     android:textAppearance="@style/HandyTextAppearanceMedium"
                     android:text="Withholdings"
                     android:id="@+id/textView10"/>
-                <ImageView
-                    android:padding="2dp"
+                <ImageButton
+                    android:background="@android:color/transparent"
+                    android:paddingLeft="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_card_amex"
+                    android:src="@drawable/ic_help_circle"
                     />
 
             </LinearLayout>
@@ -132,15 +133,34 @@
             android:paddingBottom="@dimen/row_margin"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content">
-            <TextView
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center|left"
-                android:textColor="@color/subtitle_grey"
-                android:textAppearance="@style/HandyTextAppearanceMedium"
-                android:text="Remaining Withholdings"
                 android:layout_weight="1"
-                android:id="@+id/textView13"/>
+
+                >
+                <ImageButton
+                    android:background="@android:color/transparent"
+                    android:paddingRight="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_withholding_balance"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:textColor="@color/subtitle_grey"
+                    android:textAppearance="@style/HandyTextAppearanceMedium"
+                    android:text="Remaining Withholdings"
+                    android:layout_weight="1"
+                    android:id="@+id/textView13"/>
+
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"

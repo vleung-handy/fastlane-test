@@ -63,19 +63,19 @@
     </style>
 
     <style name="HandyTextAppearanceMedium" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/title_grey</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="HandyTextAppearanceSmall" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">@color/title_grey</item>
+        <item name="android:textColor">@color/black</item>
     </style>
     <style name="HandyTextAppearanceTitle" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">@color/title_grey</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+    <item name="android:textColor">@color/black</item>
+    <item name="android:textStyle">bold</item>
+</style>
 
     <style name="HandyTextAppearanceSubtitle" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">@color/subtitle_grey</item>
+        <item name="android:textColor">@color/shadow_grey</item>
     </style>
 
     <style name="DateTextView">

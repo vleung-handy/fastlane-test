@@ -7,7 +7,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.payments.LegacyPayment;
+import com.handy.portal.model.payments.LegacyPaymentBatch;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentGroup;
@@ -82,13 +82,13 @@ public class PaymentsBatchListItemView extends TableLayout
                 }
             }
             jobInfoText.setText(numJobs + " jobs, " + numWithholdings + " withholdings");
-        }else if(paymentBatch instanceof LegacyPayment)
+        }else if(paymentBatch instanceof LegacyPaymentBatch)
         {
-            LegacyPayment legacyPayment = (LegacyPayment) paymentBatch;
-            dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPayment.getBookingDate()));
-            dollarAmountText.setText(TextUtils.formatPrice(legacyPayment.getDollarsEarnedByProvider(), legacyPayment.getCurrencySymbol()));
-            statusText.setText(legacyPayment.getStatus());
-            jobInfoText.setText("Job ID #" + legacyPayment.getBookingId());
+            LegacyPaymentBatch legacyPaymentBatch = (LegacyPaymentBatch) paymentBatch;
+            dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPaymentBatch.getBookingDate()));
+            dollarAmountText.setText(TextUtils.formatPrice(legacyPaymentBatch.getDollarsEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
+            statusText.setText(legacyPaymentBatch.getStatus());
+            jobInfoText.setText("Job ID #" + legacyPaymentBatch.getBookingId());
         }
 
     }

@@ -11,21 +11,21 @@ public class PaymentBatches implements Serializable
         return neoPaymentBatches;
     }
 
-    public LegacyPayment[] getLegacyPayments()
+    public LegacyPaymentBatch[] getLegacyPaymentsBatchBatches()
     {
-        return legacyPayments;
+        return legacyPaymentsBatchBatches;
     }
 
     @SerializedName("payments_batches")
     private NeoPaymentBatch[] neoPaymentBatches;
 
-    @SerializedName("legacy_payments")
-    private LegacyPayment[] legacyPayments;
+    @SerializedName("legacy_payments_batches")
+    private LegacyPaymentBatch[] legacyPaymentsBatchBatches;
 
 
     public boolean isEmpty()
     {
-        return neoPaymentBatches.length == 0 && legacyPayments.length == 0;
+        return neoPaymentBatches.length == 0 && legacyPaymentsBatchBatches.length == 0;
     }
 
 }

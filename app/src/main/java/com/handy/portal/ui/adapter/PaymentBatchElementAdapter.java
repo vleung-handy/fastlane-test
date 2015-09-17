@@ -16,9 +16,17 @@ import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
 public class PaymentBatchElementAdapter extends ArrayAdapter<PaymentBatch>
 {
 
-    public PaymentBatchElementAdapter(Context context, PaymentBatches paymentBatches)
+    public PaymentBatchElementAdapter(Context context)
     {
-        super(context, R.layout.element_payments_batch_list_entry, 0, ObjectArrays.concat(paymentBatches.getNeoPaymentBatches(), paymentBatches.getLegacyPayments(), PaymentBatch.class));
+        super(context, R.layout.element_payments_batch_list_entry, 0);
+    }
+
+    public void setData(PaymentBatches paymentBatches)
+    {
+        clear();
+        PaymentBatch paymentBatchList[] = ObjectArrays.concat(paymentBatches.getNeoPaymentBatches(), paymentBatches.getLegacyPaymentsBatchBatches(), PaymentBatch.class);
+        addAll(paymentBatchList);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -39,6 +47,9 @@ public class PaymentBatchElementAdapter extends ArrayAdapter<PaymentBatch>
             v = inflater.inflate(R.layout.element_payments_batch_list_entry, null);
         }
         ((PaymentsBatchListItemView)v).updateDisplay(paymentBatch);
+
+
+        v.setEnabled((paymentBatch instanceof NeoPaymentBatch)); //isEnabled doesn't trigger the enabled styling
 
         // measure ListView item (to solve 'ListView inside ScrollView' problem)
         v.measure(View.MeasureSpec.makeMeasureSpec(

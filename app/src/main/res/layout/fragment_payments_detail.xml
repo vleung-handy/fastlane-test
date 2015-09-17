@@ -1,65 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                                            android:fillViewport="true"
                                             android:layout_width="match_parent"
-                                            android:layout_height="match_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="vertical"
-                  android:background="@color/cell_sep"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
+                                            android:layout_height="match_parent"
+                                            android:fillViewport="true">
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@color/white_pressed"
+                  android:orientation="vertical">
 
 
         <TableLayout
-            android:stretchColumns="1"
-            android:layout_gravity="center_vertical"
-            android:background="@color/white"
-            android:padding="8dp"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/background_shadow_border"
+            android:padding="@dimen/default_padding"
+            android:stretchColumns="1">
+
             <TableRow
                 android:weightSum="2"
                 >
+
                 <TextView
+                    android:id="@+id/payment_detail_date_range_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/HandyTextAppearanceTitle"
-                    android:text="Mon, Aug 31 - Sun, Sept 6"
-                    android:textStyle="bold"
                     android:layout_marginBottom="@dimen/default_margin"
-                    android:id="@+id/payment_detail_date_range_text"/>
+                    android:text="Mon, Aug 31 - Sun, Sept 6"
+                    android:textAppearance="@style/HandyTextAppearanceTitle"
+                    android:textSize="@dimen/xlarge_text_size"
+                    android:textStyle="bold"/>
             </TableRow>
-        <TableRow
-            android:weightSum="2"
-            android:layout_marginBottom="@dimen/default_padding"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/HandyTextAppearanceMedium"
-                android:text="Total Payment"
-                android:layout_weight="1"
-                android:id="@+id/textView8"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:textAppearance="@style/HandyTextAppearanceMedium"
-                android:textStyle="bold"
-                android:text="$50"
-                android:textColor="@color/requested_green"
-                android:id="@+id/payments_detail_total_payment_text"/>
-        </TableRow>
+            <TableRow
+                android:layout_marginBottom="@dimen/default_padding"
+                android:weightSum="2"
+                >
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Total Payment"
+                    android:textAppearance="@style/HandyTextAppearanceTitle"
+                    android:textStyle="normal"/>
+
+                <TextView
+                    android:id="@+id/payments_detail_total_payment_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:text="$50"
+                    android:textAppearance="@style/HandyTextAppearanceTitle"
+                    android:textColor="@color/requested_green"
+                    android:textStyle="bold"/>
+            </TableRow>
         </TableLayout>
 
         <com.handy.portal.ui.view.PaymentDetailExandableListView
             android:id="@+id/payments_detail_list_view"
-            android:groupIndicator="@color/transparent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:groupIndicator="@color/transparent"
+            android:paddingTop="1dp"
+            android:transcriptMode="disabled">
 
         </com.handy.portal.ui.view.PaymentDetailExandableListView>
     </LinearLayout>

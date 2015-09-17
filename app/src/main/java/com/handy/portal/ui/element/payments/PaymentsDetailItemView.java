@@ -59,6 +59,7 @@ public class PaymentsDetailItemView extends LinearLayout
         locationText.setText(payment.getTitle());
         timeText.setText(payment.getSubTitle());
         paymentText.setText(TextUtils.formatPrice(payment.getDollarAmount(), parentBatch.getCurrencySymbol()));
+        paymentText.setTextColor(getResources().getColor(payment.getDollarAmount() < 0 ? R.color.handy_love : R.color.black));
     }
 
 }

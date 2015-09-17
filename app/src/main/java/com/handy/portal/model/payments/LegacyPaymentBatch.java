@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by vleung on 9/14/15.
  */
-public class LegacyPayment extends PaymentBatch
+public class LegacyPaymentBatch extends PaymentBatch
 {
     @SerializedName("booking_id")
     private int bookingId;
