@@ -20,6 +20,7 @@ public class PaymentsManager
     private final Bus bus;
     private final DataManager dataManager;
 
+    public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     //TODO: add caching
 
     @Inject

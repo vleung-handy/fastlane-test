@@ -6,12 +6,12 @@ import android.widget.ExpandableListView;
 
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.ui.adapter.PaymentDetailExpandableListAdapter;
-import com.handy.portal.ui.element.payments.PaymentsDetailHeaderView;
+import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
 
 public class PaymentDetailExandableListView extends ExpandableListView
 {
 
-    PaymentsDetailHeaderView headerView;
+    PaymentsDetailListHeaderView headerView;
 
     public PaymentDetailExandableListView(final Context context)
     {

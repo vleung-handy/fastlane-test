@@ -10,7 +10,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.model.payments.NeoPaymentBatch;
-import com.handy.portal.ui.element.payments.PaymentsDetailHeaderView;
+import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
 import com.handy.portal.ui.view.PaymentDetailExandableListView;
 
 import javax.inject.Inject;
@@ -27,7 +27,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     PaymentDetailExandableListView paymentDetailExandableListView; //using ExpandableListView because it is the only ListView that offers group view support
 
     @InjectView(R.id.payment_details_list_header)
-    PaymentsDetailHeaderView paymentsDetailHeaderView;
+    PaymentsDetailListHeaderView paymentsDetailListHeaderView;
 //    @InjectView(R.id.payment_detail_date_range_text)
 //    TextView paymentDetailDateRangeText;
 //
@@ -64,7 +64,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     {
         super.onViewCreated(view, savedInstanceState);
         paymentDetailExandableListView.setOnGroupClickListener(this);
-        paymentsDetailHeaderView.updateDisplay(neoPaymentBatch);
+        paymentsDetailListHeaderView.updateDisplay(neoPaymentBatch);
 //        paymentDetailDateRangeText.setText(DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getStartDate()) + " - " + DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getEndDate()));
 //        paymentDetailTotalPaymentText.setText(TextUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
         paymentDetailExandableListView.updateData(neoPaymentBatch);

@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -30,6 +29,7 @@ import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -63,20 +63,23 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     @InjectView(R.id.payments_no_history_text)
     TextView paymentsNoHistoryText;
 
-    @InjectView(R.id.payments_current_week_date_range_text)
-    TextView currentWeekDateRangeText;
+//    @InjectView(R.id.payments_batch_list_header)
+//    PaymentsBatchListHeaderView paymentsBatchListHeaderView;
 
-    @InjectView(R.id.payments_current_week_total_earnings)
-    TextView currentWeekTotalEarningsText;
-
-    @InjectView(R.id.payments_current_week_withholdings)
-    TextView currentWeekWithholdingsText;
-
-    @InjectView(R.id.payments_current_week_expected_payment)
-    TextView currentWeekExpectedPaymentText;
-
-    @InjectView(R.id.payments_current_week_remaining_withholdings)
-    TextView currentWeekRemainingWithholdingsText;
+//    @InjectView(R.id.payments_current_week_date_range_text)
+//    TextView currentWeekDateRangeText;
+//
+//    @InjectView(R.id.payments_current_week_total_earnings)
+//    TextView currentWeekTotalEarningsText;
+//
+//    @InjectView(R.id.payments_current_week_withholdings)
+//    TextView currentWeekWithholdingsText;
+//
+//    @InjectView(R.id.payments_current_week_expected_payment)
+//    TextView currentWeekExpectedPaymentText;
+//
+//    @InjectView(R.id.payments_current_week_remaining_withholdings)
+//    TextView currentWeekRemainingWithholdingsText;
 
 //    @InjectView(R.id.select_year_spinner)
 //    Spinner selectYearSpinner;
@@ -103,9 +106,18 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         super.onViewCreated(view, savedInstanceState);
         paymentsBatchListView.setOnItemClickListener(this);
-        paymentsBatchListView.setScrollContainer(false);
-        paymentsBatchListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        paymentsBatchListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED); //layout xml parameter doesnt work?
+
+        yearSummaryText.setText((Calendar.getInstance().get(Calendar.YEAR) + ""));
+//        List<String> spinnerItems = new ArrayList<String>();
+//        spinnerItems.add(Calendar.getInstance().get(Calendar.YEAR) + "");
+//        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this.getActivity().getApplicationContext(),
+//                android.R.layout.simple_spinner_dropdown_item,
+//                spinnerItems);
+//        selectYearSpinner.setAdapter(spinnerArrayAdapter);
+
+//        paymentsBatchListView.setScrollContainer(false);
+//        paymentsBatchListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+//        paymentsBatchListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED); //layout xml parameter doesnt work?
 //        paymentsBatchListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener()
 //        {
 //            @Override
@@ -146,10 +158,10 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     private void requestPaymentBatches()
     {
         //these are only arbitrary dummy dates
-        Date startDate = new Date();
-        startDate = new Date(startDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*180);//TODO: REMOVE - TEST ONLY
         Date endDate = new Date();
+        Date startDate = new Date(endDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*300);//TODO: REMOVE - TEST ONLY
         loadingText.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.GONE);
         bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
     }
     private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries)
@@ -165,15 +177,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     private void updateCurrentPayWeekView(PaymentBatches paymentBatches)
     {
-        //should be first one in payment batch
-        NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
-        //make sure start/end dates are correct
-
-        currentWeekDateRangeText.setText(DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getStartDate()) + " - " + DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getEndDate()));
-        currentWeekRemainingWithholdingsText.setText(TextUtils.formatPrice(neoPaymentBatch.getRemainingWithholdingDollarAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekExpectedPaymentText.setText(TextUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekWithholdingsText.setText(TextUtils.formatPrice(neoPaymentBatch.getWithholdingsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekTotalEarningsText.setText(TextUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
+//        paymentsBatchListHeaderView.updateDisplay(paymentBatches);
 
     }
 
@@ -181,35 +185,36 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         //update the current pay week
         updateCurrentPayWeekView(paymentBatches);
-        paymentsBatchListView.populateList(paymentBatches);
+        paymentsBatchListView.updateData(paymentBatches);
         paymentsNoHistoryText.setVisibility(!paymentBatches.isEmpty() ? View.GONE : View.VISIBLE);
         loadingText.setVisibility(View.GONE);
-        paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener()
-        {
-            private int previousLastItem = -1;
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState)
-            {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-            {
-                int lastItem = firstVisibleItem + visibleItemCount;
-                if (lastItem == totalItemCount)
-                {
-                    //scrolled to bottom!
-                    if (lastItem != previousLastItem)
-                    {
-                        previousLastItem = lastItem;
-                        System.out.println("SCROLLED TO BOTTOM OF LIST VIEW");
-                        //request more entries!
-                    }
-                }
-            }
-        });
+        scrollView.setVisibility(View.VISIBLE);
+//        paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener()
+//        {
+//            private int previousLastItem = -1;
+//
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState)
+//            {
+//
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+//            {
+//                int lastItem = firstVisibleItem + visibleItemCount;
+//                if (lastItem == totalItemCount)
+//                {
+//                    //scrolled to bottom!
+//                    if (lastItem != previousLastItem)
+//                    {
+//                        previousLastItem = lastItem;
+//                        System.out.println("SCROLLED TO BOTTOM OF LIST VIEW");
+//                        //request more entries!
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Subscribe

@@ -16,7 +16,7 @@ import butterknife.InjectView;
 /**
  * Created by vleung on 9/14/15.
  */
-public class PaymentsDetailHeaderView extends TableLayout
+public class PaymentsDetailListHeaderView extends TableLayout
 {
     @InjectView(R.id.payment_detail_date_range_text)
     TextView paymentDetailDateRangeText;
@@ -24,12 +24,12 @@ public class PaymentsDetailHeaderView extends TableLayout
     @InjectView(R.id.payments_detail_total_payment_text)
     TextView paymentDetailTotalPaymentText;
 
-    public PaymentsDetailHeaderView(Context context)
+    public PaymentsDetailListHeaderView(Context context)
     {
         super(context);
     }
 
-    public PaymentsDetailHeaderView(Context context, AttributeSet attributeSet)
+    public PaymentsDetailListHeaderView(Context context, AttributeSet attributeSet)
     {
         super(context, attributeSet);
     }

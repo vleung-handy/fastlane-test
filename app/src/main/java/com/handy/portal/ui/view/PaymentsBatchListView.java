@@ -4,17 +4,18 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchElementAdapter;
-import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
+import com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView;
 
 public final class PaymentsBatchListView extends ListView
 {
 
+    private PaymentsBatchListHeaderView paymentsBatchListHeaderView;
     public PaymentsBatchListView(final Context context)
     {
         super(context);
@@ -39,6 +40,9 @@ public final class PaymentsBatchListView extends ListView
                 getContext(
                 ));
         setAdapter(itemsAdapter);
+        paymentsBatchListHeaderView = (PaymentsBatchListHeaderView) inflate(getContext(), R.layout.element_payments_current_week_header, null);
+        addHeaderView(paymentsBatchListHeaderView);
+
     }
 
     @Override
@@ -50,20 +54,9 @@ public final class PaymentsBatchListView extends ListView
         ViewGroup.LayoutParams params = getLayoutParams();
         params.height = getMeasuredHeight();
     }
-    public void populateList(PaymentBatches paymentBatches)
+    public void updateData(PaymentBatches paymentBatches)
     {
-        ((PaymentBatchElementAdapter)getAdapter()).setData(paymentBatches);
-    }
-
-    public void repopulate(PaymentBatches paymentBatches)
-    {
-        removeAllViews();
-        NeoPaymentBatch neoPaymentBatch[] = paymentBatches.getNeoPaymentBatches();
-        for(int i = 0; i< neoPaymentBatch.length; i++){
-
-            PaymentsBatchListItemView paymentsBatchListItemView = (PaymentsBatchListItemView) inflate(getContext(), R.layout.element_payments_batch_list_entry, null);
-            paymentsBatchListItemView.updateDisplay(neoPaymentBatch[i]);
-            addView(paymentsBatchListItemView);
-        }
+        ((PaymentBatchElementAdapter)((HeaderViewListAdapter)getAdapter()).getWrappedAdapter()).setData(paymentBatches);
+        paymentsBatchListHeaderView.updateDisplay(paymentBatches);
     }
 }

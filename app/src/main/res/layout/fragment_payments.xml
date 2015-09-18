@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:fillViewport="true"
+            android:overScrollMode="always"
             android:id="@+id/payments_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -21,37 +22,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Spinner
-                android:entries="@array/test_year_spinner"
-                android:id="@+id/select_year_spinner"
-                android:spinnerMode="dropdown"
-                android:textColor="@color/title_grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <!--<Spinner-->
+                <!--android:entries="@array/test_year_spinner"-->
+                <!--android:id="@+id/select_year_spinner"-->
+                <!--android:spinnerMode="dropdown"-->
+                <!--android:textColor="@color/title_grey"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"/>-->
+
+            <!-- annual summary will be added later -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="YTD  \u00B7  25 jobs  \u00B7  $2560 *"
+                android:text=""
                 android:textColor="@color/title_grey"
                 android:id="@+id/element_payments_year_summary_text"/>
 
         </LinearLayout>
 
 
-        <include layout="@layout/element_payments_current_week"/>
+        <!--<include layout="@layout/element_payments_current_week_header"/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="PREVIOUS PAY WEEKS"
-            android:paddingTop="@dimen/default_padding"
-            android:paddingBottom="@dimen/extra_padding"
-            android:paddingLeft="@dimen/payment_container_horizontal_padding"
-            android:id="@+id/textView5"/>
+
 
         <include layout="@layout/element_payments_batch_list"/>
 

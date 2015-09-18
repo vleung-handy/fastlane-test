@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:id="@+id/payments_batch_list_header"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/payment_container_vertical_padding"
+        android:paddingBottom="@dimen/payment_container_vertical_padding"
+        android:paddingLeft="@dimen/payment_container_horizontal_padding"
+        android:paddingRight="@dimen/payment_container_horizontal_padding"
+        android:orientation="vertical"
+        android:background="@drawable/background_shadow_border"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/handy_green"
+            android:textAppearance="@style/TextView.Medium.Bold"
+            android:layout_marginBottom="@dimen/row_margin"
+            android:text="\u25CF CURRENT PAY WEEK"
+            android:id="@+id/textView6"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/xlarge_text_size"
+            android:textAppearance="@style/TextView.Bold"
+            android:text=""
+            android:layout_marginBottom="@dimen/default_margin"
+            android:id="@+id/payments_current_week_date_range_text"/>
+
+        <TableLayout
+            android:stretchColumns="1"
+            android:showDividers="middle"
+            android:divider="?android:attr/dividerHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TableRow
+                android:weightSum="2"
+                android:paddingTop="@dimen/row_margin"
+                android:paddingBottom="@dimen/row_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/HandyTextAppearanceMedium"
+                    android:text="Total Earnings"
+                    android:layout_weight="1"
+                    android:id="@+id/textView8"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/HandyTextAppearanceMedium"
+                    android:text=""
+                    android:id="@+id/payments_current_week_total_earnings"/>
+            </TableRow>
+            <TableRow
+                android:weightSum="2"
+                android:paddingTop="@dimen/row_margin"
+                android:paddingBottom="@dimen/row_margin"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/HandyTextAppearanceMedium"
+                        android:text="Withholdings"
+                        android:id="@+id/textView10"/>
+                    <ImageButton
+                        android:background="@android:color/transparent"
+                        android:paddingLeft="@dimen/extra_padding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_help_circle"
+                        />
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/HandyTextAppearanceMedium"
+                    android:text=""
+                    android:id="@+id/payments_current_week_withholdings"/>
+            </TableRow>
+            <TableRow
+                android:weightSum="2"
+                android:paddingTop="@dimen/row_margin"
+                android:paddingBottom="@dimen/row_margin"
+                android:layout_width="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:textAppearance="@style/HandyTextAppearanceMedium"
+                    android:text="Expected Payment"
+                    android:layout_weight="1"
+                    android:id="@+id/textView12"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|right"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/xxlarge_text_size"
+                    android:textAppearance="@style/HandyTextAppearanceTitle"
+                    android:text=""
+                    android:id="@+id/payments_current_week_expected_payment"/>
+            </TableRow>
+
+            <TableRow
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:paddingTop="@dimen/row_margin"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    >
+                    <ImageButton
+                        android:background="@android:color/transparent"
+                        android:paddingRight="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_withholding_balance"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:textColor="@color/subtitle_grey"
+                        android:textAppearance="@style/HandyTextAppearanceSmall"
+                        android:text="Remaining Withholdings"
+                        android:layout_weight="1"
+                        android:id="@+id/textView13"/>
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|right"
+                    android:layout_weight="1"
+                    android:textColor="@color/subtitle_grey"
+                    android:textAppearance="@style/HandyTextAppearanceSmall"
+                    android:text=""
+                    android:id="@+id/payments_current_week_remaining_withholdings"/>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="PREVIOUS PAY WEEKS"
+        android:paddingTop="@dimen/default_padding"
+        android:paddingBottom="@dimen/extra_padding"
+        android:paddingLeft="@dimen/payment_container_horizontal_padding"
+        android:paddingRight="@dimen/payment_container_horizontal_padding"
+        android:id="@+id/textView5"/>
+</com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView>
