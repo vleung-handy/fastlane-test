@@ -69,15 +69,15 @@ public class UrbanAirshipManager
                 airship.getPushManager().setPushEnabled(true);
                 airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
 
-                //Setup an alias linking this user's id to a UA alias
+                //Setup a named user linking this user's id to a UA named user
                 //We may not have a cached provider id when a user first logs in, possible race condition, but the UrbanAirshipManager will hear the ProviderIdUpdated event and update accordingly
                 String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
                 if (providerId != null)
                 {
-                    setAlias(providerId);
+                    setUniqueIdentifiers(providerId);
                 }
 
-               //Override the default action otherwise it tries to openurl all of our deep links
+                //Override the default action otherwise it tries to openurl all of our deep links
                 //Init the deep link listener, must be done after takeoff
                 UAirship.shared().getActionRegistry().getEntry(DeepLinkAction.DEFAULT_REGISTRY_NAME).setDefaultAction(customDeepLinkAction);
             }
@@ -88,14 +88,17 @@ public class UrbanAirshipManager
     @Subscribe
     public void onProviderIdUpdated(HandyEvent.ProviderIdUpdated event)
     {
-        setAlias(event.providerId);
+        setUniqueIdentifiers(event.providerId);
     }
 
-    private void setAlias(String aliasId)
+    private void setUniqueIdentifiers(String id)
     {
-        if(UAirship.isFlying() && aliasId != null && !aliasId.isEmpty())
+        if(UAirship.isFlying() && id != null && !id.isEmpty())
         {
-            UAirship.shared().getPushManager().setAlias(aliasId);
+            //Keep alias around for backwards compatibility until
+            //named user is backfilled by UrbanAirship
+            UAirship.shared().getPushManager().setAlias(id);
+            UAirship.shared().getPushManager().getNamedUser().setId(id);
         }
     }
 
