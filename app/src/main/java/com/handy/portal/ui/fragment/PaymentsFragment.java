@@ -126,7 +126,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     private void requestPaymentsInfo()
     {
         scrollView.setVisibility(View.GONE);
-        requestAnnualPaymentSummaries();
+//        requestAnnualPaymentSummaries();
         requestPaymentBatches();
     }
     private void requestAnnualPaymentSummaries()
@@ -181,13 +181,13 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         PaymentBatches paymentBatches = event.getPaymentBatches();
         updatePaymentsView(paymentBatches);
+        scrollView.setVisibility(View.VISIBLE);
     }
 
     @Subscribe
     public void onReceiveAnnualPaymentSummariesSuccess(PaymentEvents.ReceiveAnnualPaymentSummariesSuccess event)
     {
         updateYearSummaryText(event.getAnnualPaymentSummaries());
-        scrollView.setVisibility(View.VISIBLE);
     }
 
 

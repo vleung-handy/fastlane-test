@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import com.handy.portal.R;
-import com.handy.portal.model.payments.Payment;
 import com.handy.portal.model.payments.NeoPaymentBatch;
+import com.handy.portal.model.payments.Payment;
 import com.handy.portal.model.payments.PaymentGroup;
 import com.handy.portal.ui.element.payments.PaymentsDetailGroupView;
 import com.handy.portal.ui.element.payments.PaymentsDetailItemView;
@@ -69,6 +69,7 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
         return false;
     }
 
+
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
     {
@@ -83,13 +84,18 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
         convertView.setEnabled(false);
         convertView.setFocusable(false);
         convertView.setOnClickListener(null);
+        if(paymentGroup.getPayments().length == 0)
+        {
+            convertView.setVisibility(View.GONE); //temporary hack for now until server side is changed
+        }else{
+            convertView.setVisibility(View.VISIBLE);
+        }
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
     {
-
         Payment payment = getChild(groupPosition, childPosition);
         if(convertView==null)
         {

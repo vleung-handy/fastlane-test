@@ -14,9 +14,20 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_margin="@dimen/default_margin"
-            android:layout_width="wrap_content"
+            android:paddingTop="@dimen/extra_padding"
+            android:paddingBottom="@dimen/extra_padding"
+            android:paddingLeft="@dimen/payment_container_horizontal_padding"
+            android:paddingRight="@dimen/payment_container_horizontal_padding"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <Spinner
+                android:entries="@array/test_year_spinner"
+                android:id="@+id/select_year_spinner"
+                android:spinnerMode="dropdown"
+                android:textColor="@color/title_grey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <ImageButton
                 android:background="@null"
                 android:layout_gravity="center"
@@ -24,20 +35,12 @@
                 android:src="@drawable/ic_date_toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <!--<Spinner-->
-                <!--android:entries="@array/test_year_spinner"-->
-                <!--android:id="@+id/select_year_spinner"-->
-                <!--android:spinnerMode="dropdown"-->
-                <!--android:textColor="@color/title_grey"-->
-                <!--android:theme="?android:attr/textAppearanceSmall"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="2015  \u00B7  YTD  \u00B7  25 jobs  \u00B7  $2560"
+                android:text="2015  \u00B7  YTD  \u00B7  25 jobs  \u00B7  $2560 *"
                 android:textColor="@color/title_grey"
                 android:id="@+id/element_payments_year_summary_text"/>
 
@@ -52,7 +55,9 @@
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="PREVIOUS PAY WEEKS"
-            android:layout_margin="@dimen/default_margin"
+            android:paddingTop="@dimen/default_padding"
+            android:paddingBottom="@dimen/extra_padding"
+            android:paddingLeft="@dimen/payment_container_horizontal_padding"
             android:id="@+id/textView5"/>
 
         <include layout="@layout/element_payments_batch_list"/>

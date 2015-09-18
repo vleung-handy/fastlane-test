@@ -38,7 +38,10 @@ public class PaymentsManager
             public void onSuccess(PaymentBatches paymentBatches)
             {
                 if(paymentBatches!=null)
+                {
+                    //for now, filter payment batches to remove empty groups until server side changes are made
                     bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches));
+                }
             }
 
             @Override

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.handy.portal.ui.element.payments.PaymentsBatchListItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:background="@drawable/list_entry_background"
     android:divider="?android:attr/dividerHorizontal"
     android:dividerHeight="1dp"
-    android:padding="@dimen/default_padding"
+    android:paddingTop="@dimen/payment_container_vertical_padding"
+    android:paddingBottom="@dimen/payment_container_vertical_padding"
+    android:paddingLeft="@dimen/payment_container_horizontal_padding"
+    android:paddingRight="@dimen/payment_container_horizontal_padding"
     android:stretchColumns="1"
     >
 
     <TableRow
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
@@ -36,7 +39,7 @@
     </TableRow>
 
     <TableRow
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
