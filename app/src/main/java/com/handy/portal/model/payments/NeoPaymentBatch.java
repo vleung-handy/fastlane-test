@@ -112,6 +112,10 @@ public class NeoPaymentBatch extends PaymentBatch
         return paymentGroups;
     }
 
+    public void setPaymentGroups(PaymentGroup[] paymentGroups)
+    {//setter is needed for filtering
+        this.paymentGroups = paymentGroups;
+    }
 
 
     public int getTotalAmountDollars()

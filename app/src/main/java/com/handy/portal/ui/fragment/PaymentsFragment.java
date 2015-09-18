@@ -1,14 +1,15 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     PaymentsManager paymentsManager;
 
     @InjectView(R.id.payments_scroll_view)
-    NestedScrollView scrollView;
+    ScrollView scrollView;
 
     @InjectView(R.id.payments_content_container)
     View contentContainer;
@@ -102,14 +103,22 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         super.onViewCreated(view, savedInstanceState);
         paymentsBatchListView.setOnItemClickListener(this);
-        paymentsBatchListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener()
-        {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
-            {
-                scrollView.smoothScrollTo(0, 0);
-            }
-        });
+        paymentsBatchListView.setScrollContainer(false);
+        paymentsBatchListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        paymentsBatchListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED); //layout xml parameter doesnt work?
+//        paymentsBatchListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener()
+//        {
+//            @Override
+//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
+//            {
+//                scrollView.smoothScrollTo(0, 0);
+//                paymentsBatchListView.removeOnLayoutChangeListener(this); //only want to do this first time and not for pagination
+//                //hacky fix for issue in which ListView will automatically scroll to its start position on data load
+//                //TODO: investigate how to prevent ListView from auto-scrolling
+//
+//            }
+//        });
+
     }
 
     @Override
@@ -125,9 +134,10 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     private void requestPaymentsInfo()
     {
-        scrollView.setVisibility(View.GONE);
 //        requestAnnualPaymentSummaries();
         requestPaymentBatches();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+
     }
     private void requestAnnualPaymentSummaries()
     {
@@ -150,7 +160,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getAnnualPaymentSummaries()[0];
 
         //TODO: use formatter
-        yearSummaryText.setText(paymentSummary.getYear() + "  ⋅  YTD  ⋅  " + paymentSummary.getNumCompletedJobs() + " jobs  ⋅  " + TextUtils.formatPrice(paymentSummary.getNetEarnings().getAmount()/100, paymentSummary.getNetEarnings().getCurrencySymbol()));
+        yearSummaryText.setText("YTD  ⋅  " + paymentSummary.getNumCompletedJobs() + " jobs  ⋅  " + TextUtils.formatPrice(paymentSummary.getNetEarnings().getAmount()/100, paymentSummary.getNetEarnings().getCurrencySymbol()));
     }
 
     private void updateCurrentPayWeekView(PaymentBatches paymentBatches)
@@ -174,6 +184,32 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         paymentsBatchListView.populateList(paymentBatches);
         paymentsNoHistoryText.setVisibility(!paymentBatches.isEmpty() ? View.GONE : View.VISIBLE);
         loadingText.setVisibility(View.GONE);
+        paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener()
+        {
+            private int previousLastItem = -1;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState)
+            {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+            {
+                int lastItem = firstVisibleItem + visibleItemCount;
+                if (lastItem == totalItemCount)
+                {
+                    //scrolled to bottom!
+                    if (lastItem != previousLastItem)
+                    {
+                        previousLastItem = lastItem;
+                        System.out.println("SCROLLED TO BOTTOM OF LIST VIEW");
+                        //request more entries!
+                    }
+                }
+            }
+        });
     }
 
     @Subscribe
@@ -181,7 +217,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         PaymentBatches paymentBatches = event.getPaymentBatches();
         updatePaymentsView(paymentBatches);
-        scrollView.setVisibility(View.VISIBLE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
     }
 
     @Subscribe
