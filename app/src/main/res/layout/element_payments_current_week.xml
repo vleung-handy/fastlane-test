@@ -134,7 +134,6 @@
             android:weightSum="2"
             android:layout_width="match_parent"
             android:paddingTop="@dimen/row_margin"
-            android:paddingBottom="@dimen/row_margin"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content">
             <LinearLayout

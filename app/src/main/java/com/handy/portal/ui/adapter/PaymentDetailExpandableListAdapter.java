@@ -25,6 +25,12 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
     public PaymentDetailExpandableListAdapter(NeoPaymentBatch neoPaymentBatch)
     {
         this.neoPaymentBatch = neoPaymentBatch;
+
+    }
+
+    public void setData(NeoPaymentBatch neoPaymentBatch)
+    {
+        this.neoPaymentBatch = neoPaymentBatch;
     }
 
     @Override

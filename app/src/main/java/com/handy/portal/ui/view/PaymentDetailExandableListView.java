@@ -2,14 +2,16 @@ package com.handy.portal.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.ui.adapter.PaymentDetailExpandableListAdapter;
+import com.handy.portal.ui.element.payments.PaymentsDetailHeaderView;
 
 public class PaymentDetailExandableListView extends ExpandableListView
 {
+
+    PaymentsDetailHeaderView headerView;
 
     public PaymentDetailExandableListView(final Context context)
     {
@@ -26,20 +28,40 @@ public class PaymentDetailExandableListView extends ExpandableListView
         super(context, attrs, defStyle);
     }
 
-    public void populateList(NeoPaymentBatch neoPaymentBatch)
+    @Override
+    protected void onFinishInflate()
     {
+        super.onFinishInflate();
+        init();
+    }
+
+    private void init()
+    {
+        //TODO: initialize adapter
+//        headerView = (PaymentsDetailHeaderView)inflate(getContext(), R.layout.element_payment_details_list_header, null);
+//        this.addHeaderView(headerView);
+//        setAdapter(new PaymentDetailExpandableListAdapter());
+    }
+
+
+    public void updateData(NeoPaymentBatch neoPaymentBatch)//TODO: make adapter init separate
+    {
+//        headerView.updateDisplay(neoPaymentBatch);
+//        ((PaymentDetailExpandableListAdapter) getAdapter()).setData(neoPaymentBatch);
         PaymentDetailExpandableListAdapter itemsAdapter = new PaymentDetailExpandableListAdapter(
                 neoPaymentBatch);
         setAdapter(itemsAdapter);
+
+
     }
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-    {
-        int heightMeasureSpec_custom = MeasureSpec.makeMeasureSpec(
-                Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec_custom);
-        ViewGroup.LayoutParams params = getLayoutParams();
-        params.height = getMeasuredHeight();
-    }
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+//    {
+//        int heightMeasureSpec_custom = MeasureSpec.makeMeasureSpec(
+//                Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec_custom);
+//        ViewGroup.LayoutParams params = getLayoutParams();
+//        params.height = getMeasuredHeight();
+//    }
 
 }

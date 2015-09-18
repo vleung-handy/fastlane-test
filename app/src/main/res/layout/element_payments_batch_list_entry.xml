@@ -49,17 +49,20 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="2 jobs, 4 withholdings"
-            android:textSize="@dimen/default_text_size"
-            android:textAppearance="@style/HandyTextAppearanceSubtitle"/>
+            android:textSize="@dimen/xsmall_text_size"
+            android:textColor="@color/shadow_grey"
+            android:textAppearance="@style/TextView.Bold"/>
 
         <TextView
             android:id="@+id/payments_batch_list_item_status_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:textSize="@dimen/xsmall_text_size"
+            android:textColor="@color/shadow_grey"
             android:text="PENDING"
             android:textAllCaps="true"
-            android:textAppearance="@style/HandyTextAppearanceSubtitle"/>
+            android:textAppearance="@style/TextView.Bold"/>
     </TableRow>
 
 
