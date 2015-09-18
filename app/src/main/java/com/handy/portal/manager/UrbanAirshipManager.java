@@ -74,7 +74,7 @@ public class UrbanAirshipManager
                 String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
                 if (providerId != null)
                 {
-                    setProviderId(providerId);
+                    setUniqueIdentifiers(providerId);
                 }
 
                 //Override the default action otherwise it tries to openurl all of our deep links
@@ -88,15 +88,17 @@ public class UrbanAirshipManager
     @Subscribe
     public void onProviderIdUpdated(HandyEvent.ProviderIdUpdated event)
     {
-        setProviderId(event.providerId);
+        setUniqueIdentifiers(event.providerId);
     }
 
-    private void setProviderId(String providerId)
+    private void setUniqueIdentifiers(String id)
     {
-        if(UAirship.isFlying() && providerId != null && !providerId.isEmpty())
+        if(UAirship.isFlying() && id != null && !id.isEmpty())
         {
-            UAirship.shared().getPushManager().setAlias(providerId);
-            UAirship.shared().getPushManager().getNamedUser().setId(providerId);
+            //Keep alias around for backwards compatibility until
+            //named user is backfilled by UrbanAirship
+            UAirship.shared().getPushManager().setAlias(id);
+            UAirship.shared().getPushManager().getNamedUser().setId(id);
         }
     }
 
