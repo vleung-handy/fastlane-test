@@ -300,14 +300,21 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
 
-        //show either the real map or a placeholder image depending on if we have google play services
-        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
+        if (this.isForPayments)
         {
-            viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
+            mapLayout.setVisibility(View.GONE);
         }
         else
         {
-            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
+            //show either the real map or a placeholder image depending on if we have google play services
+            if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
+            {
+                viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
+            }
+            else
+            {
+                viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
+            }
         }
 
         viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
