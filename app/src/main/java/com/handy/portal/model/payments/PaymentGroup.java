@@ -1,6 +1,7 @@
 package com.handy.portal.model.payments;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.util.CurrencyUtils;
 
 import java.io.Serializable;
 
@@ -37,7 +38,7 @@ public class PaymentGroup implements Serializable
 
     public Integer getDollarAmount()
     {
-        return getAmount()/100;
+        return CurrencyUtils.centsToDollars(getAmount());
     }
     public Integer getAmount()
     {

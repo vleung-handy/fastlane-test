@@ -6,17 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.google.common.collect.ObjectArrays;
 import com.handy.portal.R;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
 
-public class PaymentBatchElementAdapter extends ArrayAdapter<PaymentBatch>
+public class PaymentBatchListElementAdapter extends ArrayAdapter<PaymentBatch>
 {
-
-    public PaymentBatchElementAdapter(Context context)
+    public PaymentBatchListElementAdapter(Context context)
     {
         super(context, R.layout.element_payments_batch_list_entry, 0);
     }
@@ -24,14 +22,17 @@ public class PaymentBatchElementAdapter extends ArrayAdapter<PaymentBatch>
     public void setData(PaymentBatches paymentBatches)
     {
         clear();
-        PaymentBatch paymentBatchList[] = ObjectArrays.concat(paymentBatches.getNeoPaymentBatches() == null ? new PaymentBatch[]{} :
-                paymentBatches.getNeoPaymentBatches(), paymentBatches.getLegacyPaymentsBatchBatches(), PaymentBatch.class);
-        addAll(paymentBatchList);
+        appendData(paymentBatches);
+    }
+
+    public void appendData(PaymentBatches paymentBatches)
+    {
+        addAll(paymentBatches.getAggregateBatchList());
         notifyDataSetChanged();
     }
 
     @Override
-    public boolean areAllItemsEnabled()
+    public boolean areAllItemsEnabled() //supposed to fix (only in Android <5.0) issue in which dividers for disabled items are invisible
     {
         return true;
     }

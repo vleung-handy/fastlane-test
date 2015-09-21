@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.TextUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -55,10 +55,10 @@ public class PaymentsBatchListHeaderView extends LinearLayout
     {
         NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
         currentWeekDateRangeText.setText(DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getStartDate()) + " - " + DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getEndDate()));
-        currentWeekRemainingWithholdingsText.setText(TextUtils.formatPrice(neoPaymentBatch.getRemainingWithholdingDollarAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekExpectedPaymentText.setText(TextUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekWithholdingsText.setText(TextUtils.formatPrice(neoPaymentBatch.getWithholdingsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekTotalEarningsText.setText(TextUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
+        currentWeekRemainingWithholdingsText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getRemainingWithholdingDollarAmount(), neoPaymentBatch.getCurrencySymbol()));
+        currentWeekExpectedPaymentText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
+        currentWeekWithholdingsText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getWithholdingsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
+        currentWeekTotalEarningsText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
     }
 
 }

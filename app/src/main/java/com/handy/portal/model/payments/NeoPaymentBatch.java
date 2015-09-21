@@ -22,10 +22,8 @@ public class NeoPaymentBatch extends PaymentBatch
     @SerializedName("status")
     private String status;
 
-    /**protocol for paymentinfo will be changed to use PaymentInfo object**/
     @SerializedName("currency_symbol")
     private String currencySymbol;
-
 
     public int getNumWithholdings()
     {
@@ -54,6 +52,23 @@ public class NeoPaymentBatch extends PaymentBatch
     @SerializedName("payment_groups")
     private PaymentGroup paymentGroups[];
 
+    public enum Status{
+        Failed("Failed"),
+        Pending("Pending"),
+        Paid("Paid");
+
+        private final String name;
+        private Status(final String name)
+        {
+            this.name = name;
+        }
+        @Override
+        public String toString()
+        {
+            return this.name;
+        }
+    }
+
     public int getGrossEarningsTotalAmount()
     {
         return grossEarningsTotalAmount;
@@ -63,6 +78,7 @@ public class NeoPaymentBatch extends PaymentBatch
     {
         return withholdingsTotalAmount;
     }
+
     public int getNumCompletedJobs()
     {
         return numCompletedJobs;
@@ -100,8 +116,9 @@ public class NeoPaymentBatch extends PaymentBatch
 
     public int getRemainingWithholdingDollarAmount()
     {
-        return remainingWithholdingAmount/100;
+        return remainingWithholdingAmount / 100;
     }
+
     public int getRemainingWithholdingAmount()
     {
         return remainingWithholdingAmount;
@@ -112,14 +129,13 @@ public class NeoPaymentBatch extends PaymentBatch
         return paymentGroups;
     }
 
-    public void setPaymentGroups(PaymentGroup[] paymentGroups)
-    {//setter is needed for filtering
+    public void setPaymentGroups(PaymentGroup[] paymentGroups) //setter is needed for filtering the payment groups to remove empty groups (later, server will remove them)
+    {
         this.paymentGroups = paymentGroups;
     }
 
-
     public int getTotalAmountDollars()
     {
-        return netEarningsTotalAmount /100;
+        return netEarningsTotalAmount / 100;
     }
 }

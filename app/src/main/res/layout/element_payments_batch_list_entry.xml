@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:background="@drawable/list_entry_background"
+    android:background="@drawable/background_list_entry"
     android:paddingTop="@dimen/payment_container_vertical_padding"
     android:paddingBottom="@dimen/payment_container_vertical_padding"
     android:paddingLeft="@dimen/payment_container_horizontal_padding"

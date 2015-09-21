@@ -15,17 +15,11 @@ import com.handy.portal.ui.element.payments.PaymentsDetailItemView;
 
 public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapter
 {
-
-    NeoPaymentBatch neoPaymentBatch;
-    public PaymentDetailExpandableListAdapter()
-    {
-
-    }
+    private NeoPaymentBatch neoPaymentBatch;
 
     public PaymentDetailExpandableListAdapter(NeoPaymentBatch neoPaymentBatch)
     {
         this.neoPaymentBatch = neoPaymentBatch;
-
     }
 
     @Override
@@ -93,15 +87,11 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
         }
         ((PaymentsDetailGroupView)convertView).updateDisplay(paymentGroup, neoPaymentBatch);
 
+        //TODO: see if these are all necessary
         convertView.setEnabled(false);
         convertView.setFocusable(false);
         convertView.setOnClickListener(null);
-        if(paymentGroup.getPayments().length == 0)
-        {
-            convertView.setVisibility(View.GONE); //temporary hack for now until server side is changed
-        }else{
-            convertView.setVisibility(View.VISIBLE);
-        }
+
         return convertView;
     }
 

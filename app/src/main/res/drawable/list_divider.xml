@@ -4,3 +4,5 @@
     <solid android:color="@color/list_divider" />
     <gradient android:height="1dp" />
 </shape>
+
+<!--TODO: see if default divider is sufficient-->

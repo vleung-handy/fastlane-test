@@ -2,7 +2,6 @@ package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -11,8 +10,8 @@ import com.handy.portal.model.payments.LegacyPaymentBatch;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentGroup;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.TextUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,11 +41,6 @@ public class PaymentsBatchListItemView extends TableLayout
         super(context, attributeSet);
     }
 
-
-    public void initView(Context parentContext, NeoPaymentBatch neoPaymentBatch, View convertView, View parent)
-    {
-        updateDisplay(neoPaymentBatch);
-    }
     @Override
     protected void onFinishInflate()
     {
@@ -60,16 +54,11 @@ public class PaymentsBatchListItemView extends TableLayout
         {
             NeoPaymentBatch neoPaymentBatch = (NeoPaymentBatch) paymentBatch;
             dateText.setText(DateTimeUtils.formatDateMonthDay(neoPaymentBatch.getStartDate()) + " - " +  DateTimeUtils.formatDateMonthDay(neoPaymentBatch.getEndDate()));
-            dollarAmountText.setText(TextUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
+            dollarAmountText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
             statusText.setText(neoPaymentBatch.getStatus());
             //color status text
 
-            if("failed".equalsIgnoreCase(neoPaymentBatch.getStatus())) //TODO: put as enum later
-            {
-                statusText.setTextColor(getResources().getColor(R.color.handy_love));
-            }else{
-                statusText.setTextColor(getResources().getColor(R.color.subtitle_grey));
-            }
+            statusText.setTextColor(getResources().getColor(NeoPaymentBatch.Status.Failed.toString().equalsIgnoreCase(neoPaymentBatch.getStatus()) ? R.color.error_red : R.color.subtitle_grey));
 
             PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
             int numJobs = 0;
@@ -85,8 +74,8 @@ public class PaymentsBatchListItemView extends TableLayout
         }else if(paymentBatch instanceof LegacyPaymentBatch)
         {
             LegacyPaymentBatch legacyPaymentBatch = (LegacyPaymentBatch) paymentBatch;
-            dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPaymentBatch.getBookingDate()));
-            dollarAmountText.setText(TextUtils.formatPrice(legacyPaymentBatch.getDollarsEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
+            dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPaymentBatch.getDate()));
+            dollarAmountText.setText(CurrencyUtils.formatPrice(legacyPaymentBatch.getDollarsEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
             statusText.setText(legacyPaymentBatch.getStatus());
             jobInfoText.setText("Job ID #" + legacyPaymentBatch.getBookingId());
         }

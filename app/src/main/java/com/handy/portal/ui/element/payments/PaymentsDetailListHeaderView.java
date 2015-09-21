@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.payments.NeoPaymentBatch;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.TextUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -44,7 +44,7 @@ public class PaymentsDetailListHeaderView extends TableLayout
     public void updateDisplay(NeoPaymentBatch neoPaymentBatch)
     {
         paymentDetailDateRangeText.setText(DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getStartDate()) + " - " + DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getEndDate()));
-        paymentDetailTotalPaymentText.setText(TextUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
+        paymentDetailTotalPaymentText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
     }
 
 }

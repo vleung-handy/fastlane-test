@@ -1,9 +1,8 @@
 package com.handy.portal.model.payments;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.util.CurrencyUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -14,11 +13,8 @@ public class LegacyPaymentBatch extends PaymentBatch
     @SerializedName("booking_id")
     private int bookingId;
 
-    @SerializedName("booking_date")
-    private String bookingDate; //TODO: change to Date once the server-side changes are made
-
-//    @SerializedName("booking_date")
-//    private Date bookingDate;
+    @SerializedName("date")
+    private Date date;
 
     @SerializedName("status")
     private String status;
@@ -34,20 +30,9 @@ public class LegacyPaymentBatch extends PaymentBatch
         return bookingId;
     }
 
-    public Date getBookingDate()
+    public Date getDate()
     {
-        //TODO: remove once server-side changes are made
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy");
-        try
-        {
-            Date d = simpleDateFormat.parse(bookingDate);
-            return d;
-        } catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-//        return bookingDate;
+        return date;
     }
 
     public String getStatus()
@@ -67,6 +52,6 @@ public class LegacyPaymentBatch extends PaymentBatch
 
     public int getDollarsEarnedByProvider()
     {
-        return earnedByProvider/100;
+        return CurrencyUtils.centsToDollars(earnedByProvider);
     }
 }

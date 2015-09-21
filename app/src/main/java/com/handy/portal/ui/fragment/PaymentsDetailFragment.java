@@ -6,12 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
-import com.handy.portal.ui.view.PaymentDetailExandableListView;
+import com.handy.portal.ui.element.payments.PaymentDetailExpandableListView;
 
 import javax.inject.Inject;
 
@@ -24,27 +25,26 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     PaymentsManager paymentsManager;
 
     @InjectView(R.id.payments_detail_list_view)
-    PaymentDetailExandableListView paymentDetailExandableListView; //using ExpandableListView because it is the only ListView that offers group view support
+    PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
 
     @InjectView(R.id.payment_details_list_header)
     PaymentsDetailListHeaderView paymentsDetailListHeaderView;
-//    @InjectView(R.id.payment_detail_date_range_text)
-//    TextView paymentDetailDateRangeText;
-//
-//    @InjectView(R.id.payments_detail_total_payment_text)
-//    TextView paymentDetailTotalPaymentText;
 
     NeoPaymentBatch neoPaymentBatch;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        if(getArguments()!=null)
+        if (getArguments() != null)
         {
             this.neoPaymentBatch = (NeoPaymentBatch) getArguments().getSerializable(BundleKeys.PAYMENT_BATCH);
         }
-        //else something is really wrong, throw an exception
+        else
+        {
+            Crashlytics.logException(new Exception("Null arguments for class " + this.getClass().getName()));
+        }
     }
 
     @Override
@@ -63,14 +63,12 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        paymentDetailExandableListView.setOnGroupClickListener(this);
+        paymentDetailExpandableListView.setOnGroupClickListener(this);
         paymentsDetailListHeaderView.updateDisplay(neoPaymentBatch);
-//        paymentDetailDateRangeText.setText(DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getStartDate()) + " - " + DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getEndDate()));
-//        paymentDetailTotalPaymentText.setText(TextUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
-        paymentDetailExandableListView.updateData(neoPaymentBatch);
-        for(int i = 0; i< neoPaymentBatch.getPaymentGroups().length; i++)
+        paymentDetailExpandableListView.updateData(neoPaymentBatch);
+        for (int i = 0; i < neoPaymentBatch.getPaymentGroups().length; i++)
         {
-            paymentDetailExandableListView.expandGroup(i);
+            paymentDetailExpandableListView.expandGroup(i);
 
         }
     }
@@ -79,10 +77,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     public void onResume()
     {
         super.onResume();
-        setActionBar("Payment Details", true);//TODO: change to resource id
-        if (!MainActivityFragment.clearingBackStack)
-        {
-        }
+        setActionBar(R.string.payments_details, true);//TODO: change to resource id
     }
 
     @Override

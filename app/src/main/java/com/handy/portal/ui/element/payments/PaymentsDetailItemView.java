@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.model.payments.Payment;
 import com.handy.portal.model.payments.NeoPaymentBatch;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.TextUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -58,8 +58,8 @@ public class PaymentsDetailItemView extends LinearLayout
         dateText.setText(DateTimeUtils.getDayOfMonth(payment.getDate()) + "");
         locationText.setText(payment.getTitle());
         timeText.setText(payment.getSubTitle());
-        paymentText.setText(TextUtils.formatPrice(payment.getDollarAmount(), parentBatch.getCurrencySymbol()));
-        paymentText.setTextColor(getResources().getColor(payment.getDollarAmount() < 0 ? R.color.handy_love : R.color.black));
+        paymentText.setText(CurrencyUtils.formatPrice(payment.getDollarAmount(), parentBatch.getCurrencySymbol()));
+        paymentText.setTextColor(getResources().getColor(payment.getDollarAmount() < 0 ? R.color.error_red : R.color.black));
     }
 
 }

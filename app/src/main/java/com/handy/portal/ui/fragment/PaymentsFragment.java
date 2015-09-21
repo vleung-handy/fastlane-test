@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -24,8 +25,8 @@ import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
-import com.handy.portal.ui.view.PaymentsBatchListView;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.ui.element.payments.PaymentsBatchListView;
+import com.handy.portal.util.CurrencyUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
@@ -62,24 +63,6 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     @InjectView(R.id.payments_no_history_text)
     TextView paymentsNoHistoryText;
 
-//    @InjectView(R.id.payments_batch_list_header)
-//    PaymentsBatchListHeaderView paymentsBatchListHeaderView;
-
-//    @InjectView(R.id.payments_current_week_date_range_text)
-//    TextView currentWeekDateRangeText;
-//
-//    @InjectView(R.id.payments_current_week_total_earnings)
-//    TextView currentWeekTotalEarningsText;
-//
-//    @InjectView(R.id.payments_current_week_withholdings)
-//    TextView currentWeekWithholdingsText;
-//
-//    @InjectView(R.id.payments_current_week_expected_payment)
-//    TextView currentWeekExpectedPaymentText;
-//
-//    @InjectView(R.id.payments_current_week_remaining_withholdings)
-//    TextView currentWeekRemainingWithholdingsText;
-
 //    @InjectView(R.id.select_year_spinner)
 //    Spinner selectYearSpinner;
 
@@ -94,42 +77,20 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
         return view;
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_payments, menu);
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
         paymentsBatchListView.setOnItemClickListener(this);
-
         yearSummaryText.setText((Calendar.getInstance().get(Calendar.YEAR) + ""));
-//        List<String> spinnerItems = new ArrayList<String>();
-//        spinnerItems.add(Calendar.getInstance().get(Calendar.YEAR) + "");
-//        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this.getActivity().getApplicationContext(),
-//                android.R.layout.simple_spinner_dropdown_item,
-//                spinnerItems);
-//        selectYearSpinner.setAdapter(spinnerArrayAdapter);
-
-//        paymentsBatchListView.setScrollContainer(false);
-//        paymentsBatchListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-//        paymentsBatchListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED); //layout xml parameter doesnt work?
-//        paymentsBatchListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener()
-//        {
-//            @Override
-//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
-//            {
-//                scrollView.smoothScrollTo(0, 0);
-//                paymentsBatchListView.removeOnLayoutChangeListener(this); //only want to do this first time and not for pagination
-//                //hacky fix for issue in which ListView will automatically scroll to its start position on data load
-//                //TODO: investigate how to prevent ListView from auto-scrolling
-//
-//            }
-//        });
-
     }
 
     @Override
@@ -150,10 +111,12 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
 
     }
+
     private void requestAnnualPaymentSummaries()
     {
         bus.post(new PaymentEvents.RequestAnnualPaymentSummaries());
     }
+
     private void requestPaymentBatches()
     {
         //these are only arbitrary dummy dates
@@ -162,62 +125,52 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         c.set(Calendar.YEAR, c.get(Calendar.YEAR));
         c.set(Calendar.DAY_OF_YEAR, 1);
         Date startDate = c.getTime();
-//        Date startDate = new Date(endDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*300);//TODO: REMOVE - TEST ONLY
         loadingText.setVisibility(View.VISIBLE);
         scrollView.setVisibility(View.GONE);
         bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
     }
-    private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries)
+
+    private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries) //not used for now
     {
         //update with annual summary
-
-        //show only most recent year for now
         AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getAnnualPaymentSummaries()[0];
-
-        //TODO: use formatter
-        yearSummaryText.setText("YTD  ⋅  " + paymentSummary.getNumCompletedJobs() + " jobs  ⋅  " + TextUtils.formatPrice(paymentSummary.getNetEarnings().getAmount()/100, paymentSummary.getNetEarnings().getCurrencySymbol()));
-    }
-
-    private void updateCurrentPayWeekView(PaymentBatches paymentBatches)
-    {
-//        paymentsBatchListHeaderView.updateDisplay(paymentBatches);
-
+        //TODO: use string with formatting placeholders
+        yearSummaryText.setText("YTD  ⋅  " + paymentSummary.getNumCompletedJobs() + " jobs  ⋅  " + CurrencyUtils.formatPrice(CurrencyUtils.centsToDollars(paymentSummary.getNetEarnings().getAmount()), paymentSummary.getNetEarnings().getCurrencySymbol()));
     }
 
     public void updatePaymentsView(PaymentBatches paymentBatches)
     {
         //update the current pay week
-        updateCurrentPayWeekView(paymentBatches);
         paymentsBatchListView.updateData(paymentBatches);
-        paymentsNoHistoryText.setVisibility(!paymentBatches.isEmpty() ? View.GONE : View.VISIBLE);
+        paymentsNoHistoryText.setVisibility(paymentBatches.isEmpty() ? View.VISIBLE : View.GONE);
         loadingText.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
-//        paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener()
-//        {
-//            private int previousLastItem = -1;
-//
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState)
-//            {
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-//            {
-//                int lastItem = firstVisibleItem + visibleItemCount;
-//                if (lastItem == totalItemCount)
-//                {
-//                    //scrolled to bottom!
-//                    if (lastItem != previousLastItem)
-//                    {
-//                        previousLastItem = lastItem;
-//                        System.out.println("SCROLLED TO BOTTOM OF LIST VIEW");
-//                        //request more entries!
-//                    }
-//                }
-//            }
-//        });
+        paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener()
+        {
+            private int previousLastItem = -1;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState)
+            {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+            {
+                int lastItem = firstVisibleItem + visibleItemCount;
+                if (lastItem == totalItemCount)
+                {
+                    //scrolled to bottom!
+                    if (lastItem != previousLastItem) //TODO: refine
+                    {
+                        previousLastItem = lastItem;
+                        System.out.println("SCROLLED TO BOTTOM OF LIST VIEW");
+                        //request more entries!
+                    }
+                }
+            }
+        });
     }
 
     @Subscribe
@@ -233,7 +186,6 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         updateYearSummaryText(event.getAnnualPaymentSummaries());
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
