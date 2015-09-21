@@ -297,6 +297,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
+        arguments.putBoolean(BundleKeys.FOR_PAYMENTS, this.isForPayments);
 
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
 
