@@ -34,40 +34,15 @@
                 android:textAppearance="@style/TextView.Bold"
                 android:textSize="@dimen/small_text_size"
                 android:paddingTop="@dimen/default_padding"
-                android:paddingBottom="@dimen/extra_padding"
+                android:paddingBottom="@dimen/default_padding"
                 android:paddingLeft="@dimen/payment_container_horizontal_padding"
                 android:paddingRight="@dimen/payment_container_horizontal_padding"
-                android:text=""
-                android:textColor="@color/title_grey"
+                android:textColor="@color/payments_batch_view_headers"
                 android:id="@+id/element_payments_year_summary_text"/>
 
         </LinearLayout>
 
-
-        <!--<include layout="@layout/element_payments_current_week_header"/>-->
-
-
-
         <include layout="@layout/element_payments_batch_list"/>
 
-        <TextView
-            android:id="@+id/payments_loading"
-            android:layout_margin="@dimen/default_margin"
-            android:visibility="visible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Loading..."
-            android:textColor="@color/shadow_grey"
-            android:textSize="@dimen/xlarge_text_size"/>
-
-        <TextView
-            android:id="@+id/payments_no_history_text"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="No payments to show."
-            android:textAppearance="@style/HandyTextAppearanceMedium"/>
     </LinearLayout>
 </ScrollView>

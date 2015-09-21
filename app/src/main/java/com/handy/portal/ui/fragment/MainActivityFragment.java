@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivityFragment extends ActionBarFragment //TODO: should we hide action bar when this starts?
+public class MainActivityFragment extends InjectedFragment //TODO: should we hide action bar when this starts?
 {
     @Inject
     HandyRetrofitEndpoint endpoint;

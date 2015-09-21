@@ -20,9 +20,6 @@ public class PaymentsManager
     private final Bus bus;
     private final DataManager dataManager;
 
-    public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
-    //TODO: add caching
-
     @Inject
     public PaymentsManager(final Bus bus, final DataManager dataManager)
     {
@@ -35,7 +32,7 @@ public class PaymentsManager
     @Subscribe
     public void onRequestPaymentBatches(final PaymentEvents.RequestPaymentBatches event)
     {
-        Date startDate = event.startDate;
+        final Date startDate = event.startDate;
         Date endDate = event.endDate;
         dataManager.getPaymentBatches(startDate, endDate, new DataManager.Callback<PaymentBatches>()
         {
@@ -59,7 +56,7 @@ public class PaymentsManager
                         neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[]{}));
 
                     }
-                    bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches));
+                    bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, startDate));
                 }
             }
 

@@ -24,9 +24,17 @@ public class PaymentEvents
     public static class ReceivePaymentBatchesSuccess extends HandyEvent.ReceiveSuccessEvent
     {
         private final PaymentBatches paymentBatches;
-        public ReceivePaymentBatchesSuccess(PaymentBatches paymentBatches)
+
+        public Date getRequestStartDate()
+        {
+            return requestStartDate;
+        }
+
+        private final Date requestStartDate; //if this batch is empty, we can use this to keep track of pagination
+        public ReceivePaymentBatchesSuccess(PaymentBatches paymentBatches, Date requestStartDate)
         {
             this.paymentBatches = paymentBatches;
+            this.requestStartDate = requestStartDate;
         }
         public PaymentBatches getPaymentBatches()
         {

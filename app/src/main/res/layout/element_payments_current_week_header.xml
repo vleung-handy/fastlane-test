@@ -160,7 +160,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|left"
-                        android:textColor="@color/subtitle_grey"
+                        android:textColor="@color/payments_batch_view_headers"
                         android:textAppearance="@style/HandyTextAppearanceSmall"
                         android:text="Remaining Withholdings"
                         android:layout_weight="1"
@@ -175,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"
                     android:layout_weight="1"
-                    android:textColor="@color/subtitle_grey"
+                    android:textColor="@color/payments_batch_view_headers"
                     android:textAppearance="@style/HandyTextAppearanceSmall"
                     android:text=""
                     android:id="@+id/payments_current_week_remaining_withholdings"/>
@@ -194,5 +194,6 @@
         android:paddingBottom="@dimen/extra_padding"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
+        android:textColor="@color/payments_batch_view_headers"
         android:id="@+id/textView5"/>
 </com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView>

@@ -11,23 +11,41 @@ import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
+import com.handy.portal.util.DateTimeUtils;
 
-public class PaymentBatchListElementAdapter extends ArrayAdapter<PaymentBatch>
+import java.util.Date;
+
+public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>
 {
-    public PaymentBatchListElementAdapter(Context context)
+    public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
+    private Date oldestDate;
+
+    //TODO: we don't need to keep track of oldest date when we can use new pagination API that allows us to get the N next batches
+
+    public PaymentBatchListAdapter(Context context)
     {
         super(context, R.layout.element_payments_batch_list_entry, 0);
+        oldestDate = new Date();
     }
 
-    public void setData(PaymentBatches paymentBatches)
+    public boolean shouldRequestMoreData()
     {
-        clear();
-        appendData(paymentBatches);
+        return oldestDate != null;
     }
 
-    public void appendData(PaymentBatches paymentBatches)
+    public Date getOldestDate()
     {
-        addAll(paymentBatches.getAggregateBatchList());
+        return oldestDate;
+    }
+
+    public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
+    {
+        PaymentBatch[] paymentBatchList = paymentBatches.getAggregateBatchList();
+        addAll(paymentBatchList);
+        if(oldestDate != null)
+        {
+            oldestDate = DateTimeUtils.isStartOfYear(requestStartDate) ? null : requestStartDate; //don't need to request any more entries if we already made a request from start of year
+        }
         notifyDataSetChanged();
     }
 
@@ -41,7 +59,7 @@ public class PaymentBatchListElementAdapter extends ArrayAdapter<PaymentBatch>
     public boolean isEnabled(int position)
     {
         PaymentBatch paymentBatch = getItem(position);
-        return paymentBatch instanceof NeoPaymentBatch;//we're not allowing users to view legacy payment batch details
+        return paymentBatch instanceof NeoPaymentBatch; //we're not allowing users to view legacy payment batch details
     }
 
     @Override

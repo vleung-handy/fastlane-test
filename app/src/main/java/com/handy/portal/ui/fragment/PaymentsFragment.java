@@ -25,8 +25,10 @@ import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.util.CurrencyUtils;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
@@ -48,23 +50,17 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     @InjectView(R.id.payments_scroll_view)
     ScrollView scrollView;
 
-    @InjectView(R.id.payments_content_container)
-    View contentContainer;
-
     @InjectView(R.id.payments_batch_list_view)
     PaymentsBatchListView paymentsBatchListView;
 
     @InjectView(R.id.element_payments_year_summary_text)
     TextView yearSummaryText;
 
-    @InjectView(R.id.payments_loading)
-    TextView loadingText;
-
-    @InjectView(R.id.payments_no_history_text)
-    TextView paymentsNoHistoryText;
-
 //    @InjectView(R.id.select_year_spinner)
 //    Spinner selectYearSpinner;
+
+    //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
+
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -91,6 +87,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         super.onViewCreated(view, savedInstanceState);
         paymentsBatchListView.setOnItemClickListener(this);
         yearSummaryText.setText((Calendar.getInstance().get(Calendar.YEAR) + ""));
+
     }
 
     @Override
@@ -102,71 +99,88 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         {
             requestPaymentsInfo();
         }
+
     }
 
     private void requestPaymentsInfo()
     {
 //        requestAnnualPaymentSummaries();
-        requestPaymentBatches();
+        requestNextPaymentBatches();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+    }
+
+    private void requestNextPaymentBatches() //TODO: check for potential timezone issues
+    {
+        if(paymentsBatchListView.isEmpty())
+        {
+            scrollView.setVisibility(View.GONE);
+        }
+        Date endDate = paymentsBatchListView.getOldestDate();
+
+        paymentsBatchListView.setFooterVisible(true);
+        if(endDate != null)
+        {
+            //TODO: see if we can use something more concise than Calendar
+            Calendar c = Calendar.getInstance();
+            c.setTime(endDate);
+            int dayOfYear = Math.max(c.get(Calendar.DAY_OF_YEAR) - PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH, 1); //only request until beginning of this year
+            c.set(Calendar.DAY_OF_YEAR, dayOfYear);
+            Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
+            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
+
+            paymentsBatchListView.setFooterText("Loading...");
+            //TODO: show loading thing?
+        }
+        else
+        {
+            paymentsBatchListView.setFooterText("No more entries");
+            //reached end of data for this year.
+            // TODO: show indicator?
+        }
 
     }
+
 
     private void requestAnnualPaymentSummaries()
     {
         bus.post(new PaymentEvents.RequestAnnualPaymentSummaries());
     }
 
-    private void requestPaymentBatches()
+    private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries) //annual summaries not shown or used for now
     {
-        //these are only arbitrary dummy dates
-        Date endDate = new Date();
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, c.get(Calendar.YEAR));
-        c.set(Calendar.DAY_OF_YEAR, 1);
-        Date startDate = c.getTime();
-        loadingText.setVisibility(View.VISIBLE);
-        scrollView.setVisibility(View.GONE);
-        bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
-    }
-
-    private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries) //not used for now
-    {
-        //update with annual summary
+        //update with annual summary. assuming array is ordered from most to least recent
+        //TODO: add defensive logic
         AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getAnnualPaymentSummaries()[0];
+
         //TODO: use string with formatting placeholders
         yearSummaryText.setText("YTD  ⋅  " + paymentSummary.getNumCompletedJobs() + " jobs  ⋅  " + CurrencyUtils.formatPrice(CurrencyUtils.centsToDollars(paymentSummary.getNetEarnings().getAmount()), paymentSummary.getNetEarnings().getCurrencySymbol()));
     }
 
-    public void updatePaymentsView(PaymentBatches paymentBatches)
+    public void onInitialPaymentBatchReceived(PaymentBatches paymentBatches, Date requestStartDate)
     {
         //update the current pay week
-        paymentsBatchListView.updateData(paymentBatches);
-        paymentsNoHistoryText.setVisibility(paymentBatches.isEmpty() ? View.VISIBLE : View.GONE);
-        loadingText.setVisibility(View.GONE);
+        paymentsBatchListView.appendData(paymentBatches, requestStartDate);
+//        paymentsNoHistoryText.setVisibility(paymentBatches.isEmpty() ? View.VISIBLE : View.GONE);
         scrollView.setVisibility(View.VISIBLE);
         paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener()
         {
-            private int previousLastItem = -1;
+            private int previousLastItem = -1; //prevent "on scrolled to bottom function" from being called more than once for the current list
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState)
             {
-
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
             {
                 int lastItem = firstVisibleItem + visibleItemCount;
-                if (lastItem == totalItemCount)
+                if (lastItem == totalItemCount) //scrolled to bottom!
                 {
-                    //scrolled to bottom!
-                    if (lastItem != previousLastItem) //TODO: refine
+                    if (lastItem != previousLastItem)
                     {
                         previousLastItem = lastItem;
-                        System.out.println("SCROLLED TO BOTTOM OF LIST VIEW");
-                        //request more entries!
+                        requestNextPaymentBatches();
                     }
                 }
             }
@@ -177,8 +191,24 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
     {
         PaymentBatches paymentBatches = event.getPaymentBatches();
-        updatePaymentsView(paymentBatches);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        paymentsBatchListView.setFooterVisible(false);
+        if(paymentsBatchListView.isEmpty())
+        {
+            onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        }
+        else
+        {
+            paymentsBatchListView.appendData(paymentBatches, event.getRequestStartDate());
+        }
+
+        //only if the data returned is empty, determine whether we need to re-request
+        //TODO: this is gross and we won't need to do this when new payments API comes out
+        if(paymentBatches.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
+        {
+            requestNextPaymentBatches();
+        }
+
     }
 
     @Subscribe

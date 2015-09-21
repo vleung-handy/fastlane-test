@@ -19,6 +19,7 @@ import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
@@ -321,6 +322,13 @@ public final class ApplicationModule
     final MainActivityFragmentNavigationHelper provideFragmentNavigationManager(Bus bus)
     {
         return new MainActivityFragmentNavigationHelper(bus);
+    }
+
+    @Provides
+    @Singleton
+    final PaymentsManager providePaymentsManager(Bus bus, final DataManager dataManager)
+    {
+        return new PaymentsManager(bus, dataManager);
     }
 
     private String getDeviceId()

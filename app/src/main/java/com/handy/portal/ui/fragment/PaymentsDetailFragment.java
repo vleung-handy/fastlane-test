@@ -9,21 +9,15 @@ import android.widget.ExpandableListView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.model.payments.NeoPaymentBatch;
-import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
 import com.handy.portal.ui.element.payments.PaymentDetailExpandableListView;
-
-import javax.inject.Inject;
+import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public final class PaymentsDetailFragment extends ActionBarFragment implements ExpandableListView.OnGroupClickListener
 {
-    @Inject
-    PaymentsManager paymentsManager;
-
     @InjectView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
 
