@@ -211,6 +211,7 @@
     <string name="please_login">Please log in</string>
     <string name="back">Back</string>
     <string name="contact_received">Message sent! \nWe\u2019ll follow up shortly.</string>
+    <string name="payment_tiers_link"><u>Learn more about payment tiers</u></string>
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
