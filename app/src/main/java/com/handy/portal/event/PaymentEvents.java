@@ -1,5 +1,6 @@
 package com.handy.portal.event;
 
+import com.handy.portal.data.DataManager;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.PaymentBatches;
 
@@ -44,8 +45,9 @@ public class PaymentEvents
 
     public static class ReceivePaymentBatchesError extends HandyEvent.ReceiveErrorEvent
     {
-        public ReceivePaymentBatchesError()
+        public ReceivePaymentBatchesError(DataManager.DataManagerError error)
         {
+            this.error = error;
         }
     }
 
@@ -71,8 +73,9 @@ public class PaymentEvents
 
     public static class ReceiveAnnualPaymentSummariesError extends HandyEvent.ReceiveErrorEvent
     {
-        public ReceiveAnnualPaymentSummariesError()
+        public ReceiveAnnualPaymentSummariesError(DataManager.DataManagerError error)
         {
+            this.error = error;
         }
     }
 }

@@ -41,31 +41,29 @@ public class PaymentsManager
             @Override
             public void onSuccess(PaymentBatches paymentBatches)
             {
-                if(paymentBatches!=null)
-                {
-                    //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
-                    NeoPaymentBatch neoPaymentBatches[] = paymentBatches.getNeoPaymentBatches();
-                    for(int i = 0; i<neoPaymentBatches.length; i++){
-                        PaymentGroup paymentGroups[] = neoPaymentBatches[i].getPaymentGroups();
-                        List<PaymentGroup> paymentGroupList = new LinkedList<PaymentGroup>();
-                        for(int j = 0; j<paymentGroups.length; j++)
+                //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
+                NeoPaymentBatch neoPaymentBatches[] = paymentBatches.getNeoPaymentBatches();
+                for(int i = 0; i<neoPaymentBatches.length; i++){
+                    PaymentGroup paymentGroups[] = neoPaymentBatches[i].getPaymentGroups();
+                    List<PaymentGroup> paymentGroupList = new LinkedList<PaymentGroup>();
+                    for(int j = 0; j<paymentGroups.length; j++)
+                    {
+                        if(paymentGroups[j].getPayments()!=null && paymentGroups[j].getPayments().length>0)
                         {
-                            if(paymentGroups[j].getPayments()!=null && paymentGroups[j].getPayments().length>0)
-                            {
-                                paymentGroupList.add(paymentGroups[j]);
-                            }
+                            paymentGroupList.add(paymentGroups[j]);
                         }
-                        neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[]{}));
-
                     }
-                    bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, startDate));
+                    neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[]{}));
+
                 }
+                bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, startDate));
+
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new PaymentEvents.ReceivePaymentBatchesError()); //TODO: fill with error
+                bus.post(new PaymentEvents.ReceivePaymentBatchesError(error));
             }
         });
     }
@@ -78,14 +76,13 @@ public class PaymentsManager
             @Override
             public void onSuccess(AnnualPaymentSummaries annualPaymentSummaries)
             {
-                if (annualPaymentSummaries != null)
-                    bus.post(new PaymentEvents.ReceiveAnnualPaymentSummariesSuccess(annualPaymentSummaries));
+                bus.post(new PaymentEvents.ReceiveAnnualPaymentSummariesSuccess(annualPaymentSummaries));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new PaymentEvents.ReceiveAnnualPaymentSummariesError()); //TODO: fill with error
+                bus.post(new PaymentEvents.ReceiveAnnualPaymentSummariesError(error));
             }
         });
     }
