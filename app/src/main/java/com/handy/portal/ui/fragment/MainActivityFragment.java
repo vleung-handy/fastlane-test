@@ -221,6 +221,7 @@ public class MainActivityFragment extends ActionBarFragment //TODO: should we hi
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
             }
 
             swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;

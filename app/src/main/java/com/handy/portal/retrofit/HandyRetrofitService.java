@@ -104,6 +104,9 @@ public interface HandyRetrofitService
                              @Query("booking_id") String bookingId,
                              HandyRetrofitCallback cb);
 
+    @GET(SELF_SERVICE_PATH + "payments_faq_node")
+    void getHelpPayments(HandyRetrofitCallback cb);
+
     @POST(SELF_SERVICE_PATH + "create_case")
     void createHelpCase(@Body TypedInput body, HandyRetrofitCallback cb);
     //********End Help Center********
