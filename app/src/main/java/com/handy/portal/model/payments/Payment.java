@@ -35,7 +35,7 @@ public class Payment implements Serializable
         return subTitle;
     }
 
-    public int getBookingId()
+    public String getBookingId()
     {
         return bookingId;
     }
@@ -58,7 +58,7 @@ public class Payment implements Serializable
     private String subTitle;
 
     @SerializedName("booking_id")
-    private int bookingId;
+    private String bookingId;
 
     @SerializedName("booking_type")
     private String bookingType;
