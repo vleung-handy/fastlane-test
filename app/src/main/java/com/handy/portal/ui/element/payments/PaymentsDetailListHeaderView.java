@@ -13,9 +13,6 @@ import com.handy.portal.util.DateTimeUtils;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-/**
- * Created by vleung on 9/14/15.
- */
 public class PaymentsDetailListHeaderView extends TableLayout
 {
     @InjectView(R.id.payment_detail_date_range_text)

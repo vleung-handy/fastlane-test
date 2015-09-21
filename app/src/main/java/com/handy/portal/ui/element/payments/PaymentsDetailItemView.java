@@ -14,9 +14,6 @@ import com.handy.portal.util.DateTimeUtils;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-/**
- * Created by vleung on 9/14/15.
- */
 public class PaymentsDetailItemView extends LinearLayout
 {
 

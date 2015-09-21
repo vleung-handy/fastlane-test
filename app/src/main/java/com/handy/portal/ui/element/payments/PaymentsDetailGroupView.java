@@ -13,9 +13,6 @@ import com.handy.portal.util.CurrencyUtils;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-/**
- * Created by vleung on 9/14/15.
- */
 public class PaymentsDetailGroupView extends LinearLayout
 {
 

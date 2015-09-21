@@ -61,7 +61,6 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
-
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
@@ -87,6 +86,10 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         super.onViewCreated(view, savedInstanceState);
         paymentsBatchListView.setOnItemClickListener(this);
         yearSummaryText.setText((Calendar.getInstance().get(Calendar.YEAR) + ""));
+        if(paymentsBatchListView.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
+        {
+            requestPaymentsInfo();
+        }
 
     }
 
@@ -95,11 +98,6 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         super.onResume();
         setActionBar(R.string.payments, false);
-        if (!MainActivityFragment.clearingBackStack)
-        {
-            requestPaymentsInfo();
-        }
-
     }
 
     private void requestPaymentsInfo()
@@ -128,14 +126,12 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
             bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
 
-            paymentsBatchListView.setFooterText("Loading...");
-            //TODO: show loading thing?
+            paymentsBatchListView.setFooterText(R.string.loading);
         }
         else
         {
-            paymentsBatchListView.setFooterText("No more entries");
+            paymentsBatchListView.setFooterText(R.string.no_more_entries);
             //reached end of data for this year.
-            // TODO: show indicator?
         }
 
     }

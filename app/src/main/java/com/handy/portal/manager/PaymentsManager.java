@@ -20,6 +20,8 @@ public class PaymentsManager
     private final Bus bus;
     private final DataManager dataManager;
 
+    //TODO: add caching when new payments, pagination api comes out
+
     @Inject
     public PaymentsManager(final Bus bus, final DataManager dataManager)
     {
