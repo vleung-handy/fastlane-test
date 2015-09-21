@@ -53,7 +53,7 @@ public class PaymentsBatchListItemView extends TableLayout
         if(paymentBatch instanceof NeoPaymentBatch)
         {
             NeoPaymentBatch neoPaymentBatch = (NeoPaymentBatch) paymentBatch;
-            dateText.setText(DateTimeUtils.formatDateMonthDay(neoPaymentBatch.getStartDate()) + " - " +  DateTimeUtils.formatDateMonthDay(neoPaymentBatch.getEndDate()));
+            dateText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.SUMMARY_DATE_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
             dollarAmountText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
             statusText.setText(neoPaymentBatch.getStatus());
             //color status text

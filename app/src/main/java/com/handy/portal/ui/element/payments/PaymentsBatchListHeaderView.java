@@ -54,7 +54,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout
     public void updateDisplay(PaymentBatches paymentBatches)
     {
         NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
-        currentWeekDateRangeText.setText(DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getStartDate()) + " - " + DateTimeUtils.formatDateDayOfWeekMonthDay(neoPaymentBatch.getEndDate()));
+        currentWeekDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
         currentWeekRemainingWithholdingsText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getRemainingWithholdingDollarAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekExpectedPaymentText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekWithholdingsText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getWithholdingsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));

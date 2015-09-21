@@ -46,7 +46,7 @@ public final class PaymentsBatchListView extends ListView
                 getContext(
                 ));
         setAdapter(itemsAdapter);
-        paymentsBatchListHeaderView = (PaymentsBatchListHeaderView) inflate(getContext(), R.layout.element_payments_current_week_header, null);
+        paymentsBatchListHeaderView = (PaymentsBatchListHeaderView) inflate(getContext(), R.layout.element_payments_batch_current_week_header, null);
         addHeaderView(paymentsBatchListHeaderView);
 
         footerView = (TextView) inflate(getContext(), R.layout.element_payments_batch_list_footer, null);

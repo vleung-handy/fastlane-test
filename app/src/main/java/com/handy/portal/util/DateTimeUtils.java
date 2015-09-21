@@ -9,11 +9,13 @@ import java.util.Date;
 public final class DateTimeUtils
 {
     //TODO: refactor code throughout the app to put date formats here
-    private static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
-    private static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("EEE, MMM d");
-    private static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER = new SimpleDateFormat("MMM");
-    private static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
-    private static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
+    //TODO: rename these fields & methods to something better
+    public final static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
+    public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("EEE, MMM d");
+    public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER = new SimpleDateFormat("MMM");
+    public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
+    public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
+    //these are public so that we can pass them in formatDateRange
 
     public final static int HOURS_IN_DAY = 24;
     public final static int MILLISECONDS_IN_MINUTE = 60000;
@@ -61,6 +63,12 @@ public final class DateTimeUtils
     {
         if (date == null) return null;
         return DETAILED_DATE_FORMATTER.format(date);
+    }
+
+    public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
+    {
+        if(start == null || end == null) return null;
+        return dateFormat.format(start) + " – " + dateFormat.format(end);
     }
 
     public static boolean equalCalendarDates(final Date date1, final Date date2)
