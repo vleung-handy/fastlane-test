@@ -108,6 +108,8 @@ public class PortalWebViewClient extends WebViewClient
         //TODO: This code seems to be duplicated in the PortalWebViewFragment
         String endOfUrl = "from_app=true&device_id=" + googleManager.getOrSetDeviceId()
                 + "&device_type=android&hide_nav=1"
+                + "&hide_banner=1"
+                + "&hide_payments_tab=1"
                 + "&hide_pro_request=1"
                 + "&ht=1"
                 + "&skip_web_portal_version_tracking=1"
