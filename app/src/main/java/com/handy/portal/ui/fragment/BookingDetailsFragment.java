@@ -114,6 +114,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private BookingType requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
+    private boolean isForPayments;
 
     private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
@@ -139,6 +140,8 @@ public class BookingDetailsFragment extends ActionBarFragment
             this.requestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
             this.requestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
 
+            this.isForPayments = arguments.getBoolean(BundleKeys.FOR_PAYMENTS, false);
+
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
                 long bookingDateLong = arguments.getLong(BundleKeys.BOOKING_DATE, 0L);
@@ -162,33 +165,44 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void updateActionBar(Menu menu) //passing menu as argument because there is no way to get a reference to it programmatically
     {
-        if(associatedBooking!=null)
+        if (associatedBooking != null)
         {
-            Booking.BookingStatus bookingStatus =  associatedBooking.inferBookingStatus(getLoggedInUserId());
+
             int titleStringId = 0;
-            if(bookingStatus!=null)
+            String bookingIdPrefix = associatedBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
+            String jobLabel = getActivity().getString(R.string.job_num) + bookingIdPrefix + associatedBooking.getId();
+
+            if (this.isForPayments)
             {
-                switch (bookingStatus)
+                titleStringId = R.string.previous_job;
+                menu.findItem(R.id.action_job_label).setTitle(jobLabel);
+            }
+            else
+            {
+                Booking.BookingStatus bookingStatus = associatedBooking.inferBookingStatus(getLoggedInUserId());
+                if (bookingStatus != null)
                 {
-                    case AVAILABLE:
+                    switch (bookingStatus)
                     {
-                        titleStringId = R.string.available_job;
-                    }
-                    break;
+                        case AVAILABLE:
+                        {
+                            titleStringId = R.string.available_job;
+                        }
+                        break;
 
-                    case CLAIMED:
-                    {
-                        String bookingIdPrefix = associatedBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
-                        menu.findItem(R.id.action_job_label).setTitle(getActivity().getString(R.string.job_num) + bookingIdPrefix + associatedBooking.getId());
-                        titleStringId = R.string.your_job;
-                    }
-                    break;
+                        case CLAIMED:
+                        {
+                            menu.findItem(R.id.action_job_label).setTitle(jobLabel);
+                            titleStringId = R.string.your_job;
+                        }
+                        break;
 
-                    case UNAVAILABLE:
-                    {
-                        titleStringId = R.string.unavailable_job;
+                        case UNAVAILABLE:
+                        {
+                            titleStringId = R.string.unavailable_job;
+                        }
+                        break;
                     }
-                    break;
                 }
             }
             setActionBar(titleStringId, true);
