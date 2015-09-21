@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.handy.portal.ui.view.PaymentsBatchListView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/payments_batch_list_view"
-            android:dividerHeight="1dp"
-            android:divider="#EEEEEE"
-              android:paddingTop="1dp"
-              android:orientation="vertical"
+            android:dividerHeight="1px"
+            android:divider="@color/list_divider"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
+              android:paddingTop="1dp"
+              android:orientation="vertical"
               android:transcriptMode="disabled"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">

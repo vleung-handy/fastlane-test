@@ -2,8 +2,6 @@ package com.handy.portal.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 
@@ -45,15 +43,15 @@ public final class PaymentsBatchListView extends ListView
 
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-    {
-        int heightMeasureSpec_custom = View.MeasureSpec.makeMeasureSpec(
-                Integer.MAX_VALUE >> 2, View.MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec_custom);
-        ViewGroup.LayoutParams params = getLayoutParams();
-        params.height = getMeasuredHeight();
-    }
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+//    {
+//        int heightMeasureSpec_custom = View.MeasureSpec.makeMeasureSpec(
+//                Integer.MAX_VALUE >> 2, View.MeasureSpec.AT_MOST);
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec_custom);
+//        ViewGroup.LayoutParams params = getLayoutParams();
+//        params.height = getMeasuredHeight();
+//    }
     public void updateData(PaymentBatches paymentBatches)
     {
         ((PaymentBatchElementAdapter)((HeaderViewListAdapter)getAdapter()).getWrappedAdapter()).setData(paymentBatches);

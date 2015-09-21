@@ -15,10 +15,6 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:paddingTop="@dimen/extra_padding"
-            android:paddingBottom="@dimen/extra_padding"
-            android:paddingLeft="@dimen/payment_container_horizontal_padding"
-            android:paddingRight="@dimen/payment_container_horizontal_padding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -35,7 +31,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="@style/TextView.Bold"
+                android:textSize="@dimen/small_text_size"
+                android:paddingTop="@dimen/default_padding"
+                android:paddingBottom="@dimen/extra_padding"
+                android:paddingLeft="@dimen/payment_container_horizontal_padding"
+                android:paddingRight="@dimen/payment_container_horizontal_padding"
                 android:text=""
                 android:textColor="@color/title_grey"
                 android:id="@+id/element_payments_year_summary_text"/>

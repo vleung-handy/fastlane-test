@@ -51,4 +51,5 @@
     <color name="shadow_grey">#9CA7B2</color>
     <color name="helper_text_grey">#A1A1A1</color>
     <color name="border_mid_grey">#CCCCCC</color>
+    <color name="list_divider">#C2C2C2</color>
 </resources>

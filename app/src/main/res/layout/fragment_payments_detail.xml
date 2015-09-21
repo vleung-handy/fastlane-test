@@ -20,10 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:groupIndicator="@color/transparent"
+            android:dividerHeight="1px"
+            android:divider="@color/list_divider"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            android:divider="#EEEEEE"
-            android:dividerHeight="1dp"
             android:paddingTop="1dp"
             android:transcriptMode="disabled">
 

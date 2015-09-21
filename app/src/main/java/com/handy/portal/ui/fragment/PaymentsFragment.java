@@ -25,7 +25,6 @@ import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.view.PaymentsBatchListView;
-import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
@@ -159,7 +158,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         //these are only arbitrary dummy dates
         Date endDate = new Date();
-        Date startDate = new Date(endDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*300);//TODO: REMOVE - TEST ONLY
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, c.get(Calendar.YEAR));
+        c.set(Calendar.DAY_OF_YEAR, 1);
+        Date startDate = c.getTime();
+//        Date startDate = new Date(endDate.getTime()-DateTimeUtils.MILLISECONDS_IN_HOUR*DateTimeUtils.HOURS_IN_DAY*300);//TODO: REMOVE - TEST ONLY
         loadingText.setVisibility(View.VISIBLE);
         scrollView.setVisibility(View.GONE);
         bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));

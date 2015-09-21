@@ -28,6 +28,12 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
 
     }
 
+    @Override
+    public boolean areAllItemsEnabled()
+    {
+        return true;
+    }
+
     public void setData(NeoPaymentBatch neoPaymentBatch)
     {
         this.neoPaymentBatch = neoPaymentBatch;

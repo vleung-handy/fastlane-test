@@ -12,8 +12,7 @@
     android:stretchColumns="1">
 
     <TableRow
-        android:weightSum="2"
-        >
+        android:weightSum="2">
 
         <TextView
             android:id="@+id/payment_detail_date_range_text"

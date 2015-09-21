@@ -24,9 +24,16 @@ public class PaymentBatchElementAdapter extends ArrayAdapter<PaymentBatch>
     public void setData(PaymentBatches paymentBatches)
     {
         clear();
-        PaymentBatch paymentBatchList[] = ObjectArrays.concat(paymentBatches.getNeoPaymentBatches(), paymentBatches.getLegacyPaymentsBatchBatches(), PaymentBatch.class);
+        PaymentBatch paymentBatchList[] = ObjectArrays.concat(paymentBatches.getNeoPaymentBatches() == null ? new PaymentBatch[]{} :
+                paymentBatches.getNeoPaymentBatches(), paymentBatches.getLegacyPaymentsBatchBatches(), PaymentBatch.class);
         addAll(paymentBatchList);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean areAllItemsEnabled()
+    {
+        return true;
     }
 
     @Override
@@ -41,20 +48,14 @@ public class PaymentBatchElementAdapter extends ArrayAdapter<PaymentBatch>
     {
         PaymentBatch paymentBatch = getItem(position);
         View v = convertView;
-        if(v==null)
+        if (v == null)
         {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.element_payments_batch_list_entry, null);
         }
-        ((PaymentsBatchListItemView)v).updateDisplay(paymentBatch);
-
+        ((PaymentsBatchListItemView) v).updateDisplay(paymentBatch);
 
         v.setEnabled((paymentBatch instanceof NeoPaymentBatch)); //isEnabled doesn't trigger the enabled styling
-
-        // measure ListView item (to solve 'ListView inside ScrollView' problem)
-        v.measure(View.MeasureSpec.makeMeasureSpec(
-                        View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         return v;
     }
 }
