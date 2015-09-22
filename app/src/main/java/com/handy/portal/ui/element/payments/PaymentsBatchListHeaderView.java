@@ -48,7 +48,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout
         ButterKnife.inject(this);
     }
 
-    public void updateDisplay(PaymentBatches paymentBatches)
+    public void updateDisplay(PaymentBatches paymentBatches) //assuming that current pay week is always returned and is the first element
     {
         if(paymentBatches.getNeoPaymentBatches().length == 0) return;
 

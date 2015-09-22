@@ -58,11 +58,6 @@ public final class PaymentsBatchListView extends ListView
         footerView.setText(resourceId);
     }
 
-    public void setFooterText(String text)
-    {
-        footerView.setText(text);
-    }
-
     public void setFooterVisible(boolean visible)
     {
         footerView.setVisibility(visible ? VISIBLE : GONE);
@@ -75,9 +70,11 @@ public final class PaymentsBatchListView extends ListView
 
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate)
     {
-        boolean needToUpdateHeader = getWrappedAdapter().isEmpty(); //update header if list was initially empty
+        if(getWrappedAdapter().isEmpty())
+        {
+            paymentsBatchListHeaderView.updateDisplay(paymentBatches);
+        }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
-        if (needToUpdateHeader) paymentsBatchListHeaderView.updateDisplay(paymentBatches);
     }
 
     private PaymentBatchListAdapter getWrappedAdapter()
