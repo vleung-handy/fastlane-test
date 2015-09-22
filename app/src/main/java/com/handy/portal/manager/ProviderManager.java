@@ -7,6 +7,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.payments.PaymentFlowResponse;
 import com.squareup.otto.Bus;
@@ -98,6 +99,27 @@ public class ProviderManager
             public void onError(DataManager.DataManagerError error)
             {
                 bus.post(new HandyEvent.ReceiveSendIncomeVerificationError());
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestProviderProfile(HandyEvent.RequestProviderProfile event)
+    {
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+
+        dataManager.getProviderProfile(providerId, new DataManager.Callback<ProviderProfile>()
+        {
+            @Override
+            public void onSuccess(ProviderProfile providerProfile)
+            {
+                bus.post(new HandyEvent.ReceiveProviderProfileSuccess(providerProfile));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveProviderProfileError());
             }
         });
     }

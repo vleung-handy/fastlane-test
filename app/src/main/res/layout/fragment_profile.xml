@@ -39,6 +39,7 @@
                         android:textSize="@dimen/hero_text_size"
                         android:text="Stephanie Jones"
                         android:layout_marginBottom="6dp"
+                        android:id="@+id/provider_name_text"
                         />
 
                     <TextView

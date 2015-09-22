@@ -19,6 +19,7 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
@@ -205,6 +206,23 @@ public abstract class HandyEvent
     }
 
     public static class ReceiveSendIncomeVerificationError extends ReceiveErrorEvent
+    {
+    }
+
+    public static class RequestProviderProfile extends RequestEvent
+    {
+    }
+
+    public static class ReceiveProviderProfileSuccess extends ReceiveSuccessEvent
+    {
+        public ProviderProfile providerProfile;
+        public ReceiveProviderProfileSuccess(ProviderProfile providerProfile)
+        {
+            this.providerProfile = providerProfile;
+        }
+    }
+
+    public static class ReceiveProviderProfileError extends ReceiveErrorEvent
     {
     }
 
