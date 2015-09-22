@@ -57,12 +57,6 @@ public class PaymentsManager
 
                 }
 
-
-                /**TEST ONLY**/
-
-//                paymentBatches.clearNeoPayments();
-
-                /**end test**/
                 bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, startDate));
 
             }
