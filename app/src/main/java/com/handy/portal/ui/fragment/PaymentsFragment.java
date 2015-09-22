@@ -113,14 +113,12 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         setLoadingOverlayVisible(true);
     }
 
-    private void requestNextPaymentBatches() //TODO: check for potential timezone issues
+    private void requestNextPaymentBatches()
     {
         Date endDate = paymentsBatchListView.getOldestDate();
 
-        paymentsBatchListView.setFooterVisible(true);
         if(endDate != null)
         {
-            //TODO: see if we can use something more concise than Calendar
             Calendar c = Calendar.getInstance();
             c.setTime(endDate);
             int dayOfYear = Math.max(c.get(Calendar.DAY_OF_YEAR) - PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH, 1); //only request until beginning of this year
@@ -128,12 +126,12 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
             bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
 
+            paymentsBatchListView.setFooterVisible(true);
             paymentsBatchListView.setFooterText(R.string.loading);
         }
-        else
+        else //TODO: we don't need this?
         {
-            paymentsBatchListView.setFooterText(R.string.no_more_entries);
-            //reached end of data for this year.
+            paymentsBatchListView.setFooterVisible(false);
         }
 
     }
