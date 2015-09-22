@@ -49,7 +49,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
     public BookingDetailsJobInstructionsViewConstructor(@NonNull Context context, Bundle arguments)
     {
         super(context, arguments);
-        this.isForPayments = arguments.getBoolean(BundleKeys.FOR_PAYMENTS, false);
+        this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
     }
 
     protected int getLayoutResourceId()

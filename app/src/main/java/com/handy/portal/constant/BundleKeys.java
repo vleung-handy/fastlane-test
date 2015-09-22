@@ -14,5 +14,5 @@ public class BundleKeys
     public static final String PATH = "path";
     public static final String TAB = "tab";
     public static final String PAYMENT_BATCH = "payment_batch";
-    public static final String FOR_PAYMENTS = "for_payments";
+    public static final String IS_FOR_PAYMENTS = "is_for_payments";
 }

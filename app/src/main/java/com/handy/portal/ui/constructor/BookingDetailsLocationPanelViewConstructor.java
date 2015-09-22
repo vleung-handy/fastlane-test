@@ -45,7 +45,7 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
     public BookingDetailsLocationPanelViewConstructor(@NonNull Context context, Bundle arguments)
     {
         super(context, arguments);
-        this.isForPayments = arguments.getBoolean(BundleKeys.FOR_PAYMENTS, false);
+        this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
     }
 
     protected int getLayoutResourceId()

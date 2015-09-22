@@ -140,7 +140,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             this.requestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
             this.requestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
 
-            this.isForPayments = arguments.getBoolean(BundleKeys.FOR_PAYMENTS, false);
+            this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
 
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
@@ -297,7 +297,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
-        arguments.putBoolean(BundleKeys.FOR_PAYMENTS, this.isForPayments);
+        arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, this.isForPayments);
 
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
 
