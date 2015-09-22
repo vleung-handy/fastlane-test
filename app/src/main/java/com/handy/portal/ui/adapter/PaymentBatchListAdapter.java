@@ -41,7 +41,20 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
     {
         PaymentBatch[] paymentBatchList = paymentBatches.getAggregateBatchList();
-        addAll(paymentBatchList);
+        if(isEmpty()) //if this is the initial load, which means first element is current week's batch
+        {
+            //don't want to show current week in the previous pay weeks batch list
+            //TODO: can i specify a filter instead?
+            for(int i = 1; i<paymentBatchList.length; i++)
+            {
+                add(paymentBatchList[i]);
+            }
+        }
+        else
+        {
+            addAll(paymentBatchList);
+        }
+
         if(oldestDate != null)
         {
             oldestDate = DateTimeUtils.isStartOfYear(requestStartDate) ? null : requestStartDate; //don't need to request any more entries if we already made a request from start of year
