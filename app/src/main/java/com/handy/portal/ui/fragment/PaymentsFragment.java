@@ -93,6 +93,12 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     }
 
+    public void setLoadingOverlayVisible(boolean visible)
+    {
+        scrollView.setVisibility(!visible && paymentsBatchListView.isEmpty() ? View.GONE : View.VISIBLE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
+    }
+
     @Override
     public void onResume()
     {
@@ -104,15 +110,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
 //        requestAnnualPaymentSummaries();
         requestNextPaymentBatches();
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        setLoadingOverlayVisible(true);
     }
 
     private void requestNextPaymentBatches() //TODO: check for potential timezone issues
     {
-        if(paymentsBatchListView.isEmpty())
-        {
-            scrollView.setVisibility(View.GONE);
-        }
         Date endDate = paymentsBatchListView.getOldestDate();
 
         paymentsBatchListView.setFooterVisible(true);
@@ -157,7 +159,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         //update the current pay week
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
 //        paymentsNoHistoryText.setVisibility(paymentBatches.isEmpty() ? View.VISIBLE : View.GONE);
-        scrollView.setVisibility(View.VISIBLE);
+
         paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener()
         {
             private int previousLastItem = -1; //prevent "on scrolled to bottom function" from being called more than once for the current list
@@ -191,7 +193,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         if(paymentsBatchListView.isEmpty())
         {
             onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            setLoadingOverlayVisible(false);
         }
         else
         {
