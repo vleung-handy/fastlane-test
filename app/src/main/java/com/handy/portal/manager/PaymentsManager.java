@@ -56,6 +56,13 @@ public class PaymentsManager
                     neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[]{}));
 
                 }
+
+
+                /**TEST ONLY**/
+
+//                paymentBatches.clearNeoPayments();
+
+                /**end test**/
                 bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, startDate));
 
             }

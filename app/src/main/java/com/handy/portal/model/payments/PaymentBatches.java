@@ -51,4 +51,15 @@ public class PaymentBatches implements Serializable
 
     }
 
+    //TODO: Remove after testing
+    public void clearNeoPayments()
+    {
+        neoPaymentBatches = new NeoPaymentBatch[]{};
+    }
+
+    public void clearLegacyPayments()
+    {
+        legacyPaymentsBatchBatches = new LegacyPaymentBatch[]{};
+    }
+
 }
