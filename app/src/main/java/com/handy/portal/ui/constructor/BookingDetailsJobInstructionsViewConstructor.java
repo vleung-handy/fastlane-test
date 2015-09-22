@@ -33,6 +33,8 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
     @InjectView(R.id.job_instructions_reveal_notice)
     protected TextView revealNotice;
 
+    private final boolean isForPayments;
+
     private static final Map<String, Integer> GROUP_ICONS;
     static
     {
@@ -47,6 +49,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
     public BookingDetailsJobInstructionsViewConstructor(@NonNull Context context, Bundle arguments)
     {
         super(context, arguments);
+        this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
     }
 
     protected int getLayoutResourceId()
@@ -59,7 +62,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
     {
         BookingStatus bookingStatus = (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
         boolean isHomeCleaning = booking.getServiceInfo().isHomeCleaning();
-        boolean fullDetails = !isHomeCleaning || (bookingStatus == BookingStatus.CLAIMED);
+        boolean fullDetails = this.isForPayments || !isHomeCleaning || (bookingStatus == BookingStatus.CLAIMED);
 
         boolean jobInstructionsSectionConstructed = false; //if we don't add any sections we will not add the view
 

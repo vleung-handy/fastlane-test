@@ -112,6 +112,7 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition)
     {
-        return false;
+        Payment payment = getChild(groupPosition, childPosition);
+        return payment.getBookingId() != null;
     }
 }
