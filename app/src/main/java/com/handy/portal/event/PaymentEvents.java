@@ -6,9 +6,6 @@ import com.handy.portal.model.payments.PaymentBatches;
 
 import java.util.Date;
 
-/**
- * Created by vleung on 9/14/15.
- */
 public class PaymentEvents
 {
     public static class RequestPaymentBatches extends HandyEvent.RequestEvent

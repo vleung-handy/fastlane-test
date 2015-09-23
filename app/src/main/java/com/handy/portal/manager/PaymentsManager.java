@@ -44,12 +44,13 @@ public class PaymentsManager
             {
                 //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
                 NeoPaymentBatch neoPaymentBatches[] = paymentBatches.getNeoPaymentBatches();
-                for(int i = 0; i<neoPaymentBatches.length; i++){
+                for (int i = 0; i < neoPaymentBatches.length; i++)
+                {
                     PaymentGroup paymentGroups[] = neoPaymentBatches[i].getPaymentGroups();
                     List<PaymentGroup> paymentGroupList = new LinkedList<PaymentGroup>();
-                    for(int j = 0; j<paymentGroups.length; j++)
+                    for (int j = 0; j < paymentGroups.length; j++)
                     {
-                        if(paymentGroups[j].getPayments()!=null && paymentGroups[j].getPayments().length>0)
+                        if (paymentGroups[j].getPayments() != null && paymentGroups[j].getPayments().length > 0)
                         {
                             paymentGroupList.add(paymentGroups[j]);
                         }

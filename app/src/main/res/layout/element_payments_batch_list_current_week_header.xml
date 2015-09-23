@@ -35,8 +35,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/handy_green"
                 android:textAppearance="@style/TextView.Medium.Bold"
-                android:text="CURRENT PAY WEEK"
-                android:id="@+id/textView6"/>
+                android:text="CURRENT PAY WEEK"/>
         </LinearLayout>
 
 
@@ -67,8 +66,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/HandyTextAppearanceMedium"
                     android:text="Total Earnings"
-                    android:layout_weight="1"
-                    android:id="@+id/textView8"/>
+                    android:layout_weight="1"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -100,8 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/HandyTextAppearanceMedium"
-                        android:text="Withholdings"
-                        android:id="@+id/textView10"/>
+                        android:text="Withholdings"/>
                     <ImageButton
                         android:background="@android:color/transparent"
                         android:paddingLeft="@dimen/extra_padding"
@@ -135,8 +132,7 @@
                     android:layout_gravity="center|left"
                     android:textAppearance="@style/HandyTextAppearanceMedium"
                     android:text="Expected Payment"
-                    android:layout_weight="1"
-                    android:id="@+id/textView12"/>
+                    android:layout_weight="1"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -179,8 +175,7 @@
                         android:text="Remaining Withholdings"
                         android:singleLine="true"
                         android:ellipsize="end"
-                        android:layout_weight="1"
-                        android:id="@+id/textView13"/>
+                        android:layout_weight="1"/>
 
 
                 </LinearLayout>
@@ -208,6 +203,5 @@
         android:paddingTop="@dimen/default_padding"
         android:paddingBottom="@dimen/extra_padding"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
-        android:paddingRight="@dimen/payment_container_horizontal_padding"
-        android:id="@+id/textView5"/>
+        android:paddingRight="@dimen/payment_container_horizontal_padding"/>
 </com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView>

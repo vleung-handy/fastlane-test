@@ -9,7 +9,6 @@ public class NeoPaymentBatch extends PaymentBatch
 {
     /**
      * assuming all amounts are passed in as cents
-     * will parse to dollar amounts
      */
     @SerializedName("batch_id")
     private int batchId;
@@ -25,11 +24,6 @@ public class NeoPaymentBatch extends PaymentBatch
 
     @SerializedName("currency_symbol")
     private String currencySymbol;
-
-    public int getNumWithholdings()
-    {
-        return numWithholdings;
-    }
 
     @SerializedName("num_completed_jobs")
     private int numCompletedJobs;
@@ -54,9 +48,9 @@ public class NeoPaymentBatch extends PaymentBatch
     private PaymentGroup paymentGroups[];
 
     public enum Status{
-        Failed("Failed"),
-        Pending("Pending"),
-        Paid("Paid");
+        FAILED("FAILED"),
+        PENDING("PENDING"),
+        PAID("PAID");
 
         private final String name;
         private Status(final String name)
@@ -68,6 +62,11 @@ public class NeoPaymentBatch extends PaymentBatch
         {
             return this.name;
         }
+    }
+
+    public int getNumWithholdings()
+    {
+        return numWithholdings;
     }
 
     public int getGrossEarningsTotalAmount()

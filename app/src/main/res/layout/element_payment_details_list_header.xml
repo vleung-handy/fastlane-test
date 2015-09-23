@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/payment_details_list_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:background="@drawable/background_shadow_border"
-    android:paddingTop="@dimen/payment_container_vertical_padding"
     android:paddingBottom="@dimen/payment_container_vertical_padding"
     android:paddingLeft="@dimen/payment_container_horizontal_padding"
     android:paddingRight="@dimen/payment_container_horizontal_padding"
-    android:id="@+id/payment_details_list_header"
+    android:paddingTop="@dimen/payment_container_vertical_padding"
     android:stretchColumns="1">
 
     <TableRow
@@ -19,16 +20,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/extra_padding"
-            android:text="--"
-            android:textSize="@dimen/xlarge_text_size"
+            android:text="@string/no_data"
             android:textAppearance="@style/TextView.Bold"
             android:textColor="@color/black"
+            android:textSize="@dimen/xlarge_text_size"
             />
     </TableRow>
 
     <TableRow
-        android:weightSum="2"
-        >
+        android:weightSum="2">
 
         <TextView
             android:id="@+id/textView8"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="1"
-            android:text=""
+            android:text="@string/no_data"
             android:textAppearance="@style/HandyTextAppearanceTitle"
             android:textColor="@color/requested_green"/>
     </TableRow>

@@ -108,7 +108,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     private void requestPaymentsInfo()
     {
-//        requestAnnualPaymentSummaries();
+//        requestAnnualPaymentSummaries(); //will need this later when annual summary api complete
         requestNextPaymentBatches();
         setLoadingOverlayVisible(true);
     }
@@ -137,7 +137,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     }
 
 
-    private void requestAnnualPaymentSummaries()
+    private void requestAnnualPaymentSummaries() //not used yet
     {
         bus.post(new PaymentEvents.RequestAnnualPaymentSummaries());
     }
