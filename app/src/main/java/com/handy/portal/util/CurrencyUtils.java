@@ -14,6 +14,7 @@ public class CurrencyUtils
 
     public static int centsToDollars(int cents)
     {
+        //truncate the cents for display purposes
         return cents/100;
     }
 }

@@ -10,8 +10,8 @@
     android:paddingBottom="@dimen/extra_padding"
     android:paddingLeft="@dimen/payment_container_horizontal_padding"
     android:paddingRight="@dimen/payment_container_horizontal_padding"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
+
     <!--TODO: clean up colors-->
     <!--TODO: remove placeholder data-->
 
@@ -20,8 +20,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:textAllCaps="true"
+        android:layout_gravity="bottom|center"
         android:text="Completed jobs (4)"
-        android:textAppearance="@style/HandyTextAppearanceSmall"
+        android:textAppearance="@style/HandyTextAppearanceListHeader"
         android:id="@+id/payments_detail_group_title_text"
         />
 
@@ -29,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:layout_gravity="center"
         android:gravity="right"
         android:text="$165"
         android:textAppearance="@style/HandyTextAppearanceMedium"

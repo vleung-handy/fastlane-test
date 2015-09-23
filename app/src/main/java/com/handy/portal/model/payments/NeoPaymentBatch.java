@@ -1,6 +1,7 @@
 package com.handy.portal.model.payments;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.util.CurrencyUtils;
 
 import java.util.Date;
 
@@ -136,6 +137,6 @@ public class NeoPaymentBatch extends PaymentBatch
 
     public int getTotalAmountDollars()
     {
-        return netEarningsTotalAmount / 100;
+        return CurrencyUtils.centsToDollars(netEarningsTotalAmount);
     }
 }

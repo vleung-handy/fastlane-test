@@ -6,9 +6,6 @@ import com.handy.portal.util.CurrencyUtils;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by vleung on 9/14/15.
- */
 public class Payment implements Serializable
 {
     public Date getDate()

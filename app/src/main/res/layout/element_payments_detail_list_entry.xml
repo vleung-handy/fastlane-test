@@ -59,8 +59,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/medium_text_size"
-            android:textAppearance="@style/HandyTextAppearanceSubtitle"
+            android:textAppearance="@style/HandyTextAppearanceListEntrySubtitle"
             android:text="8:00 am \u00B7 3 hours"
             android:id="@+id/payments_detail_time_text"/>
     </LinearLayout>

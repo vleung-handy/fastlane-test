@@ -5,10 +5,7 @@ import com.handy.portal.model.PaymentInfo;
 
 import java.io.Serializable;
 
-/**
- * Created by vleung on 9/16/15.
- */
-public class AnnualPaymentSummaries implements Serializable
+public class AnnualPaymentSummaries implements Serializable //unused for now
 {
     @SerializedName("annual_summaries")
     private AnnualPaymentSummary annualPaymentSummaries[];
