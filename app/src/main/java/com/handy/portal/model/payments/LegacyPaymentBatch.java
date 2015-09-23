@@ -1,7 +1,6 @@
 package com.handy.portal.model.payments;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.util.CurrencyUtils;
 
 import java.util.Date;
 
@@ -45,10 +44,5 @@ public class LegacyPaymentBatch extends PaymentBatch
     public int getEarnedByProvider()
     {
         return earnedByProvider;
-    }
-
-    public int getDollarsEarnedByProvider()
-    {
-        return CurrencyUtils.centsToDollars(earnedByProvider);
     }
 }

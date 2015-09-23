@@ -131,18 +131,34 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|left"
                     android:textAppearance="@style/HandyTextAppearanceMedium"
-                    android:text="Expected Payment"
+                    android:text="@string/expected_payment"
                     android:layout_weight="1"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|right"
                     android:layout_weight="1"
-                    android:textSize="@dimen/xxlarge_text_size"
-                    android:textAppearance="@style/HandyTextAppearanceTitle"
-                    android:text="@string/no_data"
-                    android:id="@+id/payments_current_week_expected_payment"/>
+                    android:gravity="end"
+                    >
+    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textSize="@dimen/xxlarge_text_size"
+                        android:textAppearance="@style/HandyTextAppearanceTitle"
+                        android:text="@string/no_data"
+                        android:id="@+id/payments_current_week_expected_payment"/>
+    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:textSize="@dimen/medium_text_size"
+                        android:layout_marginTop="4dp"
+                        android:textAppearance="@style/HandyTextAppearanceTitle"
+                        android:id="@+id/payments_current_week_expected_payment_cents"/>
+                </LinearLayout>
             </TableRow>
 
             <TableRow
@@ -172,7 +188,7 @@
                         android:layout_gravity="center|left"
                         android:textColor="@color/payments_batch_list_entry_subtitle"
                         android:textAppearance="@style/HandyTextAppearanceMediumSmall"
-                        android:text="Remaining Withholdings"
+                        android:text="@string/remaining_withholdings"
                         android:singleLine="true"
                         android:ellipsize="end"
                         android:layout_weight="1"/>

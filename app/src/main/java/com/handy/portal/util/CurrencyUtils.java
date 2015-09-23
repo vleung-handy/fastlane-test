@@ -8,19 +8,25 @@ public class CurrencyUtils
 
     public static String formatPrice(final int price, final String currencyChar)
     {
-        return (price < 0 ? "-" : "") + (currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL) + Math.abs(price);
+        String priceText = new DecimalFormat("#,##0").format(Math.abs(price));
+        return (price < 0 ? "-" : "") + (currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL) + priceText;
     }
 
     public static String formatPriceWithCents(final int priceCents, final String currencyChar)
     {
         int absolutePriceCents = Math.abs(priceCents);
         int dollarValue = absolutePriceCents / 100;
-        double centsValue = (absolutePriceCents % 100) * 0.01;
+        double centsValue = absolutePriceCents % 100;
 
-        String dollarText = (currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL) + dollarValue;
-        String centsText = new DecimalFormat(".00").format(centsValue);
+        String dollarText = formatPrice(dollarValue, currencyChar);
+        String centsText = formatCents(centsValue);
 
-        return (priceCents < 0 ? "-" : "") + dollarText + centsText;
+        return dollarText + centsText;
+    }
+
+    public static String formatCents(double cents)
+    {
+        return new DecimalFormat(".00").format(cents * 0.01);
     }
 
     public static int centsToDollars(int cents)

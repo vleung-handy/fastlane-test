@@ -1,7 +1,6 @@
 package com.handy.portal.model.payments;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.util.CurrencyUtils;
 
 import java.util.Date;
 
@@ -114,11 +113,6 @@ public class NeoPaymentBatch extends PaymentBatch
         return netEarningsTotalAmount;
     }
 
-    public int getRemainingWithholdingDollarAmount()
-    {
-        return CurrencyUtils.centsToDollars(remainingWithholdingAmount);
-    }
-
     public int getRemainingWithholdingAmount()
     {
         return remainingWithholdingAmount;
@@ -132,10 +126,5 @@ public class NeoPaymentBatch extends PaymentBatch
     public void setPaymentGroups(PaymentGroup[] paymentGroups) //setter is needed for filtering the payment groups to remove empty groups (later, server will remove them)
     {
         this.paymentGroups = paymentGroups;
-    }
-
-    public int getTotalAmountDollars()
-    {
-        return CurrencyUtils.centsToDollars(netEarningsTotalAmount);
     }
 }

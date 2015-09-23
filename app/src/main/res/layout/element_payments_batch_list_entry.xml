@@ -29,7 +29,7 @@
             android:textAppearance="@style/TextView.Bold"/>
 
         <TextView
-            android:id="@+id/payments_batch_list_item_dollar_amount_text"
+            android:id="@+id/payments_batch_list_item_payment_amount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

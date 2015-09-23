@@ -22,8 +22,8 @@ public class PaymentsBatchListItemView extends TableLayout
     @InjectView(R.id.payments_batch_list_item_date_text)
     protected TextView dateText;
 
-    @InjectView(R.id.payments_batch_list_item_dollar_amount_text)
-    protected TextView dollarAmountText;
+    @InjectView(R.id.payments_batch_list_item_payment_amount_text)
+    protected TextView paymentAmountText;
 
     @InjectView(R.id.payments_batch_list_item_job_info_text)
     protected TextView jobInfoText;
@@ -54,7 +54,7 @@ public class PaymentsBatchListItemView extends TableLayout
         {
             NeoPaymentBatch neoPaymentBatch = (NeoPaymentBatch) paymentBatch;
             dateText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.SUMMARY_DATE_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
-            dollarAmountText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
+            paymentAmountText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getNetEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
             statusText.setText(neoPaymentBatch.getStatus());
             //color status text
 
@@ -76,7 +76,7 @@ public class PaymentsBatchListItemView extends TableLayout
         {
             LegacyPaymentBatch legacyPaymentBatch = (LegacyPaymentBatch) paymentBatch;
             dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPaymentBatch.getDate()));
-            dollarAmountText.setText(CurrencyUtils.formatPrice(legacyPaymentBatch.getDollarsEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
+            paymentAmountText.setText(CurrencyUtils.formatPrice(legacyPaymentBatch.getEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
             statusText.setText(legacyPaymentBatch.getStatus());
             jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
         }
