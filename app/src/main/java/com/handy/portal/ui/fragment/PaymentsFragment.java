@@ -42,8 +42,8 @@ import butterknife.InjectView;
 
 public final class PaymentsFragment extends ActionBarFragment implements AdapterView.OnItemClickListener
 {
-    @Inject
-    HandyRetrofitEndpoint endpoint;
+    @InjectView(R.id.slide_up_panel_container)
+    SlideUpPanelContainer slideUpPanelContainer;
 
     @Inject
     PaymentsManager paymentsManager;
@@ -62,16 +62,29 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
+    private ListView helpNodesListView;
+
     @Override
-    public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                                   final Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        final View view = inflater
-                .inflate(R.layout.fragment_payments, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_payments, null);
 
         ButterKnife.inject(this, view);
 
+        helpNodesListView = new ListView(getActivity());
+        helpNodesListView.setDivider(null);
+
         return view;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        setActionBar(R.string.payments, false);
+        bus.post(new HandyEvent.RequestHelpPaymentsNode());
+
     }
 
     @Override
@@ -238,7 +251,17 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
                 return true;
             case R.id.action_email_verification:
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                bus.post(new HandyEvent.SendIncomeVerification());
+                bus.post(new HandyEvent.RequestSendIncomeVerification());
+                return true;
+            case R.id.action_help:
+                slideUpPanelContainer.showPanel(R.string.payment_help, new SlideUpPanelContainer.ContentInitializer()
+                {
+                    @Override
+                    public void initialize(ViewGroup panel)
+                    {
+                        panel.addView(helpNodesListView);
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -246,16 +269,46 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     }
 
     @Subscribe
-    public void onSendIncomeVerificationSuccess(HandyEvent.SendIncomeVerificationSuccess event)
+    public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENTS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
     }
 
     @Subscribe
-    public void onSendIncomeVerificationError(HandyEvent.SendIncomeVerificationError event)
+    public void onSendIncomeVerificationError(HandyEvent.ReceiveSendIncomeVerificationError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        Toast.makeText(getActivity(), R.string.send_verification_failed, Toast.LENGTH_SHORT).show();
+        showToast(R.string.send_verification_failed);
+    }
+
+    @Subscribe
+    public void onReceiveHelpPaymentsNodeSuccess(final HandyEvent.ReceiveHelpPaymentsNodeSuccess event)
+    {
+        HelpNodesAdapter adapter =
+            new HelpNodesAdapter(getActivity(), R.layout.list_item_support_action, event.helpNode.getChildren());
+        helpNodesListView.setAdapter(adapter);
+        helpNodesListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                final HelpNode childNode = event.helpNode.getChildren().get(position);
+                if (childNode == null || childNode.getType() == null)
+                {
+                    return;
+                }
+
+                Bundle arguments = new Bundle();
+                arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
+                bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onReceiveHelpPaymentsNodeError(HandyEvent.ReceiveHelpPaymentsNodeError event)
+    {
+        showToast(R.string.request_payments_help_failed);
     }
 }

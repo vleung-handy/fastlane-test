@@ -222,6 +222,7 @@ public class MainActivityFragment extends InjectedFragment //TODO: should we hid
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
             }
 
             swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
@@ -370,7 +371,6 @@ public class MainActivityFragment extends InjectedFragment //TODO: should we hid
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())
             {
-                CharSequence text = getText(swapArguments.transitionStyle.getOverlayStringId());
                 TransientOverlayDialogFragment overlayDialogFragment =TransientOverlayDialogFragment
                     .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapArguments.transitionStyle.getOverlayStringId());
                 overlayDialogFragment.show(getFragmentManager(), "overlay dialog fragment");

@@ -20,9 +20,9 @@ import butterknife.InjectView;
 public final class HelpNodeView extends InjectedRelativeLayout
 {
     @InjectView(R.id.help_webview)
-    protected HandyWebView helpWebView;
+    HandyWebView helpWebView;
     @InjectView(R.id.info_layout)
-    protected RelativeLayout infoLayout;
+    RelativeLayout infoLayout;
     @InjectView(R.id.contact_button)
     public Button contactButton;
     @InjectView(R.id.nav_options_layout)

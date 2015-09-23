@@ -18,8 +18,12 @@ public class HelpManager
     private final Bus bus;
     private final DataManager dataManager;
 
+    private static final String PAYMENTS_NODE_ID_KEY = "payments_node_id";
+    private static final String ROOT_NODE_ID_KEY = "root_node_id";
+
     // will change type when we want access to bookings for a specific day, right now, we're just dumping all
     private final Cache<String, HelpNode> helpNodeCache;
+    private final Cache<String, String> helpNodeIdCache;
 
     @Inject
     public HelpManager(final Bus bus, final DataManager dataManager)
@@ -30,18 +34,21 @@ public class HelpManager
 
         //TODO: we don't currently have a way to query to see if a node is changed so we rely on our cache decaying every day
         this.helpNodeCache = CacheBuilder.newBuilder()
-                .maximumSize(10000)
-                .expireAfterWrite(1, TimeUnit.DAYS)
-                .build();
+            .maximumSize(10000)
+            .expireAfterWrite(1, TimeUnit.DAYS)
+            .build();
+        this.helpNodeIdCache = CacheBuilder.newBuilder()
+            .maximumSize(10000)
+            .expireAfterWrite(1, TimeUnit.DAYS)
+            .build();
     }
 
     @Subscribe
     public void onRequestHelpNodeDetails(HandyEvent.RequestHelpNode event)
     {
-        String nodeId = event.nodeId;
+        final boolean requestingRootNote = event.nodeId == null;
+        String nodeId = requestingRootNote ? helpNodeIdCache.getIfPresent(ROOT_NODE_ID_KEY) : event.nodeId;
         String bookingId = event.bookingId;
-
-        //TODO: Currently we send null to request root on the server, this is a bit hacky and does not allow us to cache the root node which is silly
 
         if (nodeId != null) //nulls will crash our cache on the getIfPresentCall
         {
@@ -61,6 +68,10 @@ public class HelpManager
                 HelpNode helpNode = helpNodeWrapper.getHelpNode();
                 helpNodeCache.put(Integer.toString(helpNode.getId()), helpNode);
                 //don't cache the child nodes, they look like full data but don't have their children
+                if (requestingRootNote)
+                {
+                    helpNodeIdCache.put(ROOT_NODE_ID_KEY, Integer.toString(helpNode.getId()));
+                }
                 bus.post(new HandyEvent.ReceiveHelpNodeSuccess(helpNode));
             }
 
@@ -78,18 +89,7 @@ public class HelpManager
         String nodeId = event.nodeId;
         String bookingId = event.bookingId;
 
-        //TODO: Currently we send null to request root on the server, this is a bit hacky and does not allow us to cache the root node which is silly
-
-        if (nodeId != null) //nulls will crash our cache on the getIfPresentCall
-        {
-            final HelpNode cachedHelpNode = helpNodeCache.getIfPresent(nodeId);
-            if (cachedHelpNode != null)
-            {
-                bus.post(new HandyEvent.ReceiveHelpBookingNodeSuccess(cachedHelpNode));
-                return;
-            }
-        }
-
+        // We don't not cache help node for booking
         dataManager.getHelpBookingsInfo(nodeId, bookingId, new DataManager.Callback<HelpNodeWrapper>()
         {
             @Override
@@ -105,6 +105,38 @@ public class HelpManager
                 bus.post(new HandyEvent.ReceiveHelpBookingNodeError(error));
             }
         });
+    }
 
+    @Subscribe
+    public void onRequestHelpPaymentsNode(HandyEvent.RequestHelpPaymentsNode event)
+    {
+        String cachedPaymentsSupportId = helpNodeIdCache.getIfPresent(PAYMENTS_NODE_ID_KEY);
+        if (cachedPaymentsSupportId != null) //nulls will crash our cache on the getIfPresentCall
+        {
+            final HelpNode cachedHelpNode = helpNodeCache.getIfPresent(cachedPaymentsSupportId);
+            if (cachedHelpNode != null)
+            {
+                bus.post(new HandyEvent.ReceiveHelpPaymentsNodeSuccess(cachedHelpNode));
+                return;
+            }
+        }
+        dataManager.getHelpPaymentsInfo(new DataManager.Callback<HelpNodeWrapper>()
+        {
+            @Override
+            public void onSuccess(HelpNodeWrapper helpNodeWrapper)
+            {
+                HelpNode helpNode = helpNodeWrapper.getHelpNode();
+                String cachedPaymentsSupportId = Integer.toString(helpNode.getId());
+                helpNodeCache.put(cachedPaymentsSupportId, helpNode);
+                helpNodeIdCache.put(PAYMENTS_NODE_ID_KEY, cachedPaymentsSupportId);
+                bus.post(new HandyEvent.ReceiveHelpPaymentsNodeSuccess(helpNode));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveHelpPaymentsNodeError(error));
+            }
+        });
     }
 }

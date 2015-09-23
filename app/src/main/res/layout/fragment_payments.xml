@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.handy.portal.ui.layout.SlideUpPanelContainer
+    android:id="@+id/slide_up_panel_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PaymentsFragment">
+<ScrollView 
             android:fillViewport="true"
             android:overScrollMode="always"
             android:id="@+id/payments_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="vertical"
@@ -45,3 +53,4 @@
 
     </LinearLayout>
 </ScrollView>
+</com.handy.portal.ui.layout.SlideUpPanelContainer>

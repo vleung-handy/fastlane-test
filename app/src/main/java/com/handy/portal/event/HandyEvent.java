@@ -196,15 +196,15 @@ public abstract class HandyEvent
         }
     }
 
-    public static class SendIncomeVerification extends RequestEvent
+    public static class RequestSendIncomeVerification extends RequestEvent
     {
     }
 
-    public static class SendIncomeVerificationSuccess extends ReceiveSuccessEvent
+    public static class ReceiveSendIncomeVerificationSuccess extends ReceiveSuccessEvent
     {
     }
 
-    public static class SendIncomeVerificationError extends ReceiveErrorEvent
+    public static class ReceiveSendIncomeVerificationError extends ReceiveErrorEvent
     {
     }
 
@@ -678,6 +678,29 @@ public abstract class HandyEvent
     public static class ReceiveHelpBookingNodeError extends ReceiveErrorEvent
     {
         public ReceiveHelpBookingNodeError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    //Help Payments Node
+    public static class RequestHelpPaymentsNode extends HandyEvent
+    {
+    }
+
+    public static class ReceiveHelpPaymentsNodeSuccess extends ReceiveSuccessEvent
+    {
+        public HelpNode helpNode;
+
+        public ReceiveHelpPaymentsNodeSuccess(HelpNode helpNode)
+        {
+            this.helpNode = helpNode;
+        }
+    }
+
+    public static class ReceiveHelpPaymentsNodeError extends ReceiveErrorEvent
+    {
+        public ReceiveHelpPaymentsNodeError(DataManager.DataManagerError error)
         {
             this.error = error;
         }
