@@ -50,7 +50,7 @@ public class PaymentsBatchListItemView extends TableLayout
 
     public void updateDisplay(PaymentBatch paymentBatch)
     {
-        if(paymentBatch instanceof NeoPaymentBatch)
+        if (paymentBatch instanceof NeoPaymentBatch)
         {
             NeoPaymentBatch neoPaymentBatch = (NeoPaymentBatch) paymentBatch;
             dateText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.SUMMARY_DATE_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
@@ -63,20 +63,25 @@ public class PaymentsBatchListItemView extends TableLayout
             PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
             int numJobs = 0;
             int numWithholdings = 0;
-            for(int i = 0; i<paymentGroups.length; i++){
-                if(PaymentGroup.MachineName.completed_jobs.name().equals(paymentGroups[i].getMachineName())){
+            for (int i = 0; i < paymentGroups.length; i++)
+            {
+                if (PaymentGroup.MachineName.completed_jobs.name().equals(paymentGroups[i].getMachineName()))
+                {
                     numJobs = paymentGroups[i].getPayments().length;
-                }else if(PaymentGroup.MachineName.withholdings.name().equals(paymentGroups[i].getMachineName())){
+                }
+                else if (PaymentGroup.MachineName.withholdings.name().equals(paymentGroups[i].getMachineName()))
+                {
                     numWithholdings = paymentGroups[i].getPayments().length;
                 }
             }
             jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numWithholdings));
 
-        }else if(paymentBatch instanceof LegacyPaymentBatch)
+        }
+        else if (paymentBatch instanceof LegacyPaymentBatch)
         {
             LegacyPaymentBatch legacyPaymentBatch = (LegacyPaymentBatch) paymentBatch;
             dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPaymentBatch.getDate()));
-            paymentAmountText.setText(CurrencyUtils.formatPrice(legacyPaymentBatch.getEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
+            paymentAmountText.setText(CurrencyUtils.formatPriceWithCents(legacyPaymentBatch.getEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
             statusText.setText(legacyPaymentBatch.getStatus());
             jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
         }
