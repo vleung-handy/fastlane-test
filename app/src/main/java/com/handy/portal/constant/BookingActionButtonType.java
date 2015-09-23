@@ -5,26 +5,32 @@ import com.handy.portal.model.Booking;
 
 public enum BookingActionButtonType
 {
-    CLAIM(Booking.Action.ACTION_CLAIM, R.string.claim, BookingActionButtonStyle.GREEN),
-    REMOVE(Booking.Action.ACTION_REMOVE, R.string.remove_job, BookingActionButtonStyle.RED_EMPTY),
-    ON_MY_WAY(Booking.Action.ACTION_ON_MY_WAY, R.string.on_my_way, BookingActionButtonStyle.BLUE),
-    CHECK_IN(Booking.Action.ACTION_CHECK_IN, R.string.check_in, BookingActionButtonStyle.TEAL),
-    CHECK_OUT(Booking.Action.ACTION_CHECK_OUT, R.string.check_out, BookingActionButtonStyle.TEAL),
-    HELP(Booking.Action.ACTION_HELP, R.string.i_need_help, BookingActionButtonStyle.TEAL_EMPTY),
-    CONTACT_PHONE(Booking.Action.ACTION_CONTACT_PHONE, R.string.call, BookingActionButtonStyle.CONTACT),
-    CONTACT_TEXT(Booking.Action.ACTION_CONTACT_TEXT, R.string.text, BookingActionButtonStyle.CONTACT),
-    RETRACT_NO_SHOW(Booking.Action.ACTION_RETRACT_NO_SHOW, 0, null),
-    ;
+    CLAIM(R.id.claim_button, Booking.Action.ACTION_CLAIM, R.string.claim, BookingActionButtonStyle.GREEN),
+    REMOVE(R.id.remove_button, Booking.Action.ACTION_REMOVE, R.string.remove_job, BookingActionButtonStyle.RED_EMPTY),
+    ON_MY_WAY(R.id.on_my_way_button, Booking.Action.ACTION_ON_MY_WAY, R.string.on_my_way, BookingActionButtonStyle.BLUE),
+    CHECK_IN(R.id.check_in_button, Booking.Action.ACTION_CHECK_IN, R.string.check_in, BookingActionButtonStyle.TEAL),
+    CHECK_OUT(R.id.check_out_button, Booking.Action.ACTION_CHECK_OUT, R.string.check_out, BookingActionButtonStyle.TEAL),
+    HELP(R.id.i_need_help_button, Booking.Action.ACTION_HELP, R.string.i_need_help, BookingActionButtonStyle.TEAL_EMPTY),
+    CONTACT_PHONE(R.id.contact_call_button, Booking.Action.ACTION_CONTACT_PHONE, R.string.call, BookingActionButtonStyle.CONTACT),
+    CONTACT_TEXT(R.id.contact_text_button, Booking.Action.ACTION_CONTACT_TEXT, R.string.text, BookingActionButtonStyle.CONTACT),
+    RETRACT_NO_SHOW(0, Booking.Action.ACTION_RETRACT_NO_SHOW, 0, null),;
 
+    private int id;
     private String actionName; //must correspond to server's actionName to match up correctly
     private int displayNameId;
     private BookingActionButtonStyle style;
 
-    BookingActionButtonType(String actionName, int displayNameId, BookingActionButtonStyle style)
+    BookingActionButtonType(int id, String actionName, int displayNameId, BookingActionButtonStyle style)
     {
+        this.id = id;
         this.actionName = actionName;
         this.displayNameId = displayNameId;
         this.style = style;
+    }
+
+    public int getId()
+    {
+        return id;
     }
 
     public int getBackgroundDrawableId()

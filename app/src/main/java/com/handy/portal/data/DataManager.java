@@ -45,7 +45,7 @@ public abstract class DataManager
 
     public abstract void removeBooking(String bookingId, BookingType type, Callback<Booking> cb);
 
-    public abstract void getSendIncomeVerification(String providerId, Callback<SuccessWrapper> cb);
+    public abstract void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb);
 
     public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
 
@@ -71,6 +71,8 @@ public abstract class DataManager
     public abstract void getHelpBookingsInfo(String nodeId,
                                              String bookingId,
                                              final DataManager.Callback<HelpNodeWrapper> cb);
+
+    public abstract void getHelpPaymentsInfo(final DataManager.Callback<HelpNodeWrapper> cb);
 
     public abstract void createHelpCase(TypedInput body, final Callback<Void> cb);
 

@@ -41,12 +41,6 @@ public final class HelpFragment extends ActionBarFragment
     private String title = "";
 
     @Override
-    public void onCreate(Bundle savedInstance)
-    {
-        super.onCreate(savedInstance);
-    }
-
-    @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
     {

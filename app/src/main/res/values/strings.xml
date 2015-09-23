@@ -59,6 +59,8 @@
     <string name="send_verification_success">Your work verification has been sent.</string>
     <string name="send_verification_failed">Oops! There was an error sending your income verification. Please try again.</string>
 
+    <string name="request_payments_help_failed">Oops! There was an error loading payments FAQ.</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>
@@ -234,6 +236,7 @@
     <string name="available_job">Available Job</string>
     <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
     <string name="payment_value">%s</string>
+    <string name="payment_help">Payment Help</string>
     <string name="payments">Payments</string>
     <string name="payments_details">Payment Details</string>
     <string name="bonus_payment_value">+ %s BONUS</string>

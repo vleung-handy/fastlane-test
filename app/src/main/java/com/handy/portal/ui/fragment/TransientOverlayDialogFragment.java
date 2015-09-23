@@ -28,10 +28,6 @@ public class TransientOverlayDialogFragment extends DialogFragment
     @InjectView(R.id.transition_overlay_text)
     TextView display;
 
-    public TransientOverlayDialogFragment()
-    {
-    }
-
     public static TransientOverlayDialogFragment newInstance(int animationId, int imageId, int textId)
     {
         TransientOverlayDialogFragment transientOverlayDialogFragment = new TransientOverlayDialogFragment();

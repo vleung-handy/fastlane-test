@@ -80,8 +80,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getSendIncomeVerification(String providerId, Callback<SuccessWrapper> cb) {
-        service.getSendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
+    public void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb)
+    {
+        service.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
     }
 
     @Override
@@ -202,6 +203,12 @@ public final class BaseDataManager extends DataManager
                                     final Callback<HelpNodeWrapper> cb)
     {
         service.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getHelpPaymentsInfo(final Callback<HelpNodeWrapper> cb)
+    {
+        service.getHelpPayments(new HelpNodeResponseHandyRetroFitCallback(cb));
     }
 
     @Override

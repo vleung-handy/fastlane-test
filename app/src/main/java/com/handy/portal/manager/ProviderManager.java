@@ -52,38 +52,31 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onSendIncomeVerification(HandyEvent.SendIncomeVerification event)
+    public void onSendIncomeVerification(HandyEvent.RequestSendIncomeVerification event)
     {
-        Provider cachedProvider = getCachedActiveProvider();
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        if (cachedProvider != null)
+        dataManager.sendIncomeVerification(providerId, new DataManager.Callback<SuccessWrapper>()
         {
-            dataManager.getSendIncomeVerification(cachedProvider.getId(), new DataManager.Callback<SuccessWrapper>()
+            @Override
+            public void onSuccess(SuccessWrapper response)
             {
-                @Override
-                public void onSuccess(SuccessWrapper response)
+                if (response.getSuccess())
                 {
-                    if (response.getSuccess())
-                    {
-                        bus.post(new HandyEvent.SendIncomeVerificationSuccess());
-                    }
-                    else
-                    {
-                        bus.post(new HandyEvent.SendIncomeVerificationError());
-                    }
+                    bus.post(new HandyEvent.ReceiveSendIncomeVerificationSuccess());
                 }
+                else
+                {
+                    bus.post(new HandyEvent.ReceiveSendIncomeVerificationError());
+                }
+            }
 
-                @Override
-                public void onError(DataManager.DataManagerError error)
-                {
-                    bus.post(new HandyEvent.SendIncomeVerificationError());
-                }
-            });
-        }
-        else
-        {
-            bus.post(new HandyEvent.SendIncomeVerificationError());
-        }
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveSendIncomeVerificationError());
+            }
+        });
     }
 
     private void requestProviderInfo()
