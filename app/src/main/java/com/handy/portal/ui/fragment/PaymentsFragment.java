@@ -111,7 +111,7 @@ public final class PaymentsFragment extends ActionBarFragment
         });
 
         yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
-        if(paymentsBatchListView.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
+        if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())
         {
             requestPaymentsInfo();
         }
@@ -182,12 +182,12 @@ public final class PaymentsFragment extends ActionBarFragment
             return;
         }
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
-        paymentsBatchListView.setHeaderViewClickListener(new View.OnClickListener() //TODO: this is a WIP - refactor this logic so that this acts like it is part of the listview. make adapter return first view as the current header's view?
+        paymentsBatchListView.setHeaderViewClickListener(new View.OnClickListener() //TODO: this is a WIP - refactor this logic so that this acts like it is part of the listview. make adapter return first element view as the current header's view?
         {
             @Override
             public void onClick(View v)
             {
-                PaymentBatch paymentBatch = paymentBatches.getNeoPaymentBatches()[0];
+                PaymentBatch paymentBatch = paymentsBatchListView.getWrappedAdapter().getDataItem(0);
                 showPaymentDetailsForBatch(paymentBatch);
             }
         });
@@ -223,7 +223,7 @@ public final class PaymentsFragment extends ActionBarFragment
         if(id != event.getCallerIdentifier()) return;
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
-        if(paymentsBatchListView.isEmpty())
+        if(paymentsBatchListView.isDataEmpty()) //if it was previously empty
         {
             onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
             setLoadingOverlayVisible(false);

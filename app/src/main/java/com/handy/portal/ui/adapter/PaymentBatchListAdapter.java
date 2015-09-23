@@ -13,12 +13,15 @@ import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
 import com.handy.portal.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 
-public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>
+public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private Date oldestDate;
+
+    private ArrayList<Integer> hiddenItemPositions = new ArrayList<>();
 
     //TODO: we don't need to keep track of oldest date when we can use new pagination API that allows us to get the N next batches
 
@@ -26,6 +29,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>
     {
         super(context, R.layout.element_payments_batch_list_entry, 0);
         oldestDate = new Date();
+        hiddenItemPositions.add(0); //hide the first item from view
     }
 
     public boolean shouldRequestMoreData()
@@ -41,19 +45,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
     {
         PaymentBatch[] paymentBatchList = paymentBatches.getAggregateBatchList();
-//        if(isEmpty()) //if this is the initial load, which means first element is current week's batch
-//        {
-//            //don't want to show current week in the previous pay weeks batch list
-//            //TODO: can i specify a filter instead?
-//            for(int i = 1; i<paymentBatchList.length; i++)
-//            {
-//                add(paymentBatchList[i]);
-//            }
-//        }
-//        else
-//        {
-            addAll(paymentBatchList);
-//        }
+        addAll(paymentBatchList);
 
         if(oldestDate != null)
         {
@@ -68,11 +60,43 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>
         return true;
     }
 
+    public boolean isDataEmpty() //check if underlying data is empty (this counts ones not displayed)
+    {
+        return getDataItemsCount() == 0;
+    }
+
+    public int getDataItemsCount() //get count of underlying data objects, not view
+    {
+        return super.getCount();
+    }
+
+    public PaymentBatch getDataItem(int position)
+    {
+        return super.getItem(position);
+    }
+
+    @Override
+    public int getCount() //need to override this because it's used for displaying the data views?
+    {
+        return Math.max(0, super.getCount() - hiddenItemPositions.size()); //hiding first item
+    }
+
     @Override
     public boolean isEnabled(int position)
     {
         PaymentBatch paymentBatch = getItem(position);
         return paymentBatch instanceof NeoPaymentBatch; //we're not allowing users to view legacy payment batch details
+    }
+
+    @Override
+    public PaymentBatch getItem(int position) //TODO: WIP. this is a hacky way of hiding the item view without changing the underlying data
+    {
+        for(Integer i : hiddenItemPositions)
+        {
+            if(i <= position) position++;
+        }
+
+        return super.getItem(position);
     }
 
     @Override

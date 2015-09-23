@@ -15,7 +15,7 @@ import com.handy.portal.util.DateTimeUtils;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class PaymentsBatchListHeaderView extends LinearLayout
+public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we can make this more linked with the batch adapter data
 {
     @InjectView(R.id.payments_current_week_date_range_text)
     TextView currentWeekDateRangeText;

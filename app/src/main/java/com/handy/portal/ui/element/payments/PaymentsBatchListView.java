@@ -74,21 +74,16 @@ public final class PaymentsBatchListView extends ListView
         footerView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void clear()
-    {
-        getWrappedAdapter().clear();
-    }
-
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate)
     {
-        if(getWrappedAdapter().isEmpty())
+        if(getWrappedAdapter().isDataEmpty())
         {
             paymentsBatchListHeaderView.updateDisplay(paymentBatches);
         }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }
 
-    private PaymentBatchListAdapter getWrappedAdapter()
+    public PaymentBatchListAdapter getWrappedAdapter()
     {
         return getAdapter() == null ? null : ((PaymentBatchListAdapter) ((HeaderViewListAdapter) getAdapter()).getWrappedAdapter());
     }
@@ -98,9 +93,9 @@ public final class PaymentsBatchListView extends ListView
         return getWrappedAdapter().shouldRequestMoreData();
     }
 
-    public boolean isEmpty()
+    public boolean isDataEmpty()
     {
-        return getWrappedAdapter() == null || getWrappedAdapter().getCount() == 0;
+        return getWrappedAdapter() == null || getWrappedAdapter().isDataEmpty();
     }
 
     public Date getOldestDate()
