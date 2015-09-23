@@ -84,7 +84,6 @@ public final class PaymentsBatchListView extends ListView
         if(getWrappedAdapter().isEmpty())
         {
             paymentsBatchListHeaderView.updateDisplay(paymentBatches);
-
         }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }

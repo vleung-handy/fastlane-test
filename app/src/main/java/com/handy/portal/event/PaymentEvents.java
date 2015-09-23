@@ -12,8 +12,10 @@ public class PaymentEvents
     {
         public final Date startDate;
         public final Date endDate;
-        public RequestPaymentBatches(Date startDate, Date endDate)
+        public final int callerIdentifier;
+        public RequestPaymentBatches(Date startDate, Date endDate, int callerIdentifier)
         {
+            this.callerIdentifier = callerIdentifier;
             this.startDate = startDate;
             this.endDate = endDate;
         }
@@ -22,17 +24,22 @@ public class PaymentEvents
     public static class ReceivePaymentBatchesSuccess extends HandyEvent.ReceiveSuccessEvent
     {
         private final PaymentBatches paymentBatches;
-
+        private final int callerIdentifier;
         public Date getRequestStartDate()
         {
             return requestStartDate;
         }
 
         private final Date requestStartDate; //if this batch is empty, we can use this to keep track of pagination
-        public ReceivePaymentBatchesSuccess(PaymentBatches paymentBatches, Date requestStartDate)
+        public ReceivePaymentBatchesSuccess(PaymentBatches paymentBatches, Date requestStartDate, int callerIdentifier)
         {
             this.paymentBatches = paymentBatches;
             this.requestStartDate = requestStartDate;
+            this.callerIdentifier = callerIdentifier;
+        }
+        public int getCallerIdentifier()
+        {
+            return callerIdentifier;
         }
         public PaymentBatches getPaymentBatches()
         {

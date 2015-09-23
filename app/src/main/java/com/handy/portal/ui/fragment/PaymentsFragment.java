@@ -142,7 +142,7 @@ public final class PaymentsFragment extends ActionBarFragment
             int dayOfYear = Math.max(c.get(Calendar.DAY_OF_YEAR) - PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH, 1); //only request until beginning of this year
             c.set(Calendar.DAY_OF_YEAR, dayOfYear);
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
-            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
+            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, System.identityHashCode(this)));
 
             paymentsBatchListView.showFooter(R.string.loading);
         }
@@ -219,6 +219,8 @@ public final class PaymentsFragment extends ActionBarFragment
     @Subscribe
     public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
     {
+        int id = System.identityHashCode(this);
+        if(id != event.getCallerIdentifier()) return;
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
         if(paymentsBatchListView.isEmpty())
