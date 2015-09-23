@@ -1,6 +1,5 @@
 package com.handy.portal.ui.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +81,7 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
         PaymentGroup paymentGroup = getGroup(groupPosition);
         if(convertView==null)
         {
-            LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.element_payments_detail_list_group_header, null);
         }
         ((PaymentsDetailGroupView)convertView).updateDisplay(paymentGroup, neoPaymentBatch);
