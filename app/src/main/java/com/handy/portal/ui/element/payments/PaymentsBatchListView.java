@@ -53,6 +53,12 @@ public final class PaymentsBatchListView extends ListView
         addFooterView(footerView);
     }
 
+    public void showFooter(int stringResourceId)
+    {
+        setFooterVisible(true);
+        setFooterText(stringResourceId);
+    }
+
     public void setFooterText(int resourceId)
     {
         footerView.setText(resourceId);

@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -57,7 +58,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     TextView yearSummaryText;
 
 //    @InjectView(R.id.select_year_spinner)
-//    Spinner selectYearSpinner;
+//    Spinner selectYearSpinner; //will need later
 
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
@@ -85,7 +86,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         super.onViewCreated(view, savedInstanceState);
         paymentsBatchListView.setOnItemClickListener(this);
-        yearSummaryText.setText((Calendar.getInstance().get(Calendar.YEAR) + ""));
+        yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
         if(paymentsBatchListView.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
         {
             requestPaymentsInfo();
@@ -95,7 +96,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 
     public void setLoadingOverlayVisible(boolean visible)
     {
-        scrollView.setVisibility(!visible && paymentsBatchListView.isEmpty() ? View.GONE : View.VISIBLE);
+        scrollView.setVisibility(visible ? View.GONE : View.VISIBLE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
     }
 
@@ -126,12 +127,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
             bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate));
 
-            paymentsBatchListView.setFooterVisible(true);
-            paymentsBatchListView.setFooterText(R.string.loading);
+            paymentsBatchListView.showFooter(R.string.loading);
         }
-        else //TODO: we don't need this?
+        else
         {
-            paymentsBatchListView.setFooterVisible(false);
+            paymentsBatchListView.setFooterVisible(false); //TODO: we don't need this?
         }
 
     }
@@ -145,20 +145,22 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries) //annual summaries not shown or used for now
     {
         //update with annual summary. assuming array is ordered from most to least recent
-        //TODO: add defensive logic
-        AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getAnnualPaymentSummaries()[0];
-
-        //TODO: use string with formatting placeholders
-        yearSummaryText.setText("YTD  ⋅  " + paymentSummary.getNumCompletedJobs() + " jobs  ⋅  " + CurrencyUtils.formatPrice(CurrencyUtils.centsToDollars(paymentSummary.getNetEarnings().getAmount()), paymentSummary.getNetEarnings().getCurrencySymbol()));
+        AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getMostRecentYearSummary();
+        if(paymentSummary==null)
+        {
+            Crashlytics.logException(new Exception("Annual payment summaries is null or empty"));
+        }
+        else
+        {
+            yearSummaryText.setText(getResources().getString(R.string.payment_annual_summary, paymentSummary.getNumCompletedJobs(), CurrencyUtils.formatPrice(CurrencyUtils.centsToDollars(paymentSummary.getNetEarnings().getAmount()), paymentSummary.getNetEarnings().getCurrencySymbol())));
+        }
     }
 
     public void onInitialPaymentBatchReceived(PaymentBatches paymentBatches, Date requestStartDate)
     {
         //update the current pay week
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
-//        paymentsNoHistoryText.setVisibility(paymentBatches.isEmpty() ? View.VISIBLE : View.GONE);
-
-        paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener()
+        paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener() //TODO: put this functionality somewhere else so it can be more generic/reusable
         {
             private int previousLastItem = -1; //prevent "on scrolled to bottom function" from being called more than once for the current list
 
