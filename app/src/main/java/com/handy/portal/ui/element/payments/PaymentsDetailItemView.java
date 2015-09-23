@@ -52,7 +52,7 @@ public class PaymentsDetailItemView extends LinearLayout
     public void updateDisplay(Payment payment, NeoPaymentBatch parentBatch)
     {
         monthText.setText(DateTimeUtils.getMonthShortName(payment.getDate()));
-        dateText.setText(DateTimeUtils.getDayOfMonth(payment.getDate()) + "");
+        dateText.setText(Integer.toString(DateTimeUtils.getDayOfMonth(payment.getDate())));
         locationText.setText(payment.getTitle());
         timeText.setText(payment.getSubTitle());
         paymentText.setText(CurrencyUtils.formatPrice(payment.getDollarAmount(), parentBatch.getCurrencySymbol()));
