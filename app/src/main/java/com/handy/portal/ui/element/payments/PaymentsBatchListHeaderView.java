@@ -54,7 +54,8 @@ public class PaymentsBatchListHeaderView extends LinearLayout
 
     public void updateDisplay(PaymentBatches paymentBatches) //assuming that current pay week is always returned and is the first element
     {
-        if(paymentBatches.getNeoPaymentBatches().length == 0) {
+        if (paymentBatches.getNeoPaymentBatches().length == 0)
+        {
             Crashlytics.logException(new Exception("No non-legacy payment batches received! Expecting at least one (first entry should be the current week's payment batch)"));
             return;
         }
@@ -62,11 +63,12 @@ public class PaymentsBatchListHeaderView extends LinearLayout
         NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
         currentWeekDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
         currentWeekRemainingWithholdingsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getRemainingWithholdingAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekExpectedPaymentText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getNetEarningsTotalAmount() / 100, neoPaymentBatch.getCurrencySymbol()));
-        currentWeekExpectedPaymentCentsText.setText(CurrencyUtils.formatCents(neoPaymentBatch.getNetEarningsTotalAmount() % 100));
+        currentWeekExpectedPaymentText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getNetEarningsTotalAmount() * .01, neoPaymentBatch.getCurrencySymbol()));
+        currentWeekExpectedPaymentCentsText.setText(CurrencyUtils.formatCents(neoPaymentBatch.getNetEarningsTotalAmount()));
         currentWeekWithholdingsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getWithholdingsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getGrossEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
+
+        currentWeekWithholdingsText.setTextColor(getResources().getColor(neoPaymentBatch.getWithholdingsTotalAmount() < 0 ? R.color.error_red : R.color.black));
     }
 
 }
-

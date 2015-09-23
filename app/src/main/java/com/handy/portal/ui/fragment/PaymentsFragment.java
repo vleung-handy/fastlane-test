@@ -169,7 +169,7 @@ public final class PaymentsFragment extends ActionBarFragment
         }
         else
         {
-            yearSummaryText.setText(getResources().getString(R.string.payment_annual_summary, paymentSummary.getNumCompletedJobs(), CurrencyUtils.formatPrice(CurrencyUtils.centsToDollars(paymentSummary.getNetEarnings().getAmount()), paymentSummary.getNetEarnings().getCurrencySymbol())));
+            yearSummaryText.setText(getResources().getString(R.string.payment_annual_summary, paymentSummary.getNumCompletedJobs(), CurrencyUtils.formatPriceWithCents(paymentSummary.getNetEarnings().getAmount(), paymentSummary.getNetEarnings().getCurrencySymbol())));
         }
     }
 

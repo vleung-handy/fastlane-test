@@ -1,7 +1,6 @@
 package com.handy.portal.model.payments;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.util.CurrencyUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -31,10 +30,6 @@ public class Payment implements Serializable
         return date;
     }
 
-    public int getDollarAmount()
-    {
-        return CurrencyUtils.centsToDollars(getAmount());
-    }
     public int getAmount()
     {
         return amount;

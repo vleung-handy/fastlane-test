@@ -6,32 +6,24 @@ public class CurrencyUtils
 {
     private static final String DEFAULT_CURRENCY_SYMBOL = "$";
 
-    public static String formatPrice(final int price, final String currencyChar)
+    public static String formatPrice(final double price, final String currencyChar)
     {
-        String priceText = new DecimalFormat("#,##0").format(Math.abs(price));
-        return (price < 0 ? "-" : "") + (currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL) + priceText;
+        String currencySymbol = currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL;
+        String sign = price < 0 ? "-" : "";
+        return sign + currencySymbol + new DecimalFormat("#,##0").format(Math.abs(price));
     }
 
     public static String formatPriceWithCents(final int priceCents, final String currencyChar)
     {
-        int absolutePriceCents = Math.abs(priceCents);
-        int dollarValue = absolutePriceCents / 100;
-        double centsValue = absolutePriceCents % 100;
-
-        String dollarText = formatPrice(dollarValue, currencyChar);
-        String centsText = formatCents(centsValue);
+        String dollarText = formatPrice(priceCents * 0.01, currencyChar);
+        String centsText = formatCents(priceCents);
 
         return dollarText + centsText;
     }
 
-    public static String formatCents(double cents)
+    public static String formatCents(final int price)
     {
-        return new DecimalFormat(".00").format(cents * 0.01);
-    }
-
-    public static int centsToDollars(int cents)
-    {
-        //truncate the cents for display purposes
-        return cents/100;
+        int centsValue = Math.abs(price) % 100;
+        return new DecimalFormat(".00").format(centsValue * 0.01);
     }
 }
