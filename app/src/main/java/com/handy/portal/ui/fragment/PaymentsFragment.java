@@ -42,7 +42,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class PaymentsFragment extends ActionBarFragment implements AdapterView.OnItemClickListener
+public final class PaymentsFragment extends ActionBarFragment
 {
     @InjectView(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
@@ -100,7 +100,16 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        paymentsBatchListView.setOnItemClickListener(this);
+        paymentsBatchListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                PaymentBatch paymentBatch = (PaymentBatch) paymentsBatchListView.getAdapter().getItem(position);
+                showPaymentDetailsForBatch(paymentBatch);
+            }
+        });
+
         yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
         if(paymentsBatchListView.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
         {
@@ -164,10 +173,24 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         }
     }
 
-    public void onInitialPaymentBatchReceived(PaymentBatches paymentBatches, Date requestStartDate)
+    public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
         //update the current pay week
+        if(paymentBatches.getNeoPaymentBatches().length==0) //this should never happen. always expecting at least one entry (current pay week) from server in initial batch
+        {
+            Crashlytics.logException(new Exception("Bad initial payment batch received! Non-legacy payment batch list is empty. Expecting first entry to be current pay week"));
+            return;
+        }
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
+        paymentsBatchListView.setHeaderViewClickListener(new View.OnClickListener() //TODO: this is a WIP - refactor this logic so that this acts like it is part of the listview. make adapter return first view as the current header's view?
+        {
+            @Override
+            public void onClick(View v)
+            {
+                PaymentBatch paymentBatch = paymentBatches.getNeoPaymentBatches()[0];
+                showPaymentDetailsForBatch(paymentBatch);
+            }
+        });
         paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener() //TODO: put this functionality somewhere else so it can be more generic/reusable
         {
             private int previousLastItem = -1; //prevent "on scrolled to bottom function" from being called more than once for the current list
@@ -223,17 +246,14 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
         updateYearSummaryText(event.getAnnualPaymentSummaries());
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    public void showPaymentDetailsForBatch(PaymentBatch paymentBatch)
     {
-        PaymentBatch paymentBatch = (PaymentBatch) paymentsBatchListView.getAdapter().getItem(position);
         if (paymentBatch instanceof NeoPaymentBatch)
         {
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments));
         }
-
     }
 
     @Override

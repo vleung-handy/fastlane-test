@@ -13,7 +13,7 @@
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
         android:orientation="vertical"
-        android:background="@drawable/background_shadow_border"
+        android:background="@drawable/background_list_entry"
         >
 
         <LinearLayout
@@ -99,13 +99,14 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/HandyTextAppearanceMedium"
                         android:text="Withholdings"/>
-                    <ImageButton
-                        android:background="@android:color/transparent"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_help_circle"
-                        />
+
+                    <!--<ImageButton-->
+                        <!--android:background="@android:color/transparent"-->
+                        <!--android:paddingLeft="@dimen/extra_padding"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:src="@drawable/ic_help_circle"/>-->
+                    <!-- put this back when we add functionality for it -->
 
                 </LinearLayout>
                 <TextView
