@@ -40,6 +40,11 @@ public final class PaymentsBatchListView extends ListView
         init();
     }
 
+    public void setHeaderViewClickListener(OnClickListener onClickListener)
+    {
+        paymentsBatchListHeaderView.setOnClickListener(onClickListener);
+    }
+
     public void init()
     {
         PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(
@@ -79,6 +84,7 @@ public final class PaymentsBatchListView extends ListView
         if(getWrappedAdapter().isEmpty())
         {
             paymentsBatchListHeaderView.updateDisplay(paymentBatches);
+
         }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }
