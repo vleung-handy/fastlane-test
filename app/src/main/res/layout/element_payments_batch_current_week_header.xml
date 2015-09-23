@@ -16,15 +16,29 @@
         android:background="@drawable/background_shadow_border"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@color/handy_green"
-            android:textAppearance="@style/TextView.Medium.Bold"
             android:layout_marginBottom="@dimen/row_margin"
-            android:text="\u25CF CURRENT PAY WEEK"
-            android:id="@+id/textView6"/>
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/circle_green"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/handy_green"
+                android:textAppearance="@style/TextView.Medium.Bold"
+                android:text="CURRENT PAY WEEK"
+                android:id="@+id/textView6"/>
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="wrap_content"
