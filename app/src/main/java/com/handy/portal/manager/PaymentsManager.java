@@ -36,7 +36,7 @@ public class PaymentsManager
     {
         final Date startDate = event.startDate;
         Date endDate = event.endDate;
-        //assuming startDate is inclusive and endDate is exclusive
+        //assuming startDate is inclusive and endDate is inclusive
         dataManager.getPaymentBatches(startDate, endDate, new DataManager.Callback<PaymentBatches>()
         {
             @Override

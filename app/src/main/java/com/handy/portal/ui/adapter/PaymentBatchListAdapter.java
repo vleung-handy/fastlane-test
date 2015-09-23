@@ -57,7 +57,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>
 
         if(oldestDate != null)
         {
-            oldestDate = DateTimeUtils.isStartOfYear(requestStartDate) ? null : requestStartDate; //don't need to request any more entries if we already made a request from start of year
+            oldestDate = (DateTimeUtils.isStartOfYear(requestStartDate) ? null : new Date(requestStartDate.getTime() - 1)); //don't need to request any more entries if we already made a request from start of year
         }
         notifyDataSetChanged();
     }
