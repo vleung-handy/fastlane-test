@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -46,6 +47,22 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
 {
     @InjectView(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
+
+    private ListView helpNodesListView;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_payments, null);
+
+        ButterKnife.inject(this, view);
+
+        helpNodesListView = new ListView(getActivity());
+        helpNodesListView.setDivider(null);
+
+        return view;
+    }
 
     @Inject
     PaymentsManager paymentsManager;
@@ -113,6 +130,13 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     {
         scrollView.setVisibility(visible ? View.GONE : View.VISIBLE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        setActionBar(R.string.payments, false);
     }
 
     private void requestPaymentsInfo()
