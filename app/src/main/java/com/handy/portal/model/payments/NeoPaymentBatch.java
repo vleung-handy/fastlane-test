@@ -116,7 +116,7 @@ public class NeoPaymentBatch extends PaymentBatch
 
     public int getRemainingWithholdingDollarAmount()
     {
-        return remainingWithholdingAmount / 100;
+        return CurrencyUtils.centsToDollars(remainingWithholdingAmount);
     }
 
     public int getRemainingWithholdingAmount()
