@@ -70,14 +70,15 @@ public class PaymentsBatchListItemView extends TableLayout
                     numWithholdings = paymentGroups[i].getPayments().length;
                 }
             }
-            jobInfoText.setText(numJobs + " jobs, " + numWithholdings + " withholdings");
+            jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numWithholdings));
+
         }else if(paymentBatch instanceof LegacyPaymentBatch)
         {
             LegacyPaymentBatch legacyPaymentBatch = (LegacyPaymentBatch) paymentBatch;
             dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPaymentBatch.getDate()));
             dollarAmountText.setText(CurrencyUtils.formatPrice(legacyPaymentBatch.getDollarsEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
             statusText.setText(legacyPaymentBatch.getStatus());
-            jobInfoText.setText("Job ID #" + legacyPaymentBatch.getBookingId());
+            jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
         }
 
     }

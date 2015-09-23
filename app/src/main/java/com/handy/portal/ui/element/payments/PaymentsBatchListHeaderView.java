@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -50,7 +51,10 @@ public class PaymentsBatchListHeaderView extends LinearLayout
 
     public void updateDisplay(PaymentBatches paymentBatches) //assuming that current pay week is always returned and is the first element
     {
-        if(paymentBatches.getNeoPaymentBatches().length == 0) return;
+        if(paymentBatches.getNeoPaymentBatches().length == 0) {
+            Crashlytics.logException(new Exception("No non-legacy payment batches received! Expecting at least one (first entry should be the current week's payment batch)"));
+            return;
+        }
 
         NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
         currentWeekDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));

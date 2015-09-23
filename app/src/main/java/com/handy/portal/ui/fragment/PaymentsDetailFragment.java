@@ -76,7 +76,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.payments_details, true);//TODO: change to resource id
+        setActionBar(R.string.payments_details, true);
     }
 
     @Override
