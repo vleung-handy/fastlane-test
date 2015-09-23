@@ -92,9 +92,6 @@
     <style name="HandyTextAppearanceSmall" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/black</item>
     </style>
-    <style name="HandyTextAppearanceTitle" parent="@android:style/TextAppearance.Large">
-    <item name="android:textColor">@color/black</item>
-</style>
 
     <style name="HandyTextAppearanceTitle" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">@color/black</item>
