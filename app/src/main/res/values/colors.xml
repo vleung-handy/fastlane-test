@@ -52,5 +52,5 @@
     <color name="helper_text_grey">#A1A1A1</color>
     <color name="border_mid_grey">#CCCCCC</color>
     <color name="list_divider">#C2C2C2</color>
-    <color name="payments_batch_view_headers">#999999</color>
+    <color name="payments_batch_list_entry_subtitle">#999999</color>
 </resources>

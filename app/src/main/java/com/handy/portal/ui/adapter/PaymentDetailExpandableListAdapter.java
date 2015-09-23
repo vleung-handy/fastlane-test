@@ -83,7 +83,7 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
         if(convertView==null)
         {
             LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.element_payments_detail_group_header, null);
+            convertView = inflater.inflate(R.layout.element_payments_detail_list_group_header, null);
         }
         ((PaymentsDetailGroupView)convertView).updateDisplay(paymentGroup, neoPaymentBatch);
 

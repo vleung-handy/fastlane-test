@@ -1,8 +1,5 @@
 package com.handy.portal.util;
 
-/**
- * Created by vleung on 9/21/15.
- */
 public class CurrencyUtils
 {
     private static final String DEFAULT_CURRENCY_SYMBOL = "$";
@@ -14,6 +11,7 @@ public class CurrencyUtils
 
     public static int centsToDollars(int cents)
     {
+        //truncate the cents for display purposes
         return cents/100;
     }
 }

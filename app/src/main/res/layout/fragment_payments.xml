@@ -31,13 +31,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textAppearance="@style/TextView.Bold"
                 android:textSize="@dimen/small_text_size"
                 android:paddingTop="@dimen/default_padding"
                 android:paddingBottom="@dimen/default_padding"
                 android:paddingLeft="@dimen/payment_container_horizontal_padding"
                 android:paddingRight="@dimen/payment_container_horizontal_padding"
-                android:textColor="@color/payments_batch_view_headers"
+                android:textColor="@color/payments_batch_list_entry_subtitle"
                 android:id="@+id/element_payments_year_summary_text"/>
 
         </LinearLayout>

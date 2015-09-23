@@ -51,20 +51,18 @@
             android:id="@+id/payments_batch_list_item_job_info_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="left|center"
             android:duplicateParentState="true"
             android:text="2 jobs, 4 withholdings"
-            android:textSize="@dimen/medium_text_size"
-            android:textColor="@drawable/list_entry_subtitle_text"
-            android:textAppearance="@style/TextView.Bold"/>
+            android:textAppearance="@style/HandyTextAppearanceListEntrySubtitle"/>
 
         <TextView
             android:id="@+id/payments_batch_list_item_status_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="right|center"
             android:duplicateParentState="true"
-            android:textSize="@dimen/medium_text_size"
+            android:textSize="@dimen/xsmall_text_size"
             android:textColor="@drawable/list_entry_subtitle_text"
             android:text="PENDING"
             android:textAllCaps="true"

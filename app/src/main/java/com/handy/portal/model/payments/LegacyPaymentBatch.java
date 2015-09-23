@@ -5,9 +5,6 @@ import com.handy.portal.util.CurrencyUtils;
 
 import java.util.Date;
 
-/**
- * Created by vleung on 9/14/15.
- */
 public class LegacyPaymentBatch extends PaymentBatch
 {
     @SerializedName("booking_id")

@@ -5,9 +5,6 @@ import com.handy.portal.util.CurrencyUtils;
 
 import java.io.Serializable;
 
-/**
- * Created by vleung on 9/14/15.
- */
 public class PaymentGroup implements Serializable
 {
     public enum MachineName{
