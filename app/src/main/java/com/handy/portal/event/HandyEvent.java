@@ -683,6 +683,29 @@ public abstract class HandyEvent
         }
     }
 
+    //Help Payments Node
+    public static class RequestHelpPaymentsNode extends HandyEvent
+    {
+    }
+
+    public static class ReceiveHelpPaymentsNodeSuccess extends ReceiveSuccessEvent
+    {
+        public HelpNode helpNode;
+
+        public ReceiveHelpPaymentsNodeSuccess(HelpNode helpNode)
+        {
+            this.helpNode = helpNode;
+        }
+    }
+
+    public static class ReceiveHelpPaymentsNodeError extends ReceiveErrorEvent
+    {
+        public ReceiveHelpPaymentsNodeError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
     //Help Contact Message
     @Track("pro help contact form submitted")
     public static class RequestNotifyHelpContact extends HandyEvent

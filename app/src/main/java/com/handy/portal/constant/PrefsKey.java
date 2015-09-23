@@ -1,5 +1,6 @@
 package com.handy.portal.constant;
 
+// TODO: this should be refactored into static final Strings instead of enum
 public enum PrefsKey
 {
     LAST_PROVIDER_ID("user_credentials_id"),
