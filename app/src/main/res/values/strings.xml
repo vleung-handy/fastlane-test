@@ -300,6 +300,8 @@
     <string name="booking_details_eta_msg">Estimated arrival time: %1$s</string>
 
     <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d withholdings</string>
+    <string name="payment_annual_summary">YTD  \u22C5  %1$d jobs  \u22C5  %2$s</string>
+    <string name="payment_detail_list_group_header">%1$s (%2$d)</string>
 
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
     <string name="omw_failure">There was a problem updating your status. Please try again.</string>

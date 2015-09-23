@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -145,11 +146,15 @@ public final class PaymentsFragment extends ActionBarFragment implements Adapter
     private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries) //annual summaries not shown or used for now
     {
         //update with annual summary. assuming array is ordered from most to least recent
-        //TODO: add defensive logic
-        AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getAnnualPaymentSummaries()[0];
-
-        //TODO: use string with formatting placeholders
-        yearSummaryText.setText("YTD  ⋅  " + paymentSummary.getNumCompletedJobs() + " jobs  ⋅  " + CurrencyUtils.formatPrice(CurrencyUtils.centsToDollars(paymentSummary.getNetEarnings().getAmount()), paymentSummary.getNetEarnings().getCurrencySymbol()));
+        AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getMostRecentYearSummary();
+        if(paymentSummary==null)
+        {
+            Crashlytics.logException(new Exception("Annual payment summaries is null or empty"));
+        }
+        else
+        {
+            yearSummaryText.setText(getResources().getString(R.string.payment_annual_summary, paymentSummary.getNumCompletedJobs(), CurrencyUtils.formatPrice(CurrencyUtils.centsToDollars(paymentSummary.getNetEarnings().getAmount()), paymentSummary.getNetEarnings().getCurrencySymbol())));
+        }
     }
 
     public void onInitialPaymentBatchReceived(PaymentBatches paymentBatches, Date requestStartDate)
