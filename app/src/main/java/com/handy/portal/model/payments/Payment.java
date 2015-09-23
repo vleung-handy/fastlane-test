@@ -8,6 +8,24 @@ import java.util.Date;
 
 public class Payment implements Serializable
 {
+    @SerializedName("date")
+    private Date date;
+
+    @SerializedName("amount")
+    private int amount;
+
+    @SerializedName("title")
+    private String title;
+
+    @SerializedName("subtitle")
+    private String subTitle;
+
+    @SerializedName("booking_id")
+    private String bookingId;
+
+    @SerializedName("booking_type")
+    private String bookingType;
+
     public Date getDate()
     {
         return date;
@@ -41,24 +59,5 @@ public class Payment implements Serializable
     {
         return bookingType;
     }
-
-    @SerializedName("date")
-    private Date date;
-
-    @SerializedName("amount")
-    private int amount;
-
-    @SerializedName("title")
-    private String title;
-
-    @SerializedName("subtitle")
-    private String subTitle;
-
-    @SerializedName("booking_id")
-    private String bookingId;
-
-    @SerializedName("booking_type")
-    private String bookingType;
-
 
 }

@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAppearance="@style/HandyTextAppearanceSmall"
-            android:text="Aug"
             android:id="@+id/payments_detail_month_text"/>
 
         <TextView
@@ -36,7 +35,6 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAppearance="@style/HandyTextAppearanceTitle"
-            android:text="31"
             android:id="@+id/payments_detail_date_text"/>
     </LinearLayout>
     <LinearLayout
@@ -53,14 +51,12 @@
             android:textAppearance="@style/TextView.Bold"
             android:textColor="@color/black"
             android:textSize="@dimen/large_text_size"
-            android:text="Upper West Side"
             android:id="@+id/payments_detail_location_text"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/HandyTextAppearanceListEntrySubtitle"
-            android:text="8:00 am \u00B7 3 hours"
             android:id="@+id/payments_detail_time_text"/>
     </LinearLayout>
     <LinearLayout
@@ -73,7 +69,6 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:textAppearance="@style/HandyTextAppearanceTitle"
-            android:text="$45"
             android:id="@+id/payments_detail_payment_text"/>
     </LinearLayout>
 </com.handy.portal.ui.element.payments.PaymentsDetailItemView>

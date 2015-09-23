@@ -22,7 +22,7 @@
         android:textAllCaps="true"
         android:layout_gravity="bottom|center"
         android:gravity="bottom"
-        android:text="Completed jobs (4)"
+        android:text="@string/no_data"
         android:textAppearance="@style/HandyTextAppearanceListHeader"
         android:id="@+id/payments_detail_group_title_text"
         />
@@ -32,7 +32,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="right|bottom|center"
-        android:text="$165"
+        android:text="@string/no_data"
         android:textAppearance="@style/HandyTextAppearanceMedium"
         android:id="@+id/payments_detail_group_payments_text"
         />

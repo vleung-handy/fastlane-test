@@ -7,10 +7,6 @@ import java.io.Serializable;
 
 public class PaymentGroup implements Serializable
 {
-    public enum MachineName{
-        completed_jobs, withholdings
-    }
-
     @SerializedName("label")
     private String label;
 
@@ -22,6 +18,10 @@ public class PaymentGroup implements Serializable
 
     @SerializedName("payments")
     private Payment[] payments;
+
+    public enum MachineName{
+        completed_jobs, withholdings
+    }
 
     public String getLabel()
     {
