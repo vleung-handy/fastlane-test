@@ -385,6 +385,7 @@
     <!-- Payments Menu Items -->
     <string name="update_banking_information">Update banking information</string>
     <string name="email_income_verification">Email income verification</string>
+    <string name="total_payment">Total Payment</string>
 
     <!--TEST ONLY, REMOVE LATER-->
     <string-array name="test_year_spinner">

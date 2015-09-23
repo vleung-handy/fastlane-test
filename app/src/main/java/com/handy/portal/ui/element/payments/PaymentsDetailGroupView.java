@@ -42,7 +42,7 @@ public class PaymentsDetailGroupView extends LinearLayout
     public void updateDisplay(PaymentGroup paymentGroup, NeoPaymentBatch paymentBatch)
     {
         titleText.setText(getResources().getString(R.string.payment_detail_list_group_header, paymentGroup.getLabel(), paymentGroup.getPayments().length));
-        paymentsText.setText(CurrencyUtils.formatPrice(paymentGroup.getDollarAmount(), paymentBatch.getCurrencySymbol()));
+        paymentsText.setText(CurrencyUtils.formatPriceWithCents(paymentGroup.getAmount(), paymentBatch.getCurrencySymbol()));
     }
 
 }

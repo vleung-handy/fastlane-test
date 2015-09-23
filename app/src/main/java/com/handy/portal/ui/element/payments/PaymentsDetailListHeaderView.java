@@ -2,7 +2,7 @@ package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.TableLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -13,7 +13,7 @@ import com.handy.portal.util.DateTimeUtils;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class PaymentsDetailListHeaderView extends TableLayout
+public class PaymentsDetailListHeaderView extends LinearLayout
 {
     @InjectView(R.id.payment_detail_date_range_text)
     TextView paymentDetailDateRangeText;
@@ -41,7 +41,7 @@ public class PaymentsDetailListHeaderView extends TableLayout
     public void updateDisplay(NeoPaymentBatch neoPaymentBatch)
     {
         paymentDetailDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
-        paymentDetailTotalPaymentText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getTotalAmountDollars(), neoPaymentBatch.getCurrencySymbol()));
+        paymentDetailTotalPaymentText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getNetEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
     }
 
 }
