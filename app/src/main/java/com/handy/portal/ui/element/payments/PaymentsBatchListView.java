@@ -48,7 +48,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         super.onFinishInflate();
         init();
     }
-
+    
     public void init()
     {
         PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(
