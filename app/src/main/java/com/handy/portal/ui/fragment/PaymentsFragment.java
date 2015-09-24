@@ -140,6 +140,8 @@ public final class PaymentsFragment extends ActionBarFragment
             Calendar c = Calendar.getInstance();
             c.setTime(endDate);
             int dayOfYear = Math.max(c.get(Calendar.DAY_OF_YEAR) - PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH, 1); //only request until beginning of this year
+            //TODO: won't have to do this gross thing when we either get annual summaries or new pagination api
+
             c.set(Calendar.DAY_OF_YEAR, dayOfYear);
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
             bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, System.identityHashCode(this)));
@@ -216,38 +218,6 @@ public final class PaymentsFragment extends ActionBarFragment
         });
     }
 
-    @Subscribe
-    public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
-    {
-        int id = System.identityHashCode(this);
-        if(id != event.getCallerIdentifier()) return;
-        PaymentBatches paymentBatches = event.getPaymentBatches();
-        paymentsBatchListView.setFooterVisible(false);
-        if(paymentsBatchListView.isDataEmpty()) //if it was previously empty
-        {
-            onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
-            setLoadingOverlayVisible(false);
-        }
-        else
-        {
-            paymentsBatchListView.appendData(paymentBatches, event.getRequestStartDate());
-        }
-
-        //only if the data returned is empty, determine whether we need to re-request
-        //TODO: this is gross and we won't need to do this when new payments API comes out
-        if(paymentBatches.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
-        {
-            requestNextPaymentBatches();
-        }
-
-    }
-
-    @Subscribe
-    public void onReceiveAnnualPaymentSummariesSuccess(PaymentEvents.ReceiveAnnualPaymentSummariesSuccess event)
-    {
-        updateYearSummaryText(event.getAnnualPaymentSummaries());
-    }
-
     public void showPaymentDetailsForBatch(PaymentBatch paymentBatch)
     {
         if (paymentBatch instanceof NeoPaymentBatch)
@@ -283,6 +253,50 @@ public final class PaymentsFragment extends ActionBarFragment
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Subscribe
+    public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
+    {
+        int id = System.identityHashCode(this);
+        if(id != event.getCallerIdentifier()) return;
+        PaymentBatches paymentBatches = event.getPaymentBatches();
+        paymentsBatchListView.setFooterVisible(false);
+        if(paymentsBatchListView.isDataEmpty()) //if it was previously empty
+        {
+            onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
+            setLoadingOverlayVisible(false);
+        }
+        else
+        {
+            paymentsBatchListView.appendData(paymentBatches, event.getRequestStartDate());
+        }
+
+        //only if the data returned is empty, determine whether we need to re-request
+        //TODO: this is gross and we won't need to do this when new payments API comes out
+        if(paymentBatches.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
+        {
+            requestNextPaymentBatches();
+        }
+
+    }
+
+    @Subscribe
+    public void onReceivePaymentBatchesError(PaymentEvents.ReceivePaymentBatchesError event)
+    {
+        showToast(R.string.request_payments_batches_failed);
+    }
+
+    @Subscribe
+    public void onReceiveAnnualPaymentSummariesSuccess(PaymentEvents.ReceiveAnnualPaymentSummariesSuccess event)
+    {
+        updateYearSummaryText(event.getAnnualPaymentSummaries());
+    }
+
+    @Subscribe
+    public void onReceiveAnnualPaymentSummariesError(PaymentEvents.ReceiveAnnualPaymentSummariesError event)
+    {
+        //TODO: handle annual payments summary error
     }
 
     @Subscribe
