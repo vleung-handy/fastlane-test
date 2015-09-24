@@ -18,6 +18,7 @@ import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
@@ -53,6 +54,7 @@ import static org.mockito.Mockito.mock;
         HelpContactFragment.class,
         UrbanAirshipManager.class,
         PaymentsFragment.class,
+        TestActivity.class,
 
 }, library = true)
 public class TestApplicationModule

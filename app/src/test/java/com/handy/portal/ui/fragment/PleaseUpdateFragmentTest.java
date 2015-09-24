@@ -12,7 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.robolectric.util.SupportFragmentTestUtil;
+import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
