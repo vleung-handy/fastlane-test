@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,7 +61,8 @@ public final class PaymentsFragment extends ActionBarFragment
     @InjectView(R.id.fetch_error_view)
     ViewGroup fetchErrorView;
 
-    private ListView helpNodesListView;
+    @VisibleForTesting
+    ListView helpNodesListView;
 
 //    @InjectView(R.id.select_year_spinner)
 //    Spinner selectYearSpinner; //will need later
