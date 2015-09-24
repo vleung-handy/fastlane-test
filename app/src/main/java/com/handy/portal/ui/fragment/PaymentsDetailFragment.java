@@ -14,13 +14,13 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.Payment;
-import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
 import com.handy.portal.ui.element.payments.PaymentDetailExpandableListView;
+import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public final class PaymentsDetailFragment extends ActionBarFragment implements ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener
+public final class PaymentsDetailFragment extends ActionBarFragment implements ExpandableListView.OnChildClickListener
 {
     @InjectView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
@@ -29,6 +29,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     PaymentsDetailListHeaderView paymentsDetailListHeaderView;
 
     NeoPaymentBatch neoPaymentBatch;
+
+    private View fragmentView;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -49,26 +51,25 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState)
     {
-        final View view = inflater
-                .inflate(R.layout.fragment_payments_detail, container, false);
-
-        ButterKnife.inject(this, view);
-
-        return view;
+        if (fragmentView == null)
+        {
+            fragmentView = inflater
+                    .inflate(R.layout.fragment_payments_detail, container, false);
+        }
+        ButterKnife.inject(this, fragmentView);
+        return fragmentView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        paymentDetailExpandableListView.setOnGroupClickListener(this);
         paymentDetailExpandableListView.setOnChildClickListener(this);
         paymentsDetailListHeaderView.updateDisplay(neoPaymentBatch);
         paymentDetailExpandableListView.updateData(neoPaymentBatch);
         for (int i = 0; i < neoPaymentBatch.getPaymentGroups().length; i++)
         {
             paymentDetailExpandableListView.expandGroup(i);
-
         }
     }
 
@@ -77,12 +78,6 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     {
         super.onResume();
         setActionBar(R.string.payments_details, true);
-    }
-
-    @Override
-    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id)
-    {
-        return true;
     }
 
     @Override
