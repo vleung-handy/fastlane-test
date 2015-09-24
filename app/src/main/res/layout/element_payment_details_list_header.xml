@@ -13,25 +13,21 @@
     android:paddingTop="@dimen/payment_container_vertical_padding"
     android:stretchColumns="1">
 
-
     <TextView
         android:id="@+id/payment_detail_date_range_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/extra_padding"
-        android:text="--"
+        android:text="@string/no_data"
         android:textAppearance="@style/TextView.Bold"
         android:textColor="@color/black"
-        android:textSize="@dimen/xlarge_text_size"
-        />
+        android:textSize="@dimen/xlarge_text_size"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_payment"

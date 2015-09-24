@@ -389,6 +389,10 @@
     <string name="total_payment">Total Payment</string>
     <string name="expected_payment">Expected Payment</string>
     <string name="remaining_withholdings">Remaining Withholdings</string>
+    <string name="previous_pay_weeks">PREVIOUS PAY WEEKS</string>
+    <string name="withholdings">Withholdings</string>
+    <string name="current_pay_week">CURRENT PAY WEEK</string>
+    <string name="total_earnings">Total Earnings</string>
 
     <!--TEST ONLY, REMOVE LATER-->
     <string-array name="test_year_spinner">

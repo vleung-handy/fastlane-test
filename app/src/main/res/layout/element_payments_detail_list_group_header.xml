@@ -2,38 +2,33 @@
 <com.handy.portal.ui.element.payments.PaymentsDetailGroupView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/transparent"
     android:layout_height="wrap_content"
-    android:focusable="false"
     android:layout_gravity="center_vertical"
-    android:paddingTop="@dimen/default_padding"
+    android:background="@color/transparent"
+    android:focusable="false"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/extra_padding"
     android:paddingLeft="@dimen/payment_container_horizontal_padding"
     android:paddingRight="@dimen/payment_container_horizontal_padding"
-    android:orientation="horizontal">
-
-    <!--TODO: clean up colors-->
-    <!--TODO: remove placeholder data-->
+    android:paddingTop="@dimen/default_padding">
 
     <TextView
+        android:id="@+id/payments_detail_group_title_text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:textAllCaps="true"
         android:layout_gravity="bottom|center"
+        android:layout_weight="1"
         android:gravity="bottom"
         android:text="@string/no_data"
-        android:textAppearance="@style/HandyTextAppearanceListHeader"
-        android:id="@+id/payments_detail_group_title_text"
-        />
+        android:textAllCaps="true"
+        android:textAppearance="@style/HandyTextAppearanceListHeader"/>
 
     <TextView
+        android:id="@+id/payments_detail_group_payments_text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="right|bottom|center"
         android:text="@string/no_data"
-        android:textAppearance="@style/HandyTextAppearanceMedium"
-        android:id="@+id/payments_detail_group_payments_text"
-        />
+        android:textAppearance="@style/HandyTextAppearanceMedium"/>
 </com.handy.portal.ui.element.payments.PaymentsDetailGroupView>
