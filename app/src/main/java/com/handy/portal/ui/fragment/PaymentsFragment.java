@@ -19,7 +19,6 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
-import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
@@ -37,18 +36,14 @@ import com.squareup.otto.Subscribe;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public final class PaymentsFragment extends ActionBarFragment
 {
     @InjectView(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
-
-    @Inject
-    PaymentsManager paymentsManager;
 
     @InjectView(R.id.payments_scroll_view)
     ScrollView scrollView;
@@ -58,6 +53,12 @@ public final class PaymentsFragment extends ActionBarFragment
 
     @InjectView(R.id.element_payments_year_summary_text)
     TextView yearSummaryText;
+
+    @InjectView(R.id.fetch_error_text)
+    TextView fetchErrorText;
+
+    @InjectView(R.id.fetch_error_view)
+    ViewGroup fetchErrorView;
 
     private ListView helpNodesListView;
 
@@ -120,7 +121,13 @@ public final class PaymentsFragment extends ActionBarFragment
             }
         });
         yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
+    }
 
+    @OnClick(R.id.try_again_button)
+    public void doInitialRequestAgain()
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        requestPaymentsInfo();
     }
 
     public void setLoadingOverlayVisible(boolean visible)
@@ -157,9 +164,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             paymentsBatchListView.setFooterVisible(false); //TODO: we don't need this?
         }
-
     }
-
 
     private void requestAnnualPaymentSummaries() //not used yet
     {
@@ -246,6 +251,8 @@ public final class PaymentsFragment extends ActionBarFragment
     @Subscribe
     public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
     {
+        fetchErrorView.setVisibility(View.GONE);
+
         int id = System.identityHashCode(this);
         if (id != event.getCallerIdentifier()) return;
         PaymentBatches paymentBatches = event.getPaymentBatches();
@@ -272,7 +279,9 @@ public final class PaymentsFragment extends ActionBarFragment
     @Subscribe
     public void onReceivePaymentBatchesError(PaymentEvents.ReceivePaymentBatchesError event)
     {
-        showToast(R.string.request_payments_batches_failed);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        fetchErrorView.setVisibility(View.VISIBLE);
+        fetchErrorText.setText(R.string.request_payments_batches_failed);
     }
 
     @Subscribe
