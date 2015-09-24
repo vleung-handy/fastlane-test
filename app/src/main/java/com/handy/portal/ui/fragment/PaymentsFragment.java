@@ -66,18 +66,23 @@ public final class PaymentsFragment extends ActionBarFragment
 
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
+    private View fragmentView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_payments, null);
+        if (fragmentView == null)
+        {
+            fragmentView = inflater.inflate(R.layout.fragment_payments, null);
+        }
 
-        ButterKnife.inject(this, view);
+        ButterKnife.inject(this, fragmentView);
 
         helpNodesListView = new ListView(getActivity());
         helpNodesListView.setDivider(null);
 
-        return view;
+        return fragmentView;
     }
 
     @Override
@@ -86,6 +91,11 @@ public final class PaymentsFragment extends ActionBarFragment
         super.onResume();
         setActionBar(R.string.payments, false);
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
+
+        if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
+        {
+            requestPaymentsInfo();
+        }
 
     }
 
@@ -109,10 +119,6 @@ public final class PaymentsFragment extends ActionBarFragment
             }
         });
         yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
-        if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())
-        {
-            requestPaymentsInfo();
-        }
 
     }
 
