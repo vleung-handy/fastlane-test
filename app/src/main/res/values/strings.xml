@@ -59,7 +59,6 @@
     <string name="send_verification_success">Your work verification has been sent.</string>
     <string name="send_verification_failed">Oops! There was an error sending your income verification. Please try again.</string>
 
-    <string name="request_payments_help_failed">Oops! There was an error loading payments FAQ.</string>
     <string name="request_payments_batches_failed">Oops! There was an error loading the weekly payments data.</string>
 
     <string name="home">Home</string>
