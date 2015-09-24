@@ -26,7 +26,6 @@ import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -163,24 +162,14 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
 
     private void assertBusPost(Matcher matcher)
     {
-        assertThat(getBusCaptorValues(), hasItem(matcher));
+        verify(fragment.bus, atLeastOnce()).post(captor.capture());
+        assertThat(captor.getAllValues(), hasItem(matcher));
     }
 
-    private <T> T getBusCaptorValue(Class<T> klass)
-    {
-        for (Object o : getBusCaptorValues())
-        {
-            if (klass.isInstance(o))
-            {
-                return klass.cast(o);
-            }
-        }
-        throw new RuntimeException("Class " + klass.getName() + " not found in captor");
-    }
-
-    private List<Object> getBusCaptorValues()
+    private <T> T getBusCaptorValue(Class<T> classType)
     {
         verify(fragment.bus, atLeastOnce()).post(captor.capture());
-        return captor.getAllValues();
+        return getBusCaptorValue(captor, classType);
     }
+
 }
