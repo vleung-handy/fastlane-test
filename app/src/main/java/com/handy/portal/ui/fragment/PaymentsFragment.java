@@ -94,11 +94,10 @@ public final class PaymentsFragment extends ActionBarFragment
         slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
 
-        if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
+        if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
         {
             requestPaymentsInfo();
         }
-
     }
 
     @Override
@@ -158,11 +157,11 @@ public final class PaymentsFragment extends ActionBarFragment
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
             bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, System.identityHashCode(this)));
 
-            paymentsBatchListView.showFooter(R.string.loading);
+            paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
         else
         {
-            paymentsBatchListView.setFooterVisible(false); //TODO: we don't need this?
+            paymentsBatchListView.showFooter(R.string.no_more_payments);
         }
     }
 
@@ -273,15 +272,21 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             requestNextPaymentBatches();
         }
-
     }
 
     @Subscribe
     public void onReceivePaymentBatchesError(PaymentEvents.ReceivePaymentBatchesError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        fetchErrorView.setVisibility(View.VISIBLE);
-        fetchErrorText.setText(R.string.request_payments_batches_failed);
+        if (paymentsBatchListView.isDataEmpty())
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            fetchErrorView.setVisibility(View.VISIBLE);
+            fetchErrorText.setText(R.string.request_payments_batches_failed);
+        }
+        else
+        {
+            paymentsBatchListView.showFooter(R.string.request_payments_batches_failed);
+        }
     }
 
     @Subscribe

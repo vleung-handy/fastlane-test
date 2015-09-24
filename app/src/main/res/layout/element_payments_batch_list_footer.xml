@@ -7,6 +7,6 @@
     android:layout_margin="@dimen/default_margin"
     android:gravity="center"
     android:padding="@dimen/default_padding"
-    android:textColor="@color/subtitle_grey_disabled"
-    android:textSize="@dimen/xlarge_text_size"
+    android:textColor="@color/helper_text_grey"
+    android:textSize="@dimen/small_text_size"
     android:visibility="gone"/>

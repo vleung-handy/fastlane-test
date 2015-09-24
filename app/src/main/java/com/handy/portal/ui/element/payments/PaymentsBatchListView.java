@@ -49,7 +49,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         super.onFinishInflate();
         init();
     }
-    
+
     public void init()
     {
         PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(getContext());
@@ -57,7 +57,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         addHeaderView(paymentsBatchListHeaderView);
 
         footerView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_footer, null);
-        addFooterView(footerView);
+        addFooterView(footerView, null, false);
 
         setAdapter(itemsAdapter);
 

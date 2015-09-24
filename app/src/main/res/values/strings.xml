@@ -70,7 +70,7 @@
     <string name="phone">Phone</string>
     <string name="password">Password</string>
     <string name="default_error_string">"Sorry, something went wrong. Please try again."</string>
-    <string name="loading">Loading…</string>
+    <string name="loading_more_payments">Loading more payments…</string>
     <string name="no_more_entries">No more entries.</string>
     <string name="no_data">--</string>
     <string name="forgot_password">Forgot Password?</string>
@@ -392,6 +392,7 @@
     <string name="withholdings">Withholdings</string>
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
+    <string name="no_more_payments">You have no more payments for this year.</string>
 
     <!--TEST ONLY, REMOVE LATER-->
     <string-array name="test_year_spinner">
