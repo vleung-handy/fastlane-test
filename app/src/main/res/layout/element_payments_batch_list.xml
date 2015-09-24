@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.payments.PaymentsBatchListView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/payments_batch_list_view"
-            android:dividerHeight="1px"
-            android:divider="@color/list_divider"
-            android:footerDividersEnabled="true"
-            android:headerDividersEnabled="true"
-              android:paddingTop="1dp"
-              android:orientation="vertical"
-              android:transcriptMode="disabled"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-
-    <!--MOCK ONLY-->
-    <!--<include layout="@layout/element_payments_batch_list_entry"/>-->
-    <!--<include layout="@layout/element_payments_batch_list_entry"/>-->
-    <!--<include layout="@layout/element_payments_batch_list_entry"/>-->
-    <!--<include layout="@layout/element_payments_batch_list_entry"/>-->
+<com.handy.portal.ui.element.payments.PaymentsBatchListView
+    android:id="@+id/payments_batch_list_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@color/list_divider"
+    android:dividerHeight="1px"
+    android:footerDividersEnabled="true"
+    android:headerDividersEnabled="true"
+    android:orientation="vertical"
+    android:paddingTop="1dp"
+    android:transcriptMode="disabled">
 
 </com.handy.portal.ui.element.payments.PaymentsBatchListView>

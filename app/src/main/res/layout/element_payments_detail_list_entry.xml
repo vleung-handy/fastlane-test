@@ -7,68 +7,69 @@
     android:background="@drawable/background_list_entry"
     android:divider="?android:attr/dividerHorizontal"
     android:dividerHeight="1dp"
-    android:paddingTop="@dimen/payment_container_vertical_padding"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/payment_container_vertical_padding"
     android:paddingLeft="@dimen/payment_container_horizontal_padding"
     android:paddingRight="@dimen/payment_container_horizontal_padding"
-    android:orientation="horizontal"
-    >
-
+    android:paddingTop="@dimen/payment_container_vertical_padding">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:paddingRight="@dimen/payment_container_vertical_padding"
+        android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:gravity="center"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="@style/HandyTextAppearanceSmall"
-            android:id="@+id/payments_detail_month_text"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="@style/HandyTextAppearanceTitle"
-            android:id="@+id/payments_detail_date_text"/>
-    </LinearLayout>
-    <LinearLayout
         android:orientation="vertical"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_gravity="center_vertical"
-        android:paddingLeft="@dimen/extra_padding"
-        android:layout_height="wrap_content">
+        android:paddingRight="@dimen/payment_container_vertical_padding">
 
         <TextView
+            android:id="@+id/payments_detail_month_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/HandyTextAppearanceSmall"/>
+
+        <TextView
+            android:id="@+id/payments_detail_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/HandyTextAppearanceTitle"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/extra_padding">
+
+        <TextView
+            android:id="@+id/payments_detail_location_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextView.Bold"
             android:textColor="@color/black"
-            android:textSize="@dimen/large_text_size"
-            android:id="@+id/payments_detail_location_text"/>
+            android:textSize="@dimen/large_text_size"/>
 
         <TextView
+            android:id="@+id/payments_detail_time_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/HandyTextAppearanceListEntrySubtitle"
-            android:id="@+id/payments_detail_time_text"/>
+            android:textAppearance="@style/HandyTextAppearanceListEntrySubtitle"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_height="wrap_content">
+        android:layout_weight="1">
+
         <TextView
+            android:id="@+id/payments_detail_payment_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:textAppearance="@style/HandyTextAppearanceTitle"
-            android:id="@+id/payments_detail_payment_text"/>
+            android:textAppearance="@style/HandyTextAppearanceTitle"/>
     </LinearLayout>
 </com.handy.portal.ui.element.payments.PaymentsDetailItemView>

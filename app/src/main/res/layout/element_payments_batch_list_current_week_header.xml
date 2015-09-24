@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:id="@+id/payments_batch_list_header"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+<com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView
+    android:id="@+id/payments_batch_list_header"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/payment_container_vertical_padding"
+        android:background="@drawable/background_list_entry"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/payment_container_vertical_padding"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
-        android:orientation="vertical"
-        android:background="@drawable/background_list_entry"
-        >
+        android:paddingTop="@dimen/payment_container_vertical_padding">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/extra_padding"
             android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="7dp"
                 android:layout_height="7dp"
@@ -28,197 +29,193 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/circle_green"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/handy_green"
+                android:text="@string/current_pay_week"
                 android:textAppearance="@style/TextView.Medium.Bold"
-                android:text="CURRENT PAY WEEK"/>
+                android:textColor="@color/handy_green"
+                android:textStyle="bold"/>
         </LinearLayout>
 
-
         <TextView
+            android:id="@+id/payments_current_week_date_range_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/xlarge_text_size"
-            android:textAppearance="@style/TextView.Bold"
-            android:text="@string/no_data"
             android:layout_marginBottom="@dimen/default_margin"
-            android:id="@+id/payments_current_week_date_range_text"/>
+            android:text="@string/no_data"
+            android:textAppearance="@style/TextView.Bold"
+            android:textSize="@dimen/xlarge_text_size"/>
 
         <TableLayout
-            android:stretchColumns="1"
-            android:showDividers="middle"
-            android:divider="?android:attr/dividerHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle"
+            android:stretchColumns="1">
+
             <TableRow
-                android:weightSum="2"
-                android:paddingTop="@dimen/row_margin"
-                android:paddingBottom="@dimen/row_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                >
+                android:paddingBottom="@dimen/row_margin"
+                android:paddingTop="@dimen/row_margin"
+                android:weightSum="2">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/HandyTextAppearanceMedium"
-                    android:text="Total Earnings"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:text="@string/total_earnings"
+                    android:textAppearance="@style/HandyTextAppearanceMedium"/>
 
                 <TextView
+                    android:id="@+id/payments_current_week_total_earnings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_weight="1"
-                    android:textAppearance="@style/HandyTextAppearanceMedium"
                     android:text="@string/no_data"
-                    android:id="@+id/payments_current_week_total_earnings"/>
+                    android:textAppearance="@style/HandyTextAppearanceMedium"/>
             </TableRow>
-            <TableRow
-                android:weightSum="2"
-                android:paddingTop="@dimen/row_margin"
-                android:paddingBottom="@dimen/row_margin"
-                android:layout_width="match_parent"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content">
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingBottom="@dimen/row_margin"
+                android:paddingTop="@dimen/row_margin"
+                android:weightSum="2">
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:orientation="horizontal">
 
-                    >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/HandyTextAppearanceMedium"
-                        android:text="Withholdings"/>
+                        android:text="@string/withholdings"
+                        android:textAppearance="@style/HandyTextAppearanceMedium"/>
 
                     <!--<ImageButton-->
-                        <!--android:background="@android:color/transparent"-->
-                        <!--android:paddingLeft="@dimen/extra_padding"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:src="@drawable/ic_help_circle"/>-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:paddingLeft="@dimen/extra_padding"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@drawable/ic_help_circle"/>-->
                     <!-- put this back when we add functionality for it -->
 
                 </LinearLayout>
+
                 <TextView
+                    android:id="@+id/payments_current_week_withholdings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_weight="1"
-                    android:textAppearance="@style/HandyTextAppearanceMedium"
                     android:text="@string/no_data"
-                    android:id="@+id/payments_current_week_withholdings"/>
+                    android:textAppearance="@style/HandyTextAppearanceMedium"/>
             </TableRow>
-            <TableRow
-                android:weightSum="2"
-                android:paddingTop="@dimen/row_margin"
-                android:paddingBottom="@dimen/row_margin"
-                android:layout_width="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content">
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="@dimen/row_margin"
+                android:paddingTop="@dimen/row_margin"
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|left"
-                    android:textAppearance="@style/HandyTextAppearanceMedium"
+                    android:layout_weight="1"
                     android:text="@string/expected_payment"
-                    android:layout_weight="1"/>
+                    android:textAppearance="@style/HandyTextAppearanceMedium"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="end"
-                    >
-    
+                    android:gravity="end">
+
                     <TextView
+                        android:id="@+id/payments_current_week_expected_payment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="@dimen/xxlarge_text_size"
-                        android:textAppearance="@style/HandyTextAppearanceTitle"
                         android:text="@string/no_data"
-                        android:id="@+id/payments_current_week_expected_payment"/>
-    
+                        android:textAppearance="@style/HandyTextAppearanceTitle"
+                        android:textSize="@dimen/xxlarge_text_size"/>
+
                     <TextView
+                        android:id="@+id/payments_current_week_expected_payment_cents"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="top"
-                        android:textSize="@dimen/medium_text_size"
                         android:layout_marginTop="4dp"
                         android:textAppearance="@style/HandyTextAppearanceTitle"
-                        android:id="@+id/payments_current_week_expected_payment_cents"/>
+                        android:textSize="@dimen/medium_text_size"/>
                 </LinearLayout>
             </TableRow>
 
             <TableRow
-                android:weightSum="2"
                 android:layout_width="match_parent"
-                android:paddingTop="@dimen/row_margin"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content">
+                android:paddingTop="@dimen/row_margin"
+                android:weightSum="2">
+
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:orientation="horizontal">
 
-                    >
                     <ImageButton
-                        android:background="@android:color/transparent"
-                        android:paddingRight="2dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_withholding_balance"
-                        />
+                        android:background="@android:color/transparent"
+                        android:paddingRight="2dp"
+                        android:src="@drawable/ic_withholding_balance"/>
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|left"
-                        android:textColor="@color/payments_batch_list_entry_subtitle"
-                        android:textAppearance="@style/HandyTextAppearanceMediumSmall"
-                        android:text="@string/remaining_withholdings"
-                        android:singleLine="true"
+                        android:layout_weight="1"
                         android:ellipsize="end"
-                        android:layout_weight="1"/>
-
-
+                        android:singleLine="true"
+                        android:text="@string/remaining_withholdings"
+                        android:textAppearance="@style/HandyTextAppearanceMediumSmall"
+                        android:textColor="@color/payments_batch_list_entry_subtitle"/>
                 </LinearLayout>
 
-
                 <TextView
+                    android:id="@+id/payments_current_week_remaining_withholdings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"
                     android:layout_weight="1"
-                    android:textColor="@color/payments_batch_list_entry_subtitle"
-                    android:textAppearance="@style/HandyTextAppearanceMedium"
                     android:text="@string/no_data"
-                    android:id="@+id/payments_current_week_remaining_withholdings"/>
+                    android:textAppearance="@style/HandyTextAppearanceMedium"
+                    android:textColor="@color/payments_batch_list_entry_subtitle"/>
             </TableRow>
         </TableLayout>
     </LinearLayout>
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/HandyTextAppearanceListHeader"
-        android:text="PREVIOUS PAY WEEKS"
-        android:paddingTop="@dimen/default_padding"
         android:paddingBottom="@dimen/extra_padding"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
-        android:paddingRight="@dimen/payment_container_horizontal_padding"/>
+        android:paddingRight="@dimen/payment_container_horizontal_padding"
+        android:paddingTop="@dimen/default_padding"
+        android:text="@string/previous_pay_weeks"
+        android:textAppearance="@style/HandyTextAppearanceListHeader"/>
 </com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView>
