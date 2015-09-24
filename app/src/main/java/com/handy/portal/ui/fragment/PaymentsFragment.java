@@ -139,7 +139,7 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         Date endDate = paymentsBatchListView.getOldestDate();
 
-        if(endDate != null)
+        if (endDate != null)
         {
             Calendar c = Calendar.getInstance();
             c.setTime(endDate);
@@ -169,7 +169,7 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         //update with annual summary. assuming array is ordered from most to least recent
         AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getMostRecentYearSummary();
-        if(paymentSummary==null)
+        if (paymentSummary == null)
         {
             Crashlytics.logException(new Exception("Annual payment summaries is null or empty"));
         }
@@ -182,7 +182,7 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
         //update the current pay week
-        if(paymentBatches.getNeoPaymentBatches().length==0) //this should never happen. always expecting at least one entry (current pay week) from server in initial batch
+        if (paymentBatches.getNeoPaymentBatches().length == 0) //this should never happen. always expecting at least one entry (current pay week) from server in initial batch
         {
             Crashlytics.logException(new Exception("Bad initial payment batch received! Non-legacy payment batch list is empty. Expecting first entry to be current pay week"));
             return;
@@ -221,14 +221,21 @@ public final class PaymentsFragment extends ActionBarFragment
                 bus.post(new HandyEvent.RequestSendIncomeVerification());
                 return true;
             case R.id.action_help:
-                slideUpPanelContainer.showPanel(R.string.payment_help, new SlideUpPanelContainer.ContentInitializer()
+                if (helpNodesListView.getCount() > 0)
                 {
-                    @Override
-                    public void initialize(ViewGroup panel)
+                    slideUpPanelContainer.showPanel(R.string.payment_help, new SlideUpPanelContainer.ContentInitializer()
                     {
-                        panel.addView(helpNodesListView);
-                    }
-                });
+                        @Override
+                        public void initialize(ViewGroup panel)
+                        {
+                            panel.addView(helpNodesListView);
+                        }
+                    });
+                }
+                else
+                {
+                    bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP));
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -239,10 +246,10 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
     {
         int id = System.identityHashCode(this);
-        if(id != event.getCallerIdentifier()) return;
+        if (id != event.getCallerIdentifier()) return;
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
-        if(paymentsBatchListView.isDataEmpty()) //if it was previously empty
+        if (paymentsBatchListView.isDataEmpty()) //if it was previously empty
         {
             onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
             setLoadingOverlayVisible(false);
@@ -254,7 +261,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
         //only if the data returned is empty, determine whether we need to re-request
         //TODO: this is gross and we won't need to do this when new payments API comes out
-        if(paymentBatches.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
+        if (paymentBatches.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
         {
             requestNextPaymentBatches();
         }
@@ -297,7 +304,7 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onReceiveHelpPaymentsNodeSuccess(final HandyEvent.ReceiveHelpPaymentsNodeSuccess event)
     {
         HelpNodesAdapter adapter =
-            new HelpNodesAdapter(getActivity(), R.layout.list_item_support_action, event.helpNode.getChildren());
+                new HelpNodesAdapter(getActivity(), R.layout.list_item_support_action, event.helpNode.getChildren());
         helpNodesListView.setAdapter(adapter);
         helpNodesListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -315,11 +322,5 @@ public final class PaymentsFragment extends ActionBarFragment
                 bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
             }
         });
-    }
-
-    @Subscribe
-    public void onReceiveHelpPaymentsNodeError(HandyEvent.ReceiveHelpPaymentsNodeError event)
-    {
-        showToast(R.string.request_payments_help_failed);
     }
 }
