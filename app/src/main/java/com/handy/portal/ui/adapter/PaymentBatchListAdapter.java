@@ -29,7 +29,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     {
         super(context, R.layout.element_payments_batch_list_entry, 0);
         oldestDate = new Date();
-        hiddenItemPositions.add(0); //hide the first item from view
+        hiddenItemPositions.add(0); //hide the first item from view, which is current pay week
     }
 
     public boolean shouldRequestMoreData()

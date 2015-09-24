@@ -100,16 +100,14 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        paymentsBatchListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener()
         {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            public void onDataItemClicked(PaymentBatch paymentBatch)
             {
-                PaymentBatch paymentBatch = (PaymentBatch) paymentsBatchListView.getAdapter().getItem(position);
                 showPaymentDetailsForBatch(paymentBatch);
             }
         });
-
         yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
         if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())
         {
@@ -184,15 +182,6 @@ public final class PaymentsFragment extends ActionBarFragment
             return;
         }
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
-        paymentsBatchListView.setHeaderViewClickListener(new View.OnClickListener() //TODO: this is a WIP - refactor this logic so that this acts like it is part of the listview. make adapter return first element view as the current header's view?
-        {
-            @Override
-            public void onClick(View v)
-            {
-                PaymentBatch paymentBatch = paymentsBatchListView.getWrappedAdapter().getDataItem(0);
-                showPaymentDetailsForBatch(paymentBatch);
-            }
-        });
         paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener()
         {
             @Override
