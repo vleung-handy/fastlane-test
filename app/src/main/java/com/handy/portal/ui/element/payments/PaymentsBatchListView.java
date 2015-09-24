@@ -3,16 +3,16 @@ package com.handy.portal.ui.element.payments;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.HeaderViewListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
+import com.handy.portal.ui.widget.InfiniteScrollListView;
 
 import java.util.Date;
 
-public final class PaymentsBatchListView extends ListView
+public final class PaymentsBatchListView extends InfiniteScrollListView
 {
 
     private PaymentsBatchListHeaderView paymentsBatchListHeaderView;

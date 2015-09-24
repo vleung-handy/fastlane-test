@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -30,6 +29,7 @@ import com.handy.portal.ui.adapter.HelpNodesAdapter;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
+import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
@@ -193,27 +193,12 @@ public final class PaymentsFragment extends ActionBarFragment
                 showPaymentDetailsForBatch(paymentBatch);
             }
         });
-        paymentsBatchListView.setOnScrollListener(new AbsListView.OnScrollListener() //TODO: put this functionality somewhere else so it can be more generic/reusable
+        paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener()
         {
-            private int previousLastItem = -1; //prevent "on scrolled to bottom function" from being called more than once for the current list
-
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState)
+            public void onScrollToBottom()
             {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-            {
-                int lastItem = firstVisibleItem + visibleItemCount;
-                if (lastItem == totalItemCount) //scrolled to bottom!
-                {
-                    if (lastItem != previousLastItem)
-                    {
-                        previousLastItem = lastItem;
-                        requestNextPaymentBatches();
-                    }
-                }
+                requestNextPaymentBatches();
             }
         });
     }
