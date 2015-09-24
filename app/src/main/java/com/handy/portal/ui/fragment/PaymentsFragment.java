@@ -90,6 +90,7 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.payments, false);
+        slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
 
         if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
