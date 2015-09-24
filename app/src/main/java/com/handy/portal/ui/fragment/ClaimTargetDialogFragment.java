@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.PaymentInfo;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.util.CurrencyUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -79,7 +79,7 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: extend fro
         textExpectedPayLabel.setText(getResources().getString(R.string.booking_details_claim_target_expected_pay_label, claimTargetInfo.getNumDaysExpectedPayment()));
 
         PaymentInfo paymentInfo = claimTargetInfo.getPaymentInfo();
-        textExpectedPayDollars.setText(TextUtils.formatPrice(paymentInfo.getAmount(), paymentInfo.getCurrencySymbol()));
+        textExpectedPayDollars.setText(CurrencyUtils.formatPrice(paymentInfo.getAmount(), paymentInfo.getCurrencySymbol()));
 
     }
 

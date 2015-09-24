@@ -1,11 +1,15 @@
 <resources>
+
     <style name="HandyActionBarTheme" parent="android:Theme.Holo.Light.DarkActionBar"><!--TODO: eventually should use Toolbar with support library instead of ActionBar! -->
         <item name="android:actionBarStyle">@style/MainActionBar</item>
-        <item name="android:logo">@drawable/button_home_as_up</item> <!--hack to get around issue in which homeAsUpIndicator still takes up space when not enabled. seems to be no way to make visibility=GONE -->
+        <item name="android:logo">@drawable/button_home_as_up</item>
+        <!--hack to get around issue in which homeAsUpIndicator still takes up space when not enabled. seems to be no way to make visibility=GONE -->
         <item name="android:actionMenuTextAppearance">@style/MainActionBarMenu</item>
-        <item name="android:homeAsUpIndicator">@drawable/empty_space</item> <!--very gross hack needed due to issue above. unable to set padding. would really rather not do this!-->
+        <item name="android:homeAsUpIndicator">@drawable/empty_space</item>
+        <!--very gross hack needed due to issue above. unable to set padding. would really rather not do this!-->
         <item name="android:actionOverflowButtonStyle">@style/MyOverFlow</item>
     </style>
+
     <style name="MyOverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_gear</item>
     </style>
@@ -60,6 +64,37 @@
         <item name="android:background">@color/handy_blue</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <!--TODO: clean up these text appearance styles -->
+
+    <style name="HandyTextAppearanceListHeader">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="HandyTextAppearanceListEntrySubtitle">
+        <item name="android:textColor">@drawable/list_entry_subtitle_text</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+    </style>
+
+    <style name="HandyTextAppearanceMedium">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+    </style>
+
+    <style name="HandyTextAppearanceMediumSmall">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
+    <style name="HandyTextAppearanceSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="HandyTextAppearanceTitle" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="DateTextView">
@@ -581,7 +616,7 @@
         <item name="fontPath">fonts/CircularStd-Medium.otf</item>
     </style>
 
-    <style name="abstractWheelViewStyle" />
+    <style name="abstractWheelViewStyle"/>
 
     <style name="CirclePageIndicatorStyle">
     </style>

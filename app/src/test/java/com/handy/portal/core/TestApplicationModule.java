@@ -25,6 +25,7 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
@@ -54,6 +55,7 @@ import static org.mockito.Mockito.mock;
         HelpContactFragment.class,
         UrbanAirshipManager.class,
         PaymentsFragment.class,
+        PaymentsDetailFragment.class,
         TestActivity.class,
 
 }, library = true)

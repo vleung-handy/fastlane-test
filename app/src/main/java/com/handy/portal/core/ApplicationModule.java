@@ -19,6 +19,7 @@ import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
@@ -43,6 +44,7 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
@@ -93,6 +95,7 @@ import retrofit.converter.GsonConverter;
         OnboardingActivity.class,
         ComplementaryBookingsFragment.class,
         PaymentsFragment.class,
+        PaymentsDetailFragment.class
 })
 public final class ApplicationModule
 {
@@ -319,6 +322,13 @@ public final class ApplicationModule
     final MainActivityFragmentNavigationHelper provideFragmentNavigationManager(Bus bus)
     {
         return new MainActivityFragmentNavigationHelper(bus);
+    }
+
+    @Provides
+    @Singleton
+    final PaymentsManager providePaymentsManager(Bus bus, final DataManager dataManager)
+    {
+        return new PaymentsManager(bus, dataManager);
     }
 
     private String getDeviceId()

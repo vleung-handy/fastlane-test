@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <com.handy.portal.ui.layout.SlideUpPanelContainer
     android:id="@+id/slide_up_panel_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -6,4 +7,54 @@
     android:layout_height="match_parent"
     tools:context=".PaymentsFragment">
 
+    <include layout="@layout/layout_fetch_error"/>
+
+    <ScrollView
+        android:id="@+id/payments_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="always">
+
+        <LinearLayout
+            android:id="@+id/payments_content_container"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_pressed"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dark_grey_border_bottom"
+                android:orientation="horizontal">
+
+                <!--<Spinner-->
+                <!--android:entries="@array/test_year_spinner"-->
+                <!--android:id="@+id/select_year_spinner"-->
+                <!--android:spinnerMode="dropdown"-->
+                <!--android:textColor="@color/title_grey"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"/>-->
+
+                <!-- annual summary will be added later -->
+                <TextView
+                    android:id="@+id/element_payments_year_summary_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingBottom="@dimen/default_padding"
+                    android:paddingLeft="@dimen/payment_container_horizontal_padding"
+                    android:paddingRight="@dimen/payment_container_horizontal_padding"
+                    android:paddingTop="@dimen/default_padding"
+                    android:textColor="@color/payments_batch_list_entry_subtitle"
+                    android:textSize="@dimen/small_text_size"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/element_payments_batch_list"/>
+
+        </LinearLayout>
+    </ScrollView>
 </com.handy.portal.ui.layout.SlideUpPanelContainer>

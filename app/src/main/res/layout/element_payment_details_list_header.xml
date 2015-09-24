@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView
+    android:id="@+id/payment_details_list_header"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@drawable/background_shadow_border"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/payment_container_vertical_padding"
+    android:paddingLeft="@dimen/payment_container_horizontal_padding"
+    android:paddingRight="@dimen/payment_container_horizontal_padding"
+    android:paddingTop="@dimen/payment_container_vertical_padding"
+    android:stretchColumns="1">
+
+    <TextView
+        android:id="@+id/payment_detail_date_range_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/extra_padding"
+        android:text="@string/no_data"
+        android:textAppearance="@style/TextView.Bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/xlarge_text_size"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_payment"
+            android:textAppearance="@style/HandyTextAppearanceMedium"
+            android:textStyle="normal"/>
+
+        <TextView
+            android:id="@+id/payments_detail_total_payment_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="end"
+            android:textAppearance="@style/HandyTextAppearanceTitle"
+            android:textColor="@color/requested_green"/>
+    </RelativeLayout>
+</com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView>

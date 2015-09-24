@@ -22,7 +22,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
@@ -74,11 +76,28 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     public void shouldShowHelpSlideUpWhenHelpIconIsClicked() throws Exception
     {
         ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
+        fragment.helpNodesListView = spy(fragment.helpNodesListView);
+        when(fragment.helpNodesListView.getCount()).thenReturn(1);
 
         fragment.slideUpPanelContainer = mock(SlideUpPanelContainer.class);
         shadowActivity.clickMenuItem(R.id.action_help);
 
         verify(fragment.slideUpPanelContainer).showPanel(anyInt(), any(SlideUpPanelContainer.ContentInitializer.class));
+    }
+
+    @Test
+    public void shouldRedirectToHelpCenterWhenHelpIconIsClickedButThereAreNoHelpNodes() throws Exception
+    {
+        ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
+
+        fragment.slideUpPanelContainer = mock(SlideUpPanelContainer.class);
+        shadowActivity.clickMenuItem(R.id.action_help);
+
+        ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
+        verify(fragment.bus, atLeastOnce()).post(captor.capture());
+        HandyEvent.NavigateToTab event = getBusCaptorValue(captor, HandyEvent.NavigateToTab.class);
+        assertNotNull("NavigateToTab event was not post to bus", event);
+        assertEquals("Failed to navigate to help tab", MainViewTab.HELP, event.targetTab);
     }
 
 }

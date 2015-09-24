@@ -87,7 +87,7 @@ public final class UIUtils
                 }
             }
 
-            String paymentString = TextUtils.formatPrice(dollarAmount, paymentInfo.getCurrencySymbol());
+            String paymentString = CurrencyUtils.formatPrice(dollarAmount, paymentInfo.getCurrencySymbol());
             dollarTextView.setText(String.format(format, paymentString));
             dollarTextView.setVisibility(View.VISIBLE);
         }
