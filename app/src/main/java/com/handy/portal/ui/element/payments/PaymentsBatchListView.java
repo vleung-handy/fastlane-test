@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 
@@ -47,15 +48,14 @@ public final class PaymentsBatchListView extends InfiniteScrollListView
 
     public void init()
     {
-        PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(
-                getContext(
-                ));
-        setAdapter(itemsAdapter);
-        paymentsBatchListHeaderView = (PaymentsBatchListHeaderView) inflate(getContext(), R.layout.element_payments_batch_list_current_week_header, null);
+        PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(getContext());
+        paymentsBatchListHeaderView = (PaymentsBatchListHeaderView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_current_week_header, null);
         addHeaderView(paymentsBatchListHeaderView);
 
-        footerView = (TextView) inflate(getContext(), R.layout.element_payments_batch_list_footer, null);
+        footerView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_footer, null);
         addFooterView(footerView);
+
+        setAdapter(itemsAdapter);
     }
 
     public void showFooter(int stringResourceId)
@@ -76,7 +76,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView
 
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate)
     {
-        if(getWrappedAdapter().isDataEmpty())
+        if (getWrappedAdapter().isDataEmpty())
         {
             paymentsBatchListHeaderView.updateDisplay(paymentBatches);
         }
