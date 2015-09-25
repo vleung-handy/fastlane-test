@@ -18,7 +18,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/light_grey"
         android:orientation="horizontal"
-        android:weightSum="4">
+        android:weightSum="5">
 
         <RadioButton
             android:id="@+id/button_jobs"
@@ -34,6 +34,13 @@
             android:checked="false"
             android:drawableTop="@drawable/tab_button_schedule"
             android:text="@string/tab_schedule"/>
+        <RadioButton
+            android:id="@+id/button_payments"
+            style="@style/TabButton"
+            android:layout_weight="1"
+            android:checked="false"
+            android:drawableTop="@drawable/tab_button_payments"
+            android:text="@string/tab_payments"/>
 
         <RadioButton
             android:id="@+id/button_profile"
@@ -52,36 +59,5 @@
     </RadioGroup>
 
     <include layout="@layout/merge_loading"/>
-
-    <com.handy.portal.ui.element.TransitionOverlayView
-        android:id="@+id/transition_overlay"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/dark_grey"
-        android:clickable="false"
-        android:visibility="gone"
-        >
-
-        <ImageView
-            android:id="@+id/transition_overlay_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:background="@color/transparent"
-            android:src="@drawable/ic_success_circle"/>
-
-        <TextView
-            android:id="@+id/transition_overlay_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/transition_overlay_image"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_marginTop="25dp"
-            android:text="@string/job_claim_success"
-            android:textColor="@color/white"
-            android:textSize="18sp"/>
-    </com.handy.portal.ui.element.TransitionOverlayView>
 
 </RelativeLayout>

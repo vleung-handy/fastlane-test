@@ -4,6 +4,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
@@ -28,6 +29,14 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     @InjectView(R.id.available_bookings_empty)
     protected ViewGroup noAvailableBookingsLayout;
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        setActionBar(R.string.available_jobs, false);
+        tabsCallback.updateTabs(MainViewTab.AVAILABLE_JOBS);
+    }
 
     protected BookingListView getBookingListView()
     {

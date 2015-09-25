@@ -18,14 +18,18 @@ import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
+import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
@@ -42,6 +46,7 @@ import static org.mockito.Mockito.mock;
         MainActivityFragment.class,
         MainActivity.class,
         PortalWebViewFragment.class,
+        ProfileFragment.class,
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
         ScheduledBookingsFragment.class,
@@ -49,6 +54,9 @@ import static org.mockito.Mockito.mock;
         HelpFragment.class,
         HelpContactFragment.class,
         UrbanAirshipManager.class,
+        PaymentsFragment.class,
+        PaymentsDetailFragment.class,
+        TestActivity.class,
 
 }, library = true)
 public class TestApplicationModule

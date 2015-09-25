@@ -57,15 +57,12 @@ public class SupportActionContainerViewConstructor extends ViewConstructor<Booki
 
             for (Action action : supportActions)
             {
-                new SupportActionViewConstructor(getContext())
-                        .create(supportActionsContainer, action);
-
+                new SupportActionViewConstructor(getContext()).create(supportActionsContainer, action);
             }
             return true;
         }
         else
         {
-
             return false;
         }
     }

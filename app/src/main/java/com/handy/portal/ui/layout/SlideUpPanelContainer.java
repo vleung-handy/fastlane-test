@@ -1,7 +1,6 @@
 package com.handy.portal.ui.layout;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -50,6 +49,8 @@ public class SlideUpPanelContainer extends RelativeLayout
 
     public void showPanel(int titleStringId, @NonNull ContentInitializer contentInitializer)
     {
+        //TODO: Right now we are creating a new panel everytime, consider save and reuse the panel
+
         if (!panelShown)
         {
             View panelOverlay = LayoutInflater.from(getContext()).inflate(R.layout.layout_slide_up_panel_overlay, this, false);
@@ -103,14 +104,15 @@ public class SlideUpPanelContainer extends RelativeLayout
     {
         if (panelShown)
         {
-            ((Activity) getContext()).onBackPressed();
+            dismiss();
         }
     }
 
     private void dismiss()
     {
-        View panel = findViewById(R.id.slide_up_panel);
+        ViewGroup panel = (ViewGroup) findViewById(R.id.slide_up_panel);
         hideElement(panel, R.anim.slide_down);
+        panel.removeAllViews();
 
         View panelOverlay = findViewById(R.id.slide_up_panel_overlay);
         hideElement(panelOverlay, R.anim.fade_out);

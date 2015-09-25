@@ -7,10 +7,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,7 +43,6 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionRemovePanelViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsBannerViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
@@ -68,14 +68,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class BookingDetailsFragment extends InjectedFragment
+public class BookingDetailsFragment extends ActionBarFragment
 {
     //Layouts points for fragment, the various elements are childed to these
     @InjectView(R.id.booking_details_layout)
     protected LinearLayout detailsParentLayout;
-
-    @InjectView(R.id.booking_details_banner_layout)
-    protected LinearLayout bannerLayout;
 
     @InjectView(R.id.booking_details_map_layout)
     protected LinearLayout mapLayout;
@@ -117,15 +114,24 @@ public class BookingDetailsFragment extends InjectedFragment
     private BookingType requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
+    private boolean isForPayments;
+    private MainViewTab currentTab;
 
     private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
+    private static final String BOOKING_PROXY_ID_PREFIX = "P";
+
+    @Override
+    public void onCreate(Bundle savedInstance)
+    {
+        super.onCreate(savedInstance);
+        setOptionsMenuEnabled(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View view = inflater.inflate(R.layout.fragment_booking_detail, null);
 
         ButterKnife.inject(this, view);
@@ -135,6 +141,9 @@ public class BookingDetailsFragment extends InjectedFragment
             Bundle arguments = getArguments();
             this.requestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
             this.requestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
+            this.currentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
+
+            this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
 
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
@@ -152,6 +161,66 @@ public class BookingDetailsFragment extends InjectedFragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.menu_booking_details, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void updateActionBar(Menu menu) //passing menu as argument because there is no way to get a reference to it programmatically
+    {
+        if (associatedBooking != null)
+        {
+
+            int titleStringId = 0;
+            String bookingIdPrefix = associatedBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
+            String jobLabel = getActivity().getString(R.string.job_num) + bookingIdPrefix + associatedBooking.getId();
+
+            if (this.isForPayments)
+            {
+                titleStringId = R.string.previous_job;
+                menu.findItem(R.id.action_job_label).setTitle(jobLabel);
+            }
+            else
+            {
+                Booking.BookingStatus bookingStatus = associatedBooking.inferBookingStatus(getLoggedInUserId());
+                if (bookingStatus != null)
+                {
+                    switch (bookingStatus)
+                    {
+                        case AVAILABLE:
+                        {
+                            titleStringId = R.string.available_job;
+                        }
+                        break;
+
+                        case CLAIMED:
+                        {
+                            menu.findItem(R.id.action_job_label).setTitle(jobLabel);
+                            titleStringId = R.string.your_job;
+                        }
+                        break;
+
+                        case UNAVAILABLE:
+                        {
+                            titleStringId = R.string.unavailable_job;
+                        }
+                        break;
+                    }
+                }
+            }
+            setActionBar(titleStringId, true);
+        }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) //this gets called after invalidateOptionsMenu()/every time menu is shown
+    {
+        super.onPrepareOptionsMenu(menu);
+        updateActionBar(menu);
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -159,6 +228,7 @@ public class BookingDetailsFragment extends InjectedFragment
         {
             requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
         }
+        tabsCallback.updateTabs(currentTab);
     }
 
     @Override
@@ -187,10 +257,10 @@ public class BookingDetailsFragment extends InjectedFragment
         //clear existing elements out of our fragment's display
         clearLayouts();
         constructBookingDisplayElements(booking);
+        invalidateOptionsMenu();
         createAllowedActionButtons(booking);
 
         //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
-        initBackButton();
         initCancelNoShowButton();
         initMapsPlaceHolderButton();
     }
@@ -206,9 +276,6 @@ public class BookingDetailsFragment extends InjectedFragment
                 vg.removeAllViews();
             }
         }
-
-        //banner layout is not under the details layout as it sticks to the top
-        bannerLayout.removeAllViews();
     }
 
     //Use view constructors on layouts to generate the elements inside the layouts, we do not currently maintain a linkage to the resulting view
@@ -235,26 +302,38 @@ public class BookingDetailsFragment extends InjectedFragment
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
+        arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, this.isForPayments);
 
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
-        viewConstructors.put(bannerLayout, new BookingDetailsBannerViewConstructor(getActivity(), arguments));
 
-        //show either the real map or a placeholder image depending on if we have google play services
-        if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
+        if (this.isForPayments)
         {
-            viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
+            mapLayout.setVisibility(View.GONE);
         }
         else
         {
-            viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
+            //show either the real map or a placeholder image depending on if we have google play services
+            if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
+            {
+                viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
+            }
+            else
+            {
+                viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
+            }
         }
 
         viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
         viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
-        viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor(getActivity(), arguments));
-        viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments));
         viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments));
-        viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments));
+
+        if (!this.isForPayments)
+        {
+            viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor(getActivity(), arguments));
+            viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments));
+            viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments));
+        }
+
         return viewConstructors;
     }
 
@@ -262,24 +341,6 @@ public class BookingDetailsFragment extends InjectedFragment
     public void onClickRequestDetails()
     {
         requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
-    }
-
-    //Can not use @onclick b/c the button does not exist at injection time
-    //TODO: Figure out better way to link click listeners sections
-    private void initBackButton()
-    {
-        ImageButton backButton = (ImageButton) bannerLayout.findViewById(R.id.booking_details_back_button);
-        if (backButton != null)
-        {
-            backButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getActivity().onBackPressed();
-                }
-            });
-        }
     }
 
     private void initCancelNoShowButton()
@@ -754,7 +815,6 @@ public class BookingDetailsFragment extends InjectedFragment
             {
                 TransitionStyle transitionStyle = (bookingClaimDetails.getBooking().isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
                 returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), transitionStyle);
-
             }
         }
         else

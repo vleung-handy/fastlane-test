@@ -15,7 +15,9 @@ import org.robolectric.util.ActivityController;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
 {
@@ -34,9 +36,16 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
+    public void shouldHaveActionBar() throws Exception
+    {
+        assertNotNull(activityFragment.getActivity().getActionBar());
+    }
+
+    @Test
     public void givenNoTabSelected_whenActivityResumes_thenLoadJobsScreen() throws Exception
     {
         assertThat(getScreenFragment(), instanceOf(AvailableBookingsFragment.class));
+        assertTrue(activityFragment.jobsButton.isChecked());
     }
 
     @Test
@@ -44,13 +53,23 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     {
         activityFragmentView.findViewById(R.id.button_schedule).performClick();
         assertThat(getScreenFragment(), instanceOf(ScheduledBookingsFragment.class));
+        assertTrue(activityFragment.scheduleButton.isChecked());
+    }
+
+    @Test
+    public void whenPaymentsButtonClicked_thenLoadPaymentsFragment() throws Exception
+    {
+        activityFragmentView.findViewById(R.id.button_payments).performClick();
+        assertThat(getScreenFragment(), instanceOf(PaymentsFragment.class));
+        assertTrue(activityFragment.paymentsButton.isChecked());
     }
 
     @Test
     public void whenProfileButtonClicked_thenLoadWebView() throws Exception
     {
         activityFragmentView.findViewById(R.id.button_profile).performClick();
-        assertThat(getScreenFragment(), instanceOf(PortalWebViewFragment.class));
+        assertThat(getScreenFragment(), instanceOf(ProfileFragment.class));
+        assertTrue(activityFragment.profileButton.isChecked());
     }
 
     @Test
@@ -58,14 +77,15 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     {
         activityFragmentView.findViewById(R.id.button_help).performClick();
         assertThat(getScreenFragment(), instanceOf(HelpFragment.class));
+        assertTrue(activityFragment.helpButton.isChecked());
     }
 
     @Test
     public void whenJobsButtonClicked_thenLoadAvailableBookingsFragment() throws Exception
     {
         activityFragmentView.findViewById(R.id.button_jobs).performClick();
-
         assertThat(getScreenFragment(), instanceOf(AvailableBookingsFragment.class));
+        assertTrue(activityFragment.jobsButton.isChecked());
     }
 
     public Fragment getScreenFragment()

@@ -18,6 +18,7 @@ import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpContactManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.TermsManager;
@@ -64,6 +65,8 @@ public class BaseApplication extends Application
     HelpContactManager helpContactManager;
     @Inject
     PrefsManager prefsManager;
+    @Inject
+    PaymentsManager paymentsManager;
     @Inject
     UrbanAirshipManager urbanAirshipManager;
     @Inject

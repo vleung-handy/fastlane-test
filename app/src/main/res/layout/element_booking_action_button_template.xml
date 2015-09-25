@@ -4,7 +4,6 @@
     android:id="@+id/booking_action_button_template"
     >
      <com.handy.portal.ui.widget.BookingActionButton
-            android:id="@+id/booking_action_button"
             style="@style/Button.BookingAction"
             android:layout_alignParentBottom="false"
          />

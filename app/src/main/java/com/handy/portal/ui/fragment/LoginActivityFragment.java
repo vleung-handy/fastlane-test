@@ -157,11 +157,11 @@ public class LoginActivityFragment extends InjectedFragment
 
         final Environment[] environments = Environment.values();
         String[] environmentNames = new String[environments.length];
-        Environment currentEnvironment = environmentModifier.getEnvironment();
+        String currentEnvironmentPrefix = environmentModifier.getEnvironmentPrefix();
         for (int i = 0; i < environments.length; i++)
         {
             Environment environment = environments[i];
-            environmentNames[i] = environment.getName() + (currentEnvironment == environment ? " (selected)" : "");
+            environmentNames[i] = environment + (currentEnvironmentPrefix.equals(environment.getPrefix()) ? " (selected)" : "");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -170,7 +170,7 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        environmentModifier.setEnvironment(environments[which]);
+                        environmentModifier.setEnvironmentPrefix(environments[which].getPrefix());
                     }
                 });
         builder.create().show();

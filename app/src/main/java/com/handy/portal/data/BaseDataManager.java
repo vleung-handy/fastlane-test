@@ -4,17 +4,20 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.SuccessWrapper;
+import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -77,9 +80,27 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
+    public void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb)
+    {
+        service.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
+    }
+
+    @Override
     public final void getBookingDetails(String bookingId, BookingType type, final Callback<Booking> cb)
     {
         service.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public final void getPaymentBatches(Date startDate, Date endDate, final Callback<PaymentBatches> cb)
+    {
+        service.getPaymentBatches(startDate, endDate, new PaymentBatchesRetroFitCallback(cb));
+    }
+
+    @Override
+    public final void getAnnualPaymentSummaries(final Callback<AnnualPaymentSummaries> cb)
+    {
+        service.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
     }
 
     @Override
@@ -137,9 +158,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void checkForTerms(final Callback<TermsDetails> cb)
+    public void checkForAllPendingTerms(final Callback<TermsDetailsGroup> cb)
     {
-        service.checkTerms(new TermsDetailsResponseHandyRetroFitCallback(cb));
+        service.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
     }
 
     @Override
@@ -182,6 +203,12 @@ public final class BaseDataManager extends DataManager
                                     final Callback<HelpNodeWrapper> cb)
     {
         service.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getHelpPaymentsInfo(final Callback<HelpNodeWrapper> cb)
+    {
+        service.getHelpPayments(new HelpNodeResponseHandyRetroFitCallback(cb));
     }
 
     @Override

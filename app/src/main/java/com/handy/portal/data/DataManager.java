@@ -12,9 +12,12 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.SuccessWrapper;
+import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.PaymentBatches;
 
 import java.util.Date;
 import java.util.Map;
@@ -26,7 +29,7 @@ public abstract class DataManager
     //Portal
     public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
 
-    public abstract void checkForTerms(Callback<TermsDetails> cb);
+    public abstract void checkForAllPendingTerms(Callback<TermsDetailsGroup> cb);
 
     public abstract void acceptTerms(String termsCode, Callback<Void> cb);
 
@@ -41,6 +44,8 @@ public abstract class DataManager
     public abstract void claimBooking(String bookingId, BookingType type, Callback<BookingClaimDetails> cb);
 
     public abstract void removeBooking(String bookingId, BookingType type, Callback<Booking> cb);
+
+    public abstract void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb);
 
     public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
 
@@ -67,6 +72,8 @@ public abstract class DataManager
                                              String bookingId,
                                              final DataManager.Callback<HelpNodeWrapper> cb);
 
+    public abstract void getHelpPaymentsInfo(final DataManager.Callback<HelpNodeWrapper> cb);
+
     public abstract void createHelpCase(TypedInput body, final Callback<Void> cb);
 
     public abstract void getProviderInfo(Callback<Provider> cb);
@@ -74,6 +81,10 @@ public abstract class DataManager
     public abstract String getBaseUrl();
 
     public abstract void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> callback);
+
+    public abstract void getPaymentBatches(Date startDate, Date endDate, Callback<PaymentBatches> callback);
+
+    public abstract void getAnnualPaymentSummaries(Callback<AnnualPaymentSummaries> callback);
 
     public interface Callback<T>
     {

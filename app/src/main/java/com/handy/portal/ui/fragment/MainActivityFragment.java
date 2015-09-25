@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,10 +20,7 @@ import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
-import com.handy.portal.ui.element.TransitionOverlayView;
 import com.squareup.otto.Subscribe;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -38,17 +36,17 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
     RadioButton scheduleButton;
+    @InjectView(R.id.button_payments)
+    RadioButton paymentsButton;
     @InjectView(R.id.button_profile)
     RadioButton profileButton;
     @InjectView(R.id.button_help)
     RadioButton helpButton;
-    @InjectView(R.id.transition_overlay)
-    TransitionOverlayView transitionOverlayView;
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
 
     private MainViewTab currentTab = null;
-    private PortalWebViewFragment webViewFragment = null;
+    private ProfileFragment profileFragment = null;
 
     public static boolean clearingBackStack = false;
 
@@ -74,49 +72,9 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
         registerButtonListeners();
-        registerBackStackListener();
-        transitionOverlayView.init();
         loadingOverlayView.init();
 
         return view;
-    }
-
-    private void registerBackStackListener()
-    {
-        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener()
-        {
-            @Override
-            public void onBackStackChanged()
-            {
-                // traverse the fragment stack from top to bottom and activate the first relevant tab
-                List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
-                for (int i = fragments.size() - 1; i >= 0; i--)
-                {
-                    if (updateSelectedTabButton(fragments.get(i)))
-                    {
-                        break;
-                    }
-                }
-            }
-        });
-    }
-
-    private boolean updateSelectedTabButton(Fragment fragment)
-    {
-        return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
-                selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
-                selectTabIfFragmentMatches(fragment, PortalWebViewFragment.class, profileButton) ||
-                selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
-    }
-
-    private boolean selectTabIfFragmentMatches(Fragment fragment, Class<? extends Fragment> fragmentClass, RadioButton tab)
-    {
-        if (fragmentClass.isInstance(fragment))
-        {
-            tab.setChecked(true);
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -159,8 +117,9 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerButtonListeners()
     {
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
         jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
         profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
         helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
     }
@@ -199,7 +158,7 @@ public class MainActivityFragment extends InjectedFragment
 
         if (targetTab.isNativeTab())
         {
-            webViewFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
+            profileFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
 
             //don't use transition if don't have anything to transition from
             if (currentTab != null)
@@ -208,6 +167,36 @@ public class MainActivityFragment extends InjectedFragment
             }
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
+
+            if (argumentsBundle == null)
+            {
+                argumentsBundle = new Bundle();
+            }
+            argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new PaymentsFragment.UpdateTabsCallback()
+            {
+                @Override
+                public int describeContents()
+                {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel parcel, int i)
+                {
+                }
+
+                @Override
+                public void updateTabs(MainViewTab tab)
+                {
+                    updateSelectedTabButton(tab);
+                }
+            });
+
+            if (targetTab == MainViewTab.DETAILS)
+            {
+                argumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
+            }
+
             swapFragmentArguments.argumentsBundle = argumentsBundle;
 
             if (userTriggered)
@@ -218,9 +207,11 @@ public class MainActivityFragment extends InjectedFragment
             {
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
+                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
                 swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
                 swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
             }
 
             swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
@@ -239,16 +230,16 @@ public class MainActivityFragment extends InjectedFragment
                 url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getTarget().getValue();
             }
 
-            if (webViewFragment == null)
+            if (profileFragment == null)
             {
-                webViewFragment = new PortalWebViewFragment();
+                profileFragment = new ProfileFragment();
 
                 //pass along the target
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.TARGET_URL, url);
 
                 swapFragmentArguments.argumentsBundle = arguments;
-                swapFragmentArguments.overrideFragment = webViewFragment;
+                swapFragmentArguments.overrideFragment = profileFragment;
                 swapFragmentArguments.clearBackStack = true;
 
                 swapFragment(swapFragmentArguments);
@@ -256,7 +247,7 @@ public class MainActivityFragment extends InjectedFragment
             else
             {
                 //don't need to do any fragment swapping just open the new url
-                webViewFragment.openPortalUrl(url);
+                profileFragment.openPortalUrl(url);
             }
         }
 
@@ -297,6 +288,11 @@ public class MainActivityFragment extends InjectedFragment
                 case SCHEDULED_JOBS:
                 {
                     scheduleButton.toggle();
+                }
+                break;
+                case PAYMENTS:
+                {
+                    paymentsButton.toggle();
                 }
                 break;
                 case PROFILE:
@@ -359,8 +355,9 @@ public class MainActivityFragment extends InjectedFragment
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())
             {
-                transitionOverlayView.setupOverlay(swapArguments.transitionStyle);
-                transitionOverlayView.showThenHideOverlay();
+                TransientOverlayDialogFragment overlayDialogFragment =TransientOverlayDialogFragment
+                    .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapArguments.transitionStyle.getOverlayStringId());
+                overlayDialogFragment.show(getFragmentManager(), "overlay dialog fragment");
             }
         }
 

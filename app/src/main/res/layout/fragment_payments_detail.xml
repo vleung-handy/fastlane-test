@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:overScrollMode="always">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_pressed"
+        android:orientation="vertical">
+
+        <include layout="@layout/element_payment_details_list_header"/>
+
+        <com.handy.portal.ui.element.payments.PaymentDetailExpandableListView
+            android:id="@+id/payments_detail_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/list_divider"
+            android:dividerHeight="1px"
+            android:footerDividersEnabled="true"
+            android:groupIndicator="@color/transparent"
+            android:headerDividersEnabled="true"
+            android:paddingTop="1dp"
+            android:transcriptMode="disabled">
+
+        </com.handy.portal.ui.element.payments.PaymentDetailExpandableListView>
+    </LinearLayout>
+</ScrollView>

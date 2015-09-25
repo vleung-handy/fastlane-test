@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_help"
+        android:icon="@drawable/ic_question"
+        android:orderInCategory="60"
+        android:showAsAction="always"/>
+    <item
+        android:id="@+id/action_update_banking"
+        android:orderInCategory="80"
+        android:showAsAction="never"
+        android:title="@string/update_banking_information"/>
+    <item
+        android:id="@+id/action_email_verification"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/email_income_verification"/>
+</menu>

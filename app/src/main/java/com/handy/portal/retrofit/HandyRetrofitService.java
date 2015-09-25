@@ -20,12 +20,14 @@ public interface HandyRetrofitService
     String SESSIONS_PATH = "/sessions/";
     String BOOKINGS_PATH = "/bookings/";
     String JOBS_PATH = "/jobs/";
+    String PROVIDERS_PATH = "/providers/";
+    String PAYMENTS_PATH = "/payments/";
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
 
-    @GET("/check_terms")
-    void checkTerms(HandyRetrofitCallback cb);
+    @GET("/check_all_pending_terms")
+    void checkAllPendingTerms(HandyRetrofitCallback cb);
 
     @Multipart
     @POST("/accept_terms")
@@ -53,8 +55,18 @@ public interface HandyRetrofitService
     @GET(JOBS_PATH + "{id}")
     void getBookingDetails(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
+    @GET(PAYMENTS_PATH)
+    void getPaymentBatches(@Query("date_range_start") Date startDate, @Query("date_range_end") Date endDate, HandyRetrofitCallback cb);
+
+    @GET(PAYMENTS_PATH + "annual_summaries")
+    void getAnnualPaymentSummaries(HandyRetrofitCallback cb);
+
+
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "{id}/send_income_verification")
+    void sendIncomeVerification(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")
@@ -99,6 +111,9 @@ public interface HandyRetrofitService
     void getHelpBookingsInfo(@Query("id") String nodeId,
                              @Query("booking_id") String bookingId,
                              HandyRetrofitCallback cb);
+
+    @GET(SELF_SERVICE_PATH + "payments_faq_node")
+    void getHelpPayments(HandyRetrofitCallback cb);
 
     @POST(SELF_SERVICE_PATH + "create_case")
     void createHelpCase(@Body TypedInput body, HandyRetrofitCallback cb);

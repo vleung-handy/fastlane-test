@@ -1,11 +1,13 @@
 package com.handy.portal.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -18,6 +20,16 @@ import java.text.DecimalFormat;
 
 public final class UIUtils
 {
+    public static void dismissKeyboard(Activity activity)
+    {
+        View currentFocus = activity.getCurrentFocus();
+        if (currentFocus != null)
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
+    }
+
     public static ViewGroup getParent(View view)
     {
         return (ViewGroup)view.getParent();
@@ -71,11 +83,11 @@ public final class UIUtils
                 }
                 else
                 {
-                    centsTextView.setVisibility(View.INVISIBLE);
+                    centsTextView.setVisibility(View.GONE);
                 }
             }
 
-            String paymentString = TextUtils.formatPrice(dollarAmount, paymentInfo.getCurrencySymbol());
+            String paymentString = CurrencyUtils.formatPrice(dollarAmount, paymentInfo.getCurrencySymbol());
             dollarTextView.setText(String.format(format, paymentString));
             dollarTextView.setVisibility(View.VISIBLE);
         }
@@ -84,7 +96,7 @@ public final class UIUtils
             dollarTextView.setVisibility(View.INVISIBLE);
             if (centsTextView != null)
             {
-                centsTextView.setVisibility(View.INVISIBLE);
+                centsTextView.setVisibility(View.GONE);
             }
         }
     }

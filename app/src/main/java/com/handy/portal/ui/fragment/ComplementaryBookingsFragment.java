@@ -3,6 +3,9 @@ package com.handy.portal.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -32,16 +35,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class ComplementaryBookingsFragment extends InjectedFragment
+public class ComplementaryBookingsFragment extends ActionBarFragment
 {
     @InjectView(R.id.loading_overlay)
     View loadingOverlay;
     @InjectView(R.id.complementary_bookings_empty)
     View noBookingsView;
-    @InjectView(R.id.complementary_bookings_banner_text)
-    TextView bannerText;
-    @InjectView(R.id.complementary_bookings_banner_close_button)
-    View closeButton;
     @InjectView(R.id.earlier_bookings)
     ViewGroup earlierBookingsContainer;
     @InjectView(R.id.later_bookings)
@@ -63,6 +62,33 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     private Date bookingDate;
 
     public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
+
+    @Override
+    public void onCreate(Bundle savedInstance)
+    {
+        super.onCreate(savedInstance);
+        setOptionsMenuEnabled(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.menu_complementary_jobs, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.action_exit:
+                onBackButtonPressed();
+                return true;
+            default:
+                return false;
+        }
+    }
 
     @Nullable
     @Override
@@ -86,14 +112,6 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         }
 
         loadingOverlay.setVisibility(View.VISIBLE);
-        closeButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                getActivity().onBackPressed();
-            }
-        });
 
         return view;
     }
@@ -108,10 +126,12 @@ public class ComplementaryBookingsFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        setActionBar(R.string.matching_jobs, false);
         if (!MainActivityFragment.clearingBackStack)
         {
             requestComplementaryBookings();
         }
+        tabsCallback.updateTabs(MainViewTab.SCHEDULED_JOBS);
     }
 
     @OnClick(R.id.all_jobs_button)
@@ -169,13 +189,13 @@ public class ComplementaryBookingsFragment extends InjectedFragment
         if (complementaryBookings.isEmpty())
         {
             mixpanel.track("no complementary jobs found");
-            bannerText.setText(R.string.no_matching_jobs);
+            setActionBarTitle(R.string.no_matching_jobs);
             noBookingsView.setVisibility(View.VISIBLE);
         }
         else
         {
             mixpanel.track("complementary jobs found");
-            bannerText.setText(complementaryBookings.size() == 1 ? getString(R.string.one_matching_job) : getString(R.string.n_matching_jobs, complementaryBookings.size()));
+            setActionBarTitle(complementaryBookings.size() == 1 ? getString(R.string.one_matching_job) : getString(R.string.n_matching_jobs, complementaryBookings.size()));
             displayBookings(Lists.newArrayList(complementaryBookings));
         }
     }

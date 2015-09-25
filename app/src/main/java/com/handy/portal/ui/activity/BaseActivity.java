@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -139,9 +138,9 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
     }
 
     @Override
-    public void onResume()
+    public void onResumeFragments()
     {
-        super.onResume();
+        super.onResumeFragments();
         this.bus.register(busEventListener);
         checkForUpdates();
         postActivityResumeEvent(); //do not disable this
@@ -239,10 +238,11 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
                         .addOnConnectionFailedListener(this)
                         .addApi(LocationServices.API)
                         .build();
+                bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(true));
             }
             else
             {
-                Crashlytics.log("No Google Play Services, can not get locational data");
+                bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(false));
             }
         }
     }

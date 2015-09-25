@@ -74,6 +74,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         activity = activityController.get();
 
         initMocks(this);
+
+        when(environmentModifier.getEnvironmentPrefix()).thenReturn("s");
     }
 
     @Test
@@ -196,7 +198,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         alertDialog.clickOnItem(2);
 
         String secondItem = (String) alertDialog.getItems()[2];
-        verify(environmentModifier).setEnvironment(EnvironmentModifier.Environment.valueOf(secondItem));
+        verify(environmentModifier).setEnvironmentPrefix(EnvironmentModifier.Environment.valueOf(secondItem).getPrefix());
     }
 
     private void makeLoginRequest(String pinCode)

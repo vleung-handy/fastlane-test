@@ -25,7 +25,7 @@ public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint
     @Override
     public String getName()
     {
-        return environmentModifier.getEnvironment().getName();
+        return environmentModifier.getEnvironmentPrefix();
     }
 
     @Override
@@ -36,6 +36,6 @@ public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint
 
     private String formatUrl(String url)
     {
-        return MessageFormat.format(url, environmentModifier.getEnvironment().getPrefix());
+        return MessageFormat.format(url, environmentModifier.getEnvironmentPrefix());
     }
 }

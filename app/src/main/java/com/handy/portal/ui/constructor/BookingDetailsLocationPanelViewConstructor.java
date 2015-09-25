@@ -40,9 +40,12 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
     @InjectView(R.id.booking_details_requested_indicator_layout)
     protected LinearLayout requestedLayout;
 
+    private final boolean isForPayments;
+
     public BookingDetailsLocationPanelViewConstructor(@NonNull Context context, Bundle arguments)
     {
         super(context, arguments);
+        this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
     }
 
     protected int getLayoutResourceId()
@@ -53,7 +56,7 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
     @Override
     protected boolean constructView(ViewGroup container, Booking booking)
     {
-        BookingStatus bookingStatus = (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
+        BookingStatus bookingStatus = this.isForPayments ? BookingStatus.UNAVAILABLE : (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
 
         locationText.setText(booking.getFormattedLocation(bookingStatus));
 
@@ -67,8 +70,11 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
             serviceText.setText(serviceInfo.getDisplayName());
         }
 
-        UIUtils.setPaymentInfo(paymentText, centsText, booking.getPaymentToProvider(), getContext().getString(R.string.payment_value));
-        UIUtils.setPaymentInfo(paymentBonusText, null, booking.getBonusPaymentToProvider(), getContext().getString(R.string.bonus_payment_value));
+        if (!this.isForPayments)
+        {
+            UIUtils.setPaymentInfo(paymentText, centsText, booking.getPaymentToProvider(), getContext().getString(R.string.payment_value));
+            UIUtils.setPaymentInfo(paymentBonusText, null, booking.getBonusPaymentToProvider(), getContext().getString(R.string.bonus_payment_value));
+        }
 
         //Partner takes priority over requested
         if (booking.getPartner() != null)
@@ -76,7 +82,7 @@ public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsVi
             partnerText.setVisibility(booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ? View.VISIBLE : View.GONE);
             requestedLayout.setVisibility(View.GONE);
         }
-        else if (booking.isRequested())
+        else if (booking.isRequested() && !this.isForPayments)
         {
             partnerText.setVisibility(View.GONE);
             requestedLayout.setVisibility(View.VISIBLE);

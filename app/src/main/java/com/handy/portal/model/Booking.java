@@ -367,13 +367,13 @@ public class Booking implements Comparable<Booking>, Serializable
         {
             return getLocationName();
         }
-        else if (bookingStatus == BookingStatus.AVAILABLE)
+        else if (bookingStatus == BookingStatus.CLAIMED)
         {
-            return getAddress().getShortRegion() + "\n" + getAddress().getZip();
+            return getAddress().getStreetAddress() + "\n" + getAddress().getZip();
         }
         else
         {
-            return getAddress().getStreetAddress() + "\n" + getAddress().getZip();
+            return getAddress().getShortRegion() + "\n" + getAddress().getZip();
         }
     }
 

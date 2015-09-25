@@ -56,6 +56,11 @@
     <string name="job_remove_success">Success! Job removed!</string>
     <string name="series_remove_success">Success! Series removed!</string>
 
+    <string name="send_verification_success">Your work verification has been sent.</string>
+    <string name="send_verification_failed">Oops! There was an error sending your income verification. Please try again.</string>
+
+    <string name="request_payments_batches_failed">Oops! There was an error loading your payments.</string>
+
     <string name="home">Home</string>
     <string name="help">Help</string>
     <string name="promotions">Promotions</string>
@@ -65,7 +70,9 @@
     <string name="phone">Phone</string>
     <string name="password">Password</string>
     <string name="default_error_string">"Sorry, something went wrong. Please try again."</string>
-    <string name="loading">Loading…</string>
+    <string name="loading_more_payments">Loading more payments…</string>
+    <string name="no_more_entries">No more entries.</string>
+    <string name="no_data">--</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="facebook_app_id">381615805205781</string>
     <string name="or">or</string>
@@ -220,6 +227,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tab_jobs">Jobs</string>
     <string name="tab_schedule">Schedule</string>
+    <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
@@ -228,6 +236,9 @@
     <string name="available_job">Available Job</string>
     <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
     <string name="payment_value">%s</string>
+    <string name="payment_help">Payment Help</string>
+    <string name="payments">Payments</string>
+    <string name="payments_details">Payment Details</string>
     <string name="bonus_payment_value">+ %s BONUS</string>
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
@@ -282,7 +293,7 @@
     <string name="arrival_time_late_15">I\u2019ll be 15 minutes late</string>
     <string name="arrival_time_late_30">I\u2019ll be 30 minutes late</string>
 
-    <string name="booking_details_claim_target_msg">Nice! Keep claiming to hit your first 5 jobs.</string>
+    <string name="booking_details_claim_target_msg">Nice! Keep claiming to hit your first %1$d jobs.</string>
     <string name="booking_details_claim_target_reached_msg">Feel free to claim even more jobs before they\u2019re snatched up</string>
     <string name="booking_details_claim_target_title">Job claimed!</string>
     <string name="booking_details_claim_target_reached_title">Congratulations!</string>
@@ -290,6 +301,10 @@
 
     <string name="booking_details_check_in_time_msg">\u2713 Checked in at %1$s</string>
     <string name="booking_details_eta_msg">Estimated arrival time: %1$s</string>
+
+    <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d withholdings</string>
+    <string name="payment_annual_summary">YTD  \u22C5  %1$d jobs  \u22C5  %2$s</string>
+    <string name="payment_detail_list_group_header">%1$s (%2$d)</string>
 
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
     <string name="omw_failure">There was a problem updating your status. Please try again.</string>
@@ -364,4 +379,23 @@
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
 
+    <!-- Payments -->
+    <string name="previous_job">Previous Job</string>
+
+    <!-- Payments Menu Items -->
+    <string name="update_banking_information">Update banking information</string>
+    <string name="email_income_verification">Email income verification</string>
+    <string name="total_payment">Total Payment</string>
+    <string name="expected_payment">Expected Payment</string>
+    <string name="remaining_withholdings">Remaining Withholdings</string>
+    <string name="previous_pay_weeks">PREVIOUS PAY WEEKS</string>
+    <string name="withholdings">Withholdings</string>
+    <string name="current_pay_week">CURRENT PAY WEEK</string>
+    <string name="total_earnings">Total Earnings</string>
+    <string name="no_more_payments">You have no more payments for this year.</string>
+
+    <!--TEST ONLY, REMOVE LATER-->
+    <string-array name="test_year_spinner">
+        <item>2015</item>
+    </string-array>
 </resources>

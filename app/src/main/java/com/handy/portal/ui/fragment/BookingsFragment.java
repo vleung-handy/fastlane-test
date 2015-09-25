@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends InjectedFragment
+public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment
 {
     @InjectView(R.id.fetch_error_view)
     protected View fetchErrorView;

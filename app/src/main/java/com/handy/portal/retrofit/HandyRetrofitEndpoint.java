@@ -2,7 +2,6 @@ package com.handy.portal.retrofit;
 
 import android.content.Context;
 
-import com.handy.portal.BuildConfig;
 import com.handy.portal.core.PropertiesReader;
 
 import java.util.Properties;
@@ -13,6 +12,7 @@ import retrofit.Endpoint;
 
 public class HandyRetrofitEndpoint implements Endpoint
 {
+    private static final String PROD_IDENTIFIER = "p";
 
     private final String apiEndpoint;
     private final String baseUrl;
@@ -34,7 +34,7 @@ public class HandyRetrofitEndpoint implements Endpoint
     @Override
     public String getName()
     {
-        return BuildConfig.FLAVOR;
+        return PROD_IDENTIFIER;
     }
 
     public String getBaseUrl()

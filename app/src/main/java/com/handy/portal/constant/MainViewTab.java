@@ -1,18 +1,24 @@
 package com.handy.portal.constant;
 
+import com.handy.portal.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
-import com.handy.portal.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 
-public enum MainViewTab
+import java.io.Serializable;
+
+public enum MainViewTab implements Serializable
 {
     AVAILABLE_JOBS(null, AvailableBookingsFragment.class),
     SCHEDULED_JOBS(null, ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(null, ComplementaryBookingsFragment.class),
+    PAYMENTS(null, PaymentsFragment.class),
+    PAYMENTS_DETAIL(null, PaymentsDetailFragment.class),
     PROFILE(PortalWebViewFragment.Target.PROFILE, null),
     HELP(null, HelpFragment.class),
     DETAILS(null, BookingDetailsFragment.class),
