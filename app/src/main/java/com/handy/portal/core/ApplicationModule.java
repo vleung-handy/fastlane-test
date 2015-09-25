@@ -52,6 +52,7 @@ import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
+import com.handy.portal.ui.fragment.UpdatePaymentFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
@@ -100,6 +101,7 @@ import retrofit.converter.GsonConverter;
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
         AutoCheckInService.class,
+        UpdatePaymentFragment.class
 })
 public final class ApplicationModule
 {

@@ -227,7 +227,8 @@ public final class PaymentsFragment extends ActionBarFragment
         switch (item.getItemId())
         {
             case R.id.action_update_banking:
-                bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REFRESH_TAB));
+//                bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REFRESH_TAB));
+                bus.post(new HandyEvent.NavigateToTab(MainViewTab.UPDATE_PAYMENTS, null, TransitionStyle.SLIDE_UP));
                 return true;
             case R.id.action_email_verification:
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
