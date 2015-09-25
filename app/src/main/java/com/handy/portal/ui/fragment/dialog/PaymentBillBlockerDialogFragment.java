@@ -2,7 +2,6 @@ package com.handy.portal.ui.fragment.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,14 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.event.HandyEvent;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class PaymentBillBlockerDialogFragment extends DialogFragment //TODO: consolidate some of this logic with other dialog fragments
+public class PaymentBillBlockerDialogFragment extends InjectedDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
 
     @InjectView(R.id.payments_bill_blocker_update_now_button)
@@ -50,7 +52,7 @@ public class PaymentBillBlockerDialogFragment extends DialogFragment //TODO: con
             @Override
             public void onClick(View v)
             {
-                //TODO: navigate to update payment info screen
+                bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REFRESH_TAB));
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }
         });
