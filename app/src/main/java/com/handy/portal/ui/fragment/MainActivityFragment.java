@@ -172,7 +172,7 @@ public class MainActivityFragment extends InjectedFragment
             {
                 argumentsBundle = new Bundle();
             }
-            argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new PaymentsFragment.UpdateTabsCallback()
+            argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
             {
                 @Override
                 public int describeContents()
