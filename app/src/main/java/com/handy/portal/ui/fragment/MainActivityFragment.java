@@ -19,6 +19,7 @@ import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
+import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;

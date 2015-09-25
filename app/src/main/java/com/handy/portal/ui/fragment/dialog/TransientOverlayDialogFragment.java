@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import com.handy.portal.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class TransientOverlayDialogFragment extends DialogFragment
+public class TransientOverlayDialogFragment extends DialogFragment //TODO: make other transient dialog fragments extend from this
 {
     private int animationId = R.anim.overlay_fade_in_then_out;
     private int imageId = R.drawable.ic_success_circle;

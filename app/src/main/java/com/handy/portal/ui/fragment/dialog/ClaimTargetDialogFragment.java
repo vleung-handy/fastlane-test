@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -21,7 +21,7 @@ import com.handy.portal.util.CurrencyUtils;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class ClaimTargetDialogFragment extends DialogFragment //TODO: extend from TransientOverlayDialogFragment
+public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
     @InjectView(R.id.claim_target_frame_layout)
     protected FrameLayout frameLayout;
@@ -104,7 +104,7 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: extend fro
     {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation_slide_down_up_from_top;
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation_slide_down_up_from_top; //TODO: see if we can use an Animation instead so we can listen for when it ends
         return dialog;
     }
 
@@ -112,13 +112,13 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: extend fro
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_claim_target, container, false);
+        View view = inflater.inflate(R.layout.fragment_dialog_claim_target, container, false);
         ButterKnife.inject(this, view);
         updateDisplay();
         return view;
     }
 
-    public void setDelayedDismiss()
+    public void setDelayedDismiss() //TODO: see if we can use an Animation instead of setting a window animation so we can listen for when the animation ends, instead of using this gross logic
     {
         final Runnable runnable = new Runnable()
         {
