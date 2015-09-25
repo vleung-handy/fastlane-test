@@ -29,7 +29,7 @@ public class ActionBarFragment extends InjectedFragment //TODO: refine. this is 
             tabsCallback = args.getParcelable(BundleKeys.UPDATE_TAB_CALLBACK);
         }
 
-        // If not give, create one that does nothing to avoid NullPointerException
+        // If not given, create one that does nothing to avoid NullPointerException
         if (tabsCallback == null)
         {
             tabsCallback = new UpdateTabsCallback()
