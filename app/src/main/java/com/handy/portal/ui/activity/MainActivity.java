@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -40,9 +41,25 @@ public class MainActivity extends BaseActivity
         super.onPause();
     }
 
+    private void checkIfUserShouldUpdatePaymentInfo()
+    {
+        bus.post(new HandyEvent.RequestShouldUserUpdatePaymentInfo());
+    }
+
     private void checkForTerms()
     {
         bus.post(new HandyEvent.RequestCheckTerms());
+    }
+
+    @Subscribe
+    public void onReceiveUserShouldUpdatePaymentInfo(HandyEvent.ReceiveShouldUserUpdatePaymentInfo event)
+    {
+        //check if we need to show the payment bill blocker
+        if(event.shouldUserUpdatePaymentInfo)
+        {
+            PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
+            paymentBillBlockerDialogFragment.show(getSupportFragmentManager(), "fragment_dialog_payment_bill_blocker");
+        }
     }
 
     @Subscribe
@@ -52,6 +69,12 @@ public class MainActivity extends BaseActivity
         if (event.termsDetailsGroup != null && event.termsDetailsGroup.hasTerms())
         {
             startActivity(new Intent(this, TermsActivity.class));
+        }
+        else //this is gross and can be resolved after we have a state manager - have to make these requests effectively synchronous because
+        // we must guarantee the shouldUpdatePaymentInfo response comes after the terms response, else activity might be launched and obscure the update payment info prompt
+        {
+            checkIfUserShouldUpdatePaymentInfo();
+            //have to put this check here due to weird startup flow - after terms are accepted, app switches back to SplashActivity and this activity is relaunched and this function will be called again
         }
     }
 

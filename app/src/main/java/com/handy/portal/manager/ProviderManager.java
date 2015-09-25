@@ -7,6 +7,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.SuccessWrapper;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -19,6 +20,10 @@ public class ProviderManager
     private final PrefsManager prefsManager;
     private Cache<String, Provider> providerCache;
     private static final String PROVIDER_CACHE_KEY = "provider";
+
+    //TODO: use a formal/common system?
+    private long timestampPromptedUserUpdatePaymentInfoMs = 0;
+    private final long intervalPromptUpdatePaymentInfoMs = DateTimeUtils.MILLISECONDS_IN_HOUR;
 
     public ProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
@@ -35,6 +40,22 @@ public class ProviderManager
     public void prefetch()
     {
         requestProviderInfo();
+    }
+
+    @Subscribe
+    public void onRequestShouldUserUpdatePaymentInfo(HandyEvent.RequestShouldUserUpdatePaymentInfo event)
+    {
+        //TODO: this is for testing only. replace with real network call
+
+        if(System.currentTimeMillis() - timestampPromptedUserUpdatePaymentInfoMs > intervalPromptUpdatePaymentInfoMs)
+        {
+            timestampPromptedUserUpdatePaymentInfoMs = System.currentTimeMillis();
+            bus.post(new HandyEvent.ReceiveShouldUserUpdatePaymentInfo(true));
+        }
+        else
+        {
+            bus.post(new HandyEvent.ReceiveShouldUserUpdatePaymentInfo(false));
+        }
     }
 
     @Subscribe
