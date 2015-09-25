@@ -83,7 +83,7 @@ public final class UIUtils
                 }
                 else
                 {
-                    centsTextView.setVisibility(View.INVISIBLE);
+                    centsTextView.setVisibility(View.GONE);
                 }
             }
 
@@ -96,7 +96,7 @@ public final class UIUtils
             dollarTextView.setVisibility(View.INVISIBLE);
             if (centsTextView != null)
             {
-                centsTextView.setVisibility(View.INVISIBLE);
+                centsTextView.setVisibility(View.GONE);
             }
         }
     }
