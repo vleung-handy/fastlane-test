@@ -100,6 +100,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             requestPaymentsInfo();
         }
+        tabsCallback.updateTabs(MainViewTab.PAYMENTS);
     }
 
     @Override

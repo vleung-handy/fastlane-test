@@ -63,18 +63,21 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
 
     public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
 
+    @Override
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
         setOptionsMenuEnabled(true);
     }
 
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.menu_complementary_jobs, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -128,6 +131,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         {
             requestComplementaryBookings();
         }
+        tabsCallback.updateTabs(MainViewTab.SCHEDULED_JOBS);
     }
 
     @OnClick(R.id.all_jobs_button)

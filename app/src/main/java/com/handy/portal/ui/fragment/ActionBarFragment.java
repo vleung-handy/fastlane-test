@@ -2,8 +2,13 @@ package com.handy.portal.ui.fragment;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.MenuItem;
 
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.util.UIUtils;
 
 /**
@@ -12,6 +17,42 @@ import com.handy.portal.util.UIUtils;
 public class ActionBarFragment extends InjectedFragment //TODO: refine. this is a WIP
 //TODO: eventually we should use Toolbar with support library instead of ActionBar because it is more flexible
 {
+    protected UpdateTabsCallback tabsCallback;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null)
+        {
+            tabsCallback = args.getParcelable(BundleKeys.UPDATE_TAB_CALLBACK);
+        }
+
+        // If not given, create one that does nothing to avoid NullPointerException
+        if (tabsCallback == null)
+        {
+            tabsCallback = new UpdateTabsCallback()
+            {
+                @Override
+                public int describeContents()
+                {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel parcel, int i)
+                {
+                }
+
+                @Override
+                public void updateTabs(MainViewTab tab)
+                {
+                }
+            };
+        }
+    }
+
     public void setActionBarVisible(boolean visible)
     {
         if (visible) getActionBar().show();
@@ -71,6 +112,7 @@ public class ActionBarFragment extends InjectedFragment //TODO: refine. this is 
         setMenuVisibility(enabled);
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) //default support for back button
     {
         switch (item.getItemId())
@@ -81,5 +123,10 @@ public class ActionBarFragment extends InjectedFragment //TODO: refine. this is 
             default:
                 return false;
         }
+    }
+
+    public interface UpdateTabsCallback extends Parcelable
+    {
+        void updateTabs(MainViewTab tab);
     }
 }
