@@ -115,6 +115,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
     private boolean isForPayments;
+    private MainViewTab currentTab;
 
     private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
@@ -140,6 +141,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             Bundle arguments = getArguments();
             this.requestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
             this.requestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
+            this.currentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
 
             this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
 
@@ -226,6 +228,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
         }
+        tabsCallback.updateTabs(currentTab);
     }
 
     @Override

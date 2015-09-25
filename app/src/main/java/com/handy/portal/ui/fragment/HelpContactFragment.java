@@ -63,6 +63,7 @@ public final class HelpContactFragment extends ActionBarFragment
         {
             bus.post(new HandyEvent.RequestProviderInfo());
         }
+        tabsCallback.updateTabs(MainViewTab.HELP);
     }
 
     @Override

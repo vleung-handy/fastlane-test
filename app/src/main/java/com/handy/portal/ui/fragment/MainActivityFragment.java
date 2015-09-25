@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,14 +22,12 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.squareup.otto.Subscribe;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivityFragment extends InjectedFragment //TODO: should we hide action bar when this starts?
+public class MainActivityFragment extends InjectedFragment
 {
     @Inject
     HandyRetrofitEndpoint endpoint;
@@ -73,49 +72,9 @@ public class MainActivityFragment extends InjectedFragment //TODO: should we hid
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
         registerButtonListeners();
-        registerBackStackListener();
         loadingOverlayView.init();
 
         return view;
-    }
-
-    private void registerBackStackListener()
-    {
-        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener()
-        {
-            @Override
-            public void onBackStackChanged()
-            {
-                // traverse the fragment stack from top to bottom and activate the first relevant tab
-                List<Fragment> fragments = getActivity().getSupportFragmentManager().getFragments();
-                for (int i = fragments.size() - 1; i >= 0; i--)
-                {
-                    if (updateSelectedTabButton(fragments.get(i)))
-                    {
-                        break;
-                    }
-                }
-            }
-        });
-    }
-
-    private boolean updateSelectedTabButton(Fragment fragment)
-    {
-        return selectTabIfFragmentMatches(fragment, AvailableBookingsFragment.class, jobsButton) ||
-                selectTabIfFragmentMatches(fragment, ScheduledBookingsFragment.class, scheduleButton) ||
-                selectTabIfFragmentMatches(fragment, PaymentsFragment.class, paymentsButton) ||
-                selectTabIfFragmentMatches(fragment, ProfileFragment.class, profileButton) ||
-                selectTabIfFragmentMatches(fragment, HelpFragment.class, helpButton);
-    }
-
-    private boolean selectTabIfFragmentMatches(Fragment fragment, Class<? extends Fragment> fragmentClass, RadioButton tab)
-    {
-        if (fragmentClass.isInstance(fragment))
-        {
-            tab.setChecked(true);
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -208,6 +167,36 @@ public class MainActivityFragment extends InjectedFragment //TODO: should we hid
             }
 
             swapFragmentArguments.targetClassType = targetTab.getClassType();
+
+            if (argumentsBundle == null)
+            {
+                argumentsBundle = new Bundle();
+            }
+            argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new PaymentsFragment.UpdateTabsCallback()
+            {
+                @Override
+                public int describeContents()
+                {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel parcel, int i)
+                {
+                }
+
+                @Override
+                public void updateTabs(MainViewTab tab)
+                {
+                    updateSelectedTabButton(tab);
+                }
+            });
+
+            if (targetTab == MainViewTab.DETAILS)
+            {
+                argumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
+            }
+
             swapFragmentArguments.argumentsBundle = argumentsBundle;
 
             if (userTriggered)
@@ -297,11 +286,6 @@ public class MainActivityFragment extends InjectedFragment //TODO: should we hid
                 }
                 break;
                 case SCHEDULED_JOBS:
-                {
-                    scheduleButton.toggle();
-                }
-                break;
-                case DETAILS:
                 {
                     scheduleButton.toggle();
                 }

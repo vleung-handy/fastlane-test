@@ -47,6 +47,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.onResume();
         setActionBar(R.string.scheduled_jobs, false);
+        tabsCallback.updateTabs(MainViewTab.SCHEDULED_JOBS);
     }
 
     protected LinearLayout getDatesLayout()

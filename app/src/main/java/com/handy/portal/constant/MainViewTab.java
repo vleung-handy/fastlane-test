@@ -10,7 +10,9 @@ import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 
-public enum MainViewTab
+import java.io.Serializable;
+
+public enum MainViewTab implements Serializable
 {
     AVAILABLE_JOBS(null, AvailableBookingsFragment.class),
     SCHEDULED_JOBS(null, ScheduledBookingsFragment.class),

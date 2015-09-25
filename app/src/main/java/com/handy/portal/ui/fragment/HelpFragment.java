@@ -93,6 +93,8 @@ public final class HelpFragment extends ActionBarFragment
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, currentBookingId));
+
+            tabsCallback.updateTabs(MainViewTab.HELP);
         }
     }
 
