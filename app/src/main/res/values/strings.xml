@@ -394,8 +394,12 @@
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments for this year.</string>
 
+    <!-- Payments Bill Blocker -->
+    <string name="payments_bill_blocker_title">Handy no longer provides payment by checks.</string>
+    <string name="payments_bill_blocker_content">We are constantly making changes to our platform to make paying you simpler and more reliable.\n\nTo ensure you are paid for your next job, please update your payment information. You can change your information to direct deposit in your payment settings tab.</string>
+
     <!--TEST ONLY, REMOVE LATER-->
-    <string-array name="test_year_spinner">
-        <item>2015</item>
-    </string-array>
+    <!--<string-array name="test_year_spinner">-->
+        <!--<item>2015</item>-->
+    <!--</string-array>-->
 </resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_help_circle"/>
+
+
+    <LinearLayout
+        android:id="@+id/payments_bill_window"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/default_padding"
+        android:paddingLeft="@dimen/default_padding_medium"
+        android:paddingRight="@dimen/default_padding_medium"
+        android:paddingTop="@dimen/default_padding_xlarge">
+
+        <TextView
+            android:id="@+id/payments_bill_blocker_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/payments_bill_blocker_title"
+            android:textAppearance="@style/TextView.Bold"
+            android:textSize="@dimen/large_text_size"/>
+
+        <TextView
+            android:id="@+id/payments_bill_blocker_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/payment_container_vertical_padding"
+            android:text="@string/payments_bill_blocker_content"
+            android:textAppearance="@style/HandyTextAppearanceMedium"
+            android:textColor="@color/dark_grey"/>
+
+        <Button
+            android:id="@+id/payments_bill_blocker_update_now_button"
+            style="@style/Button.Green.Round"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/payment_container_vertical_padding"
+            android:text="Update Now"/>
+
+        <Button
+            android:id="@+id/payments_bill_blocker_later_button"
+            style="@style/Button.Transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remind me later"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/small_text_size"/>
+
+    </LinearLayout>
+</RelativeLayout>

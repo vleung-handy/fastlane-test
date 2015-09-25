@@ -28,6 +28,7 @@ import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.HelpNodesAdapter;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
+import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.CurrencyUtils;
@@ -122,6 +123,15 @@ public final class PaymentsFragment extends ActionBarFragment
             }
         });
         yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
+
+
+        //check if we need to show the payment bill blocker
+        boolean userHasStripeAccountSetUp = false; //TODO: check if user has stripe account set up
+        if(!userHasStripeAccountSetUp)
+        {
+            PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
+            paymentBillBlockerDialogFragment.show(getFragmentManager(), "fragment_dialog_payment_bill_blocker");
+        }
     }
 
     @OnClick(R.id.try_again_button)
