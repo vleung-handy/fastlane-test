@@ -127,6 +127,20 @@ public class ActionBarFragment extends InjectedFragment //TODO: refine. this is 
 
     public interface UpdateTabsCallback extends Parcelable
     {
+        Parcelable.Creator CREATOR = new Parcelable.Creator() {
+            @Override
+            public Object createFromParcel(Parcel source)
+            {
+                return null;
+            }
+
+            @Override
+            public Object[] newArray(int size)
+            {
+                return new Object[0];
+            }
+        };
+
         void updateTabs(MainViewTab tab);
     }
 }
