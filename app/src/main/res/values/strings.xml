@@ -395,6 +395,7 @@
     <string name="no_more_payments">You have no more payments for this year.</string>
     <string name="update_payment_method">Update Payment Method</string>
     <string name="expected_deposit">Expect deposit by</string>
+    <string name="debit_card_number">Debit Card Number</string>
 
     <!-- Payments Bill Blocker -->
     <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>
