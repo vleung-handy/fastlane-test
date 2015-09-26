@@ -11,13 +11,12 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.util.UIUtils;
 
-/**
- * this is a fragment with action bar support methods
- */
-public class ActionBarFragment extends InjectedFragment //TODO: refine. this is a WIP
 //TODO: eventually we should use Toolbar with support library instead of ActionBar because it is more flexible
+public abstract class ActionBarFragment extends InjectedFragment
 {
-    protected UpdateTabsCallback tabsCallback;
+    private UpdateTabsCallback tabsCallback;
+
+    abstract MainViewTab getTab();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -50,6 +49,16 @@ public class ActionBarFragment extends InjectedFragment //TODO: refine. this is 
                 {
                 }
             };
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if (getTab() != null)
+        {
+            tabsCallback.updateTabs(getTab());
         }
     }
 

@@ -85,6 +85,12 @@ public final class HelpFragment extends ActionBarFragment
 
 
     @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.HELP;
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -93,8 +99,6 @@ public final class HelpFragment extends ActionBarFragment
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, currentBookingId));
-
-            tabsCallback.updateTabs(MainViewTab.HELP);
         }
     }
 

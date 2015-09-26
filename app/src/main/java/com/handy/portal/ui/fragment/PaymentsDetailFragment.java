@@ -33,6 +33,12 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     private View fragmentView;
 
     @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.PAYMENTS;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

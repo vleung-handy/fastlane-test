@@ -9,10 +9,15 @@ import com.handy.portal.constant.MainViewTab;
 public class ProfileFragment extends PortalWebViewFragment
 {
     @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.PROFILE;
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
         setActionBar(R.string.profile, false);
-        tabsCallback.updateTabs(MainViewTab.PROFILE);
     }
 }
