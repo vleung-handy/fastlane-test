@@ -228,7 +228,10 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
         }
-        tabsCallback.updateTabs(currentTab);
+        if (currentTab != null)
+        {
+            tabsCallback.updateTabs(currentTab);
+        }
     }
 
     @Override
