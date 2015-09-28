@@ -28,7 +28,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     @InjectView(R.id.payment_details_list_header)
     PaymentsDetailListHeaderView paymentsDetailListHeaderView;
 
-    NeoPaymentBatch neoPaymentBatch;
+    private NeoPaymentBatch neoPaymentBatch;
 
     private View fragmentView;
 

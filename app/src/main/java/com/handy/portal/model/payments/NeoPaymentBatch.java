@@ -18,6 +18,9 @@ public class NeoPaymentBatch extends PaymentBatch
     @SerializedName("end_date")
     private Date endDate;
 
+    @SerializedName("expected_deposit_date")
+    private Date expectedDepositDate;
+
     @SerializedName("status")
     private String status;
 
@@ -47,12 +50,13 @@ public class NeoPaymentBatch extends PaymentBatch
     private PaymentGroup paymentGroups[];
 
     public enum Status{
-        FAILED("FAILED"),
-        PENDING("PENDING"),
-        PAID("PAID");
+        FAILED("Failed"),
+        PENDING("Pending"),
+        IN_REVIEW("In Review"),
+        PAID("Paid");
 
         private final String name;
-        private Status(final String name)
+        Status(final String name)
         {
             this.name = name;
         }
@@ -96,6 +100,11 @@ public class NeoPaymentBatch extends PaymentBatch
     public Date getEndDate()
     {
         return endDate;
+    }
+
+    public Date getExpectedDepositDate()
+    {
+        return expectedDepositDate;
     }
 
     public String getStatus()

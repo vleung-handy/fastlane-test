@@ -393,6 +393,7 @@
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments for this year.</string>
+    <string name="expected_deposit">Expect deposit by</string>
 
     <!-- Payments Bill Blocker -->
     <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>
