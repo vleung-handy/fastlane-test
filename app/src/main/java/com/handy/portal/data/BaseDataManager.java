@@ -18,7 +18,7 @@ import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.PaymentBatches;
-import com.handy.portal.model.payments.RequiresUpdate;
+import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -105,7 +105,7 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getNeedsToUpdatePaymentInfo(Callback<RequiresUpdate> cb)
+    public void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> cb)
     {
         service.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
     }

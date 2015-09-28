@@ -6,7 +6,7 @@ import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentGroup;
-import com.handy.portal.model.payments.RequiresUpdate;
+import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -25,7 +25,7 @@ public class PaymentsManager
 
     private long timestampPromptedUserUpdatePaymentInfoMs = 0;
     private final long intervalPromptUpdatePaymentInfoMs = DateTimeUtils.MILLISECONDS_IN_HOUR;
-    //TODO: use a formal/common system?
+    //TODO: use a formal/common system? find a better place to put this
 
     @Inject
     public PaymentsManager(final Bus bus, final DataManager dataManager)
@@ -39,15 +39,13 @@ public class PaymentsManager
     @Subscribe
     public void onRequestShouldUserUpdatePaymentInfo(PaymentEvents.RequestShouldUserUpdatePaymentInfo event)
     {
-        //TODO: this is for testing only. replace with real network call
-
-        if(System.currentTimeMillis() - timestampPromptedUserUpdatePaymentInfoMs > intervalPromptUpdatePaymentInfoMs)
+        if (System.currentTimeMillis() - timestampPromptedUserUpdatePaymentInfoMs > intervalPromptUpdatePaymentInfoMs)
         {
             timestampPromptedUserUpdatePaymentInfoMs = System.currentTimeMillis();
-            dataManager.getNeedsToUpdatePaymentInfo(new DataManager.Callback<RequiresUpdate>()
+            dataManager.getNeedsToUpdatePaymentInfo(new DataManager.Callback<RequiresPaymentInfoUpdate>()
             {
                 @Override
-                public void onSuccess(RequiresUpdate response)
+                public void onSuccess(RequiresPaymentInfoUpdate response)
                 {
                     bus.post(new PaymentEvents.ReceiveShouldUserUpdatePaymentInfoSuccess(response.getNeedsUpdate()));
                 }
