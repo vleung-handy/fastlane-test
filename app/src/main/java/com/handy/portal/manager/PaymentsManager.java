@@ -24,7 +24,7 @@ public class PaymentsManager
     //TODO: add caching when new payments, pagination api comes out
 
     private long timestampRequestPaymentInfoUpdateNeeded = 0;
-    private final long intervalRequestPaymentInfoUpdatedNeededMs = DateTimeUtils.MILLISECONDS_IN_HOUR;
+    private final long INTERVAL_REQUEST_PAYMENT_INFO_UPDATED_NEEDED_MS = DateTimeUtils.MILLISECONDS_IN_HOUR;
     //TODO: use a formal/common system? find a better place to put this
 
     @Inject
@@ -39,7 +39,7 @@ public class PaymentsManager
     @Subscribe
     public void onRequestShouldUserUpdatePaymentInfo(PaymentEvents.RequestShouldUserUpdatePaymentInfo event)
     {
-        if (System.currentTimeMillis() - timestampRequestPaymentInfoUpdateNeeded > intervalRequestPaymentInfoUpdatedNeededMs)
+        if (System.currentTimeMillis() - timestampRequestPaymentInfoUpdateNeeded > INTERVAL_REQUEST_PAYMENT_INFO_UPDATED_NEEDED_MS)
         {
             timestampRequestPaymentInfoUpdateNeeded = System.currentTimeMillis();
             dataManager.getNeedsToUpdatePaymentInfo(new DataManager.Callback<RequiresPaymentInfoUpdate>()
