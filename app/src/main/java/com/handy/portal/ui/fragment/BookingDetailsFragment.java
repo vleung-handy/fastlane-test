@@ -50,6 +50,7 @@ import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
 import com.handy.portal.ui.constructor.GoogleMapViewConstructor;
 import com.handy.portal.ui.constructor.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
+import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
@@ -812,7 +813,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
                 ClaimTargetDialogFragment claimTargetDialogFragment = new ClaimTargetDialogFragment();
                 claimTargetDialogFragment.setDisplayData(claimTargetInfo);
-                claimTargetDialogFragment.show(getFragmentManager(), "fragment_claim_target");
+                claimTargetDialogFragment.show(getFragmentManager(), ClaimTargetDialogFragment.FRAGMENT_TAG);
 
                 returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null);
             }

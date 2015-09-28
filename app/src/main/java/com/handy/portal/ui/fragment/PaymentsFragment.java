@@ -127,6 +127,7 @@ public final class PaymentsFragment extends ActionBarFragment
             }
         });
         yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
+
     }
 
     @OnClick(R.id.try_again_button)

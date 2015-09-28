@@ -394,8 +394,10 @@
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments for this year.</string>
 
-    <!--TEST ONLY, REMOVE LATER-->
-    <string-array name="test_year_spinner">
-        <item>2015</item>
-    </string-array>
+    <!-- Payments Bill Blocker -->
+    <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>
+    <string name="payments_bill_blocker_content">Head to the Profile tab to set up your payment method.</string>
+    <string name="payments_bill_blocker_update_now_button">Update Now</string>
+    <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
+
 </resources>
