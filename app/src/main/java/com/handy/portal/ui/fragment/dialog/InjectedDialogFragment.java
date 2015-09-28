@@ -3,7 +3,7 @@ package com.handy.portal.ui.fragment.dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.handy.portal.core.BaseApplication;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ public class InjectedDialogFragment extends DialogFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        ((BaseApplication) getActivity().getApplication()).inject(this);
+        Utils.inject(getActivity(), this);
     }
 
     @Override
