@@ -33,7 +33,7 @@ public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapp
 
         neoPaymentBatch = mock(NeoPaymentBatch.class);
         Date date = new Date();
-        when(neoPaymentBatch.getExptectedDepositDate()).thenReturn(date);
+        when(neoPaymentBatch.getExpectedDepositDate()).thenReturn(date);
     }
 
     @Test

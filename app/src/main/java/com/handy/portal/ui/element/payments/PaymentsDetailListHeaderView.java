@@ -48,7 +48,7 @@ public class PaymentsDetailListHeaderView extends LinearLayout
     {
         paymentDetailDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
         paymentDetailTotalPaymentText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getNetEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        paymentDetailExpectDepositDate.setText(DateTimeUtils.SUMMARY_DATE_FORMATTER.format(neoPaymentBatch.getExptectedDepositDate()));
+        paymentDetailExpectDepositDate.setText(DateTimeUtils.SUMMARY_DATE_FORMATTER.format(neoPaymentBatch.getExpectedDepositDate()));
 
         if (neoPaymentBatch.getStatus().equalsIgnoreCase(NeoPaymentBatch.Status.FAILED.name()) || neoPaymentBatch.getStatus().equalsIgnoreCase(NeoPaymentBatch.Status.PAID.name()))
         {

@@ -19,7 +19,7 @@ public class NeoPaymentBatch extends PaymentBatch
     private Date endDate;
 
     @SerializedName("expected_deposit_date")
-    private Date exptectedDepositDate;
+    private Date expectedDepositDate;
 
     @SerializedName("status")
     private String status;
@@ -102,9 +102,9 @@ public class NeoPaymentBatch extends PaymentBatch
         return endDate;
     }
 
-    public Date getExptectedDepositDate()
+    public Date getExpectedDepositDate()
     {
-        return exptectedDepositDate;
+        return expectedDepositDate;
     }
 
     public String getStatus()
