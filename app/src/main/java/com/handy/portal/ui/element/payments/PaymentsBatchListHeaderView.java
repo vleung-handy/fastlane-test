@@ -77,10 +77,6 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         {
             currentWeekRemainingWithholdingsRow.setVisibility(GONE);
         }
-        else
-        {
-            currentWeekRemainingWithholdingsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getRemainingWithholdingAmount(), neoPaymentBatch.getCurrencySymbol()));
-        }
     }
 
 }
