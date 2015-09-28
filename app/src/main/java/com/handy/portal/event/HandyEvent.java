@@ -299,21 +299,7 @@ public abstract class HandyEvent
     {
     }
 
-    public static class RequestShouldUserUpdatePaymentInfo extends RequestEvent
-    {
-
-    }
-
-    public static class ReceiveShouldUserUpdatePaymentInfo extends ReceiveSuccessEvent
-    {
-        public final boolean shouldUserUpdatePaymentInfo;
-        public ReceiveShouldUserUpdatePaymentInfo(boolean shouldUserUpdatePaymentInfo)
-        {
-            this.shouldUserUpdatePaymentInfo = shouldUserUpdatePaymentInfo;
-        }
-    }
-
-//Booking Lists
+    //Booking Lists
 
     public static class RequestAvailableBookings extends RequestEvent
     {

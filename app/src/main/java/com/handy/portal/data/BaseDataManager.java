@@ -18,6 +18,7 @@ import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.RequiresUpdate;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -101,6 +102,12 @@ public final class BaseDataManager extends DataManager
     public final void getAnnualPaymentSummaries(final Callback<AnnualPaymentSummaries> cb)
     {
         service.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getNeedsToUpdatePaymentInfo(Callback<RequiresUpdate> cb)
+    {
+        service.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
     }
 
     @Override

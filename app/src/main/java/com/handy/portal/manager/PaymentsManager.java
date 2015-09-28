@@ -6,6 +6,8 @@ import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentGroup;
+import com.handy.portal.model.payments.RequiresUpdate;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -19,8 +21,11 @@ public class PaymentsManager
 {
     private final Bus bus;
     private final DataManager dataManager;
-
     //TODO: add caching when new payments, pagination api comes out
+
+    private long timestampPromptedUserUpdatePaymentInfoMs = 0;
+    private final long intervalPromptUpdatePaymentInfoMs = DateTimeUtils.MILLISECONDS_IN_HOUR;
+    //TODO: use a formal/common system?
 
     @Inject
     public PaymentsManager(final Bus bus, final DataManager dataManager)
@@ -29,6 +34,35 @@ public class PaymentsManager
         this.bus.register(this);
         this.dataManager = dataManager;
 
+    }
+
+    @Subscribe
+    public void onRequestShouldUserUpdatePaymentInfo(PaymentEvents.RequestShouldUserUpdatePaymentInfo event)
+    {
+        //TODO: this is for testing only. replace with real network call
+
+        if(System.currentTimeMillis() - timestampPromptedUserUpdatePaymentInfoMs > intervalPromptUpdatePaymentInfoMs)
+        {
+            timestampPromptedUserUpdatePaymentInfoMs = System.currentTimeMillis();
+            dataManager.getNeedsToUpdatePaymentInfo(new DataManager.Callback<RequiresUpdate>()
+            {
+                @Override
+                public void onSuccess(RequiresUpdate response)
+                {
+                    bus.post(new PaymentEvents.ReceiveShouldUserUpdatePaymentInfoSuccess(response.getNeedsUpdate()));
+                }
+
+                @Override
+                public void onError(DataManager.DataManagerError error)
+                {
+                    bus.post(new PaymentEvents.ReceiveShouldUserUpdatePaymentInfoError(error));
+                }
+            });
+        }
+        else
+        {
+            bus.post(new PaymentEvents.ReceiveShouldUserUpdatePaymentInfoSuccess(false));
+        }
     }
 
     @Subscribe

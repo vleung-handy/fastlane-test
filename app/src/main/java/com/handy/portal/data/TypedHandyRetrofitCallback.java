@@ -19,6 +19,7 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.RequiresUpdate;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
@@ -74,6 +75,14 @@ class PaymentBatchesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentB
 class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<AnnualPaymentSummaries>
 {
     AnnualPaymentSummariesRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresUpdate>
+{
+    NeedsToUpdatePaymentInfoRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }
