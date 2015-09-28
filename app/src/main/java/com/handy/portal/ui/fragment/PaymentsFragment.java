@@ -77,7 +77,7 @@ public final class PaymentsFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
         if (fragmentView == null)
         {
-            fragmentView = inflater.inflate(R.layout.fragment_payments, null);
+            fragmentView = inflater.inflate(R.layout.fragment_payments, container, false);
         }
 
         ButterKnife.inject(this, fragmentView);
@@ -89,18 +89,22 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.PAYMENTS;
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
         setActionBar(R.string.payments, false);
-        slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
 
         if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
         {
             requestPaymentsInfo();
         }
-        tabsCallback.updateTabs(MainViewTab.PAYMENTS);
     }
 
     @Override
@@ -123,6 +127,7 @@ public final class PaymentsFragment extends ActionBarFragment
             }
         });
         yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
+
     }
 
     @OnClick(R.id.try_again_button)
@@ -334,6 +339,8 @@ public final class PaymentsFragment extends ActionBarFragment
                 {
                     return;
                 }
+
+                slideUpPanelContainer.hidePanel();
 
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));

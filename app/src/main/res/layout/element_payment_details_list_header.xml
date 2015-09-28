@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_payment"
-            android:textAppearance="@style/HandyTextAppearanceMedium"
+            android:textAppearance="@style/HandyTextAppearanceLarge"
             android:textStyle="normal"/>
 
         <TextView
@@ -44,4 +44,28 @@
             android:textAppearance="@style/HandyTextAppearanceTitle"
             android:textColor="@color/requested_green"/>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/payments_detail_expect_deposit_date_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:text="@string/expected_deposit"
+            android:textColor="@color/payments_batch_list_entry_subtitle"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/payments_detail_expect_deposit_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/payments_batch_list_entry_subtitle"
+            android:textSize="@dimen/small_text_size"/>
+
+    </LinearLayout>
 </com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView>

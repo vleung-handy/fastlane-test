@@ -82,4 +82,26 @@ public class PaymentEvents
             this.error = error;
         }
     }
+
+    public static class ReceiveShouldUserUpdatePaymentInfoSuccess extends HandyEvent.ReceiveSuccessEvent
+    {
+        public final boolean shouldUserUpdatePaymentInfo;
+        public ReceiveShouldUserUpdatePaymentInfoSuccess(boolean shouldUserUpdatePaymentInfo)
+        {
+            this.shouldUserUpdatePaymentInfo = shouldUserUpdatePaymentInfo;
+        }
+    }
+
+    public static class ReceiveShouldUserUpdatePaymentInfoError extends HandyEvent.ReceiveErrorEvent
+    {
+        public ReceiveShouldUserUpdatePaymentInfoError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestShouldUserUpdatePaymentInfo extends HandyEvent.RequestEvent
+    {
+
+    }
 }

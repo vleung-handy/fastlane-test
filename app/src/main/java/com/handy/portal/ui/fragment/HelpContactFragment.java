@@ -55,6 +55,12 @@ public final class HelpContactFragment extends ActionBarFragment
     }
 
     @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.HELP;
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -63,7 +69,6 @@ public final class HelpContactFragment extends ActionBarFragment
         {
             bus.post(new HandyEvent.RequestProviderInfo());
         }
-        tabsCallback.updateTabs(MainViewTab.HELP);
     }
 
     @Override

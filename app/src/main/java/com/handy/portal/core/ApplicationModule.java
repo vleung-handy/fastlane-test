@@ -51,6 +51,7 @@ import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
+import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -95,7 +96,8 @@ import retrofit.converter.GsonConverter;
         OnboardingActivity.class,
         ComplementaryBookingsFragment.class,
         PaymentsFragment.class,
-        PaymentsDetailFragment.class
+        PaymentsDetailFragment.class,
+        PaymentBillBlockerDialogFragment.class
 })
 public final class ApplicationModule
 {

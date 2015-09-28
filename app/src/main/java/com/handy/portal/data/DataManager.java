@@ -18,6 +18,7 @@ import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 
 import java.util.Date;
 import java.util.Map;
@@ -85,6 +86,8 @@ public abstract class DataManager
     public abstract void getPaymentBatches(Date startDate, Date endDate, Callback<PaymentBatches> callback);
 
     public abstract void getAnnualPaymentSummaries(Callback<AnnualPaymentSummaries> callback);
+
+    public abstract void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> callback);
 
     public interface Callback<T>
     {

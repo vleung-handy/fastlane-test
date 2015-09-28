@@ -3,6 +3,7 @@ package com.handy.portal.ui.element.payments;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -34,6 +35,9 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
 
     @InjectView(R.id.payments_current_week_remaining_withholdings)
     TextView currentWeekRemainingWithholdingsText;
+
+    @InjectView(R.id.payments_current_week_remaining_withholdings_row)
+    TableRow currentWeekRemainingWithholdingsRow;
 
     public PaymentsBatchListHeaderView(Context context)
     {
@@ -67,8 +71,12 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         currentWeekExpectedPaymentCentsText.setText(CurrencyUtils.formatCents(neoPaymentBatch.getNetEarningsTotalAmount()));
         currentWeekWithholdingsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getWithholdingsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getGrossEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-
         currentWeekWithholdingsText.setTextColor(getResources().getColor(neoPaymentBatch.getWithholdingsTotalAmount() < 0 ? R.color.error_red : R.color.black));
+
+        if (neoPaymentBatch.getRemainingWithholdingAmount() == 0)
+        {
+            currentWeekRemainingWithholdingsRow.setVisibility(GONE);
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.handy.portal.ui.layout;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -104,7 +105,7 @@ public class SlideUpPanelContainer extends RelativeLayout
     {
         if (panelShown)
         {
-            dismiss();
+            ((Activity) getContext()).onBackPressed();
         }
     }
 

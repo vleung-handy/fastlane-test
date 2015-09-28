@@ -50,6 +50,7 @@ import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
 import com.handy.portal.ui.constructor.GoogleMapViewConstructor;
 import com.handy.portal.ui.constructor.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
+import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
@@ -119,6 +120,12 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
+
+    @Override
+    MainViewTab getTab()
+    {
+        return currentTab;
+    }
 
     @Override
     public void onCreate(Bundle savedInstance)
@@ -228,7 +235,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
         }
-        tabsCallback.updateTabs(currentTab);
     }
 
     @Override
@@ -807,7 +813,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
                 ClaimTargetDialogFragment claimTargetDialogFragment = new ClaimTargetDialogFragment();
                 claimTargetDialogFragment.setDisplayData(claimTargetInfo);
-                claimTargetDialogFragment.show(getFragmentManager(), "fragment_claim_target");
+                claimTargetDialogFragment.show(getFragmentManager(), ClaimTargetDialogFragment.FRAGMENT_TAG);
 
                 returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null);
             }

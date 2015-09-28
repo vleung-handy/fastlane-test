@@ -61,6 +61,8 @@ public interface HandyRetrofitService
     @GET(PAYMENTS_PATH + "annual_summaries")
     void getAnnualPaymentSummaries(HandyRetrofitCallback cb);
 
+    @GET(PAYMENTS_PATH + "requires_update")
+    void getNeedsToUpdatePaymentInfo(HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);

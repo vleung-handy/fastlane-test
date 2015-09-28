@@ -30,5 +30,5 @@
         android:layout_weight="1"
         android:gravity="right|bottom|center"
         android:text="@string/no_data"
-        android:textAppearance="@style/HandyTextAppearanceMedium"/>
+        android:textAppearance="@style/HandyTextAppearanceLarge"/>
 </com.handy.portal.ui.element.payments.PaymentsDetailGroupView>
