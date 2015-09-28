@@ -99,7 +99,6 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.payments, false);
-        slideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
 
         if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
@@ -339,6 +338,8 @@ public final class PaymentsFragment extends ActionBarFragment
                 {
                     return;
                 }
+
+                slideUpPanelContainer.hidePanel();
 
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
