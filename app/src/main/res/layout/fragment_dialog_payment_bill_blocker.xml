@@ -2,17 +2,22 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:id="@+id/payments_bill_blocker_window"
+                android:gravity="center"
+    >
 
     <ImageView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/ic_help_circle"/>
+        android:translationY="-20dp"
+        android:src="@drawable/ic_alert_circle"/>
 
 
     <LinearLayout
-        android:id="@+id/payments_bill_window"
+        android:id="@+id/payments_bill_blocker_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
@@ -46,14 +51,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/payment_container_vertical_padding"
-            android:text="Update Now"/>
+            android:text="@string/payments_bill_blocker_update_now_button"/>
 
         <Button
             android:id="@+id/payments_bill_blocker_later_button"
             style="@style/Button.Transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Remind me later"
+            android:text="@string/payments_bill_blocker_remind_me_later_button"
             android:textAllCaps="true"
             android:textAppearance="@style/TextView.Bold"
             android:textColor="@color/tertiary_grey"

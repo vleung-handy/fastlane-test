@@ -805,7 +805,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
                 ClaimTargetDialogFragment claimTargetDialogFragment = new ClaimTargetDialogFragment();
                 claimTargetDialogFragment.setDisplayData(claimTargetInfo);
-                claimTargetDialogFragment.show(getFragmentManager(), "fragment_dialog_claim_target");
+                claimTargetDialogFragment.show(getFragmentManager(), ClaimTargetDialogFragment.FRAGMENT_TAG);
 
                 returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null);
             }

@@ -49,6 +49,8 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
     private final static long FADE_IN_ANIMATION_DURATION = 300; //TODO: make this not hard-coded. currently have no way of accessing dialog's animation listeners, and cannot access style resource file attributes easily
     private final static long SHOW_DURATION_MS = 3500;
 
+    public static final String FRAGMENT_TAG = "fragment_dialog_claim_target";
+
     public ClaimTargetDialogFragment()
     {
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.handy.portal.R;
@@ -25,11 +26,14 @@ public class PaymentBillBlockerDialogFragment extends InjectedDialogFragment //T
     @InjectView(R.id.payments_bill_blocker_later_button)
     protected Button laterButton;
 
+    public static final String FRAGMENT_TAG = "fragment_dialog_payment_bill_blocker";
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation_slide_down_up_from_top;
         return dialog;
     }
