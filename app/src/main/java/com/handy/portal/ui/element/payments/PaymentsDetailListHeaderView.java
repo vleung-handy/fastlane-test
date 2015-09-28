@@ -21,6 +21,12 @@ public class PaymentsDetailListHeaderView extends LinearLayout
     @InjectView(R.id.payments_detail_total_payment_text)
     TextView paymentDetailTotalPaymentText;
 
+    @InjectView(R.id.payments_detail_expect_deposit_date)
+    TextView paymentDetailExpectDepositDate;
+
+    @InjectView(R.id.payments_detail_expect_deposit_date_layout)
+    LinearLayout paymentsDetailExpectDepositLayout;
+
     public PaymentsDetailListHeaderView(Context context)
     {
         super(context);
@@ -42,6 +48,13 @@ public class PaymentsDetailListHeaderView extends LinearLayout
     {
         paymentDetailDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
         paymentDetailTotalPaymentText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getNetEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
+        paymentDetailExpectDepositDate.setText(DateTimeUtils.SUMMARY_DATE_FORMATTER.format(neoPaymentBatch.getExptectedDepositDate()));
+
+        if (neoPaymentBatch.getStatus().equalsIgnoreCase(NeoPaymentBatch.Status.FAILED.name()) || neoPaymentBatch.getStatus().equalsIgnoreCase(NeoPaymentBatch.Status.PAID.name()))
+        {
+            paymentsDetailExpectDepositLayout.setVisibility(GONE);
+        }
+
     }
 
 }

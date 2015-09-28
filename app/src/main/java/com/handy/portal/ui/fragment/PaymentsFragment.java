@@ -77,7 +77,7 @@ public final class PaymentsFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
         if (fragmentView == null)
         {
-            fragmentView = inflater.inflate(R.layout.fragment_payments, null);
+            fragmentView = inflater.inflate(R.layout.fragment_payments, container, false);
         }
 
         ButterKnife.inject(this, fragmentView);

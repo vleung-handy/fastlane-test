@@ -393,6 +393,7 @@
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments for this year.</string>
+    <string name="expected_deposit">Expect deposit by</string>
 
     <!--TEST ONLY, REMOVE LATER-->
     <string-array name="test_year_spinner">
