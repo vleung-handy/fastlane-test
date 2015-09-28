@@ -7,9 +7,9 @@ import java.io.Serializable;
 public class RequiresPaymentInfoUpdate implements Serializable
 {
     @SerializedName("needs_update")
-    private Boolean needsUpdate;
+    private boolean needsUpdate;
 
-    public Boolean getNeedsUpdate()
+    public boolean getNeedsUpdate()
     {
         return needsUpdate;
     }

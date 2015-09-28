@@ -400,8 +400,4 @@
     <string name="payments_bill_blocker_update_now_button">Update Now</string>
     <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
 
-    <!--TEST ONLY, REMOVE LATER-->
-    <!--<string-array name="test_year_spinner">-->
-        <!--<item>2015</item>-->
-    <!--</string-array>-->
 </resources>
