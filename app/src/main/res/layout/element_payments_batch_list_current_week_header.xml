@@ -165,6 +165,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
+                android:id="@+id/payments_current_week_remaining_withholdings_row"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingTop="@dimen/row_margin"
