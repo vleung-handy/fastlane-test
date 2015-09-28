@@ -64,6 +64,12 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
 
     @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.SCHEDULED_JOBS;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
@@ -131,7 +137,6 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         {
             requestComplementaryBookings();
         }
-        tabsCallback.updateTabs(MainViewTab.SCHEDULED_JOBS);
     }
 
     @OnClick(R.id.all_jobs_button)

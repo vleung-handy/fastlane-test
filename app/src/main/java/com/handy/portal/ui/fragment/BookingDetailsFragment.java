@@ -121,6 +121,12 @@ public class BookingDetailsFragment extends ActionBarFragment
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
 
     @Override
+    MainViewTab getTab()
+    {
+        return currentTab;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
@@ -228,7 +234,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
         }
-        tabsCallback.updateTabs(currentTab);
     }
 
     @Override

@@ -89,6 +89,12 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.PAYMENTS;
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -100,7 +106,6 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             requestPaymentsInfo();
         }
-        tabsCallback.updateTabs(MainViewTab.PAYMENTS);
     }
 
     @Override

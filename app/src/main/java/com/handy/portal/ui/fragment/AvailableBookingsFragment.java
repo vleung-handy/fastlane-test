@@ -31,11 +31,16 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected ViewGroup noAvailableBookingsLayout;
 
     @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.AVAILABLE_JOBS;
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
         setActionBar(R.string.available_jobs, false);
-        tabsCallback.updateTabs(MainViewTab.AVAILABLE_JOBS);
     }
 
     protected BookingListView getBookingListView()

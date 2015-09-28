@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class PortalWebViewFragment extends ActionBarFragment
+public abstract class PortalWebViewFragment extends ActionBarFragment
 {
     public enum Target
     {
@@ -46,9 +46,6 @@ public class PortalWebViewFragment extends ActionBarFragment
 
     @InjectView(R.id.portal_web_view)
     WebView webView;
-
-    @Inject
-    HandyRetrofitEndpoint endpoint;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
