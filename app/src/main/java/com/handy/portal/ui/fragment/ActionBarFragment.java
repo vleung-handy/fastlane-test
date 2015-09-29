@@ -23,7 +23,6 @@ public abstract class ActionBarFragment extends InjectedFragment
 {
     @Inject
     EnvironmentModifier environmentModifier;
-
     private UpdateTabsCallback tabsCallback;
 
     abstract MainViewTab getTab();

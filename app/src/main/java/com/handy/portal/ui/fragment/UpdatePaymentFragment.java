@@ -13,26 +13,19 @@ import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.Booking;
-import com.handy.portal.model.Booking.BookingType;
-import com.handy.portal.ui.element.AvailableBookingElementView;
-import com.handy.portal.ui.element.BookingElementMediator;
-import com.handy.portal.ui.element.BookingElementView;
-import com.handy.portal.ui.element.ScheduledBookingElementView;
-import com.squareup.otto.Subscribe;
 
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 
 public class UpdatePaymentFragment extends ActionBarFragment
 {
+
+    @Override
+    MainViewTab getTab()
+    {
+        return MainViewTab.PAYMENTS;
+    }
 
     @Override
     public void onCreate(Bundle savedInstance)
@@ -84,7 +77,6 @@ public class UpdatePaymentFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.update_payment_method, false);
-        tabsCallback.updateTabs(MainViewTab.PAYMENTS);
     }
 
 
