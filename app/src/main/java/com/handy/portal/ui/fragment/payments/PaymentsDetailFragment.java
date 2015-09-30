@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +16,7 @@ import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.Payment;
 import com.handy.portal.ui.element.payments.PaymentDetailExpandableListView;
 import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,7 +34,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     private View fragmentView;
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.PAYMENTS;
     }

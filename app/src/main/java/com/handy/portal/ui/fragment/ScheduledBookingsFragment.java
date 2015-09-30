@@ -43,7 +43,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected ViewGroup findMatchingJobsButtonContainer;
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.SCHEDULED_JOBS;
     }

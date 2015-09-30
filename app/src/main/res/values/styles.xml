@@ -33,8 +33,20 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="Base.Widget.Design.TabLayout" parent="android:Widget">
+        <item name="tabMaxWidth">@dimen/ua_iam_banner_width</item>
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/TextAppearance.Design.Tab</item>
+        <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+    </style>
+
     <!-- Base application theme. -->
-    <style name="Theme.Base" parent="android:Theme.Holo.Light.NoActionBar">
+    <style name="Theme.Base" parent="@style/Theme.AppCompat.Light.NoActionBar">
+
         <!--
         <item name="simpleAlertDialogStyle">@style/Theme.SimpleAlertDialog.Light</item>
         <item name="abstractWheelViewStyle">@style/abstractWheelViewStyle</item>

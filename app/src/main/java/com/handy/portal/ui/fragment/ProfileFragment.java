@@ -9,7 +9,7 @@ import com.handy.portal.constant.MainViewTab;
 public class ProfileFragment extends PortalWebViewFragment
 {
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.PROFILE;
     }

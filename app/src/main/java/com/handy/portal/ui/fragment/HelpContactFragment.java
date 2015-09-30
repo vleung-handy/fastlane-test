@@ -55,7 +55,7 @@ public final class HelpContactFragment extends ActionBarFragment
     }
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.HELP;
     }

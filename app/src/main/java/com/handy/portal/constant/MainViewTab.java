@@ -5,11 +5,11 @@ import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
-import com.handy.portal.ui.fragment.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.PaymentsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
-import com.handy.portal.ui.fragment.UpdatePaymentFragment;
+import com.handy.portal.ui.fragment.payments.UpdatePaymentFragment;
 
 import java.io.Serializable;
 

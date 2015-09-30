@@ -45,14 +45,16 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.fragment.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.PaymentsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankInfoFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
-import com.handy.portal.ui.fragment.UpdatePaymentFragment;
+import com.handy.portal.ui.fragment.payments.UpdatePaymentFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
@@ -100,6 +102,9 @@ import retrofit.converter.GsonConverter;
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
+        UpdatePaymentFragment.class,
+        PaymentsUpdateBankInfoFragment.class,
+        PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
         UpdatePaymentFragment.class
 })

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -28,6 +28,7 @@ import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.HelpNodesAdapter;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.CurrencyUtils;
@@ -43,6 +44,7 @@ import butterknife.OnClick;
 
 public final class PaymentsFragment extends ActionBarFragment
 {
+    @VisibleForTesting
     @InjectView(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
 
@@ -89,7 +91,7 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.PAYMENTS;
     }

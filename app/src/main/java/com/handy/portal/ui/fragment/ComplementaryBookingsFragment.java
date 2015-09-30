@@ -64,7 +64,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.SCHEDULED_JOBS;
     }

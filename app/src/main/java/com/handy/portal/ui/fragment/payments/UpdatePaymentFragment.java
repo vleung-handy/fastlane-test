@@ -1,7 +1,9 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,16 +15,24 @@ import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.ui.adapter.UpdatePaymentsFragmentPagerAdapter;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import java.util.List;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class UpdatePaymentFragment extends ActionBarFragment
 {
+    @InjectView(R.id.payments_update_bank_info_sliding_tabs)
+    TabLayout tabLayout;
+
+    @InjectView(R.id.payments_update_bank_info_viewpager)
+    ViewPager viewPager;
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.PAYMENTS;
     }
@@ -60,10 +70,19 @@ public class UpdatePaymentFragment extends ActionBarFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_update_payment, container, false);
+        View view = inflater.inflate(R.layout.fragment_payments_add_method, container, false);
         ButterKnife.inject(this, view);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        viewPager.setAdapter(new UpdatePaymentsFragmentPagerAdapter(getChildFragmentManager(), this.getContext()));
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -79,20 +98,4 @@ public class UpdatePaymentFragment extends ActionBarFragment
         setActionBar(R.string.update_payment_method, false);
     }
 
-
-    private void setVisibilityByChildCount(ViewGroup... viewGroups)
-    {
-        for (ViewGroup viewGroup : viewGroups)
-        {
-            if (viewGroup.getChildCount() > 0)
-            {
-                viewGroup.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                viewGroup.setVisibility(View.GONE);
-            }
-
-        }
-    }
 }
