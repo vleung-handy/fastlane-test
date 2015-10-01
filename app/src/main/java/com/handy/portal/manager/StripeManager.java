@@ -1,11 +1,10 @@
 package com.handy.portal.manager;
 
 
-import com.handy.portal.constant.StripeKeys;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.StripeEvents;
 import com.handy.portal.model.payments.BankAccountInfo;
-import com.handy.portal.model.payments.StripeResponse;
+import com.handy.portal.model.payments.StripeTokenResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -14,11 +13,21 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class StripeManager
+public class StripeManager //TODO: should we consolidate this with PaymentsManager?
 {
     private final String STRIPE_API_KEY = "pk_AdAZ6Xac3qjOGZPIPBxAiVFxoocj4"; //TODO: move to config file
     private final Bus bus;
     private final DataManager dataManager;
+
+    private class RequestStripeTokenKeys{
+        private final static String BANK_ACCOUNT = "bank_account";
+        public final static String BANK_ACCOUNT_COUNTRY = BANK_ACCOUNT + "[country]";
+        public final static String BANK_ACCOUNT_CURRENCY = BANK_ACCOUNT + "[currency]";
+        public final static String BANK_ACCOUNT_ROUTING_NUMBER = BANK_ACCOUNT + "[routing_number]";
+        public final static String BANK_ACCOUNT_ACCOUNT_NUMBER = BANK_ACCOUNT + "[account_number]";
+        public final static String API_KEY = "key";
+        public final static String PAYMENT_USER_AGENT = "payment_user_agent";
+    }
 
     @Inject
     public StripeManager(final Bus bus, final DataManager dataManager)
@@ -41,10 +50,10 @@ public class StripeManager
     @Subscribe
     public void onRequestStripeToken(final StripeEvents.RequestStripeToken event)
     {
-        dataManager.getStripeToken(buildParamsFromBankAccountInfo(event.bankAccountInfo), new DataManager.Callback<StripeResponse>()
+        dataManager.getStripeToken(buildParamsFromBankAccountInfo(event.bankAccountInfo), new DataManager.Callback<StripeTokenResponse>()
         {
             @Override
-            public void onSuccess(StripeResponse response)
+            public void onSuccess(StripeTokenResponse response)
             {
                 bus.post(new StripeEvents.ReceiveStripeTokenSuccess(response.getStripeToken()));
             }
@@ -61,11 +70,12 @@ public class StripeManager
     private Map<String, String> buildParamsFromBankAccountInfo(BankAccountInfo bankAccountInfo)
     {
         Map<String, String> params = new HashMap<>();
-        params.put(StripeKeys.BANK_ACCOUNT_ACCOUNT_NUMBER, bankAccountInfo.getAccountNumber());
-        params.put(StripeKeys.BANK_ACCOUNT_COUNTRY, bankAccountInfo.getCountry());
-        params.put(StripeKeys.BANK_ACCOUNT_CURRENCY, bankAccountInfo.getCurrency());
-        params.put(StripeKeys.BANK_ACCOUNT_ROUTING_NUMBER, bankAccountInfo.getRoutingNumber());
-        params.put(StripeKeys.API_KEY, STRIPE_API_KEY);
+        params.put(RequestStripeTokenKeys.BANK_ACCOUNT_ACCOUNT_NUMBER, bankAccountInfo.getAccountNumber());
+        params.put(RequestStripeTokenKeys.BANK_ACCOUNT_COUNTRY, bankAccountInfo.getCountry());
+        params.put(RequestStripeTokenKeys.BANK_ACCOUNT_CURRENCY, bankAccountInfo.getCurrency());
+        params.put(RequestStripeTokenKeys.BANK_ACCOUNT_ROUTING_NUMBER, bankAccountInfo.getRoutingNumber());
+        params.put(RequestStripeTokenKeys.API_KEY, STRIPE_API_KEY);
         return params;
     }
+
 }

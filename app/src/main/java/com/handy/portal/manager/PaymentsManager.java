@@ -3,6 +3,7 @@ package com.handy.portal.manager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentGroup;
@@ -12,8 +13,10 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -121,5 +124,28 @@ public class PaymentsManager
         });
     }
 
+    @Subscribe
+    public void onRequestCreateBankAccount(final PaymentEvents.RequestCreateBankAccount event) //TODO: finish implementing
+    {
+        dataManager.createBankAccount(buildParamsForCreateBankAccount(), new DataManager.Callback<CreateBankAccountResponse>()
+        {
+            @Override
+            public void onSuccess(CreateBankAccountResponse response)
+            {
+                bus.post(new PaymentEvents.ReceiveCreateBankAccountSuccess(response));
+            }
 
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new PaymentEvents.ReceiveCreateBankAccountError(error));
+            }
+        });
+    }
+
+    private Map<String, String> buildParamsForCreateBankAccount() //TODO: fill with real params
+    {
+        Map<String, String> params = new HashMap<>();
+        return params;
+    }
 }

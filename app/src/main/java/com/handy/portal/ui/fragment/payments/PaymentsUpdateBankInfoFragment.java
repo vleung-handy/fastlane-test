@@ -88,5 +88,7 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment
     {
         String token = event.getToken();
         System.out.println("Received Stripe token: " + token);
+
+        //send request to our server to create bank account
     }
 }

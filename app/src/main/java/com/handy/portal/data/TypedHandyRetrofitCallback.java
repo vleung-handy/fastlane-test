@@ -18,9 +18,10 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
-import com.handy.portal.model.payments.StripeResponse;
+import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
@@ -186,9 +187,17 @@ class SuccessWrapperRetroFitCallback extends TypedHandyRetrofitCallback<SuccessW
     }
 }
 
-class StripeRetroFitCallback extends TypedHandyRetrofitCallback<StripeResponse>
+class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeTokenResponse>
 {
-    StripeRetroFitCallback(DataManager.Callback callback)
+    StripeTokenRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<CreateBankAccountResponse>
+{
+    CreateBankAccountRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

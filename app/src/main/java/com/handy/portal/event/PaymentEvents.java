@@ -2,6 +2,7 @@ package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 
 import java.util.Date;
@@ -101,6 +102,28 @@ public class PaymentEvents
     }
 
     public static class RequestShouldUserUpdatePaymentInfo extends HandyEvent.RequestEvent
+    {
+
+    }
+
+    public static class ReceiveCreateBankAccountSuccess extends HandyEvent.ReceiveSuccessEvent
+    {
+        public final CreateBankAccountResponse createBankAccountResponse;
+        public ReceiveCreateBankAccountSuccess(CreateBankAccountResponse createBankAccountResponse)
+        {
+            this.createBankAccountResponse = createBankAccountResponse;
+        }
+    }
+
+    public static class ReceiveCreateBankAccountError extends HandyEvent.ReceiveErrorEvent
+    {
+        public ReceiveCreateBankAccountError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestCreateBankAccount extends HandyEvent.RequestEvent
     {
 
     }

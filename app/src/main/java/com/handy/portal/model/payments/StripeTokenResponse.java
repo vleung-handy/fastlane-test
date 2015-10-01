@@ -2,7 +2,7 @@ package com.handy.portal.model.payments;
 
 import com.google.gson.annotations.SerializedName;
 
-public class StripeResponse
+public class StripeTokenResponse
 {
     @SerializedName("id")
     private String stripeToken;

@@ -64,6 +64,10 @@ public interface HandyRetrofitService
     @GET(PAYMENTS_PATH + "requires_update")
     void getNeedsToUpdatePaymentInfo(HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(PAYMENTS_PATH + "create_bank_account") //TODO: this is just a placeholder. replace with actual endpoint path
+    void createBankAccount(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 

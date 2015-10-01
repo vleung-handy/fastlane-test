@@ -17,9 +17,10 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
-import com.handy.portal.model.payments.StripeResponse;
+import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -57,12 +58,6 @@ public final class BaseDataManager extends DataManager
     public String getBaseUrl()
     {
         return endpoint.getBaseUrl();
-    }
-
-    @Override
-    public void getStripeToken(Map<String, String> params, final Callback<StripeResponse> cb)
-    {
-        stripeService.getStripeToken(params, new StripeRetroFitCallback(cb));
     }
 
     @Override
@@ -239,4 +234,20 @@ public final class BaseDataManager extends DataManager
         service.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
     }
     //********End Help Center********
+
+    @Override
+    public void createBankAccount(Map<String, String> params, final Callback<CreateBankAccountResponse> cb)
+    {
+        service.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));
+    }
+
+    //Stripe
+
+    @Override
+    public void getStripeToken(Map<String, String> params, final Callback<StripeTokenResponse> cb)
+    {
+        stripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
+    }
+
+
 }
