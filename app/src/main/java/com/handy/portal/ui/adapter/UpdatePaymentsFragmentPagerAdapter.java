@@ -11,7 +11,7 @@ import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 //TODO: work in progress. need to refactor
 public class UpdatePaymentsFragmentPagerAdapter extends FragmentPagerAdapter //TODO: rename this
 {
-    private String tabTitles[] = new String[] { "Debit Card", "Bank Account" }; //TODO: reorganize this/put in better place/use strings.xml
+    private String tabTitles[] = new String[] {"Bank Account", "Debit Card"}; //TODO: reorganize this/put in better place/use strings.xml
     private Context context;
 
     public UpdatePaymentsFragmentPagerAdapter(FragmentManager fm, Context context)
@@ -26,9 +26,9 @@ public class UpdatePaymentsFragmentPagerAdapter extends FragmentPagerAdapter //T
         switch(position) //TODO: reorganize/put in better place?
         {
             case 0:
-                return new PaymentsUpdateDebitCardFragment();
-            case 1:
                 return new PaymentsUpdateBankInfoFragment();
+            case 1:
+                return new PaymentsUpdateDebitCardFragment();
         }
         return null;
     }
