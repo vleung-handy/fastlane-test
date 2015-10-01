@@ -121,9 +121,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EnvironmentModifier provideEnvironmentModifier()
+    final EnvironmentModifier provideEnvironmentModifier(PrefsManager prefsManager)
     {
-        return new EnvironmentModifier(context);
+        return new EnvironmentModifier(context, prefsManager);
     }
 
     @Provides
