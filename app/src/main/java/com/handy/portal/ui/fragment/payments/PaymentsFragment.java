@@ -105,7 +105,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
         if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
         {
-            requestPaymentsInfo();
+            requestPaymentsInfo(); //TODO: need to add logic to prevent multiple requests onResume(), now that user can put this fragment into the back stack by clicking on certain action bar icons
         }
         //TODO: test only. remove later
 //        bus.post(new StripeEvents.RequestStripeToken(StripeManager.getTestBankAccountInfo()));

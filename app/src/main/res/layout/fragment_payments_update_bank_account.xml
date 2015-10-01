@@ -19,6 +19,7 @@
             android:textStyle="bold"/>
 
         <EditText
+            android:id="@+id/payments_update_info_routing_number_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="9-Digit Number"/>
@@ -40,6 +41,7 @@
             android:textStyle="bold"/>
 
         <EditText
+            android:id="@+id/payments_update_info_account_number_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
@@ -53,6 +55,7 @@
             android:textStyle="bold"/>
 
         <EditText
+            android:id="@+id/payments_update_info_tax_id_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
@@ -61,6 +64,7 @@
 
 
     <Button
+        android:id="@+id/payments_update_info_submit_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
