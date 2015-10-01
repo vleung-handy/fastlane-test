@@ -107,6 +107,8 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             requestPaymentsInfo();
         }
+        //TODO: test only. remove later
+//        bus.post(new StripeEvents.RequestStripeToken(StripeManager.getTestBankAccountInfo()));
     }
 
     @Override

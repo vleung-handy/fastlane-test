@@ -55,7 +55,7 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
         assertEquals(fragment.getString(R.string.payments), actionBar.getTitle());
     }
 
-    @Ignore
+    @Ignore //TODO: fix later when we finish Update Payments screen
     @Test
     public void shouldNavigateToProfileTabWhenUpdateBankingClicked() throws Exception
     {

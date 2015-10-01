@@ -19,6 +19,7 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
+import com.handy.portal.model.payments.StripeResponse;
 
 import java.util.Date;
 import java.util.Map;
@@ -88,6 +89,9 @@ public abstract class DataManager
     public abstract void getAnnualPaymentSummaries(Callback<AnnualPaymentSummaries> callback);
 
     public abstract void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> callback);
+
+    public abstract  void getStripeToken(Map<String, String> params, Callback<StripeResponse> callback);
+    //TODO: refactor. should this be here?
 
     public interface Callback<T>
     {

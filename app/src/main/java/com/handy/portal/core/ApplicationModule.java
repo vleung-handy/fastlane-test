@@ -22,12 +22,15 @@ import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
+import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -196,6 +199,33 @@ public final class ApplicationModule
         return restAdapter.create(HandyRetrofitService.class);
     }
 
+    //stripe
+    @Provides
+    @Singleton
+    final StripeRetrofitEndpoint provideStripeEndpoint()
+    {
+        return new StripeRetrofitEndpoint(context);
+    }
+
+    @Provides
+    @Singleton
+    final StripeRetrofitService provideStripeService(final StripeRetrofitEndpoint endpoint) //TODO: clean up
+    {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
+
+        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
+                .setRequestInterceptor(new RequestInterceptor()
+                {
+
+                    @Override
+                    public void intercept(RequestFacade request)
+                    {
+                    }
+                }).setClient(new OkClient(okHttpClient)).build();
+        return restAdapter.create(StripeRetrofitService.class);
+    }
+
     @Provides
     @Singleton
     final Bus provideBus(final Mixpanel mixpanel)
@@ -213,10 +243,12 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
-                                         final HandyRetrofitEndpoint endpoint
+                                         final HandyRetrofitEndpoint endpoint,
+                                         final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else
+                                         final StripeRetrofitEndpoint stripeEndpoint
     )
     {
-        return new BaseDataManager(service, endpoint);
+        return new BaseDataManager(service, endpoint, stripeService, stripeEndpoint);
     }
 
     @Provides
@@ -340,6 +372,13 @@ public final class ApplicationModule
     final PaymentsManager providePaymentsManager(Bus bus, final DataManager dataManager)
     {
         return new PaymentsManager(bus, dataManager);
+    }
+
+    @Provides
+    @Singleton
+    final StripeManager provideStripeManager(final Bus bus, final DataManager dataManager)
+    {
+        return new StripeManager(bus, dataManager);
     }
 
     private String getDeviceId()

@@ -19,9 +19,12 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
+import com.handy.portal.model.payments.StripeResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
+import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 
 import org.json.JSONObject;
 
@@ -37,17 +40,29 @@ public final class BaseDataManager extends DataManager
     private final HandyRetrofitService service;
     private final HandyRetrofitEndpoint endpoint;
 
+    private final StripeRetrofitService stripeService; //TODO: should refactor and move somewhere else?
+    private final StripeRetrofitEndpoint stripeEndpoint;
+
     @Inject
-    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint)
+    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
+                           final StripeRetrofitService stripeService, final StripeRetrofitEndpoint stripeEndpoint)
     {
         this.service = service;
         this.endpoint = endpoint;
+        this.stripeService = stripeService;
+        this.stripeEndpoint = stripeEndpoint;
     }
 
     @Override
     public String getBaseUrl()
     {
         return endpoint.getBaseUrl();
+    }
+
+    @Override
+    public void getStripeToken(Map<String, String> params, final Callback<StripeResponse> cb)
+    {
+        stripeService.getStripeToken(params, new StripeRetroFitCallback(cb));
     }
 
     @Override

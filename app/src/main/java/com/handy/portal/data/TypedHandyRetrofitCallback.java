@@ -20,6 +20,7 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
+import com.handy.portal.model.payments.StripeResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
@@ -180,6 +181,14 @@ class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 class SuccessWrapperRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
 {
     SuccessWrapperRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class StripeRetroFitCallback extends TypedHandyRetrofitCallback<StripeResponse>
+{
+    StripeRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }
