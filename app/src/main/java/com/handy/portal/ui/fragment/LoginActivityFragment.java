@@ -1,8 +1,6 @@
 package com.handy.portal.ui.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +28,7 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
+import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -38,8 +37,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-
-import static com.handy.portal.core.EnvironmentModifier.Environment;
 
 public class LoginActivityFragment extends InjectedFragment
 {
@@ -155,25 +152,7 @@ public class LoginActivityFragment extends InjectedFragment
     {
         if (!buildConfigWrapper.isDebug()) return;
 
-        final Environment[] environments = Environment.values();
-        String[] environmentNames = new String[environments.length];
-        String currentEnvironmentPrefix = environmentModifier.getEnvironmentPrefix();
-        for (int i = 0; i < environments.length; i++)
-        {
-            Environment environment = environments[i];
-            environmentNames[i] = environment + (currentEnvironmentPrefix.equals(environment.getPrefix()) ? " (selected)" : "");
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Pick an environment")
-                .setItems(environmentNames, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        environmentModifier.setEnvironmentPrefix(environments[which].getPrefix());
-                    }
-                });
-        builder.create().show();
+        UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), null).show();
     }
 
     @OnClick(R.id.login_help_button)

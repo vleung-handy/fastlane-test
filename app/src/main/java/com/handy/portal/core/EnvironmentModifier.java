@@ -1,6 +1,7 @@
 package com.handy.portal.core;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import java.util.Properties;
 
@@ -36,9 +37,13 @@ public class EnvironmentModifier
         return pinRequestEnabled;
     }
 
-    public void setEnvironmentPrefix(String environmentPrefix)
+    public void setEnvironmentPrefix(String environmentPrefix, @Nullable OnEnvironmentChangedListener callback)
     {
         this.environmentPrefix = environmentPrefix;
+        if (callback != null)
+        {
+            callback.onEnvironmentChanged(environmentPrefix);
+        }
     }
 
     public enum Environment
@@ -49,5 +54,10 @@ public class EnvironmentModifier
         {
             return this.toString().toLowerCase();
         }
+    }
+
+    public interface OnEnvironmentChangedListener
+    {
+        void onEnvironmentChanged(String newEnvironmentPrefix);
     }
 }
