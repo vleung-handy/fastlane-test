@@ -52,7 +52,7 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        dataManager = new BaseDataManager(service, endpoint);
+//        dataManager = new BaseDataManager(service, endpoint);
     }
 
     @Test
