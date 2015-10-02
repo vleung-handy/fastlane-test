@@ -17,7 +17,6 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
@@ -236,7 +235,7 @@ public final class BaseDataManager extends DataManager
     //********End Help Center********
 
     @Override
-    public void createBankAccount(Map<String, String> params, final Callback<CreateBankAccountResponse> cb)
+    public void createBankAccount(Map<String, String> params, final Callback<SuccessWrapper> cb)
     {
         service.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));
     }

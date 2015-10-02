@@ -18,7 +18,6 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
@@ -195,7 +194,7 @@ class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeToken
     }
 }
 
-class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<CreateBankAccountResponse>
+class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
 {
     CreateBankAccountRetroFitCallback(DataManager.Callback callback)
     {

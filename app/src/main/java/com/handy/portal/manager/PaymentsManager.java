@@ -2,8 +2,8 @@ package com.handy.portal.manager;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentGroup;
@@ -127,12 +127,12 @@ public class PaymentsManager
     @Subscribe
     public void onRequestCreateBankAccount(final PaymentEvents.RequestCreateBankAccount event) //TODO: finish implementing
     {
-        dataManager.createBankAccount(buildParamsForCreateBankAccount(), new DataManager.Callback<CreateBankAccountResponse>()
+        dataManager.createBankAccount(buildParamsForCreateBankAccount(event.stripeToken, event.taxId, event.accountNumberLast4Digits), new DataManager.Callback<SuccessWrapper>()
         {
             @Override
-            public void onSuccess(CreateBankAccountResponse response)
+            public void onSuccess(SuccessWrapper successWrapper)
             {
-                bus.post(new PaymentEvents.ReceiveCreateBankAccountSuccess(response));
+                bus.post(new PaymentEvents.ReceiveCreateBankAccountSuccess(successWrapper.getSuccess()));
             }
 
             @Override
@@ -143,9 +143,13 @@ public class PaymentsManager
         });
     }
 
-    private Map<String, String> buildParamsForCreateBankAccount() //TODO: fill with real params
+    private Map<String, String> buildParamsForCreateBankAccount(String stripeToken, String taxId, String accountNumberLast4Digits) //TODO: fill with real params
     {
         Map<String, String> params = new HashMap<>();
+        params.put("token", stripeToken);
+        params.put("tax_id", taxId);
+        params.put("last4", accountNumberLast4Digits);
+        params.put("account_type", "bank_account");
         return params;
     }
 }

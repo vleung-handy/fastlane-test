@@ -2,7 +2,6 @@ package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 
 import java.util.Date;
@@ -108,10 +107,10 @@ public class PaymentEvents
 
     public static class ReceiveCreateBankAccountSuccess extends HandyEvent.ReceiveSuccessEvent
     {
-        public final CreateBankAccountResponse createBankAccountResponse;
-        public ReceiveCreateBankAccountSuccess(CreateBankAccountResponse createBankAccountResponse)
+        public final boolean successfullyCreated;
+        public ReceiveCreateBankAccountSuccess(boolean succesfullyCreated)
         {
-            this.createBankAccountResponse = createBankAccountResponse;
+            this.successfullyCreated = succesfullyCreated;
         }
     }
 
@@ -125,6 +124,14 @@ public class PaymentEvents
 
     public static class RequestCreateBankAccount extends HandyEvent.RequestEvent
     {
-
+        public final String stripeToken;
+        public final String taxId;
+        public final String accountNumberLast4Digits;
+        public RequestCreateBankAccount(String stripeToken, String taxId, String accountNumberLast4Digits)
+        {
+            this.stripeToken = stripeToken;
+            this.taxId = taxId;
+            this.accountNumberLast4Digits = accountNumberLast4Digits;
+        }
     }
 }

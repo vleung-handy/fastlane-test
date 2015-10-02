@@ -22,6 +22,7 @@ public interface HandyRetrofitService
     String JOBS_PATH = "/jobs/";
     String PROVIDERS_PATH = "/providers/";
     String PAYMENTS_PATH = "/payments/";
+    String STRIPE_PATH = "/stripe/";
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
@@ -65,7 +66,7 @@ public interface HandyRetrofitService
     void getNeedsToUpdatePaymentInfo(HandyRetrofitCallback cb);
 
     @FormUrlEncoded
-    @POST(PAYMENTS_PATH + "create_bank_account") //TODO: this is just a placeholder. replace with actual endpoint path
+    @POST(STRIPE_PATH + "create_bank_account")
     void createBankAccount(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "{id}/complementary_jobs")

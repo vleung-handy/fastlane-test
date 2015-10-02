@@ -2,7 +2,7 @@ package com.handy.portal.model.payments;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CreateBankAccountResponse
+public class CreateDebitCardResponse
 {
     @SerializedName("card_details")
     private String cardDetails;

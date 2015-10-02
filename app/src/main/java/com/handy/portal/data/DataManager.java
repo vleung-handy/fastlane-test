@@ -17,7 +17,6 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateBankAccountResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
@@ -91,7 +90,7 @@ public abstract class DataManager
 
     public abstract void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> callback);
 
-    public abstract void createBankAccount(Map<String, String> params, Callback<CreateBankAccountResponse> callback);
+    public abstract void createBankAccount(Map<String, String> params, Callback<SuccessWrapper> callback);
 
     public abstract void getStripeToken(Map<String, String> params, Callback<StripeTokenResponse> callback);
     //TODO: refactor. should this be here?
