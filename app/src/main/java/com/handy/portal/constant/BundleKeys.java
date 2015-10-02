@@ -16,4 +16,8 @@ public class BundleKeys
     public static final String PAYMENT_BATCH = "payment_batch";
     public static final String IS_FOR_PAYMENTS = "is_for_payments";
     public static final String UPDATE_TAB_CALLBACK = "update_tab_callback";
+
+    // UrbanAirship
+    public static final String PUSH_TYPE = "type_id";
+    public static final String CHECK_IN_ACTION_ID = "check_in";
 }

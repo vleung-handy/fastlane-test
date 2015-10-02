@@ -304,7 +304,7 @@ public class BookingManager
     {
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckInBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckInBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
@@ -326,7 +326,7 @@ public class BookingManager
     {
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckOutBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckOutBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)

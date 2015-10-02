@@ -449,7 +449,14 @@ public abstract class HandyEvent
     @Track("provider checkin submitted")
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
+        public boolean isAuto;
         public LocationData locationData;
+
+        public RequestNotifyJobCheckIn(String bookingId, boolean isAuto, LocationData locationData)
+        {
+            this(bookingId, locationData);
+            this.isAuto = isAuto;
+        }
 
         public RequestNotifyJobCheckIn(String bookingId, LocationData locationData)
         {
@@ -461,7 +468,14 @@ public abstract class HandyEvent
     @Track("provider checkout submitted")
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
+        public boolean isAuto;
         public LocationData locationData;
+
+        public RequestNotifyJobCheckOut(String bookingId, boolean isAuto, LocationData locationData)
+        {
+            this(bookingId, locationData);
+            this.isAuto = isAuto;
+        }
 
         public RequestNotifyJobCheckOut(String bookingId, LocationData locationData)
         {
