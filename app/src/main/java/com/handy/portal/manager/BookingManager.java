@@ -97,10 +97,17 @@ public class BookingManager
         for (Date date : event.dates)
         {
             final Date day = DateTimeUtils.getDateWithoutTime(date);
-            final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
-            if (cachedBookings != null)
+            if (event.useCachedIfPresent)
             {
-                bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
+                final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
+                if (cachedBookings != null)
+                {
+                    bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
+                }
+                else
+                {
+                    datesToRequest.add(day);
+                }
             }
             else
             {
@@ -143,10 +150,17 @@ public class BookingManager
         for (Date date : event.dates)
         {
             final Date day = DateTimeUtils.getDateWithoutTime(date);
-            final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
-            if (cachedBookings != null)
+            if (event.useCachedIfPresent)
             {
-                bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
+                final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
+                if (cachedBookings != null)
+                {
+                    bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
+                }
+                else
+                {
+                    datesToRequest.add(day);
+                }
             }
             else
             {

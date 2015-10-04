@@ -301,23 +301,30 @@ public abstract class HandyEvent
 
     //Booking Lists
 
-    public static class RequestAvailableBookings extends RequestEvent
+    public static class RequestBookingsEvent extends RequestEvent
+    {
+        public boolean useCachedIfPresent;
+    }
+
+    public static class RequestAvailableBookings extends RequestBookingsEvent
     {
         public final List<Date> dates;
 
-        public RequestAvailableBookings(List<Date> dates)
+        public RequestAvailableBookings(List<Date> dates, boolean useCachedIfPresent)
         {
             this.dates = dates;
+            this.useCachedIfPresent = useCachedIfPresent;
         }
     }
 
-    public static class RequestScheduledBookings extends RequestEvent
+    public static class RequestScheduledBookings extends RequestBookingsEvent
     {
         public final List<Date> dates;
 
-        public RequestScheduledBookings(List<Date> dates)
+        public RequestScheduledBookings(List<Date> dates, boolean useCachedIfPresent)
         {
             this.dates = dates;
+            this.useCachedIfPresent = useCachedIfPresent;
         }
     }
 

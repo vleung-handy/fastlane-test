@@ -78,9 +78,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected HandyEvent getRequestEvent(List<Date> dates)
+    protected HandyEvent getRequestEvent(List<Date> dates, boolean useCachedIfPresent)
     {
-        return new HandyEvent.RequestScheduledBookings(dates);
+        return new HandyEvent.RequestScheduledBookings(dates, useCachedIfPresent);
     }
 
     @Override
