@@ -300,7 +300,7 @@ public class BookingManager
     }
 
     @Subscribe
-    public void onRequestNotifyCheckIn(HandyEvent.RequestNotifyJobCheckIn event)
+    public void onRequestNotifyCheckIn(final HandyEvent.RequestNotifyJobCheckIn event)
     {
         LocationData locationData = event.locationData;
 
@@ -309,20 +309,20 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking, event.isAuto));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error, event.isAuto));
             }
         });
     }
 
     @Subscribe
-    public void onRequestNotifyCheckOut(HandyEvent.RequestNotifyJobCheckOut event)
+    public void onRequestNotifyCheckOut(final HandyEvent.RequestNotifyJobCheckOut event)
     {
         LocationData locationData = event.locationData;
 
@@ -331,13 +331,13 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckoutSuccess(booking));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking, event.isAuto));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckoutError(error));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error, event.isAuto));
             }
         });
     }
