@@ -1,17 +1,17 @@
 package com.handy.portal.service;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
+import android.text.format.DateUtils;
 
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
+import com.urbanairship.PendingResult;
+import com.urbanairship.UAirship;
 
 import javax.inject.Inject;
 
@@ -19,6 +19,8 @@ public class AutoCheckInService extends IntentService
 {
     @Inject
     Bus bus;
+
+    private static final long MAXIMUM_LOCATION_AGE_MILLIS = DateUtils.MINUTE_IN_MILLIS;
 
     private static final String ACTION_CHECK_IN = "check_in";
     private static final String ACTION_CHECK_OUT = "check_out";
@@ -43,13 +45,29 @@ public class AutoCheckInService extends IntentService
     @Override
     protected void onHandleIntent(Intent intent)
     {
-        String action = intent.getStringExtra(BundleKeys.CHECK_IN_ACTION_ID);
-        String bookingId = intent.getStringExtra(BundleKeys.BOOKING_ID);
+        final String action = intent.getStringExtra(BundleKeys.CHECK_IN_ACTION_ID);
+        final String bookingId = intent.getStringExtra(BundleKeys.BOOKING_ID);
 
         if (action != null && bookingId != null)
         {
-            handleAction(action, bookingId, getLastKnownLocation());
+            PendingResult<Location> pendingLocation = UAirship.shared().getLocationManager().requestSingleLocation();
+            pendingLocation.onResult(new PendingResult.ResultCallback<Location>()
+            {
+                @Override
+                public void onResult(Location location)
+                {
+                    if (isRecent(location))
+                    {
+                        handleAction(action, bookingId, location);
+                    }
+                }
+            });
         }
+    }
+
+    private boolean isRecent(Location location)
+    {
+        return location != null && System.currentTimeMillis() - location.getTime() <= MAXIMUM_LOCATION_AGE_MILLIS;
     }
 
     private void handleAction(String action, String bookingId, Location location)
@@ -67,13 +85,4 @@ public class AutoCheckInService extends IntentService
         }
     }
 
-    private Location getLastKnownLocation()
-    {
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        String locationProvider = locationManager.getBestProvider(criteria, true);
-        return locationManager.getLastKnownLocation(locationProvider);
-    }
 }
