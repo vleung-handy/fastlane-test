@@ -276,9 +276,16 @@ public final class PaymentsFragment extends ActionBarFragment
 
         //only if the data returned is empty, determine whether we need to re-request
         //TODO: this is gross and we won't need to do this when new payments API comes out
-        if (paymentBatches.isEmpty() && paymentsBatchListView.shouldRequestMoreData())
+        if (paymentBatches.isEmpty())
         {
-            requestNextPaymentBatches();
+            if (paymentsBatchListView.shouldRequestMoreData())
+            {
+                requestNextPaymentBatches();
+            }
+            else
+            {
+                paymentsBatchListView.showFooter(R.string.no_more_payments);
+            }
         }
     }
 
