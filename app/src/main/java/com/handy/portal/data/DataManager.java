@@ -92,6 +92,8 @@ public abstract class DataManager
 
     public abstract void createBankAccount(Map<String, String> params, Callback<SuccessWrapper> callback);
 
+    public abstract void createDebitCardRecipient(Map<String, String> params, Callback<SuccessWrapper> callback);
+
     public abstract void getStripeToken(Map<String, String> params, Callback<StripeTokenResponse> callback);
     //TODO: refactor. should this be here?
 

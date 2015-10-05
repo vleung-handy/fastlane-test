@@ -202,4 +202,12 @@ class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<Succe
     }
 }
 
+class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
+{
+    CreateDebitCardRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
 

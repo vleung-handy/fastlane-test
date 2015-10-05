@@ -134,4 +134,40 @@ public class PaymentEvents
             this.accountNumberLast4Digits = accountNumberLast4Digits;
         }
     }
+
+
+    public static class ReceiveCreateDebitCardRecipientSuccess extends HandyEvent.ReceiveSuccessEvent
+    {
+        public final boolean successfullyCreated;
+        public ReceiveCreateDebitCardRecipientSuccess(boolean succesfullyCreated)
+        {
+            this.successfullyCreated = succesfullyCreated;
+        }
+    }
+
+    public static class ReceiveCreateDebitCardRecipientError extends HandyEvent.ReceiveErrorEvent
+    {
+        public ReceiveCreateDebitCardRecipientError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestCreateDebitCardRecipient extends HandyEvent.RequestEvent
+    {
+        public final String stripeToken;
+        //TODO: refactor. wrap in object?
+        public final String taxId;
+        public final String cardNumberLast4Digits;
+        public final String expMonth;
+        public final String expYear;
+        public RequestCreateDebitCardRecipient(String stripeToken, String taxId, String accountNumberLast4Digits, String expMonth, String expYear)
+        {
+            this.stripeToken = stripeToken;
+            this.taxId = taxId;
+            this.cardNumberLast4Digits = accountNumberLast4Digits;
+            this.expMonth = expMonth;
+            this.expYear = expYear;
+        }
+    }
 }

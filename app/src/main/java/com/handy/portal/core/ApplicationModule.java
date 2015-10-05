@@ -244,11 +244,10 @@ public final class ApplicationModule
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
-                                         final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else
-                                         final StripeRetrofitEndpoint stripeEndpoint
+                                         final StripeRetrofitService stripeService //TODO: refactor and move somewhere else?
     )
     {
-        return new BaseDataManager(service, endpoint, stripeService, stripeEndpoint);
+        return new BaseDataManager(service, endpoint, stripeService);
     }
 
     @Provides

@@ -125,7 +125,7 @@ public class PaymentsManager
     }
 
     @Subscribe
-    public void onRequestCreateBankAccount(final PaymentEvents.RequestCreateBankAccount event) //TODO: finish implementing
+    public void onRequestCreateBankAccount(final PaymentEvents.RequestCreateBankAccount event)
     {
         dataManager.createBankAccount(buildParamsForCreateBankAccount(event.stripeToken, event.taxId, event.accountNumberLast4Digits), new DataManager.Callback<SuccessWrapper>()
         {
@@ -143,7 +143,39 @@ public class PaymentsManager
         });
     }
 
-    private Map<String, String> buildParamsForCreateBankAccount(String stripeToken, String taxId, String accountNumberLast4Digits) //TODO: fill with real params
+    @Subscribe
+    public void onRequestCreateDebitCardRecipient(final PaymentEvents.RequestCreateDebitCardRecipient event)
+    {
+        dataManager.createDebitCardRecipient(buildParamsForDebitCardRecipient(event.stripeToken, event.taxId, event.cardNumberLast4Digits, event.expMonth, event.expYear), new DataManager.Callback<SuccessWrapper>()
+        {
+            @Override
+            public void onSuccess(SuccessWrapper successWrapper)
+            {
+                bus.post(new PaymentEvents.ReceiveCreateDebitCardRecipientSuccess(successWrapper.getSuccess()));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new PaymentEvents.ReceiveCreateDebitCardRecipientError(error));
+            }
+        });
+    }
+
+    //TODO: clean this up. parameterize
+    private Map<String, String> buildParamsForDebitCardRecipient(String stripeToken, String taxId, String cardNumberLast4Digits, String expMonth, String expYear)
+    {
+        Map<String, String> params = new HashMap<>();
+        params.put("token", stripeToken);
+        params.put("tax_id", taxId);
+        params.put("last4", cardNumberLast4Digits);
+        params.put("exp_month", expMonth);
+        params.put("exp_year", expYear);
+        params.put("account_type", "debit_card");
+        return params;
+    }
+
+    private Map<String, String> buildParamsForCreateBankAccount(String stripeToken, String taxId, String accountNumberLast4Digits)
     {
         Map<String, String> params = new HashMap<>();
         params.put("token", stripeToken);

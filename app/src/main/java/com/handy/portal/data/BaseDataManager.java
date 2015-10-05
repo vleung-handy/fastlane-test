@@ -23,7 +23,6 @@ import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 
 import org.json.JSONObject;
@@ -41,16 +40,14 @@ public final class BaseDataManager extends DataManager
     private final HandyRetrofitEndpoint endpoint;
 
     private final StripeRetrofitService stripeService; //TODO: should refactor and move somewhere else?
-    private final StripeRetrofitEndpoint stripeEndpoint;
 
     @Inject
     public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
-                           final StripeRetrofitService stripeService, final StripeRetrofitEndpoint stripeEndpoint)
+                           final StripeRetrofitService stripeService)
     {
         this.service = service;
         this.endpoint = endpoint;
         this.stripeService = stripeService;
-        this.stripeEndpoint = stripeEndpoint;
     }
 
     @Override
@@ -238,6 +235,12 @@ public final class BaseDataManager extends DataManager
     public void createBankAccount(Map<String, String> params, final Callback<SuccessWrapper> cb)
     {
         service.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));
+    }
+
+    @Override
+    public void createDebitCardRecipient(Map<String, String> params, final Callback<SuccessWrapper> cb)
+    {
+        service.createDebitCardRecipient(params, new CreateDebitCardRetroFitCallback(cb));
     }
 
     //Stripe

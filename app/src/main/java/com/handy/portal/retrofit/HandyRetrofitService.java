@@ -69,6 +69,10 @@ public interface HandyRetrofitService
     @POST(STRIPE_PATH + "create_bank_account")
     void createBankAccount(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "create_debit_card_recipient")
+    void createDebitCardRecipient(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 

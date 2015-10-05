@@ -9,6 +9,7 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.squareup.otto.Bus;
 
 import org.json.JSONObject;
@@ -35,6 +36,8 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     @Mock
     HandyRetrofitEndpoint endpoint;
     @Mock
+    StripeRetrofitService stripeService;
+    @Mock
     Bus bus;
     @Mock
     PrefsManager prefsManager;
@@ -52,7 +55,7 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-//        dataManager = new BaseDataManager(service, endpoint);
+        dataManager = new BaseDataManager(service, endpoint, stripeService);
     }
 
     @Test

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.event.StripeEvents;
 import com.handy.portal.model.payments.BankAccountInfo;
@@ -102,6 +103,7 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment
             bankAccountInfo.setCurrency("usd"); //TODO: test only. investigate how we can get the user's actual currency and country codes
             bankAccountInfo.setCountry("US");
             bus.post(new StripeEvents.RequestStripeToken(bankAccountInfo));
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
         else
         {
@@ -110,11 +112,13 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment
 
     }
 
+    //TODO: This fragment isn't paused when tab switched so this event is received even when not in view
+    //we may move away from using tab layout so this may not have to be handled
     @Subscribe
     public void onReceiveStripeTokenSuccess(StripeEvents.ReceiveStripeTokenSuccess event)
     {
         String token = event.getToken();
-        System.out.println("Received Stripe token: " + token);
+        System.out.println("Received Stripe token: " + token);//TODO: test only, remove later
 
         //TODO: need to do validation first
         String taxIdString = taxIdText.getText().toString();
@@ -126,9 +130,18 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment
     @Subscribe
     public void onReceiveCreateBankAccountSuccess(PaymentEvents.ReceiveCreateBankAccountSuccess event)
     {
-        //TODO: implement
-
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        //TODO: implement. below is test message only
         Toast.makeText(this.getContext(), event.successfullyCreated ? "Successfully created bank account" : "Failed to create bank account", Toast.LENGTH_LONG).show();
+
+    }
+
+    @Subscribe
+    public void onReceiveCreateBankAccountError(PaymentEvents.ReceiveCreateBankAccountError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        //TODO: implement. below is test message only
+        Toast.makeText(this.getContext(), "Failed to create bank account", Toast.LENGTH_LONG).show();
 
     }
 }
