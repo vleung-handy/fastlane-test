@@ -198,7 +198,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         alertDialog.clickOnItem(2);
 
         String secondItem = (String) alertDialog.getItems()[2];
-        verify(environmentModifier).setEnvironmentPrefix(EnvironmentModifier.Environment.valueOf(secondItem).getPrefix());
+        verify(environmentModifier).setEnvironmentPrefix(EnvironmentModifier.Environment.valueOf(secondItem).getPrefix(), null);
     }
 
     private void makeLoginRequest(String pinCode)

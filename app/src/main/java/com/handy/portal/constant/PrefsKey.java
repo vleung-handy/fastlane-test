@@ -6,7 +6,9 @@ public enum PrefsKey
     LAST_PROVIDER_ID("user_credentials_id"),
     AUTH_TOKEN("user_credentials"),
     ONBOARDING_COMPLETED("onboarding_completed"),
-    ONBOARDING_NEEDED("onboarding_needed");
+    ONBOARDING_NEEDED("onboarding_needed"),
+    ENVIRONMENT_PREFIX("environment_prefix"),
+    ;
 
     private String key;
 

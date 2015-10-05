@@ -5,15 +5,25 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.handy.portal.BuildConfig;
+import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.util.UIUtils;
+
+import javax.inject.Inject;
 
 //TODO: eventually we should use Toolbar with support library instead of ActionBar because it is more flexible
 public abstract class ActionBarFragment extends InjectedFragment
 {
+    @Inject
+    EnvironmentModifier environmentModifier;
+
     private UpdateTabsCallback tabsCallback;
 
     abstract MainViewTab getTab();
@@ -59,6 +69,43 @@ public abstract class ActionBarFragment extends InjectedFragment
         if (getTab() != null)
         {
             tabsCallback.updateTabs(getTab());
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        if (BuildConfig.DEBUG)
+        {
+            inflater.inflate(R.menu.menu_main, menu);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        super.onPrepareOptionsMenu(menu);
+        final MenuItem environmentModifierMenuItem = menu.findItem(R.id.action_settings);
+        if (environmentModifierMenuItem != null)
+        {
+            environmentModifierMenuItem.setTitle(environmentModifier.getEnvironmentPrefix().toUpperCase());
+            environmentModifierMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
+            {
+                @Override
+                public boolean onMenuItemClick(MenuItem item)
+                {
+                    UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener()
+                    {
+                        @Override
+                        public void onEnvironmentChanged(String newEnvironmentPrefix)
+                        {
+                            environmentModifierMenuItem.setTitle(newEnvironmentPrefix.toUpperCase());
+                        }
+                    }).show();
+                    return true;
+                }
+            });
         }
     }
 
@@ -136,7 +183,8 @@ public abstract class ActionBarFragment extends InjectedFragment
 
     public interface UpdateTabsCallback extends Parcelable
     {
-        Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        Parcelable.Creator CREATOR = new Parcelable.Creator()
+        {
             @Override
             public Object createFromParcel(Parcel source)
             {

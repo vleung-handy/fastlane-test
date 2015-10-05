@@ -1,7 +1,9 @@
 package com.handy.portal.util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -32,12 +35,13 @@ public final class UIUtils
 
     public static ViewGroup getParent(View view)
     {
-        return (ViewGroup)view.getParent();
+        return (ViewGroup) view.getParent();
     }
 
-    public static void removeView(View view) {
+    public static void removeView(View view)
+    {
         ViewGroup parent = getParent(view);
-        if(parent != null)
+        if (parent != null)
         {
             parent.removeView(view);
         }
@@ -46,7 +50,7 @@ public final class UIUtils
     public static void replaceView(View currentView, View newView)
     {
         ViewGroup parent = getParent(currentView);
-        if(parent == null)
+        if (parent == null)
         {
             return;
         }
@@ -148,6 +152,30 @@ public final class UIUtils
             }
         }
         return null;
+    }
+
+    public static AlertDialog createEnvironmentModifierDialog(final EnvironmentModifier environmentModifier, final Context context, final EnvironmentModifier.OnEnvironmentChangedListener callback)
+    {
+        final EnvironmentModifier.Environment[] environments = EnvironmentModifier.Environment.values();
+        String[] environmentNames = new String[environments.length];
+        String currentEnvironmentPrefix = environmentModifier.getEnvironmentPrefix();
+        for (int i = 0; i < environments.length; i++)
+        {
+            EnvironmentModifier.Environment environment = environments[i];
+            environmentNames[i] = environment + (currentEnvironmentPrefix.equals(environment.getPrefix()) ? " (selected)" : "");
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Pick an environment")
+                .setItems(environmentNames, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        String selectedEnvironmentPrefix = environments[which].getPrefix();
+                        environmentModifier.setEnvironmentPrefix(selectedEnvironmentPrefix, callback);
+                    }
+                });
+        return builder.create();
     }
 
 }
