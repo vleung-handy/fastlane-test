@@ -11,7 +11,6 @@ import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -55,18 +54,18 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
         assertEquals(fragment.getString(R.string.payments), actionBar.getTitle());
     }
 
-    @Ignore //TODO: fix later when we finish Update Payments screen
     @Test
-    public void shouldNavigateToProfileTabWhenUpdateBankingClicked() throws Exception
+    public void shouldNavigateToUpdatePaymentWhenUpdateBankingClicked() throws Exception
     {
         ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
         shadowActivity.clickMenuItem(R.id.action_update_banking);
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
         verify(bus, atLeastOnce()).post(captor.capture());
+
         HandyEvent.NavigateToTab event = getBusCaptorValue(captor, HandyEvent.NavigateToTab.class);
         assertNotNull("NavigateToTab event was not post to bus", event);
-        assertEquals("Failed to navigate to profile tab", MainViewTab.PROFILE, event.targetTab);
+        assertEquals("Failed to navigate to UpdatePaymentFragment", MainViewTab.UPDATE_PAYMENTS, event.targetTab);
     }
 
     @Test

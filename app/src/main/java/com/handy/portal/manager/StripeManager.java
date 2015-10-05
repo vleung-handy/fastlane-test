@@ -69,7 +69,6 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
             public void onError(DataManager.DataManagerError error)
             {
                 bus.post(new StripeEvents.ReceiveStripeTokenError(error));
-
             }
         });
     }
