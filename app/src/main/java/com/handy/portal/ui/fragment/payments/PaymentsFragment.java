@@ -33,6 +33,7 @@ import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
@@ -108,7 +109,7 @@ public final class PaymentsFragment extends ActionBarFragment
             requestPaymentsInfo(); //TODO: need to add logic to prevent multiple requests onResume(), now that user can put this fragment into the back stack by clicking on certain action bar icons
         }
         //TODO: test only. remove later
-//        bus.post(new StripeEvents.RequestStripeToken(StripeManager.getTestBankAccountInfo()));
+//        bus.post(new StripeEvents.RequestStripeTokenFromBankAccount(StripeManager.getTestBankAccountInfo()));
     }
 
     @Override
@@ -167,7 +168,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
             c.set(Calendar.DAY_OF_YEAR, dayOfYear);
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
-            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, System.identityHashCode(this)));
+            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, Utils.getObjectIdentifier(this)));
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
@@ -265,7 +266,7 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         fetchErrorView.setVisibility(View.GONE);
 
-        int id = System.identityHashCode(this);
+        int id = Utils.getObjectIdentifier(this);
         if (id != event.getCallerIdentifier()) return;
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);

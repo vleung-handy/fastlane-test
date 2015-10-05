@@ -20,6 +20,11 @@ import com.handy.portal.ui.activity.BaseActivity;
 
 public final class Utils //TODO: we should reorganize these methods into more specific util classes
 {
+    public static int getObjectIdentifier(Object object)
+    {
+        return System.identityHashCode(object);
+    }
+
     //returns true if the intent was successfully launched
     public static boolean safeLaunchIntent(Intent intent, Context context)
     {

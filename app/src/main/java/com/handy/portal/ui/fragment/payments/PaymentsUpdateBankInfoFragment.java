@@ -102,29 +102,34 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment
             bankAccountInfo.setRoutingNumber(routingNumber);
             bankAccountInfo.setCurrency("usd"); //TODO: test only. investigate how we can get the user's actual currency and country codes
             bankAccountInfo.setCountry("US");
-            bus.post(new StripeEvents.RequestStripeToken(bankAccountInfo));
+            bus.post(new StripeEvents.RequestStripeTokenFromBankAccount(bankAccountInfo));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
         else
         {
             //TODO: show error text
         }
-
     }
 
-    //TODO: This fragment isn't paused when tab switched so this event is received even when not in view
-    //we may move away from using tab layout so this may not have to be handled
     @Subscribe
-    public void onReceiveStripeTokenSuccess(StripeEvents.ReceiveStripeTokenSuccess event)
+    public void onReceiveStripeTokenFromBankAccountSuccess(StripeEvents.ReceiveStripeTokenFromBankAccountSuccess event)
     {
-        String token = event.getToken();
-        System.out.println("Received Stripe token: " + token);//TODO: test only, remove later
+        String token = event.stripeTokenResponse.getStripeToken();
 
         //TODO: need to do validation first
         String taxIdString = taxIdText.getText().toString();
         String accountNumberString = accountNumberText.getText().toString();
         String accountNumberLast4Digits = accountNumberString.substring(accountNumberString.length() - 4);
         bus.post(new PaymentEvents.RequestCreateBankAccount(token, taxIdString, accountNumberLast4Digits));
+    }
+
+    @Subscribe
+    public void onReceiveStripeTokenFromBankAccountError(StripeEvents.ReceiveStripeTokenFromBankAccountError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        //TODO: implement. below is test message only
+        Toast.makeText(this.getContext(), "Failed to get stripe token", Toast.LENGTH_LONG).show();
+
     }
 
     @Subscribe

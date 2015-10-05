@@ -2,14 +2,15 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
@@ -25,10 +26,13 @@ import butterknife.InjectView;
 
 public class UpdatePaymentFragment extends ActionBarFragment
 {
-    @InjectView(R.id.payments_update_bank_info_sliding_tabs)
-    TabLayout tabLayout;
+    @InjectView(R.id.payments_update_method_radio_group)
+    RadioGroup radioGroup;
 
-    @InjectView(R.id.payments_update_bank_info_viewpager)
+    @InjectView(R.id.payments_update_info_view_pager_wrapper)
+    CardView viewPagerWrapper;
+
+    @InjectView(R.id.payments_update_info_viewpager)
     ViewPager viewPager;
 
     @Override
@@ -70,19 +74,36 @@ public class UpdatePaymentFragment extends ActionBarFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_payments_add_method, container, false);
+        View view = inflater.inflate(R.layout.fragment_payments_update_method, container, false);
         ButterKnife.inject(this, view);
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager.setAdapter(new UpdatePaymentsFragmentPagerAdapter(getChildFragmentManager(), this.getContext()));
-        tabLayout.setupWithViewPager(viewPager);
+        final UpdatePaymentsFragmentPagerAdapter adapter = new UpdatePaymentsFragmentPagerAdapter(getChildFragmentManager(), this.getContext());
+        viewPager.setAdapter(adapter);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                viewPagerWrapper.setVisibility(View.VISIBLE);
+                switch(checkedId)
+                {
+                    case R.id.payments_update_method_bank_account_radio_button:
+                        viewPager.setCurrentItem(0, true);
+                        break;
+                    case R.id.payments_update_method_debit_card_radio_button:
+                        viewPager.setCurrentItem(1, true);
+                        break;
+                }
+            }
+        });
     }
 
     @Override

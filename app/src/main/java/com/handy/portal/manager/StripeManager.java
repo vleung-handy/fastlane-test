@@ -55,26 +55,46 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     @Subscribe
-    public void onRequestStripeToken(final StripeEvents.RequestStripeToken event)
+    public void onRequestStripeTokenFromBankAccount(final StripeEvents.RequestStripeTokenFromBankAccount event)
     {
-        dataManager.getStripeToken(event.params, new DataManager.Callback<StripeTokenResponse>()
+        dataManager.getStripeToken(buildParamsFromBankAccountInfo(event.bankAccountInfo), new DataManager.Callback<StripeTokenResponse>()
         {
             @Override
             public void onSuccess(StripeTokenResponse response)
             {
-                bus.post(new StripeEvents.ReceiveStripeTokenSuccess(response.getStripeToken()));
+                bus.post(new StripeEvents.ReceiveStripeTokenFromBankAccountSuccess(response));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new StripeEvents.ReceiveStripeTokenError(error));
+                bus.post(new StripeEvents.ReceiveStripeTokenFromBankAccountError(error));
+
             }
         });
     }
 
-    //TODO: WIP. refactor and make not static!
-    public static Map<String, String> buildParamsFromDebitCardInfo(DebitCardInfo debitCardInfo)
+    @Subscribe
+    public void onRequestStripeTokenFromDebitCard(final StripeEvents.RequestStripeTokenFromDebitCard event)
+    {
+        dataManager.getStripeToken(buildParamsFromDebitCardInfo(event.debitCardInfo), new DataManager.Callback<StripeTokenResponse>()
+        {
+            @Override
+            public void onSuccess(StripeTokenResponse response)
+            {
+                bus.post(new StripeEvents.ReceiveStripeTokenFromDebitCardSuccess(response));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new StripeEvents.ReceiveStripeTokenFromDebitCardError(error));
+
+            }
+        });
+    }
+
+    private Map<String, String> buildParamsFromDebitCardInfo(DebitCardInfo debitCardInfo)
     {
         Map<String, String> params = new HashMap<>();
         params.put(RequestStripeTokenKeys.CARD_NUMBER, debitCardInfo.getCardNumber());
@@ -85,7 +105,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         return params;
     }
 
-    public static Map<String, String> buildParamsFromBankAccountInfo(BankAccountInfo bankAccountInfo)
+    private Map<String, String> buildParamsFromBankAccountInfo(BankAccountInfo bankAccountInfo)
     {
         Map<String, String> params = new HashMap<>();
         params.put(RequestStripeTokenKeys.BANK_ACCOUNT_ACCOUNT_NUMBER, bankAccountInfo.getAccountNumber());

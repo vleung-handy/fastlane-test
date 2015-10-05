@@ -1,44 +1,59 @@
 package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.manager.StripeManager;
 import com.handy.portal.model.payments.BankAccountInfo;
 import com.handy.portal.model.payments.DebitCardInfo;
-
-import java.util.Map;
+import com.handy.portal.model.payments.StripeTokenResponse;
 
 public class StripeEvents
 {
-    public static class RequestStripeToken extends HandyEvent.RequestEvent
+    public static class RequestStripeTokenFromBankAccount extends HandyEvent.RequestEvent
     {
-        public final Map<String, String> params;
-        public RequestStripeToken(BankAccountInfo bankAccountInfo)
+        public final BankAccountInfo bankAccountInfo;
+        public RequestStripeTokenFromBankAccount(BankAccountInfo bankAccountInfo)
         {
-            params = StripeManager.buildParamsFromBankAccountInfo(bankAccountInfo); //TODO: refactor. would rather not do this in request object
-        }
-        public RequestStripeToken(DebitCardInfo debitCardInfo)
-        {
-            params = StripeManager.buildParamsFromDebitCardInfo(debitCardInfo);
+            this.bankAccountInfo = bankAccountInfo;
         }
     }
 
-    public static class ReceiveStripeTokenSuccess extends HandyEvent.ReceiveSuccessEvent
+    public static class ReceiveStripeTokenFromBankAccountSuccess extends HandyEvent.ReceiveSuccessEvent
     {
-        private final String token;
-        public ReceiveStripeTokenSuccess(String token)
+        public final StripeTokenResponse stripeTokenResponse;
+        public ReceiveStripeTokenFromBankAccountSuccess(StripeTokenResponse stripeTokenResponse)
         {
-            this.token = token;
-        }
-
-        public String getToken()
-        {
-            return token;
+            this.stripeTokenResponse = stripeTokenResponse;
         }
     }
 
-    public static class ReceiveStripeTokenError extends HandyEvent.ReceiveErrorEvent
+    public static class ReceiveStripeTokenFromBankAccountError extends HandyEvent.ReceiveErrorEvent
     {
-        public ReceiveStripeTokenError(DataManager.DataManagerError error)
+        public ReceiveStripeTokenFromBankAccountError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestStripeTokenFromDebitCard extends HandyEvent.RequestEvent
+    {
+        public final DebitCardInfo debitCardInfo;
+        public RequestStripeTokenFromDebitCard(DebitCardInfo debitCardInfo)
+        {
+            this.debitCardInfo = debitCardInfo;
+        }
+    }
+
+    public static class ReceiveStripeTokenFromDebitCardSuccess extends HandyEvent.ReceiveSuccessEvent
+    {
+        public final StripeTokenResponse stripeTokenResponse;
+        public ReceiveStripeTokenFromDebitCardSuccess(StripeTokenResponse stripeTokenResponse)
+        {
+            this.stripeTokenResponse = stripeTokenResponse;
+        }
+    }
+
+    public static class ReceiveStripeTokenFromDebitCardError extends HandyEvent.ReceiveErrorEvent
+    {
+        public ReceiveStripeTokenFromDebitCardError(DataManager.DataManagerError error)
         {
             this.error = error;
         }

@@ -85,7 +85,7 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
             debitCardInfo.setCvc(debitCardSecurityCodeText.getText().toString());
             debitCardInfo.setExpMonth(debitCardExpirationMonthText.getText().toString());
             debitCardInfo.setExpYear(debitCardExpirationYearText.getText().toString());
-            bus.post(new StripeEvents.RequestStripeToken(debitCardInfo));
+            bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
         else
@@ -97,9 +97,10 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
     //TODO: This fragment isn't paused when tab switched so this event is received even when not in view
     //we may move away from using tab layout so this may not have to be handled
     @Subscribe
-    public void onReceiveStripeTokenSuccess(StripeEvents.ReceiveStripeTokenSuccess event)
+    public void onReceiveStripeTokenFromDebitCardSuccess(StripeEvents.ReceiveStripeTokenFromDebitCardSuccess event)
     {
-        String token = event.getToken();
+
+        String token = event.stripeTokenResponse.getStripeToken();
         System.out.println("Received Stripe token: " + token);
 
         //TODO: need to do validation first
@@ -109,12 +110,14 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         String cardNumberString = debitCardNumberText.getText().toString();
         String cardNumberLast4Digits = cardNumberString.substring(cardNumberString.length() - 4);
         bus.post(new PaymentEvents.RequestCreateDebitCardRecipient(token, taxIdString, cardNumberLast4Digits, expMonthString, expYearString));
+
     }
 
     @Subscribe
-    public void onReceiveStripeTokenError(StripeEvents.ReceiveStripeTokenError event)
+    public void onReceiveStripeTokenFromDebitCardError(StripeEvents.ReceiveStripeTokenFromDebitCardError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        //TODO: implement. below is test message only
         Toast.makeText(this.getContext(), "Failed to get stripe token", Toast.LENGTH_LONG).show();
 
     }
