@@ -30,13 +30,19 @@
 
         <include layout="@layout/layout_scheduled_bookings_empty"/>
 
-        <com.handy.portal.ui.element.BookingListView
-            android:id="@+id/scheduled_jobs_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@color/white_trans"
-            android:dividerHeight="1dp"
-            android:paddingTop="1dp"/>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.handy.portal.ui.element.BookingListView
+                android:id="@+id/scheduled_jobs_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/white_trans"
+                android:dividerHeight="1dp"
+                android:paddingTop="1dp"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout
             android:id="@+id/find_matching_jobs_button_container"

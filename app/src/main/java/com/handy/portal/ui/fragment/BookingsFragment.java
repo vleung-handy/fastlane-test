@@ -2,10 +2,8 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,6 +42,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @InjectView(R.id.fetch_error_text)
     protected TextView errorText;
 
+    @InjectView(R.id.refresh_layout)
+    protected SwipeRefreshLayout refreshLayout;
+
     protected abstract int getFragmentResourceId();
 
     protected abstract BookingListView getBookingListView();
@@ -77,27 +78,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected List<Booking> bookingsForSelectedDay;
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.menu_bookings, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_refresh:
-                requestBookingsForSelectedDay();
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
@@ -114,6 +94,16 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 this.selectedDay = DateTimeUtils.getDateWithoutTime(new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME)));
             }
         }
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                requestBookingsForSelectedDay(false);
+            }
+        });
+        refreshLayout.setColorSchemeResources(R.color.handy_blue);
 
         return view;
     }
@@ -145,19 +135,19 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookingsForSelectedDay();
+        requestBookingsForSelectedDay(true);
     }
 
     private void requestAllBookings()
     {
-        requestBookingsForSelectedDay();
+        requestBookingsForSelectedDay(true);
 
         requestBookingsForOtherDays(selectedDay);
     }
 
-    private void requestBookingsForSelectedDay()
+    private void requestBookingsForSelectedDay(boolean showOverlay)
     {
-        requestBookings(Lists.newArrayList(selectedDay), true, false);
+        requestBookings(Lists.newArrayList(selectedDay), showOverlay, false);
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)
@@ -191,6 +181,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
+        refreshLayout.setRefreshing(false);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         List<Booking> bookings = event.bookings;
@@ -215,6 +206,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
+        refreshLayout.setRefreshing(false);
         if (event.days.contains(selectedDay))
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
