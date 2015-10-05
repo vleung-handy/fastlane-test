@@ -52,9 +52,9 @@ public abstract class DataManager
 
     public abstract void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
-    public abstract void notifyCheckInBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
+    public abstract void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
-    public abstract void notifyCheckOutBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
+    public abstract void notifyCheckOutBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
     public abstract void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
 

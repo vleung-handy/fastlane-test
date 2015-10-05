@@ -117,15 +117,15 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void notifyCheckInBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.checkIn(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.checkIn(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
-    public final void notifyCheckOutBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckOutBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.checkOut(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.checkOut(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -97,7 +98,8 @@ import retrofit.converter.GsonConverter;
         ComplementaryBookingsFragment.class,
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
-        PaymentBillBlockerDialogFragment.class
+        PaymentBillBlockerDialogFragment.class,
+        AutoCheckInService.class,
 })
 public final class ApplicationModule
 {

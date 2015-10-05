@@ -449,7 +449,14 @@ public abstract class HandyEvent
     @Track("provider checkin submitted")
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
+        public boolean isAuto;
         public LocationData locationData;
+
+        public RequestNotifyJobCheckIn(String bookingId, boolean isAuto, LocationData locationData)
+        {
+            this(bookingId, locationData);
+            this.isAuto = isAuto;
+        }
 
         public RequestNotifyJobCheckIn(String bookingId, LocationData locationData)
         {
@@ -461,7 +468,14 @@ public abstract class HandyEvent
     @Track("provider checkout submitted")
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
+        public boolean isAuto;
         public LocationData locationData;
+
+        public RequestNotifyJobCheckOut(String bookingId, boolean isAuto, LocationData locationData)
+        {
+            this(bookingId, locationData);
+            this.isAuto = isAuto;
+        }
 
         public RequestNotifyJobCheckOut(String bookingId, LocationData locationData)
         {
@@ -529,18 +543,24 @@ public abstract class HandyEvent
     @Track("check in")
     public static class ReceiveNotifyJobCheckInSuccess extends ReceiveBookingSuccessEvent
     {
-        public ReceiveNotifyJobCheckInSuccess(Booking booking)
+        public boolean isAuto;
+
+        public ReceiveNotifyJobCheckInSuccess(Booking booking, boolean isAuto)
         {
             this.booking = booking;
+            this.isAuto = isAuto;
         }
     }
 
     @Track("check out")
-    public static class ReceiveNotifyJobCheckoutSuccess extends ReceiveBookingSuccessEvent
+    public static class ReceiveNotifyJobCheckOutSuccess extends ReceiveBookingSuccessEvent
     {
-        public ReceiveNotifyJobCheckoutSuccess(Booking booking)
+        public boolean isAuto;
+
+        public ReceiveNotifyJobCheckOutSuccess(Booking booking, boolean isAuto)
         {
             this.booking = booking;
+            this.isAuto = isAuto;
         }
     }
 
@@ -573,17 +593,23 @@ public abstract class HandyEvent
 
     public static class ReceiveNotifyJobCheckInError extends ReceiveErrorEvent
     {
-        public ReceiveNotifyJobCheckInError(DataManager.DataManagerError error)
+        public boolean isAuto;
+
+        public ReceiveNotifyJobCheckInError(DataManager.DataManagerError error, boolean isAuto)
         {
             this.error = error;
+            this.isAuto = isAuto;
         }
     }
 
-    public static class ReceiveNotifyJobCheckoutError extends ReceiveErrorEvent
+    public static class ReceiveNotifyJobCheckOutError extends ReceiveErrorEvent
     {
-        public ReceiveNotifyJobCheckoutError(DataManager.DataManagerError error)
+        public boolean isAuto;
+
+        public ReceiveNotifyJobCheckOutError(DataManager.DataManagerError error, boolean isAuto)
         {
             this.error = error;
+            this.isAuto = isAuto;
         }
     }
 
