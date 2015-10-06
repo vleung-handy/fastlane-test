@@ -1,0 +1,51 @@
+{
+  "form_definitions": {
+    "update_bank_info": {
+      "field_definitions": {
+        "routing_number": {
+          "display_name": "Routing Number",
+          "error_message": "Routing number must be exactly 9 digits",
+          "hint_text": "9 digit number",
+          "pattern": "^[0-9]{9}$"
+        },
+        "account_number": {
+          "display_name": "Account Number",
+          "error_message": "Account number must be 1-17 digits",
+          "hint_text": "1-17 Digit Number",
+          "pattern": "^[0-9]{1,17}$"
+        },
+        "tax_id_number": {
+          "display_name": "Social Security Number",
+          "error_message": "Social security number should be exactly 9 digits",
+          "hint_text": "9 digit number",
+          "pattern": "^[0-9]{9}$"
+        }
+      }
+    },
+    "update_debit_card_info": {
+      "field_definitions": {
+        "debit_card_number": {
+          "display_name": "Debit Card Number",
+          "error_message": "Debit card number must be 15 or 16 digits",
+          "hint_text": "15-16 digit number",
+          "pattern": "^[0-9]{15,16}$"
+        },
+        "expiration_date":{
+          "display_name": "Expiration Date"
+        },
+        "security_code": {
+          "display_name": "CVC Code",
+          "error_message": "CVC code must be between 2 and 5 digits",
+          "hint_text": "cvc code",
+          "pattern": "^[0-9]{2,5}$"
+        },
+        "tax_id_number": {
+          "display_name": "Social Security Number",
+          "hint_text": "9 digit number",
+          "error_message": "Social security number should be exactly 9 digits",
+          "pattern": "^[0-9]{9}$"
+        }
+      }
+    }
+  }
+}

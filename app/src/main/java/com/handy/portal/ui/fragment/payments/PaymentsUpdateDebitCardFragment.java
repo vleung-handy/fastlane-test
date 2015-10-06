@@ -9,18 +9,40 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvents;
+import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.definitions.FieldDefinition;
+import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.model.payments.DebitCardInfo;
 import com.handy.portal.ui.fragment.InjectedFragment;
 import com.squareup.otto.Subscribe;
+
+import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class PaymentsUpdateDebitCardFragment extends InjectedFragment
 {
+    //TODO: need to consolidate this logic with the other update payment fragment!
+
+    @InjectView(R.id.payments_update_info_debit_card_number_label)
+    TextView debitCardNumberLabel;
+
+    @InjectView(R.id.payments_update_info_debit_card_expiration_date_label)
+    TextView debitCardExpirationDateLabel;
+
+    @InjectView(R.id.payments_update_info_debit_card_tax_id_label)
+    TextView debitCardTaxIdLabel;
+
+    @InjectView(R.id.payments_update_info_debit_card_security_code_label)
+    TextView debitCardSecurityCodeLabel;
 
     @InjectView(R.id.payments_update_info_debit_card_number_text)
     TextView debitCardNumberText;
@@ -37,8 +59,15 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
     @InjectView(R.id.payments_update_info_debit_tax_id_text)
     TextView taxIdText;
 
+    @Inject
+    ProviderManager providerManager;
+
     @InjectView(R.id.payments_update_info_debit_card_submit_button)
     Button submitButton;
+
+    FormDefinitionWrapper formDefinitionWrapper;
+
+    private final String FORM_KEY = FormDefinitionKey.UPDATE_DEBIT_CARD_INFO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -55,6 +84,7 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+
         debitCardNumberText.setText("4000056655665556"); //TODO: remove. test only
         debitCardExpirationMonthText.setText("01");
         debitCardExpirationYearText.setText("2017");
@@ -70,15 +100,51 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         });
     }
 
-    public boolean isInputValid()
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
+    }
+
+    public boolean validate()
     {
         //TODO: implement
-        return true;
+
+        boolean allFieldsValid = true;
+
+        Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
+
+        FieldDefinition fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER);
+        if (!fieldDefinition.getCompiledPattern().matcher(taxIdText.getText()).matches())
+        {
+            taxIdText.setError(fieldDefinition.getErrorMessage());
+            allFieldsValid = false;
+        }
+
+        fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER);
+        if (!fieldDefinition.getCompiledPattern().matcher(debitCardSecurityCodeText.getText()).matches())
+        {
+            debitCardSecurityCodeText.setError(fieldDefinition.getErrorMessage());
+            allFieldsValid = false;
+        }
+        fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER);
+        if (!fieldDefinition.getCompiledPattern().matcher(debitCardNumberText.getText()).matches())
+        {
+            debitCardNumberText.setError(fieldDefinition.getErrorMessage());
+            allFieldsValid = false;
+        }
+
+        if (!allFieldsValid)
+        {
+            //show message
+        }
+        return allFieldsValid;
     }
 
     public void onSubmitForm()
     {
-        if(isInputValid())
+        if (validate())
         {
             DebitCardInfo debitCardInfo = new DebitCardInfo();
             debitCardInfo.setCardNumber(debitCardNumberText.getText().toString());
@@ -88,14 +154,41 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
             bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
-        else
-        {
-            //TODO: show error text
-        }
     }
 
-    //TODO: This fragment isn't paused when tab switched so this event is received even when not in view
-    //we may move away from using tab layout so this may not have to be handled
+    @Subscribe
+    public void onReceiveFormDefinitionsSuccess(RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
+    {
+        this.formDefinitionWrapper = event.formDefinitionWrapper;
+        updateFormWithDefinitions(formDefinitionWrapper);
+    }
+
+    private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper)
+    {
+        //TODO
+        Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
+
+        if (fieldDefinitionMap != null)
+        {
+            FieldDefinition fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER);
+            debitCardNumberLabel.setText(fieldDefinition.getDisplayName());
+            debitCardNumberText.setHint(fieldDefinition.getHintText());
+
+            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER);
+            debitCardSecurityCodeLabel.setText(fieldDefinition.getDisplayName());
+            debitCardSecurityCodeText.setHint(fieldDefinition.getHintText());
+
+            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER);
+            debitCardTaxIdLabel.setText(fieldDefinition.getDisplayName());
+            taxIdText.setHint(fieldDefinition.getHintText());
+
+            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE);
+            debitCardExpirationDateLabel.setText(fieldDefinition.getDisplayName());
+        }
+
+
+    }
+
     @Subscribe
     public void onReceiveStripeTokenFromDebitCardSuccess(StripeEvents.ReceiveStripeTokenFromDebitCardSuccess event)
     {
@@ -119,7 +212,6 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         //TODO: implement. below is test message only
         Toast.makeText(this.getContext(), "Failed to get stripe token", Toast.LENGTH_LONG).show();
-
     }
 
     //TODO: clean this up

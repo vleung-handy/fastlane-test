@@ -13,6 +13,7 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
@@ -378,6 +379,13 @@ public final class ApplicationModule
     final StripeManager provideStripeManager(final Bus bus, final DataManager dataManager)
     {
         return new StripeManager(bus, dataManager);
+    }
+
+    @Provides
+    @Singleton
+    final RegionDefinitionsManager provideRegionDefinitionsManager(final Bus bus, final DataManager dataManager)
+    {
+        return new RegionDefinitionsManager(bus, dataManager);
     }
 
     private String getDeviceId()

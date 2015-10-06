@@ -11,6 +11,7 @@ import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
@@ -70,6 +71,8 @@ public class BaseApplication extends Application
     PaymentsManager paymentsManager;
     @Inject
     StripeManager stripeManager;
+    @Inject
+    RegionDefinitionsManager regionDefinitionsManager;
     @Inject
     UrbanAirshipManager urbanAirshipManager;
     @Inject

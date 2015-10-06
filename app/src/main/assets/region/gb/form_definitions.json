@@ -1,0 +1,24 @@
+{
+  "region": "gb",
+  "form_definitions": {
+    "update_bank_info": {
+      "field_definitions": {
+        "routing_number": {
+          "display_name": "Sort Code",
+          "hint_text": "",
+          "pattern": "^[0-9]{6}$"
+        },
+        "account_number": {
+          "display_name": "Account Number",
+          "hint_text": "",
+          "pattern": "^[0-9]{1,30}$"
+        },
+        "tax_id_number": {
+          "display_name": "National Insurance Number",
+          "hint_text": "",
+          "pattern": "^[A-z]{2}[0-9]{6}[A-z]$"
+        }
+      }
+    }
+  }
+}

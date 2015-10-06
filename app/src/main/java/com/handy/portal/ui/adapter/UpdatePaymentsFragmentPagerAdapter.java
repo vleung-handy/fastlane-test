@@ -5,43 +5,30 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankInfoFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
+import com.handy.portal.ui.fragment.payments.UpdatePaymentFragment;
 
 //TODO: work in progress. need to refactor
-public class UpdatePaymentsFragmentPagerAdapter extends FragmentPagerAdapter //TODO: rename this
+public class UpdatePaymentsFragmentPagerAdapter extends FragmentPagerAdapter
 {
-    private String tabTitles[] = new String[] {"Bank Account", "Debit Card"}; //TODO: reorganize this/put in better place/use strings.xml
     private Context context;
 
-    public UpdatePaymentsFragmentPagerAdapter(FragmentManager fm, Context context)
+    private int numItems = 0;
+    public UpdatePaymentsFragmentPagerAdapter(FragmentManager fm, int numItems, Context context)
     {
         super(fm);
+        this.numItems = numItems;
         this.context = context;
     }
 
     @Override
     public Fragment getItem(int position)
     {
-        switch(position) //TODO: reorganize/put in better place?
-        {
-            case 0:
-                return new PaymentsUpdateBankInfoFragment();
-            case 1:
-                return new PaymentsUpdateDebitCardFragment();
-        }
-        return null;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position)
-    {
-        return tabTitles[position];
+        return UpdatePaymentFragment.getItem(position);
     }
 
     @Override
     public int getCount()
     {
-        return tabTitles.length;
+        return numItems;
     }
 }
