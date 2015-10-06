@@ -1,111 +1,396 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/handy_bg"
+        android:orientation="vertical">
 
+        <!-- Name / header section-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@color/handy_blue"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/default_padding_large"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingTop="@dimen/default_padding_large">
 
-           <!-- Name / header section-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/handy_blue"
-                android:paddingTop="40dp"
-                android:paddingBottom="40dp"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/provider_name_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="60dp"
-                    android:paddingRight="60dp"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:gravity="center"
+                    android:text="Stephanie"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/hero_text_size"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:gravity="center"
-                        android:textSize="@dimen/hero_text_size"
-                        android:text="Stephanie Jones"
-                        android:layout_marginBottom="6dp"
-                        android:id="@+id/provider_name_text"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black_trans"
-                        android:gravity="center"
-                        android:textSize="@dimen/small_text_size"
-                        android:text="130 completed jobs · 4.2 all-time rating"
-                        />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Payment tier information -->
-            <include layout="@layout/layout_profile_section_header"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
-
-                <include layout="@layout/layout_payment_tier_section"/>
-                <include layout="@layout/layout_payment_tier_section"/>
-                <include layout="@layout/layout_payment_tier_section"/>
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/payment_tiers_link"
-                android:textColorLink="@color/handy_blue"
-                android:textColor="@color/handy_blue"
-                android:gravity="center"
-                android:layout_marginBottom="15dp"/>
-
-            <!-- Supplies -->
-            <include layout="@layout/layout_profile_section_header"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:gravity="center"
+                    android:text="Jones"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/hero_text_size"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:text="Need more supplies? Just click below and we will ship a resupply kit directly to your home."/>
+                    android:paddingBottom="@dimen/extra_padding"
+                    android:text="Joined Handy September 5, 2015"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/small_text_size"/>
 
-                <Button
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:background="@color/handy_green"
+                    android:gravity="center"
+                    android:text="130 jobs · 4.2 overall rating"
                     android:textColor="@color/white"
-                    android:text="Request Supplies"/>
+                    android:textSize="@dimen/small_text_size"/>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
 
-</LinearLayout>
+        <!-- Payment tier information -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/section_margin"
+            android:orientation="vertical">
+
+            <!-- Section header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:elevation="@dimen/default_elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/default_padding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current tier"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/large_text_size"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Based on the last 28 days"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/extra_padding"
+                android:paddingTop="@dimen/default_padding"
+                android:weightSum="4">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Rating"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/small_text_size"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Jobs"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/small_text_size"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Rate"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/small_text_size"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/default_padding"
+                android:weightSum="4">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="TIER 1"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/handy_blue"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="4.5"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/handy_blue"
+                    android:textSize="@dimen/xxlarge_text_size"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="28"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/handy_blue"
+                    android:textSize="@dimen/xxlarge_text_size"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="$15"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/handy_blue"
+                    android:textSize="@dimen/xxlarge_text_size"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Referral -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/section_margin"
+            android:orientation="vertical">
+
+            <!-- Section header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:elevation="@dimen/default_elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/default_padding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Earn a $50 bonus"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/large_text_size"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Refer a professional to Handy"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/default_padding">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/grey_round"
+                    android:padding="@dimen/default_padding">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:text="JACLYN7063"
+                        android:textAppearance="@style/TextView.Bold"
+                        android:textColor="@color/handy_green"
+                        android:textSize="@dimen/xlarge_text_size"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_share"/>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/row_margin"
+                    android:gravity="center_horizontal"
+                    android:text="You will automatically get $50 when they complete 5 jobs in the first 2 weeks."
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/helper_text_grey"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Contact information -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/section_margin"
+            android:orientation="vertical">
+
+            <!-- Section header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:elevation="@dimen/default_elevation"
+                android:orientation="vertical"
+                android:padding="@dimen/default_padding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your contact information"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/large_text_size"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/default_padding">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/section_item_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_email"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:text="sjohnson@gmail.com"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text_size"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/section_item_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_phone"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:text="(555) 555 - 5555"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text_size"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_location"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:text="123 Handy St.\nNew York, NY 10001"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text_size"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Supplies -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/section_margin"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/resupply"/>
+
+            <Button
+                style="@style/Button.Green.Round"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/get_resupply_kit"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

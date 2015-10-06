@@ -211,7 +211,6 @@
     <string name="please_login">Please log in</string>
     <string name="back">Back</string>
     <string name="contact_received">Message sent! \nWe\u2019ll follow up shortly.</string>
-    <string name="payment_tiers_link"><u>Learn more about payment tiers</u></string>
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
@@ -412,5 +411,8 @@
     <string name="payments_bill_blocker_content">Head to the Profile tab to set up your payment method.</string>
     <string name="payments_bill_blocker_update_now_button">Update Now</string>
     <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
+
+    <!-- Profile -->
+    <string name="get_resupply_kit">Get a resupply kit</string>
 
 </resources>
