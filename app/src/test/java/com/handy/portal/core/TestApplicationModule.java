@@ -26,7 +26,6 @@ import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
-import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
@@ -46,7 +45,6 @@ import static org.mockito.Mockito.when;
         LoginActivity.class,
         MainActivityFragment.class,
         MainActivity.class,
-        PortalWebViewFragment.class,
         ProfileFragment.class,
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
