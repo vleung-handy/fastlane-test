@@ -28,31 +28,30 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/provider_name_text"
+                    android:id="@+id/provider_first_name_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Stephanie"
                     android:textAppearance="@style/TextView.Bold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/hero_text_size"/>
 
                 <TextView
+                    android:id="@+id/provider_last_name_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/default_margin"
                     android:gravity="center"
-                    android:text="Jones"
                     android:textAppearance="@style/TextView.Bold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/hero_text_size"/>
 
                 <TextView
+                    android:id="@+id/joined_handy_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingBottom="@dimen/extra_padding"
-                    android:text="Joined Handy September 5, 2015"
                     android:textColor="@color/white"
                     android:textSize="@dimen/small_text_size"/>
 
@@ -236,18 +235,19 @@
                 android:padding="@dimen/default_padding">
 
                 <RelativeLayout
+                    android:id="@+id/referral_code_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/grey_round"
                     android:padding="@dimen/default_padding">
 
                     <TextView
+                        android:id="@+id/referral_code_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:text="JACLYN7063"
                         android:textAppearance="@style/TextView.Bold"
                         android:textColor="@color/handy_green"
                         android:textSize="@dimen/xlarge_text_size"/>
@@ -318,10 +318,10 @@
                         android:src="@drawable/ic_email"/>
 
                     <TextView
+                        android:id="@+id/provider_email_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/default_margin"
-                        android:text="sjohnson@gmail.com"
                         android:textColor="@color/black"
                         android:textSize="@dimen/medium_text_size"/>
                 </LinearLayout>
@@ -337,10 +337,10 @@
                         android:src="@drawable/ic_phone"/>
 
                     <TextView
+                        android:id="@+id/provider_phone_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/default_margin"
-                        android:text="(555) 555 - 5555"
                         android:textColor="@color/black"
                         android:textSize="@dimen/medium_text_size"/>
                 </LinearLayout>
@@ -355,10 +355,10 @@
                         android:src="@drawable/ic_location"/>
 
                     <TextView
+                        android:id="@+id/provider_address_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/default_margin"
-                        android:text="123 Handy St.\nNew York, NY 10001"
                         android:textColor="@color/black"
                         android:textSize="@dimen/medium_text_size"/>
                 </LinearLayout>

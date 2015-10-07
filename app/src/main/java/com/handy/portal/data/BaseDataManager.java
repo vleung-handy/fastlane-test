@@ -96,7 +96,8 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getProviderProfile(String providerId, Callback<ProviderProfile> cb) {
+    public void getProviderProfile(String providerId, Callback<ProviderProfile> cb)
+    {
         service.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
     }
 

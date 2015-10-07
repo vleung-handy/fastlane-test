@@ -414,5 +414,7 @@
 
     <!-- Profile -->
     <string name="get_resupply_kit">Get a resupply kit</string>
+    <string name="share_with">Share with…</string>
+    <string name="joined_handy"><![CDATA[Joined Handy <b>%1$s</b>]]></string>
 
 </resources>

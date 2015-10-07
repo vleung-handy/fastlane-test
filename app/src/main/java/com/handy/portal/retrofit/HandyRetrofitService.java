@@ -87,7 +87,7 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/send_income_verification")
     void sendIncomeVerification(@Path("id") String providerId, HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "{id}/profile")
+    @GET(PROVIDERS_PATH + "{id}")
     void getProviderProfile(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
