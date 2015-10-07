@@ -2,15 +2,19 @@ package com.handy.portal.manager;
 
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.util.IOUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -38,23 +42,47 @@ public class RegionDefinitionsManager //TODO: rename
     public void onRequestFormDefinitions(final RegionDefinitionEvent.RequestFormDefinitions event)
     {
         //TODO: make a network call instead?
-        FormDefinitionWrapper formDefinitionWrapper;
+        FormDefinitionWrapper formDefinitionWrapper = null;
         String region = event.region.toLowerCase();
         Context context = event.context;
-        if(formDefinitionCache.getIfPresent(region)==null)
+        if (formDefinitionCache.getIfPresent(region) == null)
         {
             String path = "region/" + region + "/form_definitions.json"; //TODO: cleanup
-            String fileContents = IOUtils.loadJSONFromAsset(context, path);
-            Gson gson = new Gson();
-            formDefinitionWrapper = gson.fromJson(fileContents, FormDefinitionWrapper.class);//TODO: add exception handling
-            formDefinitionCache.put(region, formDefinitionWrapper);
+
+            try
+            {
+                String fileContents = IOUtils.loadJSONFromAsset(context, path);
+                try
+                {
+                    formDefinitionWrapper = (new Gson()).fromJson(fileContents, FormDefinitionWrapper.class);//TODO: add exception handling
+                    formDefinitionCache.put(region, formDefinitionWrapper);
+                } catch (JsonSyntaxException ex)
+                {
+                    Crashlytics.logException(ex);
+                }
+
+            } catch (IOException e)
+            {
+                Crashlytics.logException(e);
+            }
+
         }
         else
         {
             formDefinitionWrapper = formDefinitionCache.getIfPresent(region);
         }
 
-        bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsSuccess(formDefinitionWrapper));
+        if (formDefinitionWrapper == null)
+        {
+            //TODO: set proper error object
+            bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT)));
+
+        }
+        else
+        {
+            bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsSuccess(formDefinitionWrapper));
+
+        }
 
     }
 
