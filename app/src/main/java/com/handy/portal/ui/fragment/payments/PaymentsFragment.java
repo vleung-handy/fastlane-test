@@ -74,6 +74,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
     private View fragmentView;
 
+    private boolean requestedInitialPaymentBatch = false; //TODO: TEMPORARY FIX REMOVE THIS IS GROSS
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -104,12 +105,11 @@ public final class PaymentsFragment extends ActionBarFragment
         setActionBar(R.string.payments, false);
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
 
-        if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
+        if (!requestedInitialPaymentBatch && paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
         {
+            requestedInitialPaymentBatch = true; //TODO: TEMPORARY FIX ONLY REMOVE LATER
             requestPaymentsInfo(); //TODO: need to add logic to prevent multiple requests onResume(), now that user can put this fragment into the back stack by clicking on certain action bar icons
         }
-        //TODO: test only. remove later
-//        bus.post(new StripeEvents.RequestStripeTokenFromBankAccount(StripeManager.getTestBankAccountInfo()));
     }
 
     @Override

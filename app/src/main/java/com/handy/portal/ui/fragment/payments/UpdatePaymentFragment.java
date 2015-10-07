@@ -46,6 +46,8 @@ public class UpdatePaymentFragment extends ActionBarFragment
     @InjectView(R.id.payments_update_info_viewpager)
     ViewPager viewPager;
 
+    //TODO: we don't need to use viewpager because we don't want swipe functionality
+
     @Inject
     ProviderManager providerManager;
 
@@ -149,6 +151,7 @@ public class UpdatePaymentFragment extends ActionBarFragment
             });
             numItems = 2;
         }
+
         viewPager.setAdapter(new UpdatePaymentsFragmentPagerAdapter(getChildFragmentManager(), numItems, this.getContext()));
 
     }
