@@ -14,6 +14,8 @@ public class FormDefinitionKey
         public static final String DEBIT_CARD_NUMBER = "debit_card_number";
         public static final String SECURITY_CODE_NUMBER = "security_code";
         public static final String EXPIRATION_DATE = "expiration_date";
+        public static final String EXPIRATION_YEAR = "expiration_year";
+        public static final String EXPIRATION_MONTH = "expiration_month";
 
     }
 

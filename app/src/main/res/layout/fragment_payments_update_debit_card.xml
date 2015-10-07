@@ -46,7 +46,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Month"
                 android:singleLine="true"/>
 
             <EditText
@@ -54,7 +53,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Year"
                 android:singleLine="true"/>
         </LinearLayout>
 

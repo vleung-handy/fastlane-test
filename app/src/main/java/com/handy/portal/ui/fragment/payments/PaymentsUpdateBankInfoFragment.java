@@ -98,7 +98,7 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
     }
 
-    public boolean validate()
+    private boolean validate()
     {
         boolean allFieldsValid = true;
 
@@ -118,7 +118,14 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         return allFieldsValid;
     }
 
-    public void onSubmitForm()
+    private void clearInputFields() //TODO: make this more elegant
+    {
+        routingNumberText.setText("");
+        accountNumberText.setText("");
+        taxIdText.setText("");
+    }
+
+    private void onSubmitForm()
     {
         if (validate())
         {
@@ -180,6 +187,7 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     @Subscribe
     public void onReceiveCreateBankAccountSuccess(PaymentEvents.ReceiveCreateBankAccountSuccess event)
     {
+        clearInputFields();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         //TODO: implement. below is test message only
         Toast.makeText(this.getContext(), event.successfullyCreated ? "Successfully created bank account" : "Failed to create bank account", Toast.LENGTH_LONG).show();

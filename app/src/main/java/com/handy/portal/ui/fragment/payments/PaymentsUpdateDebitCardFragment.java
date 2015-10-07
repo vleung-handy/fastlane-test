@@ -120,7 +120,11 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         {
             allFieldsValid = UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER))
                     && UIUtils.validateField(debitCardSecurityCodeText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER))
-                    && UIUtils.validateField(debitCardNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER));
+                    && UIUtils.validateField(debitCardNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER))
+                    && UIUtils.validateField(debitCardExpirationMonthText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH))
+                    && UIUtils.validateField(debitCardExpirationYearText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
+
+            //TODO: also validate that date is in future?
         }
 
         if (!allFieldsValid)
@@ -130,7 +134,16 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         return allFieldsValid;
     }
 
-    public void onSubmitForm()
+    private void clearInputFields() //TODO: make this more elegant
+    {
+        debitCardNumberText.setText("");
+        debitCardExpirationMonthText.setText("");
+        debitCardExpirationYearText.setText("");
+        debitCardSecurityCodeText.setText("");
+        taxIdText.setText("");
+    }
+
+    private void onSubmitForm()
     {
         if (validate())
         {
@@ -162,6 +175,9 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
             UIUtils.setFieldsFromDefinition(debitCardSecurityCodeLabel, debitCardSecurityCodeText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
             UIUtils.setFieldsFromDefinition(debitCardExpirationDateLabel, null, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE));
             UIUtils.setFieldsFromDefinition(debitCardTaxIdLabel, taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
+            UIUtils.setFieldsFromDefinition(null, debitCardExpirationMonthText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH));
+            UIUtils.setFieldsFromDefinition(null, debitCardExpirationYearText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
+
         }
 
     }
@@ -195,6 +211,7 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
     @Subscribe
     public void onReceiveCreateDebitCardRecipientSuccess(PaymentEvents.ReceiveCreateDebitCardRecipientSuccess event)
     {
+        clearInputFields();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         //TODO: implement. below is test message only
         Toast.makeText(this.getContext(), event.successfullyCreated ? "Successfully created debit card" : "Failed to create debit card", Toast.LENGTH_LONG).show();

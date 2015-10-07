@@ -38,6 +38,18 @@
         "expiration_date":{
           "display_name": "Expiration Date"
         },
+        "expiration_month":{
+          "error_message": "Invalid month. Must be in MM or M format",
+          "input_type": "number",
+          "hint_text": "MM",
+          "pattern": "^(([1][0-2])|([0]?[1-9]))$"
+        },
+        "expiration_year":{
+          "error_message": "Year must be in YYYY format",
+          "input_type": "number",
+          "hint_text": "YYYY",
+          "pattern": "^[0-9]{4}$"
+        },
         "security_code": {
           "display_name": "CVC Code",
           "error_message": "",
