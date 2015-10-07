@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import retrofit.http.Body;
+import retrofit.http.Field;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -72,6 +73,10 @@ public interface HandyRetrofitService
     @FormUrlEncoded
     @POST(STRIPE_PATH + "create_debit_card_recipient")
     void createDebitCardRecipient(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "create_debit_card_for_charge")
+    void createDebitCardForCharge(@Field("token") String stripeToken, HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);

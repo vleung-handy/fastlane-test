@@ -82,7 +82,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
             @Override
             public void onSuccess(StripeTokenResponse response)
             {
-                bus.post(new StripeEvents.ReceiveStripeTokenFromDebitCardSuccess(response));
+                bus.post(new StripeEvents.ReceiveStripeTokenFromDebitCardSuccess(response, event.requestIdentifier));
             }
 
             @Override

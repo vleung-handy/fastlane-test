@@ -70,6 +70,10 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
 
     private final String FORM_KEY = FormDefinitionKey.UPDATE_DEBIT_CARD_INFO;
 
+    private final int DEBIT_CARD_RECIPIENT_REQUEST_ID = 1;
+    private final int DEBIT_CARD_FOR_CHARGE_REQUEST_ID = 2;
+    //TODO: make this cleaner
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -152,7 +156,8 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
             debitCardInfo.setCvc(debitCardSecurityCodeText.getText().toString());
             debitCardInfo.setExpMonth(debitCardExpirationMonthText.getText().toString());
             debitCardInfo.setExpYear(debitCardExpirationYearText.getText().toString());
-            bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo));
+            bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_FOR_CHARGE_REQUEST_ID));
+            bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
     }
@@ -189,13 +194,20 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         String token = event.stripeTokenResponse.getStripeToken();
         System.out.println("Received Stripe token: " + token);
 
-        //TODO: need to do validation first
-        String taxIdString = taxIdText.getText().toString();
-        String expMonthString = debitCardExpirationMonthText.getText().toString();
-        String expYearString = debitCardExpirationYearText.getText().toString();
-        String cardNumberString = debitCardNumberText.getText().toString();
-        String cardNumberLast4Digits = cardNumberString.substring(cardNumberString.length() - 4);
-        bus.post(new PaymentEvents.RequestCreateDebitCardRecipient(token, taxIdString, cardNumberLast4Digits, expMonthString, expYearString));
+        if(event.requestIdentifier == DEBIT_CARD_RECIPIENT_REQUEST_ID)
+        {
+            String taxIdString = taxIdText.getText().toString();
+            String expMonthString = debitCardExpirationMonthText.getText().toString();
+            String expYearString = debitCardExpirationYearText.getText().toString();
+            String cardNumberString = debitCardNumberText.getText().toString();
+            String cardNumberLast4Digits = cardNumberString.substring(cardNumberString.length() - 4);
+            bus.post(new PaymentEvents.RequestCreateDebitCardRecipient(token, taxIdString, cardNumberLast4Digits, expMonthString, expYearString));
+        }
+        else if(event.requestIdentifier == DEBIT_CARD_FOR_CHARGE_REQUEST_ID)
+        {
+            bus.post(new PaymentEvents.RequestCreateDebitCardForCharge(token));
+        }
+
 
     }
 
@@ -214,7 +226,7 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         clearInputFields();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), event.successfullyCreated ? "Successfully created debit card" : "Failed to create debit card", Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getContext(), event.successfullyCreated ? "Successfully created debit card for recipient" : "Failed to create debit card for recipient", Toast.LENGTH_LONG).show();
     }
 
     @Subscribe
@@ -223,5 +235,22 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         //TODO: implement. below is test message only
         Toast.makeText(this.getContext(), "Failed to create debit card", Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void onReceiveCreateDebitCardForChargeSuccess(PaymentEvents.ReceiveCreateDebitCardForChargeSuccess event)
+    {
+        clearInputFields();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        //TODO: implement. below is test message only
+        Toast.makeText(this.getContext(), (event.response!=null && event.response.getCardDetails()!=null) ? "Successfully created debit card for charge" : "Failed to create debit card for charge", Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void onReceiveCreateDebitCardForChargeError(PaymentEvents.ReceiveCreateDebitCardForChargeError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        //TODO: implement. below is test message only
+        Toast.makeText(this.getContext(), "Failed to create debit card for charge", Toast.LENGTH_LONG).show();
     }
 }

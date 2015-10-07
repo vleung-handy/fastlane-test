@@ -17,6 +17,7 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
@@ -240,9 +241,14 @@ public final class BaseDataManager extends DataManager
     @Override
     public void createDebitCardRecipient(Map<String, String> params, final Callback<SuccessWrapper> cb)
     {
-        service.createDebitCardRecipient(params, new CreateDebitCardRetroFitCallback(cb));
+        service.createDebitCardRecipient(params, new CreateDebitCardRecipientRetroFitCallback(cb));
     }
 
+    @Override
+    public void createDebitCardForCharge(String stripeToken, final Callback<CreateDebitCardResponse> cb)
+    {
+        service.createDebitCardForCharge(stripeToken, new CreateDebitCardRetroFitCallback(cb));
+    }
     //Stripe
 
     @Override

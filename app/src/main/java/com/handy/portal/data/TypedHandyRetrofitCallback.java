@@ -18,6 +18,7 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
@@ -202,12 +203,18 @@ class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<Succe
     }
 }
 
-class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
+class CreateDebitCardRecipientRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
+{
+    CreateDebitCardRecipientRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<CreateDebitCardResponse>
 {
     CreateDebitCardRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }
 }
-
-

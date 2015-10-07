@@ -4,6 +4,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentGroup;
@@ -158,6 +159,25 @@ public class PaymentsManager
             public void onError(DataManager.DataManagerError error)
             {
                 bus.post(new PaymentEvents.ReceiveCreateDebitCardRecipientError(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestCreateDebitCardForCharge(final PaymentEvents.RequestCreateDebitCardForCharge event)
+    {
+        dataManager.createDebitCardForCharge(event.stripeToken, new DataManager.Callback<CreateDebitCardResponse>()
+        {
+            @Override
+            public void onSuccess(CreateDebitCardResponse response)
+            {
+                bus.post(new PaymentEvents.ReceiveCreateDebitCardForChargeSuccess(response));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new PaymentEvents.ReceiveCreateDebitCardForChargeError(error));
             }
         });
     }

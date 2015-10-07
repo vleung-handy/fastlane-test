@@ -35,19 +35,23 @@ public class StripeEvents
 
     public static class RequestStripeTokenFromDebitCard extends HandyEvent.RequestEvent
     {
+        public final int requestIdentifier;//TODO: refactor - might remove this later
         public final DebitCardInfo debitCardInfo;
-        public RequestStripeTokenFromDebitCard(DebitCardInfo debitCardInfo)
+        public RequestStripeTokenFromDebitCard(DebitCardInfo debitCardInfo, int requestIdentifier)
         {
             this.debitCardInfo = debitCardInfo;
+            this.requestIdentifier = requestIdentifier;
         }
     }
 
     public static class ReceiveStripeTokenFromDebitCardSuccess extends HandyEvent.ReceiveSuccessEvent
     {
+        public final int requestIdentifier;
         public final StripeTokenResponse stripeTokenResponse;
-        public ReceiveStripeTokenFromDebitCardSuccess(StripeTokenResponse stripeTokenResponse)
+        public ReceiveStripeTokenFromDebitCardSuccess(StripeTokenResponse stripeTokenResponse, int requestIdentifier)
         {
             this.stripeTokenResponse = stripeTokenResponse;
+            this.requestIdentifier = requestIdentifier;
         }
     }
 

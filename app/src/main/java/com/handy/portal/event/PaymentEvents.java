@@ -2,6 +2,7 @@ package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 
 import java.util.Date;
@@ -174,6 +175,32 @@ public class PaymentEvents
             this.cardNumberLast4Digits = accountNumberLast4Digits;
             this.expMonth = expMonth;
             this.expYear = expYear;
+        }
+    }
+
+    public static class ReceiveCreateDebitCardForChargeSuccess extends HandyEvent.ReceiveSuccessEvent
+    {
+        public final CreateDebitCardResponse response;
+        public ReceiveCreateDebitCardForChargeSuccess(CreateDebitCardResponse response)
+        {
+            this.response = response;
+        }
+    }
+
+    public static class ReceiveCreateDebitCardForChargeError extends HandyEvent.ReceiveErrorEvent
+    {
+        public ReceiveCreateDebitCardForChargeError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestCreateDebitCardForCharge extends HandyEvent.RequestEvent
+    {
+        public final String stripeToken;
+        public RequestCreateDebitCardForCharge(String stripeToken)
+        {
+            this.stripeToken = stripeToken;
         }
     }
 }
