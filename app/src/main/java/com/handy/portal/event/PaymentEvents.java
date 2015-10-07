@@ -10,19 +10,23 @@ public class PaymentEvents
 {
     public static class RequestPaymentBatches extends HandyEvent.RequestEvent
     {
+        //need to remember if request was initial to handle corner cases related to fragment not listening to events after onPause
+        public final boolean isInitialBatchRequest;
         public final Date startDate;
         public final Date endDate;
         public final int callerIdentifier;
-        public RequestPaymentBatches(Date startDate, Date endDate, int callerIdentifier)
+        public RequestPaymentBatches(Date startDate, Date endDate, boolean isInitialRequest, int callerIdentifier)
         {
             this.callerIdentifier = callerIdentifier;
             this.startDate = startDate;
             this.endDate = endDate;
+            this.isInitialBatchRequest = isInitialRequest;
         }
     }
 
     public static class ReceivePaymentBatchesSuccess extends HandyEvent.ReceiveSuccessEvent
     {
+        public final boolean isFromInitialBatchRequest;
         private final PaymentBatches paymentBatches;
         private final int callerIdentifier;
         public Date getRequestStartDate()
@@ -31,11 +35,13 @@ public class PaymentEvents
         }
 
         private final Date requestStartDate; //if this batch is empty, we can use this to keep track of pagination
-        public ReceivePaymentBatchesSuccess(PaymentBatches paymentBatches, Date requestStartDate, int callerIdentifier)
+        public ReceivePaymentBatchesSuccess(PaymentBatches paymentBatches, Date requestStartDate, boolean isFromInitialBatchRequest, int callerIdentifier)
         {
+
             this.paymentBatches = paymentBatches;
             this.requestStartDate = requestStartDate;
             this.callerIdentifier = callerIdentifier;
+            this.isFromInitialBatchRequest = isFromInitialBatchRequest;
         }
         public int getCallerIdentifier()
         {

@@ -96,9 +96,7 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     {
         super.onResume();
         bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
-
     }
-
 
     public boolean validate()
     {

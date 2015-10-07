@@ -93,7 +93,7 @@ public class PaymentsManager
                     neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[]{}));
 
                 }
-                bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, startDate, event.callerIdentifier));
+                bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, startDate, event.isInitialBatchRequest, event.callerIdentifier));
 
             }
 

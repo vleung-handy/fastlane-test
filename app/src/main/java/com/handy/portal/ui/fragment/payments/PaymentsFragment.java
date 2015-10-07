@@ -104,11 +104,13 @@ public final class PaymentsFragment extends ActionBarFragment
         super.onResume();
         setActionBar(R.string.payments, false);
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
-
-        if (!requestedInitialPaymentBatch && paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
+        if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {
-            requestedInitialPaymentBatch = true; //TODO: TEMPORARY FIX ONLY REMOVE LATER
-            requestPaymentsInfo(); //TODO: need to add logic to prevent multiple requests onResume(), now that user can put this fragment into the back stack by clicking on certain action bar icons
+            requestInitialPaymentsInfo();
+        }
+        else //have to put this logic here because of the way the loading overlay is handled by the bus system e.g. when child fragment is destroyed but caused overlay to show (messy to put in onResume because user could have just navigated away from app)
+        {
+            setLoadingOverlayVisible(false);
         }
     }
 
@@ -139,7 +141,7 @@ public final class PaymentsFragment extends ActionBarFragment
     public void doInitialRequestAgain()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        requestPaymentsInfo();
+        requestInitialPaymentsInfo();
     }
 
     public void setLoadingOverlayVisible(boolean visible)
@@ -148,14 +150,14 @@ public final class PaymentsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
     }
 
-    private void requestPaymentsInfo()
+    private void requestInitialPaymentsInfo()
     {
 //        requestAnnualPaymentSummaries(); //will need this later when annual summary api complete
-        requestNextPaymentBatches();
+        requestNextPaymentBatches(true);
         setLoadingOverlayVisible(true);
     }
 
-    private void requestNextPaymentBatches()
+    private void requestNextPaymentBatches(boolean isInitialRequest)
     {
         Date endDate = paymentsBatchListView.getOldestDate();
 
@@ -168,7 +170,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
             c.set(Calendar.DAY_OF_YEAR, dayOfYear);
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
-            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, Utils.getObjectIdentifier(this)));
+            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, isInitialRequest, Utils.getObjectIdentifier(this)));
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
@@ -176,6 +178,13 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             paymentsBatchListView.showFooter(R.string.no_more_payments);
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));//don't want overlay to persist when this fragment is paused
+        super.onPause();
     }
 
     private void requestAnnualPaymentSummaries() //not used yet
@@ -199,6 +208,10 @@ public final class PaymentsFragment extends ActionBarFragment
 
     public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
+        //reset payment batch list view and its adapter
+        paymentsBatchListView.clear();
+        setLoadingOverlayVisible(false);
+
         //update the current pay week
         if (paymentBatches.getNeoPaymentBatches().length == 0) //this should never happen. always expecting at least one entry (current pay week) from server in initial batch
         {
@@ -211,7 +224,7 @@ public final class PaymentsFragment extends ActionBarFragment
             @Override
             public void onScrollToBottom()
             {
-                requestNextPaymentBatches();
+                requestNextPaymentBatches(false);
             }
         });
     }
@@ -270,10 +283,9 @@ public final class PaymentsFragment extends ActionBarFragment
         if (id != event.getCallerIdentifier()) return;
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
-        if (paymentsBatchListView.isDataEmpty()) //if it was previously empty
+        if (event.isFromInitialBatchRequest) //if it was previously empty
         {
             onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
-            setLoadingOverlayVisible(false);
         }
         else
         {
@@ -286,7 +298,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             if (paymentsBatchListView.shouldRequestMoreData())
             {
-                requestNextPaymentBatches();
+                requestNextPaymentBatches(false);
             }
             else
             {
