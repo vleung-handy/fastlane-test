@@ -8,6 +8,8 @@ public class ReferralInfo
     private String referralCode;
     @SerializedName("referral_link")
     private String referralLink;
+    @SerializedName("bonus_amount")
+    private String bonusAmount;
 
     public String getReferralCode()
     {
@@ -17,5 +19,10 @@ public class ReferralInfo
     public String getReferralLink()
     {
         return referralLink;
+    }
+
+    public String getBonusAmount()
+    {
+        return bonusAmount;
     }
 }

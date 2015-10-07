@@ -416,5 +416,13 @@
     <string name="get_resupply_kit">Get a resupply kit</string>
     <string name="share_with">Share with…</string>
     <string name="joined_handy"><![CDATA[Joined Handy <b>%1$s</b>]]></string>
+    <string name="earn_a_bonus">Earn a %1$s bonus</string>
+    <string name="refer_a_pro">Refer a professional to Handy</string>
+    <string name="jobs_and_rating"><![CDATA[<b>%1$d</b> jobs · <b>%2$s</b> overall rating]]></string>
+    <string name="rating">Rating</string>
+    <string name="jobs">Jobs</string>
+    <string name="rate">Rate</string>
+    <string name="tier_x">TIER %1$d</string>
+    <string name="error_loading_profile">There was an error loading your profile information.</string>
 
 </resources>
