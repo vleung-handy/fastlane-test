@@ -19,6 +19,7 @@ import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.model.payments.DebitCardInfo;
 import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Map;
@@ -115,24 +116,11 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
 
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
 
-        FieldDefinition fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER);
-        if (!fieldDefinition.getCompiledPattern().matcher(taxIdText.getText()).matches())
+        if (fieldDefinitionMap != null)
         {
-            taxIdText.setError(fieldDefinition.getErrorMessage());
-            allFieldsValid = false;
-        }
-
-        fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER);
-        if (!fieldDefinition.getCompiledPattern().matcher(debitCardSecurityCodeText.getText()).matches())
-        {
-            debitCardSecurityCodeText.setError(fieldDefinition.getErrorMessage());
-            allFieldsValid = false;
-        }
-        fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER);
-        if (!fieldDefinition.getCompiledPattern().matcher(debitCardNumberText.getText()).matches())
-        {
-            debitCardNumberText.setError(fieldDefinition.getErrorMessage());
-            allFieldsValid = false;
+            allFieldsValid = UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER))
+                    && UIUtils.validateField(debitCardSecurityCodeText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER))
+                    && UIUtils.validateField(debitCardNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER));
         }
 
         if (!allFieldsValid)
@@ -170,22 +158,11 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
 
         if (fieldDefinitionMap != null)
         {
-            FieldDefinition fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER);
-            debitCardNumberLabel.setText(fieldDefinition.getDisplayName());
-            debitCardNumberText.setHint(fieldDefinition.getHintText());
-
-            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER);
-            debitCardSecurityCodeLabel.setText(fieldDefinition.getDisplayName());
-            debitCardSecurityCodeText.setHint(fieldDefinition.getHintText());
-
-            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER);
-            debitCardTaxIdLabel.setText(fieldDefinition.getDisplayName());
-            taxIdText.setHint(fieldDefinition.getHintText());
-
-            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE);
-            debitCardExpirationDateLabel.setText(fieldDefinition.getDisplayName());
+            UIUtils.setFieldsFromDefinition(debitCardNumberLabel, debitCardNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER));
+            UIUtils.setFieldsFromDefinition(debitCardSecurityCodeLabel, debitCardSecurityCodeText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
+            UIUtils.setFieldsFromDefinition(debitCardExpirationDateLabel, null, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE));
+            UIUtils.setFieldsFromDefinition(debitCardTaxIdLabel, taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
-
 
     }
 

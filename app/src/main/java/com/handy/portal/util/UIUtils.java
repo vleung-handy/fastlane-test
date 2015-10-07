@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -17,12 +20,65 @@ import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.ui.activity.BaseActivity;
 
 import java.text.DecimalFormat;
 
 public final class UIUtils
 {
+
+    //TODO: reorganize these
+    public static boolean validateField(TextView input, FieldDefinition fieldDefinition)
+    {
+        if (fieldDefinition.getCompiledPattern()!=null && !fieldDefinition.getCompiledPattern().matcher(input.getText()).matches())
+        {
+            input.setError(fieldDefinition.getErrorMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public static void setInputFilterForInputType(TextView textView, FieldDefinition.InputType inputType)
+    {
+        if(inputType == null || textView == null) return;
+        switch (inputType)
+        {
+            case NUMBER:
+                textView.setInputType(InputType.TYPE_CLASS_NUMBER);
+                break;
+            case ALPHA_NUMERIC:
+                textView.setFilters(new InputFilter[]{new InputFilter()
+                {
+                    @Override
+                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend)
+                    {
+                        for (int i = start; i < end; i++) {
+                            if (!Character.isLetterOrDigit(source.charAt(i))) {
+                                return "";
+                            }
+                        }
+                        return null;
+                    }
+                }});
+                break;
+        }
+    }
+
+
+    public static void setFieldsFromDefinition(TextView label, TextView input, FieldDefinition fieldDefinition)
+    {
+        if(label!=null)
+        {
+            label.setText(fieldDefinition.getDisplayName());
+        }
+        if(input!=null)
+        {
+            input.setHint(fieldDefinition.getHintText());
+        }
+        setInputFilterForInputType(input, fieldDefinition.getInputType());
+    }
+
     public static void dismissKeyboard(Activity activity)
     {
         View currentFocus = activity.getCurrentFocus();

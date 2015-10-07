@@ -46,7 +46,7 @@ public class RegionDefinitionsManager //TODO: rename
             String path = "region/" + region + "/form_definitions.json"; //TODO: cleanup
             String fileContents = IOUtils.loadJSONFromAsset(context, path);
             Gson gson = new Gson();
-            formDefinitionWrapper = gson.fromJson(fileContents, FormDefinitionWrapper.class);
+            formDefinitionWrapper = gson.fromJson(fileContents, FormDefinitionWrapper.class);//TODO: add exception handling
             formDefinitionCache.put(region, formDefinitionWrapper);
         }
         else

@@ -10,6 +10,9 @@ public class FieldDefinition
     @SerializedName("display_name")
     String displayName;
 
+    @SerializedName("input_type")
+    InputType inputType;
+
     @SerializedName("hint_text")
     String hintText;
 
@@ -21,10 +24,34 @@ public class FieldDefinition
 
     private Pattern compiledPattern;
 
+    public enum InputType {
+        //TODO: can we make this more concise
+        @SerializedName("number")
+        NUMBER ("number"),
+
+        @SerializedName("alphanumeric")
+        ALPHA_NUMERIC ("alphanumeric");
+
+        private final String value;
+        public String getValue()
+        {
+            return value;
+        }
+        InputType(String value)
+        {
+            this.value = value;
+        }
+    }
 //    public FieldDefinition()
 //    {
 //        compiledPattern = Pattern.compile(pattern); //pre-cache
 //    }
+
+
+    public InputType getInputType()
+    {
+        return inputType;
+    }
 
     public String getDisplayName()
     {

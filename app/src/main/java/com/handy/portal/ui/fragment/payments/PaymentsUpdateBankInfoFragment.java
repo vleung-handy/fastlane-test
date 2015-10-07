@@ -20,6 +20,7 @@ import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.model.payments.BankAccountInfo;
 import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Map;
@@ -85,7 +86,6 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
                 onSubmitForm();
             }
         });
-        setInputFilters();
         accountNumberText.setText("000123456789");
         taxIdText.setText("000000000");
         routingNumberText.setText("110000000");
@@ -99,6 +99,7 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
 
     }
 
+
     public boolean validate()
     {
         boolean allFieldsValid = true;
@@ -107,50 +108,16 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
 
         if (fieldDefinitionMap != null)
         {
-            FieldDefinition fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER);
-            if (!fieldDefinition.getCompiledPattern().matcher(routingNumberText.getText()).matches())
-            {
-                routingNumberText.setError(fieldDefinition.getErrorMessage());
-                allFieldsValid = false;
-            }
-
-            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER);
-            if (!fieldDefinition.getCompiledPattern().matcher(accountNumberText.getText()).matches())
-            {
-                accountNumberText.setError(fieldDefinition.getErrorMessage());
-                allFieldsValid = false;
-            }
-
-            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER);
-            if (!fieldDefinition.getCompiledPattern().matcher(taxIdText.getText()).matches())
-            {
-                taxIdText.setError(fieldDefinition.getErrorMessage());
-                allFieldsValid = false;
-            }
+            allFieldsValid = UIUtils.validateField(routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER))
+                    && UIUtils.validateField(accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER))
+                    && UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
-
 
         if (!allFieldsValid)
         {
             //show message
         }
         return allFieldsValid;
-    }
-
-    private void setInputFilters()
-    {
-        //TODO: implement. below is for test only
-//        List<InputFilter> filters = new LinkedList<>();
-//        InputFilter lengthFilter = new InputFilter.LengthFilter(9);
-//        filters.add(lengthFilter);
-//        taxIdText.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        taxIdText.setFilters(filters.toArray(new InputFilter[]{}));
-//
-//        routingNumberText.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        routingNumberText.setFilters(filters.toArray(new InputFilter[]{}));
-//
-//        accountNumberText.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        accountNumberText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
     }
 
     public void onSubmitForm()
@@ -185,17 +152,9 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
         if (fieldDefinitionMap != null)
         {
-            FieldDefinition fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER);
-            routingNumberLabel.setText(fieldDefinition.getDisplayName());
-            routingNumberText.setHint(fieldDefinition.getHintText());
-
-            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER);
-            accountNumberLabel.setText(fieldDefinition.getDisplayName());
-            accountNumberText.setHint(fieldDefinition.getHintText());
-
-            fieldDefinition = fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER);
-            taxIdLabel.setText(fieldDefinition.getDisplayName());
-            taxIdText.setHint(fieldDefinition.getHintText());
+            UIUtils.setFieldsFromDefinition(routingNumberLabel, routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
+            UIUtils.setFieldsFromDefinition(accountNumberLabel, accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
+            UIUtils.setFieldsFromDefinition(taxIdLabel, taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
     }
 
