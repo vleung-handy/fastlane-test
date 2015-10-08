@@ -11,6 +11,7 @@ import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
@@ -25,12 +26,12 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
@@ -57,6 +58,7 @@ import static org.mockito.Mockito.mock;
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
         TestActivity.class,
+
 
 }, library = true)
 public class TestApplicationModule
@@ -150,6 +152,12 @@ public class TestApplicationModule
     final PrefsManager providePrefsManager()
     {
         return mock(PrefsManager.class);
+    }
+
+    @Provides
+    final StripeManager provideStripeManager()
+    {
+        return mock(StripeManager.class);
     }
 
     @Provides
