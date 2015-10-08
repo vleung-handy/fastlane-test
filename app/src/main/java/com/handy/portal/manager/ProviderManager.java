@@ -124,6 +124,34 @@ public class ProviderManager
         });
     }
 
+    @Subscribe
+    public void onRequestResupplyKit(HandyEvent.RequestSendResupplyKit event)
+    {
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+
+        dataManager.getResupplyKit(providerId, new DataManager.Callback<SuccessWrapper>()
+        {
+            @Override
+            public void onSuccess(SuccessWrapper response)
+            {
+                if (response.getSuccess())
+                {
+                    bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess());
+                }
+                else
+                {
+                    bus.post(new HandyEvent.ReceiveSendResupplyKitError());
+                }
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveSendResupplyKitError());
+            }
+        });
+    }
+
     private void requestProviderInfo()
     {
         dataManager.getProviderInfo(new DataManager.Callback<Provider>()

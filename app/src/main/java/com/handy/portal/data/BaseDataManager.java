@@ -102,6 +102,12 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
+    public void getResupplyKit(String providerId, Callback<SuccessWrapper> cb)
+    {
+        service.getResupplyKit(providerId, new SuccessWrapperRetroFitCallback(cb));
+    }
+
+    @Override
     public final void getBookingDetails(String bookingId, BookingType type, final Callback<Booking> cb)
     {
         service.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));

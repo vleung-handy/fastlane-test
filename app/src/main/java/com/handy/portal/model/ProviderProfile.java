@@ -10,6 +10,8 @@ public class ProviderProfile
     private ReferralInfo referralInfo;
     @SerializedName("performance_info")
     private PerformanceInfo performanceInfo;
+    @SerializedName("resupply_info")
+    private ResupplyInfo resupplyInfo;
 
     public ProviderPersonalInfo getProviderPersonalInfo()
     {
@@ -24,5 +26,10 @@ public class ProviderProfile
     public PerformanceInfo getPerformanceInfo()
     {
         return performanceInfo;
+    }
+
+    public ResupplyInfo getResupplyInfo()
+    {
+        return resupplyInfo;
     }
 }

@@ -54,6 +54,8 @@ public abstract class DataManager
 
     public abstract void getProviderProfile(String providerId, Callback<ProviderProfile> cb);
 
+    public abstract void getResupplyKit(String providerId, Callback<SuccessWrapper> callback);
+
     public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
 
     public abstract void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);

@@ -6,6 +6,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -15,6 +16,7 @@ import com.handy.portal.model.PerformanceInfo;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ReferralInfo;
+import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
@@ -52,7 +54,7 @@ public class ProfileFragment extends ActionBarFragment
     ViewGroup referralCodeLayout;
     @InjectView(R.id.section_header_title)
     TextView referralSectionHeaderTitle;
-    ;
+
     @InjectView(R.id.referral_code_text)
     TextView referralCodeText;
 
@@ -64,6 +66,11 @@ public class ProfileFragment extends ActionBarFragment
     TextView providerPhoneText;
     @InjectView(R.id.provider_address_text)
     TextView providerAddressText;
+
+    @InjectView(R.id.resupply_layout)
+    ViewGroup resupplyLayout;
+    @InjectView(R.id.get_resupply_kit_button)
+    Button resupplyButton;
 
     @InjectView(R.id.fetch_error_view)
     ViewGroup fetchErrorLayout;
@@ -172,6 +179,25 @@ public class ProfileFragment extends ActionBarFragment
         providerPhoneText.setText(providerPersonalInfo.getPhone());
         providerAddressText.setText(providerPersonalInfo.getAddress().getStreetAddress() + "\n" + providerPersonalInfo.getAddress().getCityStateZip());
 
+        // Resupply
+        ResupplyInfo resupplyInfo = providerProfile.getResupplyInfo();
+        if (!resupplyInfo.canRequestSupplies())
+        {
+            resupplyLayout.setVisibility(View.GONE);
+        }
+        else
+        {
+            resupplyButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                    bus.post(new HandyEvent.RequestSendResupplyKit());
+                }
+            });
+        }
+
         fetchErrorLayout.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         profileLayout.setVisibility(View.VISIBLE);
@@ -185,4 +211,18 @@ public class ProfileFragment extends ActionBarFragment
         fetchErrorLayout.setVisibility(View.VISIBLE);
     }
 
+    @Subscribe
+    public void onReceiveSendResupplyKitSuccess(HandyEvent.ReceiveSendResupplyKitSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        resupplyLayout.setVisibility(View.GONE);
+        showToast(R.string.resupply_kit_on_its_way);
+    }
+
+    @Subscribe
+    public void onReceiveSendResupplyKitError(HandyEvent.ReceiveSendResupplyKitError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.unable_to_process_request);
+    }
 }

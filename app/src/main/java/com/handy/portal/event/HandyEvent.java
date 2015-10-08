@@ -226,6 +226,18 @@ public abstract class HandyEvent
     {
     }
 
+    public static class RequestSendResupplyKit extends RequestEvent
+    {
+    }
+
+    public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent
+    {
+    }
+
+    public static class ReceiveSendResupplyKitError extends ReceiveErrorEvent
+    {
+    }
+
     public static class ProviderIdUpdated extends HandyEvent
     {
         public final String providerId;
