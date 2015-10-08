@@ -5,7 +5,7 @@ import android.content.Context;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 
-public class RegionDefinitionEvent //TODO: rename
+public class RegionDefinitionEvent
 {
     public static class RequestFormDefinitions extends HandyEvent.RequestEvent
     {

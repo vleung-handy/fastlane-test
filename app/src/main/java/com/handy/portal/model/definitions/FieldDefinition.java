@@ -42,11 +42,6 @@ public class FieldDefinition
             this.value = value;
         }
     }
-//    public FieldDefinition()
-//    {
-//        compiledPattern = Pattern.compile(pattern); //pre-cache
-//    }
-
 
     public InputType getInputType()
     {

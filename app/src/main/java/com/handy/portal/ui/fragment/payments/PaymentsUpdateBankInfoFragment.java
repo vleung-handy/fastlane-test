@@ -60,7 +60,7 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
 
     FormDefinitionWrapper formDefinitionWrapper;
 
-    private final String FORM_KEY = FormDefinitionKey.UPDATE_BANK_INFO;
+    private static final String FORM_KEY = FormDefinitionKey.UPDATE_BANK_INFO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

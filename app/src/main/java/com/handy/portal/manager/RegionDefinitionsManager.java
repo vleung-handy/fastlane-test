@@ -19,7 +19,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 //manager for region specific form definitions, etc
-public class RegionDefinitionsManager //TODO: rename
+public class RegionDefinitionsManager
 {
     private final Bus bus;
     private final DataManager dataManager;
@@ -34,7 +34,6 @@ public class RegionDefinitionsManager //TODO: rename
         this.dataManager = dataManager;
         formDefinitionCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
-//                .expireAfterWrite(1, TimeUnit.HOURS)
                 .build();
     }
 

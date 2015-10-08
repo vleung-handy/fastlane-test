@@ -13,6 +13,4 @@ public class FieldDefinitionsWrapper //TODO: restructure this
     {
         return fieldDefinitionMap;
     }
-
-
 }

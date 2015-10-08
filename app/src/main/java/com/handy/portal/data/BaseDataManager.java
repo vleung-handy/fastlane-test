@@ -264,5 +264,4 @@ public final class BaseDataManager extends DataManager
         stripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
     }
 
-
 }
