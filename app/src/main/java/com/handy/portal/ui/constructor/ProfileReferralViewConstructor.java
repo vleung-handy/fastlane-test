@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.ReferralInfo;
+import com.handy.portal.util.Utils;
 
 import butterknife.InjectView;
 
@@ -49,7 +50,7 @@ public class ProfileReferralViewConstructor extends ViewConstructor<ReferralInfo
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, referralInfo.getReferralLink());
                 sendIntent.setType("text/plain");
-                getContext().startActivity(Intent.createChooser(sendIntent, getContext().getString(R.string.share_with)));
+                Utils.safeLaunchIntent(Intent.createChooser(sendIntent, getContext().getString(R.string.share_with)), getContext());
             }
         });
 
