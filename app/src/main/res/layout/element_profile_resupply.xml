@@ -23,4 +23,15 @@
         android:text="@string/get_resupply_kit"
         android:textColor="@color/white"/>
 
+    <TextView
+        android:id="@+id/get_resupply_kit_helper_text"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/helper_text_grey"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:visibility="gone"/>
+
 </LinearLayout>

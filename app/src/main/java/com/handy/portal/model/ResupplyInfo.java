@@ -4,11 +4,25 @@ import com.google.gson.annotations.SerializedName;
 
 public class ResupplyInfo
 {
-    @SerializedName("can_request_supplies")
-    private boolean canRequestSupplies;
+    @SerializedName("request_supplies_allowed")
+    private boolean requestSuppliesAllowed;
+    @SerializedName("provider_can_request_supplies")
+    private boolean providerCanRequestSupplies;
+    @SerializedName("helper_text")
+    private String helperText;
 
-    public boolean canRequestSupplies()
+    public boolean isRequestSuppliesAllowed()
     {
-        return canRequestSupplies;
+        return requestSuppliesAllowed;
+    }
+
+    public boolean providerCanRequestSupplies()
+    {
+        return providerCanRequestSupplies;
+    }
+
+    public String getHelperText()
+    {
+        return helperText;
     }
 }

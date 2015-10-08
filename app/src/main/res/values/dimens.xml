@@ -9,7 +9,6 @@
     <dimen name="extra_padding">5dp</dimen>
     <dimen name="section_margin">10dp</dimen>
     <dimen name="section_item_margin">20dp</dimen>
-    <dimen name="default_elevation">2dp</dimen>
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_padding_medium">24dp</dimen>
     <dimen name="default_padding_large">32dp</dimen>
