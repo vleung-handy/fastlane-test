@@ -1,6 +1,9 @@
 package com.handy.portal.manager;
 
 
+import android.content.Context;
+
+import com.handy.portal.core.PropertiesReader;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.StripeEvents;
 import com.handy.portal.model.payments.BankAccountInfo;
@@ -16,7 +19,7 @@ import javax.inject.Inject;
 
 public class StripeManager //TODO: should we consolidate this with PaymentsManager?
 {
-    private static final String STRIPE_API_KEY = "pk_AdAZ6Xac3qjOGZPIPBxAiVFxoocj4"; //TODO: move to config file
+    private final String STRIPE_API_KEY;
     private final Bus bus;
     private final DataManager dataManager;
 
@@ -44,11 +47,13 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     @Inject
-    public StripeManager(final Bus bus, final DataManager dataManager)
+    public StripeManager(final Context context, final Bus bus, final DataManager dataManager)
     {
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
+
+        STRIPE_API_KEY = PropertiesReader.getConfigProperties(context).getProperty("stripe_api_key");
     }
 
     @Subscribe

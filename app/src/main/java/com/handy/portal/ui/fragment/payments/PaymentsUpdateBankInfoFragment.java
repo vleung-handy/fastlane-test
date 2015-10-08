@@ -86,9 +86,9 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
             }
         });
 
-        accountNumberText.setText("000123456789"); //TODO: test only, remove later
-        taxIdText.setText("000000000");
-        routingNumberText.setText("110000000");
+//        accountNumberText.setText("000123456789");
+//        taxIdText.setText("000000000");
+//        routingNumberText.setText("110000000");
     }
 
     @Override

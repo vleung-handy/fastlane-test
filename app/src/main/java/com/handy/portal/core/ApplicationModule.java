@@ -318,7 +318,7 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final HelpManager provideHelpManager(final Bus bus,
-                                               final DataManager dataManager)
+                                         final DataManager dataManager)
     {
         return new HelpManager(bus, dataManager);
     }
@@ -380,7 +380,7 @@ public final class ApplicationModule
     @Singleton
     final StripeManager provideStripeManager(final Bus bus, final DataManager dataManager)
     {
-        return new StripeManager(bus, dataManager);
+        return new StripeManager(context, bus, dataManager);
     }
 
     @Provides

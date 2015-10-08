@@ -93,11 +93,11 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        debitCardNumberText.setText("4000056655665556"); //TODO: remove. test only
-        debitCardExpirationMonthText.setText("01");
-        debitCardExpirationYearText.setText("2017");
-        debitCardSecurityCodeText.setText("424");
-        taxIdText.setText("000000000");
+//        debitCardNumberText.setText("4000056655665556");
+//        debitCardExpirationMonthText.setText("01");
+//        debitCardExpirationYearText.setText("2017");
+//        debitCardSecurityCodeText.setText("424");
+//        taxIdText.setText("000000000");
         submitButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
