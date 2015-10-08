@@ -19,6 +19,7 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.PaymentFlowResponse;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
 
@@ -96,6 +97,8 @@ public abstract class DataManager
     public abstract void createDebitCardRecipient(Map<String, String> params, Callback<SuccessWrapper> callback);
 
     public abstract void createDebitCardForCharge(String stripeToken, Callback<CreateDebitCardResponse> callback);
+
+    public abstract void getPaymentFlow(String providerId, Callback<PaymentFlowResponse> callback);
 
     public abstract void getStripeToken(Map<String, String> params, Callback<StripeTokenResponse> callback);
     //TODO: refactor. should this be here?

@@ -33,6 +33,7 @@ import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -74,7 +75,6 @@ public final class PaymentsFragment extends ActionBarFragment
 
     private View fragmentView;
 
-    private boolean requestedInitialPaymentBatch = false; //TODO: TEMPORARY FIX REMOVE THIS IS GROSS
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -104,6 +104,7 @@ public final class PaymentsFragment extends ActionBarFragment
         super.onResume();
         setActionBar(R.string.payments, false);
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
+
         if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {
             requestInitialPaymentsInfo();
@@ -245,8 +246,7 @@ public final class PaymentsFragment extends ActionBarFragment
         switch (item.getItemId())
         {
             case R.id.action_update_banking:
-//                bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REFRESH_TAB));
-                bus.post(new HandyEvent.NavigateToTab(MainViewTab.UPDATE_PAYMENTS, null, TransitionStyle.SLIDE_UP));
+                UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentMethodFragment());
                 return true;
             case R.id.action_email_verification:
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -373,4 +373,5 @@ public final class PaymentsFragment extends ActionBarFragment
             }
         });
     }
+
 }

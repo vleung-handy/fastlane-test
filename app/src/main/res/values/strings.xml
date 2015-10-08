@@ -396,6 +396,15 @@
     <string name="expected_deposit">Expect deposit by</string>
     <string name="update_payment_method">Update Payment Method</string>
     <string name="debit_card_number">Debit Card Number</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="payment_flow_error">Failed to get payment flow</string>
+    <string name="payment_account">Payment Account</string>
+    <string name="update_payment_method_note">Note:\nPlease allow an additional 1&#8211;3 days after Handy sends payment for your bank to process it.</string>
+    <string name="update_debit_card_failed">Failed to update debit card info</string>
+    <string name="update_debit_card_success">Successfully updated debit card</string>
+    <string name="payment_account_number">Account Number</string>
+    <string name="update_bank_account_failed">Failed to update bank account</string>
+    <string name="update_bank_account_success">Successfully updated bank account</string>
 
     <!-- Payments Bill Blocker -->
     <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>

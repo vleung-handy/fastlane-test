@@ -4,6 +4,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.PaymentFlowResponse;
 
 import java.util.Date;
 
@@ -202,5 +203,26 @@ public class PaymentEvents
         {
             this.stripeToken = stripeToken;
         }
+    }
+
+    public static class ReceivePaymentFlowSuccess extends HandyEvent.ReceiveSuccessEvent
+    {
+        public final PaymentFlowResponse response;
+        public ReceivePaymentFlowSuccess(PaymentFlowResponse response)
+        {
+            this.response = response;
+        }
+    }
+
+    public static class ReceivePaymentFlowError extends HandyEvent.ReceiveErrorEvent
+    {
+        public ReceivePaymentFlowError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+    public static class RequestPaymentFlow extends HandyEvent.RequestEvent
+    {
     }
 }

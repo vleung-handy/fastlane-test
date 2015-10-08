@@ -182,26 +182,41 @@ public class PaymentsManager
         });
     }
 
-    //TODO: clean this up. parameterize
+    private final class ParamKeys
+    {
+        static final String STRIPE_TOKEN = "token";
+        static final String TAX_ID = "tax_id";
+        static final String ACCOUNT_NUMBER_LAST4_DIGITS = "last4";
+        static final String EXP_MONTH = "exp_month";
+        static final String EXP_YEAR = "exp_year";
+        static final String ACCOUNT_TYPE = "account_type";
+    }
+    
+    private final class PaymentMethodAccountType
+    {
+        static final String DEBIT_CARD = "debit_card";
+        static final String BANK_ACCOUNT = "bank_account";
+    }
+    
     private Map<String, String> buildParamsForDebitCardRecipient(String stripeToken, String taxId, String cardNumberLast4Digits, String expMonth, String expYear)
     {
         Map<String, String> params = new HashMap<>();
-        params.put("token", stripeToken);
-        params.put("tax_id", taxId);
-        params.put("last4", cardNumberLast4Digits);
-        params.put("exp_month", expMonth);
-        params.put("exp_year", expYear);
-        params.put("account_type", "debit_card");
+        params.put(ParamKeys.STRIPE_TOKEN, stripeToken);
+        params.put(ParamKeys.TAX_ID, taxId);
+        params.put(ParamKeys.ACCOUNT_NUMBER_LAST4_DIGITS, cardNumberLast4Digits);
+        params.put(ParamKeys.EXP_MONTH, expMonth);
+        params.put(ParamKeys.EXP_YEAR, expYear);
+        params.put(ParamKeys.ACCOUNT_TYPE, PaymentMethodAccountType.DEBIT_CARD);
         return params;
     }
 
     private Map<String, String> buildParamsForCreateBankAccount(String stripeToken, String taxId, String accountNumberLast4Digits)
     {
         Map<String, String> params = new HashMap<>();
-        params.put("token", stripeToken);
-        params.put("tax_id", taxId);
-        params.put("last4", accountNumberLast4Digits);
-        params.put("account_type", "bank_account");
+        params.put(ParamKeys.STRIPE_TOKEN, stripeToken);
+        params.put(ParamKeys.TAX_ID, taxId);
+        params.put(ParamKeys.ACCOUNT_NUMBER_LAST4_DIGITS, accountNumberLast4Digits);
+        params.put(ParamKeys.ACCOUNT_TYPE, PaymentMethodAccountType.BANK_ACCOUNT);
         return params;
     }
 }

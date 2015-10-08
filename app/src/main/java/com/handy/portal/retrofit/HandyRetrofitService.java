@@ -78,6 +78,9 @@ public interface HandyRetrofitService
     @POST(STRIPE_PATH + "create_debit_card_for_charge")
     void createDebitCardForCharge(@Field("token") String stripeToken, HandyRetrofitCallback cb);
 
+    @GET(PROVIDERS_PATH + "{id}/payment_flow")
+    void getPaymentFlow(@Path("id") String providerId, HandyRetrofitCallback cb);
+
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 

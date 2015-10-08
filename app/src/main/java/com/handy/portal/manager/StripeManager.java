@@ -16,24 +16,31 @@ import javax.inject.Inject;
 
 public class StripeManager //TODO: should we consolidate this with PaymentsManager?
 {
-    private final static String STRIPE_API_KEY = "pk_AdAZ6Xac3qjOGZPIPBxAiVFxoocj4"; //TODO: move to config file
+    private static final String STRIPE_API_KEY = "pk_AdAZ6Xac3qjOGZPIPBxAiVFxoocj4"; //TODO: move to config file
     private final Bus bus;
     private final DataManager dataManager;
 
-    private class RequestStripeTokenKeys{//TODO: clean this up/refactor
-        private final static String BANK_ACCOUNT = "bank_account";
-        public final static String BANK_ACCOUNT_COUNTRY = BANK_ACCOUNT + "[country]";
-        public final static String BANK_ACCOUNT_CURRENCY = BANK_ACCOUNT + "[currency]";
-        public final static String BANK_ACCOUNT_ROUTING_NUMBER = BANK_ACCOUNT + "[routing_number]";
-        public final static String BANK_ACCOUNT_ACCOUNT_NUMBER = BANK_ACCOUNT + "[account_number]";
+    private final class RequestStripeTokenKeys
+    {
+        private static final String API_KEY = "key";
 
-        private final static String CARD = "card";
-        public final static String CARD_NUMBER = CARD + "[number]";
-        public final static String CARD_EXP_MONTH = CARD + "[exp_month]";
-        public final static String CARD_EXP_YEAR = CARD + "[exp_year]";
-        public final static String CARD_CVC = CARD + "[cvc]";
+        private final class BankAccount
+        {
+            private static final String BANK_ACCOUNT = "bank_account";
+            private static final String BANK_ACCOUNT_COUNTRY = BANK_ACCOUNT + "[country]";
+            private static final String BANK_ACCOUNT_CURRENCY = BANK_ACCOUNT + "[currency]";
+            private static final String BANK_ACCOUNT_ROUTING_NUMBER = BANK_ACCOUNT + "[routing_number]";
+            private static final String BANK_ACCOUNT_ACCOUNT_NUMBER = BANK_ACCOUNT + "[account_number]";
+        }
 
-        public final static String API_KEY = "key";
+        private final class DebitCard
+        {
+            private static final String CARD = "card";
+            private static final String CARD_NUMBER = CARD + "[number]";
+            private static final String CARD_EXP_MONTH = CARD + "[exp_month]";
+            private static final String CARD_EXP_YEAR = CARD + "[exp_year]";
+            private static final String CARD_CVC = CARD + "[cvc]";
+        }
     }
 
     @Inject
@@ -42,16 +49,6 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
-    }
-
-    public static BankAccountInfo getTestBankAccountInfo() //TODO: test only, remove later
-    {
-        BankAccountInfo testBankAccountInfo = new BankAccountInfo();
-        testBankAccountInfo.setCountry("US");
-        testBankAccountInfo.setCurrency("usd");
-        testBankAccountInfo.setRoutingNumber("110000000");
-        testBankAccountInfo.setAccountNumber("000123456789");
-        return testBankAccountInfo;
     }
 
     @Subscribe
@@ -97,10 +94,10 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     private Map<String, String> buildParamsFromDebitCardInfo(DebitCardInfo debitCardInfo)
     {
         Map<String, String> params = new HashMap<>();
-        params.put(RequestStripeTokenKeys.CARD_NUMBER, debitCardInfo.getCardNumber());
-        params.put(RequestStripeTokenKeys.CARD_EXP_MONTH, debitCardInfo.getExpMonth());
-        params.put(RequestStripeTokenKeys.CARD_EXP_YEAR, debitCardInfo.getExpYear());
-        params.put(RequestStripeTokenKeys.CARD_CVC, debitCardInfo.getCvc());
+        params.put(RequestStripeTokenKeys.DebitCard.CARD_NUMBER, debitCardInfo.getCardNumber());
+        params.put(RequestStripeTokenKeys.DebitCard.CARD_EXP_MONTH, debitCardInfo.getExpMonth());
+        params.put(RequestStripeTokenKeys.DebitCard.CARD_EXP_YEAR, debitCardInfo.getExpYear());
+        params.put(RequestStripeTokenKeys.DebitCard.CARD_CVC, debitCardInfo.getCvc());
         params.put(RequestStripeTokenKeys.API_KEY, STRIPE_API_KEY);
         return params;
     }
@@ -108,10 +105,10 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     private Map<String, String> buildParamsFromBankAccountInfo(BankAccountInfo bankAccountInfo)
     {
         Map<String, String> params = new HashMap<>();
-        params.put(RequestStripeTokenKeys.BANK_ACCOUNT_ACCOUNT_NUMBER, bankAccountInfo.getAccountNumber());
-        params.put(RequestStripeTokenKeys.BANK_ACCOUNT_COUNTRY, bankAccountInfo.getCountry());
-        params.put(RequestStripeTokenKeys.BANK_ACCOUNT_CURRENCY, bankAccountInfo.getCurrency());
-        params.put(RequestStripeTokenKeys.BANK_ACCOUNT_ROUTING_NUMBER, bankAccountInfo.getRoutingNumber());
+        params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_ACCOUNT_NUMBER, bankAccountInfo.getAccountNumber());
+        params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_COUNTRY, bankAccountInfo.getCountry());
+        params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_CURRENCY, bankAccountInfo.getCurrency());
+        params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_ROUTING_NUMBER, bankAccountInfo.getRoutingNumber());
         params.put(RequestStripeTokenKeys.API_KEY, STRIPE_API_KEY);
         return params;
     }

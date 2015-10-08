@@ -13,7 +13,6 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
@@ -23,6 +22,7 @@ import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
@@ -49,17 +49,18 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankInfoFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
-import com.handy.portal.ui.fragment.payments.UpdatePaymentFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
+import com.handy.portal.ui.fragment.payments.PaymentMethodFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankInfoFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
+import com.handy.portal.ui.fragment.payments.UpdatePaymentFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -110,7 +111,8 @@ import retrofit.converter.GsonConverter;
         PaymentsUpdateBankInfoFragment.class,
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
-        UpdatePaymentFragment.class
+        UpdatePaymentFragment.class,
+        PaymentMethodFragment.class,
 })
 public final class ApplicationModule
 {

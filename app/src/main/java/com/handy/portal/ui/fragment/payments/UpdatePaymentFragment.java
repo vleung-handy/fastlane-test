@@ -84,7 +84,6 @@ public class UpdatePaymentFragment extends ActionBarFragment
         }
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -119,6 +118,8 @@ public class UpdatePaymentFragment extends ActionBarFragment
 
     private void createViewFromRecommendedPaymentFlow() //TODO: clean this up
     {
+        //TODO: we don't need viewpager anymore because we don't want swipe functionality
+
         boolean stripeAndDebit = Provider.RecommendedPaymentFlow.STRIPE_DEBIT.getValue().equalsIgnoreCase(providerManager.getCachedActiveProvider().getRecommendedPaymentFlow());
         //TODO: disable swipe on viewpager
 

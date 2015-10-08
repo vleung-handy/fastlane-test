@@ -52,7 +52,6 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     @InjectView(R.id.payments_update_info_tax_id_text)
     TextView taxIdText;
 
-
     @InjectView(R.id.payments_update_info_submit_button)
     Button submitButton;
 
@@ -86,7 +85,8 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
                 onSubmitForm();
             }
         });
-        accountNumberText.setText("000123456789");
+
+        accountNumberText.setText("000123456789"); //TODO: test only, remove later
         taxIdText.setText("000000000");
         routingNumberText.setText("110000000");
     }
@@ -101,9 +101,7 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     private boolean validate()
     {
         boolean allFieldsValid = true;
-
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
-
         if (fieldDefinitionMap != null)
         {
             allFieldsValid = UIUtils.validateField(routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER))
@@ -113,16 +111,9 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
 
         if (!allFieldsValid)
         {
-            //show message
+            //show banner
         }
         return allFieldsValid;
-    }
-
-    private void clearInputFields() //TODO: make this more elegant
-    {
-        routingNumberText.setText("");
-        accountNumberText.setText("");
-        taxIdText.setText("");
     }
 
     private void onSubmitForm()
@@ -131,7 +122,6 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         {
             String routingNumber = routingNumberText.getText().toString();
             String accountNumber = accountNumberText.getText().toString();
-            String taxId = taxIdText.getText().toString();
             BankAccountInfo bankAccountInfo = new BankAccountInfo();
             bankAccountInfo.setAccountNumber(accountNumber);
             bankAccountInfo.setRoutingNumber(routingNumber);
@@ -153,7 +143,6 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
 
     private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper)
     {
-        //TODO
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
         if (fieldDefinitionMap != null)
         {
@@ -168,38 +157,42 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     {
         String token = event.stripeTokenResponse.getStripeToken();
 
-        //TODO: need to do validation first
         String taxIdString = taxIdText.getText().toString();
         String accountNumberString = accountNumberText.getText().toString();
         String accountNumberLast4Digits = accountNumberString.substring(accountNumberString.length() - 4);
         bus.post(new PaymentEvents.RequestCreateBankAccount(token, taxIdString, accountNumberLast4Digits));
     }
 
+    private void onFailure()
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.update_bank_account_failed, Toast.LENGTH_LONG);
+    }
+
     @Subscribe
     public void onReceiveStripeTokenFromBankAccountError(StripeEvents.ReceiveStripeTokenFromBankAccountError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), "Failed to get stripe token", Toast.LENGTH_LONG).show();
-
+        onFailure();
     }
 
     @Subscribe
     public void onReceiveCreateBankAccountSuccess(PaymentEvents.ReceiveCreateBankAccountSuccess event)
     {
-        clearInputFields();
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), event.successfullyCreated ? "Successfully created bank account" : "Failed to create bank account", Toast.LENGTH_LONG).show();
-
+        if (event.successfullyCreated)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            showToast(R.string.update_bank_account_success, Toast.LENGTH_LONG);
+            UIUtils.dismissOnBackPressed(getActivity());
+        }
+        else
+        {
+            onFailure();
+        }
     }
 
     @Subscribe
     public void onReceiveCreateBankAccountError(PaymentEvents.ReceiveCreateBankAccountError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), "Failed to create bank account", Toast.LENGTH_LONG).show();
-
+        onFailure();
     }
 }

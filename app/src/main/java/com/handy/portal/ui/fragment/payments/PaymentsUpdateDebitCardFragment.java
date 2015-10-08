@@ -68,11 +68,14 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
 
     FormDefinitionWrapper formDefinitionWrapper;
 
-    private final String FORM_KEY = FormDefinitionKey.UPDATE_DEBIT_CARD_INFO;
+    private static final String FORM_KEY = FormDefinitionKey.UPDATE_DEBIT_CARD_INFO;
 
-    private final int DEBIT_CARD_RECIPIENT_REQUEST_ID = 1;
-    private final int DEBIT_CARD_FOR_CHARGE_REQUEST_ID = 2;
-    //TODO: make this cleaner
+    private static final int DEBIT_CARD_RECIPIENT_REQUEST_ID = 1;
+    private static final int DEBIT_CARD_FOR_CHARGE_REQUEST_ID = 2;
+
+    //TODO: create a state manager object
+    private boolean receivedDebitCardRecipientSuccess;
+    private boolean receivedDebitCardForChargeSuccess;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -109,17 +112,14 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        resetStates();
         bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
     }
 
     public boolean validate()
     {
-        //TODO: implement
-
         boolean allFieldsValid = true;
-
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
-
         if (fieldDefinitionMap != null)
         {
             allFieldsValid = UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER))
@@ -127,24 +127,13 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
                     && UIUtils.validateField(debitCardNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER))
                     && UIUtils.validateField(debitCardExpirationMonthText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH))
                     && UIUtils.validateField(debitCardExpirationYearText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
-
-            //TODO: also validate that date is in future?
         }
 
         if (!allFieldsValid)
         {
-            //show message
+            //show banner
         }
         return allFieldsValid;
-    }
-
-    private void clearInputFields() //TODO: make this more elegant
-    {
-        debitCardNumberText.setText("");
-        debitCardExpirationMonthText.setText("");
-        debitCardExpirationYearText.setText("");
-        debitCardSecurityCodeText.setText("");
-        taxIdText.setText("");
     }
 
     private void onSubmitForm()
@@ -171,7 +160,6 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
 
     private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper)
     {
-        //TODO
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
 
         if (fieldDefinitionMap != null)
@@ -182,19 +170,15 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
             UIUtils.setFieldsFromDefinition(debitCardTaxIdLabel, taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
             UIUtils.setFieldsFromDefinition(null, debitCardExpirationMonthText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH));
             UIUtils.setFieldsFromDefinition(null, debitCardExpirationYearText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
-
         }
-
     }
 
     @Subscribe
     public void onReceiveStripeTokenFromDebitCardSuccess(StripeEvents.ReceiveStripeTokenFromDebitCardSuccess event)
     {
-
         String token = event.stripeTokenResponse.getStripeToken();
-        System.out.println("Received Stripe token: " + token);
 
-        if(event.requestIdentifier == DEBIT_CARD_RECIPIENT_REQUEST_ID)
+        if (event.requestIdentifier == DEBIT_CARD_RECIPIENT_REQUEST_ID)
         {
             String taxIdString = taxIdText.getText().toString();
             String expMonthString = debitCardExpirationMonthText.getText().toString();
@@ -203,54 +187,68 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
             String cardNumberLast4Digits = cardNumberString.substring(cardNumberString.length() - 4);
             bus.post(new PaymentEvents.RequestCreateDebitCardRecipient(token, taxIdString, cardNumberLast4Digits, expMonthString, expYearString));
         }
-        else if(event.requestIdentifier == DEBIT_CARD_FOR_CHARGE_REQUEST_ID)
+        else if (event.requestIdentifier == DEBIT_CARD_FOR_CHARGE_REQUEST_ID)
         {
             bus.post(new PaymentEvents.RequestCreateDebitCardForCharge(token));
         }
-
-
     }
 
     @Subscribe
     public void onReceiveStripeTokenFromDebitCardError(StripeEvents.ReceiveStripeTokenFromDebitCardError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), "Failed to get stripe token", Toast.LENGTH_LONG).show();
+        onFailure();
     }
 
-    //TODO: clean this up
+    private void onFailure()
+    {
+        resetStates();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.update_debit_card_failed, Toast.LENGTH_LONG);
+    }
+
+    private void checkSuccess()
+    {
+        if(receivedDebitCardForChargeSuccess && receivedDebitCardRecipientSuccess)
+        {
+            onSuccess();
+        }
+    }
+    private void onSuccess()
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.update_debit_card_success, Toast.LENGTH_LONG);
+        UIUtils.dismissOnBackPressed(getActivity());
+    }
+
+    private void resetStates()
+    {
+        receivedDebitCardRecipientSuccess = false;
+        receivedDebitCardForChargeSuccess = false;
+    }
+
     @Subscribe
     public void onReceiveCreateDebitCardRecipientSuccess(PaymentEvents.ReceiveCreateDebitCardRecipientSuccess event)
     {
-        clearInputFields();
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), event.successfullyCreated ? "Successfully created debit card for recipient" : "Failed to create debit card for recipient", Toast.LENGTH_LONG).show();
+        receivedDebitCardRecipientSuccess = true;
+        checkSuccess();
     }
 
     @Subscribe
     public void onReceiveCreateDebitCardRecipientError(PaymentEvents.ReceiveCreateDebitCardRecipientError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), "Failed to create debit card", Toast.LENGTH_LONG).show();
+        onFailure();
     }
 
     @Subscribe
     public void onReceiveCreateDebitCardForChargeSuccess(PaymentEvents.ReceiveCreateDebitCardForChargeSuccess event)
     {
-        clearInputFields();
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), (event.response!=null && event.response.getCardDetails()!=null) ? "Successfully created debit card for charge" : "Failed to create debit card for charge", Toast.LENGTH_LONG).show();
+        receivedDebitCardForChargeSuccess = true;
+        checkSuccess();
     }
 
     @Subscribe
     public void onReceiveCreateDebitCardForChargeError(PaymentEvents.ReceiveCreateDebitCardForChargeError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO: implement. below is test message only
-        Toast.makeText(this.getContext(), "Failed to create debit card for charge", Toast.LENGTH_LONG).show();
+        onFailure();
     }
 }
