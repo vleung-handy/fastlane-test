@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
 
 import butterknife.InjectView;
@@ -42,9 +43,16 @@ public class ProfileContactViewConstructor extends ViewConstructor<ProviderPerso
         titleText.setText(R.string.your_contact_information);
         subtitleText.setVisibility(View.GONE);
 
-        providerEmailText.setText(providerPersonalInfo.getEmail());
-        providerPhoneText.setText(providerPersonalInfo.getPhone());
-        providerAddressText.setText(providerPersonalInfo.getAddress().getStreetAddress() + "\n" + providerPersonalInfo.getAddress().getCityStateZip());
+        String noData = getContext().getString(R.string.no_data);
+
+        String email = providerPersonalInfo.getEmail();
+        providerEmailText.setText(email != null ? email : noData);
+
+        String phone = providerPersonalInfo.getPhone();
+        providerPhoneText.setText(phone != null ? phone : noData);
+
+        Address address = providerPersonalInfo.getAddress();
+        providerAddressText.setText(address != null ? (address.getStreetAddress() + "\n" + address.getCityStateZip()) : noData);
 
         return true;
     }
