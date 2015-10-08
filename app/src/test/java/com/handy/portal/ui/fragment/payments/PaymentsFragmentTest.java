@@ -55,20 +55,6 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldNavigateToUpdatePaymentWhenUpdateBankingClicked() throws Exception
-    {
-        ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
-        shadowActivity.clickMenuItem(R.id.action_update_banking);
-
-        ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
-        verify(bus, atLeastOnce()).post(captor.capture());
-
-        HandyEvent.NavigateToTab event = getBusCaptorValue(captor, HandyEvent.NavigateToTab.class);
-        assertNotNull("NavigateToTab event was not post to bus", event);
-        assertEquals("Failed to navigate to UpdatePaymentFragment", MainViewTab.UPDATE_PAYMENTS, event.targetTab);
-    }
-
-    @Test
     public void shouldShowIncomeVerificationConfirm() throws Exception
     {
         ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());

@@ -1,6 +1,5 @@
 package com.handy.portal.core;
 
-
 import android.app.Application;
 
 import com.handy.portal.analytics.Mixpanel;
@@ -39,6 +38,7 @@ import dagger.Module;
 import dagger.Provides;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Module(injects = {
         TestBaseApplication.class,
@@ -73,7 +73,9 @@ public class TestApplicationModule
     @Provides
     final EnvironmentModifier provideEnvironmentModifier()
     {
-        return mock(EnvironmentModifier.class);
+        EnvironmentModifier environmentModifier = mock(EnvironmentModifier.class);
+        when(environmentModifier.getEnvironmentPrefix()).thenReturn("s");
+        return environmentModifier;
     }
 
     @Provides
