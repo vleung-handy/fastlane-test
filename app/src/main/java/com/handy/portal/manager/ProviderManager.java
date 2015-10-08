@@ -11,6 +11,7 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.payments.PaymentFlowResponse;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.TimeUnit;
@@ -22,6 +23,8 @@ public class ProviderManager
     private final PrefsManager prefsManager;
     private Cache<String, Provider> providerCache;
     private static final String PROVIDER_CACHE_KEY = "provider";
+
+    private ProviderProfile providerProfile;
 
     public ProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
@@ -103,6 +106,16 @@ public class ProviderManager
         });
     }
 
+    @Produce
+    public HandyEvent.ReceiveProviderProfileSuccess produceProviderProfile()
+    {
+        if (providerProfile != null)
+        {
+            return new HandyEvent.ReceiveProviderProfileSuccess(providerProfile);
+        }
+        return null;
+    }
+
     @Subscribe
     public void onRequestProviderProfile(HandyEvent.RequestProviderProfile event)
     {
@@ -113,6 +126,7 @@ public class ProviderManager
             @Override
             public void onSuccess(ProviderProfile providerProfile)
             {
+                ProviderManager.this.providerProfile = providerProfile;
                 bus.post(new HandyEvent.ReceiveProviderProfileSuccess(providerProfile));
             }
 

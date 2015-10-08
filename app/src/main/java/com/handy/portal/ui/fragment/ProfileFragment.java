@@ -73,6 +73,8 @@ public class ProfileFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveProviderProfileSuccess(HandyEvent.ReceiveProviderProfileSuccess event)
     {
+        profileLayout.removeAllViews();
+
         ProviderProfile providerProfile = event.providerProfile;
 
         new ProfileHeaderViewConstructor(getActivity()).create(profileLayout, providerProfile);
