@@ -426,5 +426,8 @@
     <string name="error_loading_profile">There was an error loading your profile information.</string>
     <string name="unable_to_process_request">Sorry, we are unable to process your request at this time.</string>
     <string name="resupply_kit_on_its_way">Your resupply kit is on its way!</string>
+    <string name="based_on_last_28_days">Based on the last 28 days</string>
+    <string name="performance">Performance</string>
+    <string name="your_contact_information">Your contact information</string>
 
 </resources>

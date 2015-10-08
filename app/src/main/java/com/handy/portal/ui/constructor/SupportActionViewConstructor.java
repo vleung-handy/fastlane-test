@@ -37,7 +37,7 @@ public class SupportActionViewConstructor extends ViewConstructor<Action>
     }
 
     @Override
-    int getLayoutResourceId()
+    protected int getLayoutResourceId()
     {
         return R.layout.list_item_support_action;
     }

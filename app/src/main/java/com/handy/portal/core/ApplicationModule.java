@@ -41,6 +41,7 @@ import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
+import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
@@ -110,6 +111,7 @@ import retrofit.converter.GsonConverter;
         AutoCheckInService.class,
         UpdatePaymentFragment.class,
         PaymentMethodFragment.class,
+        ProfileResupplyViewConstructor.class
 })
 public final class ApplicationModule
 {
