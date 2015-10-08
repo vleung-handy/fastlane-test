@@ -13,7 +13,6 @@ public class LoginDetails
 
         public boolean getSuccess() { return success; }
         public String getAuthToken() { return userCredentials; }
-        public String getUserCredentialsCookie() { return "user_credentials="+ getAuthToken();}
 
         public String getProviderId() { return userCredentialsId; }
 }
