@@ -74,7 +74,10 @@ public class Address implements Serializable
 
     public String getCityStateZip()
     {
-        return getCity() + ", " + getState() + " " + getZip();
+        return (getCity() != null ? getCity() : "") +
+                (getCity() != null && getState() != null ? ", " : "") +
+                (getState() != null ? getState() : "") +
+                (getZip() != null ? (" " + getZip()) : "");
     }
 
     public String getCountry()
