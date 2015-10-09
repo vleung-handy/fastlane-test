@@ -83,6 +83,7 @@ public class PaymentsBatchListItemView extends TableLayout
             dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPaymentBatch.getDate()));
             paymentAmountText.setText(CurrencyUtils.formatPriceWithCents(legacyPaymentBatch.getEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
             statusText.setText(legacyPaymentBatch.getStatus());
+            statusText.setTextColor(getResources().getColor(R.color.subtitle_grey));
             jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
         }
 

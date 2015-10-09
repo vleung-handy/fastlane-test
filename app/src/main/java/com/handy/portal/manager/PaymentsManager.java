@@ -13,7 +13,6 @@ import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,10 +69,8 @@ public class PaymentsManager
     @Subscribe
     public void onRequestPaymentBatches(final PaymentEvents.RequestPaymentBatches event)
     {
-        final Date startDate = event.startDate;
-        Date endDate = event.endDate;
         //assuming startDate is inclusive and endDate is inclusive
-        dataManager.getPaymentBatches(startDate, endDate, new DataManager.Callback<PaymentBatches>()
+        dataManager.getPaymentBatches(event.startDate, event.endDate, new DataManager.Callback<PaymentBatches>()
         {
             @Override
             public void onSuccess(PaymentBatches paymentBatches)
@@ -94,7 +91,7 @@ public class PaymentsManager
                     neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[]{}));
 
                 }
-                bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, startDate, event.isInitialBatchRequest, event.callerIdentifier));
+                bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, event.startDate, event.endDate, event.isInitialBatchRequest, event.callerIdentifier));
 
             }
 
