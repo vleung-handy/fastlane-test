@@ -87,6 +87,12 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ResupplyInfo
     public void onReceiveSendResupplyKitError(HandyEvent.ReceiveSendResupplyKitError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        Toast.makeText(getContext(), R.string.unable_to_process_request, Toast.LENGTH_LONG).show();
+        String message = event.error.getMessage();
+        if (message == null)
+        {
+            message = getContext().getString(R.string.unable_to_process_request);
+        }
+
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 }

@@ -148,20 +148,13 @@ public class ProviderManager
             @Override
             public void onSuccess(SuccessWrapper response)
             {
-                if (response.getSuccess())
-                {
-                    bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess());
-                }
-                else
-                {
-                    bus.post(new HandyEvent.ReceiveSendResupplyKitError());
-                }
+                bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess());
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveSendResupplyKitError());
+                bus.post(new HandyEvent.ReceiveSendResupplyKitError(error));
             }
         });
     }

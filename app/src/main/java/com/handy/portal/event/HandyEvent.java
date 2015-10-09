@@ -236,6 +236,10 @@ public abstract class HandyEvent
 
     public static class ReceiveSendResupplyKitError extends ReceiveErrorEvent
     {
+        public ReceiveSendResupplyKitError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
     }
 
     public static class ProviderIdUpdated extends HandyEvent
