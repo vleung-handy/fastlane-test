@@ -105,7 +105,7 @@ public final class PaymentsFragment extends ActionBarFragment
         setActionBar(R.string.payments, false);
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
 
-        if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
+        if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {
             requestInitialPaymentsInfo();
         }
@@ -225,7 +225,10 @@ public final class PaymentsFragment extends ActionBarFragment
             @Override
             public void onScrollToBottom()
             {
-                requestNextPaymentBatches(false);
+                if (paymentsBatchListView != null) //this is to handle case in which Butterknife.reset(this) makes paymentBatchListView null but this callback still gets called. TODO: need more general solution
+                {
+                    requestNextPaymentBatches(false);
+                }
             }
         });
     }
@@ -278,9 +281,9 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
     {
         fetchErrorView.setVisibility(View.GONE);
-
-        int id = Utils.getObjectIdentifier(this);
-        if (id != event.getCallerIdentifier()) return;
+        if (Utils.getObjectIdentifier(this) != event.getCallerIdentifier()
+                || (paymentsBatchListView.getWrappedAdapter().isBatchRequestEndDateInvalid(event.getRequestEndDate())))
+            return;
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
         if (event.isFromInitialBatchRequest) //if it was previously empty

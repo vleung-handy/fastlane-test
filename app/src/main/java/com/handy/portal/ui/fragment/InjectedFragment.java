@@ -59,7 +59,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Override
     public void onDestroyView()
     {
-        ButterKnife.reset(this);
+        ButterKnife.reset(this); //TODO: this doesn't actually remove the injected views' listeners! need to be careful when handling the listeners' callbacks
         super.onDestroyView();
     }
 
