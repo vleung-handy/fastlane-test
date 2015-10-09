@@ -20,6 +20,7 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
@@ -232,6 +233,12 @@ public abstract class HandyEvent
 
     public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent
     {
+        public final ResupplyInfo resupplyInfo;
+
+        public ReceiveSendResupplyKitSuccess(ResupplyInfo resupplyInfo)
+        {
+            this.resupplyInfo = resupplyInfo;
+        }
     }
 
     public static class ReceiveSendResupplyKitError extends ReceiveErrorEvent

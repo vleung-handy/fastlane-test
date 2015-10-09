@@ -8,6 +8,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.payments.PaymentFlowResponse;
 import com.squareup.otto.Bus;
@@ -143,12 +144,12 @@ public class ProviderManager
     {
         String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        dataManager.getResupplyKit(providerId, new DataManager.Callback<SuccessWrapper>()
+        dataManager.getResupplyKit(providerId, new DataManager.Callback<ResupplyInfo>()
         {
             @Override
-            public void onSuccess(SuccessWrapper response)
+            public void onSuccess(ResupplyInfo resupplyInfo)
             {
-                bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess());
+                bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess(resupplyInfo));
             }
 
             @Override

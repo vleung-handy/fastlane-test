@@ -95,4 +95,33 @@ public class ProfileFragment extends ActionBarFragment
         fetchErrorText.setText(R.string.error_loading_profile);
         fetchErrorLayout.setVisibility(View.VISIBLE);
     }
+
+    @Subscribe
+    public void onReceiveSendResupplyKitSuccess(HandyEvent.ReceiveSendResupplyKitSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
+        ViewGroup resupplyLayout = (ViewGroup) getActivity().findViewById(R.id.resupply_layout);
+        if (resupplyLayout != null)
+        {
+            profileLayout.removeView(resupplyLayout);
+        }
+
+        new ProfileResupplyViewConstructor(getActivity()).create(profileLayout, event.resupplyInfo);
+
+        showToast(R.string.resupply_kit_on_its_way);
+    }
+
+    @Subscribe
+    public void onReceiveSendResupplyKitError(HandyEvent.ReceiveSendResupplyKitError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        String message = event.error.getMessage();
+        if (message == null)
+        {
+            message = getContext().getString(R.string.unable_to_process_request);
+        }
+
+        showToast(message);
+    }
 }

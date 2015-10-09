@@ -13,6 +13,7 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
@@ -54,7 +55,7 @@ public abstract class DataManager
 
     public abstract void getProviderProfile(String providerId, Callback<ProviderProfile> cb);
 
-    public abstract void getResupplyKit(String providerId, Callback<SuccessWrapper> callback);
+    public abstract void getResupplyKit(String providerId, Callback<ResupplyInfo> callback);
 
     public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
 
