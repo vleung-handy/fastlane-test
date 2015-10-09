@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import retrofit.http.Body;
+import retrofit.http.Field;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -22,6 +23,7 @@ public interface HandyRetrofitService
     String JOBS_PATH = "/jobs/";
     String PROVIDERS_PATH = "/providers/";
     String PAYMENTS_PATH = "/payments/";
+    String STRIPE_PATH = "/stripe/";
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
@@ -63,6 +65,21 @@ public interface HandyRetrofitService
 
     @GET(PAYMENTS_PATH + "requires_update")
     void getNeedsToUpdatePaymentInfo(HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "create_bank_account")
+    void createBankAccount(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "create_debit_card_recipient")
+    void createDebitCardRecipient(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "create_debit_card_for_charge")
+    void createDebitCardForCharge(@Field("token") String stripeToken, HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "{id}/payment_flow")
+    void getPaymentFlow(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);

@@ -5,10 +5,11 @@ import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
-import com.handy.portal.ui.fragment.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.PaymentsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.payments.UpdatePaymentFragment;
 
 import java.io.Serializable;
 
@@ -17,6 +18,7 @@ public enum MainViewTab implements Serializable
     AVAILABLE_JOBS(null, AvailableBookingsFragment.class),
     SCHEDULED_JOBS(null, ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(null, ComplementaryBookingsFragment.class),
+    UPDATE_PAYMENTS(null, UpdatePaymentFragment.class),
     PAYMENTS(null, PaymentsFragment.class),
     PAYMENTS_DETAIL(null, PaymentsDetailFragment.class),
     PROFILE(PortalWebViewFragment.Target.PROFILE, null),

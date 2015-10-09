@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--TODO: put strings in strings.xml-->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        android:theme="@style/HandyForm">
+
+        <TextView
+            android:id="@+id/payments_update_info_routing_number_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Routing Number"
+            android:textAppearance="@style/TextView.Bold"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/payments_update_info_routing_number_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="9-Digit Number"
+            android:singleLine="true"/>
+
+        <TextView
+            android:id="@+id/payments_update_info_account_number_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="Account Number"
+            android:textAppearance="@style/TextView.Bold"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/payments_update_info_account_number_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="**** 1234"
+            android:singleLine="true"/>
+
+        <TextView
+            android:id="@+id/payments_update_info_tax_id_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="Social Security Number"
+            android:textAppearance="@style/TextView.Bold"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/payments_update_info_tax_id_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="**** ** 1234"
+            android:singleLine="true"/>
+
+        <Button
+            android:id="@+id/payments_update_info_submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@drawable/button_green_round"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+</ScrollView>

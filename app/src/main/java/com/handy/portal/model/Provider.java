@@ -19,6 +19,25 @@ public class Provider
     @SerializedName("complementary_jobs_enabled")
     private boolean complementaryJobsEnabled;
 
+    //TODO: reorganize
+    @SerializedName("payment_currency_code")
+    private String paymentCurrencyCode;
+    @SerializedName("recommended_payment_flow")
+    private String recommendedPaymentFlow;
+
+    public enum RecommendedPaymentFlow{
+        STRIPE_DEBIT("stripe_debit"), STRIPE("stripe");
+        private String value;
+        RecommendedPaymentFlow(String value)
+        {
+            this.value = value;
+        }
+
+        public String getValue()
+        {
+            return value;
+        }
+    }
     public String getId()
     {
         return id;
@@ -67,5 +86,15 @@ public class Provider
     public boolean isComplementaryJobsEnabled()
     {
         return complementaryJobsEnabled;
+    }
+
+    public String getPaymentCurrencyCode()
+    {
+        return paymentCurrencyCode;
+    }
+
+    public String getRecommendedPaymentFlow()
+    {
+        return recommendedPaymentFlow;
     }
 }

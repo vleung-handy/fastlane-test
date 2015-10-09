@@ -28,8 +28,19 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     public PaymentBatchListAdapter(Context context)
     {
         super(context, R.layout.element_payments_batch_list_entry, 0);
-        oldestDate = new Date();
+        resetMetadata();
         hiddenItemPositions.add(0); //hide the first item from view, which is current pay week
+    }
+
+    private void resetMetadata()
+    {
+        oldestDate = new Date();
+    }
+
+    public void clear()
+    {
+        resetMetadata();
+        super.clear();
     }
 
     public boolean shouldRequestMoreData()

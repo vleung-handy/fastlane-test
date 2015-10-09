@@ -22,12 +22,16 @@ import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.manager.RegionDefinitionsManager;
+import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
+import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -45,14 +49,18 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.fragment.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
+import com.handy.portal.ui.fragment.payments.PaymentMethodFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankInfoFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
+import com.handy.portal.ui.fragment.payments.UpdatePaymentFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -99,7 +107,12 @@ import retrofit.converter.GsonConverter;
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
+        UpdatePaymentFragment.class,
+        PaymentsUpdateBankInfoFragment.class,
+        PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
+        UpdatePaymentFragment.class,
+        PaymentMethodFragment.class,
 })
 public final class ApplicationModule
 {
@@ -189,6 +202,33 @@ public final class ApplicationModule
         return restAdapter.create(HandyRetrofitService.class);
     }
 
+    //stripe
+    @Provides
+    @Singleton
+    final StripeRetrofitEndpoint provideStripeEndpoint()
+    {
+        return new StripeRetrofitEndpoint(context);
+    }
+
+    @Provides
+    @Singleton
+    final StripeRetrofitService provideStripeService(final StripeRetrofitEndpoint endpoint) //TODO: clean up
+    {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
+
+        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
+                .setRequestInterceptor(new RequestInterceptor()
+                {
+
+                    @Override
+                    public void intercept(RequestFacade request)
+                    {
+                    }
+                }).setClient(new OkClient(okHttpClient)).build();
+        return restAdapter.create(StripeRetrofitService.class);
+    }
+
     @Provides
     @Singleton
     final Bus provideBus(final Mixpanel mixpanel)
@@ -206,10 +246,11 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
-                                         final HandyRetrofitEndpoint endpoint
+                                         final HandyRetrofitEndpoint endpoint,
+                                         final StripeRetrofitService stripeService //TODO: refactor and move somewhere else?
     )
     {
-        return new BaseDataManager(service, endpoint);
+        return new BaseDataManager(service, endpoint, stripeService);
     }
 
     @Provides
@@ -277,7 +318,7 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final HelpManager provideHelpManager(final Bus bus,
-                                               final DataManager dataManager)
+                                         final DataManager dataManager)
     {
         return new HelpManager(bus, dataManager);
     }
@@ -333,6 +374,20 @@ public final class ApplicationModule
     final PaymentsManager providePaymentsManager(Bus bus, final DataManager dataManager)
     {
         return new PaymentsManager(bus, dataManager);
+    }
+
+    @Provides
+    @Singleton
+    final StripeManager provideStripeManager(final Bus bus, final DataManager dataManager)
+    {
+        return new StripeManager(context, bus, dataManager);
+    }
+
+    @Provides
+    @Singleton
+    final RegionDefinitionsManager provideRegionDefinitionsManager(final Bus bus, final DataManager dataManager)
+    {
+        return new RegionDefinitionsManager(bus, dataManager);
     }
 
     private String getDeviceId()

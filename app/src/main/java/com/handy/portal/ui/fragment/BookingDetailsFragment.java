@@ -122,7 +122,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return currentTab;
     }

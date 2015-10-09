@@ -23,10 +23,9 @@ public abstract class ActionBarFragment extends InjectedFragment
 {
     @Inject
     EnvironmentModifier environmentModifier;
-
     private UpdateTabsCallback tabsCallback;
 
-    abstract MainViewTab getTab();
+    protected abstract MainViewTab getTab();
 
     @Override
     public void onCreate(Bundle savedInstanceState)

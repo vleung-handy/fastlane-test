@@ -5,8 +5,10 @@ import com.google.common.cache.CacheBuilder;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.SuccessWrapper;
+import com.handy.portal.model.payments.PaymentFlowResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -49,6 +51,27 @@ public class ProviderManager
         {
             requestProviderInfo();
         }
+    }
+
+    @Subscribe
+    public void onRequestPaymentFlow(PaymentEvents.RequestPaymentFlow event)
+    {
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        dataManager.getPaymentFlow(providerId, new DataManager.Callback<PaymentFlowResponse>()
+        {
+            @Override
+            public void onSuccess(PaymentFlowResponse response)
+            {
+                bus.post(new PaymentEvents.ReceivePaymentFlowSuccess(response));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new PaymentEvents.ReceivePaymentFlowError(error));
+
+            }
+        });
     }
 
     @Subscribe

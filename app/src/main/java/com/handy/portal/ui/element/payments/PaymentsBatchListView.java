@@ -75,6 +75,11 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         });
     }
 
+    public void clear()
+    {
+        getWrappedAdapter().clear();
+    }
+
     public interface OnDataItemClickListener
     { //TODO: put this somewhere else and make type generic?
         void onDataItemClicked(PaymentBatch paymentBatch);

@@ -1,6 +1,5 @@
 package com.handy.portal.core;
 
-
 import android.app.Application;
 
 import com.handy.portal.analytics.Mixpanel;
@@ -11,6 +10,7 @@ import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
@@ -25,12 +25,12 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.fragment.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
@@ -38,6 +38,7 @@ import dagger.Module;
 import dagger.Provides;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Module(injects = {
         TestBaseApplication.class,
@@ -58,6 +59,7 @@ import static org.mockito.Mockito.mock;
         PaymentsDetailFragment.class,
         TestActivity.class,
 
+
 }, library = true)
 public class TestApplicationModule
 {
@@ -71,7 +73,9 @@ public class TestApplicationModule
     @Provides
     final EnvironmentModifier provideEnvironmentModifier()
     {
-        return mock(EnvironmentModifier.class);
+        EnvironmentModifier environmentModifier = mock(EnvironmentModifier.class);
+        when(environmentModifier.getEnvironmentPrefix()).thenReturn("s");
+        return environmentModifier;
     }
 
     @Provides
@@ -150,6 +154,12 @@ public class TestApplicationModule
     final PrefsManager providePrefsManager()
     {
         return mock(PrefsManager.class);
+    }
+
+    @Provides
+    final StripeManager provideStripeManager()
+    {
+        return mock(StripeManager.class);
     }
 
     @Provides

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -28,10 +28,13 @@ import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.HelpNodesAdapter;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.UIUtils;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
@@ -43,6 +46,7 @@ import butterknife.OnClick;
 
 public final class PaymentsFragment extends ActionBarFragment
 {
+    @VisibleForTesting
     @InjectView(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
 
@@ -89,7 +93,7 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.PAYMENTS;
     }
@@ -101,9 +105,13 @@ public final class PaymentsFragment extends ActionBarFragment
         setActionBar(R.string.payments, false);
         bus.post(new HandyEvent.RequestHelpPaymentsNode());
 
-        if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData()) //request only if not requested yet
+        if(paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {
-            requestPaymentsInfo();
+            requestInitialPaymentsInfo();
+        }
+        else //have to put this logic here because of the way the loading overlay is handled by the bus system e.g. when child fragment is destroyed but caused overlay to show (messy to put in onResume because user could have just navigated away from app)
+        {
+            setLoadingOverlayVisible(false);
         }
     }
 
@@ -134,7 +142,7 @@ public final class PaymentsFragment extends ActionBarFragment
     public void doInitialRequestAgain()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        requestPaymentsInfo();
+        requestInitialPaymentsInfo();
     }
 
     public void setLoadingOverlayVisible(boolean visible)
@@ -143,14 +151,14 @@ public final class PaymentsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
     }
 
-    private void requestPaymentsInfo()
+    private void requestInitialPaymentsInfo()
     {
 //        requestAnnualPaymentSummaries(); //will need this later when annual summary api complete
-        requestNextPaymentBatches();
+        requestNextPaymentBatches(true);
         setLoadingOverlayVisible(true);
     }
 
-    private void requestNextPaymentBatches()
+    private void requestNextPaymentBatches(boolean isInitialRequest)
     {
         Date endDate = paymentsBatchListView.getOldestDate();
 
@@ -163,7 +171,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
             c.set(Calendar.DAY_OF_YEAR, dayOfYear);
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
-            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, System.identityHashCode(this)));
+            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, isInitialRequest, Utils.getObjectIdentifier(this)));
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
@@ -171,6 +179,13 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             paymentsBatchListView.showFooter(R.string.no_more_payments);
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));//don't want overlay to persist when this fragment is paused
+        super.onPause();
     }
 
     private void requestAnnualPaymentSummaries() //not used yet
@@ -194,6 +209,10 @@ public final class PaymentsFragment extends ActionBarFragment
 
     public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
+        //reset payment batch list view and its adapter
+        paymentsBatchListView.clear();
+        setLoadingOverlayVisible(false);
+
         //update the current pay week
         if (paymentBatches.getNeoPaymentBatches().length == 0) //this should never happen. always expecting at least one entry (current pay week) from server in initial batch
         {
@@ -206,7 +225,7 @@ public final class PaymentsFragment extends ActionBarFragment
             @Override
             public void onScrollToBottom()
             {
-                requestNextPaymentBatches();
+                requestNextPaymentBatches(false);
             }
         });
     }
@@ -227,7 +246,7 @@ public final class PaymentsFragment extends ActionBarFragment
         switch (item.getItemId())
         {
             case R.id.action_update_banking:
-                bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REFRESH_TAB));
+                UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentMethodFragment());
                 return true;
             case R.id.action_email_verification:
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -260,14 +279,13 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         fetchErrorView.setVisibility(View.GONE);
 
-        int id = System.identityHashCode(this);
+        int id = Utils.getObjectIdentifier(this);
         if (id != event.getCallerIdentifier()) return;
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
-        if (paymentsBatchListView.isDataEmpty()) //if it was previously empty
+        if (event.isFromInitialBatchRequest) //if it was previously empty
         {
             onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
-            setLoadingOverlayVisible(false);
         }
         else
         {
@@ -280,7 +298,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             if (paymentsBatchListView.shouldRequestMoreData())
             {
-                requestNextPaymentBatches();
+                requestNextPaymentBatches(false);
             }
             else
             {
@@ -355,4 +373,5 @@ public final class PaymentsFragment extends ActionBarFragment
             }
         });
     }
+
 }

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.payments;
 
 import android.app.ActionBar;
 
@@ -8,10 +8,13 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
+import com.squareup.otto.Bus;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
@@ -29,6 +32,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
 {
+    @Mock
+    Bus bus;
+
+    @InjectMocks
     private PaymentsFragment fragment;
 
     @Before
@@ -48,26 +55,13 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldNavigateToProfileTabWhenUpdateBankingClicked() throws Exception
-    {
-        ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
-        shadowActivity.clickMenuItem(R.id.action_update_banking);
-
-        ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
-        verify(fragment.bus, atLeastOnce()).post(captor.capture());
-        HandyEvent.NavigateToTab event = getBusCaptorValue(captor, HandyEvent.NavigateToTab.class);
-        assertNotNull("NavigateToTab event was not post to bus", event);
-        assertEquals("Failed to navigate to profile tab", MainViewTab.PROFILE, event.targetTab);
-    }
-
-    @Test
     public void shouldShowIncomeVerificationConfirm() throws Exception
     {
         ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
         shadowActivity.clickMenuItem(R.id.action_email_verification);
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
-        verify(fragment.bus, atLeastOnce()).post(captor.capture());
+        verify(bus, atLeastOnce()).post(captor.capture());
         HandyEvent.RequestSendIncomeVerification event = getBusCaptorValue(captor, HandyEvent.RequestSendIncomeVerification.class);
         assertNotNull("RequestSendIncomeVerification event was not post to bus", event);
     }
@@ -94,7 +88,7 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
         shadowActivity.clickMenuItem(R.id.action_help);
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
-        verify(fragment.bus, atLeastOnce()).post(captor.capture());
+        verify(bus, atLeastOnce()).post(captor.capture());
         HandyEvent.NavigateToTab event = getBusCaptorValue(captor, HandyEvent.NavigateToTab.class);
         assertNotNull("NavigateToTab event was not post to bus", event);
         assertEquals("Failed to navigate to help tab", MainViewTab.HELP, event.targetTab);

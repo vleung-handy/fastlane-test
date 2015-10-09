@@ -64,7 +64,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.SCHEDULED_JOBS;
     }
@@ -79,7 +79,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
-        inflater.inflate(R.menu.menu_complementary_jobs, menu);
+        inflater.inflate(R.menu.menu_x_back, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

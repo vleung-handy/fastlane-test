@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        android:theme="@style/HandyForm">
+
+        <!--TODO: put strings in strings.xml-->
+        <TextView
+            android:id="@+id/payments_update_info_debit_card_number_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Debit Card Number"
+            android:textAppearance="@style/TextView.Bold"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/payments_update_info_debit_card_number_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Debit Card Number"
+            android:singleLine="true"/>
+
+        <TextView
+            android:id="@+id/payments_update_info_debit_card_expiration_date_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="Expiration Date"
+            android:textAppearance="@style/TextView.Bold"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/payments_update_info_debit_card_expiration_month_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:singleLine="true"/>
+
+            <EditText
+                android:id="@+id/payments_update_info_debit_card_expiration_year_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:singleLine="true"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/payments_update_info_debit_card_security_code_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="Security Code"
+            android:textAppearance="@style/TextView.Bold"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/payments_update_info_debit_card_security_code_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="CVC"
+            android:singleLine="true"/>
+
+        <TextView
+            android:id="@+id/payments_update_info_debit_card_tax_id_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="Social Security Number"
+            android:textAppearance="@style/TextView.Bold"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/payments_update_info_debit_tax_id_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="000 00 0000"
+            android:singleLine="true"/>
+
+        <Button
+            android:id="@+id/payments_update_info_debit_card_submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@drawable/button_green_round"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+</ScrollView>

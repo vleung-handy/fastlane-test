@@ -17,8 +17,11 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.PaymentFlowResponse;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
+import com.handy.portal.model.payments.StripeTokenResponse;
 
 import java.util.Date;
 import java.util.Map;
@@ -88,6 +91,17 @@ public abstract class DataManager
     public abstract void getAnnualPaymentSummaries(Callback<AnnualPaymentSummaries> callback);
 
     public abstract void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> callback);
+
+    public abstract void createBankAccount(Map<String, String> params, Callback<SuccessWrapper> callback);
+
+    public abstract void createDebitCardRecipient(Map<String, String> params, Callback<SuccessWrapper> callback);
+
+    public abstract void createDebitCardForCharge(String stripeToken, Callback<CreateDebitCardResponse> callback);
+
+    public abstract void getPaymentFlow(String providerId, Callback<PaymentFlowResponse> callback);
+
+    public abstract void getStripeToken(Map<String, String> params, Callback<StripeTokenResponse> callback);
+    //TODO: refactor. should this be here?
 
     public interface Callback<T>
     {

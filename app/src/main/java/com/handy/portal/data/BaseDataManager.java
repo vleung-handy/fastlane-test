@@ -17,11 +17,15 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.PaymentFlowResponse;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
+import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 
 import org.json.JSONObject;
 
@@ -37,11 +41,15 @@ public final class BaseDataManager extends DataManager
     private final HandyRetrofitService service;
     private final HandyRetrofitEndpoint endpoint;
 
+    private final StripeRetrofitService stripeService; //TODO: should refactor and move somewhere else?
+
     @Inject
-    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint)
+    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
+                           final StripeRetrofitService stripeService)
     {
         this.service = service;
         this.endpoint = endpoint;
+        this.stripeService = stripeService;
     }
 
     @Override
@@ -224,4 +232,36 @@ public final class BaseDataManager extends DataManager
         service.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
     }
     //********End Help Center********
+
+    @Override
+    public void createBankAccount(Map<String, String> params, final Callback<SuccessWrapper> cb)
+    {
+        service.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));
+    }
+
+    @Override
+    public void createDebitCardRecipient(Map<String, String> params, final Callback<SuccessWrapper> cb)
+    {
+        service.createDebitCardRecipient(params, new CreateDebitCardRecipientRetroFitCallback(cb));
+    }
+
+    @Override
+    public void createDebitCardForCharge(String stripeToken, final Callback<CreateDebitCardResponse> cb)
+    {
+        service.createDebitCardForCharge(stripeToken, new CreateDebitCardRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getPaymentFlow(String providerId, final Callback<PaymentFlowResponse> cb)
+    {
+        service.getPaymentFlow(providerId, new GetPaymentFlowRetroFitCallback(cb));
+    }
+
+    //Stripe
+    @Override
+    public void getStripeToken(Map<String, String> params, final Callback<StripeTokenResponse> cb)
+    {
+        stripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
+    }
+
 }

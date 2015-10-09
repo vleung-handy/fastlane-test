@@ -31,7 +31,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected ViewGroup noAvailableBookingsLayout;
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return MainViewTab.AVAILABLE_JOBS;
     }
