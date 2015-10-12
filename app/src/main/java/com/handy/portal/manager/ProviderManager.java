@@ -112,7 +112,9 @@ public class ProviderManager
     {
         if (providerProfile != null)
         {
-            return new HandyEvent.ReceiveProviderProfileSuccess(providerProfile);
+            ProviderProfile savedProfile = providerProfile;
+            providerProfile = null;
+            return new HandyEvent.ReceiveProviderProfileSuccess(savedProfile);
         }
         return null;
     }
