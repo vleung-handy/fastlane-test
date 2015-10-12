@@ -405,6 +405,8 @@
     <string name="payment_account_number">Account Number</string>
     <string name="update_bank_account_failed">Failed to update bank account</string>
     <string name="update_bank_account_success">Successfully updated bank account</string>
+    <string name="no_payment_method">No Payment Method</string>
+    <string name="add_payment_method">Add Payment Method</string>
 
     <!-- Payments Bill Blocker -->
     <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>

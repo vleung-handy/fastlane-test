@@ -19,11 +19,11 @@
             android:layout_height="wrap_content">
 
             <TableRow
-                android:paddingBottom="@dimen/default_padding_large"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
                 <TextView
                     android:text="@string/payment_method"
+                    android:id="@+id/payment_method_title"
                     android:textSize="@dimen/large_text_size"
                     android:textAppearance="@style/TextView.Bold"
                     android:textStyle="bold"
@@ -44,7 +44,9 @@
                     android:layout_height="wrap_content" />
             </TableRow>
             <TableRow
+                android:paddingTop="@dimen/default_padding_large"
                 android:paddingBottom="@dimen/default_padding_large"
+                android:id="@+id/payment_method_account_detail_row"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
                 <TextView

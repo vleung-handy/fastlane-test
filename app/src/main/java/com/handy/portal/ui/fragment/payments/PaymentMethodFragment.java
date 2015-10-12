@@ -23,6 +23,8 @@ import butterknife.InjectView;
 
 public class PaymentMethodFragment extends ActionBarFragment
 {
+    @InjectView(R.id.payment_method_title)
+    TextView titleText;
 
     @InjectView(R.id.payment_method_account_details_text)
     TextView accountDetailsText;
@@ -32,6 +34,9 @@ public class PaymentMethodFragment extends ActionBarFragment
 
     @InjectView(R.id.payment_method_container)
     LinearLayout paymentMethodContainer;
+
+    @InjectView(R.id.payment_method_account_detail_row)
+    View accountDetailRow;
 
     @Override
     protected MainViewTab getTab()
@@ -100,7 +105,6 @@ public class PaymentMethodFragment extends ActionBarFragment
                 launchUpdatePaymentMethodFragment();
             }
         });
-
     }
 
     private void launchUpdatePaymentMethodFragment()
@@ -115,13 +119,16 @@ public class PaymentMethodFragment extends ActionBarFragment
 
         if (event.response.getAccountDetails() != null)
         {
+            accountDetailRow.setVisibility(View.VISIBLE);
+            titleText.setText(R.string.payment_method);
             accountDetailsText.setText(event.response.getAccountDetails());
-            paymentMethodContainer.setVisibility(View.VISIBLE);
         }
         else
         {
-            launchUpdatePaymentMethodFragment();
+            titleText.setText(R.string.add_payment_method);
+            accountDetailRow.setVisibility(View.GONE);
         }
+        paymentMethodContainer.setVisibility(View.VISIBLE);
     }
 
     @Subscribe
