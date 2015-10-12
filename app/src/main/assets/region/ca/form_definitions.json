@@ -4,11 +4,11 @@
     "update_bank_info": {
       "field_definitions": {
         "routing_number": {
-          "display_name": "Transit Number",
-          "error_message": "Transit number must be correctly formatted",
-          "hint_text": "abcde123",
-          "input_type": "alphanumeric",
-          "pattern": "^[A-z]{5}[0-9]{3}$"
+          "display_name": "Transit and Institution Numbers",
+          "error_message": "Transit and institution numbers must be correctly formatted",
+          "hint_text": "12345678",
+          "input_type": "number",
+          "pattern": "^[0-9]{8}$"
         },
         "account_number": {
           "display_name": "Account Number",
