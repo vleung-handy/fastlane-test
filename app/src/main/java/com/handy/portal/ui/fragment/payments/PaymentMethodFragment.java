@@ -119,6 +119,8 @@ public class PaymentMethodFragment extends ActionBarFragment
 
         if (event.response.getAccountDetails() != null)
         {
+            accountDetailRow.setVisibility(View.VISIBLE);
+            titleText.setText(R.string.payment_method);
             accountDetailsText.setText(event.response.getAccountDetails());
         }
         else
