@@ -17,6 +17,7 @@
             android:id="@+id/payments_update_info_routing_number_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_margin"
             android:textAppearance="@style/TextView.Bold"
             android:textStyle="bold"/>
 
@@ -30,6 +31,7 @@
             android:id="@+id/payments_update_info_account_number_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:textAppearance="@style/TextView.Bold"
             android:textStyle="bold"/>
@@ -44,6 +46,7 @@
             android:id="@+id/payments_update_info_tax_id_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:textAppearance="@style/TextView.Bold"
             android:textStyle="bold"/>
