@@ -41,6 +41,7 @@ import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
+import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
@@ -50,7 +51,6 @@ import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
-import com.handy.portal.ui.fragment.PortalWebViewFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
@@ -82,11 +82,9 @@ import retrofit.converter.GsonConverter;
         BookingDetailsFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
-        PortalWebViewFragment.class,
         ScheduledBookingsFragment.class,
         ProfileFragment.class,
         AvailableBookingsFragment.class,
-        PortalWebViewClient.class,
         MainActivityFragment.class,
         BaseApplication.class,
         BaseActivity.class,
@@ -113,6 +111,7 @@ import retrofit.converter.GsonConverter;
         AutoCheckInService.class,
         UpdatePaymentFragment.class,
         PaymentMethodFragment.class,
+        ProfileResupplyViewConstructor.class
 })
 public final class ApplicationModule
 {

@@ -13,8 +13,6 @@ public enum TransitionStyle
     TAB_TO_TAB(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
     JOB_LIST_TO_DETAILS(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
     NATIVE_TO_NATIVE(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
-    NATIVE_TO_WEBVIEW(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
-    WEBVIEW_TO_NATIVE(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
     REFRESH_TAB(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
     SLIDE_UP(R.anim.slide_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_down),
     NONE();

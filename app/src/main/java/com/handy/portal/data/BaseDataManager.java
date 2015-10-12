@@ -12,6 +12,8 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
@@ -92,6 +94,18 @@ public final class BaseDataManager extends DataManager
     public void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb)
     {
         service.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getProviderProfile(String providerId, Callback<ProviderProfile> cb)
+    {
+        service.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
+    }
+
+    @Override
+    public void getResupplyKit(String providerId, Callback<ResupplyInfo> cb)
+    {
+        service.getResupplyKit(providerId, "", new ResupplyInfoRetrofitCallback(cb));
     }
 
     @Override

@@ -87,6 +87,12 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/send_income_verification")
     void sendIncomeVerification(@Path("id") String providerId, HandyRetrofitCallback cb);
 
+    @GET(PROVIDERS_PATH + "{id}")
+    void getProviderProfile(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @POST(PROVIDERS_PATH + "{id}/send_resupply_kit")
+    void getResupplyKit(@Path("id") String providerId, @Body String body, HandyRetrofitCallback cb);
+
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")
     void notifyOnMyWay(@Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);

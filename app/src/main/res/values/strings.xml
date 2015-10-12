@@ -412,4 +412,22 @@
     <string name="payments_bill_blocker_update_now_button">Update Now</string>
     <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
 
+    <!-- Profile -->
+    <string name="get_resupply_kit">Get a resupply kit</string>
+    <string name="share_with">Share with…</string>
+    <string name="joined_handy"><![CDATA[Joined Handy <b>%1$s</b>]]></string>
+    <string name="earn_a_bonus">Earn a %1$s bonus</string>
+    <string name="refer_a_pro">Refer a professional to Handy</string>
+    <string name="jobs_and_rating"><![CDATA[<b>%1$d</b> jobs · <b>%2$s</b> overall rating]]></string>
+    <string name="rating">Rating</string>
+    <string name="jobs">Jobs</string>
+    <string name="rate">Rate</string>
+    <string name="tier_x">TIER %1$d</string>
+    <string name="error_loading_profile">There was an error loading your profile information.</string>
+    <string name="unable_to_process_request">Sorry, we are unable to process your request at this time.</string>
+    <string name="resupply_kit_on_its_way">Your resupply kit is on its way!</string>
+    <string name="based_on_last_28_days">Based on the last 28 days</string>
+    <string name="performance">Performance</string>
+    <string name="your_contact_information">Your contact information</string>
+
 </resources>

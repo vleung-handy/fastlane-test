@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/section_margin"
+    android:orientation="vertical">
+
+    <include layout="@layout/element_profile_section_header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/extra_padding"
+        android:paddingTop="@dimen/default_padding">
+
+        <TextView
+            android:id="@+id/tier_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/rating"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/jobs"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/rate"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/small_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/default_padding">
+
+        <TextView
+            android:id="@+id/tier_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/tier_x"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/handy_blue"/>
+
+        <TextView
+            android:id="@+id/trailing_rating_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/handy_blue"
+            android:textSize="@dimen/xxlarge_text_size"/>
+
+        <TextView
+            android:id="@+id/trailing_jobs_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/handy_blue"
+            android:textSize="@dimen/xxlarge_text_size"/>
+
+        <TextView
+            android:id="@+id/trailing_rate_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/handy_blue"
+            android:textSize="@dimen/xxlarge_text_size"/>
+
+    </LinearLayout>
+</LinearLayout>
