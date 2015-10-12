@@ -7,7 +7,7 @@
           "display_name": "Routing Number",
           "error_message": "Routing number must be exactly 9 digits",
           "input_type": "number",
-          "hint_text": "",
+          "hint_text": "123456789",
           "pattern": "^[0-9]{9}$"
         },
         "account_number": {
@@ -21,7 +21,7 @@
           "display_name": "Social Security Number",
           "error_message": "Social security number should be exactly 9 digits",
           "input_type": "number",
-          "hint_text": "",
+          "hint_text": "123456789",
           "pattern": "^[0-9]{9}$"
         }
       }
@@ -59,7 +59,7 @@
         },
         "tax_id_number": {
           "display_name": "Social Security Number",
-          "hint_text": "",
+          "hint_text": "123456789",
           "input_type": "number",
           "error_message": "Social security number should be exactly 9 digits",
           "pattern": "^[0-9]{9}$"
