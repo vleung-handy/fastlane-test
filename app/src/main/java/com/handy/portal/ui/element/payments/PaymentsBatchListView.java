@@ -145,9 +145,9 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         return getWrappedAdapter() == null || getWrappedAdapter().isDataEmpty();
     }
 
-    public Date getOldestDate()
+    public Date getNextRequestEndDate()
     {
-        return getWrappedAdapter().getOldestDate();
+        return getWrappedAdapter().getNextRequestEndDate();
     }
 
 }

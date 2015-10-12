@@ -17,7 +17,7 @@
             android:id="@+id/payments_update_info_routing_number_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Routing Number"
+            android:layout_marginBottom="@dimen/row_margin"
             android:textAppearance="@style/TextView.Bold"
             android:textStyle="bold"/>
 
@@ -25,15 +25,14 @@
             android:id="@+id/payments_update_info_routing_number_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="9-Digit Number"
             android:singleLine="true"/>
 
         <TextView
             android:id="@+id/payments_update_info_account_number_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_margin"
             android:layout_marginTop="@dimen/default_margin"
-            android:text="Account Number"
             android:textAppearance="@style/TextView.Bold"
             android:textStyle="bold"/>
 
@@ -41,15 +40,14 @@
             android:id="@+id/payments_update_info_account_number_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="**** 1234"
             android:singleLine="true"/>
 
         <TextView
             android:id="@+id/payments_update_info_tax_id_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/row_margin"
             android:layout_marginTop="@dimen/default_margin"
-            android:text="Social Security Number"
             android:textAppearance="@style/TextView.Bold"
             android:textStyle="bold"/>
 
@@ -57,7 +55,6 @@
             android:id="@+id/payments_update_info_tax_id_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="**** ** 1234"
             android:singleLine="true"/>
 
         <Button
@@ -66,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin"
             android:background="@drawable/button_green_round"
-            android:text="Save"
+            android:text="@string/save"
             android:textAllCaps="false"
             android:textColor="@color/white"/>
     </LinearLayout>
