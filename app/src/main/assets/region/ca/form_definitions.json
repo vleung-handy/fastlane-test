@@ -5,18 +5,21 @@
       "field_definitions": {
         "routing_number": {
           "display_name": "Transit Number",
+          "error_message": "Transit number must be correctly formatted",
           "hint_text": "abcde123",
           "input_type": "alphanumeric",
           "pattern": "^[A-z]{5}[0-9]{3}$"
         },
         "account_number": {
           "display_name": "Account Number",
+          "error_message": "Account number must be 1-30 digits",
           "hint_text": "",
           "input_type": "number",
           "pattern": "^[0-9]{1,30}$"
         },
         "tax_id_number": {
           "display_name": "Social Insurance Number",
+          "error_message": "Social insurance number must be exactly 9 digits",
           "hint_text": "123456789",
           "input_type": "number",
           "pattern": "^[0-9]{9}$"
