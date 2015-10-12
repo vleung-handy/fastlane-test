@@ -104,9 +104,10 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
         if (fieldDefinitionMap != null)
         {
-            allFieldsValid = UIUtils.validateField(routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER))
-                    && UIUtils.validateField(accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER))
-                    && UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
+            //need to show error for each field
+            allFieldsValid = UIUtils.validateField(routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER))  && allFieldsValid;
+            allFieldsValid = UIUtils.validateField(accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER)) && allFieldsValid;
+            allFieldsValid = UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER)) && allFieldsValid;
         }
 
         if (!allFieldsValid)
