@@ -5,7 +5,7 @@
       "field_definitions": {
         "routing_number": {
           "display_name": "Transit Number",
-          "hint_text": "",
+          "hint_text": "abcde123",
           "input_type": "alphanumeric",
           "pattern": "^[A-z]{5}[0-9]{3}$"
         },
@@ -17,7 +17,7 @@
         },
         "tax_id_number": {
           "display_name": "Social Insurance Number",
-          "hint_text": "",
+          "hint_text": "123456789",
           "input_type": "number",
           "pattern": "^[0-9]{9}$"
         }
