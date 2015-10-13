@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -39,7 +40,7 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void shouldHaveActionBar() throws Exception
     {
-        assertNotNull(activityFragment.getActivity().getActionBar());
+        assertNotNull(((AppCompatActivity) activityFragment.getActivity()).getSupportActionBar());
     }
 
     @Test

@@ -23,7 +23,7 @@
     <dimen name="xlarge_text_size">22sp</dimen>
     <dimen name="hero_text_size">28sp</dimen>
     <dimen name="xxlarge_text_size">32sp</dimen>
-    <dimen name="options_wheel_padding">0dp</dimen>
+    <dimen name="options_wheel_padding">10dp</dimen>
     <dimen name="inner_textfield_padding">12dp</dimen>
     <dimen name="round_button_radius">5dp</dimen>
     <dimen name="round_button_stroke">1dp</dimen>

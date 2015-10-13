@@ -1,17 +1,19 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_help"
+        android:title="@string/help"
         android:icon="@drawable/ic_question"
         android:orderInCategory="60"
-        android:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_update_banking"
         android:orderInCategory="80"
-        android:showAsAction="never"
-        android:title="@string/update_banking_information"/>
+        android:title="@string/update_banking_information"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_email_verification"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/email_income_verification"/>
+        android:title="@string/email_income_verification"
+        app:showAsAction="never" />
 </menu>

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
     private Object busEventListener;
     protected boolean allowCallbacks;
@@ -113,9 +113,9 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         super.onStart();
         allowCallbacks = true;
 
-        if (this.googleApiClient != null)
+        if (googleApiClient != null)
         {
-            this.googleApiClient.connect();
+            googleApiClient.connect();
         }
     }
 
@@ -125,9 +125,9 @@ public abstract class BaseActivity extends FragmentActivity implements GoogleApi
         super.onStop();
         allowCallbacks = false;
 
-        if (this.googleApiClient != null)
+        if (googleApiClient != null)
         {
-            this.googleApiClient.connect();
+            googleApiClient.connect();
         }
     }
 
