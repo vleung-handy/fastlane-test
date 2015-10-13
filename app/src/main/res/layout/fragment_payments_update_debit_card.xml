@@ -11,7 +11,6 @@
         android:padding="@dimen/default_padding"
         android:theme="@style/HandyForm">
 
-        <!--TODO: put strings in strings.xml-->
         <TextView
             android:id="@+id/payments_update_info_debit_card_number_label"
             android:layout_width="match_parent"
@@ -64,11 +63,20 @@
             android:textAppearance="@style/TextView.Bold"
             android:textStyle="bold"/>
 
-        <EditText
-            android:id="@+id/payments_update_info_debit_card_security_code_text"
+        <!--nesting of EditText is needed to make width 50%-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_weight="0.5"
+                android:id="@+id/payments_update_info_debit_card_security_code_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
+            </LinearLayout>
+
 
         <TextView
             android:id="@+id/payments_update_info_debit_card_tax_id_label"
