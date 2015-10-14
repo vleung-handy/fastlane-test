@@ -1,10 +1,11 @@
 package com.handy.portal.ui.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -116,7 +117,7 @@ public abstract class ActionBarFragment extends InjectedFragment
 
     private ActionBar getActionBar()
     {
-        return getActivity().getActionBar();
+        return ((AppCompatActivity)getActivity()).getSupportActionBar();
     }
 
     public void setBackButtonEnabled(boolean enabled)

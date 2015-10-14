@@ -11,6 +11,5 @@ public class TestActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.HandyActionBarTheme);
     }
 }
