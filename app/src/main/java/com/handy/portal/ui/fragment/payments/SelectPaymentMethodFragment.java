@@ -7,11 +7,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -20,23 +20,30 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
-public class PaymentMethodFragment extends ActionBarFragment
+public class SelectPaymentMethodFragment extends ActionBarFragment
 {
-    @InjectView(R.id.payment_method_title)
-    TextView titleText;
+    @InjectView(R.id.bank_account_details)
+    TextView bankAccountDetails;
 
-    @InjectView(R.id.payment_method_account_details_text)
-    TextView accountDetailsText;
-
-    @InjectView(R.id.payment_method_update_button)
-    TextView updatePaymentMethodButton;
+    @InjectView(R.id.debit_card_details)
+    TextView debitCardDetails;
 
     @InjectView(R.id.payment_method_container)
-    LinearLayout paymentMethodContainer;
+    ViewGroup paymentMethodContainer;
 
-    @InjectView(R.id.payment_method_account_detail_row)
-    View accountDetailRow;
+    @OnClick(R.id.debit_card_option)
+    public void onDebitCardOptionClicked()
+    {
+        launchUpdatePaymentMethodFragment();
+    }
+
+    @OnClick(R.id.bank_account_option)
+    public void onBankAccountOptionClicked()
+    {
+        launchUpdatePaymentMethodFragment();
+    }
 
     @Override
     protected MainViewTab getTab()
@@ -75,9 +82,9 @@ public class PaymentMethodFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.payment_method, false);
-        bus.post(new PaymentEvents.RequestPaymentFlow());
+        setActionBar(R.string.select_payment_method, false);
         paymentMethodContainer.setVisibility(View.GONE);
+        bus.post(new PaymentEvents.RequestPaymentFlow());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
 
     }
@@ -97,19 +104,11 @@ public class PaymentMethodFragment extends ActionBarFragment
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        updatePaymentMethodButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                launchUpdatePaymentMethodFragment();
-            }
-        });
     }
 
     private void launchUpdatePaymentMethodFragment()
     {
-        UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new UpdatePaymentFragment());
+        UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new UpdatePaymentFragment(), TransitionStyle.NATIVE_TO_NATIVE);
     }
 
     @Subscribe
@@ -117,16 +116,17 @@ public class PaymentMethodFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
-        if (event.response.getAccountDetails() != null)
+        String accountDetails = event.paymentFlow.getAccountDetails();
+        if (accountDetails != null)
         {
-            accountDetailRow.setVisibility(View.VISIBLE);
-            titleText.setText(R.string.payment_method);
-            accountDetailsText.setText(event.response.getAccountDetails());
-        }
-        else
-        {
-            titleText.setText(R.string.add_payment_method);
-            accountDetailRow.setVisibility(View.GONE);
+            if (event.paymentFlow.isDebitCard())
+            {
+                debitCardDetails.setText(accountDetails);
+            }
+            else if (event.paymentFlow.isBankAccount())
+            {
+                bankAccountDetails.setText(accountDetails);
+            }
         }
         paymentMethodContainer.setVisibility(View.VISIBLE);
     }

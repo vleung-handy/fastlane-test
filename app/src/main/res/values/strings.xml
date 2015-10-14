@@ -396,7 +396,7 @@
     <string name="expected_deposit">Expect deposit by</string>
     <string name="update_payment_method">Update Payment Method</string>
     <string name="debit_card_number">Debit Card Number</string>
-    <string name="payment_method">Payment Method</string>
+    <string name="select_payment_method">Select Payment Method</string>
     <string name="payment_flow_error">Failed to get payment flow</string>
     <string name="payment_account">Payment Account</string>
     <string name="update_payment_method_note">Note:\nPlease allow an additional 1&#8211;3 days after Handy sends payment for your bank to process it.</string>

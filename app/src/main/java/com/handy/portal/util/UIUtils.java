@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
@@ -29,11 +30,14 @@ import java.text.DecimalFormat;
 public final class UIUtils
 {
     //TODO: move some of these functions into a separate util class
-    public static void launchFragmentInMainActivityOnBackStack(FragmentActivity activity, Fragment fragment)
+    public static void launchFragmentInMainActivityOnBackStack(FragmentActivity activity, Fragment fragment, TransitionStyle transitionStyle)
     {
-        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_container, fragment).addToBackStack(null).commit();
-
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .setCustomAnimations(transitionStyle.getIncomingAnimId(), transitionStyle.getOutgoingAnimId(), transitionStyle.getPopIncomingAnimId(), transitionStyle.getPopOutgoingAnimId())
+                .addToBackStack(null)
+                .commit();
     }
 
     public static boolean validateField(TextView input, FieldDefinition fieldDefinition)

@@ -55,7 +55,7 @@ import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
-import com.handy.portal.ui.fragment.payments.PaymentMethodFragment;
+import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankInfoFragment;
@@ -110,7 +110,7 @@ import retrofit.converter.GsonConverter;
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
         UpdatePaymentFragment.class,
-        PaymentMethodFragment.class,
+        SelectPaymentMethodFragment.class,
         ProfileResupplyViewConstructor.class
 })
 public final class ApplicationModule

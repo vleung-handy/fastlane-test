@@ -10,7 +10,7 @@ import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.payments.PaymentFlowResponse;
+import com.handy.portal.model.payments.PaymentFlow;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -62,10 +62,10 @@ public class ProviderManager
     public void onRequestPaymentFlow(PaymentEvents.RequestPaymentFlow event)
     {
         String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        dataManager.getPaymentFlow(providerId, new DataManager.Callback<PaymentFlowResponse>()
+        dataManager.getPaymentFlow(providerId, new DataManager.Callback<PaymentFlow>()
         {
             @Override
-            public void onSuccess(PaymentFlowResponse response)
+            public void onSuccess(PaymentFlow response)
             {
                 bus.post(new PaymentEvents.ReceivePaymentFlowSuccess(response));
             }
