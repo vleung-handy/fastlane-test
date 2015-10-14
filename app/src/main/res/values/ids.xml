@@ -8,4 +8,5 @@
     <item name="contact_call_button" type="id"/>
     <item name="remove_button" type="id"/>
     <item name="i_need_help_button" type="id"/>
+    <item name="action_bar_title" type="id"/>
 </resources>
