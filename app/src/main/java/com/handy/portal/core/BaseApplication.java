@@ -11,16 +11,18 @@ import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpContactManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
@@ -67,6 +69,10 @@ public class BaseApplication extends Application
     PrefsManager prefsManager;
     @Inject
     PaymentsManager paymentsManager;
+    @Inject
+    StripeManager stripeManager;
+    @Inject
+    RegionDefinitionsManager regionDefinitionsManager;
     @Inject
     UrbanAirshipManager urbanAirshipManager;
     @Inject

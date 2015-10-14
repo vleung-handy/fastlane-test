@@ -6,6 +6,7 @@ import android.view.View;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 
 import org.junit.Before;
 import org.junit.Test;

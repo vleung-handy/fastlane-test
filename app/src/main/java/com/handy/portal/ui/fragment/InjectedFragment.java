@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -26,8 +27,11 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     DataManager dataManager;
     @Inject
     GoogleManager googleManager;
+
+    @VisibleForTesting
     @Inject
-    Bus bus;
+    protected Bus bus;
+
     @Inject
     ConfigManager configManager;
 
@@ -55,7 +59,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Override
     public void onDestroyView()
     {
-        ButterKnife.reset(this);
+        ButterKnife.reset(this); //TODO: this doesn't actually remove the injected views' listeners! need to be careful when handling the listeners' callbacks
         super.onDestroyView();
     }
 

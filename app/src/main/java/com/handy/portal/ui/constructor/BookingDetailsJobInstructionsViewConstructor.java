@@ -75,7 +75,7 @@ public class BookingDetailsJobInstructionsViewConstructor extends BookingDetails
         }
 
         //Show description field regardless of claim status if the booking is not for cleaning (e.g. furniture assembly)
-        if (!isHomeCleaning && booking.getDescription() != null)
+        if (!isHomeCleaning && booking.getDescription() != null && !booking.getDescription().isEmpty())
         {
             BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
             sectionView.init(getContext().getString(R.string.description), R.drawable.ic_details_notes, Lists.newArrayList(booking.getDescription()));

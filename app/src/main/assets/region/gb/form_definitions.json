@@ -1,0 +1,30 @@
+{
+  "region": "gb",
+  "form_definitions": {
+    "update_bank_info": {
+      "field_definitions": {
+        "routing_number": {
+          "display_name": "Sort Code",
+          "error_message": "Sort code must be exactly 6 digits",
+          "hint_text": "123456",
+          "input_type": "number",
+          "pattern": "^[0-9]{6}$"
+        },
+        "account_number": {
+          "display_name": "Account Number",
+          "error_message": "Account number must be 1-30 digits",
+          "hint_text": "",
+          "input_type": "number",
+          "pattern": "^[0-9]{1,30}$"
+        },
+        "tax_id_number": {
+          "display_name": "National Insurance Number",
+          "error_message": "National insurance number must be correctly formatted",
+          "hint_text": "ab123456c",
+          "input_type": "alphanumeric",
+          "pattern": "^[A-z]{2}[0-9]{6}[A-z]$"
+        }
+      }
+    }
+  }
+}

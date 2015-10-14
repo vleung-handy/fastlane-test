@@ -1,0 +1,70 @@
+{
+  "region": "us",
+  "form_definitions": {
+    "update_bank_info": {
+      "field_definitions": {
+        "routing_number": {
+          "display_name": "Routing Number",
+          "error_message": "Routing number must be exactly 9 digits",
+          "input_type": "number",
+          "hint_text": "123456789",
+          "pattern": "^[0-9]{9}$"
+        },
+        "account_number": {
+          "display_name": "Account Number",
+          "error_message": "Account number must be 1-17 digits",
+          "input_type": "number",
+          "hint_text": "",
+          "pattern": "^[0-9]{1,17}$"
+        },
+        "tax_id_number": {
+          "display_name": "Social Security Number",
+          "error_message": "Social security number should be exactly 9 digits",
+          "input_type": "number",
+          "hint_text": "123456789",
+          "pattern": "^[0-9]{9}$"
+        }
+      }
+    },
+    "update_debit_card_info": {
+      "field_definitions": {
+        "debit_card_number": {
+          "display_name": "Debit Card Number",
+          "error_message": "Debit card number must be 15-17 digits",
+          "input_type": "number",
+          "hint_text": "",
+          "pattern": "^[0-9]{15,17}$"
+        },
+        "expiration_date":{
+          "display_name": "Expiration Date"
+        },
+        "expiration_month":{
+          "error_message": "Invalid month. Must be in MM or M format",
+          "input_type": "number",
+          "hint_text": "MM",
+          "pattern": "^(([1][0-2])|([0]?[1-9]))$"
+        },
+        "expiration_year":{
+          "error_message": "Year must be in YYYY format",
+          "input_type": "number",
+          "hint_text": "YYYY",
+          "pattern": "^[0-9]{4}$"
+        },
+        "security_code": {
+          "display_name": "CVC Code",
+          "error_message": "",
+          "input_type": "number",
+          "hint_text": "",
+          "pattern": "^[0-9]{3,4}$"
+        },
+        "tax_id_number": {
+          "display_name": "Social Security Number",
+          "hint_text": "123456789",
+          "input_type": "number",
+          "error_message": "Social security number should be exactly 9 digits",
+          "pattern": "^[0-9]{9}$"
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @InjectView(R.id.fetch_error_text)
     protected TextView errorText;
 
+    @InjectView(R.id.refresh_layout)
+    protected SwipeRefreshLayout refreshLayout;
+
     protected abstract int getFragmentResourceId();
 
     protected abstract BookingListView getBookingListView();
@@ -51,7 +55,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract String getTrackingType();
 
-    protected abstract HandyEvent getRequestEvent(List<Date> dates);
+    protected abstract HandyEvent getRequestEvent(List<Date> dates, boolean useCachedIfPresent);
 
     protected abstract boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay);
 
@@ -91,6 +95,16 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
         }
 
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                requestBookingsForSelectedDay(false);
+            }
+        });
+        refreshLayout.setColorSchemeResources(R.color.handy_blue);
+
         return view;
     }
 
@@ -111,28 +125,29 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
             if (dateButtonMap.containsKey(selectedDay))
             {
-                dateButtonMap.get(selectedDay).performClick();
+                dateButtonMap.get(selectedDay).setChecked(true);
             }
 
-            requestBookingsForOtherDays(selectedDay);
+            requestAllBookings();
         }
     }
 
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookings(Lists.newArrayList(selectedDay), true);
+        requestBookingsForSelectedDay(true);
     }
 
-    protected void requestBookings(List<Date> dates, boolean showOverlay)
+    private void requestAllBookings()
     {
-        Crashlytics.log("Requesting bookings for the following dates" + dates.toString());
-        fetchErrorView.setVisibility(View.GONE);
-        if (showOverlay)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        }
-        bus.post(getRequestEvent(dates));
+        requestBookingsForSelectedDay(true);
+
+        requestBookingsForOtherDays(selectedDay);
+    }
+
+    private void requestBookingsForSelectedDay(boolean showOverlay)
+    {
+        requestBookings(Lists.newArrayList(selectedDay), showOverlay, false);
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)
@@ -150,11 +165,23 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 dates.add(day);
             }
         }
-        requestBookings(dates, false);
+        requestBookings(dates, false, true);
+    }
+
+    private void requestBookings(List<Date> dates, boolean showOverlay, boolean useCachedIfPresent)
+    {
+        Crashlytics.log("Requesting bookings for the following dates" + dates.toString());
+        fetchErrorView.setVisibility(View.GONE);
+        if (showOverlay)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        }
+        bus.post(getRequestEvent(dates, useCachedIfPresent));
     }
 
     protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
+        refreshLayout.setRefreshing(false);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         List<Booking> bookings = event.bookings;
@@ -179,6 +206,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
+        refreshLayout.setRefreshing(false);
         if (event.days.contains(selectedDay))
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -221,7 +249,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
                     beforeRequestBookings();
-                    requestBookings(Lists.newArrayList(day), true);
+                    requestBookings(Lists.newArrayList(day), true, true);
                 }
             });
 

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import retrofit.http.Body;
+import retrofit.http.Field;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -22,6 +23,7 @@ public interface HandyRetrofitService
     String JOBS_PATH = "/jobs/";
     String PROVIDERS_PATH = "/providers/";
     String PAYMENTS_PATH = "/payments/";
+    String STRIPE_PATH = "/stripe/";
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
@@ -64,11 +66,32 @@ public interface HandyRetrofitService
     @GET(PAYMENTS_PATH + "requires_update")
     void getNeedsToUpdatePaymentInfo(HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "create_bank_account")
+    void createBankAccount(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "create_debit_card_recipient")
+    void createDebitCardRecipient(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "create_debit_card_for_charge")
+    void createDebitCardForCharge(@Field("token") String stripeToken, HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "{id}/payment_flow")
+    void getPaymentFlow(@Path("id") String providerId, HandyRetrofitCallback cb);
+
     @GET(JOBS_PATH + "{id}/complementary_jobs")
     void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}/send_income_verification")
     void sendIncomeVerification(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "{id}")
+    void getProviderProfile(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @POST(PROVIDERS_PATH + "{id}/send_resupply_kit")
+    void getResupplyKit(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")
@@ -76,11 +99,11 @@ public interface HandyRetrofitService
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/check_in")
-    void checkIn(@Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
+    void checkIn(@Path("booking_id") String bookingId, @Query("auto") boolean isAuto, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/check_out")
-    void checkOut(@Path("booking_id") String bookingId, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
+    void checkOut(@Path("booking_id") String bookingId, @Query("auto") boolean isAuto, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/customer_no_show")

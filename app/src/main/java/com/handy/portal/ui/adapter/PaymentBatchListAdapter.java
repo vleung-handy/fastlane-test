@@ -19,7 +19,7 @@ import java.util.Date;
 public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
-    private Date oldestDate;
+    private Date nextRequestEndDate;
 
     private ArrayList<Integer> hiddenItemPositions = new ArrayList<>();
 
@@ -28,18 +28,29 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     public PaymentBatchListAdapter(Context context)
     {
         super(context, R.layout.element_payments_batch_list_entry, 0);
-        oldestDate = new Date();
+        resetMetadata();
         hiddenItemPositions.add(0); //hide the first item from view, which is current pay week
+    }
+
+    private void resetMetadata()
+    {
+        nextRequestEndDate = new Date();
+    }
+
+    public void clear()
+    {
+        resetMetadata();
+        super.clear();
     }
 
     public boolean shouldRequestMoreData()
     {
-        return oldestDate != null;
+        return nextRequestEndDate != null;
     }
 
-    public Date getOldestDate()
+    public Date getNextRequestEndDate()
     {
-        return oldestDate;
+        return nextRequestEndDate;
     }
 
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
@@ -47,11 +58,21 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
         PaymentBatch[] paymentBatchList = paymentBatches.getAggregateBatchList();
         addAll(paymentBatchList);
 
-        if(oldestDate != null)
-        {
-            oldestDate = (DateTimeUtils.isStartOfYear(requestStartDate) ? null : new Date(requestStartDate.getTime() - 1)); //don't need to request any more entries if we already made a request from start of year
-        }
+        updateOldestDate(requestStartDate);
         notifyDataSetChanged();
+    }
+
+    public boolean canAppendBatch(Date batchRequestEndDate) //TODO: do something more elegant
+    {
+        return nextRequestEndDate !=null && batchRequestEndDate.equals(nextRequestEndDate); //compares the exact time
+    }
+
+    private void updateOldestDate(Date requestStartDate)
+    {
+        if (nextRequestEndDate != null)
+        {
+            nextRequestEndDate = (DateTimeUtils.isStartOfYear(requestStartDate) ? null : new Date(requestStartDate.getTime() - 1)); //don't need to request any more entries if we already made a request from start of year
+        }
     }
 
     @Override
@@ -91,9 +112,9 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     @Override
     public PaymentBatch getItem(int position) //TODO: WIP. this is a hacky way of hiding the item view without changing the underlying data
     {
-        for(Integer i : hiddenItemPositions)
+        for (Integer i : hiddenItemPositions)
         {
-            if(i <= position) position++;
+            if (i <= position) position++;
         }
 
         return super.getItem(position);

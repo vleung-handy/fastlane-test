@@ -75,6 +75,11 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         });
     }
 
+    public void clear()
+    {
+        getWrappedAdapter().clear();
+    }
+
     public interface OnDataItemClickListener
     { //TODO: put this somewhere else and make type generic?
         void onDataItemClicked(PaymentBatch paymentBatch);
@@ -140,9 +145,9 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         return getWrappedAdapter() == null || getWrappedAdapter().isDataEmpty();
     }
 
-    public Date getOldestDate()
+    public Date getNextRequestEndDate()
     {
-        return getWrappedAdapter().getOldestDate();
+        return getWrappedAdapter().getNextRequestEndDate();
     }
 
 }

@@ -15,6 +15,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER = new SimpleDateFormat("MMM");
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
     public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
+    public final static SimpleDateFormat MONTH_DATE_YEAR_DATE_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
     //these are public so that we can pass them in formatDateRange
 
     public final static int HOURS_IN_DAY = 24;
@@ -63,6 +64,12 @@ public final class DateTimeUtils
     {
         if (date == null) return null;
         return DETAILED_DATE_FORMATTER.format(date);
+    }
+
+    public static String formatMonthDateYear(Date date)
+    {
+        if (date == null) return null;
+        return MONTH_DATE_YEAR_DATE_FORMATTER.format(date);
     }
 
     public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)

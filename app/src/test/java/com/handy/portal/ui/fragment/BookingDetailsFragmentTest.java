@@ -133,7 +133,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     public void onCheckInSuccess_updateDisplayAndShowToast() throws Exception
     {
         BookingDetailsFragment fragmentSpy = spy(fragment);
-        fragmentSpy.onReceiveNotifyJobCheckInSuccess(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking));
+        fragmentSpy.onReceiveNotifyJobCheckInSuccess(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking, false));
 
         verify(fragmentSpy).updateDisplayForBooking(booking);
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_in_success)));
@@ -143,7 +143,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     public void onEtaSuccess_updateDisplayAndShowToast() throws Exception
     {
         BookingDetailsFragment fragmentSpy = spy(fragment);
-        fragmentSpy.onNotifyUpdateArrivalRequestReceived(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess(booking));
+        fragmentSpy.onReceiveNotifyJobUpdateArrivalTimeSuccess(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess(booking));
 
         verify(fragmentSpy).updateDisplayForBooking(booking);
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.eta_success)));
@@ -154,7 +154,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     {
         fragment.onReceiveBookingDetailsSuccess(new HandyEvent.ReceiveBookingDetailsSuccess(booking));
         // the event below depends on the event above being called to set the associated booking
-        fragment.onNotifyCheckOutJobRequestReceived(new HandyEvent.ReceiveNotifyJobCheckoutSuccess(null));
+        fragment.onReceiveNotifyJobCheckOutSuccess(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(null, false));
 
         assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_out_success)));

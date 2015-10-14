@@ -26,12 +26,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowAlertDialog;
-import org.robolectric.shadows.ShadowCookieManager;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
 
 import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -100,20 +98,10 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenSetCredentialsCookie() throws Exception
-    {
-        when(dataManager.getBaseUrl()).thenReturn("http://cats.url");
-        makeLoginRequest("5353");
-        receiveLoginRequest(true, "something", "credentials=something");
-
-        assertTrue(ShadowCookieManager.getInstance().getCookie("http://cats.url").contains("credentials=something"));
-    }
-
-    @Test
     public void givenValidPinCode_whenLoginRequestDetailsReceived_thenGoToSplashActivity() throws Exception
     {
         makeLoginRequest("5353");
-        receiveLoginRequest(true, null, null);
+        receiveLoginRequest(true, null);
 
         Intent expectedIntent = new Intent(activity, SplashActivity.class);
         assertThat(shadowOf(activity).getNextStartedActivity(), equalTo(expectedIntent));
@@ -140,7 +128,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     public void givenWrongPinCode_whenLoginRequestDetailsReceived_thenDisplayErrorToast() throws Exception
     {
         makeLoginRequest("7777");
-        receiveLoginRequest(false, null, null);
+        receiveLoginRequest(false, null);
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.login_error_bad_login)));
     }
@@ -198,7 +186,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         alertDialog.clickOnItem(2);
 
         String secondItem = (String) alertDialog.getItems()[2];
-        verify(environmentModifier).setEnvironmentPrefix(EnvironmentModifier.Environment.valueOf(secondItem).getPrefix());
+        verify(environmentModifier).setEnvironmentPrefix(EnvironmentModifier.Environment.valueOf(secondItem).getPrefix(), null);
     }
 
     private void makeLoginRequest(String pinCode)
@@ -226,13 +214,12 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         fragment.onPinCodeRequestReceived(event);
     }
 
-    private void receiveLoginRequest(boolean isValid, String credentials, String credentialsCookie)
+    private void receiveLoginRequest(boolean isValid, String credentials)
     {
         HandyEvent.ReceiveLoginSuccess event = mock(HandyEvent.ReceiveLoginSuccess.class);
         event.loginDetails = mock(LoginDetails.class);
         when(event.loginDetails.getSuccess()).thenReturn(isValid);
         when(event.loginDetails.getAuthToken()).thenReturn(credentials);
-        when(event.loginDetails.getUserCredentialsCookie()).thenReturn(credentialsCookie);
         fragment.onLoginRequestSuccess(event);
     }
 

@@ -12,7 +12,7 @@ public abstract class ViewConstructor<T>
 {
     private Context context;
 
-    abstract int getLayoutResourceId();
+    protected abstract int getLayoutResourceId();
 
     protected abstract boolean constructView(ViewGroup container, T item);
 

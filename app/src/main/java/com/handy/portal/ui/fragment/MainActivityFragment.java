@@ -17,22 +17,16 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.SwapFragmentArguments;
-import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.squareup.otto.Subscribe;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
-    @Inject
-    HandyRetrofitEndpoint endpoint;
-
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -47,7 +41,6 @@ public class MainActivityFragment extends InjectedFragment
     LoadingOverlayView loadingOverlayView;
 
     private MainViewTab currentTab = null;
-    private ProfileFragment profileFragment = null;
 
     public static boolean clearingBackStack = false;
 
@@ -157,100 +150,64 @@ public class MainActivityFragment extends InjectedFragment
 
         SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
 
-        if (targetTab.isNativeTab())
+        //don't use transition if don't have anything to transition from
+        if (currentTab != null)
         {
-            profileFragment = null; //clear this out explicitly otherwise we keep a pointer to a bad fragment once it gets swapped out
+            swapFragmentArguments.transitionStyle = (overrideTransitionStyle != null ? overrideTransitionStyle : currentTab.getDefaultTransitionStyle(targetTab));
+        }
 
-            //don't use transition if don't have anything to transition from
-            if (currentTab != null)
+        swapFragmentArguments.targetClassType = targetTab.getClassType();
+
+        if (argumentsBundle == null)
+        {
+            argumentsBundle = new Bundle();
+        }
+        argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
+        {
+            @Override
+            public int describeContents()
             {
-                swapFragmentArguments.transitionStyle = (overrideTransitionStyle != null ? overrideTransitionStyle : currentTab.getDefaultTransitionStyle(targetTab));
+                return 0;
             }
 
-            swapFragmentArguments.targetClassType = targetTab.getClassType();
-
-            if (argumentsBundle == null)
+            @Override
+            public void writeToParcel(Parcel parcel, int i)
             {
-                argumentsBundle = new Bundle();
-            }
-            argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
-            {
-                @Override
-                public int describeContents()
-                {
-                    return 0;
-                }
-
-                @Override
-                public void writeToParcel(Parcel parcel, int i)
-                {
-                }
-
-                @Override
-                public void updateTabs(MainViewTab tab)
-                {
-                    updateSelectedTabButton(tab);
-                }
-            });
-
-            if (targetTab == MainViewTab.DETAILS)
-            {
-                argumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
             }
 
-            swapFragmentArguments.argumentsBundle = argumentsBundle;
-
-            if (userTriggered)
+            @Override
+            public void updateTabs(MainViewTab tab)
             {
-                swapFragmentArguments.addToBackStack = false;
+                updateSelectedTabButton(tab);
             }
-            else
-            {
-                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
-                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
-                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
-                swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
-                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
-                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
-                swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
-            }
+        });
 
-            swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
+        if (targetTab == MainViewTab.DETAILS)
+        {
+            argumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
+        }
 
-            swapFragment(swapFragmentArguments);
+        swapFragmentArguments.argumentsBundle = argumentsBundle;
+
+        if (userTriggered)
+        {
+            swapFragmentArguments.addToBackStack = false;
         }
         else
         {
-            String url;
-            if (argumentsBundle != null && argumentsBundle.containsKey(BundleKeys.TARGET_URL))
-            {
-                url = argumentsBundle.getString(BundleKeys.TARGET_URL);
-            }
-            else
-            {
-                url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getTarget().getValue();
-            }
-
-            if (profileFragment == null)
-            {
-                profileFragment = new ProfileFragment();
-
-                //pass along the target
-                Bundle arguments = new Bundle();
-                arguments.putString(BundleKeys.TARGET_URL, url);
-
-                swapFragmentArguments.argumentsBundle = arguments;
-                swapFragmentArguments.overrideFragment = profileFragment;
-                swapFragmentArguments.clearBackStack = true;
-
-                swapFragment(swapFragmentArguments);
-            }
-            else
-            {
-                //don't need to do any fragment swapping just open the new url
-                profileFragment.openPortalUrl(url);
-            }
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.UPDATE_PAYMENTS;
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
+            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
+            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
         }
+
+        swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
+
+        swapFragment(swapFragmentArguments);
 
         updateSelectedTabButton(targetTab);
 
@@ -356,8 +313,8 @@ public class MainActivityFragment extends InjectedFragment
             //Runs async, covers the transition
             if (swapArguments.transitionStyle.shouldShowOverlay())
             {
-                TransientOverlayDialogFragment overlayDialogFragment =TransientOverlayDialogFragment
-                    .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapArguments.transitionStyle.getOverlayStringId());
+                TransientOverlayDialogFragment overlayDialogFragment = TransientOverlayDialogFragment
+                        .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapArguments.transitionStyle.getOverlayStringId());
                 overlayDialogFragment.show(getFragmentManager(), "overlay dialog fragment");
             }
         }

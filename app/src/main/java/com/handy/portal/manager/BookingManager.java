@@ -97,10 +97,17 @@ public class BookingManager
         for (Date date : event.dates)
         {
             final Date day = DateTimeUtils.getDateWithoutTime(date);
-            final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
-            if (cachedBookings != null)
+            if (event.useCachedIfPresent)
             {
-                bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
+                final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
+                if (cachedBookings != null)
+                {
+                    bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
+                }
+                else
+                {
+                    datesToRequest.add(day);
+                }
             }
             else
             {
@@ -143,10 +150,17 @@ public class BookingManager
         for (Date date : event.dates)
         {
             final Date day = DateTimeUtils.getDateWithoutTime(date);
-            final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
-            if (cachedBookings != null)
+            if (event.useCachedIfPresent)
             {
-                bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
+                final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
+                if (cachedBookings != null)
+                {
+                    bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
+                }
+                else
+                {
+                    datesToRequest.add(day);
+                }
             }
             else
             {
@@ -286,44 +300,44 @@ public class BookingManager
     }
 
     @Subscribe
-    public void onRequestNotifyCheckIn(HandyEvent.RequestNotifyJobCheckIn event)
+    public void onRequestNotifyCheckIn(final HandyEvent.RequestNotifyJobCheckIn event)
     {
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckInBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckInBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking, event.isAuto));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error, event.isAuto));
             }
         });
     }
 
     @Subscribe
-    public void onRequestNotifyCheckOut(HandyEvent.RequestNotifyJobCheckOut event)
+    public void onRequestNotifyCheckOut(final HandyEvent.RequestNotifyJobCheckOut event)
     {
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckOutBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckOutBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckoutSuccess(booking));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking, event.isAuto));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckoutError(error));
+                bus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error, event.isAuto));
             }
         });
     }

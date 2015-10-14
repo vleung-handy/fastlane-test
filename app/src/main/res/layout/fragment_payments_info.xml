@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:id="@+id/payment_method_container"
+              android:padding="@dimen/default_padding"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        app:optCardElevation="@dimen/cardview_default_elevation"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/default_margin_x2"
+        android:layout_height="wrap_content">
+        <TableLayout
+            android:stretchColumns="1"
+            android:padding="@dimen/default_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+                <TextView
+                    android:text="@string/payment_method"
+                    android:id="@+id/payment_method_title"
+                    android:textSize="@dimen/large_text_size"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="Update"
+                    android:id="@+id/payment_method_update_button"
+                    android:textColor="@color/handy_blue"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textStyle="bold"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:textSize="@dimen/small_text_size"
+                    android:textAllCaps="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <TableRow
+                android:paddingTop="@dimen/default_padding_large"
+                android:paddingBottom="@dimen/default_padding_large"
+                android:id="@+id/payment_method_account_detail_row"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+                <TextView
+                    android:text="@string/payment_account_number"
+                    android:textSize="@dimen/medium_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/payment_method_account_details_text"
+                    android:textSize="@dimen/medium_text_size"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <!--<TableRow-->
+                <!--android:paddingBottom="@dimen/default_padding"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="match_parent">-->
+                <!--<ImageView-->
+                    <!--android:layout_span="2"-->
+                    <!--android:src="@drawable/abc_list_divider_mtrl_alpha"-->
+                    <!--android:background="@color/list_divider"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--/>-->
+            <!--</TableRow>-->
+            <!--<TableRow-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="match_parent">-->
+                <!--<TextView-->
+                    <!--android:textSize="@dimen/xsmall_text_size"-->
+                    <!--android:text="Updated Sep 28, 2015"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</TableRow>-->
+        </TableLayout>
+
+    </android.support.v7.widget.CardView>
+    <TextView
+        android:text="@string/update_payment_method_note"
+        android:textColor="@color/subtitle_grey"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

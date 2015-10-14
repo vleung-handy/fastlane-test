@@ -14,12 +14,17 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
+import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.PaymentFlowResponse;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
+import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
@@ -185,4 +190,57 @@ class SuccessWrapperRetroFitCallback extends TypedHandyRetrofitCallback<SuccessW
     }
 }
 
+class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile>
+{
+    ProviderProfileRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ResupplyInfo>
+{
+    ResupplyInfoRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
 
+class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeTokenResponse>
+{
+    StripeTokenRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
+{
+    CreateBankAccountRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class CreateDebitCardRecipientRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
+{
+    CreateDebitCardRecipientRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<CreateDebitCardResponse>
+{
+    CreateDebitCardRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class GetPaymentFlowRetroFitCallback extends TypedHandyRetrofitCallback<PaymentFlowResponse>
+{
+    GetPaymentFlowRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}

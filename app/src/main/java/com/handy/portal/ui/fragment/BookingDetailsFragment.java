@@ -122,7 +122,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
 
     @Override
-    MainViewTab getTab()
+    protected MainViewTab getTab()
     {
         return currentTab;
     }
@@ -883,42 +883,54 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveNotifyJobCheckInSuccess(final HandyEvent.ReceiveNotifyJobCheckInSuccess event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        if (!event.isAuto)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
-        //refresh the page with the new booking
-        this.associatedBooking = event.booking;
-        updateDisplayForBooking(event.booking);
+            //refresh the page with the new booking
+            this.associatedBooking = event.booking;
+            updateDisplayForBooking(event.booking);
 
-        showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+            showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+        }
     }
 
     @Subscribe
     public void onReceiveNotifyJobCheckInError(final HandyEvent.ReceiveNotifyJobCheckInError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        handleNotifyCheckInError(event);
+        if (!event.isAuto)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            handleNotifyCheckInError(event);
+        }
     }
 
     @Subscribe
-    public void onNotifyCheckOutJobRequestReceived(final HandyEvent.ReceiveNotifyJobCheckoutSuccess event)
+    public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        if (!event.isAuto)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
-        //return to schedule page
-        returnToTab(MainViewTab.SCHEDULED_JOBS, this.associatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+            //return to schedule page
+            returnToTab(MainViewTab.SCHEDULED_JOBS, this.associatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
 
-        showToast(R.string.check_out_success, Toast.LENGTH_LONG);
+            showToast(R.string.check_out_success, Toast.LENGTH_LONG);
+        }
     }
 
     @Subscribe
-    public void onNotifyCheckOutJobError(final HandyEvent.ReceiveNotifyJobCheckoutError event)
+    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        handleNotifyCheckOutError(event);
+        if (!event.isAuto)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            handleNotifyCheckOutError(event);
+        }
     }
 
     @Subscribe
-    public void onNotifyUpdateArrivalRequestReceived(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess event)
+    public void onReceiveNotifyJobUpdateArrivalTimeSuccess(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
@@ -930,7 +942,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onNotifyUpdateArrivalError(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeError event)
+    public void onReceiveNotifyJobUpdateArrivalTimeError(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleNotifyUpdateArrivalError(event);
@@ -1099,7 +1111,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         handleCheckInFlowError(event.error.getMessage());
     }
 
-    private void handleNotifyCheckOutError(final HandyEvent.ReceiveNotifyJobCheckoutError event)
+    private void handleNotifyCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
         handleCheckInFlowError(event.error.getMessage());
     }

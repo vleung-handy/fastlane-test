@@ -85,6 +85,18 @@
             </intent-filter>
         </service>
 
+        <service android:name=".service.AutoCheckInService" />
+
+        <receiver android:name=".receiver.HandyPushReceiver">
+            <intent-filter>
+                <action android:name="com.urbanairship.push.CHANNEL_UPDATED" />
+                <action android:name="com.urbanairship.push.OPENED" />
+                <action android:name="com.urbanairship.push.RECEIVED" />
+                <action android:name="com.urbanairship.push.DISMISSED" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>

@@ -20,6 +20,8 @@ repositories {
 }
 
 apply plugin: 'com.android.application'
+// This does not break the build when Android Studio is missing the JRebel for Android plugin.
+apply plugin: 'com.zeroturnaround.jrebel.android'
 apply plugin: 'crashlytics'
 apply plugin: 'newrelic'
 apply plugin: 'jacoco'
@@ -27,15 +29,16 @@ apply plugin: 'jacoco'
 apply from: 'jacoco.gradle'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+    useLibrary  'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.handy.portal"
         minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 32
-        versionName "0.6.2"
+        targetSdkVersion 23
+        versionCode 33
+        versionName "0.7.0"
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
@@ -103,12 +106,15 @@ tasks.withType(Test) {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:support-v4:22.+'
-    compile 'com.android.support:appcompat-v7:22.+'
-    compile 'com.android.support:cardview-v7:22.+' //Recommended for in-app messaging
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:23.0.1' //Recommended for in-app messaging
+    compile 'com.android.support:design:23.0.1'
 
-    //Google play services
-    compile 'com.google.android.gms:play-services:7.8.0'
+    //Google services
+    compile 'com.google.android.gms:play-services:8.1.0' // play services
+    compile 'com.google.android.gms:play-services-location:8.1.0' //Recommended for location services
+    compile 'com.google.android.gms:play-services-gcm:8.1.0' //Required for Android (GCM) push notifications
 
     //Guava
     compile 'com.google.guava:guava:18.0'
@@ -123,7 +129,7 @@ dependencies {
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 
     //Mixpanel analytics
-    compile 'com.mixpanel.android:mixpanel-android:4.4.1@aar'
+    compile 'com.mixpanel.android:mixpanel-android:4.6.4@aar'
 
     //Custom font display
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
@@ -138,13 +144,7 @@ dependencies {
     compile 'com.scottyab:secure-preferences-lib:0.1.1'
 
     //Urban Airship SDK
-    compile 'com.urbanairship.android:urbanairship-sdk:6.1.+'
-
-    //Recommended for location services
-    compile 'com.google.android.gms:play-services-location:7.8.0'
-
-    //Required for Android (GCM) push notifications
-    compile 'com.google.android.gms:play-services-gcm:7.8.0'
+    compile 'com.urbanairship.android:urbanairship-sdk:6.3.+'
 
     //Testing
     testCompile 'org.robolectric:robolectric:3.0'
