@@ -48,7 +48,7 @@ public final class UIUtils
 
     public static void setInputFilterForInputType(TextView textView, FieldDefinition.InputType inputType)
     {
-        if (inputType == null || textView == null) return;
+        if (inputType == null || textView == null) { return; }
         switch (inputType)
         {
             case NUMBER:

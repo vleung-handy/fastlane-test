@@ -127,7 +127,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
-        if (bookingsForSelectedDay == null || selectedDay == null) return;
+        if (bookingsForSelectedDay == null || selectedDay == null) { return; }
 
         //show Find Matching Jobs buttons only if we're inside of our available bookings length range
         int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);

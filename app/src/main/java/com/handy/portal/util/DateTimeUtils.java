@@ -32,7 +32,7 @@ public final class DateTimeUtils
 
     public static String getMonthShortName(Date date)
     {
-        if(date==null) return null;
+        if (date == null) { return null; }
         return MONTH_SHORT_NAME_FORMATTER.format(date);
 
     }
@@ -43,38 +43,40 @@ public final class DateTimeUtils
         c.setTime(date);
         return c.get(Calendar.DAY_OF_MONTH);
     }
+
     public static String formatDateTo12HourClock(Date date)
     {
-        if (date == null) return null;
+        if (date == null) { return null; }
         return CLOCK_FORMATTER_12HR.format(date);
     }
 
     public static String formatDateDayOfWeekMonthDay(Date date)
     {
-        if(date==null) return null;
+        if (date == null) { return null; }
         return DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(date);
     }
+
     public static String formatDateMonthDay(Date date)
     {
-        if (date == null) return null;
+        if (date == null) { return null; }
         return SUMMARY_DATE_FORMATTER.format(date);
     }
 
     public static String formatDetailedDate(Date date)
     {
-        if (date == null) return null;
+        if (date == null) { return null; }
         return DETAILED_DATE_FORMATTER.format(date);
     }
 
     public static String formatMonthDateYear(Date date)
     {
-        if (date == null) return null;
+        if (date == null) { return null; }
         return MONTH_DATE_YEAR_DATE_FORMATTER.format(date);
     }
 
     public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
     {
-        if(start == null || end == null) return null;
+        if (start == null || end == null) { return null; }
         return dateFormat.format(start) + " – " + dateFormat.format(end);
     }
 
