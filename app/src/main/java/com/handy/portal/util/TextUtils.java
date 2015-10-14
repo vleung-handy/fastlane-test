@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
 import android.widget.TextView;
+
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -17,7 +18,8 @@ public final class TextUtils
 {
     private static final String URL_PATTERN = "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
 
-    public static final class Fonts {
+    public static final class Fonts
+    {
         public static final String CIRCULAR_BOLD = "fonts/CircularStd-Bold.otf";
         public static final String CIRCULAR_BOOK = "fonts/CircularStd-Book.otf";
         public static final String CIRCULAR_MEDIUM = "fonts/CircularStd-Medium.otf";
@@ -59,16 +61,18 @@ public final class TextUtils
 
         phone = phone.replaceAll("\\D+", "");
 
-        if (phone.length() < 4) return phone;
+        if (phone.length() < 4) { return phone; }
 
         else if (phone.length() >= 4 && phone.length() <= 6)
-            return String.format(shortFormat, phone.substring(0, 3), phone.substring(3));
+        { return String.format(shortFormat, phone.substring(0, 3), phone.substring(3)); }
 
         else if (phone.length() >= 7 && phone.length() <= 10)
+        {
             return String.format(longFormat, phone.substring(0, 3), phone.substring(3, 6),
                     phone.substring(6));
+        }
 
-        else return phone;
+        else { return phone; }
     }
 
     public static String formatAddress(final String address1, final String address2, final String city,
@@ -81,7 +85,7 @@ public final class TextUtils
 
     public static String formatDate(final Date date, final String format)
     {
-        if (date == null) return null;
+        if (date == null) { return null; }
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         final DateFormatSymbols symbols = new DateFormatSymbols();
@@ -98,7 +102,7 @@ public final class TextUtils
 
     public static String toTitleCase(final String str)
     {
-        if (str == null) return null;
+        if (str == null) { return null; }
 
         boolean space = true;
 
@@ -116,10 +120,12 @@ public final class TextUtils
                     builder.setCharAt(i, Character.toTitleCase(c));
                     space = false;
                 }
-            } else if (Character.isWhitespace(c))
+            }
+            else if (Character.isWhitespace(c))
             {
                 space = true;
-            } else
+            }
+            else
             {
                 builder.setCharAt(i, Character.toLowerCase(c));
             }
@@ -133,8 +139,8 @@ public final class TextUtils
         int start = 0;
         int end = s.length();
 
-        while (start < end && Character.isWhitespace(s.charAt(start))) start++;
-        while (end > start && Character.isWhitespace(s.charAt(end - 1))) end--;
+        while (start < end && Character.isWhitespace(s.charAt(start))) { start++; }
+        while (end > start && Character.isWhitespace(s.charAt(end - 1))) { end--; }
 
         return s.subSequence(start, end);
     }

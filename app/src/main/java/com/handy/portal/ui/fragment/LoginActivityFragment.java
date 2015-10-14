@@ -148,7 +148,7 @@ public class LoginActivityFragment extends InjectedFragment
     @OnClick(R.id.logo)
     protected void selectEnvironment()
     {
-        if (!buildConfigWrapper.isDebug()) return;
+        if (!buildConfigWrapper.isDebug()) { return; }
 
         UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), null).show();
     }
@@ -197,7 +197,8 @@ public class LoginActivityFragment extends InjectedFragment
             // purposes where the seeded value of the pin associated with the provider will be
             // preserved on the server side and used on the client side
             changeState(LoginState.INPUTTING_PIN);
-        } else
+        }
+        else
         {
             bus.post(new HandyEvent.RequestPinCode(phoneNumber));
         }
@@ -220,7 +221,8 @@ public class LoginActivityFragment extends InjectedFragment
             if (event.pinRequestDetails.getSuccess())
             {
                 changeState(LoginState.INPUTTING_PIN);
-            } else
+            }
+            else
             {
                 postLoginErrorEvent("phone number");
                 showToast(R.string.login_error_bad_phone);
@@ -255,7 +257,8 @@ public class LoginActivityFragment extends InjectedFragment
             if (event.loginDetails.getSuccess())
             {
                 beginLogin(event.loginDetails);
-            } else
+            }
+            else
             {
                 postLoginErrorEvent("pin code");
                 showToast(R.string.login_error_bad_login);

@@ -24,7 +24,7 @@ public final class ProgressDialog extends android.app.ProgressDialog
             @Override
             public void run()
             {
-                if (wasDismissedCanceled) return;
+                if (wasDismissedCanceled) { return; }
                 ProgressDialog.super.show();
                 ProgressDialog.this.getWindow().setGravity(Gravity.CENTER);
             }
