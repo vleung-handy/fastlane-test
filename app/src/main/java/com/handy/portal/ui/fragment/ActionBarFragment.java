@@ -19,7 +19,6 @@ import com.handy.portal.util.UIUtils;
 
 import javax.inject.Inject;
 
-//TODO: eventually we should use Toolbar with support library instead of ActionBar because it is more flexible
 public abstract class ActionBarFragment extends InjectedFragment
 {
     @Inject
@@ -44,20 +43,13 @@ public abstract class ActionBarFragment extends InjectedFragment
             tabsCallback = new UpdateTabsCallback()
             {
                 @Override
-                public int describeContents()
-                {
-                    return 0;
-                }
+                public int describeContents() { return 0; }
 
                 @Override
-                public void writeToParcel(Parcel parcel, int i)
-                {
-                }
+                public void writeToParcel(Parcel parcel, int i) { }
 
                 @Override
-                public void updateTabs(MainViewTab tab)
-                {
-                }
+                public void updateTabs(MainViewTab tab) { }
             };
         }
     }
@@ -111,13 +103,13 @@ public abstract class ActionBarFragment extends InjectedFragment
 
     public void setActionBarVisible(boolean visible)
     {
-        if (visible) getActionBar().show();
-        else getActionBar().hide();
+        if (visible) { getActionBar().show(); }
+        else { getActionBar().hide(); }
     }
 
     private ActionBar getActionBar()
     {
-        return ((AppCompatActivity)getActivity()).getSupportActionBar();
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     public void setBackButtonEnabled(boolean enabled)
