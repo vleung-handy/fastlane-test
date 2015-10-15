@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/default_padding"
-        android:theme="@style/HandyForm">
+        android:padding="@dimen/default_padding">
 
         <TextView
             android:id="@+id/payments_update_info_routing_number_label"
