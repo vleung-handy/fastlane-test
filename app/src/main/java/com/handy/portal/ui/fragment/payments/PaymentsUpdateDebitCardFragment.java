@@ -2,14 +2,17 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.event.RegionDefinitionEvent;
@@ -18,7 +21,7 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.model.payments.DebitCardInfo;
-import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
@@ -28,8 +31,9 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
-public class PaymentsUpdateDebitCardFragment extends InjectedFragment
+public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
 {
     //TODO: need to consolidate this logic with the other update payment fragment!
 
@@ -63,9 +67,6 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
     @Inject
     ProviderManager providerManager;
 
-    @InjectView(R.id.payments_update_info_debit_card_submit_button)
-    Button submitButton;
-
     FormDefinitionWrapper formDefinitionWrapper;
 
     private static final String FORM_KEY = FormDefinitionKey.UPDATE_DEBIT_CARD_INFO;
@@ -76,6 +77,13 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
     //TODO: create a state manager object
     private boolean receivedDebitCardRecipientSuccess;
     private boolean receivedDebitCardForChargeSuccess;
+
+    @Override
+    public void onCreate(Bundle savedInstance)
+    {
+        super.onCreate(savedInstance);
+        setOptionsMenuEnabled(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -98,20 +106,39 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
 //        debitCardExpirationYearText.setText("2017");
 //        debitCardSecurityCodeText.setText("424");
 //        taxIdText.setText("000000000");
-        submitButton.setOnClickListener(new View.OnClickListener()
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.menu_x_back, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
         {
-            @Override
-            public void onClick(View v)
-            {
-                onSubmitForm();
-            }
-        });
+            case R.id.action_exit:
+                onBackButtonPressed();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    protected MainViewTab getTab()
+    {
+        return MainViewTab.PAYMENTS;
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
+        setActionBarTitle(R.string.add_debit_card);
         resetStates();
         bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
     }
@@ -137,7 +164,8 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
         return allFieldsValid;
     }
 
-    private void onSubmitForm()
+    @OnClick(R.id.payments_update_info_debit_card_submit_button)
+    public void onSubmitForm()
     {
         if (validate())
         {
@@ -172,6 +200,8 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
             UIUtils.setFieldsFromDefinition(null, debitCardExpirationMonthText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH));
             UIUtils.setFieldsFromDefinition(null, debitCardExpirationYearText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
         }
+
+        debitCardNumberText.requestFocus();
     }
 
     @Subscribe
@@ -209,11 +239,12 @@ public class PaymentsUpdateDebitCardFragment extends InjectedFragment
 
     private void checkSuccess()
     {
-        if(receivedDebitCardForChargeSuccess && receivedDebitCardRecipientSuccess)
+        if (receivedDebitCardForChargeSuccess && receivedDebitCardRecipientSuccess)
         {
             onSuccess();
         }
     }
+
     private void onSuccess()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));

@@ -2,6 +2,9 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,6 +13,7 @@ import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.event.RegionDefinitionEvent;
@@ -19,7 +23,7 @@ import com.handy.portal.model.Provider;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.model.payments.BankAccountInfo;
-import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
@@ -30,7 +34,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: make a form class
+public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO: make a form class
 {
     //TODO: need to consolidate this logic with the other update payment fragment!
 
@@ -63,6 +67,13 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     private static final String FORM_KEY = FormDefinitionKey.UPDATE_BANK_INFO;
 
     @Override
+    public void onCreate(Bundle savedInstance)
+    {
+        super.onCreate(savedInstance);
+        setOptionsMenuEnabled(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -92,9 +103,36 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.menu_x_back, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_exit:
+                onBackButtonPressed();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    protected MainViewTab getTab()
+    {
+        return MainViewTab.PAYMENTS;
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
+        setActionBarTitle(R.string.add_payment_method);
         bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
     }
 
@@ -105,9 +143,9 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         if (fieldDefinitionMap != null)
         {
             //need to show error for each field
-            allFieldsValid = UIUtils.validateField(routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER))  && allFieldsValid;
-            allFieldsValid = UIUtils.validateField(accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER)) && allFieldsValid;
-            allFieldsValid = UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER)) && allFieldsValid;
+            allFieldsValid = UIUtils.validateField(routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
+            allFieldsValid &= UIUtils.validateField(accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
+            allFieldsValid &= UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
 
         if (!allFieldsValid)

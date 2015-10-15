@@ -395,7 +395,6 @@
     <string name="no_more_payments">You have no more payments for this year.</string>
     <string name="expected_deposit">Expect deposit by</string>
     <string name="update_payment_method">Update Payment Method</string>
-    <string name="debit_card_number">Debit Card Number</string>
     <string name="select_payment_method">Select Payment Method</string>
     <string name="payment_flow_error">Failed to get payment flow</string>
     <string name="payment_account">Payment Account</string>
@@ -435,5 +434,7 @@
     <string name="based_on_last_28_days">Based on the last 28 days</string>
     <string name="performance">Performance</string>
     <string name="your_contact_information">Your contact information</string>
+    <string name="add_debit_card">Add Debit Card</string>
+    <string name="slash">/</string>
 
 </resources>
