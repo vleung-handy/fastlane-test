@@ -39,7 +39,7 @@ import butterknife.OnClick;
 public class LoginActivityFragment extends InjectedFragment
 {
     @VisibleForTesting
-    protected static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
+    static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
 
     @InjectView(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
@@ -55,6 +55,9 @@ public class LoginActivityFragment extends InjectedFragment
     Button loginButton;
     @InjectView(R.id.back_button)
     ImageButton backButton;
+    @InjectView(R.id.slide_up_panel_container)
+    SlideUpPanelContainer slideUpPanelContainer;
+
 
     @Inject
     EnvironmentModifier environmentModifier;
@@ -64,8 +67,6 @@ public class LoginActivityFragment extends InjectedFragment
     Mixpanel mixpanel;
     @Inject
     PrefsManager prefsManager;
-    @InjectView(R.id.slide_up_panel_container)
-    protected SlideUpPanelContainer slideUpPanelContainer;
 
     private enum LoginState
     {
@@ -156,6 +157,11 @@ public class LoginActivityFragment extends InjectedFragment
     @OnClick(R.id.login_help_button)
     protected void showLoginInstructions()
     {
+        if (getView() != null)
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
         slideUpPanelContainer.showPanel(R.string.instructions, new SlideUpPanelContainer.ContentInitializer()
         {
             @Override
