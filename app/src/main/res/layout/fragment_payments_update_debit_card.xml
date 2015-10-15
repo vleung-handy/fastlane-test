@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/default_padding"
-        android:theme="@style/HandyForm">
+        android:padding="@dimen/default_padding">
 
         <TextView
             android:id="@+id/payments_update_info_debit_card_number_label"
@@ -65,17 +64,18 @@
 
         <!--nesting of EditText is needed to make width 50%-->
         <LinearLayout
-            android:orientation="horizontal"
-            android:weightSum="1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
             <EditText
-                android:layout_weight="0.5"
                 android:id="@+id/payments_update_info_debit_card_security_code_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.5"
                 android:singleLine="true"/>
-            </LinearLayout>
+        </LinearLayout>
 
 
         <TextView
