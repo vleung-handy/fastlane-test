@@ -14,9 +14,12 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -24,6 +27,9 @@ import butterknife.OnClick;
 
 public class SelectPaymentMethodFragment extends ActionBarFragment
 {
+    @Inject
+    ProviderManager providerManager;
+
     @InjectView(R.id.bank_account_details)
     TextView bankAccountDetails;
 
@@ -32,6 +38,9 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
 
     @InjectView(R.id.payment_method_container)
     ViewGroup paymentMethodContainer;
+
+    @InjectView(R.id.debit_card_option)
+    ViewGroup debitCardOption;
 
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked()
@@ -94,8 +103,13 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_payments_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_select_payment_method, container, false);
         ButterKnife.inject(this, view);
+
+        if (!providerManager.getCachedActiveProvider().isUS())
+        {
+            debitCardOption.setVisibility(View.GONE);
+        }
 
         return view;
     }

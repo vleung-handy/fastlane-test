@@ -405,7 +405,6 @@
     <string name="update_bank_account_failed">Failed to update bank account</string>
     <string name="update_bank_account_success">Successfully updated bank account</string>
     <string name="no_payment_method">No Payment Method</string>
-    <string name="add_payment_method">Add Payment Method</string>
 
     <!-- Payments Bill Blocker -->
     <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>
@@ -435,6 +434,8 @@
     <string name="performance">Performance</string>
     <string name="your_contact_information">Your contact information</string>
     <string name="add_debit_card">Add Debit Card</string>
+    <string name="add_bank_account">Add Bank Account</string>
+    <string name="your_bank_check">Your bank check:</string>
     <string name="slash">/</string>
 
 </resources>

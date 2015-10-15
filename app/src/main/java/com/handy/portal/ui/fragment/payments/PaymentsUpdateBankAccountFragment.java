@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +32,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO: make a form class
 {
@@ -56,8 +56,8 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     @InjectView(R.id.payments_update_info_tax_id_text)
     TextView taxIdText;
 
-    @InjectView(R.id.payments_update_info_submit_button)
-    Button submitButton;
+    @InjectView(R.id.bank_account_setup_helper)
+    ViewGroup bankAccountSetupHelper;
 
     @Inject
     ProviderManager providerManager;
@@ -88,14 +88,6 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        submitButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onSubmitForm();
-            }
-        });
 
 //        accountNumberText.setText("000123456789");
 //        taxIdText.setText("000000000");
@@ -132,8 +124,14 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     public void onResume()
     {
         super.onResume();
-        setActionBarTitle(R.string.add_payment_method);
-        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        setActionBarTitle(R.string.add_bank_account);
+        Provider provider = providerManager.getCachedActiveProvider();
+        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(provider.getCountry(), this.getContext()));
+
+        if (!provider.isUS())
+        {
+            bankAccountSetupHelper.setVisibility(View.GONE);
+        }
     }
 
     private boolean validate()
@@ -155,7 +153,8 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
         return allFieldsValid;
     }
 
-    private void onSubmitForm()
+    @OnClick(R.id.payments_update_info_bank_account_submit_button)
+    public void onSubmitForm()
     {
         if (validate())
         {
@@ -189,6 +188,8 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
             UIUtils.setFieldsFromDefinition(accountNumberLabel, accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
             UIUtils.setFieldsFromDefinition(taxIdLabel, taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
+
+        routingNumberText.requestFocus();
     }
 
     @Subscribe

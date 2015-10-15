@@ -83,6 +83,11 @@ public class Provider
         return "GB".equalsIgnoreCase(getCountry());
     }
 
+    public boolean isUS()
+    {
+        return "US".equalsIgnoreCase(getCountry());
+    }
+
     public boolean isComplementaryJobsEnabled()
     {
         return complementaryJobsEnabled;

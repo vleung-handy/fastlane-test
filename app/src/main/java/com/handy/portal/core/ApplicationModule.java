@@ -381,9 +381,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final RegionDefinitionsManager provideRegionDefinitionsManager(final Bus bus, final DataManager dataManager)
+    final RegionDefinitionsManager provideRegionDefinitionsManager(final Bus bus)
     {
-        return new RegionDefinitionsManager(bus, dataManager);
+        return new RegionDefinitionsManager(bus);
     }
 
     private String getDeviceId()

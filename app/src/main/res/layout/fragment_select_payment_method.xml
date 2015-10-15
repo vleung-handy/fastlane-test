@@ -28,20 +28,10 @@
             android:id="@+id/debit_card_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/extra_margin"
-            android:layout_toLeftOf="@+id/debit_card_chevron"
-            android:layout_toStartOf="@+id/debit_card_chevron"
-            android:textSize="@dimen/large_text_size"/>
-
-        <ImageView
-            android:id="@+id/debit_card_chevron"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_chevron_black"/>
+            android:textSize="@dimen/large_text_size"/>
 
     </RelativeLayout>
 
@@ -49,7 +39,7 @@
         android:id="@+id/bank_account_option"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@drawable/background_list_entry"
+        android:background="@drawable/background_payment_method_option"
         android:clickable="true"
         android:padding="@dimen/default_padding">
 
@@ -65,20 +55,10 @@
             android:id="@+id/bank_account_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/extra_margin"
-            android:layout_toLeftOf="@+id/bank_account_chevron"
-            android:layout_toStartOf="@+id/bank_account_chevron"
-            android:textSize="@dimen/large_text_size"/>
-
-        <ImageView
-            android:id="@+id/bank_account_chevron"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_chevron_black"/>
+            android:textSize="@dimen/large_text_size"/>
 
     </RelativeLayout>
 
