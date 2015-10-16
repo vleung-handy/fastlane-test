@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
@@ -23,6 +22,7 @@ import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.model.payments.BankAccountInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
@@ -38,23 +38,14 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
 {
     //TODO: need to consolidate this logic with the other update payment fragment!
 
-    @InjectView(R.id.payments_update_info_routing_number_label)
-    TextView routingNumberLabel;
+    @InjectView(R.id.routing_number_field)
+    FormFieldTableRow routingNumberField;
 
-    @InjectView(R.id.payments_update_info_account_number_label)
-    TextView accountNumberLabel;
+    @InjectView(R.id.account_number_field)
+    FormFieldTableRow accountNumberField;
 
-    @InjectView(R.id.payments_update_info_tax_id_label)
-    TextView taxIdLabel;
-
-    @InjectView(R.id.payments_update_info_routing_number_text)
-    TextView routingNumberText;
-
-    @InjectView(R.id.payments_update_info_account_number_text)
-    TextView accountNumberText;
-
-    @InjectView(R.id.payments_update_info_tax_id_text)
-    TextView taxIdText;
+    @InjectView(R.id.tax_id_field)
+    FormFieldTableRow taxIdField;
 
     @InjectView(R.id.bank_account_setup_helper)
     ViewGroup bankAccountSetupHelper;
@@ -81,17 +72,9 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
         View view = inflater.inflate(R.layout.fragment_payments_update_bank_account, container, false);
         ButterKnife.inject(this, view);
 
+        setFormFieldErrorStateRemovers();
+
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-
-//        accountNumberText.setText("000123456789");
-//        taxIdText.setText("000000000");
-//        routingNumberText.setText("110000000");
     }
 
     @Override
@@ -140,15 +123,9 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
         if (fieldDefinitionMap != null)
         {
-            //need to show error for each field
-            allFieldsValid = UIUtils.validateField(routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
-            allFieldsValid &= UIUtils.validateField(accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
-            allFieldsValid &= UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
-        }
-
-        if (!allFieldsValid)
-        {
-            //show banner
+            allFieldsValid = UIUtils.validateField(routingNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
+            allFieldsValid &= UIUtils.validateField(accountNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
+            allFieldsValid &= UIUtils.validateField(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
         return allFieldsValid;
     }
@@ -158,8 +135,8 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     {
         if (validate())
         {
-            String routingNumber = routingNumberText.getText().toString();
-            String accountNumber = accountNumberText.getText().toString();
+            String routingNumber = routingNumberField.getValue().getText().toString();
+            String accountNumber = accountNumberField.getValue().getText().toString();
             BankAccountInfo bankAccountInfo = new BankAccountInfo();
             bankAccountInfo.setAccountNumber(accountNumber);
             bankAccountInfo.setRoutingNumber(routingNumber);
@@ -170,6 +147,10 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
             bus.post(new StripeEvents.RequestStripeTokenFromBankAccount(bankAccountInfo));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
+        else
+        {
+            onFailure();
+        }
     }
 
     @Subscribe
@@ -179,17 +160,24 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
         updateFormWithDefinitions(formDefinitionWrapper);
     }
 
+    private void setFormFieldErrorStateRemovers()
+    {
+        routingNumberField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(routingNumberField));
+        accountNumberField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(accountNumberField));
+        taxIdField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(taxIdField));
+    }
+
     private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper)
     {
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
         if (fieldDefinitionMap != null)
         {
-            UIUtils.setFieldsFromDefinition(routingNumberLabel, routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
-            UIUtils.setFieldsFromDefinition(accountNumberLabel, accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
-            UIUtils.setFieldsFromDefinition(taxIdLabel, taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
+            UIUtils.setFieldsFromDefinition(routingNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
+            UIUtils.setFieldsFromDefinition(accountNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
+            UIUtils.setFieldsFromDefinition(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
 
-        routingNumberText.requestFocus();
+        routingNumberField.getValue().requestFocus();
     }
 
     @Subscribe
@@ -197,8 +185,8 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     {
         String token = event.stripeTokenResponse.getStripeToken();
 
-        String taxIdString = taxIdText.getText().toString();
-        String accountNumberString = accountNumberText.getText().toString();
+        String taxIdString = taxIdField.getValue().getText().toString();
+        String accountNumberString = accountNumberField.getValue().getText().toString();
         String accountNumberLast4Digits = accountNumberString.substring(accountNumberString.length() - 4);
         bus.post(new PaymentEvents.RequestCreateBankAccount(token, taxIdString, accountNumberLast4Digits));
     }

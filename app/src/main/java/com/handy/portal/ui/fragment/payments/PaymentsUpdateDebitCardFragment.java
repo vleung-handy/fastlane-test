@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
@@ -22,6 +21,8 @@ import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.model.payments.DebitCardInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.view.DateFormFieldTableRow;
+import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
@@ -37,32 +38,17 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
 {
     //TODO: need to consolidate this logic with the other update payment fragment!
 
-    @InjectView(R.id.payments_update_info_debit_card_number_label)
-    TextView debitCardNumberLabel;
+    @InjectView(R.id.debit_card_number_field)
+    FormFieldTableRow debitCardNumberField;
 
-    @InjectView(R.id.payments_update_info_debit_card_expiration_date_label)
-    TextView debitCardExpirationDateLabel;
+    @InjectView(R.id.expiration_date_field)
+    DateFormFieldTableRow expirationDateField;
 
-    @InjectView(R.id.payments_update_info_debit_card_tax_id_label)
-    TextView debitCardTaxIdLabel;
+    @InjectView(R.id.security_code_field)
+    FormFieldTableRow securityCodeField;
 
-    @InjectView(R.id.payments_update_info_debit_card_security_code_label)
-    TextView debitCardSecurityCodeLabel;
-
-    @InjectView(R.id.payments_update_info_debit_card_number_text)
-    TextView debitCardNumberText;
-
-    @InjectView(R.id.payments_update_info_debit_card_expiration_month_text)
-    TextView debitCardExpirationMonthText;
-
-    @InjectView(R.id.payments_update_info_debit_card_expiration_year_text)
-    TextView debitCardExpirationYearText;
-
-    @InjectView(R.id.payments_update_info_debit_card_security_code_text)
-    TextView debitCardSecurityCodeText;
-
-    @InjectView(R.id.payments_update_info_debit_tax_id_text)
-    TextView taxIdText;
+    @InjectView(R.id.tax_id_field)
+    FormFieldTableRow taxIdField;
 
     @Inject
     ProviderManager providerManager;
@@ -93,19 +79,9 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_payments_update_debit_card, container, false);
         ButterKnife.inject(this, view);
 
+        setFormFieldErrorStateRemovers();
+
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-
-//        debitCardNumberText.setText("4000056655665556");
-//        debitCardExpirationMonthText.setText("01");
-//        debitCardExpirationYearText.setText("2017");
-//        debitCardSecurityCodeText.setText("424");
-//        taxIdText.setText("000000000");
     }
 
     @Override
@@ -149,19 +125,25 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
         if (fieldDefinitionMap != null)
         {
-            //need to show error for each field
-            allFieldsValid = UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER)) && allFieldsValid;
-            allFieldsValid = UIUtils.validateField(debitCardSecurityCodeText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER)) && allFieldsValid;
-            allFieldsValid = UIUtils.validateField(debitCardNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER)) && allFieldsValid;
-            allFieldsValid = UIUtils.validateField(debitCardExpirationMonthText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH)) && allFieldsValid;
-            allFieldsValid = UIUtils.validateField(debitCardExpirationYearText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR)) && allFieldsValid;
+            allFieldsValid = UIUtils.validateField(debitCardNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER));
+            allFieldsValid &= UIUtils.validateField(expirationDateField,
+                    fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
+                    fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR)
+            );
+            allFieldsValid &= UIUtils.validateField(securityCodeField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
+            allFieldsValid &= UIUtils.validateField(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
 
-        if (!allFieldsValid)
-        {
-            //show banner
-        }
         return allFieldsValid;
+    }
+
+    private void setFormFieldErrorStateRemovers()
+    {
+        debitCardNumberField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(debitCardNumberField));
+        expirationDateField.getMonthValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(expirationDateField));
+        expirationDateField.getYearValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(expirationDateField));
+        securityCodeField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(securityCodeField));
+        taxIdField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(taxIdField));
     }
 
     @OnClick(R.id.payments_update_info_debit_card_submit_button)
@@ -170,10 +152,10 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         if (validate())
         {
             DebitCardInfo debitCardInfo = new DebitCardInfo();
-            debitCardInfo.setCardNumber(debitCardNumberText.getText().toString());
-            debitCardInfo.setCvc(debitCardSecurityCodeText.getText().toString());
-            debitCardInfo.setExpMonth(debitCardExpirationMonthText.getText().toString());
-            debitCardInfo.setExpYear(debitCardExpirationYearText.getText().toString());
+            debitCardInfo.setCardNumber(debitCardNumberField.getValue().getText().toString());
+            debitCardInfo.setCvc(securityCodeField.getValue().getText().toString());
+            debitCardInfo.setExpMonth(expirationDateField.getMonthValue().getText().toString());
+            debitCardInfo.setExpYear(expirationDateField.getYearValue().getText().toString());
             bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_FOR_CHARGE_REQUEST_ID));
             bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -193,15 +175,18 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
 
         if (fieldDefinitionMap != null)
         {
-            UIUtils.setFieldsFromDefinition(debitCardNumberLabel, debitCardNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER));
-            UIUtils.setFieldsFromDefinition(debitCardSecurityCodeLabel, debitCardSecurityCodeText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
-            UIUtils.setFieldsFromDefinition(debitCardExpirationDateLabel, null, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE));
-            UIUtils.setFieldsFromDefinition(debitCardTaxIdLabel, taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
-            UIUtils.setFieldsFromDefinition(null, debitCardExpirationMonthText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH));
-            UIUtils.setFieldsFromDefinition(null, debitCardExpirationYearText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
+            UIUtils.setFieldsFromDefinition(debitCardNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER));
+            UIUtils.setFieldsFromDefinition(securityCodeField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
+            UIUtils.setFieldsFromDefinition(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
+
+            UIUtils.setFieldsFromDefinition(expirationDateField,
+                    fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE),
+                    fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
+                    fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR)
+            );
         }
 
-        debitCardNumberText.requestFocus();
+        debitCardNumberField.getValue().requestFocus();
     }
 
     @Subscribe
@@ -211,10 +196,10 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
 
         if (event.requestIdentifier == DEBIT_CARD_RECIPIENT_REQUEST_ID)
         {
-            String taxIdString = taxIdText.getText().toString();
-            String expMonthString = debitCardExpirationMonthText.getText().toString();
-            String expYearString = debitCardExpirationYearText.getText().toString();
-            String cardNumberString = debitCardNumberText.getText().toString();
+            String taxIdString = taxIdField.getValue().getText().toString();
+            String expMonthString = expirationDateField.getMonthValue().getText().toString();
+            String expYearString = expirationDateField.getYearValue().getText().toString();
+            String cardNumberString = debitCardNumberField.getValue().getText().toString();
             String cardNumberLast4Digits = cardNumberString.substring(cardNumberString.length() - 4);
             bus.post(new PaymentEvents.RequestCreateDebitCardRecipient(token, taxIdString, cardNumberLast4Digits, expMonthString, expYearString));
         }

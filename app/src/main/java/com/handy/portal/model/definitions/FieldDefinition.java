@@ -16,9 +16,6 @@ public class FieldDefinition
     @SerializedName("hint_text")
     String hintText;
 
-    @SerializedName("error_message")
-    String errorMessage;
-
     @SerializedName("pattern")
     String pattern;
 
@@ -61,18 +58,8 @@ public class FieldDefinition
         return compiledPattern;
     }
 
-    public String getPattern()
-    {
-        return pattern;
-    }
-
     public String getHintText()
     {
         return hintText;
-    }
-
-    public String getErrorMessage()
-    {
-        return errorMessage;
     }
 }
