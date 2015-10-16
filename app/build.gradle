@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.newrelic.agent.android:agent-gradle-plugin:5.1.2'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.14.7'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.2.1'
     }
 }
 repositories {
@@ -25,6 +26,7 @@ apply plugin: 'com.zeroturnaround.jrebel.android'
 apply plugin: 'crashlytics'
 apply plugin: 'newrelic'
 apply plugin: 'jacoco'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 apply from: 'jacoco.gradle'
 
@@ -112,7 +114,6 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
 
     //Google services
-    compile 'com.google.android.gms:play-services:8.1.0' // play services
     compile 'com.google.android.gms:play-services-location:8.1.0' //Recommended for location services
     compile 'com.google.android.gms:play-services-gcm:8.1.0' //Required for Android (GCM) push notifications
 
