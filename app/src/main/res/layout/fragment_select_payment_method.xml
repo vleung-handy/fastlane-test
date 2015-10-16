@@ -28,10 +28,19 @@
             android:id="@+id/debit_card_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/debit_card_chevron"
+            android:textSize="@dimen/large_text_size"/>
+
+        <ImageView
+            android:id="@+id/debit_card_chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:textSize="@dimen/large_text_size"/>
+            android:layout_marginLeft="@dimen/extra_margin"
+            android:src="@drawable/ic_chevron_black"/>
 
     </RelativeLayout>
 
@@ -55,10 +64,19 @@
             android:id="@+id/bank_account_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/bank_account_chevron"
+            android:textSize="@dimen/large_text_size"/>
+
+        <ImageView
+            android:id="@+id/bank_account_chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:textSize="@dimen/large_text_size"/>
+            android:layout_marginLeft="@dimen/extra_margin"
+            android:src="@drawable/ic_chevron_black"/>
 
     </RelativeLayout>
 

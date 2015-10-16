@@ -2,9 +2,6 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -85,26 +82,6 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.menu_x_back, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_exit:
-                onBackButtonPressed();
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
     protected MainViewTab getTab()
     {
         return MainViewTab.PAYMENTS;
@@ -114,6 +91,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        setBackButtonEnabled(true);
         setActionBarTitle(R.string.add_debit_card);
         resetStates();
         bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));

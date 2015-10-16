@@ -2,9 +2,6 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -78,26 +75,6 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.menu_x_back, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_exit:
-                onBackButtonPressed();
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
     protected MainViewTab getTab()
     {
         return MainViewTab.PAYMENTS;
@@ -107,6 +84,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     public void onResume()
     {
         super.onResume();
+        setBackButtonEnabled(true);
         setActionBarTitle(R.string.add_bank_account);
         Provider provider = providerManager.getCachedActiveProvider();
         bus.post(new RegionDefinitionEvent.RequestFormDefinitions(provider.getCountry(), this.getContext()));

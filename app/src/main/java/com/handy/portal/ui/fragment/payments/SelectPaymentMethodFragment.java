@@ -45,13 +45,13 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked()
     {
-        UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentsUpdateDebitCardFragment(), TransitionStyle.SLIDE_UP);
+        UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentsUpdateDebitCardFragment(), TransitionStyle.NATIVE_TO_NATIVE);
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked()
     {
-        UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentsUpdateBankAccountFragment(), TransitionStyle.SLIDE_UP);
+        UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentsUpdateBankAccountFragment(), TransitionStyle.NATIVE_TO_NATIVE);
     }
 
     @Override
