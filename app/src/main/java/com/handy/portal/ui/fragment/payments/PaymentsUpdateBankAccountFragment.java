@@ -127,7 +127,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
         }
         else
         {
-            onFailure();
+            onFailure(R.string.form_not_filled_out_correctly);
         }
     }
 
@@ -169,16 +169,16 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
         bus.post(new PaymentEvents.RequestCreateBankAccount(token, taxIdString, accountNumberLast4Digits));
     }
 
-    private void onFailure()
+    private void onFailure(int errorStringId)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(R.string.update_bank_account_failed, Toast.LENGTH_LONG);
+        showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
     @Subscribe
     public void onReceiveStripeTokenFromBankAccountError(StripeEvents.ReceiveStripeTokenFromBankAccountError event)
     {
-        onFailure();
+        onFailure(R.string.update_bank_account_failed);
     }
 
     @Subscribe
@@ -192,13 +192,13 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
         }
         else
         {
-            onFailure();
+            onFailure(R.string.update_bank_account_failed);
         }
     }
 
     @Subscribe
     public void onReceiveCreateBankAccountError(PaymentEvents.ReceiveCreateBankAccountError event)
     {
-        onFailure();
+        onFailure(R.string.update_bank_account_failed);
     }
 }

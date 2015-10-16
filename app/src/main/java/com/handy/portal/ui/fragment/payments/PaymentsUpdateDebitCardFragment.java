@@ -140,7 +140,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         }
         else
         {
-            onFailure();
+            onFailure(R.string.form_not_filled_out_correctly);
         }
     }
 
@@ -194,14 +194,14 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveStripeTokenFromDebitCardError(StripeEvents.ReceiveStripeTokenFromDebitCardError event)
     {
-        onFailure();
+        onFailure(R.string.update_debit_card_failed);
     }
 
-    private void onFailure()
+    private void onFailure(int errorStringId)
     {
         resetStates();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(R.string.update_debit_card_failed, Toast.LENGTH_LONG);
+        showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
     private void checkSuccess()
@@ -235,7 +235,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveCreateDebitCardRecipientError(PaymentEvents.ReceiveCreateDebitCardRecipientError event)
     {
-        onFailure();
+        onFailure(R.string.update_debit_card_failed);
     }
 
     @Subscribe
@@ -248,6 +248,6 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveCreateDebitCardForChargeError(PaymentEvents.ReceiveCreateDebitCardForChargeError event)
     {
-        onFailure();
+        onFailure(R.string.update_debit_card_failed);
     }
 }
