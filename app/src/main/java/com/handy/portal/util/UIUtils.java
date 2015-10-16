@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
@@ -35,17 +33,6 @@ import java.util.regex.Pattern;
 
 public final class UIUtils
 {
-    //TODO: move some of these functions into a separate util class
-    public static void launchFragmentInMainActivityOnBackStack(FragmentActivity activity, Fragment fragment, TransitionStyle transitionStyle)
-    {
-        activity.getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .setCustomAnimations(transitionStyle.getIncomingAnimId(), transitionStyle.getOutgoingAnimId(), transitionStyle.getPopIncomingAnimId(), transitionStyle.getPopOutgoingAnimId())
-                .addToBackStack(null)
-                .commit();
-    }
-
     public static boolean validateField(FormFieldTableRow field, FieldDefinition fieldDefinition)
     {
         CharSequence value = field.getValue().getText();

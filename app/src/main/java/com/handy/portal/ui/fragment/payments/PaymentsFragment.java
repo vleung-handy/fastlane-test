@@ -250,7 +250,7 @@ public final class PaymentsFragment extends ActionBarFragment
         switch (item.getItemId())
         {
             case R.id.action_update_banking:
-                UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new SelectPaymentMethodFragment(), TransitionStyle.SLIDE_UP);
+                bus.post(new HandyEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.SLIDE_UP));
                 return true;
             case R.id.action_email_verification:
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));

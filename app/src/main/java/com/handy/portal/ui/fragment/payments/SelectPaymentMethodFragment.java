@@ -16,7 +16,6 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -45,13 +44,13 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked()
     {
-        UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentsUpdateDebitCardFragment(), TransitionStyle.NATIVE_TO_NATIVE);
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked()
     {
-        UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentsUpdateBankAccountFragment(), TransitionStyle.NATIVE_TO_NATIVE);
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
     @Override
