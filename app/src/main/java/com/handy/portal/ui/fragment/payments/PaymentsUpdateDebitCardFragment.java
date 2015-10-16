@@ -138,6 +138,10 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
             bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
+        else
+        {
+            onFailure();
+        }
     }
 
     @Subscribe
