@@ -55,7 +55,7 @@
                 android:id="@+id/expiration_date_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_payment_method_option">
+                android:background="@drawable/border_bottom_payment_method_option">
 
                 <ImageView
                     android:id="@+id/error_indicator"
@@ -113,7 +113,7 @@
                 android:id="@+id/security_code_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_payment_method_option">
+                android:background="@drawable/border_bottom_payment_method_option">
 
                 <include layout="@layout/element_form_field"/>
 
@@ -123,7 +123,7 @@
                 android:id="@+id/tax_id_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_payment_method_option">
+                android:background="@drawable/border_bottom_payment_method_option">
 
                 <include layout="@layout/element_form_field"/>
 
