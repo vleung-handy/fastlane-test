@@ -9,42 +9,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/debit_card_option"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@drawable/background_payment_method_option"
-        android:clickable="true"
-        android:padding="@dimen/default_padding">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/debit_card"
-            android:textAppearance="@style/TextView.Bold"
-            android:textSize="@dimen/large_text_size"/>
-
-        <TextView
-            android:id="@+id/debit_card_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/debit_card_chevron"
-            android:textSize="@dimen/large_text_size"/>
-
-        <ImageView
-            android:id="@+id/debit_card_chevron"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/extra_margin"
-            android:src="@drawable/ic_chevron_black"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/bank_account_option"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -70,6 +34,42 @@
 
         <ImageView
             android:id="@+id/bank_account_chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/extra_margin"
+            android:src="@drawable/ic_chevron_black"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/debit_card_option"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/background_payment_method_option"
+        android:clickable="true"
+        android:padding="@dimen/default_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/debit_card"
+            android:textAppearance="@style/TextView.Bold"
+            android:textSize="@dimen/large_text_size"/>
+
+        <TextView
+            android:id="@+id/debit_card_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/debit_card_chevron"
+            android:textSize="@dimen/large_text_size"/>
+
+        <ImageView
+            android:id="@+id/debit_card_chevron"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
