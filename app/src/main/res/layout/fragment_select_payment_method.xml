@@ -83,7 +83,7 @@
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/circle_yellow"/>
+                    android:src="@drawable/circle_steel"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
                     android:text="@string/pending"
                     android:textAllCaps="true"
                     android:textAppearance="@style/TextView.Bold"
-                    android:textColor="@color/handy_yellow"
+                    android:textColor="@color/steel"
                     android:textSize="@dimen/small_text_size"/>
 
             </LinearLayout>
