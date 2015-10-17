@@ -5,7 +5,7 @@
       "field_definitions": {
         "routing_number": {
           "display_name": "Sort Code",
-          "hint_text": "123456",
+          "hint_text": "",
           "input_type": "number",
           "pattern": "^[0-9]{6}$"
         },
@@ -17,7 +17,7 @@
         },
         "tax_id_number": {
           "display_name": "National Insurance #",
-          "hint_text": "ab123456c",
+          "hint_text": "",
           "input_type": "alphanumeric",
           "pattern": "^[A-z]{2}[0-9]{6}[A-z]$"
         }

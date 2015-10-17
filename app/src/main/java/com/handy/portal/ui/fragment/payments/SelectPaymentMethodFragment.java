@@ -15,6 +15,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.payments.PaymentFlow;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.squareup.otto.Subscribe;
 
@@ -40,6 +41,15 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
 
     @InjectView(R.id.debit_card_option)
     ViewGroup debitCardOption;
+
+    @InjectView(R.id.verified_indicator)
+    View verifiedIndicator;
+
+    @InjectView(R.id.failed_indicator)
+    View failedIndicator;
+
+    @InjectView(R.id.pending_indicator)
+    View pendingIndicator;
 
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked()
@@ -76,7 +86,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(item.getItemId())
+        switch (item.getItemId())
         {
             case R.id.action_exit:
                 onBackButtonPressed();
@@ -94,7 +104,6 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         paymentMethodContainer.setVisibility(View.GONE);
         bus.post(new PaymentEvents.RequestPaymentFlow());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-
     }
 
     @Override
@@ -134,9 +143,31 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
             else if (event.paymentFlow.isBankAccount())
             {
                 bankAccountDetails.setText(accountDetails);
+                showBankAccountStatus(event.paymentFlow.getStatus());
             }
         }
         paymentMethodContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void showBankAccountStatus(String status)
+    {
+        if (status != null)
+        {
+            switch (status)
+            {
+                case PaymentFlow.STATUS_NEW:
+                    pendingIndicator.setVisibility(View.VISIBLE);
+                    break;
+                case PaymentFlow.STATUS_VALIDATED:
+                case PaymentFlow.STATUS_VERIFIED:
+                    verifiedIndicator.setVisibility(View.VISIBLE);
+                    break;
+                case PaymentFlow.STATUS_ERRORED:
+                    failedIndicator.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+
     }
 
     @Subscribe
@@ -145,4 +176,5 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(R.string.payment_flow_error);
     }
+
 }

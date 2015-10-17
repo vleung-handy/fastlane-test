@@ -410,6 +410,9 @@
     <string name="your_bank_check">Your bank check:</string>
     <string name="slash">/</string>
     <string name="form_not_filled_out_correctly">Your form is not filled out correctly</string>
+    <string name="verified">Verified</string>
+    <string name="failed">Failed</string>
+    <string name="pending">Pending</string>
 
     <!-- Payments Bill Blocker -->
     <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>

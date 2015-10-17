@@ -14,16 +14,98 @@
         android:layout_height="80dp"
         android:background="@drawable/background_payment_method_option"
         android:clickable="true"
-        android:padding="@dimen/default_padding">
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/bank_account"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/black"
-            android:textSize="@dimen/large_text_size"/>
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/verified_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/circle_teal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/extra_margin"
+                    android:layout_marginStart="@dimen/extra_margin"
+                    android:text="@string/verified"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/handy_teal"
+                    android:textSize="@dimen/small_text_size"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/failed_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/circle_red"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/extra_margin"
+                    android:layout_marginStart="@dimen/extra_margin"
+                    android:text="@string/failed"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/error_red"
+                    android:textSize="@dimen/small_text_size"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pending_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/circle_yellow"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/extra_margin"
+                    android:layout_marginStart="@dimen/extra_margin"
+                    android:text="@string/pending"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/handy_yellow"
+                    android:textSize="@dimen/small_text_size"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bank_account"
+                android:textAppearance="@style/TextView.Bold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/large_text_size"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/bank_account_details"
