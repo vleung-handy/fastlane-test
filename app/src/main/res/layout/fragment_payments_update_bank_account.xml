@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--TODO: put strings in strings.xml-->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -10,61 +8,72 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/default_padding">
+        android:paddingTop="@dimen/default_padding">
 
-        <TextView
-            android:id="@+id/payments_update_info_routing_number_label"
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin"
-            android:textAppearance="@style/TextView.Bold"
-            android:textStyle="bold"/>
+            android:orientation="vertical"
+            android:stretchColumns="2">
 
-        <EditText
-            android:id="@+id/payments_update_info_routing_number_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
+            <com.handy.portal.ui.view.FormFieldTableRow
+                android:id="@+id/routing_number_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_payment_method_option">
 
-        <TextView
-            android:id="@+id/payments_update_info_account_number_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:textAppearance="@style/TextView.Bold"
-            android:textStyle="bold"/>
+                <include layout="@layout/element_form_field"/>
 
-        <EditText
-            android:id="@+id/payments_update_info_account_number_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
+            </com.handy.portal.ui.view.FormFieldTableRow>
 
-        <TextView
-            android:id="@+id/payments_update_info_tax_id_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:textAppearance="@style/TextView.Bold"
-            android:textStyle="bold"/>
+            <com.handy.portal.ui.view.FormFieldTableRow
+                android:id="@+id/account_number_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_payment_method_option">
 
-        <EditText
-            android:id="@+id/payments_update_info_tax_id_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
+                <include layout="@layout/element_form_field"/>
+
+            </com.handy.portal.ui.view.FormFieldTableRow>
+
+            <com.handy.portal.ui.view.FormFieldTableRow
+                android:id="@+id/tax_id_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_payment_method_option">
+
+                <include layout="@layout/element_form_field"/>
+
+            </com.handy.portal.ui.view.FormFieldTableRow>
+        </TableLayout>
 
         <Button
-            android:id="@+id/payments_update_info_submit_button"
+            android:id="@+id/payments_update_info_bank_account_submit_button"
+            style="@style/Button.Green.Round"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:background="@drawable/button_green_round"
-            android:text="@string/save"
-            android:textAllCaps="false"
-            android:textColor="@color/white"/>
-    </LinearLayout>
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/add_bank_account"/>
 
+        <LinearLayout
+            android:id="@+id/bank_account_setup_helper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/extra_margin"
+                android:text="@string/your_bank_check"
+                android:textColor="@color/subtitle_grey"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bank_check"/>
+
+        </LinearLayout>
+    </LinearLayout>
 </ScrollView>

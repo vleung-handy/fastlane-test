@@ -5,11 +5,13 @@ import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
-import com.handy.portal.ui.fragment.payments.UpdatePaymentFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
+import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
+import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
 
 import java.io.Serializable;
 
@@ -18,7 +20,9 @@ public enum MainViewTab implements Serializable
     AVAILABLE_JOBS(AvailableBookingsFragment.class),
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
-    UPDATE_PAYMENTS(UpdatePaymentFragment.class),
+    SELECT_PAYMENT_METHOD(SelectPaymentMethodFragment.class),
+    UPDATE_BANK_ACCOUNT(PaymentsUpdateBankAccountFragment.class),
+    UPDATE_DEBIT_CARD(PaymentsUpdateDebitCardFragment.class),
     PAYMENTS(PaymentsFragment.class),
     PAYMENTS_DETAIL(PaymentsDetailFragment.class),
     PROFILE(ProfileFragment.class),

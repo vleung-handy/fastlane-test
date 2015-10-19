@@ -4,12 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvents;
 import com.handy.portal.event.RegionDefinitionEvent;
@@ -19,7 +18,8 @@ import com.handy.portal.model.Provider;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.model.payments.BankAccountInfo;
-import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
@@ -29,31 +29,23 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
-public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: make a form class
+public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO: make a form class
 {
     //TODO: need to consolidate this logic with the other update payment fragment!
 
-    @InjectView(R.id.payments_update_info_routing_number_label)
-    TextView routingNumberLabel;
+    @InjectView(R.id.routing_number_field)
+    FormFieldTableRow routingNumberField;
 
-    @InjectView(R.id.payments_update_info_account_number_label)
-    TextView accountNumberLabel;
+    @InjectView(R.id.account_number_field)
+    FormFieldTableRow accountNumberField;
 
-    @InjectView(R.id.payments_update_info_tax_id_label)
-    TextView taxIdLabel;
+    @InjectView(R.id.tax_id_field)
+    FormFieldTableRow taxIdField;
 
-    @InjectView(R.id.payments_update_info_routing_number_text)
-    TextView routingNumberText;
-
-    @InjectView(R.id.payments_update_info_account_number_text)
-    TextView accountNumberText;
-
-    @InjectView(R.id.payments_update_info_tax_id_text)
-    TextView taxIdText;
-
-    @InjectView(R.id.payments_update_info_submit_button)
-    Button submitButton;
+    @InjectView(R.id.bank_account_setup_helper)
+    ViewGroup bankAccountSetupHelper;
 
     @Inject
     ProviderManager providerManager;
@@ -63,6 +55,13 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     private static final String FORM_KEY = FormDefinitionKey.UPDATE_BANK_INFO;
 
     @Override
+    public void onCreate(Bundle savedInstance)
+    {
+        super.onCreate(savedInstance);
+        setOptionsMenuEnabled(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -70,32 +69,30 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         View view = inflater.inflate(R.layout.fragment_payments_update_bank_account, container, false);
         ButterKnife.inject(this, view);
 
+        setFormFieldErrorStateRemovers();
+
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
+    protected MainViewTab getTab()
     {
-        super.onViewCreated(view, savedInstanceState);
-        submitButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onSubmitForm();
-            }
-        });
-
-//        accountNumberText.setText("000123456789");
-//        taxIdText.setText("000000000");
-//        routingNumberText.setText("110000000");
+        return MainViewTab.PAYMENTS;
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        setBackButtonEnabled(true);
+        setActionBarTitle(R.string.add_bank_account);
+        Provider provider = providerManager.getCachedActiveProvider();
+        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(provider.getCountry(), this.getContext()));
+
+        if (!provider.isUS())
+        {
+            bankAccountSetupHelper.setVisibility(View.GONE);
+        }
     }
 
     private boolean validate()
@@ -104,25 +101,20 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
         if (fieldDefinitionMap != null)
         {
-            //need to show error for each field
-            allFieldsValid = UIUtils.validateField(routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER))  && allFieldsValid;
-            allFieldsValid = UIUtils.validateField(accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER)) && allFieldsValid;
-            allFieldsValid = UIUtils.validateField(taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER)) && allFieldsValid;
-        }
-
-        if (!allFieldsValid)
-        {
-            //show banner
+            allFieldsValid = UIUtils.validateField(routingNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
+            allFieldsValid &= UIUtils.validateField(accountNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
+            allFieldsValid &= UIUtils.validateField(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
         return allFieldsValid;
     }
 
-    private void onSubmitForm()
+    @OnClick(R.id.payments_update_info_bank_account_submit_button)
+    public void onSubmitForm()
     {
         if (validate())
         {
-            String routingNumber = routingNumberText.getText().toString();
-            String accountNumber = accountNumberText.getText().toString();
+            String routingNumber = routingNumberField.getValue().getText().toString();
+            String accountNumber = accountNumberField.getValue().getText().toString();
             BankAccountInfo bankAccountInfo = new BankAccountInfo();
             bankAccountInfo.setAccountNumber(accountNumber);
             bankAccountInfo.setRoutingNumber(routingNumber);
@@ -133,6 +125,10 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
             bus.post(new StripeEvents.RequestStripeTokenFromBankAccount(bankAccountInfo));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
+        else
+        {
+            onFailure(R.string.form_not_filled_out_correctly);
+        }
     }
 
     @Subscribe
@@ -142,15 +138,24 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         updateFormWithDefinitions(formDefinitionWrapper);
     }
 
+    private void setFormFieldErrorStateRemovers()
+    {
+        routingNumberField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(routingNumberField));
+        accountNumberField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(accountNumberField));
+        taxIdField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(taxIdField));
+    }
+
     private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper)
     {
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
         if (fieldDefinitionMap != null)
         {
-            UIUtils.setFieldsFromDefinition(routingNumberLabel, routingNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
-            UIUtils.setFieldsFromDefinition(accountNumberLabel, accountNumberText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
-            UIUtils.setFieldsFromDefinition(taxIdLabel, taxIdText, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
+            UIUtils.setFieldsFromDefinition(routingNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
+            UIUtils.setFieldsFromDefinition(accountNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
+            UIUtils.setFieldsFromDefinition(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
         }
+
+        routingNumberField.getValue().requestFocus();
     }
 
     @Subscribe
@@ -158,22 +163,22 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
     {
         String token = event.stripeTokenResponse.getStripeToken();
 
-        String taxIdString = taxIdText.getText().toString();
-        String accountNumberString = accountNumberText.getText().toString();
+        String taxIdString = taxIdField.getValue().getText().toString();
+        String accountNumberString = accountNumberField.getValue().getText().toString();
         String accountNumberLast4Digits = accountNumberString.substring(accountNumberString.length() - 4);
         bus.post(new PaymentEvents.RequestCreateBankAccount(token, taxIdString, accountNumberLast4Digits));
     }
 
-    private void onFailure()
+    private void onFailure(int errorStringId)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(R.string.update_bank_account_failed, Toast.LENGTH_LONG);
+        showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
     @Subscribe
     public void onReceiveStripeTokenFromBankAccountError(StripeEvents.ReceiveStripeTokenFromBankAccountError event)
     {
-        onFailure();
+        onFailure(R.string.update_bank_account_failed);
     }
 
     @Subscribe
@@ -187,13 +192,13 @@ public class PaymentsUpdateBankInfoFragment extends InjectedFragment //TODO: mak
         }
         else
         {
-            onFailure();
+            onFailure(R.string.update_bank_account_failed);
         }
     }
 
     @Subscribe
     public void onReceiveCreateBankAccountError(PaymentEvents.ReceiveCreateBankAccountError event)
     {
-        onFailure();
+        onFailure(R.string.update_bank_account_failed);
     }
 }

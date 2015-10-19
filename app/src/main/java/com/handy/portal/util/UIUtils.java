@@ -5,12 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -23,27 +24,43 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.view.DateFormFieldTableRow;
+import com.handy.portal.ui.view.Errorable;
+import com.handy.portal.ui.view.FormFieldTableRow;
 
 import java.text.DecimalFormat;
+import java.util.regex.Pattern;
 
 public final class UIUtils
 {
-    //TODO: move some of these functions into a separate util class
-    public static void launchFragmentInMainActivityOnBackStack(FragmentActivity activity, Fragment fragment)
+    public static boolean validateField(FormFieldTableRow field, FieldDefinition fieldDefinition)
     {
-        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_container, fragment).addToBackStack(null).commit();
+        CharSequence value = field.getValue().getText();
+        Pattern pattern = fieldDefinition.getCompiledPattern();
+        boolean isValid = pattern == null || pattern.matcher(value).matches();
 
+        if (!isValid)
+        {
+            field.setErrorState(true);
+        }
+
+        return isValid;
     }
 
-    public static boolean validateField(TextView input, FieldDefinition fieldDefinition)
+    public static boolean validateField(DateFormFieldTableRow field, FieldDefinition monthFieldDefinition, FieldDefinition yearFieldDefinition)
     {
-        if (fieldDefinition.getCompiledPattern() != null && !fieldDefinition.getCompiledPattern().matcher(input.getText()).matches())
+        CharSequence monthValue = field.getMonthValue().getText();
+        CharSequence yearValue = field.getYearValue().getText();
+        Pattern monthPattern = monthFieldDefinition.getCompiledPattern();
+        Pattern yearPattern = yearFieldDefinition.getCompiledPattern();
+        boolean isValid = (monthPattern == null || monthPattern.matcher(monthValue).matches()) && (yearPattern == null || yearPattern.matcher(yearValue).matches());
+
+        if (!isValid)
         {
-            input.setError(fieldDefinition.getErrorMessage());
-            return false;
+            field.setErrorState(true);
         }
-        return true;
+
+        return isValid;
     }
 
     public static void setInputFilterForInputType(TextView textView, FieldDefinition.InputType inputType)
@@ -74,18 +91,20 @@ public final class UIUtils
         }
     }
 
-
-    public static void setFieldsFromDefinition(TextView label, TextView input, FieldDefinition fieldDefinition)
+    public static void setFieldsFromDefinition(FormFieldTableRow field, FieldDefinition fieldDefinition)
     {
-        if (label != null)
-        {
-            label.setText(fieldDefinition.getDisplayName());
-        }
-        if (input != null)
-        {
-            input.setHint(fieldDefinition.getHintText());
-        }
-        setInputFilterForInputType(input, fieldDefinition.getInputType());
+        field.getLabel().setText(fieldDefinition.getDisplayName());
+        field.getValue().setHint(fieldDefinition.getHintText());
+        setInputFilterForInputType(field.getValue(), fieldDefinition.getInputType());
+    }
+
+    public static void setFieldsFromDefinition(DateFormFieldTableRow field, FieldDefinition dateFieldDefinition, FieldDefinition monthFieldDefinition, FieldDefinition yearFieldDefinition)
+    {
+        field.getLabel().setText(dateFieldDefinition.getDisplayName());
+        field.getMonthValue().setHint(monthFieldDefinition.getHintText());
+        field.getYearValue().setHint(yearFieldDefinition.getHintText());
+        setInputFilterForInputType(field.getMonthValue(), monthFieldDefinition.getInputType());
+        setInputFilterForInputType(field.getYearValue(), yearFieldDefinition.getInputType());
     }
 
     public static void dismissOnBackPressed(Activity activity)
@@ -247,5 +266,31 @@ public final class UIUtils
                     }
                 });
         return builder.create();
+    }
+
+    public static class FormFieldErrorStateRemover implements TextWatcher
+    {
+        private Errorable errorable;
+
+        public FormFieldErrorStateRemover(Errorable errorable)
+        {
+            this.errorable = errorable;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+        {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s)
+        {
+            errorable.setErrorState(false);
+        }
     }
 }

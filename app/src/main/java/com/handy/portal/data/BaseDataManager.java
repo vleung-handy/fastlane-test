@@ -21,7 +21,7 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
-import com.handy.portal.model.payments.PaymentFlowResponse;
+import com.handy.portal.model.payments.PaymentFlow;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -266,7 +266,7 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getPaymentFlow(String providerId, final Callback<PaymentFlowResponse> cb)
+    public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb)
     {
         service.getPaymentFlow(providerId, new GetPaymentFlowRetroFitCallback(cb));
     }

@@ -33,7 +33,6 @@ import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -250,7 +249,7 @@ public final class PaymentsFragment extends ActionBarFragment
         switch (item.getItemId())
         {
             case R.id.action_update_banking:
-                UIUtils.launchFragmentInMainActivityOnBackStack(getActivity(), new PaymentMethodFragment());
+                bus.post(new HandyEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.SLIDE_UP));
                 return true;
             case R.id.action_email_verification:
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
