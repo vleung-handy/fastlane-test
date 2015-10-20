@@ -10,9 +10,9 @@ import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
-import com.handy.portal.event.StripeEvents;
+import com.handy.portal.event.StripeEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
@@ -134,8 +134,8 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
             debitCardInfo.setCvc(securityCodeField.getValue().getText().toString());
             debitCardInfo.setExpMonth(expirationDateField.getMonthValue().getText().toString());
             debitCardInfo.setExpYear(expirationDateField.getYearValue().getText().toString());
-            bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_FOR_CHARGE_REQUEST_ID));
-            bus.post(new StripeEvents.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
+            bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_FOR_CHARGE_REQUEST_ID));
+            bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
         else
@@ -172,7 +172,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveStripeTokenFromDebitCardSuccess(StripeEvents.ReceiveStripeTokenFromDebitCardSuccess event)
+    public void onReceiveStripeTokenFromDebitCardSuccess(StripeEvent.ReceiveStripeTokenFromDebitCardSuccess event)
     {
         String token = event.stripeTokenResponse.getStripeToken();
 
@@ -183,16 +183,16 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
             String expYearString = expirationDateField.getYearValue().getText().toString();
             String cardNumberString = debitCardNumberField.getValue().getText().toString();
             String cardNumberLast4Digits = cardNumberString.substring(cardNumberString.length() - 4);
-            bus.post(new PaymentEvents.RequestCreateDebitCardRecipient(token, taxIdString, cardNumberLast4Digits, expMonthString, expYearString));
+            bus.post(new PaymentEvent.RequestCreateDebitCardRecipient(token, taxIdString, cardNumberLast4Digits, expMonthString, expYearString));
         }
         else if (event.requestIdentifier == DEBIT_CARD_FOR_CHARGE_REQUEST_ID)
         {
-            bus.post(new PaymentEvents.RequestCreateDebitCardForCharge(token));
+            bus.post(new PaymentEvent.RequestCreateDebitCardForCharge(token));
         }
     }
 
     @Subscribe
-    public void onReceiveStripeTokenFromDebitCardError(StripeEvents.ReceiveStripeTokenFromDebitCardError event)
+    public void onReceiveStripeTokenFromDebitCardError(StripeEvent.ReceiveStripeTokenFromDebitCardError event)
     {
         onFailure(R.string.update_debit_card_failed);
     }
@@ -226,27 +226,27 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveCreateDebitCardRecipientSuccess(PaymentEvents.ReceiveCreateDebitCardRecipientSuccess event)
+    public void onReceiveCreateDebitCardRecipientSuccess(PaymentEvent.ReceiveCreateDebitCardRecipientSuccess event)
     {
         receivedDebitCardRecipientSuccess = true;
         checkSuccess();
     }
 
     @Subscribe
-    public void onReceiveCreateDebitCardRecipientError(PaymentEvents.ReceiveCreateDebitCardRecipientError event)
+    public void onReceiveCreateDebitCardRecipientError(PaymentEvent.ReceiveCreateDebitCardRecipientError event)
     {
         onFailure(R.string.update_debit_card_failed);
     }
 
     @Subscribe
-    public void onReceiveCreateDebitCardForChargeSuccess(PaymentEvents.ReceiveCreateDebitCardForChargeSuccess event)
+    public void onReceiveCreateDebitCardForChargeSuccess(PaymentEvent.ReceiveCreateDebitCardForChargeSuccess event)
     {
         receivedDebitCardForChargeSuccess = true;
         checkSuccess();
     }
 
     @Subscribe
-    public void onReceiveCreateDebitCardForChargeError(PaymentEvents.ReceiveCreateDebitCardForChargeError event)
+    public void onReceiveCreateDebitCardForChargeError(PaymentEvent.ReceiveCreateDebitCardForChargeError event)
     {
         onFailure(R.string.update_debit_card_failed);
     }

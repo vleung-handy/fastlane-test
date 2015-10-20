@@ -13,7 +13,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.payments.PaymentFlow;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -102,7 +102,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         super.onResume();
         setActionBar(R.string.select_payment_method, false);
         paymentMethodContainer.setVisibility(View.GONE);
-        bus.post(new PaymentEvents.RequestPaymentFlow());
+        bus.post(new PaymentEvent.RequestPaymentFlow());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
     }
 
@@ -129,7 +129,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onGetPaymentFlowSuccess(PaymentEvents.ReceivePaymentFlowSuccess event)
+    public void onGetPaymentFlowSuccess(PaymentEvent.ReceivePaymentFlowSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
@@ -171,7 +171,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onGetPaymentFlowError(PaymentEvents.ReceivePaymentFlowError event)
+    public void onGetPaymentFlowError(PaymentEvent.ReceivePaymentFlowError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(R.string.payment_flow_error);

@@ -1,7 +1,7 @@
 package com.handy.portal.manager;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
@@ -40,7 +40,7 @@ public class PaymentsManager
     }
 
     @Subscribe
-    public void onRequestShouldUserUpdatePaymentInfo(PaymentEvents.RequestShouldUserUpdatePaymentInfo event)
+    public void onRequestShouldUserUpdatePaymentInfo(PaymentEvent.RequestShouldUserUpdatePaymentInfo event)
     {
         if (System.currentTimeMillis() - timestampRequestPaymentInfoUpdateNeeded > INTERVAL_REQUEST_PAYMENT_INFO_UPDATED_NEEDED_MS)
         {
@@ -50,24 +50,24 @@ public class PaymentsManager
                 @Override
                 public void onSuccess(RequiresPaymentInfoUpdate response)
                 {
-                    bus.post(new PaymentEvents.ReceiveShouldUserUpdatePaymentInfoSuccess(response.getNeedsUpdate()));
+                    bus.post(new PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess(response.getNeedsUpdate()));
                 }
 
                 @Override
                 public void onError(DataManager.DataManagerError error)
                 {
-                    bus.post(new PaymentEvents.ReceiveShouldUserUpdatePaymentInfoError(error));
+                    bus.post(new PaymentEvent.ReceiveShouldUserUpdatePaymentInfoError(error));
                 }
             });
         }
         else
         {
-            bus.post(new PaymentEvents.ReceiveShouldUserUpdatePaymentInfoSuccess(false));
+            bus.post(new PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess(false));
         }
     }
 
     @Subscribe
-    public void onRequestPaymentBatches(final PaymentEvents.RequestPaymentBatches event)
+    public void onRequestPaymentBatches(final PaymentEvent.RequestPaymentBatches event)
     {
         //assuming startDate is inclusive and endDate is inclusive
         dataManager.getPaymentBatches(event.startDate, event.endDate, new DataManager.Callback<PaymentBatches>()
@@ -91,90 +91,90 @@ public class PaymentsManager
                     neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[]{}));
 
                 }
-                bus.post(new PaymentEvents.ReceivePaymentBatchesSuccess(paymentBatches, event.startDate, event.endDate, event.isInitialBatchRequest, event.callerIdentifier));
+                bus.post(new PaymentEvent.ReceivePaymentBatchesSuccess(paymentBatches, event.startDate, event.endDate, event.isInitialBatchRequest, event.callerIdentifier));
 
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new PaymentEvents.ReceivePaymentBatchesError(error));
+                bus.post(new PaymentEvent.ReceivePaymentBatchesError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestAnnualPaymentSummaries(final PaymentEvents.RequestAnnualPaymentSummaries event)
+    public void onRequestAnnualPaymentSummaries(final PaymentEvent.RequestAnnualPaymentSummaries event)
     {
         dataManager.getAnnualPaymentSummaries(new DataManager.Callback<AnnualPaymentSummaries>()
         {
             @Override
             public void onSuccess(AnnualPaymentSummaries annualPaymentSummaries)
             {
-                bus.post(new PaymentEvents.ReceiveAnnualPaymentSummariesSuccess(annualPaymentSummaries));
+                bus.post(new PaymentEvent.ReceiveAnnualPaymentSummariesSuccess(annualPaymentSummaries));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new PaymentEvents.ReceiveAnnualPaymentSummariesError(error));
+                bus.post(new PaymentEvent.ReceiveAnnualPaymentSummariesError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestCreateBankAccount(final PaymentEvents.RequestCreateBankAccount event)
+    public void onRequestCreateBankAccount(final PaymentEvent.RequestCreateBankAccount event)
     {
         dataManager.createBankAccount(buildParamsForCreateBankAccount(event.stripeToken, event.taxId, event.accountNumberLast4Digits), new DataManager.Callback<SuccessWrapper>()
         {
             @Override
             public void onSuccess(SuccessWrapper successWrapper)
             {
-                bus.post(new PaymentEvents.ReceiveCreateBankAccountSuccess(successWrapper.getSuccess()));
+                bus.post(new PaymentEvent.ReceiveCreateBankAccountSuccess(successWrapper.getSuccess()));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new PaymentEvents.ReceiveCreateBankAccountError(error));
+                bus.post(new PaymentEvent.ReceiveCreateBankAccountError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestCreateDebitCardRecipient(final PaymentEvents.RequestCreateDebitCardRecipient event)
+    public void onRequestCreateDebitCardRecipient(final PaymentEvent.RequestCreateDebitCardRecipient event)
     {
         dataManager.createDebitCardRecipient(buildParamsForDebitCardRecipient(event.stripeToken, event.taxId, event.cardNumberLast4Digits, event.expMonth, event.expYear), new DataManager.Callback<SuccessWrapper>()
         {
             @Override
             public void onSuccess(SuccessWrapper successWrapper)
             {
-                bus.post(new PaymentEvents.ReceiveCreateDebitCardRecipientSuccess(successWrapper.getSuccess()));
+                bus.post(new PaymentEvent.ReceiveCreateDebitCardRecipientSuccess(successWrapper.getSuccess()));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new PaymentEvents.ReceiveCreateDebitCardRecipientError(error));
+                bus.post(new PaymentEvent.ReceiveCreateDebitCardRecipientError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestCreateDebitCardForCharge(final PaymentEvents.RequestCreateDebitCardForCharge event)
+    public void onRequestCreateDebitCardForCharge(final PaymentEvent.RequestCreateDebitCardForCharge event)
     {
         dataManager.createDebitCardForCharge(event.stripeToken, new DataManager.Callback<CreateDebitCardResponse>()
         {
             @Override
             public void onSuccess(CreateDebitCardResponse response)
             {
-                bus.post(new PaymentEvents.ReceiveCreateDebitCardForChargeSuccess(response));
+                bus.post(new PaymentEvent.ReceiveCreateDebitCardForChargeSuccess(response));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new PaymentEvents.ReceiveCreateDebitCardForChargeError(error));
+                bus.post(new PaymentEvent.ReceiveCreateDebitCardForChargeError(error));
             }
         });
     }

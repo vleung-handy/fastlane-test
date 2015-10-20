@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.squareup.otto.Subscribe;
@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity
 
     private void checkIfUserShouldUpdatePaymentInfo()
     {
-        bus.post(new PaymentEvents.RequestShouldUserUpdatePaymentInfo());
+        bus.post(new PaymentEvent.RequestShouldUserUpdatePaymentInfo());
     }
 
     private void checkForTerms()
@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onReceiveUserShouldUpdatePaymentInfo(PaymentEvents.ReceiveShouldUserUpdatePaymentInfoSuccess event)
+    public void onReceiveUserShouldUpdatePaymentInfo(PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess event)
     {
         //check if we need to show the payment bill blocker
         if(event.shouldUserUpdatePaymentInfo)
