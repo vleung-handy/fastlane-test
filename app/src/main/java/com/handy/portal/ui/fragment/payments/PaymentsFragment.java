@@ -19,7 +19,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
@@ -171,7 +171,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
             c.set(Calendar.DAY_OF_YEAR, dayOfYear);
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
-            bus.post(new PaymentEvents.RequestPaymentBatches(startDate, endDate, isInitialRequest, Utils.getObjectIdentifier(this)));
+            bus.post(new PaymentEvent.RequestPaymentBatches(startDate, endDate, isInitialRequest, Utils.getObjectIdentifier(this)));
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
@@ -190,7 +190,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
     private void requestAnnualPaymentSummaries() //not used yet
     {
-        bus.post(new PaymentEvents.RequestAnnualPaymentSummaries());
+        bus.post(new PaymentEvent.RequestAnnualPaymentSummaries());
     }
 
     private void updateYearSummaryText(AnnualPaymentSummaries annualPaymentSummaries) //annual summaries not shown or used for now
@@ -278,7 +278,7 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceivePaymentBatchesSuccess(PaymentEvents.ReceivePaymentBatchesSuccess event)
+    public void onReceivePaymentBatchesSuccess(PaymentEvent.ReceivePaymentBatchesSuccess event)
     {
         fetchErrorView.setVisibility(View.GONE);
         if (Utils.getObjectIdentifier(this) != event.getCallerIdentifier()
@@ -311,7 +311,7 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceivePaymentBatchesError(PaymentEvents.ReceivePaymentBatchesError event)
+    public void onReceivePaymentBatchesError(PaymentEvent.ReceivePaymentBatchesError event)
     {
         if (paymentsBatchListView.isDataEmpty())
         {
@@ -326,13 +326,13 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveAnnualPaymentSummariesSuccess(PaymentEvents.ReceiveAnnualPaymentSummariesSuccess event)
+    public void onReceiveAnnualPaymentSummariesSuccess(PaymentEvent.ReceiveAnnualPaymentSummariesSuccess event)
     {
         updateYearSummaryText(event.getAnnualPaymentSummaries());
     }
 
     @Subscribe
-    public void onReceiveAnnualPaymentSummariesError(PaymentEvents.ReceiveAnnualPaymentSummariesError event)
+    public void onReceiveAnnualPaymentSummariesError(PaymentEvent.ReceiveAnnualPaymentSummariesError event)
     {
         //TODO: handle annual payments summary error
     }

@@ -10,9 +10,9 @@ import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
-import com.handy.portal.event.StripeEvents;
+import com.handy.portal.event.StripeEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.definitions.FieldDefinition;
@@ -122,7 +122,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
             Provider provider = providerManager.getCachedActiveProvider();
             bankAccountInfo.setCurrency(provider.getPaymentCurrencyCode());
             bankAccountInfo.setCountry(provider.getCountry());
-            bus.post(new StripeEvents.RequestStripeTokenFromBankAccount(bankAccountInfo));
+            bus.post(new StripeEvent.RequestStripeTokenFromBankAccount(bankAccountInfo));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
         else
@@ -159,14 +159,14 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     }
 
     @Subscribe
-    public void onReceiveStripeTokenFromBankAccountSuccess(StripeEvents.ReceiveStripeTokenFromBankAccountSuccess event)
+    public void onReceiveStripeTokenFromBankAccountSuccess(StripeEvent.ReceiveStripeTokenFromBankAccountSuccess event)
     {
         String token = event.stripeTokenResponse.getStripeToken();
 
         String taxIdString = taxIdField.getValue().getText().toString();
         String accountNumberString = accountNumberField.getValue().getText().toString();
         String accountNumberLast4Digits = accountNumberString.substring(accountNumberString.length() - 4);
-        bus.post(new PaymentEvents.RequestCreateBankAccount(token, taxIdString, accountNumberLast4Digits));
+        bus.post(new PaymentEvent.RequestCreateBankAccount(token, taxIdString, accountNumberLast4Digits));
     }
 
     private void onFailure(int errorStringId)
@@ -176,13 +176,13 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     }
 
     @Subscribe
-    public void onReceiveStripeTokenFromBankAccountError(StripeEvents.ReceiveStripeTokenFromBankAccountError event)
+    public void onReceiveStripeTokenFromBankAccountError(StripeEvent.ReceiveStripeTokenFromBankAccountError event)
     {
         onFailure(R.string.update_bank_account_failed);
     }
 
     @Subscribe
-    public void onReceiveCreateBankAccountSuccess(PaymentEvents.ReceiveCreateBankAccountSuccess event)
+    public void onReceiveCreateBankAccountSuccess(PaymentEvent.ReceiveCreateBankAccountSuccess event)
     {
         if (event.successfullyCreated)
         {
@@ -197,7 +197,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO:
     }
 
     @Subscribe
-    public void onReceiveCreateBankAccountError(PaymentEvents.ReceiveCreateBankAccountError event)
+    public void onReceiveCreateBankAccountError(PaymentEvent.ReceiveCreateBankAccountError event)
     {
         onFailure(R.string.update_bank_account_failed);
     }

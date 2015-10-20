@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.handy.portal.core.PropertiesReader;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.StripeEvents;
+import com.handy.portal.event.StripeEvent;
 import com.handy.portal.model.payments.BankAccountInfo;
 import com.handy.portal.model.payments.DebitCardInfo;
 import com.handy.portal.model.payments.StripeTokenResponse;
@@ -57,40 +57,40 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     @Subscribe
-    public void onRequestStripeTokenFromBankAccount(final StripeEvents.RequestStripeTokenFromBankAccount event)
+    public void onRequestStripeTokenFromBankAccount(final StripeEvent.RequestStripeTokenFromBankAccount event)
     {
         dataManager.getStripeToken(buildParamsFromBankAccountInfo(event.bankAccountInfo), new DataManager.Callback<StripeTokenResponse>()
         {
             @Override
             public void onSuccess(StripeTokenResponse response)
             {
-                bus.post(new StripeEvents.ReceiveStripeTokenFromBankAccountSuccess(response));
+                bus.post(new StripeEvent.ReceiveStripeTokenFromBankAccountSuccess(response));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new StripeEvents.ReceiveStripeTokenFromBankAccountError(error));
+                bus.post(new StripeEvent.ReceiveStripeTokenFromBankAccountError(error));
 
             }
         });
     }
 
     @Subscribe
-    public void onRequestStripeTokenFromDebitCard(final StripeEvents.RequestStripeTokenFromDebitCard event)
+    public void onRequestStripeTokenFromDebitCard(final StripeEvent.RequestStripeTokenFromDebitCard event)
     {
         dataManager.getStripeToken(buildParamsFromDebitCardInfo(event.debitCardInfo), new DataManager.Callback<StripeTokenResponse>()
         {
             @Override
             public void onSuccess(StripeTokenResponse response)
             {
-                bus.post(new StripeEvents.ReceiveStripeTokenFromDebitCardSuccess(response, event.requestIdentifier));
+                bus.post(new StripeEvent.ReceiveStripeTokenFromDebitCardSuccess(response, event.requestIdentifier));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new StripeEvents.ReceiveStripeTokenFromDebitCardError(error));
+                bus.post(new StripeEvent.ReceiveStripeTokenFromDebitCardError(error));
 
             }
         });
