@@ -59,9 +59,11 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ResupplyInfo
             else
             {
                 resupplyButton.setEnabled(false);
-                resupplyHelperText.setText(resupplyInfo.getHelperText());
-                resupplyHelperText.setVisibility(View.VISIBLE);
             }
+
+            resupplyHelperText.setText(resupplyInfo.getHelperText());
+            resupplyHelperText.setVisibility(View.VISIBLE);
+
             return true;
         }
         else
