@@ -30,6 +30,14 @@ apply plugin: 'com.getkeepsafe.dexcount'
 
 apply from: 'jacoco.gradle'
 
+
+def computeVersionName(versionCode) {
+    def major = (versionCode / 10000).intValue() % 10000
+    def minor = (versionCode / 100).intValue() % 100
+    def bugfix = versionCode % 100
+    "${major}.${minor}.${bugfix}"
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -39,8 +47,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 33
-        versionName "0.7.0"
+        versionCode 701 //0.7.1
+        versionName computeVersionName(versionCode)
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
