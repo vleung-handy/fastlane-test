@@ -379,12 +379,12 @@
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
 
-    <!-- Payments -->
-    <string name="previous_job">Previous Job</string>
-
     <!-- Payments Menu Items -->
     <string name="update_banking_information">Update banking information</string>
     <string name="email_income_verification">Email income verification</string>
+
+    <!-- Payments -->
+    <string name="previous_job">Previous Job</string>
     <string name="total_payment">Total Payment</string>
     <string name="expected_payment">Expected Payment</string>
     <string name="remaining_withholdings">Remaining Withholdings</string>
@@ -395,8 +395,7 @@
     <string name="no_more_payments">You have no more payments for this year.</string>
     <string name="expected_deposit">Expect deposit by</string>
     <string name="update_payment_method">Update Payment Method</string>
-    <string name="debit_card_number">Debit Card Number</string>
-    <string name="payment_method">Payment Method</string>
+    <string name="select_payment_method">Select Payment Method</string>
     <string name="payment_flow_error">Failed to get payment flow</string>
     <string name="payment_account">Payment Account</string>
     <string name="update_payment_method_note">Note:\nPlease allow an additional 1&#8211;3 days after Handy sends payment for your bank to process it.</string>
@@ -406,7 +405,14 @@
     <string name="update_bank_account_failed">Failed to update bank account</string>
     <string name="update_bank_account_success">Successfully updated bank account</string>
     <string name="no_payment_method">No Payment Method</string>
-    <string name="add_payment_method">Add Payment Method</string>
+    <string name="add_debit_card">Add Debit Card</string>
+    <string name="add_bank_account">Add Bank Account</string>
+    <string name="your_bank_check">Your bank check:</string>
+    <string name="slash">/</string>
+    <string name="form_not_filled_out_correctly">Your form is not filled out correctly</string>
+    <string name="verified">Verified</string>
+    <string name="failed">Failed</string>
+    <string name="pending">Pending</string>
 
     <!-- Payments Bill Blocker -->
     <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>

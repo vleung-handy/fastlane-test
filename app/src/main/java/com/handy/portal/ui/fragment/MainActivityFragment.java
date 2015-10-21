@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -27,6 +28,8 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
+    @InjectView(R.id.tabs)
+    RadioGroup tabs;
     @InjectView(R.id.button_jobs)
     RadioButton jobsButton;
     @InjectView(R.id.button_schedule)
@@ -165,20 +168,15 @@ public class MainActivityFragment extends InjectedFragment
         argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
         {
             @Override
-            public int describeContents()
-            {
-                return 0;
-            }
+            public int describeContents() { return 0; }
 
             @Override
-            public void writeToParcel(Parcel parcel, int i)
-            {
-            }
+            public void writeToParcel(Parcel parcel, int i) { }
 
             @Override
             public void updateTabs(MainViewTab tab)
             {
-                updateSelectedTabButton(tab);
+                if (tabs != null) { updateSelectedTabButton(tab); }
             }
         });
 
@@ -196,7 +194,9 @@ public class MainActivityFragment extends InjectedFragment
         else
         {
             swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.UPDATE_PAYMENTS;
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
+            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
             swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
             swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
             swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
@@ -283,7 +283,8 @@ public class MainActivityFragment extends InjectedFragment
             try
             {
                 newFragment = (Fragment) swapArguments.targetClassType.newInstance();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Crashlytics.logException(new RuntimeException("Error instantiating fragment class", e));
                 return;

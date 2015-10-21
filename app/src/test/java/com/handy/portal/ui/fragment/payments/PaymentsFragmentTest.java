@@ -1,12 +1,13 @@
 package com.handy.portal.ui.fragment.payments;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.ui.activity.TestActivity;
+import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.squareup.otto.Bus;
 
@@ -42,14 +43,14 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     public void setUp() throws Exception
     {
         fragment = new PaymentsFragment();
-        SupportFragmentTestUtil.startFragment(fragment, TestActivity.class);
+        SupportFragmentTestUtil.startFragment(fragment, MainActivity.class);
         initMocks(this);
     }
 
     @Test
     public void shouldHaveCorrectTitleOnActionBar() throws Exception
     {
-        ActionBar actionBar = fragment.getActivity().getActionBar();
+        ActionBar actionBar = ((AppCompatActivity)fragment.getActivity()).getSupportActionBar();
         assertNotNull(actionBar);
         assertEquals(fragment.getString(R.string.payments), actionBar.getTitle());
     }

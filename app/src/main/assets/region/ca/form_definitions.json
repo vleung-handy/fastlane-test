@@ -4,23 +4,20 @@
     "update_bank_info": {
       "field_definitions": {
         "routing_number": {
-          "display_name": "Transit and Institution Numbers",
-          "error_message": "Transit and institution numbers must be correctly formatted",
-          "hint_text": "12345678",
+          "display_name": "Transit and Institution #",
+          "hint_text": "",
           "input_type": "number",
           "pattern": "^[0-9]{8}$"
         },
         "account_number": {
-          "display_name": "Account Number",
-          "error_message": "Account number must be 1-30 digits",
+          "display_name": "Account #",
           "hint_text": "",
           "input_type": "number",
           "pattern": "^[0-9]{1,30}$"
         },
         "tax_id_number": {
-          "display_name": "Social Insurance Number",
-          "error_message": "Social insurance number must be exactly 9 digits",
-          "hint_text": "123456789",
+          "display_name": "Social Insurance #",
+          "hint_text": "",
           "input_type": "number",
           "pattern": "^[0-9]{9}$"
         }

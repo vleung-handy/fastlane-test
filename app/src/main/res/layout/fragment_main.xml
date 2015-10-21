@@ -1,4 +1,4 @@
-<RelativeLayout
+<com.handy.portal.ui.layout.TabbedLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -60,4 +60,4 @@
 
     <include layout="@layout/merge_loading"/>
 
-</RelativeLayout>
+</com.handy.portal.ui.layout.TabbedLayout>

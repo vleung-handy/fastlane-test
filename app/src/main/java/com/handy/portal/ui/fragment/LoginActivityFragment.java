@@ -39,7 +39,7 @@ import butterknife.OnClick;
 public class LoginActivityFragment extends InjectedFragment
 {
     @VisibleForTesting
-    protected static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
+    static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
 
     @InjectView(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
@@ -55,6 +55,9 @@ public class LoginActivityFragment extends InjectedFragment
     Button loginButton;
     @InjectView(R.id.back_button)
     ImageButton backButton;
+    @InjectView(R.id.slide_up_panel_container)
+    SlideUpPanelContainer slideUpPanelContainer;
+
 
     @Inject
     EnvironmentModifier environmentModifier;
@@ -64,8 +67,6 @@ public class LoginActivityFragment extends InjectedFragment
     Mixpanel mixpanel;
     @Inject
     PrefsManager prefsManager;
-    @InjectView(R.id.slide_up_panel_container)
-    protected SlideUpPanelContainer slideUpPanelContainer;
 
     private enum LoginState
     {
@@ -148,7 +149,7 @@ public class LoginActivityFragment extends InjectedFragment
     @OnClick(R.id.logo)
     protected void selectEnvironment()
     {
-        if (!buildConfigWrapper.isDebug()) return;
+        if (!buildConfigWrapper.isDebug()) { return; }
 
         UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), null).show();
     }
@@ -156,6 +157,11 @@ public class LoginActivityFragment extends InjectedFragment
     @OnClick(R.id.login_help_button)
     protected void showLoginInstructions()
     {
+        if (getView() != null)
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
         slideUpPanelContainer.showPanel(R.string.instructions, new SlideUpPanelContainer.ContentInitializer()
         {
             @Override
@@ -197,7 +203,8 @@ public class LoginActivityFragment extends InjectedFragment
             // purposes where the seeded value of the pin associated with the provider will be
             // preserved on the server side and used on the client side
             changeState(LoginState.INPUTTING_PIN);
-        } else
+        }
+        else
         {
             bus.post(new HandyEvent.RequestPinCode(phoneNumber));
         }
@@ -220,7 +227,8 @@ public class LoginActivityFragment extends InjectedFragment
             if (event.pinRequestDetails.getSuccess())
             {
                 changeState(LoginState.INPUTTING_PIN);
-            } else
+            }
+            else
             {
                 postLoginErrorEvent("phone number");
                 showToast(R.string.login_error_bad_phone);
@@ -255,7 +263,8 @@ public class LoginActivityFragment extends InjectedFragment
             if (event.loginDetails.getSuccess())
             {
                 beginLogin(event.loginDetails);
-            } else
+            }
+            else
             {
                 postLoginErrorEvent("pin code");
                 showToast(R.string.login_error_bad_login);

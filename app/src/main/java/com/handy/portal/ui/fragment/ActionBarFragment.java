@@ -1,10 +1,11 @@
 package com.handy.portal.ui.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,7 +19,6 @@ import com.handy.portal.util.UIUtils;
 
 import javax.inject.Inject;
 
-//TODO: eventually we should use Toolbar with support library instead of ActionBar because it is more flexible
 public abstract class ActionBarFragment extends InjectedFragment
 {
     @Inject
@@ -43,20 +43,13 @@ public abstract class ActionBarFragment extends InjectedFragment
             tabsCallback = new UpdateTabsCallback()
             {
                 @Override
-                public int describeContents()
-                {
-                    return 0;
-                }
+                public int describeContents() { return 0; }
 
                 @Override
-                public void writeToParcel(Parcel parcel, int i)
-                {
-                }
+                public void writeToParcel(Parcel parcel, int i) { }
 
                 @Override
-                public void updateTabs(MainViewTab tab)
-                {
-                }
+                public void updateTabs(MainViewTab tab) { }
             };
         }
     }
@@ -110,13 +103,13 @@ public abstract class ActionBarFragment extends InjectedFragment
 
     public void setActionBarVisible(boolean visible)
     {
-        if (visible) getActionBar().show();
-        else getActionBar().hide();
+        if (visible) { getActionBar().show(); }
+        else { getActionBar().hide(); }
     }
 
     private ActionBar getActionBar()
     {
-        return getActivity().getActionBar();
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     public void setBackButtonEnabled(boolean enabled)

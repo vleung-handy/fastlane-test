@@ -8,91 +8,134 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/default_padding"
-        android:theme="@style/HandyForm">
+        android:paddingTop="@dimen/default_padding">
 
-        <!--TODO: put strings in strings.xml-->
-        <TextView
-            android:id="@+id/payments_update_info_debit_card_number_label"
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin"
-            android:textAppearance="@style/TextView.Bold"
-            android:textStyle="bold"/>
+            android:orientation="vertical"
+            android:stretchColumns="2">
 
-        <EditText
-            android:id="@+id/payments_update_info_debit_card_number_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
-
-        <TextView
-            android:id="@+id/payments_update_info_debit_card_expiration_date_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:textAppearance="@style/TextView.Bold"
-            android:textStyle="bold"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/payments_update_info_debit_card_expiration_month_text"
-                android:layout_width="wrap_content"
+            <com.handy.portal.ui.view.FormFieldTableRow
+                android:id="@+id/debit_card_number_field"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"/>
+                android:background="@drawable/border_payment_method_option">
 
-            <EditText
-                android:id="@+id/payments_update_info_debit_card_expiration_year_text"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/error_indicator"
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="1dp"
+                    android:src="@drawable/rectangle_red"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/label_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/default_padding"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="@dimen/default_padding"
+                    android:textColor="@color/black"/>
+
+                <EditText
+                    android:id="@+id/value_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:nextFocusDown="@+id/month_value_text"
+                    android:padding="@dimen/default_padding"
+                    android:singleLine="true"
+                    android:textColor="@color/black"/>
+
+            </com.handy.portal.ui.view.FormFieldTableRow>
+
+            <com.handy.portal.ui.view.DateFormFieldTableRow
+                android:id="@+id/expiration_date_field"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"/>
-        </LinearLayout>
+                android:background="@drawable/border_bottom_payment_method_option">
 
-        <TextView
-            android:id="@+id/payments_update_info_debit_card_security_code_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:textAppearance="@style/TextView.Bold"
-            android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/error_indicator"
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="1dp"
+                    android:src="@drawable/rectangle_red"
+                    android:visibility="invisible"/>
 
-        <EditText
-            android:id="@+id/payments_update_info_debit_card_security_code_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
+                <TextView
+                    android:id="@+id/label_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/default_padding"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="@dimen/default_padding"
+                    android:textColor="@color/black"/>
 
-        <TextView
-            android:id="@+id/payments_update_info_debit_card_tax_id_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:textAppearance="@style/TextView.Bold"
-            android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/payments_update_info_debit_tax_id_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
+                    <EditText
+                        android:id="@+id/month_value_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:maxLength="2"
+                        android:nextFocusDown="@+id/year_value_text"
+                        android:padding="@dimen/default_padding"
+                        android:singleLine="true"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/slash"
+                        android:textColor="@color/black"/>
+
+                    <EditText
+                        android:id="@+id/year_value_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:maxLength="4"
+                        android:nextFocusDown="@+id/tax_id_field"
+                        android:padding="@dimen/default_padding"
+                        android:singleLine="true"
+                        android:textColor="@color/black"/>
+
+                </LinearLayout>
+            </com.handy.portal.ui.view.DateFormFieldTableRow>
+
+            <com.handy.portal.ui.view.FormFieldTableRow
+                android:id="@+id/security_code_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_payment_method_option">
+
+                <include layout="@layout/element_form_field"/>
+
+            </com.handy.portal.ui.view.FormFieldTableRow>
+
+            <com.handy.portal.ui.view.FormFieldTableRow
+                android:id="@+id/tax_id_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_payment_method_option">
+
+                <include layout="@layout/element_form_field"/>
+
+            </com.handy.portal.ui.view.FormFieldTableRow>
+        </TableLayout>
 
         <Button
             android:id="@+id/payments_update_info_debit_card_submit_button"
+            style="@style/Button.Green.Round"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:background="@drawable/button_green_round"
-            android:text="@string/save"
-            android:textAllCaps="false"
-            android:textColor="@color/white"/>
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/add_debit_card"/>
     </LinearLayout>
 </ScrollView>

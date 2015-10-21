@@ -5,12 +5,12 @@ import com.google.common.cache.CacheBuilder;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.PaymentEvents;
+import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.payments.PaymentFlowResponse;
+import com.handy.portal.model.payments.PaymentFlow;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -59,21 +59,21 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestPaymentFlow(PaymentEvents.RequestPaymentFlow event)
+    public void onRequestPaymentFlow(PaymentEvent.RequestPaymentFlow event)
     {
         String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        dataManager.getPaymentFlow(providerId, new DataManager.Callback<PaymentFlowResponse>()
+        dataManager.getPaymentFlow(providerId, new DataManager.Callback<PaymentFlow>()
         {
             @Override
-            public void onSuccess(PaymentFlowResponse response)
+            public void onSuccess(PaymentFlow response)
             {
-                bus.post(new PaymentEvents.ReceivePaymentFlowSuccess(response));
+                bus.post(new PaymentEvent.ReceivePaymentFlowSuccess(response));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new PaymentEvents.ReceivePaymentFlowError(error));
+                bus.post(new PaymentEvent.ReceivePaymentFlowError(error));
 
             }
         });

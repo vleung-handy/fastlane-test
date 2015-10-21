@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.newrelic.agent.android:agent-gradle-plugin:5.1.2'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.14.7'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.2.1'
     }
 }
 repositories {
@@ -25,8 +26,17 @@ apply plugin: 'com.zeroturnaround.jrebel.android'
 apply plugin: 'crashlytics'
 apply plugin: 'newrelic'
 apply plugin: 'jacoco'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 apply from: 'jacoco.gradle'
+
+
+def computeVersionName(versionCode) {
+    def major = (versionCode / 10000).intValue() % 10000
+    def minor = (versionCode / 100).intValue() % 100
+    def bugfix = versionCode % 100
+    "${major}.${minor}.${bugfix}"
+}
 
 android {
     compileSdkVersion 23
@@ -37,8 +47,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 33
-        versionName "0.7.0"
+        versionCode 701 //0.7.1
+        versionName computeVersionName(versionCode)
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
@@ -112,7 +122,6 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
 
     //Google services
-    compile 'com.google.android.gms:play-services:8.1.0' // play services
     compile 'com.google.android.gms:play-services-location:8.1.0' //Recommended for location services
     compile 'com.google.android.gms:play-services-gcm:8.1.0' //Required for Android (GCM) push notifications
 

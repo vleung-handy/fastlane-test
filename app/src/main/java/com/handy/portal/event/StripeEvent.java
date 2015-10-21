@@ -5,7 +5,7 @@ import com.handy.portal.model.payments.BankAccountInfo;
 import com.handy.portal.model.payments.DebitCardInfo;
 import com.handy.portal.model.payments.StripeTokenResponse;
 
-public class StripeEvents
+public class StripeEvent
 {
     public static class RequestStripeTokenFromBankAccount extends HandyEvent.RequestEvent
     {

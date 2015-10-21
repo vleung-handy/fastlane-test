@@ -22,16 +22,14 @@ import javax.inject.Inject;
 public class RegionDefinitionsManager
 {
     private final Bus bus;
-    private final DataManager dataManager;
 
     private final Cache<String, FormDefinitionWrapper> formDefinitionCache;
 
     @Inject
-    public RegionDefinitionsManager(final Bus bus, final DataManager dataManager)
+    public RegionDefinitionsManager(final Bus bus)
     {
         this.bus = bus;
         this.bus.register(this);
-        this.dataManager = dataManager;
         formDefinitionCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
                 .build();

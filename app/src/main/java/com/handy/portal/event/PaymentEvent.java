@@ -4,11 +4,11 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
-import com.handy.portal.model.payments.PaymentFlowResponse;
+import com.handy.portal.model.payments.PaymentFlow;
 
 import java.util.Date;
 
-public class PaymentEvents
+public class PaymentEvent
 {
     public static class RequestPaymentBatches extends HandyEvent.RequestEvent
     {
@@ -215,10 +215,10 @@ public class PaymentEvents
 
     public static class ReceivePaymentFlowSuccess extends HandyEvent.ReceiveSuccessEvent
     {
-        public final PaymentFlowResponse response;
-        public ReceivePaymentFlowSuccess(PaymentFlowResponse response)
+        public final PaymentFlow paymentFlow;
+        public ReceivePaymentFlowSuccess(PaymentFlow paymentFlow)
         {
-            this.response = response;
+            this.paymentFlow = paymentFlow;
         }
     }
 
