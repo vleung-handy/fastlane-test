@@ -41,17 +41,18 @@ public class TabbedLayout extends RelativeLayout
 
     private void setTabsVisibility(int heightMeasureSpec)
     {
-        final int proposedHeight = MeasureSpec.getSize(heightMeasureSpec);
-        final int actualHeight = getHeight();
+        final double proposedHeight = MeasureSpec.getSize(heightMeasureSpec);
+        final double actualHeight = getRootView().getHeight();
 
-        View tabs = findViewById(R.id.tabs);
+        final View tabs = findViewById(R.id.tabs);
         if (tabs != null)
         {
-            if (actualHeight > proposedHeight)
+
+            if (proposedHeight / actualHeight < .7)
             {
                 tabs.setVisibility(GONE);
             }
-            else if (actualHeight < proposedHeight)
+            else
             {
                 tabs.setVisibility(VISIBLE);
             }
