@@ -18,16 +18,23 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.SwapFragmentArguments;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
+    @Inject
+    HandyRetrofitEndpoint endpoint;
+
+
     @InjectView(R.id.tabs)
     RadioGroup tabs;
     @InjectView(R.id.button_jobs)
@@ -115,7 +122,7 @@ public class MainActivityFragment extends InjectedFragment
     private void registerButtonListeners()
     {
         jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW));
         paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
         profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
         helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
@@ -165,6 +172,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             argumentsBundle = new Bundle();
         }
+
         argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
         {
             @Override
@@ -184,6 +192,14 @@ public class MainActivityFragment extends InjectedFragment
         {
             argumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
         }
+
+//TEMPORARY WEB VIEW LOGIC
+        if(targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW)
+        {
+            String url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getWebViewTarget().getValue();
+            argumentsBundle.putString(BundleKeys.TARGET_URL, url);
+        }
+//END TEMPORARY WEB VIEW LOGIC
 
         swapFragmentArguments.argumentsBundle = argumentsBundle;
 
