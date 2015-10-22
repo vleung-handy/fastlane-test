@@ -58,6 +58,11 @@ public class SplashActivity extends BaseActivity
             if (authToken != null)
             {
                 prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
+
+                //For use with WebView
+                CookieSyncManager.createInstance(this);
+                CookieManager.getInstance().setCookie(endpoint.getBaseUrl(), "user_credentials=" + authToken);
+                CookieSyncManager.getInstance().sync();
             }
         }
     }

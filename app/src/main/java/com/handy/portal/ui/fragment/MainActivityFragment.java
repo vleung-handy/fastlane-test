@@ -121,8 +121,17 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerButtonListeners()
     {
-        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW));
+        boolean userIsBlockPro = true;
+        if(userIsBlockPro)
+        {
+            jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW));
+        }
+        else
+        {
+            jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
+        }
+
+        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
         paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
         profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
         helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
