@@ -1,5 +1,6 @@
 package com.handy.portal.webview;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,11 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_webportal, null);
         ButterKnife.inject(this, view);
+
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) //needed to workaround a bug in android 4.4 that cause webview artifacts to show.
+        {
+            view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
 
         initWebView();
 
