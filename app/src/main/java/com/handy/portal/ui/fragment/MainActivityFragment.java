@@ -121,7 +121,7 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerButtonListeners()
     {
-        boolean userIsBlockPro = true;
+        boolean userIsBlockPro = false;
         if(userIsBlockPro)
         {
             jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW));
