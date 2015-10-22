@@ -34,7 +34,6 @@ public class MainActivityFragment extends InjectedFragment
     @Inject
     HandyRetrofitEndpoint endpoint;
 
-
     @InjectView(R.id.tabs)
     RadioGroup tabs;
     @InjectView(R.id.button_jobs)
@@ -122,6 +121,7 @@ public class MainActivityFragment extends InjectedFragment
     private void registerButtonListeners()
     {
         boolean userIsBlockPro = false;
+        //TEMPORARY BLOCK PRO WEB VIEW LOGIC
         if(userIsBlockPro)
         {
             jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW));
@@ -130,6 +130,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
         }
+        //END TEMPORARY BLOCK PRO WEB VIEW LOGIC
 
         scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
         paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
@@ -202,13 +203,13 @@ public class MainActivityFragment extends InjectedFragment
             argumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
         }
 
-//TEMPORARY WEB VIEW LOGIC
+        //TEMPORARY BLOCK PRO WEB VIEW LOGIC
         if(targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW)
         {
             String url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getWebViewTarget().getValue();
             argumentsBundle.putString(BundleKeys.TARGET_URL, url);
         }
-//END TEMPORARY WEB VIEW LOGIC
+        //END TEMPORARY BLOCK PRO WEB VIEW LOGIC
 
         swapFragmentArguments.argumentsBundle = argumentsBundle;
 
