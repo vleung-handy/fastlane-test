@@ -23,9 +23,7 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
 {
     public enum Target
     {
-     //   BLOCK_JOBS("block_jobs"),
-     BLOCK_JOBS("available"), //testing using available since we don't have the real page yet
-
+        BLOCK_JOBS("block"),
         ;
 
         private String value;
