@@ -7,6 +7,7 @@ import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
+import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
@@ -28,6 +29,7 @@ public enum MainViewTab implements Serializable
     PAYMENTS(PaymentsFragment.class),
     PAYMENTS_DETAIL(PaymentsDetailFragment.class),
     PROFILE(ProfileFragment.class),
+    REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     HELP(HelpFragment.class),
     DETAILS(BookingDetailsFragment.class),
     HELP_CONTACT(HelpContactFragment.class),

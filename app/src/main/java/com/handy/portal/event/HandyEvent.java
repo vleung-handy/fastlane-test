@@ -262,6 +262,25 @@ public abstract class HandyEvent
         }
     }
 
+
+    public static class RequestSupplyKitInfo extends RequestEvent
+    {
+    }
+
+    public static class ReceiveSupplyKitInfoSuccess extends ReceiveSuccessEvent
+    {
+        //TODO: Need an endpoint and strucutre for content and cost of supply kit
+        public ReceiveSupplyKitInfoSuccess()
+        {
+
+        }
+    }
+
+    public static class ReceiveSupplyKitInfoError extends ReceiveErrorEvent
+    {
+    }
+
+
     public static class ProviderIdUpdated extends HandyEvent
     {
         public final String providerId;

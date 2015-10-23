@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.util.Utils;
@@ -42,19 +43,32 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ResupplyInfo
     @Override
     protected boolean constructView(ViewGroup container, ResupplyInfo resupplyInfo)
     {
-        if (resupplyInfo.providerCanRequestSupplies())
+        //if (resupplyInfo.providerCanRequestSupplies())
+        if(true)
         {
-            if (resupplyInfo.providerCanRequestSuppliesNow())
+            //if (resupplyInfo.providerCanRequestSuppliesNow())
+            if(true)
             {
+//                resupplyButton.setOnClickListener(new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(View v)
+//                    {
+//                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+//                        bus.post(new HandyEvent.RequestSendResupplyKit());
+//                    }
+//                });
+
                 resupplyButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new HandyEvent.RequestSendResupplyKit());
+                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES));
                     }
                 });
+
             }
             else
             {
