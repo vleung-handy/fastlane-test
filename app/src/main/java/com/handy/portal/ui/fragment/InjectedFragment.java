@@ -26,7 +26,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Inject
     DataManager dataManager;
     @Inject
-    GoogleManager googleManager;
+    protected GoogleManager googleManager;
 
     @VisibleForTesting
     @Inject

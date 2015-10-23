@@ -60,6 +60,8 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
+import com.handy.portal.webview.BlockScheduleFragment;
+import com.handy.portal.webview.PortalWebViewFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -108,7 +110,9 @@ import retrofit.converter.GsonConverter;
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
         SelectPaymentMethodFragment.class,
-        ProfileResupplyViewConstructor.class
+        ProfileResupplyViewConstructor.class,
+        PortalWebViewFragment.class,
+        BlockScheduleFragment.class,
 })
 public final class ApplicationModule
 {
