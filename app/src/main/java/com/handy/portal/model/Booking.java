@@ -89,6 +89,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private Coordinates midpoint;
     @SerializedName("radius")
     private float radius;
+    @SerializedName("zipcluster_id")
+    private String zipClusterId;
 
     public int compareTo(@NonNull Booking other)
     {
@@ -313,6 +315,8 @@ public class Booking implements Comparable<Booking>, Serializable
     {
         return revealDate;
     }
+
+    public String getZipClusterId() { return zipClusterId; }
 
     //Basic booking statuses inferrable from providerId
     public enum BookingStatus
@@ -672,7 +676,7 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
-    public static class Coordinates
+    public static class Coordinates implements Serializable
     {
         @SerializedName("latitude")
         private float latitude;

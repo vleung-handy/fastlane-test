@@ -16,6 +16,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingElementView;
@@ -186,6 +187,14 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
         List<Booking> bookings = event.bookings;
         Collections.sort(bookings);
+
+        for (Booking b : bookings)
+        {
+            if (b.getZipClusterId() != null)
+            {
+                bus.post(new BookingEvent.RequestZipClusterPolygons(b.getZipClusterId()));
+            }
+        }
 
         DateButtonView dateButtonView = dateButtonMap.get(event.day);
         if (dateButtonView != null)

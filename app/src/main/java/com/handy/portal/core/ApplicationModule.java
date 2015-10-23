@@ -28,6 +28,7 @@ import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
+import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -222,11 +223,8 @@ public final class ApplicationModule
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
                 .setRequestInterceptor(new RequestInterceptor()
                 {
-
                     @Override
-                    public void intercept(RequestFacade request)
-                    {
-                    }
+                    public void intercept(RequestFacade request) { }
                 }).setClient(new OkClient(okHttpClient)).build();
         return restAdapter.create(StripeRetrofitService.class);
     }
@@ -376,6 +374,13 @@ public final class ApplicationModule
     final PaymentsManager providePaymentsManager(Bus bus, final DataManager dataManager)
     {
         return new PaymentsManager(bus, dataManager);
+    }
+
+    @Provides
+    @Singleton
+    final ZipClusterManager provideZipClusterPolygonManager(final Bus bus, final DataManager dataManager)
+    {
+        return new ZipClusterManager(bus, dataManager);
     }
 
     @Provides

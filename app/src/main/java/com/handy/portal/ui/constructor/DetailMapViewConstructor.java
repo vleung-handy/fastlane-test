@@ -29,7 +29,6 @@ public abstract class DetailMapViewConstructor extends BookingDetailsViewConstru
         super(context, arguments);
     }
 
-
     public void create(ViewGroup container, Booking booking)
     {
         super.create(container, booking);

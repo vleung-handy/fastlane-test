@@ -25,9 +25,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.ui.fragment.BookingMapFragment;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 
@@ -44,6 +47,7 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
     private boolean useRestrictedView;
     private LatLng target;
     private ViewGroup container;
+    private ZipClusterPolygons mPolygons;
 
     public GoogleMapViewConstructor(@NonNull Context context, Bundle arguments)
     {
@@ -55,10 +59,12 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
     {
         try
         {
-            SupportMapFragment fragment = SupportMapFragment.class.newInstance();
+            BookingMapFragment fragment = BookingMapFragment.class.newInstance();
+
             UIUtils.replaceViewWithFragment(getContext(), mapViewStub, fragment);
             onFragmentCreated(fragment);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Crashlytics.logException(e);
         }
@@ -68,7 +74,6 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
     {
         if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext()))
         {
-
             if (mapFragment != null)
             {
                 mapFragment.getMapAsync(this);
@@ -97,6 +102,7 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         this.container = container;
         this.useRestrictedView = bookingStatus != Booking.BookingStatus.CLAIMED;
         this.booking = booking;
+        mPolygons = (ZipClusterPolygons) getArguments().getSerializable(BundleKeys.ZIP_CLUSTER_POLYGONS);
 
         return true;
     }
@@ -112,7 +118,6 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
 
         if (this.useRestrictedView)
         {
-            map.getUiSettings().setAllGesturesEnabled(false); //disable all controls, we just want to see the image for now
             //In restricted view can't click on map to see exact location, show Toast to inform user
             map.setOnMapClickListener(new GoogleMap.OnMapClickListener()
             {
@@ -127,8 +132,6 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         }
         else
         {
-            map.getUiSettings().setAllGesturesEnabled(false); //disable controls for now, only allowing clicks to launch maps
-
             //Can click on the map to launch it
             map.setOnMapClickListener(new GoogleMap.OnMapClickListener()
             {
@@ -152,12 +155,20 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
 
     private LatLng getLatLng()
     {
-        float latitude;
-        float longitude;
+        double latitude;
+        double longitude;
         if (booking.isProxy())
         {
-            latitude = booking.getMidpoint().getLatitude();
-            longitude = booking.getMidpoint().getLongitude();
+            if (mPolygons == null)
+            {
+                latitude = booking.getMidpoint().getLatitude();
+                longitude = booking.getMidpoint().getLongitude();
+            }
+            else
+            {
+                latitude = mPolygons.getOutlines()[0][0].latitude;
+                longitude = mPolygons.getOutlines()[0][0].longitude;
+            }
         }
         else
         {
@@ -177,11 +188,30 @@ public class GoogleMapViewConstructor extends DetailMapViewConstructor implement
         map.moveCamera(cameraUpdate);
         if (booking.isProxy() || this.useRestrictedView)
         {
-            showRangeOverlay(map, target, getRadius());
+            if (mPolygons == null)
+            {
+                showRangeOverlay(map, target, getRadius());
+            }
+            else
+            {
+                showPolygon(map, mPolygons.getOutlines());
+            }
         }
         else
         {
             addPinToMap(map, target);
+        }
+    }
+
+    private static void showPolygon(GoogleMap map, LatLng[][] polygons)
+    {
+        for (LatLng[] polygon : polygons)
+        {
+            PolygonOptions polygonOptions = new PolygonOptions();
+            polygonOptions.add(polygon);
+            polygonOptions.strokeWidth(1);
+            polygonOptions.fillColor(0x4C00CDED);
+            map.addPolygon(polygonOptions);
         }
     }
 

@@ -763,9 +763,7 @@ public abstract class HandyEvent
     }
 
     //Help Payments Node
-    public static class RequestHelpPaymentsNode extends HandyEvent
-    {
-    }
+    public static class RequestHelpPaymentsNode extends RequestEvent {}
 
     public static class ReceiveHelpPaymentsNodeSuccess extends ReceiveSuccessEvent
     {

@@ -18,6 +18,7 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -269,6 +270,12 @@ public final class BaseDataManager extends DataManager
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb)
     {
         service.getPaymentFlow(providerId, new GetPaymentFlowRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getZipClusterPolygons(String providerId, final Callback<ZipClusterPolygons> cb)
+    {
+        service.getZipClusterPolygon(providerId, new GetZipClusterPolygonRetroFitCallback(cb));
     }
 
     //Stripe

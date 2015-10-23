@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
@@ -47,7 +49,6 @@ import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
-import com.handy.portal.ui.constructor.GoogleMapViewConstructor;
 import com.handy.portal.ui.constructor.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
@@ -110,6 +111,9 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     @Inject
     PrefsManager prefsManager;
+
+    @Inject
+    ZipClusterManager mZipClusterManager;
 
     private String requestedBookingId;
     private BookingType requestedBookingType;
@@ -177,7 +181,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         if (associatedBooking != null)
         {
-
             int titleStringId = 0;
             String bookingIdPrefix = associatedBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
             String jobLabel = getActivity().getString(R.string.job_num) + bookingIdPrefix + associatedBooking.getId();
@@ -230,6 +233,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+
         if (!MainActivityFragment.clearingBackStack)
         {
             requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
@@ -311,6 +315,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
 
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+
         if (this.isForPayments)
         {
             mapLayout.setVisibility(View.GONE);
@@ -320,7 +326,8 @@ public class BookingDetailsFragment extends ActionBarFragment
             //show either the real map or a placeholder image depending on if we have google play services
             if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
             {
-                viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
+                BookingMapFragment fragment = BookingMapFragment.newInstance(associatedBooking, bookingStatus, mZipClusterManager.getCachedPolygons(associatedBooking.getZipClusterId()));
+                transaction.replace(mapLayout.getId(), fragment);
             }
             else
             {
@@ -339,6 +346,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments));
         }
 
+        transaction.commit();
         return viewConstructors;
     }
 
