@@ -33,8 +33,6 @@ import butterknife.OnClick;
 
 public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
 {
-    //TODO: need to consolidate this logic with the other update payment fragment!
-
     @InjectView(R.id.debit_card_number_field)
     FormFieldTableRow debitCardNumberField;
 

@@ -19,7 +19,9 @@ import javax.inject.Inject;
 
 public class StripeManager //TODO: should we consolidate this with PaymentsManager?
 {
-    private final String STRIPE_API_KEY;
+    private final String STRIPE_API_KEY_US;
+    private final String STRIPE_API_KEY_GB;
+    private final String STRIPE_API_KEY_CA;
     private final Bus bus;
     private final DataManager dataManager;
 
@@ -53,7 +55,9 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         this.bus.register(this);
         this.dataManager = dataManager;
 
-        STRIPE_API_KEY = PropertiesReader.getConfigProperties(context).getProperty("stripe_api_key");
+        STRIPE_API_KEY_US = PropertiesReader.getConfigProperties(context).getProperty("stripe_api_key_us");
+        STRIPE_API_KEY_GB = PropertiesReader.getConfigProperties(context).getProperty("stripe_api_key_gb");
+        STRIPE_API_KEY_CA = PropertiesReader.getConfigProperties(context).getProperty("stripe_api_key_ca");
     }
 
     @Subscribe
@@ -103,7 +107,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         params.put(RequestStripeTokenKeys.DebitCard.CARD_EXP_MONTH, debitCardInfo.getExpMonth());
         params.put(RequestStripeTokenKeys.DebitCard.CARD_EXP_YEAR, debitCardInfo.getExpYear());
         params.put(RequestStripeTokenKeys.DebitCard.CARD_CVC, debitCardInfo.getCvc());
-        params.put(RequestStripeTokenKeys.API_KEY, STRIPE_API_KEY);
+        params.put(RequestStripeTokenKeys.API_KEY, STRIPE_API_KEY_US);
         return params;
     }
 
@@ -114,8 +118,14 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_COUNTRY, bankAccountInfo.getCountry());
         params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_CURRENCY, bankAccountInfo.getCurrency());
         params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_ROUTING_NUMBER, bankAccountInfo.getRoutingNumber());
-        params.put(RequestStripeTokenKeys.API_KEY, STRIPE_API_KEY);
+        params.put(RequestStripeTokenKeys.API_KEY, pickStripeApiKey(bankAccountInfo.getCountry()));
         return params;
+    }
+
+    private String pickStripeApiKey(String country) {
+        if ("GB".equalsIgnoreCase(country)) { return STRIPE_API_KEY_GB; }
+        else if ("CA".equalsIgnoreCase(country)) { return STRIPE_API_KEY_CA; }
+        else { return STRIPE_API_KEY_US; }
     }
 
 }

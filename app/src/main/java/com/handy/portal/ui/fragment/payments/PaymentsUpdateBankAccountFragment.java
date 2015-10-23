@@ -31,10 +31,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class PaymentsUpdateBankAccountFragment extends ActionBarFragment //TODO: make a form class
+public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
 {
-    //TODO: need to consolidate this logic with the other update payment fragment!
-
     @InjectView(R.id.routing_number_field)
     FormFieldTableRow routingNumberField;
 
