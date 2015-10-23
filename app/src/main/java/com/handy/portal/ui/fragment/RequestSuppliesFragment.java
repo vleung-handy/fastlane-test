@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
@@ -139,22 +140,8 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void onReceiveSendResupplyKitSuccess(HandyEvent.ReceiveSendResupplyKitSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-
-//        ViewGroup resupplyLayout = (ViewGroup) getActivity().findViewById(R.id.resupply_layout);
-//        if (resupplyLayout != null)
-//        {
-//            resupplyLayout.removeView(resupplyLayout);
-//        }
-
-        //new ProfileResupplyViewConstructor(getActivity()).create(profileLayout, event.resupplyInfo);
-
-
-        showToast(R.string.resupply_kit_on_its_way);
-
-
         //TODO : Success transition / pop back to the profile tab
-
-        //bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.JOB_CLAIM_SUCCESS));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
     }
 
     @Subscribe

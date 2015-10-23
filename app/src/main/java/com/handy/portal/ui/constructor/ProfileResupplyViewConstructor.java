@@ -43,22 +43,12 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ResupplyInfo
     @Override
     protected boolean constructView(ViewGroup container, ResupplyInfo resupplyInfo)
     {
-        //if (resupplyInfo.providerCanRequestSupplies())
-        if(true)
-        {
-            //if (resupplyInfo.providerCanRequestSuppliesNow())
-            if(true)
-            {
-//                resupplyButton.setOnClickListener(new View.OnClickListener()
-//                {
-//                    @Override
-//                    public void onClick(View v)
-//                    {
-//                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-//                        bus.post(new HandyEvent.RequestSendResupplyKit());
-//                    }
-//                });
+        final boolean OVERRIDE_REQUEST_SUPPLY_CHECK_DEBUG = true;
 
+        if (resupplyInfo.providerCanRequestSupplies() || OVERRIDE_REQUEST_SUPPLY_CHECK_DEBUG)
+        {
+            if (resupplyInfo.providerCanRequestSuppliesNow() || OVERRIDE_REQUEST_SUPPLY_CHECK_DEBUG)
+            {
                 resupplyButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -68,7 +58,6 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ResupplyInfo
                         bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES));
                     }
                 });
-
             }
             else
             {
