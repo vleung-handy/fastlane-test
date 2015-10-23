@@ -2,6 +2,7 @@ package com.handy.portal.webview;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.StringDef;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,23 +24,10 @@ import butterknife.InjectView;
 
 public abstract class PortalWebViewFragment extends ActionBarFragment
 {
-    public enum Target
-    {
-        BLOCK_JOBS("block"),
-        ;
-
-        private String value;
-
-        Target(String value)
-        {
-            this.value = value;
-        }
-
-        public String getValue()
-        {
-            return value;
-        }
-    }
+    @StringDef({BLOCK_JOBS_PAGE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TargetPage {}
+    public static final String BLOCK_JOBS_PAGE = "block";
 
     @InjectView(R.id.portal_web_view)
     WebView webView;

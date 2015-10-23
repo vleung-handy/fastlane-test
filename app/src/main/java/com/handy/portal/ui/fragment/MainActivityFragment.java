@@ -206,7 +206,7 @@ public class MainActivityFragment extends InjectedFragment
         //TEMPORARY BLOCK PRO WEB VIEW LOGIC
         if(targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW)
         {
-            String url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getWebViewTarget().getValue();
+            String url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getWebViewTarget();
             argumentsBundle.putString(BundleKeys.TARGET_URL, url);
         }
         //END TEMPORARY BLOCK PRO WEB VIEW LOGIC

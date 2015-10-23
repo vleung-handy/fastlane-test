@@ -31,18 +31,18 @@ public enum MainViewTab implements Serializable
     HELP(HelpFragment.class),
     DETAILS(BookingDetailsFragment.class),
     HELP_CONTACT(HelpContactFragment.class),
-    BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, PortalWebViewFragment.Target.BLOCK_JOBS),
+    BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, PortalWebViewFragment.BLOCK_JOBS_PAGE),
     ;
 
     private Class classType;
-    private PortalWebViewFragment.Target webViewTarget;
+    private @PortalWebViewFragment.TargetPage String webViewTarget;
 
     MainViewTab(Class classType)
     {
         this.classType = classType;
     }
 
-    MainViewTab(Class classType, PortalWebViewFragment.Target target)
+    MainViewTab(Class classType, @PortalWebViewFragment.TargetPage String target)
     {
         this.classType = classType;
         this.webViewTarget = target;
@@ -53,7 +53,7 @@ public enum MainViewTab implements Serializable
         return classType;
     }
 
-    public PortalWebViewFragment.Target getWebViewTarget()
+    public @PortalWebViewFragment.TargetPage String getWebViewTarget()
     {
         return webViewTarget;
     }
@@ -73,5 +73,7 @@ public enum MainViewTab implements Serializable
 
         return TransitionStyle.NATIVE_TO_NATIVE;
     }
+
+
 
 }
