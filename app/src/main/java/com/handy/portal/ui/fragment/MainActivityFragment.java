@@ -17,6 +17,8 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -33,6 +35,9 @@ public class MainActivityFragment extends InjectedFragment
 {
     @Inject
     HandyRetrofitEndpoint endpoint;
+    @Inject
+    ProviderManager providerManager;
+
 
     @InjectView(R.id.tabs)
     RadioGroup tabs;
@@ -87,7 +92,14 @@ public class MainActivityFragment extends InjectedFragment
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB))
         {
-            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            if(isCachedProviderBlockPro())
+            {
+                switchToTab(MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW, false);
+            }
+            else
+            {
+                switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            }
         }
     }
 
@@ -120,9 +132,8 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerButtonListeners()
     {
-        boolean userIsBlockPro = false;
         //TEMPORARY BLOCK PRO WEB VIEW LOGIC
-        if(userIsBlockPro)
+        if(isCachedProviderBlockPro())
         {
             jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW));
         }
@@ -206,7 +217,7 @@ public class MainActivityFragment extends InjectedFragment
         //TEMPORARY BLOCK PRO WEB VIEW LOGIC
         if(targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW)
         {
-            String url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getWebViewTarget();
+            String url = constructTargetUrl(targetTab);
             argumentsBundle.putString(BundleKeys.TARGET_URL, url);
         }
         //END TEMPORARY BLOCK PRO WEB VIEW LOGIC
@@ -242,6 +253,26 @@ public class MainActivityFragment extends InjectedFragment
         currentTab = targetTab;
     }
 
+    private String constructTargetUrl(MainViewTab targetTab)
+    {
+        String targetUrl = endpoint.getBaseUrl() + targetTab.getWebViewTarget();;
+
+        //need to replace certain tokens
+
+        String providerIdReplacement = ":id";
+
+        Provider provider = providerManager.getCachedActiveProvider();
+
+        String providerId = (provider != null ? provider.getId() : "");
+
+        targetUrl = targetUrl.replace(providerIdReplacement, providerId);
+
+        System.out.println("Target URL is : " + targetUrl);
+
+        return targetUrl;
+    }
+
+
     private void clearFragmentBackStack()
     {
         clearingBackStack = true;
@@ -265,6 +296,7 @@ public class MainActivityFragment extends InjectedFragment
             switch (targetTab)
             {
                 case AVAILABLE_JOBS:
+                case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
                 {
                     jobsButton.toggle();
                 }
@@ -361,5 +393,13 @@ public class MainActivityFragment extends InjectedFragment
 
         // Commit the transaction
         transaction.commit();
+    }
+
+    private  boolean isCachedProviderBlockPro()
+    {
+        boolean userIsBlockPro = false;
+        userIsBlockPro = (  providerManager.getCachedActiveProvider() != null &&
+                providerManager.getCachedActiveProvider().isBlockCleaner());
+        return userIsBlockPro;
     }
 }

@@ -27,7 +27,7 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
     @StringDef({BLOCK_JOBS_PAGE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TargetPage {}
-    public static final String BLOCK_JOBS_PAGE = "block";
+    public static final String BLOCK_JOBS_PAGE = "providers/:id/provider_schedules";
 
     @InjectView(R.id.portal_web_view)
     WebView webView;
@@ -97,7 +97,9 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
                 + "&ht=1"
                 + "&skip_web_portal_version_tracking=1"
                 + "&skip_web_portal_blocking=1"
-                + "&from_android_native=1";
+                + "&from_android_native=1"
+                + "&disable_mobile_splash=1"
+                ;
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
         webView.loadUrl(urlWithParams);
     }
