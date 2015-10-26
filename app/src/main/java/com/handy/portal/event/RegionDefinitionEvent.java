@@ -5,9 +5,9 @@ import android.content.Context;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 
-public class RegionDefinitionEvent
+public abstract class RegionDefinitionEvent extends HandyEvent
 {
-    public static class RequestFormDefinitions extends HandyEvent.RequestEvent
+    public static class RequestFormDefinitions extends RequestEvent
     {
         public final Context context;
         public final String region;
@@ -19,7 +19,7 @@ public class RegionDefinitionEvent
         }
     }
 
-    public static class ReceiveFormDefinitionsSuccess extends HandyEvent.ReceiveSuccessEvent
+    public static class ReceiveFormDefinitionsSuccess extends ReceiveSuccessEvent
     {
         public final FormDefinitionWrapper formDefinitionWrapper;
 
@@ -29,7 +29,7 @@ public class RegionDefinitionEvent
         }
     }
 
-    public static class ReceiveFormDefinitionsError extends HandyEvent.ReceiveErrorEvent
+    public static class ReceiveFormDefinitionsError extends ReceiveErrorEvent
     {
         public ReceiveFormDefinitionsError(DataManager.DataManagerError error)
         {

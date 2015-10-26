@@ -5,27 +5,29 @@ import com.handy.portal.model.payments.BankAccountInfo;
 import com.handy.portal.model.payments.DebitCardInfo;
 import com.handy.portal.model.payments.StripeTokenResponse;
 
-public class StripeEvent
+public abstract class StripeEvent extends HandyEvent
 {
-    public static class RequestStripeTokenFromBankAccount extends HandyEvent.RequestEvent
+    public static class RequestStripeTokenFromBankAccount extends RequestEvent
     {
         public final BankAccountInfo bankAccountInfo;
+
         public RequestStripeTokenFromBankAccount(BankAccountInfo bankAccountInfo)
         {
             this.bankAccountInfo = bankAccountInfo;
         }
     }
 
-    public static class ReceiveStripeTokenFromBankAccountSuccess extends HandyEvent.ReceiveSuccessEvent
+    public static class ReceiveStripeTokenFromBankAccountSuccess extends ReceiveSuccessEvent
     {
         public final StripeTokenResponse stripeTokenResponse;
+
         public ReceiveStripeTokenFromBankAccountSuccess(StripeTokenResponse stripeTokenResponse)
         {
             this.stripeTokenResponse = stripeTokenResponse;
         }
     }
 
-    public static class ReceiveStripeTokenFromBankAccountError extends HandyEvent.ReceiveErrorEvent
+    public static class ReceiveStripeTokenFromBankAccountError extends ReceiveErrorEvent
     {
         public ReceiveStripeTokenFromBankAccountError(DataManager.DataManagerError error)
         {
@@ -33,10 +35,11 @@ public class StripeEvent
         }
     }
 
-    public static class RequestStripeTokenFromDebitCard extends HandyEvent.RequestEvent
+    public static class RequestStripeTokenFromDebitCard extends RequestEvent
     {
         public final int requestIdentifier;//TODO: refactor - might remove this later
         public final DebitCardInfo debitCardInfo;
+
         public RequestStripeTokenFromDebitCard(DebitCardInfo debitCardInfo, int requestIdentifier)
         {
             this.debitCardInfo = debitCardInfo;
@@ -44,10 +47,11 @@ public class StripeEvent
         }
     }
 
-    public static class ReceiveStripeTokenFromDebitCardSuccess extends HandyEvent.ReceiveSuccessEvent
+    public static class ReceiveStripeTokenFromDebitCardSuccess extends ReceiveSuccessEvent
     {
         public final int requestIdentifier;
         public final StripeTokenResponse stripeTokenResponse;
+
         public ReceiveStripeTokenFromDebitCardSuccess(StripeTokenResponse stripeTokenResponse, int requestIdentifier)
         {
             this.stripeTokenResponse = stripeTokenResponse;
@@ -55,7 +59,7 @@ public class StripeEvent
         }
     }
 
-    public static class ReceiveStripeTokenFromDebitCardError extends HandyEvent.ReceiveErrorEvent
+    public static class ReceiveStripeTokenFromDebitCardError extends ReceiveErrorEvent
     {
         public ReceiveStripeTokenFromDebitCardError(DataManager.DataManagerError error)
         {
