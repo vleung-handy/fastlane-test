@@ -44,8 +44,6 @@ public class TabNavigationManager
                 event.userTriggered
         );
 
-        System.out.println("ZZZz sending back the swap fragment nav");
-
         mBus.post(new HandyEvent.SwapFragmentNavigation(swapFragmentArguments));
     }
 
