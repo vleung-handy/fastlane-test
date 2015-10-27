@@ -78,6 +78,9 @@ public class PortalWebViewClient extends WebViewClient
     public void onPageFinished(WebView view, String url)
     {
         super.onPageFinished(view, url);
+
+        System.out.println("Finished page : " + url);
+
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
     }
 

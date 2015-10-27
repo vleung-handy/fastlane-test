@@ -34,7 +34,7 @@ public class MainActivityFragment extends InjectedFragment
 //TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
     @Inject
     HandyRetrofitEndpoint endpoint;
-
+/////////////Bad useless injection that breaks if not in?
 
 
 
@@ -59,11 +59,20 @@ public class MainActivityFragment extends InjectedFragment
     // Other fragments will want to know to avoid re-doing things on their onCreateView
     public static boolean clearingBackStack = false;
 
+    private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
+
     @Override
     public void onResume()
     {
         super.onResume();
+
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
+
+        //Need to wait until onResume instead of onViewStateRestored to make sure bus is registered
+        if (mOnResumeTransitionToMainTab)
+        {
+            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+        }
     }
 
     @Override
@@ -82,7 +91,6 @@ public class MainActivityFragment extends InjectedFragment
         ButterKnife.inject(this, view);
         registerButtonListeners();
         loadingOverlayView.init();
-
         return view;
     }
 
@@ -93,7 +101,11 @@ public class MainActivityFragment extends InjectedFragment
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB))
         {
-            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            mOnResumeTransitionToMainTab = true;
+        }
+        else
+        {
+            mOnResumeTransitionToMainTab = false;
         }
     }
 
