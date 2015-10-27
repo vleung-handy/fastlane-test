@@ -76,15 +76,8 @@ public class MainActivityFragment extends InjectedFragment
     public void onViewStateRestored(Bundle savedInstanceState)
     {
         super.onViewStateRestored(savedInstanceState);
-
-        if (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB))
-        {
-            mOnResumeTransitionToMainTab = true;
-        }
-        else
-        {
-            mOnResumeTransitionToMainTab = false;
-        }
+        //if we don't have any saved data about which tab to go to, default to the main/available jobs tab
+        mOnResumeTransitionToMainTab = (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB));
     }
 
     @Override
