@@ -10,6 +10,8 @@ import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import javax.inject.Inject;
+
 public class WebUrlManager
 {
     private static final String WEB_URL_PROVIDER_ID_TOKEN = ":id";
@@ -23,6 +25,7 @@ public class WebUrlManager
     private final HandyRetrofitEndpoint mEndpoint;
     private final PrefsManager mPrefsManager;
 
+    @Inject
     public WebUrlManager(final ProviderManager providerManager, final PrefsManager prefsManager, final HandyRetrofitEndpoint endpoint)
     {
         mProviderManager = providerManager;

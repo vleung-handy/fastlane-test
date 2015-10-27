@@ -10,12 +10,15 @@ import com.handy.portal.model.SwapFragmentArguments;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import javax.inject.Inject;
+
 public class TabNavigationManager
 {
     private final Bus mBus;
     private final ProviderManager mProviderManager;
     private final WebUrlManager mWebUrlManager;
 
+    @Inject
     public TabNavigationManager(final Bus bus,
                                 final ProviderManager providerManager,
                                 final WebUrlManager webUrlManager)
