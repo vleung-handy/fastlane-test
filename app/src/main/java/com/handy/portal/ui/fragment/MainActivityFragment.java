@@ -1,15 +1,13 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.FrameLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -36,20 +34,27 @@ public class MainActivityFragment extends InjectedFragment
     HandyRetrofitEndpoint handyRetrofitEndpoint;
 /////////////Bad useless injection that breaks if not in?
 
-    @InjectView(R.id.tabs)
-    RadioGroup tabs;
-    @InjectView(R.id.button_jobs)
-    RadioButton jobsButton;
-    @InjectView(R.id.button_schedule)
-    RadioButton scheduleButton;
-    @InjectView(R.id.button_payments)
-    RadioButton paymentsButton;
-    @InjectView(R.id.button_profile)
-    RadioButton profileButton;
-    @InjectView(R.id.button_help)
-    RadioButton helpButton;
+//    @InjectView(R.id.tabs)
+//    RadioGroup tabs;
+//    @InjectView(R.id.button_jobs)
+//    RadioButton jobsButton;
+//    @InjectView(R.id.button_schedule)
+//    RadioButton scheduleButton;
+//    @InjectView(R.id.button_payments)
+//    RadioButton paymentsButton;
+//    @InjectView(R.id.button_profile)
+//    RadioButton profileButton;
+//    @InjectView(R.id.button_help)
+//    RadioButton helpButton;
+
+//    @InjectView(R.id.navigation_tab_fragment)
+    NavigationTabFragment navigationTabFragment;
+
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
+
+    @InjectView(R.id.navigation_fragment_container)
+    FrameLayout navigationFragmentContainer;
 
     //What tab are we currently displaying
     private MainViewTab currentTab = null;
@@ -67,9 +72,30 @@ public class MainActivityFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
-        registerButtonListeners();
+        //registerButtonListeners();
         loadingOverlayView.init();
+
+        //navigationTabFragment = (NavigationTabFragment) getChildFragmentManager().findFragmentById(R.id.navigation_tab_fragment);
+
+        addNavigationFragment();
+
         return view;
+    }
+
+    public void addNavigationFragment()
+    {
+        getChildFragmentManager().beginTransaction().replace(navigationFragmentContainer.getId(), new NavigationTabFragment()).commit();
+        getChildFragmentManager().executePendingTransactions();
+
+        navigationTabFragment =  (NavigationTabFragment) getChildFragmentManager().findFragmentById(R.id.navigation_tab_fragment);
+        if(navigationTabFragment != null)
+        {
+            navigationTabFragment.switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+        }
+        else
+        {
+            System.out.println("ZZZ null nav frag");
+        }
     }
 
     @Override
@@ -97,7 +123,10 @@ public class MainActivityFragment extends InjectedFragment
         //Need to wait until onResume instead of onViewStateRestored to make sure bus is registered
         if (mOnResumeTransitionToMainTab)
         {
-            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            if(navigationTabFragment != null)
+            {
+                navigationTabFragment.switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            }
         }
     }
 
@@ -129,7 +158,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         //Catch this event then throw one to have the manager do the processing
             //We need to bother catching it here because we need to know the current tab of this fragment
-        requestProcessNavigateToTab(event.targetTab, this.currentTab, event.arguments, event.transitionStyleOverride, false);
+        requestProcessNavigateToTab(event.targetTab, this.currentTab, event.arguments, event.transitionStyleOverride, event.userTriggered);
     }
 
     //Ask the managers to do all the argument processing and post back a SwapFragmentNavigation event
@@ -144,13 +173,13 @@ public class MainActivityFragment extends InjectedFragment
         SwapFragmentArguments swapFragmentArguments = event.swapFragmentArguments;
 
         //Add our fragment specific callback to update tab buttons
-        addUpdateTabCallback(swapFragmentArguments);
+        navigationTabFragment.addUpdateTabCallback(swapFragmentArguments);
         //Track in analytics
         trackSwitchToTab(swapFragmentArguments.targetTab);
         //Swap the fragments
         swapFragment(swapFragmentArguments);
         //Update the tab button display
-        updateSelectedTabButton(swapFragmentArguments.targetTab);
+        navigationTabFragment.updateSelectedTabButton(swapFragmentArguments.targetTab);
         //Clear the back pressed listeners from the old fragment(s)
         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
         //Set correct currentTab
@@ -165,45 +194,45 @@ public class MainActivityFragment extends InjectedFragment
 
 //Click Listeners
 
-    private void registerButtonListeners()
-    {
-        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
-        paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
-        profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
-        helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
-    }
+//    private void registerButtonListeners()
+//    {
+//        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
+//        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+//        paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
+//        profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
+//        helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
+//    }
 
-    private class TabOnClickListener implements View.OnClickListener
-    {
-        private MainViewTab tab;
+//    private class TabOnClickListener implements View.OnClickListener
+//    {
+//        private MainViewTab tab;
+//
+//        TabOnClickListener(MainViewTab tab)
+//        {
+//            this.tab = tab;
+//        }
+//
+//        @Override
+//        public void onClick(View view)
+//        {
+//            switchToTab(tab, true);
+//        }
+//    }
 
-        TabOnClickListener(MainViewTab tab)
-        {
-            this.tab = tab;
-        }
-
-        @Override
-        public void onClick(View view)
-        {
-            switchToTab(tab, true);
-        }
-    }
-
-    private void switchToTab(MainViewTab tab, boolean userTriggered)
-    {
-        switchToTab(tab, null, userTriggered);
-    }
-
-    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, boolean userTriggered)
-    {
-        switchToTab(targetTab, argumentsBundle, null, userTriggered);
-    }
-
-    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
-    {
-        requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
-    }
+//    private void switchToTab(MainViewTab tab, boolean userTriggered)
+//    {
+//        switchToTab(tab, null, userTriggered);
+//    }
+//
+//    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, boolean userTriggered)
+//    {
+//        switchToTab(targetTab, argumentsBundle, null, userTriggered);
+//    }
+//
+//    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
+//    {
+//        requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
+//    }
 
 
 ///Fragment swapping and related
@@ -222,61 +251,61 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
     }
 
-    private void addUpdateTabCallback(SwapFragmentArguments swapFragmentArguments)
-    {
-        swapFragmentArguments.argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
-        {
-            @Override
-            public int describeContents() { return 0; }
+//    private void addUpdateTabCallback(SwapFragmentArguments swapFragmentArguments)
+//    {
+//        swapFragmentArguments.argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
+//        {
+//            @Override
+//            public int describeContents() { return 0; }
+//
+//            @Override
+//            public void writeToParcel(Parcel parcel, int i) { }
+//
+//            @Override
+//            public void updateTabs(MainViewTab tab)
+//            {
+//                if (tabs != null) { updateSelectedTabButton(tab); }
+//            }
+//        });
+//    }
 
-            @Override
-            public void writeToParcel(Parcel parcel, int i) { }
-
-            @Override
-            public void updateTabs(MainViewTab tab)
-            {
-                if (tabs != null) { updateSelectedTabButton(tab); }
-            }
-        });
-    }
-
-    //Update the visuals to show the correct selected button
-    private void updateSelectedTabButton(MainViewTab targetTab)
-    {
-        //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
-        if (targetTab != MainViewTab.DETAILS)
-        {
-            switch (targetTab)
-            {
-                case AVAILABLE_JOBS:
-                case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
-                {
-                    jobsButton.toggle();
-                }
-                break;
-                case SCHEDULED_JOBS:
-                {
-                    scheduleButton.toggle();
-                }
-                break;
-                case PAYMENTS:
-                {
-                    paymentsButton.toggle();
-                }
-                break;
-                case PROFILE:
-                {
-                    profileButton.toggle();
-                }
-                break;
-                case HELP:
-                {
-                    helpButton.toggle();
-                }
-                break;
-            }
-        }
-    }
+//    //Update the visuals to show the correct selected button
+//    private void updateSelectedTabButton(MainViewTab targetTab)
+//    {
+//        //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
+//        if (targetTab != MainViewTab.DETAILS)
+//        {
+//            switch (targetTab)
+//            {
+//                case AVAILABLE_JOBS:
+//                case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
+//                {
+//                    jobsButton.toggle();
+//                }
+//                break;
+//                case SCHEDULED_JOBS:
+//                {
+//                    scheduleButton.toggle();
+//                }
+//                break;
+//                case PAYMENTS:
+//                {
+//                    paymentsButton.toggle();
+//                }
+//                break;
+//                case PROFILE:
+//                {
+//                    profileButton.toggle();
+//                }
+//                break;
+//                case HELP:
+//                {
+//                    helpButton.toggle();
+//                }
+//                break;
+//            }
+//        }
+//    }
 
     private void swapFragment(SwapFragmentArguments swapArguments)
     {

@@ -9,54 +9,14 @@
         android:id="@+id/main_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/tabs"/>
+        />
 
-    <RadioGroup
-        android:id="@+id/tabs"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/light_grey"
-        android:orientation="horizontal"
-        android:weightSum="5">
-
-        <RadioButton
-            android:id="@+id/button_jobs"
-            style="@style/TabButton"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/tab_button_jobs"
-            android:text="@string/tab_jobs"/>
-
-        <RadioButton
-            android:id="@+id/button_schedule"
-            style="@style/TabButton"
-            android:layout_weight="1"
-            android:checked="false"
-            android:drawableTop="@drawable/tab_button_schedule"
-            android:text="@string/tab_schedule"/>
-        <RadioButton
-            android:id="@+id/button_payments"
-            style="@style/TabButton"
-            android:layout_weight="1"
-            android:checked="false"
-            android:drawableTop="@drawable/tab_button_payments"
-            android:text="@string/tab_payments"/>
-
-        <RadioButton
-            android:id="@+id/button_profile"
-            style="@style/TabButton"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/tab_button_profile"
-            android:text="@string/tab_profile"/>
-
-        <RadioButton
-            android:id="@+id/button_help"
-            style="@style/TabButton"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/tab_button_help"
-            android:text="@string/tab_help"/>
-
-    </RadioGroup>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:id="@+id/navigation_fragment_container"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@id/main_container"
+        />
 
     <include layout="@layout/merge_loading"/>
 

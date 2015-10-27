@@ -94,6 +94,7 @@ public abstract class HandyEvent
         public MainViewTab targetTab;
         public Bundle arguments;
         public TransitionStyle transitionStyleOverride;
+        public boolean userTriggered;
 
         public NavigateToTab(MainViewTab targetTab)
         {
@@ -111,6 +112,14 @@ public abstract class HandyEvent
             this.targetTab = targetTab;
             this.arguments = arguments;
             this.transitionStyleOverride = transitionStyleOverride;
+        }
+
+        public NavigateToTab(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyleOverride, boolean userTriggered)
+        {
+            this.targetTab = targetTab;
+            this.arguments = arguments;
+            this.transitionStyleOverride = transitionStyleOverride;
+            this.userTriggered = userTriggered;
         }
     }
 
