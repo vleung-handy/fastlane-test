@@ -17,7 +17,6 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -32,11 +31,9 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
-
+//TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
     @Inject
     HandyRetrofitEndpoint endpoint;
-    @Inject
-    ProviderManager providerManager;
 
 
 
