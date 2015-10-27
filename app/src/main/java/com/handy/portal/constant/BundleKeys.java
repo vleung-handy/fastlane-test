@@ -6,7 +6,6 @@ public class BundleKeys
     public static final String BOOKING_TYPE = "booking_type";
     public static final String BOOKING_DATE = "booking_date";
     public static final String BOOKING_SOURCE = "booking_source";
-    public static final String TARGET_URL = "target_url";
     public static final String BOOKING_STATUS = "booking_status";
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
     public static final String HELP_NODE = "help_node";
@@ -20,4 +19,7 @@ public class BundleKeys
     // UrbanAirship
     public static final String PUSH_TYPE = "type_id";
     public static final String CHECK_IN_ACTION_ID = "check_in";
+
+    //Webview
+    public static final String TARGET_URL = "target_url";
 }

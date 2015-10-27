@@ -18,12 +18,18 @@ public class Provider
     private boolean onboardingEnabled;
     @SerializedName("complementary_jobs_enabled")
     private boolean complementaryJobsEnabled;
-
+    @SerializedName("block_cleaner")
+    private boolean isBlockCleaner;
     //TODO: reorganize
     @SerializedName("payment_currency_code")
     private String paymentCurrencyCode;
     @SerializedName("recommended_payment_flow")
     private String recommendedPaymentFlow;
+
+    public boolean isBlockCleaner()
+    {
+        return isBlockCleaner;
+    }
 
     public enum RecommendedPaymentFlow{
         STRIPE_DEBIT("stripe_debit"), STRIPE("stripe");

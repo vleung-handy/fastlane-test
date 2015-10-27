@@ -21,6 +21,7 @@ import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
+import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
@@ -106,6 +107,35 @@ public abstract class HandyEvent
             this.targetTab = targetTab;
             this.arguments = arguments;
             this.transitionStyleOverride = transitionStyleOverride;
+        }
+    }
+
+    //TODO: Come up with better name
+    public static class RequestProcessNavigateToTab extends HandyEvent
+    {
+        public MainViewTab targetTab;
+        public MainViewTab currentTab;
+        public Bundle arguments;
+        public TransitionStyle transitionStyle;
+        public boolean userTriggered;
+
+        public RequestProcessNavigateToTab(MainViewTab targetTab, MainViewTab currentTab, Bundle arguments, TransitionStyle transitionStyle, boolean userTriggered)
+        {
+            this.targetTab = targetTab;
+            this.currentTab = currentTab;
+            this.arguments = arguments;
+            this.transitionStyle = transitionStyle;
+            this.userTriggered = userTriggered;
+        }
+    }
+
+    //TODO: Come up with better name
+    public static class SwapFragmentNavigation extends HandyEvent
+    {
+        public SwapFragmentArguments swapFragmentArguments;
+        public SwapFragmentNavigation(SwapFragmentArguments swapFragmentArguments)
+        {
+            this.swapFragmentArguments = swapFragmentArguments;
         }
     }
 

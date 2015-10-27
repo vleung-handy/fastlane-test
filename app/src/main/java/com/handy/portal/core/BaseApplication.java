@@ -23,9 +23,11 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
+import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
@@ -79,6 +81,10 @@ public class BaseApplication extends Application
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
     @Inject
     MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
+    @Inject
+    TabNavigationManager tabNavigationManager;
+    @Inject
+    WebUrlManager webUrlManager;
 
     @Inject
     Bus bus;
