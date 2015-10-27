@@ -52,8 +52,7 @@ public class TabNavigationManager
 
     private  boolean isCachedProviderBlockPro()
     {
-        boolean userIsBlockPro = false;
-        userIsBlockPro = (  mProviderManager.getCachedActiveProvider() != null &&
+        boolean userIsBlockPro = (  mProviderManager.getCachedActiveProvider() != null &&
                             mProviderManager.getCachedActiveProvider().isBlockCleaner());
         return userIsBlockPro;
     }
