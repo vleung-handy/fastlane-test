@@ -31,8 +31,10 @@ import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
+//TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
     @Inject
-    HandyRetrofitEndpoint endpoint;
+    HandyRetrofitEndpoint handyRetrofitEndpoint;
+/////////////Bad useless injection that breaks if not in?
 
     @InjectView(R.id.tabs)
     RadioGroup tabs;
@@ -49,23 +51,14 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
 
+    //What tab are we currently displaying
     private MainViewTab currentTab = null;
 
+    //Are we currently clearing out the backstack?
+    // Other fragments will want to know to avoid re-doing things on their onCreateView
     public static boolean clearingBackStack = false;
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
-    }
+    private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +69,6 @@ public class MainActivityFragment extends InjectedFragment
         ButterKnife.inject(this, view);
         registerButtonListeners();
         loadingOverlayView.init();
-
         return view;
     }
 
@@ -84,11 +76,29 @@ public class MainActivityFragment extends InjectedFragment
     public void onViewStateRestored(Bundle savedInstanceState)
     {
         super.onViewStateRestored(savedInstanceState);
+        //if we don't have any saved data about which tab to go to, default to the main/available jobs tab
+        mOnResumeTransitionToMainTab = (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB));
+    }
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB))
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
+
+        //Need to wait until onResume instead of onViewStateRestored to make sure bus is registered
+        if (mOnResumeTransitionToMainTab)
         {
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
     }
 
     @Override
@@ -105,11 +115,39 @@ public class MainActivityFragment extends InjectedFragment
         super.onSaveInstanceState(outState);
     }
 
-    //Listeners
+//Event Listeners
+
     @Subscribe
     public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
-        switchToTab(event.targetTab, event.arguments, event.transitionStyleOverride, false);
+        //Catch this event then throw one to have the manager do the processing
+            //We need to bother catching it here because we need to know the current tab of this fragment
+        requestProcessNavigateToTab(event.targetTab, this.currentTab, event.arguments, event.transitionStyleOverride, false);
+    }
+
+    //Ask the managers to do all the argument processing and post back a SwapFragmentNavigation event
+    private void requestProcessNavigateToTab(MainViewTab targetTab, MainViewTab currentTab, Bundle arguments, TransitionStyle transitionStyle, boolean userTriggered)
+    {
+        bus.post(new HandyEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments, transitionStyle, userTriggered));
+    }
+
+    @Subscribe
+    public void onSwapFragmentNavigation(HandyEvent.SwapFragmentNavigation event)
+    {
+        SwapFragmentArguments swapFragmentArguments = event.swapFragmentArguments;
+
+        //Add our fragment specific callback to update tab buttons
+        addUpdateTabCallback(swapFragmentArguments);
+        //Track in analytics
+        trackSwitchToTab(swapFragmentArguments.targetTab);
+        //Swap the fragments
+        swapFragment(swapFragmentArguments);
+        //Update the tab button display
+        updateSelectedTabButton(swapFragmentArguments.targetTab);
+        //Clear the back pressed listeners from the old fragment(s)
+        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
+        //Set correct currentTab
+        currentTab = swapFragmentArguments.targetTab;
     }
 
     @Subscribe
@@ -118,20 +156,11 @@ public class MainActivityFragment extends InjectedFragment
         loadingOverlayView.setOverlayVisibility(event.isVisible);
     }
 
+//Click Listeners
+
     private void registerButtonListeners()
     {
-        boolean userIsBlockPro = false;
-        //TEMPORARY BLOCK PRO WEB VIEW LOGIC
-        if(userIsBlockPro)
-        {
-            jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW));
-        }
-        else
-        {
-            jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        }
-        //END TEMPORARY BLOCK PRO WEB VIEW LOGIC
-
+        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
         scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
         paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
         profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
@@ -166,81 +195,11 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
-        trackSwitchToTab(targetTab);
-
-        SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
-
-        //don't use transition if don't have anything to transition from
-        if (currentTab != null)
-        {
-            swapFragmentArguments.transitionStyle = (overrideTransitionStyle != null ? overrideTransitionStyle : currentTab.getDefaultTransitionStyle(targetTab));
-        }
-
-        swapFragmentArguments.targetClassType = targetTab.getClassType();
-
-        if (argumentsBundle == null)
-        {
-            argumentsBundle = new Bundle();
-        }
-
-        argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
-        {
-            @Override
-            public int describeContents() { return 0; }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) { }
-
-            @Override
-            public void updateTabs(MainViewTab tab)
-            {
-                if (tabs != null) { updateSelectedTabButton(tab); }
-            }
-        });
-
-        if (targetTab == MainViewTab.DETAILS)
-        {
-            argumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
-        }
-
-        //TEMPORARY BLOCK PRO WEB VIEW LOGIC
-        if(targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW)
-        {
-            String url = endpoint.getBaseUrl() + "/portal/home?goto=" + targetTab.getWebViewTarget();
-            argumentsBundle.putString(BundleKeys.TARGET_URL, url);
-        }
-        //END TEMPORARY BLOCK PRO WEB VIEW LOGIC
-
-        swapFragmentArguments.argumentsBundle = argumentsBundle;
-
-        if (userTriggered)
-        {
-            swapFragmentArguments.addToBackStack = false;
-        }
-        else
-        {
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
-            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
-            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
-            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
-        }
-
-        swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
-
-        swapFragment(swapFragmentArguments);
-
-        updateSelectedTabButton(targetTab);
-
-        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-
-        currentTab = targetTab;
+        requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
     }
+
+
+///Fragment swapping and related
 
     private void clearFragmentBackStack()
     {
@@ -256,6 +215,24 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
     }
 
+    private void addUpdateTabCallback(SwapFragmentArguments swapFragmentArguments)
+    {
+        swapFragmentArguments.argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
+        {
+            @Override
+            public int describeContents() { return 0; }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) { }
+
+            @Override
+            public void updateTabs(MainViewTab tab)
+            {
+                if (tabs != null) { updateSelectedTabButton(tab); }
+            }
+        });
+    }
+
     //Update the visuals to show the correct selected button
     private void updateSelectedTabButton(MainViewTab targetTab)
     {
@@ -265,6 +242,7 @@ public class MainActivityFragment extends InjectedFragment
             switch (targetTab)
             {
                 case AVAILABLE_JOBS:
+                case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
                 {
                     jobsButton.toggle();
                 }

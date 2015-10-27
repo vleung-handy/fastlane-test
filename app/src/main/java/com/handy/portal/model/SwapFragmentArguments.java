@@ -3,6 +3,7 @@ package com.handy.portal.model;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 
 public class SwapFragmentArguments
@@ -13,4 +14,6 @@ public class SwapFragmentArguments
     public TransitionStyle transitionStyle;
     public boolean addToBackStack;
     public boolean clearBackStack;
+
+    public MainViewTab targetTab;
 }

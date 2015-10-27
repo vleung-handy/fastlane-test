@@ -7,7 +7,7 @@ import com.handy.portal.analytics.Mixpanel;
 import com.squareup.otto.Bus;
 import com.squareup.otto.DeadEvent;
 
-final class MainBus extends Bus
+public final class MainBus extends Bus
 {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Mixpanel mixpanel;

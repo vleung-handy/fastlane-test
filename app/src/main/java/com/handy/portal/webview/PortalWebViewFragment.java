@@ -2,7 +2,6 @@ package com.handy.portal.webview;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.StringDef;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +21,7 @@ import butterknife.InjectView;
 
 public abstract class PortalWebViewFragment extends ActionBarFragment
 {
-    @StringDef({BLOCK_JOBS_PAGE})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface TargetPage {}
-    public static final String BLOCK_JOBS_PAGE = "block";
-
-    @InjectView(R.id.portal_web_view)
+     @InjectView(R.id.portal_web_view)
     WebView webView;
 
     @Override
@@ -97,8 +89,11 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
                 + "&ht=1"
                 + "&skip_web_portal_version_tracking=1"
                 + "&skip_web_portal_blocking=1"
-                + "&from_android_native=1";
+                + "&from_android_native=1"
+                + "&disable_mobile_splash=1"
+                ;
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
         webView.loadUrl(urlWithParams);
     }
+
 }
