@@ -26,14 +26,6 @@ public class TabNavigationManager
         mWebUrlManager = webUrlManager;
     }
 
-    private  boolean isCachedProviderBlockPro()
-    {
-        boolean userIsBlockPro = false;
-        userIsBlockPro = (  mProviderManager.getCachedActiveProvider() != null &&
-                            mProviderManager.getCachedActiveProvider().isBlockCleaner());
-        return userIsBlockPro;
-    }
-
     @Subscribe
     //catch this , add extra data/process needed data, pass along to fragment for final usage/swap
     public void onRequestProcessNavigateToTab(HandyEvent.RequestProcessNavigateToTab event)
@@ -55,65 +47,88 @@ public class TabNavigationManager
         mBus.post(new HandyEvent.SwapFragmentNavigation(swapFragmentArguments));
     }
 
+    private  boolean isCachedProviderBlockPro()
+    {
+        boolean userIsBlockPro = false;
+        userIsBlockPro = (  mProviderManager.getCachedActiveProvider() != null &&
+                            mProviderManager.getCachedActiveProvider().isBlockCleaner());
+        return userIsBlockPro;
+    }
 
-    public SwapFragmentArguments generateSwapFragmentArguments(MainViewTab targetTab, MainViewTab currentTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
+    public SwapFragmentArguments generateSwapFragmentArguments(MainViewTab targetTab,
+                                                               MainViewTab currentTab,
+                                                               Bundle argumentsBundle,
+                                                               TransitionStyle overrideTransitionStyle,
+                                                               boolean userTriggered
+    )
     {
         SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
 
         swapFragmentArguments.targetTab = targetTab;
-
-        if (argumentsBundle == null)
-        {
-            argumentsBundle = new Bundle();
-        }
-
-        //don't use transition if don't have anything to transition from
-        if (currentTab != null)
-        {
-            swapFragmentArguments.transitionStyle = (overrideTransitionStyle != null ? overrideTransitionStyle : currentTab.getDefaultTransitionStyle(targetTab));
-        }
-
         swapFragmentArguments.targetClassType = targetTab.getClassType();
 
-        if (targetTab == MainViewTab.DETAILS)
-        {
-            argumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
-        }
-
-        //TEMPORARY BLOCK PRO WEB VIEW LOGIC
-        if(targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW)
-        {
-            String constructedUrl = mWebUrlManager.constructUrlForTargetTab(targetTab);
-            argumentsBundle.putString(BundleKeys.TARGET_URL, constructedUrl);
-        }
-        //END TEMPORARY BLOCK PRO WEB VIEW LOGIC
-
-        swapFragmentArguments.argumentsBundle = argumentsBundle;
-
-        if (userTriggered)
-        {
-            swapFragmentArguments.addToBackStack = false;
-        }
-        else
-        {
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.DETAILS;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
-            swapFragmentArguments.addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
-            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
-            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
-            swapFragmentArguments.addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
-        }
+        swapFragmentArguments.transitionStyle = getTransitionStyle(overrideTransitionStyle, targetTab, currentTab);
+        swapFragmentArguments.argumentsBundle = getSwapFragmentArgumentsBundle(argumentsBundle, targetTab, currentTab);
+        swapFragmentArguments.addToBackStack = getAddToBackStack(userTriggered, targetTab, currentTab);
 
         swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
 
         return swapFragmentArguments;
     }
 
+    private TransitionStyle getTransitionStyle(TransitionStyle overrideTransitionStyle, MainViewTab targetTab, MainViewTab currentTab)
+    {
+        //No transition if nothing to transition from
+        if (currentTab != null)
+        {
+            return (overrideTransitionStyle != null ? overrideTransitionStyle : currentTab.getDefaultTransitionStyle(targetTab));
+        }
+        return null;
+    }
 
+    private Bundle getSwapFragmentArgumentsBundle(Bundle inputArgumentsBundle, MainViewTab targetTab, MainViewTab currentTab)
+    {
+        if (inputArgumentsBundle == null)
+        {
+            inputArgumentsBundle = new Bundle();
+        }
+
+        if (targetTab == MainViewTab.DETAILS)
+        {
+            inputArgumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
+        }
+
+        //The new web view page URL style requires some processing since it is structured in a RESTful way
+        if(targetTab.getWebViewTarget() != null)
+        {
+            String constructedUrl = mWebUrlManager.constructUrlForTargetTab(targetTab);
+            inputArgumentsBundle.putString(BundleKeys.TARGET_URL, constructedUrl);
+        }
+
+        return inputArgumentsBundle;
+    }
+
+    private boolean getAddToBackStack(boolean userTriggered, MainViewTab targetTab, MainViewTab currentTab)
+    {
+        boolean addToBackStack = false;
+
+        if (!userTriggered)
+        {
+            //TODO: Some really ugly logic about adding to the backstack, clean this up somehow
+            addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
+            addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
+            addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
+            addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
+            addToBackStack |= targetTab == MainViewTab.DETAILS;
+            addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
+            addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
+            addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
+            addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+            addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
+        }
+
+        return addToBackStack;
+    }
 
 
 

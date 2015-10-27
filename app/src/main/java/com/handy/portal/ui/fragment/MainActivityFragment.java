@@ -55,6 +55,8 @@ public class MainActivityFragment extends InjectedFragment
 
     private MainViewTab currentTab = null;
 
+    //Are we currently clearing out the backstack?
+    // Other fragments will want to know to avoid re-doing things on their onCreateView
     public static boolean clearingBackStack = false;
 
     @Override
@@ -115,6 +117,7 @@ public class MainActivityFragment extends InjectedFragment
     public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
         //Catch this event then throw one to have the manager do the processing
+            //We need to bother catching it here because we need to know the current tab of this fragment
         requestProcessNavigateToTab(event.targetTab, this.currentTab, event.arguments, event.transitionStyleOverride, false);
     }
 

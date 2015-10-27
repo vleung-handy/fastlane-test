@@ -2,8 +2,8 @@ package com.handy.portal.manager;
 
 import android.support.annotation.StringDef;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 
@@ -21,33 +21,28 @@ public class WebUrlManager
 
     private final ProviderManager mProviderManager;
     private final HandyRetrofitEndpoint mEndpoint;
+    private final PrefsManager mPrefsManager;
 
-    public WebUrlManager(final ProviderManager providerManager, final HandyRetrofitEndpoint endpoint)
+    public WebUrlManager(final ProviderManager providerManager, final PrefsManager prefsManager, final HandyRetrofitEndpoint endpoint)
     {
         mProviderManager = providerManager;
         mEndpoint = endpoint;
+        mPrefsManager = prefsManager;
     }
 
     public String constructUrlForTargetTab(MainViewTab targetTab)
     {
         String targetUrl = mEndpoint.getBaseUrl() + targetTab.getWebViewTarget();
-        String constructedUrl = replaceVariablesInUrl(targetUrl);
-        System.out.println("ConstructedUrl URL is : " + constructedUrl);
-        return constructedUrl;
+        return replaceVariablesInUrl(targetUrl);
     }
 
-    public String replaceVariablesInUrl(String url)
+    //need to replace certain tokens, currently just WEB_URL_PROVIDER_ID_TOKEN so hacking it in, if need to replace more make a smarter function
+    private String replaceVariablesInUrl(String url)
     {
-        //need to replace certain tokens
-        String providerIdReplacement = ":id";
         Provider provider = mProviderManager.getCachedActiveProvider();
-        if(provider == null)
-        {
-            Crashlytics.log("replaceVariablesInUrl : called before cached provider retrieved");
-        }
-        String providerId = (provider != null ? provider.getId() : "");
-        url = url.replace(providerIdReplacement, providerId);
+        //Try to use the cached provider, and if not available fall back to last logged in provider id
+        String providerId = (provider != null ? provider.getId() : mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        url = url.replace(WEB_URL_PROVIDER_ID_TOKEN, providerId);
         return url;
     }
-
 }

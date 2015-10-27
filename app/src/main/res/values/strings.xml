@@ -233,6 +233,7 @@
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
     <string name="scheduled_jobs">Scheduled Jobs</string>
+    <string name="block_jobs_schedule">Block Jobs Schedule</string>
     <string name="available_job">Available Job</string>
     <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
     <string name="payment_value">%s</string>

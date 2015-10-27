@@ -394,9 +394,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager, final HandyRetrofitEndpoint endpoint)
+    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager, final PrefsManager prefsManager, final HandyRetrofitEndpoint endpoint)
     {
-        return new WebUrlManager(providerManager, endpoint);
+        return new WebUrlManager(providerManager, prefsManager, endpoint);
     }
 
     @Provides
