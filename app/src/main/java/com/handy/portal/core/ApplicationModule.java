@@ -24,9 +24,11 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
+import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -388,6 +390,22 @@ public final class ApplicationModule
     final RegionDefinitionsManager provideRegionDefinitionsManager(final Bus bus)
     {
         return new RegionDefinitionsManager(bus);
+    }
+
+    @Provides
+    @Singleton
+    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager, final HandyRetrofitEndpoint endpoint)
+    {
+        return new WebUrlManager(providerManager, endpoint);
+    }
+
+    @Provides
+    @Singleton
+    final TabNavigationManager provideTabNavigationManager(final Bus bus,
+                                                           final ProviderManager providerManager,
+                                                           final WebUrlManager webUrlManager)
+    {
+        return new TabNavigationManager(bus, providerManager, webUrlManager);
     }
 
     private String getDeviceId()

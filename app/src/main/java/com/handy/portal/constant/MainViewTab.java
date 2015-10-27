@@ -1,5 +1,6 @@
 package com.handy.portal.constant;
 
+import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
@@ -13,7 +14,6 @@ import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
-import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.io.Serializable;
 
@@ -31,18 +31,18 @@ public enum MainViewTab implements Serializable
     HELP(HelpFragment.class),
     DETAILS(BookingDetailsFragment.class),
     HELP_CONTACT(HelpContactFragment.class),
-    BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, PortalWebViewFragment.BLOCK_JOBS_PAGE),
+    BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     ;
 
     private Class classType;
-    private @PortalWebViewFragment.TargetPage String webViewTarget;
+    private @WebUrlManager.TargetPage String webViewTarget;
 
     MainViewTab(Class classType)
     {
         this.classType = classType;
     }
 
-    MainViewTab(Class classType, @PortalWebViewFragment.TargetPage String target)
+    MainViewTab(Class classType, @WebUrlManager.TargetPage String target)
     {
         this.classType = classType;
         this.webViewTarget = target;
@@ -53,7 +53,7 @@ public enum MainViewTab implements Serializable
         return classType;
     }
 
-    public @PortalWebViewFragment.TargetPage String getWebViewTarget()
+    public @WebUrlManager.TargetPage String getWebViewTarget()
     {
         return webViewTarget;
     }
