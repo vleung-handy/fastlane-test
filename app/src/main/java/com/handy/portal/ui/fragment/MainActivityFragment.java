@@ -33,10 +33,8 @@ public class MainActivityFragment extends InjectedFragment
 {
 //TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
     @Inject
-    HandyRetrofitEndpoint endpoint;
+    HandyRetrofitEndpoint handyRetrofitEndpoint;
 /////////////Bad useless injection that breaks if not in?
-
-
 
     @InjectView(R.id.tabs)
     RadioGroup tabs;
@@ -53,6 +51,7 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView loadingOverlayView;
 
+    //What tab are we currently displaying
     private MainViewTab currentTab = null;
 
     //Are we currently clearing out the backstack?
@@ -60,27 +59,6 @@ public class MainActivityFragment extends InjectedFragment
     public static boolean clearingBackStack = false;
 
     private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
-
-        //Need to wait until onResume instead of onViewStateRestored to make sure bus is registered
-        if (mOnResumeTransitionToMainTab)
-        {
-            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
-        }
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,6 +85,27 @@ public class MainActivityFragment extends InjectedFragment
         {
             mOnResumeTransitionToMainTab = false;
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
+
+        //Need to wait until onResume instead of onViewStateRestored to make sure bus is registered
+        if (mOnResumeTransitionToMainTab)
+        {
+            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
     }
 
     @Override
@@ -163,7 +162,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         loadingOverlayView.setOverlayVisibility(event.isVisible);
     }
-
 
 //Click Listeners
 
