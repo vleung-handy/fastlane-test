@@ -503,6 +503,13 @@
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
+    <style name="TextView.ActionText">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+        <item name="android:textColor">@color/partner_blue</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+    </style>
+
     <style name="TextView.Navbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>

@@ -124,6 +124,7 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.DETAILS;
             addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
             addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
+            addToBackStack |= targetTab == MainViewTab.REQUEST_SUPPLIES;
             addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.util.Utils;
@@ -55,7 +56,7 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ResupplyInfo
                     public void onClick(View v)
                     {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES));
+                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.SLIDE_UP));
                     }
                 });
             }
