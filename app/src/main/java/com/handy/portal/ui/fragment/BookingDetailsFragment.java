@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,10 +48,10 @@ import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
-import com.handy.portal.ui.constructor.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
+import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
@@ -122,7 +121,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     private boolean isForPayments;
     private MainViewTab currentTab;
 
-    private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
 
     @Override
@@ -271,7 +269,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
         initCancelNoShowButton();
-        initMapsPlaceHolderButton();
     }
 
     //We use view constructors instead of views so to clear the views just remove all children of layouts
@@ -331,7 +328,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
             else
             {
-                viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
+                UIUtils.replaceView(mapLayout, new MapPlaceholderView(getContext()));
             }
         }
 
@@ -383,26 +380,6 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
         }
         return false;
-    }
-
-    //Can not use @onclick b/c the button does not exist at injection time
-    //TODO: Figure out better way to link click listeners sections
-    private void initMapsPlaceHolderButton()
-    {
-        Button mapsInstallButton = (Button) mapLayout.findViewById(R.id.map_placeholder_install_button);
-        //will fail if we didn't use the placeholder version
-        if (mapsInstallButton != null)
-        {
-            mapsInstallButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_SERVICES_INSTALL_URL));
-                    Utils.safeLaunchIntent(browserIntent, BookingDetailsFragment.this.getActivity());
-                }
-            });
-        }
     }
 
     //Dynamically generated Action Buttons based on the allowedActions sent by the server in our booking data
