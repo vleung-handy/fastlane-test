@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -308,6 +310,15 @@ public class LoginActivityFragment extends InjectedFragment
     private void beginLogin(LoginDetails loginDetails)
     {
         changeState(LoginState.COMPLETE);
+
+        //Set cookies to enable seamless access in our webview
+        if (loginDetails.getAuthToken() != null)
+        {
+            CookieSyncManager.createInstance(getActivity());
+            CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
+            CookieSyncManager.getInstance().sync();
+        }
+
 
         String providerId = loginDetails.getProviderId();
         prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);//TODO: we need to move away from using PrefsKey.LAST_PROVIDER_ID

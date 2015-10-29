@@ -8,6 +8,7 @@ import javax.inject.Inject;
 public class ConfigManager
 {
     public static final String KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS = "Hours to Start Sending Messages";
+    public static final String KEY_SHOW_BLOCK_JOB_SCHEDULES = "Show Block Job Schedules";
     private static final String[] CONFIG_PARAM_KEYS = {KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS};
 
     private final DataManager dataManager;

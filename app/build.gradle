@@ -41,18 +41,24 @@ def computeVersionName(versionCode) {
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-    useLibrary  'org.apache.http.legacy'
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 701 //0.7.1
+        versionCode 702 //0.7.2
         versionName computeVersionName(versionCode)
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
 
     signingConfigs {
+        debug {
+            keyAlias 'HandyProdKey'
+            keyPassword 'S0H@ndy!'
+            storeFile file('keys/handy-prod-key.keystore')
+            storePassword 'S0H@ndy!'
+        }
         prod {
             keyAlias 'HandyProdKey'
             keyPassword 'S0H@ndy!'
@@ -122,8 +128,10 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
 
     //Google services
-    compile 'com.google.android.gms:play-services-location:8.1.0' //Recommended for location services
-    compile 'com.google.android.gms:play-services-gcm:8.1.0' //Required for Android (GCM) push notifications
+    compile 'com.google.android.gms:play-services-location:8.1.0'
+    //Recommended for location services
+    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    //Required for Android (GCM) push notifications
 
     //Guava
     compile 'com.google.guava:guava:18.0'

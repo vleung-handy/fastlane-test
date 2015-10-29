@@ -135,8 +135,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_booking_detail, null);
@@ -759,7 +758,8 @@ public class BookingDetailsFragment extends ActionBarFragment
         try
         {
             Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), this.getActivity());
-        } catch (ActivityNotFoundException activityException)
+        }
+        catch (ActivityNotFoundException activityException)
         {
             Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
         }
@@ -771,7 +771,8 @@ public class BookingDetailsFragment extends ActionBarFragment
         try
         {
             Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), this.getActivity());
-        } catch (ActivityNotFoundException activityException)
+        }
+        catch (ActivityNotFoundException activityException)
         {
             Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
         }

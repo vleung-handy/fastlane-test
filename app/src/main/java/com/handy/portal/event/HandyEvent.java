@@ -21,6 +21,7 @@ import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
+import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
@@ -32,8 +33,13 @@ import retrofit.mime.TypedInput;
 
 public abstract class HandyEvent
 {
-    public abstract static class RequestEvent extends HandyEvent
+    public abstract static class RequestEvent extends HandyEvent {}
+
+    public abstract static class ReceiveSuccessEvent extends HandyEvent {}
+
+    public abstract static class ReceiveErrorEvent extends HandyEvent
     {
+        public DataManager.DataManagerError error;
     }
 
     public abstract static class RequestBookingActionEvent extends RequestEvent
@@ -41,18 +47,9 @@ public abstract class HandyEvent
         public String bookingId;
     }
 
-    public abstract static class ReceiveSuccessEvent extends HandyEvent
-    {
-    }
-
     public abstract static class ReceiveBookingSuccessEvent extends ReceiveSuccessEvent
     {
         public Booking booking;
-    }
-
-    public abstract static class ReceiveErrorEvent extends HandyEvent
-    {
-        public DataManager.DataManagerError error;
     }
 
     public abstract static class ApplicationLifeCycleEvent extends HandyEvent
@@ -110,6 +107,35 @@ public abstract class HandyEvent
             this.targetTab = targetTab;
             this.arguments = arguments;
             this.transitionStyleOverride = transitionStyleOverride;
+        }
+    }
+
+    //TODO: Come up with better name
+    public static class RequestProcessNavigateToTab extends HandyEvent
+    {
+        public MainViewTab targetTab;
+        public MainViewTab currentTab;
+        public Bundle arguments;
+        public TransitionStyle transitionStyle;
+        public boolean userTriggered;
+
+        public RequestProcessNavigateToTab(MainViewTab targetTab, MainViewTab currentTab, Bundle arguments, TransitionStyle transitionStyle, boolean userTriggered)
+        {
+            this.targetTab = targetTab;
+            this.currentTab = currentTab;
+            this.arguments = arguments;
+            this.transitionStyle = transitionStyle;
+            this.userTriggered = userTriggered;
+        }
+    }
+
+    //TODO: Come up with better name
+    public static class SwapFragmentNavigation extends HandyEvent
+    {
+        public SwapFragmentArguments swapFragmentArguments;
+        public SwapFragmentNavigation(SwapFragmentArguments swapFragmentArguments)
+        {
+            this.swapFragmentArguments = swapFragmentArguments;
         }
     }
 
@@ -176,9 +202,7 @@ public abstract class HandyEvent
         }
     }
 
-    public static class RequestProviderInfo extends RequestEvent
-    {
-    }
+    public static class RequestProviderInfo extends RequestEvent {}
 
     public static class ReceiveProviderInfoSuccess extends ReceiveSuccessEvent
     {
@@ -198,38 +222,27 @@ public abstract class HandyEvent
         }
     }
 
-    public static class RequestSendIncomeVerification extends RequestEvent
-    {
-    }
+    public static class RequestSendIncomeVerification extends RequestEvent {}
 
-    public static class ReceiveSendIncomeVerificationSuccess extends ReceiveSuccessEvent
-    {
-    }
+    public static class ReceiveSendIncomeVerificationSuccess extends ReceiveSuccessEvent {}
 
-    public static class ReceiveSendIncomeVerificationError extends ReceiveErrorEvent
-    {
-    }
+    public static class ReceiveSendIncomeVerificationError extends ReceiveErrorEvent {}
 
-    public static class RequestProviderProfile extends RequestEvent
-    {
-    }
+    public static class RequestProviderProfile extends RequestEvent {}
 
     public static class ReceiveProviderProfileSuccess extends ReceiveSuccessEvent
     {
         public ProviderProfile providerProfile;
+
         public ReceiveProviderProfileSuccess(ProviderProfile providerProfile)
         {
             this.providerProfile = providerProfile;
         }
     }
 
-    public static class ReceiveProviderProfileError extends ReceiveErrorEvent
-    {
-    }
+    public static class ReceiveProviderProfileError extends ReceiveErrorEvent {}
 
-    public static class RequestSendResupplyKit extends RequestEvent
-    {
-    }
+    public static class RequestSendResupplyKit extends RequestEvent {}
 
     public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent
     {
@@ -313,18 +326,12 @@ public abstract class HandyEvent
         }
     }
 
-    public static class DownloadUpdateSuccessful extends HandyEvent
-    {
-    }
+    public static class DownloadUpdateSuccessful extends HandyEvent {}
 
     @Track("portal app update download failed")
-    public static class DownloadUpdateFailed extends HandyEvent
-    {
-    }
+    public static class DownloadUpdateFailed extends HandyEvent {}
 
-    public static class RequestCheckTerms extends RequestEvent
-    {
-    }
+    public static class RequestCheckTerms extends RequestEvent {}
 
     public static class ReceiveCheckTermsSuccess extends ReceiveSuccessEvent
     {
@@ -336,9 +343,7 @@ public abstract class HandyEvent
         }
     }
 
-    public static class ReceiveCheckTermsError extends ReceiveErrorEvent
-    {
-    }
+    public static class ReceiveCheckTermsError extends ReceiveErrorEvent {}
 
     //Booking Lists
 
@@ -794,9 +799,7 @@ public abstract class HandyEvent
 
     public static class ReceiveNotifyHelpContactSuccess extends ReceiveSuccessEvent
     {
-        public ReceiveNotifyHelpContactSuccess()
-        {
-        }
+        public ReceiveNotifyHelpContactSuccess() { }
     }
 
     public static class ReceiveNotifyHelpContactError extends ReceiveErrorEvent
@@ -1072,9 +1075,7 @@ public abstract class HandyEvent
     }
 
     //Request that Urban Airship takes off
-    public static class StartUrbanAirship extends HandyEvent
-    {
-    }
+    public static class StartUrbanAirship extends HandyEvent {}
 
     public static class UpdateMainActivityFragmentActive extends HandyEvent
     {

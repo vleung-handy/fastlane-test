@@ -11,7 +11,6 @@ import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
@@ -22,10 +21,13 @@ import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
+import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
@@ -79,6 +81,10 @@ public class BaseApplication extends Application
     ApplicationOnResumeWatcher applicationOnResumeWatcher;
     @Inject
     MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
+    @Inject
+    TabNavigationManager tabNavigationManager;
+    @Inject
+    WebUrlManager webUrlManager;
 
     @Inject
     Bus bus;
@@ -124,36 +130,25 @@ public class BaseApplication extends Application
 
                 if (started == 1)
                 {
-                    if (!savedInstance) mixpanel.trackEventAppOpened(true);
-                    else mixpanel.trackEventAppOpened(false);
+                    if (!savedInstance) { mixpanel.trackEventAppOpened(true); }
+                    else { mixpanel.trackEventAppOpened(false); }
                 }
             }
 
             @Override
-            public void onActivityResumed(final Activity activity)
-            {
-            }
+            public void onActivityResumed(final Activity activity) { }
 
             @Override
-            public void onActivityPaused(final Activity activity)
-            {
-            }
+            public void onActivityPaused(final Activity activity) { }
 
             @Override
-            public void onActivityStopped(final Activity activity)
-            {
-            }
+            public void onActivityStopped(final Activity activity) { }
 
             @Override
-            public void onActivitySaveInstanceState(final Activity activity,
-                                                    final Bundle outState)
-            {
-            }
+            public void onActivitySaveInstanceState(final Activity activity, final Bundle outState) { }
 
             @Override
-            public void onActivityDestroyed(final Activity activity)
-            {
-            }
+            public void onActivityDestroyed(final Activity activity) { }
         });
     }
 
@@ -171,7 +166,7 @@ public class BaseApplication extends Application
 
     protected void startCrashlytics()
     {
-        if(!BuildConfig.DEBUG)
+        if (!BuildConfig.DEBUG)
         {
             Crashlytics.start(this);
         }

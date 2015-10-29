@@ -24,9 +24,11 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
+import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -60,6 +62,8 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
+import com.handy.portal.webview.BlockScheduleFragment;
+import com.handy.portal.webview.PortalWebViewFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -108,7 +112,9 @@ import retrofit.converter.GsonConverter;
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
         SelectPaymentMethodFragment.class,
-        ProfileResupplyViewConstructor.class
+        ProfileResupplyViewConstructor.class,
+        PortalWebViewFragment.class,
+        BlockScheduleFragment.class,
 })
 public final class ApplicationModule
 {
@@ -384,6 +390,22 @@ public final class ApplicationModule
     final RegionDefinitionsManager provideRegionDefinitionsManager(final Bus bus)
     {
         return new RegionDefinitionsManager(bus);
+    }
+
+    @Provides
+    @Singleton
+    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager, final PrefsManager prefsManager, final HandyRetrofitEndpoint endpoint)
+    {
+        return new WebUrlManager(providerManager, prefsManager, endpoint);
+    }
+
+    @Provides
+    @Singleton
+    final TabNavigationManager provideTabNavigationManager(final Bus bus,
+                                                           final ProviderManager providerManager,
+                                                           final WebUrlManager webUrlManager)
+    {
+        return new TabNavigationManager(bus, providerManager, webUrlManager);
     }
 
     private String getDeviceId()
