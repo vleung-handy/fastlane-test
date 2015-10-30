@@ -16,7 +16,7 @@
 
     <Button
         android:id="@+id/get_resupply_kit_button"
-        style="@style/Button.Green.Round"
+        style="@style/Button.BookingAction.Green"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
