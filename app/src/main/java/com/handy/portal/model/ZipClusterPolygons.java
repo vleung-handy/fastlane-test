@@ -9,21 +9,21 @@ import java.util.List;
 public class ZipClusterPolygons implements Serializable
 {
     @SerializedName("center")
-    private Coordinates center;
+    private Coordinates mCenter;
 
     @SerializedName("outlines")
-    private List<List<Coordinates>> outlines;
+    private List<List<Coordinates>> mOutlines;
 
-    public LatLng getCenter() { return new LatLng(center.latitude, center.longitude); }
+    public LatLng getCenter() { return new LatLng(mCenter.mLatitude, mCenter.mLongitude); }
 
     public LatLng[][] getOutlines() {
-        LatLng[][] polygons = new LatLng[outlines.size()][];
+        LatLng[][] polygons = new LatLng[mOutlines.size()][];
 
-        for (int i = 0; i < outlines.size(); ++i) {
-            List<Coordinates> polygon = outlines.get(i);
+        for (int i = 0; i < mOutlines.size(); ++i) {
+            List<Coordinates> polygon = mOutlines.get(i);
             polygons[i] = new LatLng[polygon.size()];
             for (int j = 0; j < polygon.size(); ++j) {
-                polygons[i][j] = new LatLng(polygon.get(j).latitude, polygon.get(j).longitude);
+                polygons[i][j] = new LatLng(polygon.get(j).mLatitude, polygon.get(j).mLongitude);
             }
         }
         return polygons;
@@ -32,12 +32,12 @@ public class ZipClusterPolygons implements Serializable
     public static class Coordinates implements Serializable
     {
         @SerializedName("lat")
-        private float latitude;
+        private float mLatitude;
         @SerializedName("lng")
-        private float longitude;
+        private float mLongitude;
 
-        public float getLatitude() { return latitude; }
+        public float getLatitude() { return mLatitude; }
 
-        public float getLongitude() { return longitude; }
+        public float getLongitude() { return mLongitude; }
     }
 }

@@ -196,8 +196,6 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
             switch (event.getAction())
             {
                 case MotionEvent.ACTION_DOWN:
-                    mScrollView.requestDisallowInterceptTouchEvent(true);
-                    break;
                 case MotionEvent.ACTION_UP:
                     mScrollView.requestDisallowInterceptTouchEvent(true);
                     break;

@@ -53,7 +53,6 @@ public class ZipClusterManager
             @Override
             public void onSuccess(ZipClusterPolygons response)
             {
-                response.getOutlines();
                 mZipClusterCache.put(event.zipClusterId, response);
                 mBus.post(new BookingEvent.ReceiveZipClusterPolygonsSuccess(response));
             }
