@@ -153,8 +153,6 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void requestSupplyInfo()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        // Should this be removed now that we are passing the resupply info via the show endpoint
-        bus.post(new HandyEvent.RequestSupplyKitInfo()); //TODO: No one is listening to this yet
     }
 
     @Subscribe
