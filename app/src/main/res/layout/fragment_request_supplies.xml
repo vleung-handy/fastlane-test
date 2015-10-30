@@ -24,12 +24,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/supply_kit_includes"
-                android:textColor="@color/text_light_grey"
+                android:textColor="@color/subtitle_grey"
                 />
 
-            <!--<ListView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height=""></ListView>-->
+            <LinearLayout
+                android:id="@+id/requested_supplies_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/row_margin"
+                >
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/supply_kit_contents_layout"
@@ -44,23 +50,35 @@
                 android:layout_height="wrap_content"
                 android:text="@string/shipping_address"
                 android:layout_marginTop="@dimen/default_margin_x2"
-                android:textColor="@color/text_light_grey"
+                android:textColor="@color/subtitle_grey"
                 />
 
             <TextView
-                android:id="@+id/shipping_address_content_text"
+                android:id="@+id/shipping_address_line_1_content_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin_x2"
-                tools:text="The shipping address \n multiple lines \n are almost guaranteed"
+                android:layout_marginTop="@dimen/row_margin"
+                android:textColor="@color/dark_grey"
+                tools:text="shipping address line 1"
                 />
 
             <TextView
+                android:id="@+id/shipping_address_line_2_content_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                tools:text="shipping address line 2"
+                />
+
+            <!-- Hiding for now; will show for phase 2 -->
+            <TextView
+                android:id="@+id/update_shipping_address"
                 style="@style/TextView.ActionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/row_margin"
                 android:text="@string/update"
+                android:visibility="gone"
                 />
 
             <TextView
@@ -68,7 +86,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin_x2"
                 android:text="@string/withholding_amount"
-                android:textColor="@color/text_light_grey"
+                android:textColor="@color/subtitle_grey"
+                />
+
+            <TextView
+                android:id="@+id/request_supplies_withholding_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin"
+                android:textColor="@color/dark_grey"
                 />
 
             <Button
@@ -77,15 +103,6 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/default_margin_x2"
                 android:text="@string/complete_purchase"
-                />
-
-            <TextView
-                android:id="@+id/complete_purchase_disclaimer_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/row_margin"
-                android:gravity="center"
-                android:text="@string/complete_purchase_disclaimer"
                 />
 
         </LinearLayout>

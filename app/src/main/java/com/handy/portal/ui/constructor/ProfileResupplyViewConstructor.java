@@ -1,6 +1,7 @@
 package com.handy.portal.ui.constructor;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
@@ -42,21 +44,21 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ResupplyInfo
     }
 
     @Override
-    protected boolean constructView(ViewGroup container, ResupplyInfo resupplyInfo)
+    protected boolean constructView(ViewGroup container, final ResupplyInfo resupplyInfo)
     {
-        final boolean OVERRIDE_REQUEST_SUPPLY_CHECK_DEBUG = true;
-
-        if (resupplyInfo.providerCanRequestSupplies() || OVERRIDE_REQUEST_SUPPLY_CHECK_DEBUG)
+        if (resupplyInfo.providerCanRequestSupplies())
         {
-            if (resupplyInfo.providerCanRequestSuppliesNow() || OVERRIDE_REQUEST_SUPPLY_CHECK_DEBUG)
+            if (resupplyInfo.providerCanRequestSuppliesNow())
             {
                 resupplyButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
+                        final Bundle args = new Bundle();
+                        args.putSerializable(BundleKeys.RESUPPLY_INFO, resupplyInfo);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.SLIDE_UP));
+                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, args, TransitionStyle.SLIDE_UP));
                     }
                 });
             }

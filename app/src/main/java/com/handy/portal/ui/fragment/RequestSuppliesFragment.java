@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,9 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
@@ -18,7 +21,12 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
+import com.handy.portal.model.SupplyListItem;
+import com.handy.portal.ui.element.SupplyListItemView;
+
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -39,11 +47,17 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @InjectView(R.id.request_supplies_button)
     Button requestSuppliesButton;
 
-    @InjectView(R.id.complete_purchase_disclaimer_text)
-    TextView completePurchaseDisclaimerText;
+    @InjectView(R.id.shipping_address_line_1_content_text)
+    TextView shippingAddressLine1ContentText;
 
-    @InjectView(R.id.shipping_address_content_text)
-    TextView shippingAddressContentText;
+    @InjectView(R.id.shipping_address_line_2_content_text)
+    TextView shippingAddressLine2ContentText;
+
+    @InjectView(R.id.requested_supplies_list)
+    LinearLayout requestedSuppliesList;
+
+    @InjectView(R.id.request_supplies_withholding_amount)
+    TextView requestSuppliesWithholdingAmount;
 
     @Override
     protected MainViewTab getTab()
@@ -57,9 +71,13 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
+        final Bundle args = getArguments();
+        final ResupplyInfo resupplyInfo = (ResupplyInfo) args.getSerializable(BundleKeys.RESUPPLY_INFO);
 
         View view = inflater.inflate(R.layout.fragment_request_supplies, container, false);
         ButterKnife.inject(this, view);
+        createSupplyList(resupplyInfo.getSupplyList());
+        setWithholdingAmountText(resupplyInfo.getWithholdingAmount());
 
         return view;
     }
@@ -135,6 +153,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void requestSupplyInfo()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        // Should this be removed now that we are passing the resupply info via the show endpoint
         bus.post(new HandyEvent.RequestSupplyKitInfo()); //TODO: No one is listening to this yet
     }
 
@@ -191,7 +210,16 @@ public class RequestSuppliesFragment extends ActionBarFragment
 
     private void displayShippingAddress(Address address)
     {
-        shippingAddressContentText.setText(address != null ? address.getShippingAddress() : "No Address On File");
+        if (address != null)
+        {
+            shippingAddressLine1ContentText.setText(address.getStreetAddress());
+            shippingAddressLine2ContentText.setText(address.getCityStateZip());
+        }
+        else
+        {
+            shippingAddressLine1ContentText.setText("No Address On File");
+            shippingAddressLine2ContentText.setText("");
+        }
     }
 
     private void processResupplyInfo(ResupplyInfo resupplyInfo)
@@ -210,5 +238,23 @@ public class RequestSuppliesFragment extends ActionBarFragment
         }
     }
 
+    private void createSupplyList(List<SupplyListItem> supplyListItems)
+    {
+        for (int i = 0; i < supplyListItems.size(); i++)
+        {
+            SupplyListItem supplyItem = supplyListItems.get(i);
 
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            SupplyListItemView supplyListItemView = (SupplyListItemView) inflater.inflate(R.layout.element_supply_list_item, null);
+            supplyListItemView.updateDisplay(supplyItem.getType(), String.valueOf(supplyItem.getAmount()));
+
+            // Add it to the requested supplies list
+            requestedSuppliesList.addView(supplyListItemView);
+        }
+    }
+
+    private void setWithholdingAmountText(String withholdingAmount)
+    {
+        requestSuppliesWithholdingAmount.setText(withholdingAmount);
+    }
 }
