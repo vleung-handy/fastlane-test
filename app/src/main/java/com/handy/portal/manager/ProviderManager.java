@@ -1,5 +1,7 @@
 package com.handy.portal.manager;
 
+import android.support.annotation.Nullable;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.constant.PrefsKey;
@@ -183,6 +185,7 @@ public class ProviderManager
         });
     }
 
+    @Nullable
     public Provider getCachedActiveProvider()
     {
         return providerCache.getIfPresent(PROVIDER_CACHE_KEY);
