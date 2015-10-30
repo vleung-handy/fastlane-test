@@ -114,7 +114,9 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_select_payment_method, container, false);
         ButterKnife.inject(this, view);
 
-        if (!providerManager.getCachedActiveProvider().isUS())
+        if (providerManager.getCachedActiveProvider() != null &&
+                !providerManager.getCachedActiveProvider().isUS()
+                )
         {
             debitCardOption.setVisibility(View.GONE);
         }

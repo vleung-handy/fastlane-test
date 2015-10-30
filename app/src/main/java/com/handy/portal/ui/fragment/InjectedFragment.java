@@ -77,14 +77,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
         if(suppliedArguments == null)
         {
-            if(requiredArguments().size() == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return requiredArguments().size() == 0;
         }
 
         List<String> requiredArguments = requiredArguments();
