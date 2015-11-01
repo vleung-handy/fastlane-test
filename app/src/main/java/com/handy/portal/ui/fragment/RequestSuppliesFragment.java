@@ -157,13 +157,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveProviderProfileError(HandyEvent.ReceiveProviderProfileError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        String message = event.error.getMessage();
-        if (message == null)
-        {
-            message = getContext().getString(R.string.unable_to_process_request);
-        }
-        showToast(message);
+        this.handleRequestError(event);
     }
 
 
@@ -178,13 +172,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveSendResupplyKitError(HandyEvent.ReceiveSendResupplyKitError event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        String message = event.error.getMessage();
-        if (message == null)
-        {
-            message = getContext().getString(R.string.unable_to_process_request);
-        }
-        showToast(message);
+        this.handleRequestError(event);
     }
 
 
@@ -244,5 +232,16 @@ public class RequestSuppliesFragment extends ActionBarFragment
     private void setWithholdingAmountText(String withholdingAmount)
     {
         mRequestSuppliesWithholdingAmount.setText(withholdingAmount);
+    }
+
+    private void handleRequestError(HandyEvent.ReceiveErrorEvent event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        String message = event.error.getMessage();
+        if (message == null)
+        {
+            message = getContext().getString(R.string.unable_to_process_request);
+        }
+        showToast(message);
     }
 }
