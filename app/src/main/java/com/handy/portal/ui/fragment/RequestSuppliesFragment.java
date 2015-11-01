@@ -35,29 +35,20 @@ import butterknife.OnClick;
 
 public class RequestSuppliesFragment extends ActionBarFragment
 {
-    @InjectView(R.id.fetch_error_view)
-    ViewGroup fetchErrorLayout;
-
-    @InjectView(R.id.fetch_error_text)
-    TextView fetchErrorText;
-
-    @InjectView(R.id.request_supplies_layout)
-    ViewGroup requestSuppliesLayout;
-
     @InjectView(R.id.request_supplies_button)
-    Button requestSuppliesButton;
+    Button mRequestSuppliesButton;
 
     @InjectView(R.id.shipping_address_line_1_content_text)
-    TextView shippingAddressLine1ContentText;
+    TextView mShippingAddressLine1ContentText;
 
     @InjectView(R.id.shipping_address_line_2_content_text)
-    TextView shippingAddressLine2ContentText;
+    TextView mShippingAddressLine2ContentText;
 
     @InjectView(R.id.requested_supplies_list)
-    LinearLayout requestedSuppliesList;
+    LinearLayout mRequestedSuppliesList;
 
     @InjectView(R.id.request_supplies_withholding_amount)
-    TextView requestSuppliesWithholdingAmount;
+    TextView mRequestSuppliesWithholdingAmount;
 
     @Override
     protected MainViewTab getTab()
@@ -210,13 +201,13 @@ public class RequestSuppliesFragment extends ActionBarFragment
     {
         if (address != null)
         {
-            shippingAddressLine1ContentText.setText(address.getStreetAddress());
-            shippingAddressLine2ContentText.setText(address.getCityStateZip());
+            mShippingAddressLine1ContentText.setText(address.getStreetAddress());
+            mShippingAddressLine2ContentText.setText(address.getCityStateZip());
         }
         else
         {
-            shippingAddressLine1ContentText.setText("No Address On File");
-            shippingAddressLine2ContentText.setText("");
+            mShippingAddressLine1ContentText.setText("No Address On File");
+            mShippingAddressLine2ContentText.setText("");
         }
     }
 
@@ -228,11 +219,11 @@ public class RequestSuppliesFragment extends ActionBarFragment
 
         if (canRequestSupplies && canRequestSuppliesNow)
         {
-            requestSuppliesButton.setEnabled(true);
+            mRequestSuppliesButton.setEnabled(true);
         }
         else
         {
-            requestSuppliesButton.setEnabled(false);
+            mRequestSuppliesButton.setEnabled(false);
         }
     }
 
@@ -247,12 +238,12 @@ public class RequestSuppliesFragment extends ActionBarFragment
             supplyListItemView.updateDisplay(supplyItem.getType(), String.valueOf(supplyItem.getAmount()));
 
             // Add it to the requested supplies list
-            requestedSuppliesList.addView(supplyListItemView);
+            mRequestedSuppliesList.addView(supplyListItemView);
         }
     }
 
     private void setWithholdingAmountText(String withholdingAmount)
     {
-        requestSuppliesWithholdingAmount.setText(withholdingAmount);
+        mRequestSuppliesWithholdingAmount.setText(withholdingAmount);
     }
 }
