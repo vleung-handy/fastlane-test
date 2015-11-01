@@ -206,7 +206,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
         }
         else
         {
-            mShippingAddressLine1ContentText.setText("No Address On File");
+            mShippingAddressLine1ContentText.setText(R.string.no_address_on_file);
             mShippingAddressLine2ContentText.setText("");
         }
     }

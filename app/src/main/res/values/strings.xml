@@ -455,4 +455,5 @@
     <string name="withholding_amount">Withholding Amount</string>
     <string name="complete_purchase">Complete Purchase</string>
     <string name="complete_purchase_disclaimer">* completing purchase will withhold %1$s from your next pay period.</string>
+    <string name="no_address_on_file">No Address On File</string>
 </resources>
