@@ -213,7 +213,6 @@ public class RequestSuppliesFragment extends ActionBarFragment
 
     private void processResupplyInfo(ResupplyInfo resupplyInfo)
     {
-        String resupplyHelperText = resupplyInfo.getHelperText();
         boolean canRequestSupplies = resupplyInfo.providerCanRequestSupplies();
         boolean canRequestSuppliesNow = resupplyInfo.providerCanRequestSuppliesNow();
 
