@@ -59,7 +59,6 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ProviderProf
                     {
                         final Bundle args = new Bundle();
                         args.putSerializable(BundleKeys.PROVIDER_PROFILE, providerProfile);
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
                         bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, args, TransitionStyle.SLIDE_UP));
                     }
                 });

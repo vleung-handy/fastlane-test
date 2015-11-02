@@ -60,12 +60,6 @@ public class ProfileFragment extends ActionBarFragment
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();

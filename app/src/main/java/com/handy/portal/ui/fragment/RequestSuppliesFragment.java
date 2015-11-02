@@ -73,13 +73,6 @@ public class RequestSuppliesFragment extends ActionBarFragment
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.menu_x_back, menu);
