@@ -63,12 +63,11 @@ public class RequestSuppliesFragment extends ActionBarFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
         final Bundle args = getArguments();
-        final ResupplyInfo resupplyInfo = (ResupplyInfo) args.getSerializable(BundleKeys.RESUPPLY_INFO);
+        mProviderProfile = (ProviderProfile) args.getSerializable(BundleKeys.PROVIDER_PROFILE);
 
         View view = inflater.inflate(R.layout.fragment_request_supplies, container, false);
         ButterKnife.inject(this, view);
-        createSupplyList(resupplyInfo.getSupplyList());
-        setWithholdingAmountText(resupplyInfo.getWithholdingAmount());
+        processProviderProfile(mProviderProfile);
 
         return view;
     }
@@ -77,8 +76,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        requestProviderProfile();
-        requestSupplyInfo();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
     }
 
     @Override
@@ -108,14 +106,6 @@ public class RequestSuppliesFragment extends ActionBarFragment
         setActionBar(R.string.request_supplies, false);
     }
 
-    @OnClick(R.id.try_again_button)
-    public void onTryAgainButtonClicked()
-    {
-        requestProviderProfile();
-        requestSupplyInfo();
-    }
-
-
     @OnClick(R.id.request_supplies_button)
     public void onRequestSuppliesButtonClicked()
     {
@@ -133,33 +123,6 @@ public class RequestSuppliesFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestSendResupplyKit());
     }
-
-
-    public void requestProviderProfile()
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestProviderProfile());
-    }
-
-    public void requestSupplyInfo()
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-    }
-
-    @Subscribe
-    public void onReceiveProviderProfileSuccess(HandyEvent.ReceiveProviderProfileSuccess event)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false)); //todo: check if also have the resupply info, or maybe use a non-blocking swirly while supply info is loading?
-        mProviderProfile = event.providerProfile;
-        processProviderProfile(mProviderProfile);
-    }
-
-    @Subscribe
-    public void onReceiveProviderProfileError(HandyEvent.ReceiveProviderProfileError event)
-    {
-        this.handleRequestError(event);
-    }
-
 
     @Subscribe
     public void onReceiveSendResupplyKitSuccess(HandyEvent.ReceiveSendResupplyKitSuccess event)
@@ -201,6 +164,9 @@ public class RequestSuppliesFragment extends ActionBarFragment
 
     private void processResupplyInfo(ResupplyInfo resupplyInfo)
     {
+        createSupplyList(resupplyInfo.getSupplyList());
+        setWithholdingAmountText(resupplyInfo.getWithholdingAmount());
+
         boolean canRequestSupplies = resupplyInfo.providerCanRequestSupplies();
         boolean canRequestSuppliesNow = resupplyInfo.providerCanRequestSuppliesNow();
 

@@ -2,34 +2,41 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProviderProfile
+import java.io.Serializable;
+
+public class ProviderProfile implements Serializable
 {
     @SerializedName("personal_info")
-    private ProviderPersonalInfo providerPersonalInfo;
+    private ProviderPersonalInfo mProviderPersonalInfo;
     @SerializedName("referral_info")
-    private ReferralInfo referralInfo;
+    private ReferralInfo mReferralInfo;
     @SerializedName("performance_info")
-    private PerformanceInfo performanceInfo;
+    private PerformanceInfo mPerformanceInfo;
     @SerializedName("resupply_info")
-    private ResupplyInfo resupplyInfo;
+    private ResupplyInfo mResupplyInfo;
 
     public ProviderPersonalInfo getProviderPersonalInfo()
     {
-        return providerPersonalInfo;
+        return mProviderPersonalInfo;
     }
 
     public ReferralInfo getReferralInfo()
     {
-        return referralInfo;
+        return mReferralInfo;
     }
 
     public PerformanceInfo getPerformanceInfo()
     {
-        return performanceInfo;
+        return mPerformanceInfo;
     }
 
     public ResupplyInfo getResupplyInfo()
     {
-        return resupplyInfo;
+        return mResupplyInfo;
+    }
+
+    public void setResupplyInfo(ResupplyInfo resupplyInfo)
+    {
+        mResupplyInfo = resupplyInfo;
     }
 }

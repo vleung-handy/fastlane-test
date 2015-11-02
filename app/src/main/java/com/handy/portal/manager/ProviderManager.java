@@ -151,7 +151,8 @@ public class ProviderManager
             @Override
             public void onSuccess(ResupplyInfo resupplyInfo)
             {
-                bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess(resupplyInfo));
+                providerProfile.setResupplyInfo(resupplyInfo);
+                bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess(providerProfile));
             }
 
             @Override
