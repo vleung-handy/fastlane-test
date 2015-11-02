@@ -2,6 +2,7 @@ package com.handy.portal.constant;
 
 public class BundleKeys
 {
+    public static final String BOOKING = "booking";
     public static final String BOOKING_ID = "booking_id";
     public static final String BOOKING_TYPE = "booking_type";
     public static final String BOOKING_DATE = "booking_date";
@@ -15,6 +16,7 @@ public class BundleKeys
     public static final String PAYMENT_BATCH = "payment_batch";
     public static final String IS_FOR_PAYMENTS = "is_for_payments";
     public static final String UPDATE_TAB_CALLBACK = "update_tab_callback";
+    public static final String ZIP_CLUSTER_POLYGONS = "zip_cluster_polygons";
 
     // UrbanAirship
     public static final String PUSH_TYPE = "type_id";

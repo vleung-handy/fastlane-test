@@ -28,6 +28,7 @@ import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
+import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.util.TextUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
@@ -71,6 +72,8 @@ public class BaseApplication extends Application
     PrefsManager prefsManager;
     @Inject
     PaymentsManager paymentsManager;
+    @Inject
+    ZipClusterManager zipClusterManager;
     @Inject
     StripeManager stripeManager;
     @Inject

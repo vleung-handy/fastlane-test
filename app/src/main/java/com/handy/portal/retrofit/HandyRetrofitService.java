@@ -24,6 +24,8 @@ public interface HandyRetrofitService
     String PROVIDERS_PATH = "/providers/";
     String PAYMENTS_PATH = "/payments/";
     String STRIPE_PATH = "/stripe/";
+    String ZIP_CLUSTER_POLYGONS_PATH = "/zipcluster_polygons/";
+
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
@@ -57,6 +59,9 @@ public interface HandyRetrofitService
     @GET(JOBS_PATH + "{id}")
     void getBookingDetails(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
+    @GET(JOBS_PATH + "{id}/complementary_jobs")
+    void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
+
     @GET(PAYMENTS_PATH)
     void getPaymentBatches(@Query("date_range_start") Date startDate, @Query("date_range_end") Date endDate, HandyRetrofitCallback cb);
 
@@ -81,11 +86,11 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/payment_flow")
     void getPaymentFlow(@Path("id") String providerId, HandyRetrofitCallback cb);
 
-    @GET(JOBS_PATH + "{id}/complementary_jobs")
-    void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
-
     @GET(PROVIDERS_PATH + "{id}/send_income_verification")
     void sendIncomeVerification(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @GET(ZIP_CLUSTER_POLYGONS_PATH + "{id}")
+    void getZipClusterPolygon(@Path("id") String zipClusterPolygonId, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}")
     void getProviderProfile(@Path("id") String providerId, HandyRetrofitCallback cb);

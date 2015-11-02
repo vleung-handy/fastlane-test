@@ -24,71 +24,73 @@ public class Booking implements Comparable<Booking>, Serializable
     }
 
     @SerializedName("id")
-    private String id;
+    private String mId;
     @SerializedName("type")
-    private String type;
+    private String mType;
     @SerializedName("service_name")
-    private String service;
+    private String mService;
     @SerializedName("service")
-    private ServiceInfo serviceInfo;
+    private ServiceInfo mServiceInfo;
     @SerializedName("start_date")
-    private Date startDate;
+    private Date mStartDate;
     @SerializedName("status")
-    private String status;
+    private String mStatus;
     @SerializedName("end_date")
-    private Date endDate;
+    private Date mEndDate;
     @SerializedName("reveal_date")
-    private Date revealDate;
+    private Date mRevealDate;
 
     @SerializedName("check_in_summary")
-    private CheckInSummary checkInSummary;
+    private CheckInSummary mCheckInSummary;
     @SerializedName("eta_lateness_minutes")
-    private Integer providerMinutesLate;//value returned from server can be null
+    private Integer mProviderMinutesLate;//value returned from server can be null
 
     @SerializedName("address")
-    private Address address;
+    private Address mAddress;
 
     @SerializedName("is_requested")
-    private boolean isRequested;
+    private boolean mIsRequested;
     @SerializedName("payment_to_provider")
-    private PaymentInfo paymentToProvider;
+    private PaymentInfo mPaymentToProvider;
     @SerializedName("bonus")
-    private PaymentInfo bonusPayment;
+    private PaymentInfo mBonusPayment;
     @SerializedName("frequency")
-    private int frequency;
+    private int mFrequency;
 
     @SerializedName("provider_id")
-    private String providerId;
+    private String mProviderId;
     @SerializedName("partner")
-    private String partner;
+    private String mPartner;
     @SerializedName("country")
-    private String country;
+    private String mCountry;
     @SerializedName("user")
-    private User user;
+    private User mUser;
     @SerializedName("actions")
-    private List<Action> actionList;
+    private List<Action> mActionList;
     @SerializedName("booking_phone")
-    private String bookingPhone;
+    private String mBookingPhone;
 
     @SerializedName("booking_instructions")
-    private List<BookingInstruction> bookingInstructions;
+    private List<BookingInstruction> mBookingInstructions;
     @SerializedName("booking_instruction_groups")
-    private List<BookingInstructionGroup> bookingInstructionGroups;
+    private List<BookingInstructionGroup> mBookingInstructionGroups;
     @SerializedName("booking_extras")
-    private ArrayList<ExtraInfoWrapper> extrasInfo;
+    private ArrayList<ExtraInfoWrapper> mExtrasInfo;
     @SerializedName("description")
-    private String description;
+    private String mDescription;
 
     @SerializedName("distance")
-    private String formattedDistance;
+    private String mFormattedDistance;
     @SerializedName("location_name")
-    private String locationName;
+    private String mLocationName;
     @SerializedName("claimed_by_me")
-    private boolean claimedByMe;
+    private boolean mClaimedByMe;
     @SerializedName("midpoint")
-    private Coordinates midpoint;
+    private Coordinates mMidpoint;
     @SerializedName("radius")
-    private float radius;
+    private float mRadius;
+    @SerializedName("zipcluster_id")
+    private String mZipClusterId;
 
     public int compareTo(@NonNull Booking other)
     {
@@ -104,7 +106,7 @@ public class Booking implements Comparable<Booking>, Serializable
                 return 1;
             }
         }
-        return startDate.compareTo(other.startDate);
+        return mStartDate.compareTo(other.mStartDate);
     }
 
     public boolean equals(Object o)
@@ -114,52 +116,52 @@ public class Booking implements Comparable<Booking>, Serializable
             return false;
         }
         Booking b = (Booking) o;
-        return b.id.equals(id);
+        return b.mId.equals(mId);
     }
 
     public String getStatus()
     {
-        return status;
+        return mStatus;
     }
 
     public List<BookingInstruction> getBookingInstructions()
     {
-        return bookingInstructions;
+        return mBookingInstructions;
     }
 
     public List<BookingInstructionGroup> getBookingInstructionGroups()
     {
-        return bookingInstructionGroups;
+        return mBookingInstructionGroups;
     }
 
     public int getFrequency()
     {
-        return frequency;
+        return mFrequency;
     }
 
     public String getPartner()
     {
-        return partner;
+        return mPartner;
     }
 
     public PaymentInfo getPaymentToProvider()
     {
-        return paymentToProvider;
+        return mPaymentToProvider;
     }
 
     public PaymentInfo getBonusPaymentToProvider()
     {
-        return bonusPayment;
+        return mBonusPayment;
     }
 
     public boolean isRequested()
     {
-        return isRequested;
+        return mIsRequested;
     }
 
     public String getId()
     {
-        return id;
+        return mId;
     }
 
     public boolean isStarted()
@@ -186,52 +188,52 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public boolean isRecurring()
     {
-        return frequency > 0;
+        return mFrequency > 0;
     }
 
     public String getService()
     {
-        return service;
+        return mService;
     }
 
     public Date getStartDate()
     {
-        return startDate;
+        return mStartDate;
     }
 
     public Date getEndDate()
     {
-        return endDate;
+        return mEndDate;
     }
 
     public Address getAddress()
     {
-        return address;
+        return mAddress;
     }
 
     public String getProviderId()
     {
-        return providerId;
+        return mProviderId;
     }
 
     public ArrayList<ExtraInfoWrapper> getExtrasInfo()
     {
-        return extrasInfo;
+        return mExtrasInfo;
     }
 
     public ServiceInfo getServiceInfo()
     {
-        return serviceInfo;
+        return mServiceInfo;
     }
 
     public User getUser()
     {
-        return user;
+        return mUser;
     }
 
     public String getBookingPhone()
     {
-        return bookingPhone;
+        return mBookingPhone;
     }
 
     public List<ExtraInfoWrapper> getExtrasInfoByMachineName(final String machineName)
@@ -253,45 +255,45 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public boolean isUK()
     {
-        return "GB".equalsIgnoreCase(country);
+        return "GB".equalsIgnoreCase(mCountry);
     }
 
     public CheckInSummary getCheckInSummary()
     {
-        return checkInSummary;
+        return mCheckInSummary;
     }
 
     public Integer getProviderMinutesLate()
     {
-        return providerMinutesLate;
+        return mProviderMinutesLate;
     }
 
-    //providerId = 0, no one assigned can claim, otherwise is already claimed
+    //mProviderId = 0, no one assigned can claim, otherwise is already claimed
     public static final String NO_PROVIDER_ASSIGNED = "0";
 
     public String getFormattedDistance()
     {
-        return formattedDistance;
+        return mFormattedDistance;
     }
 
     public String getDescription()
     {
-        return description;
+        return mDescription;
     }
 
     public BookingType getType()
     {
-        return BookingType.valueOf(type.toUpperCase());
+        return BookingType.valueOf(mType.toUpperCase());
     }
 
     public String getLocationName()
     {
-        return locationName;
+        return mLocationName;
     }
 
     public boolean isClaimedByMe()
     {
-        return claimedByMe;
+        return mClaimedByMe;
     }
 
     public boolean isProxy()
@@ -301,20 +303,22 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public Coordinates getMidpoint()
     {
-        return midpoint;
+        return mMidpoint;
     }
 
     public float getRadius()
     {
-        return radius;
+        return mRadius;
     }
 
     public Date getRevealDate()
     {
-        return revealDate;
+        return mRevealDate;
     }
 
-    //Basic booking statuses inferrable from providerId
+    public String getZipClusterId() { return mZipClusterId; }
+
+    //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus
     {
         AVAILABLE,
@@ -331,13 +335,13 @@ public class Booking implements Comparable<Booking>, Serializable
         LATE_15_MINUTES(R.string.arrival_time_late_15, "15"),
         LATE_30_MINUTES(R.string.arrival_time_late_30, "30"),;
 
-        private String value;
-        private int stringId;
+        private String mValue;
+        private int mStringId;
 
         ArrivalTimeOption(int stringId, String value)
         {
-            this.stringId = stringId;
-            this.value = value;
+            this.mStringId = stringId;
+            this.mValue = value;
         }
 
         public static List<ArrivalTimeOption> lateValues()
@@ -352,12 +356,12 @@ public class Booking implements Comparable<Booking>, Serializable
 
         public String getValue()
         {
-            return value;
+            return mValue;
         }
 
         public int getStringId()
         {
-            return stringId;
+            return mStringId;
         }
     }
 
@@ -412,9 +416,9 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public List<Action> getAllowedActions()
     {
-        if (actionList != null)
+        if (mActionList != null)
         {
-            return actionList;
+            return mActionList;
         }
         else
         {
@@ -445,92 +449,92 @@ public class Booking implements Comparable<Booking>, Serializable
         public static final String ACTION_RETRACT_NO_SHOW = "retract_no_show";
 
         @SerializedName("action_name")
-        private String actionName;
+        private String mActionName;
         @SerializedName("helper_text")
-        private String helperText; //Displayed in text field below button / button section
+        private String mHelperText; //Displayed in text field below button / button section
         @SerializedName("warning_text")
-        private String warningText; //Indicates a popup should be shown with this message to confirm action
+        private String mWarningText; //Indicates a popup should be shown with this message to confirm action
         @SerializedName("enabled")
-        private boolean enabled;
+        private boolean mEnabled;
         @SerializedName("deep_link_data")
-        private String deepLinkData;
+        private String mDeepLinkData;
 
         public String getActionName()
         {
-            return actionName;
+            return mActionName;
         }
 
         public String getHelperText()
         {
-            return helperText;
+            return mHelperText;
         }
 
         public String getWarningText()
         {
-            return warningText;
+            return mWarningText;
         }
 
         public boolean isEnabled()
         {
-            return enabled;
+            return mEnabled;
         }
 
         public String getDeepLinkData()
         {
-            return deepLinkData;
+            return mDeepLinkData;
         }
     }
 
     public static class User implements Serializable
     {
         @SerializedName("email")
-        private String email;
+        private String mEmail;
         @SerializedName("first_name")
-        private String firstName;
+        private String mFirstName;
         @SerializedName("last_name")
-        private String lastName;
+        private String mLastName;
 
         public String getEmail()
         {
-            return email;
+            return mEmail;
         }
 
         public String getFirstName()
         {
-            return firstName;
+            return mFirstName;
         }
 
         public String getLastName()
         {
-            return lastName;
+            return mLastName;
         }
 
         public String getAbbreviatedName()
         {
-            return firstName + (lastName.isEmpty() ? "" : " " + lastName.charAt(0) + ".");
+            return mFirstName + (mLastName.isEmpty() ? "" : " " + mLastName.charAt(0) + ".");
         }
 
         public String getFullName()
         {
-            return firstName + " " + lastName;
+            return mFirstName + " " + mLastName;
         }
     }
 
     public static class BookingInstruction implements Serializable
     {
         @SerializedName("description")
-        private String description;
+        private String mDescription;
         @SerializedName("machine_name")
-        private String machineName;
+        private String mMachineName;
 
         public String getDescription()
         {
-            return description;
+            return mDescription;
         }
 
         public String getMachineName()
         {
-            return machineName;
+            return mMachineName;
         }
     }
 
@@ -544,44 +548,44 @@ public class Booking implements Comparable<Booking>, Serializable
         public static String OTHER = "other";
 
         @SerializedName("group")
-        private String group;
+        private String mGroup;
         @SerializedName("label")
-        private String label;
+        private String mLabel;
         @SerializedName("items")
-        private List<String> items;
+        private List<String> mItems;
 
         public String getGroup()
         {
-            return group;
+            return mGroup;
         }
 
         public String getLabel()
         {
-            return label;
+            return mLabel;
         }
 
         public List<String> getItems()
         {
-            return items;
+            return mItems;
         }
     }
 
     public static class CheckInSummary implements Serializable
     {
         @SerializedName("is_checked_in")
-        private boolean isCheckedIn; //false if checked out or on my way
+        private boolean mIsCheckedIn; //false if checked out or on my way
 
         @SerializedName("time")
-        private Date checkInTime;
+        private Date mCheckInTime;
 
         public Date getCheckInTime()
         {
-            return checkInTime;
+            return mCheckInTime;
         }
 
         public boolean isCheckedIn()
         {
-            return isCheckedIn;
+            return mIsCheckedIn;
         }
     }
 
@@ -590,23 +594,23 @@ public class Booking implements Comparable<Booking>, Serializable
         private static final String MACHINE_NAME_CLEANING = "home_cleaning";
 
         @SerializedName("machine_name")
-        private String machineName;
+        private String mMachineName;
         @SerializedName("name")
-        private String displayName;
+        private String mDisplayName;
 
         public String getMachineName()
         {
-            return machineName;
+            return mMachineName;
         }
 
         public String getDisplayName()
         {
-            return displayName;
+            return mDisplayName;
         }
 
         public boolean isHomeCleaning()
         {
-            return MACHINE_NAME_CLEANING.equalsIgnoreCase(machineName);
+            return MACHINE_NAME_CLEANING.equalsIgnoreCase(mMachineName);
         }
     }
 
@@ -614,79 +618,79 @@ public class Booking implements Comparable<Booking>, Serializable
     {
         public ExtraInfo getExtraInfo()
         {
-            return extraInfo;
+            return mExtraInfo;
         }
 
         @SerializedName("extra")
-        private ExtraInfo extraInfo;
+        private ExtraInfo mExtraInfo;
         @SerializedName("quantity")
-        private int quantity;
+        private int mQuantity;
     }
 
     public static class ExtraInfo implements Serializable
     {
-        //cleaning supplies are in their own category apart from all other extras
+        //cleaning supplies are in their own mCategory apart from all other extras
         public static final String TYPE_CLEANING_SUPPLIES = "cleaning_supplies";
 
         @SerializedName("category")
-        private String category;
+        private String mCategory;
         @SerializedName("fee")
-        private String fee;
+        private String mFee;
         @SerializedName("hours")
-        private String hours;
+        private String mHours;
         @SerializedName("id")
-        private int id;
+        private int mId;
         @SerializedName("machine_name")
-        private String machineName;
+        private String mMachineName;
         @SerializedName("name")
-        private String name;
+        private String mName;
 
         public String getCategory()
         {
-            return category;
+            return mCategory;
         }
 
         public String getFee()
         {
-            return fee;
+            return mFee;
         }
 
         public String getHours()
         {
-            return hours;
+            return mHours;
         }
 
         public int getId()
         {
-            return id;
+            return mId;
         }
 
         public String getMachineName()
         {
-            return machineName;
+            return mMachineName;
         }
 
         public String getName()
         {
-            return name;
+            return mName;
         }
     }
 
-    public static class Coordinates
+    public static class Coordinates implements Serializable
     {
         @SerializedName("latitude")
-        private float latitude;
+        private float mLatitude;
         @SerializedName("longitude")
-        private float longitude;
+        private float mLongitude;
 
         public float getLatitude()
         {
-            return latitude;
+            return mLatitude;
         }
 
         public float getLongitude()
         {
-            return longitude;
+            return mLongitude;
         }
     }
 
