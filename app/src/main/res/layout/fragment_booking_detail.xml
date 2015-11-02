@@ -41,7 +41,7 @@
                         <LinearLayout
                             android:id="@+id/booking_details_map_layout"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"
+                            android:layout_height="280dp"
                             android:orientation="vertical"
                             />
 
