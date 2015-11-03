@@ -24,6 +24,8 @@ public class ProviderManager
     private final PrefsManager prefsManager;
     private Cache<String, Provider> providerCache;
     private static final String PROVIDER_CACHE_KEY = "provider";
+    private Cache<String, ProviderProfile> mProviderProfileCache;
+    private static final String PROVIDER_PROFILE_CACHE_KEY = "provider_profile";
 
     private ProviderProfile providerProfile;
 
@@ -36,6 +38,10 @@ public class ProviderManager
             .maximumSize(10)
             .expireAfterWrite(1, TimeUnit.DAYS)
             .build();
+        this.mProviderProfileCache = CacheBuilder.newBuilder()
+                .maximumSize(10)
+                .expireAfterWrite(1, TimeUnit.DAYS)
+                .build();
         bus.register(this);
     }
 
@@ -122,23 +128,16 @@ public class ProviderManager
     @Subscribe
     public void onRequestProviderProfile(HandyEvent.RequestProviderProfile event)
     {
-        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        final ProviderProfile cachedProviderProfile = getCachedProviderProfile();
 
-        dataManager.getProviderProfile(providerId, new DataManager.Callback<ProviderProfile>()
+        if (cachedProviderProfile != null)
         {
-            @Override
-            public void onSuccess(ProviderProfile providerProfile)
-            {
-                ProviderManager.this.providerProfile = providerProfile;
-                bus.post(new HandyEvent.ReceiveProviderProfileSuccess(providerProfile));
-            }
-
-            @Override
-            public void onError(DataManager.DataManagerError error)
-            {
-                bus.post(new HandyEvent.ReceiveProviderProfileError());
-            }
-        });
+            bus.post(new HandyEvent.ReceiveProviderProfileSuccess(cachedProviderProfile));
+        }
+        else
+        {
+            requestProviderProfile();
+        }
     }
 
     @Subscribe
@@ -184,8 +183,35 @@ public class ProviderManager
         });
     }
 
+    public void requestProviderProfile()
+    {
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+
+        dataManager.getProviderProfile(providerId, new DataManager.Callback<ProviderProfile>()
+        {
+            @Override
+            public void onSuccess(ProviderProfile providerProfile)
+            {
+                mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
+                ProviderManager.this.providerProfile = providerProfile;
+                bus.post(new HandyEvent.ReceiveProviderProfileSuccess(providerProfile));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveProviderProfileError());
+            }
+        });
+    }
+
     public Provider getCachedActiveProvider()
     {
         return providerCache.getIfPresent(PROVIDER_CACHE_KEY);
+    }
+
+    private ProviderProfile getCachedProviderProfile()
+    {
+        return mProviderProfileCache.getIfPresent(PROVIDER_PROFILE_CACHE_KEY);
     }
 }
