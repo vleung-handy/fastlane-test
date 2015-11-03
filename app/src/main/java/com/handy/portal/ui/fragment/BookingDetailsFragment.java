@@ -52,6 +52,7 @@ import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.view.MapPlaceholderView;
+import com.handy.portal.ui.view.ProxyLocationView;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
@@ -73,40 +74,43 @@ public class BookingDetailsFragment extends ActionBarFragment
 {
     //Layouts points for fragment, the various elements are childed to these
     @InjectView(R.id.booking_details_layout)
-    protected LinearLayout detailsParentLayout;
+    LinearLayout detailsParentLayout;
 
     @InjectView(R.id.booking_details_map_layout)
-    protected LinearLayout mapLayout;
+    ViewGroup mapLayout;
 
     @InjectView(R.id.booking_details_date_layout)
-    protected LinearLayout dateLayout;
+    LinearLayout dateLayout;
 
-    @InjectView(R.id.booking_details_location_layout)
-    protected RelativeLayout locationLayout;
+    @InjectView(R.id.booking_details_title_layout)
+    RelativeLayout titleLayout;
 
     @InjectView(R.id.booking_details_action_layout)
-    protected RelativeLayout actionLayout;
+    RelativeLayout actionLayout;
 
     @InjectView(R.id.booking_details_contact_layout)
-    protected RelativeLayout contactLayout;
+    RelativeLayout contactLayout;
 
     @InjectView(R.id.booking_details_job_instructions_layout)
-    protected LinearLayout jobInstructionsLayout;
+    LinearLayout jobInstructionsLayout;
+
+    @InjectView(R.id.booking_details_location_layout)
+    ViewGroup locationLayout;
 
     @InjectView(R.id.booking_details_remove_job_layout)
-    protected LinearLayout removeJobLayout;
+    LinearLayout removeJobLayout;
 
     @InjectView(R.id.booking_details_full_details_notice_text)
-    protected TextView fullDetailsNoticeText;
+    TextView fullDetailsNoticeText;
 
     @InjectView(R.id.fetch_error_view)
     protected View fetchErrorView;
 
     @InjectView(R.id.fetch_error_text)
-    protected TextView errorText;
+    TextView errorText;
 
     @InjectView(R.id.slide_up_panel_container)
-    protected SlideUpPanelContainer slideUpPanelContainer;
+    SlideUpPanelContainer slideUpPanelContainer;
 
     @Inject
     PrefsManager prefsManager;
@@ -140,7 +144,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_booking_detail, null);
+        View view = inflater.inflate(R.layout.fragment_booking_detail, container, false);
 
         ButterKnife.inject(this, view);
 
@@ -333,7 +337,11 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
 
         viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
-        viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
+        viewConstructors.put(titleLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
+        if (booking.isProxy() && (booking.getLocationDescription() != null || booking.getTransitDescription() != null))
+        {
+            UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getLocationDescription(), booking.getTransitDescription()));
+        }
         viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments));
 
         if (!this.isForPayments)

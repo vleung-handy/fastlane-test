@@ -268,6 +268,12 @@ public final class UIUtils
         return builder.create();
     }
 
+    public static int calculateDpToPx(Context context, int dp)
+    {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + .5f);
+    }
+
     public static class FormFieldErrorStateRemover implements TextWatcher
     {
         private Errorable errorable;

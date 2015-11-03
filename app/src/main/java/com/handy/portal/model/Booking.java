@@ -91,6 +91,11 @@ public class Booking implements Comparable<Booking>, Serializable
     private float mRadius;
     @SerializedName("zipcluster_id")
     private String mZipClusterId;
+    @SerializedName("transit_description")
+    private String mTransitDescription;
+    @SerializedName("location_description")
+    private String mLocationDescription;
+
 
     public int compareTo(@NonNull Booking other)
     {
@@ -317,6 +322,10 @@ public class Booking implements Comparable<Booking>, Serializable
     }
 
     public String getZipClusterId() { return mZipClusterId; }
+
+    public String getTransitDescription() { return mTransitDescription; }
+
+    public String getLocationDescription() { return mLocationDescription; }
 
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus
