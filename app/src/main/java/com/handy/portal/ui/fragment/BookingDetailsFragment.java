@@ -338,9 +338,9 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
         viewConstructors.put(titleLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
-        if (booking.isProxy() && (booking.getLocationDescription() != null || booking.getTransitDescription() != null))
+        if (booking.isProxy())
         {
-            UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getLocationDescription(), booking.getTransitDescription()));
+            UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getZipCluster()));
         }
         viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments));
 

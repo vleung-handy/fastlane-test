@@ -8,13 +8,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.Booking;
+
+import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class ProxyLocationView extends FrameLayout
 {
-    public ProxyLocationView(Context context, String jobLocation, String nearbyTransit)
+    @InjectView(R.id.job_location_title)
+    TextView jobLocationTitleTextView;
+
+    @InjectView(R.id.job_location)
+    TextView jobLocationTextView;
+
+    @InjectView(R.id.nearby_transit_title)
+    TextView nearbyTransitTextView;
+
+    @InjectView(R.id.nearby_transits)
+    LinearLayout nearbyTransits;
+
+    private Booking.ZipCluster mZipCluster;
+
+    public ProxyLocationView(Context context, Booking.ZipCluster zipCluster)
     {
         super(context);
-        init(jobLocation, nearbyTransit);
+        mZipCluster = zipCluster;
+        init();
     }
 
     public ProxyLocationView(Context context, AttributeSet attrs)
@@ -33,39 +54,50 @@ public class ProxyLocationView extends FrameLayout
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    private void init(String jobLocation, String nearbyTransit)
+    private void init()
     {
+        if (mZipCluster == null || mZipCluster.getTransitDescription().isEmpty() && mZipCluster.getLocationDescription().isEmpty())
+        {
+            setVisibility(GONE);
+            return;
+        }
+
         inflate(getContext(), R.layout.element_booking_details_proxy_location, this);
+        ButterKnife.inject(this);
 
-        TextView jobLocationTitleTextView = (TextView) findViewById(R.id.job_location_title);
-        TextView jobLocationTextView = (TextView) findViewById(R.id.job_location);
-        TextView nearbyTransitTextView = (TextView) findViewById(R.id.nearby_transit_title);
-        LinearLayout nearbyTransits = (LinearLayout) findViewById(R.id.nearby_transits);
+        setJobLocation();
+        setNearbyTransit();
+    }
 
-        if (jobLocation == null || jobLocation.isEmpty())
+    private void setJobLocation()
+    {
+        if (mZipCluster.getLocationDescription() == null || mZipCluster.getLocationDescription().isEmpty())
         {
             jobLocationTitleTextView.setVisibility(GONE);
             jobLocationTextView.setVisibility(GONE);
         }
         else
         {
-            jobLocationTextView.setText(jobLocation);
+            jobLocationTextView.setText(mZipCluster.getLocationDescription());
         }
 
-        if (nearbyTransit == null || nearbyTransit.isEmpty())
+    }
+
+    private void setNearbyTransit()
+    {
+        if (mZipCluster.getTransitDescription() == null || mZipCluster.getTransitDescription().isEmpty())
         {
             nearbyTransitTextView.setVisibility(GONE);
         }
         else
         {
-            String[] transits = nearbyTransit.split(",");
-            for (String transit : transits)
+            List<String> transitsMarkers = mZipCluster.getTransitDescription();
+            for (String transitMarker : transitsMarkers)
             {
-                RoundedTextView transitView = new RoundedTextView(getContext());
-                transitView.setText(transit);
-                nearbyTransits.addView(transitView);
+                RoundedTextView transitMarkerView = new RoundedTextView(getContext());
+                transitMarkerView.setText(transitMarker);
+                nearbyTransits.addView(transitMarkerView);
             }
         }
     }
-
 }

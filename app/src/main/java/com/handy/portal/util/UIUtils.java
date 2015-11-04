@@ -271,7 +271,7 @@ public final class UIUtils
     public static int calculateDpToPx(Context context, int dp)
     {
         final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + .5f);
+        return (int) (dp * scale + .5f); // round up if the decimal is greater than .5
     }
 
     public static class FormFieldErrorStateRemover implements TextWatcher
