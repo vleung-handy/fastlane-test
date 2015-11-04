@@ -4,10 +4,13 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="row_margin">8dp</dimen>
     <dimen name="default_margin">16dp</dimen>
+    <dimen name="default_margin_medium">24dp</dimen>
     <dimen name="payment_container_horizontal_padding">20dp</dimen>
     <dimen name="payment_container_vertical_padding">20dp</dimen>
     <dimen name="extra_padding">5dp</dimen>
+    <dimen name="extra_padding_large">15dp</dimen>
     <dimen name="extra_margin">5dp</dimen>
+    <dimen name="extra_margin_large">15dp</dimen>
     <dimen name="section_margin">10dp</dimen>
     <dimen name="section_item_margin">20dp</dimen>
     <dimen name="default_padding">16dp</dimen>

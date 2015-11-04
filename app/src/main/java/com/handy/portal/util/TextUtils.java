@@ -18,13 +18,6 @@ public final class TextUtils
 {
     private static final String URL_PATTERN = "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
 
-    public static final class Fonts
-    {
-        public static final String CIRCULAR_BOLD = "fonts/CircularStd-Bold.otf";
-        public static final String CIRCULAR_BOOK = "fonts/CircularStd-Book.otf";
-        public static final String CIRCULAR_MEDIUM = "fonts/CircularStd-Medium.otf";
-    }
-
     private static final Hashtable<String, Typeface> cache = new Hashtable<>();
 
     public static Typeface get(final Context c, final String name)

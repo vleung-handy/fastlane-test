@@ -91,6 +91,9 @@ public class Booking implements Comparable<Booking>, Serializable
     private float mRadius;
     @SerializedName("zipcluster_id")
     private String mZipClusterId;
+    @SerializedName("zipcluster")
+    private ZipCluster mZipCluster;
+
 
     public int compareTo(@NonNull Booking other)
     {
@@ -317,6 +320,8 @@ public class Booking implements Comparable<Booking>, Serializable
     }
 
     public String getZipClusterId() { return mZipClusterId; }
+
+    public ZipCluster getZipCluster() { return mZipCluster; }
 
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus
@@ -692,6 +697,24 @@ public class Booking implements Comparable<Booking>, Serializable
         {
             return mLongitude;
         }
+    }
+
+    public static class ZipCluster implements Serializable
+    {
+        @SerializedName("zipcluster_id")
+        private String mZipClusterId;
+
+        @SerializedName("transit_description")
+        private List<String> mTransitDescription;
+
+        @SerializedName("location_description")
+        private String mLocationDescription;
+
+        public List<String> getTransitDescription() { return mTransitDescription; }
+
+        public String getLocationDescription() { return mLocationDescription; }
+
+        public String getZipClusterId() { return mZipClusterId; }
     }
 
 }
