@@ -1,6 +1,7 @@
 package com.handy.portal.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -56,7 +57,6 @@ public class Booking implements Comparable<Booking>, Serializable
     private PaymentInfo mBonusPayment;
     @SerializedName("frequency")
     private int mFrequency;
-
     @SerializedName("provider_id")
     private String mProviderId;
     @SerializedName("partner")
@@ -122,6 +122,7 @@ public class Booking implements Comparable<Booking>, Serializable
         return b.mId.equals(mId);
     }
 
+    @Nullable
     public String getStatus()
     {
         return mStatus;
@@ -214,9 +215,10 @@ public class Booking implements Comparable<Booking>, Serializable
         return mAddress;
     }
 
+    @NonNull
     public String getProviderId()
     {
-        return mProviderId;
+        return (mProviderId != null ? mProviderId : NO_PROVIDER_ASSIGNED);
     }
 
     public ArrayList<ExtraInfoWrapper> getExtrasInfo()
@@ -271,7 +273,7 @@ public class Booking implements Comparable<Booking>, Serializable
         return mProviderMinutesLate;
     }
 
-    //mProviderId = 0, no one assigned can claim, otherwise is already claimed
+    //providerId = 0, no one assigned, can claim, otherwise is already claimed
     public static final String NO_PROVIDER_ASSIGNED = "0";
 
     public String getFormattedDistance()
@@ -394,10 +396,10 @@ public class Booking implements Comparable<Booking>, Serializable
             return isClaimedByMe() ? BookingStatus.CLAIMED : BookingStatus.AVAILABLE;
         }
 
-        String assignedProvider = getProviderId();
+        String assignedProviderId = getProviderId();
         boolean bookingIsStarted = isStarted();
 
-        if (assignedProvider.equals(NO_PROVIDER_ASSIGNED))
+        if (assignedProviderId.equals(NO_PROVIDER_ASSIGNED))
         {
             //Can't claim bookings that have already started
             if (bookingIsStarted)
