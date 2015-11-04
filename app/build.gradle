@@ -161,7 +161,7 @@ dependencies {
     compile 'com.scottyab:secure-preferences-lib:0.1.1'
 
     //Urban Airship SDK
-    compile 'com.urbanairship.android:urbanairship-sdk:6.3'
+    compile 'com.urbanairship.android:urbanairship-sdk:6.3+'
 
     //Testing
     testCompile 'org.robolectric:robolectric:3.0'
