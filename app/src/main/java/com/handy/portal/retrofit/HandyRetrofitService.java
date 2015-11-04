@@ -95,7 +95,7 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}")
     void getProviderProfile(@Path("id") String providerId, HandyRetrofitCallback cb);
 
-    @POST(PROVIDERS_PATH + "{id}/send_resupply_kit")
+    @POST(PROVIDERS_PATH + "{id}/temp_send_resupply_kit")
     void getResupplyKit(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded

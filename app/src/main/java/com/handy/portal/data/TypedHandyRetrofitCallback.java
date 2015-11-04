@@ -198,7 +198,7 @@ class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<Provide
         super(callback);
     }
 }
-class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ResupplyInfo>
+class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile>
 {
     ResupplyInfoRetrofitCallback(DataManager.Callback callback)
     {

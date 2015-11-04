@@ -104,7 +104,7 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getResupplyKit(String providerId, Callback<ResupplyInfo> cb)
+    public void getResupplyKit(String providerId, Callback<ProviderProfile> cb)
     {
         service.getResupplyKit(providerId, new ResupplyInfoRetrofitCallback(cb));
     }

@@ -49,13 +49,6 @@ public class ProfileFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.inject(this, view);
 
-        if (mProviderProfile != null) {
-            createProfileView();
-        }
-        else {
-            requestProviderProfile();
-        }
-
         return view;
     }
 
@@ -64,6 +57,15 @@ public class ProfileFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.profile, false);
+
+        if (mProviderProfile != null)
+        {
+            createProfileView();
+        }
+        else
+        {
+            requestProviderProfile();
+        }
     }
 
     @OnClick(R.id.try_again_button)

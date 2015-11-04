@@ -27,8 +27,6 @@ public class ProviderManager
     private Cache<String, ProviderProfile> mProviderProfileCache;
     private static final String PROVIDER_PROFILE_CACHE_KEY = "provider_profile";
 
-    private ProviderProfile providerProfile;
-
     public ProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
         this.bus = bus;
@@ -113,18 +111,6 @@ public class ProviderManager
         });
     }
 
-    @Produce
-    public HandyEvent.ReceiveProviderProfileSuccess produceProviderProfile()
-    {
-        if (providerProfile != null)
-        {
-            ProviderProfile savedProfile = providerProfile;
-            providerProfile = null;
-            return new HandyEvent.ReceiveProviderProfileSuccess(savedProfile);
-        }
-        return null;
-    }
-
     @Subscribe
     public void onRequestProviderProfile(HandyEvent.RequestProviderProfile event)
     {
@@ -145,12 +131,12 @@ public class ProviderManager
     {
         String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        dataManager.getResupplyKit(providerId, new DataManager.Callback<ResupplyInfo>()
+        dataManager.getResupplyKit(providerId, new DataManager.Callback<ProviderProfile>()
         {
             @Override
-            public void onSuccess(ResupplyInfo resupplyInfo)
+            public void onSuccess(ProviderProfile providerProfile)
             {
-                providerProfile.setResupplyInfo(resupplyInfo);
+                mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
                 bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess(providerProfile));
             }
 
@@ -193,7 +179,6 @@ public class ProviderManager
             public void onSuccess(ProviderProfile providerProfile)
             {
                 mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
-                ProviderManager.this.providerProfile = providerProfile;
                 bus.post(new HandyEvent.ReceiveProviderProfileSuccess(providerProfile));
             }
 

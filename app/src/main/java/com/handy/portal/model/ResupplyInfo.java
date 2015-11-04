@@ -2,9 +2,10 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ResupplyInfo
+public class ResupplyInfo implements Serializable
 {
     @SerializedName("can_request_supplies")
     private boolean canRequestSupplies;

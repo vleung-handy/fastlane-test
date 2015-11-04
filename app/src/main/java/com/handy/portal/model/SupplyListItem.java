@@ -3,7 +3,9 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SupplyListItem
+import java.io.Serializable;
+
+public class SupplyListItem implements Serializable
 {
     @SerializedName("type")
     private String type;
