@@ -617,6 +617,18 @@
         <item name="android:background">@drawable/tooltip_blue</item>
     </style>
 
-    <string name="name">Name</string>
+    <style name="NavigationLink">
+        <item name="android:paddingLeft">@dimen/default_padding</item>
+        <item name="android:paddingRight">@dimen/default_padding</item>
+        <item name="android:paddingTop">@dimen/default_padding</item>
+        <item name="android:paddingBottom">@dimen/default_padding</item>
+    </style>
+
+    <style name="NavigationLinkImage">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">@dimen/navigation_image_size</item>
+        <item name="android:layout_height">@dimen/navigation_image_size</item>
+        <item name="android:layout_marginRight">@dimen/default_padding</item>
+    </style>
 
 </resources>
