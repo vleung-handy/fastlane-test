@@ -622,6 +622,7 @@
         <item name="android:paddingRight">@dimen/default_padding</item>
         <item name="android:paddingTop">@dimen/default_padding</item>
         <item name="android:paddingBottom">@dimen/default_padding</item>
+        <item name="android:background">@drawable/background_list_entry</item>
     </style>
 
     <style name="NavigationLinkImage">
