@@ -49,6 +49,15 @@ public class ProfileFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.inject(this, view);
 
+        if (mProviderProfile != null)
+        {
+            createProfileView();
+        }
+        else
+        {
+            requestProviderProfile();
+        }
+
         return view;
     }
 
