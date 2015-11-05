@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
@@ -85,11 +86,18 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
         setBackButtonEnabled(true);
         setActionBarTitle(R.string.add_bank_account);
         Provider provider = providerManager.getCachedActiveProvider();
-        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(provider.getCountry(), this.getContext()));
 
-        if (!provider.isUS())
+        if(provider != null)
         {
-            bankAccountSetupHelper.setVisibility(View.GONE);
+            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(provider.getCountry(), this.getContext()));
+            if (!provider.isUS())
+            {
+                bankAccountSetupHelper.setVisibility(View.GONE);
+            }
+        }
+        else
+        {
+            Crashlytics.log("PaymentsUpdateBankAccountFragment null cached provider on resume");
         }
     }
 
