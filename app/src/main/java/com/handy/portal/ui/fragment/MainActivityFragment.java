@@ -73,22 +73,11 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState)
-    {
-        super.onViewStateRestored(savedInstanceState);
-        //if we don't have any saved data about which tab to go to, default to the main/available jobs tab
-        mOnResumeTransitionToMainTab = (savedInstanceState == null || !savedInstanceState.containsKey(BundleKeys.TAB));
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
-
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
-
-        //Need to wait until onResume instead of onViewStateRestored to make sure bus is registered
-        if (mOnResumeTransitionToMainTab)
+        if (currentTab == null)
         {
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
@@ -99,20 +88,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onPause();
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        if (currentTab != null)
-        {
-            if (outState == null)
-            {
-                outState = new Bundle();
-            }
-            outState.putString(BundleKeys.TAB, currentTab.name());
-        }
-        super.onSaveInstanceState(outState);
     }
 
 //Event Listeners
