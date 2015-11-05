@@ -21,7 +21,7 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
 {
     private int animationId = R.anim.overlay_fade_in_then_out;
     private int imageId = R.drawable.ic_success_circle;
-    private int textId;
+    private int textId = R.string.special_empty_string;
 
     @InjectView(R.id.transition_overlay_image)
     ImageView icon;
