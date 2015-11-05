@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         style="@style/NavigationLink"
+        android:id="@+id/nav_link_my_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -22,30 +24,32 @@
 
     </LinearLayout>
 
+    <!--<LinearLayout-->
+        <!--android:id="@+id/nav_link_payments"-->
+        <!--style="@style/NavigationLink"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!-->-->
+
+        <!--<ImageView-->
+            <!--style="@style/NavigationLinkImage"-->
+            <!--android:src="@drawable/ic_support"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textColor="@color/dark_grey"-->
+            <!--android:textSize="@dimen/medium_text_size"-->
+            <!--android:text="@string/payments"-->
+            <!--/>-->
+
+    <!--</LinearLayout>-->
+
     <LinearLayout
-        style="@style/NavigationLink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-        <ImageView
-            style="@style/NavigationLinkImage"
-            android:src="@drawable/ic_support"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/dark_grey"
-            android:textSize="@dimen/medium_text_size"
-            android:text="@string/payments"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
+        android:id="@+id/nav_link_edit_payment_method"
         style="@style/NavigationLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,6 +73,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/nav_link_help"
         style="@style/NavigationLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

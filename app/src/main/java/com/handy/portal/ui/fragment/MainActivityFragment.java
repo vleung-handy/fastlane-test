@@ -5,9 +5,11 @@ import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -39,17 +41,25 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.tabs)
     RadioGroup tabs;
     @InjectView(R.id.button_jobs)
-    RadioButton jobsButton;
+    RadioButton mJobsButton;
     @InjectView(R.id.button_schedule)
-    RadioButton scheduleButton;
+    RadioButton mScheduleButton;
     @InjectView(R.id.button_payments)
-    RadioButton paymentsButton;
-    @InjectView(R.id.button_profile)
-    RadioButton profileButton;
-    @InjectView(R.id.button_help)
-    RadioButton helpButton;
+    RadioButton mPaymentsButton;
+    @InjectView(R.id.button_more)
+    RadioButton mButtonMore;
     @InjectView(R.id.loading_overlay)
-    LoadingOverlayView loadingOverlayView;
+    LoadingOverlayView mLoadingOverlayView;
+    @InjectView(R.id.nav_link_my_profile)
+    LinearLayout mNavLinkMyProfile;
+    @InjectView(R.id.nav_link_edit_payment_method)
+    LinearLayout mNavLinkEditPaymentMethod;
+    @InjectView(R.id.nav_link_help)
+    LinearLayout mNavLinkHelp;
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @InjectView(R.id.navigation_drawer)
+    LinearLayout mNavigationDrawer;
 
     //What tab are we currently displaying
     private MainViewTab currentTab = null;
@@ -68,7 +78,7 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
         registerButtonListeners();
-        loadingOverlayView.init();
+        mLoadingOverlayView.init();
         return view;
     }
 
@@ -128,33 +138,82 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
     {
-        loadingOverlayView.setOverlayVisibility(event.isVisible);
+        mLoadingOverlayView.setOverlayVisibility(event.isVisible);
     }
 
 //Click Listeners
 
     private void registerButtonListeners()
     {
-        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
-        paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
-        profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
-        helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
+        registerBottomNavListeners();
+        registerNavDrawerListeners();
+    }
+
+    private void registerBottomNavListeners()
+    {
+        mJobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
+        mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        mPaymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
+        mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
+    }
+
+    private void registerNavDrawerListeners()
+    {
+        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
+        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
     }
 
     private class TabOnClickListener implements View.OnClickListener
     {
-        private MainViewTab tab;
+        private MainViewTab mTab;
 
         TabOnClickListener(MainViewTab tab)
         {
-            this.tab = tab;
+            mTab = tab;
         }
 
         @Override
         public void onClick(View view)
         {
-            switchToTab(tab, true);
+            switchToTab(mTab, true);
+        }
+    }
+
+    private class NavDrawerOnClickListener extends TabOnClickListener
+    {
+        private MainViewTab mTab;
+        private TransitionStyle mTransitionStyle;
+
+        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride)
+        {
+            super(tab);
+            mTab = tab;
+            mTransitionStyle = transitionStyleOverride;
+        }
+
+        @Override
+        public void onClick(View view)
+        {
+            if(mTransitionStyle != null)
+            {
+                switchToTab(mTab, null, mTransitionStyle, false);
+            }
+            else
+            {
+                switchToTab(mTab, true);
+            }
+
+            mDrawerLayout.closeDrawers();
+        }
+    }
+
+    private class MoreButtonOnClickListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View view)
+        {
+            mDrawerLayout.openDrawer(mNavigationDrawer);
         }
     }
 
@@ -219,27 +278,32 @@ public class MainActivityFragment extends InjectedFragment
                 case AVAILABLE_JOBS:
                 case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
                 {
-                    jobsButton.toggle();
+                    mJobsButton.toggle();
                 }
                 break;
                 case SCHEDULED_JOBS:
                 {
-                    scheduleButton.toggle();
+                    mScheduleButton.toggle();
                 }
                 break;
                 case PAYMENTS:
                 {
-                    paymentsButton.toggle();
+                    mPaymentsButton.toggle();
                 }
                 break;
                 case PROFILE:
                 {
-                    profileButton.toggle();
+                    mButtonMore.toggle();
                 }
                 break;
                 case HELP:
                 {
-                    helpButton.toggle();
+                    mButtonMore.toggle();
+                }
+                break;
+                case SELECT_PAYMENT_METHOD:
+                {
+                    mButtonMore.toggle();
                 }
                 break;
             }

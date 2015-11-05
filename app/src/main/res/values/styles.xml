@@ -88,7 +88,7 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_gravity">bottom</item>
         <item name="android:button">@null</item>
-        <item name="android:gravity">center_horizontal</item>
+        <item name="android:gravity">bottom|center</item>
         <item name="android:background">@drawable/tab_button_background</item>
         <item name="android:textColor">@drawable/tab_button_text</item>
         <item name="android:paddingTop">5dp</item>
