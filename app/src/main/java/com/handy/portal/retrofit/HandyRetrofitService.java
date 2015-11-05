@@ -95,6 +95,8 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}")
     void getProviderProfile(@Path("id") String providerId, HandyRetrofitCallback cb);
 
+    // This is temporary; we will be changing back to 'send_resupply_kit' after we
+    // are able to change the endpoint to send back the updated provider profile
     @POST(PROVIDERS_PATH + "{id}/temp_send_resupply_kit")
     void getResupplyKit(@Path("id") String providerId, HandyRetrofitCallback cb);
 
