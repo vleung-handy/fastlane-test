@@ -98,7 +98,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void beforeRequestBookings()
     {
-        findMatchingJobsButtonContainer.setVisibility(View.GONE);
+        //Crash #476, some timing issue where butterknife hasn't injected yet
+            //Ugly hack fix in lieu of restructuring code to track down root issue
+        if(findMatchingJobsButtonContainer != null)
+        {
+            findMatchingJobsButtonContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override
