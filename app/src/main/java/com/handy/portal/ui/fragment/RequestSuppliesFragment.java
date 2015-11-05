@@ -121,7 +121,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void onReceiveSendResupplyKitSuccess(HandyEvent.ReceiveSendResupplyKitSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //TODO : Success transition / pop back to the profile tab
+        // Verify with Kenny that this transition is ok; may need to refactor later
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
     }
 
