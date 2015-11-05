@@ -155,6 +155,7 @@ public class MainActivityFragment extends InjectedFragment
         mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
         mPaymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
+        tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
     }
 
     private void registerNavDrawerListeners()
@@ -214,6 +215,18 @@ public class MainActivityFragment extends InjectedFragment
         public void onClick(View view)
         {
             mDrawerLayout.openDrawer(mNavigationDrawer);
+        }
+    }
+
+    private class BottomNavOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener
+    {
+        @Override
+        public void onCheckedChanged(RadioGroup radioGroup, int radioButtonId)
+        {
+            if (radioButtonId == mButtonMore.getId())
+            {
+                updateSelectedTabButton(currentTab);
+            }
         }
     }
 
