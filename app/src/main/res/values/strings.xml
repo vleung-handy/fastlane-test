@@ -443,4 +443,7 @@
     <string name="performance">Performance</string>
     <string name="your_contact_information">Your contact information</string>
 
+    <!-- Special -->
+    <string name="special_empty_string"> </string>
+
 </resources>
