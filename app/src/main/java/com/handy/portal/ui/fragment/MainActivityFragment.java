@@ -171,10 +171,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerNavDrawerListeners()
     {
-        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null, mNavLinkMyProfile));
-        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null, mNavLinkPayments));
-        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP, mNavLinkEditPaymentMethod));
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null, mNavLinkHelp));
+        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
+        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
+        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
     }
 
     private class TabOnClickListener implements View.OnClickListener
@@ -197,14 +197,12 @@ public class MainActivityFragment extends InjectedFragment
     {
         private MainViewTab mTab;
         private TransitionStyle mTransitionStyle;
-        private RadioButton mRadioButton;
 
-        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride, RadioButton radioButton)
+        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride)
         {
             super(tab);
             mTab = tab;
             mTransitionStyle = transitionStyleOverride;
-            mRadioButton = radioButton;
         }
 
         @Override
@@ -219,7 +217,6 @@ public class MainActivityFragment extends InjectedFragment
                 switchToTab(mTab, true);
             }
 
-            mRadioButton.toggle();
             mDrawerLayout.closeDrawers();
         }
     }
@@ -320,21 +317,25 @@ public class MainActivityFragment extends InjectedFragment
                 case PAYMENTS:
                 {
                     mButtonMore.toggle();
+                    mNavLinkPayments.toggle();
                 }
                 break;
                 case PROFILE:
                 {
                     mButtonMore.toggle();
+                    mNavLinkMyProfile.toggle();
                 }
                 break;
                 case HELP:
                 {
                     mButtonMore.toggle();
+                    mNavLinkHelp.toggle();
                 }
                 break;
                 case SELECT_PAYMENT_METHOD:
                 {
                     mButtonMore.toggle();
+                    mNavLinkEditPaymentMethod.toggle();
                 }
                 break;
             }
