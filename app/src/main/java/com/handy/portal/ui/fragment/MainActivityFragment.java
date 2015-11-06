@@ -148,7 +148,7 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onReceiveProviderInfoSucces(HandyEvent.ReceiveProviderInfoSuccess event)
+    public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
         mNavigationHeader.setText(event.provider.getFullName());
     }
