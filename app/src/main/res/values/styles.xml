@@ -96,6 +96,21 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <style name="TrayButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/default_padding</item>
+        <item name="android:paddingRight">@dimen/default_padding</item>
+        <item name="android:paddingTop">@dimen/default_padding</item>
+        <item name="android:paddingBottom">@dimen/default_padding</item>
+        <item name="android:drawablePadding">@dimen/default_padding</item>
+        <item name="android:background">@drawable/background_tray_button</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+    </style>
+
     <style name="Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -616,20 +631,4 @@
         <item name="android:layout_marginRight">@dimen/default_padding</item>
         <item name="android:background">@drawable/tooltip_blue</item>
     </style>
-
-    <style name="NavigationLink">
-        <item name="android:paddingLeft">@dimen/default_padding</item>
-        <item name="android:paddingRight">@dimen/default_padding</item>
-        <item name="android:paddingTop">@dimen/default_padding</item>
-        <item name="android:paddingBottom">@dimen/default_padding</item>
-        <item name="android:background">@drawable/background_list_entry</item>
-    </style>
-
-    <style name="NavigationLinkImage">
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_width">@dimen/navigation_image_size</item>
-        <item name="android:layout_height">@dimen/navigation_image_size</item>
-        <item name="android:layout_marginRight">@dimen/default_padding</item>
-    </style>
-
 </resources>

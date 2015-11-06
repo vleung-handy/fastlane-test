@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -19,6 +20,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -49,17 +51,21 @@ public class MainActivityFragment extends InjectedFragment
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView mLoadingOverlayView;
     @InjectView(R.id.nav_link_my_profile)
-    LinearLayout mNavLinkMyProfile;
+    RadioButton mNavLinkMyProfile;
     @InjectView(R.id.nav_link_payments)
-    LinearLayout mNavLinkPayments;
+    RadioButton mNavLinkPayments;
     @InjectView(R.id.nav_link_edit_payment_method)
-    LinearLayout mNavLinkEditPaymentMethod;
+    RadioButton mNavLinkEditPaymentMethod;
     @InjectView(R.id.nav_link_help)
-    LinearLayout mNavLinkHelp;
+    RadioButton mNavLinkHelp;
     @InjectView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @InjectView(R.id.navigation_drawer)
     LinearLayout mNavigationDrawer;
+    @InjectView(R.id.nav_tray_links)
+    RadioGroup mNavTrayLinks;
+    @InjectView(R.id.navigation_header)
+    TextView mNavigationHeader;
 
     //What tab are we currently displaying
     private MainViewTab currentTab = null;
@@ -141,6 +147,12 @@ public class MainActivityFragment extends InjectedFragment
         mLoadingOverlayView.setOverlayVisibility(event.isVisible);
     }
 
+    @Subscribe
+    public void onReceiveProviderInfoSucces(HandyEvent.ReceiveProviderInfoSuccess event)
+    {
+        mNavigationHeader.setText(event.provider.getFullName());
+    }
+
 //Click Listeners
 
     private void registerButtonListeners()
@@ -159,10 +171,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerNavDrawerListeners()
     {
-        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
-        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
-        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
+        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null, mNavLinkMyProfile));
+        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null, mNavLinkPayments));
+        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP, mNavLinkEditPaymentMethod));
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null, mNavLinkHelp));
     }
 
     private class TabOnClickListener implements View.OnClickListener
@@ -185,12 +197,14 @@ public class MainActivityFragment extends InjectedFragment
     {
         private MainViewTab mTab;
         private TransitionStyle mTransitionStyle;
+        private RadioButton mRadioButton;
 
-        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride)
+        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride, RadioButton radioButton)
         {
             super(tab);
             mTab = tab;
             mTransitionStyle = transitionStyleOverride;
+            mRadioButton = radioButton;
         }
 
         @Override
@@ -205,6 +219,7 @@ public class MainActivityFragment extends InjectedFragment
                 switchToTab(mTab, true);
             }
 
+            mRadioButton.toggle();
             mDrawerLayout.closeDrawers();
         }
     }
@@ -292,11 +307,14 @@ public class MainActivityFragment extends InjectedFragment
                 case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
                 {
                     mJobsButton.toggle();
+                    mNavTrayLinks.clearCheck();
+
                 }
                 break;
                 case SCHEDULED_JOBS:
                 {
                     mScheduleButton.toggle();
+                    mNavTrayLinks.clearCheck();
                 }
                 break;
                 case PAYMENTS:

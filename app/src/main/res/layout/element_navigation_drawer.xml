@@ -20,7 +20,6 @@
         android:paddingTop="@dimen/default_padding_medium"
         android:background="@color/tertiary_grey"
         android:textColor="@color/white"
-        android:text="Jane Doe"
         />
 
     <LinearLayout
@@ -31,7 +30,7 @@
         android:paddingBottom="@dimen/default_padding_medium"
         >
 
-        <include layout="@layout/merge_navigation_links"/>
+        <include layout="@layout/element_navigation_links"/>
 
     </LinearLayout>
 
