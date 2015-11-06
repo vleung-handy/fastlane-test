@@ -44,14 +44,14 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mJobsButton;
     @InjectView(R.id.button_schedule)
     RadioButton mScheduleButton;
-    @InjectView(R.id.button_payments)
-    RadioButton mPaymentsButton;
     @InjectView(R.id.button_more)
     RadioButton mButtonMore;
     @InjectView(R.id.loading_overlay)
     LoadingOverlayView mLoadingOverlayView;
     @InjectView(R.id.nav_link_my_profile)
     LinearLayout mNavLinkMyProfile;
+    @InjectView(R.id.nav_link_payments)
+    LinearLayout mNavLinkPayments;
     @InjectView(R.id.nav_link_edit_payment_method)
     LinearLayout mNavLinkEditPaymentMethod;
     @InjectView(R.id.nav_link_help)
@@ -153,7 +153,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         mJobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
         mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
-        mPaymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
         tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
     }
@@ -161,8 +160,9 @@ public class MainActivityFragment extends InjectedFragment
     private void registerNavDrawerListeners()
     {
         mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
+        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
         mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
     }
 
     private class TabOnClickListener implements View.OnClickListener
@@ -301,7 +301,7 @@ public class MainActivityFragment extends InjectedFragment
                 break;
                 case PAYMENTS:
                 {
-                    mPaymentsButton.toggle();
+                    mButtonMore.toggle();
                 }
                 break;
                 case PROFILE:

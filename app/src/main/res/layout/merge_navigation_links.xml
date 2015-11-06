@@ -24,29 +24,29 @@
 
     </LinearLayout>
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/nav_link_payments"-->
-        <!--style="@style/NavigationLink"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!-->-->
+    <LinearLayout
+        android:id="@+id/nav_link_payments"
+        style="@style/NavigationLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
 
-        <!--<ImageView-->
-            <!--style="@style/NavigationLinkImage"-->
-            <!--android:src="@drawable/ic_support"-->
-            <!--/>-->
+        <ImageView
+            style="@style/NavigationLinkImage"
+            android:src="@drawable/ic_tray_wallet"
+            />
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:textColor="@color/dark_grey"-->
-            <!--android:textSize="@dimen/medium_text_size"-->
-            <!--android:text="@string/payments"-->
-            <!--/>-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/medium_text_size"
+            android:text="@string/payments"
+            />
 
-    <!--</LinearLayout>-->
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/nav_link_edit_payment_method"
