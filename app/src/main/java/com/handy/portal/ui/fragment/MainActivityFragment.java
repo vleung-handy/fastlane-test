@@ -235,7 +235,7 @@ public class MainActivityFragment extends InjectedFragment
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int radioButtonId)
         {
-            if (radioButtonId == mButtonMore.getId())
+            if (radioButtonId == mButtonMore.getId() && currentTab != null)
             {
                 updateSelectedTabButton(currentTab);
             }
