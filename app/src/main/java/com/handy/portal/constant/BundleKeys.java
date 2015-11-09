@@ -17,6 +17,7 @@ public class BundleKeys
     public static final String IS_FOR_PAYMENTS = "is_for_payments";
     public static final String UPDATE_TAB_CALLBACK = "update_tab_callback";
     public static final String ZIP_CLUSTER_POLYGONS = "zip_cluster_polygons";
+    public static final String PROVIDER_PROFILE= "provider_profile";
 
     // UrbanAirship
     public static final String PUSH_TYPE = "type_id";

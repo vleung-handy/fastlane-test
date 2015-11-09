@@ -448,5 +448,12 @@
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
 
-
+    <!-- Supplies -->
+    <string name="request_supplies">Request Supplies</string>
+    <string name="supply_kit_includes">Supply Kit Includes</string>
+    <string name="shipping_address">Shipping Address</string>
+    <string name="withholding_amount">Withholding Amount</string>
+    <string name="complete_purchase">Complete Purchase</string>
+    <string name="complete_purchase_disclaimer">* completing purchase will withhold %1$s from your next pay period.</string>
+    <string name="no_address_on_file">No Address On File</string>
 </resources>

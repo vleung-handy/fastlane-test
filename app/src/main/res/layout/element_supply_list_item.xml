@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.element.SupplyListItemView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+    >
+
+    <TextView
+        style="@style/TextView.Medium"
+        android:id="@+id/supply_list_item_amount"
+        android:layout_width="@dimen/supply_list_bullet_width"
+        android:layout_height="20sp"
+        android:textColor="@color/dark_grey"
+        />
+
+    <TextView
+        style="@style/TextView.Medium"
+        android:id="@+id/supply_list_item_type"
+        android:layout_width="wrap_content"
+        android:layout_height="20sp"
+        android:textColor="@color/dark_grey"
+        />
+
+</com.handy.portal.ui.element.SupplyListItemView>

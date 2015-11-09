@@ -26,11 +26,14 @@ public class ProfileFragment extends ActionBarFragment
 {
     @InjectView(R.id.fetch_error_view)
     ViewGroup fetchErrorLayout;
+
     @InjectView(R.id.profile_layout)
     ViewGroup profileLayout;
 
     @InjectView(R.id.fetch_error_text)
     TextView fetchErrorText;
+
+    private ProviderProfile mProviderProfile;
 
     @Override
     protected MainViewTab getTab()
@@ -46,14 +49,16 @@ public class ProfileFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.inject(this, view);
 
-        return view;
-    }
+        if (mProviderProfile != null)
+        {
+            createProfileView();
+        }
+        else
+        {
+            requestProviderProfile();
+        }
 
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        requestProviderProfile();
+        return view;
     }
 
     @Override
@@ -61,6 +66,15 @@ public class ProfileFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.profile, false);
+
+        if (mProviderProfile != null)
+        {
+            createProfileView();
+        }
+        else
+        {
+            requestProviderProfile();
+        }
     }
 
     @OnClick(R.id.try_again_button)
@@ -73,19 +87,8 @@ public class ProfileFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveProviderProfileSuccess(HandyEvent.ReceiveProviderProfileSuccess event)
     {
-        profileLayout.removeAllViews();
-
-        ProviderProfile providerProfile = event.providerProfile;
-
-        new ProfileHeaderViewConstructor(getActivity()).create(profileLayout, providerProfile);
-        new ProfilePerformanceViewConstructor(getActivity()).create(profileLayout, providerProfile.getPerformanceInfo());
-        new ProfileReferralViewConstructor(getActivity()).create(profileLayout, providerProfile.getReferralInfo());
-        new ProfileContactViewConstructor(getActivity()).create(profileLayout, providerProfile.getProviderPersonalInfo());
-        new ProfileResupplyViewConstructor(getActivity()).create(profileLayout, providerProfile.getResupplyInfo());
-
-        fetchErrorLayout.setVisibility(View.GONE);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        profileLayout.setVisibility(View.VISIBLE);
+        mProviderProfile = event.providerProfile;
+        createProfileView();
     }
 
     @Subscribe
@@ -107,7 +110,7 @@ public class ProfileFragment extends ActionBarFragment
             profileLayout.removeView(resupplyLayout);
         }
 
-        new ProfileResupplyViewConstructor(getActivity()).create(profileLayout, event.resupplyInfo);
+        new ProfileResupplyViewConstructor(getActivity()).create(profileLayout, event.providerProfile);
 
         showToast(R.string.resupply_kit_on_its_way);
     }
@@ -123,5 +126,20 @@ public class ProfileFragment extends ActionBarFragment
         }
 
         showToast(message);
+    }
+
+    private void createProfileView()
+    {
+        profileLayout.removeAllViews();
+
+        new ProfileHeaderViewConstructor(getActivity()).create(profileLayout, mProviderProfile);
+        new ProfilePerformanceViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getPerformanceInfo());
+        new ProfileReferralViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getReferralInfo());
+        new ProfileContactViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getProviderPersonalInfo());
+        new ProfileResupplyViewConstructor(getActivity()).create(profileLayout, mProviderProfile);
+
+        fetchErrorLayout.setVisibility(View.GONE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        profileLayout.setVisibility(View.VISIBLE);
     }
 }

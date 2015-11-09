@@ -89,4 +89,11 @@ public class Address implements Serializable
     {
         return regionId;
     }
+
+    public String getShippingAddress()
+    {
+        return (getAddress1() +
+                (getAddress2() != null ? " " + getAddress2() : "") +
+                (getCityStateZip() != null ? " " + getCityStateZip() : ""));
+    }
 }
