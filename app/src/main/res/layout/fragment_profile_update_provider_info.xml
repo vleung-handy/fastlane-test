@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/default_padding"
+        >
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:stretchColumns="2"
+            >
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_payment_method_option"
+                >
+
+                <ImageView
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/error"
+                    android:paddingBottom="1dp"
+                    android:src="@drawable/rectangle_red"
+                    android:visibility="invisible"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/name"
+                    android:paddingBottom="@dimen/default_padding"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="@dimen/default_padding"
+                    android:src="@drawable/ic_profile"
+                    />
+
+                <EditText
+                    android:id="@+id/provider_name_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:hint="@string/name"
+                    android:nextFocusDown="@+id/month_value_text"
+                    android:padding="@dimen/default_padding"
+                    android:singleLine="true"
+                    android:text="Xi Wei"
+                    android:textColor="@color/black"
+                    />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_payment_method_option"
+                >
+
+                <ImageView
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/error"
+                    android:paddingBottom="1dp"
+                    android:src="@drawable/rectangle_red"
+                    android:visibility="invisible"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/email"
+                    android:paddingBottom="@dimen/default_padding"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="@dimen/default_padding"
+                    android:src="@drawable/ic_email"
+                    />
+
+                <EditText
+                    android:id="@+id/provider_email_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:nextFocusDown="@+id/month_value_text"
+                    android:padding="@dimen/default_padding"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_payment_method_option"
+                >
+
+                <ImageView
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/error"
+                    android:paddingBottom="1dp"
+                    android:src="@drawable/rectangle_red"
+                    android:visibility="invisible"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/address"
+                    android:paddingBottom="@dimen/default_padding"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="@dimen/default_padding"
+                    android:src="@drawable/ic_location"
+                    />
+
+                <EditText
+                    android:id="@+id/provider_address_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/address"
+                    android:padding="@dimen/default_padding"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    />
+
+            </TableRow>
+
+            <com.handy.portal.ui.view.DateFormFieldTableRow
+                android:id="@+id/expiration_date_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_payment_method_option"
+                >
+
+                <ImageView
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/error"
+                    android:paddingBottom="1dp"
+                    android:src="@drawable/rectangle_red"
+                    android:visibility="invisible"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/address"
+                    android:paddingBottom="@dimen/default_padding"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="@dimen/default_padding"
+                    android:src="@drawable/ic_location"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <EditText
+                        android:id="@+id/provider_city_edit_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="City"
+                        android:nextFocusDown="@+id/provider_state_edit_text"
+                        android:padding="@dimen/default_padding"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        />
+
+                    <EditText
+                        android:id="@+id/provider_state_edit_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="State"
+                        android:background="@null"
+                        android:nextFocusDown="@+id/provider_zip_code_edit_text"
+                        android:padding="@dimen/default_padding"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        />
+
+                    <EditText
+                        android:id="@+id/provider_zip_code_edit_text"
+                        android:hint="Zip Code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:nextFocusDown="@+id/provider_phone_edit_text"
+                        android:padding="@dimen/default_padding"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        />
+
+                </LinearLayout>
+            </com.handy.portal.ui.view.DateFormFieldTableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_payment_method_option"
+                >
+
+                <ImageView
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/error"
+                    android:paddingBottom="1dp"
+                    android:src="@drawable/rectangle_red"
+                    android:visibility="invisible"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/phone"
+                    android:paddingBottom="@dimen/default_padding"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="@dimen/default_padding"
+                    android:src="@drawable/ic_phone"
+                    />
+
+                <EditText
+                    android:id="@+id/provider_phone_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/phone"
+                    android:inputType="phone"
+                    android:padding="@dimen/default_padding"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    />
+
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/profile_update_provider"
+            style="@style/Button.Green.Round"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/save"
+            />
+    </LinearLayout>
+</ScrollView>

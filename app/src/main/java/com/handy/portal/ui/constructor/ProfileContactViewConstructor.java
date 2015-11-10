@@ -7,18 +7,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.util.Utils;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.InjectView;
 
 public class ProfileContactViewConstructor extends ViewConstructor<ProviderPersonalInfo>
 {
+    @Inject
+    Bus bus;
+
     @InjectView(R.id.profile_section_header_title_text)
     TextView titleText;
     @InjectView(R.id.profile_section_header_subtitle_text)
     TextView subtitleText;
-
+    @InjectView(R.id.profile_section_update)
+    TextView mUpdateButton;
     @InjectView(R.id.provider_email_text)
     TextView providerEmailText;
     @InjectView(R.id.provider_phone_text)
@@ -26,9 +37,11 @@ public class ProfileContactViewConstructor extends ViewConstructor<ProviderPerso
     @InjectView(R.id.provider_address_text)
     TextView providerAddressText;
 
+
     public ProfileContactViewConstructor(@NonNull Context context)
     {
         super(context);
+        Utils.inject(context, this);
     }
 
     @Override
@@ -54,6 +67,21 @@ public class ProfileContactViewConstructor extends ViewConstructor<ProviderPerso
         Address address = providerPersonalInfo.getAddress();
         providerAddressText.setText(address != null ? (address.getStreetAddress() + "\n" + address.getCityStateZip()) : noData);
 
+        setupUpdateButton();
+
         return true;
+    }
+
+    private void setupUpdateButton()
+    {
+        mUpdateButton.setVisibility(View.VISIBLE);
+        mUpdateButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, null, TransitionStyle.SLIDE_UP));
+            }
+        });
     }
 }
