@@ -52,9 +52,7 @@ public class TabNavigationManager
 
     private  boolean isCachedProviderBlockPro()
     {
-        boolean userIsBlockPro = (  mProviderManager.getCachedActiveProvider() != null &&
-                            mProviderManager.getCachedActiveProvider().isBlockCleaner());
-        return userIsBlockPro;
+        return mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().isBlockCleaner();
     }
 
     public SwapFragmentArguments generateSwapFragmentArguments(MainViewTab targetTab,
@@ -117,10 +115,11 @@ public class TabNavigationManager
         if (!userTriggered)
         {
             //TODO: Some really ugly logic about adding to the backstack, clean this up somehow
-            addToBackStack |= targetTab == MainViewTab.COMPLEMENTARY_JOBS;
+            addToBackStack = targetTab == MainViewTab.COMPLEMENTARY_JOBS;
             addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
             addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
             addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
+            addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
             addToBackStack |= targetTab == MainViewTab.DETAILS;
             addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
             addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;

@@ -441,6 +441,7 @@
     <string name="based_on_last_28_days">Based on the last 28 days</string>
     <string name="performance">Performance</string>
     <string name="your_contact_information">Your contact information</string>
+    <string name="edit_your_profile">Edit your profile</string>
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
