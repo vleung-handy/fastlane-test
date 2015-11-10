@@ -56,7 +56,7 @@ public abstract class DataManager
 
     public abstract void getProviderProfile(String providerId, Callback<ProviderProfile> cb);
 
-    public abstract void getResupplyKit(String providerId, Callback<ResupplyInfo> callback);
+    public abstract void getResupplyKit(String providerId, Callback<ProviderProfile> callback);
 
     public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
 

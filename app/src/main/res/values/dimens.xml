@@ -31,4 +31,5 @@
     <dimen name="inner_textfield_padding">12dp</dimen>
     <dimen name="round_button_radius">5dp</dimen>
     <dimen name="round_button_stroke">1dp</dimen>
+    <dimen name="supply_list_bullet_width">25dp</dimen>
 </resources>

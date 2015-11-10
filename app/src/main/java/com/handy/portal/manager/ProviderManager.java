@@ -10,11 +10,9 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.payments.PaymentFlow;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.TimeUnit;
@@ -26,8 +24,8 @@ public class ProviderManager
     private final PrefsManager prefsManager;
     private Cache<String, Provider> providerCache;
     private static final String PROVIDER_CACHE_KEY = "provider";
-
-    private ProviderProfile providerProfile;
+    private Cache<String, ProviderProfile> mProviderProfileCache;
+    private static final String PROVIDER_PROFILE_CACHE_KEY = "provider_profile";
 
     public ProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
@@ -38,6 +36,10 @@ public class ProviderManager
             .maximumSize(10)
             .expireAfterWrite(1, TimeUnit.DAYS)
             .build();
+        this.mProviderProfileCache = CacheBuilder.newBuilder()
+                .maximumSize(10)
+                .expireAfterWrite(1, TimeUnit.DAYS)
+                .build();
         bus.register(this);
     }
 
@@ -109,38 +111,19 @@ public class ProviderManager
         });
     }
 
-    @Produce
-    public HandyEvent.ReceiveProviderProfileSuccess produceProviderProfile()
-    {
-        if (providerProfile != null)
-        {
-            ProviderProfile savedProfile = providerProfile;
-            providerProfile = null;
-            return new HandyEvent.ReceiveProviderProfileSuccess(savedProfile);
-        }
-        return null;
-    }
-
     @Subscribe
     public void onRequestProviderProfile(HandyEvent.RequestProviderProfile event)
     {
-        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        final ProviderProfile cachedProviderProfile = getCachedProviderProfile();
 
-        dataManager.getProviderProfile(providerId, new DataManager.Callback<ProviderProfile>()
+        if (cachedProviderProfile != null)
         {
-            @Override
-            public void onSuccess(ProviderProfile providerProfile)
-            {
-                ProviderManager.this.providerProfile = providerProfile;
-                bus.post(new HandyEvent.ReceiveProviderProfileSuccess(providerProfile));
-            }
-
-            @Override
-            public void onError(DataManager.DataManagerError error)
-            {
-                bus.post(new HandyEvent.ReceiveProviderProfileError());
-            }
-        });
+            bus.post(new HandyEvent.ReceiveProviderProfileSuccess(cachedProviderProfile));
+        }
+        else
+        {
+            requestProviderProfile();
+        }
     }
 
     @Subscribe
@@ -148,12 +131,13 @@ public class ProviderManager
     {
         String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        dataManager.getResupplyKit(providerId, new DataManager.Callback<ResupplyInfo>()
+        dataManager.getResupplyKit(providerId, new DataManager.Callback<ProviderProfile>()
         {
             @Override
-            public void onSuccess(ResupplyInfo resupplyInfo)
+            public void onSuccess(ProviderProfile providerProfile)
             {
-                bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess(resupplyInfo));
+                mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
+                bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess(providerProfile));
             }
 
             @Override
@@ -185,9 +169,35 @@ public class ProviderManager
         });
     }
 
+    public void requestProviderProfile()
+    {
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+
+        dataManager.getProviderProfile(providerId, new DataManager.Callback<ProviderProfile>()
+        {
+            @Override
+            public void onSuccess(ProviderProfile providerProfile)
+            {
+                mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
+                bus.post(new HandyEvent.ReceiveProviderProfileSuccess(providerProfile));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.ReceiveProviderProfileError());
+            }
+        });
+    }
+
     @Nullable
     public Provider getCachedActiveProvider()
     {
         return providerCache.getIfPresent(PROVIDER_CACHE_KEY);
+    }
+
+    private ProviderProfile getCachedProviderProfile()
+    {
+        return mProviderProfileCache.getIfPresent(PROVIDER_PROFILE_CACHE_KEY);
     }
 }

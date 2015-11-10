@@ -2,7 +2,9 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PerformanceInfo
+import java.io.Serializable;
+
+public class PerformanceInfo implements Serializable
 {
     @SerializedName("total_jobs_count")
     private int totalJobsCount;

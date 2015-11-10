@@ -14,6 +14,7 @@ public enum OverlayStyle
     JOB_REMOVE_SUCCESS(R.string.job_remove_success, R.drawable.ic_success_circle),
     SERIES_REMOVE_SUCCESS(R.string.series_remove_success, R.drawable.ic_success_circle),
     SEND_VERIFICATION_SUCCESS(R.string.send_verification_success, R.drawable.ic_success_circle),
+    REQUEST_SUPPLY_SUCCESS(R.string.resupply_kit_on_its_way, R.drawable.ic_success_circle),
     NONE(-1, -1)
     ;
 
