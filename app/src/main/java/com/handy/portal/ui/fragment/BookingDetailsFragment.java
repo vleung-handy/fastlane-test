@@ -553,17 +553,21 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void showHelpOptions()
     {
-        slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
+        //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
+        if(slideUpPanelContainer != null)
         {
-            @Override
-            public void initialize(ViewGroup panel)
+            slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
             {
-                new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
-                        .create(panel, associatedBooking);
-                new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
-                        .create(panel, associatedBooking);
-            }
-        });
+                @Override
+                public void initialize(ViewGroup panel)
+                {
+                    new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
+                            .create(panel, associatedBooking);
+                    new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
+                            .create(panel, associatedBooking);
+                }
+            });
+        }
     }
 
     //Check if the current booking data for a given action type has an associated warning to display
@@ -673,14 +677,23 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
-        slideUpPanelContainer.hidePanel();
+        //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
+        if(slideUpPanelContainer != null)
+        {
+            slideUpPanelContainer.hidePanel();
+        }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
     }
 
     private void requestReportNoShow()
     {
-        slideUpPanelContainer.hidePanel();
+        //TODO: Crash #608, this is null sometimes and crashing, butterknife timing?
+        //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
+        if(slideUpPanelContainer != null)
+        {
+            slideUpPanelContainer.hidePanel();
+        }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), getLocationData()));
     }

@@ -448,6 +448,9 @@
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
 
+    <!-- Special -->
+    <string name="special_empty_string"> </string>
+
     <!-- Supplies -->
     <string name="request_supplies">Request Supplies</string>
     <string name="supply_kit_includes">Supply Kit Includes</string>

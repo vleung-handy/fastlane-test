@@ -59,11 +59,7 @@ public class CustomDeepLinkAction extends Action
             return false;
         }
 
-        if(arguments.getValue() != null)
-        {
-            return true;
-        }
+        return arguments.getValue() != null;
 
-        return false;
     }
 }

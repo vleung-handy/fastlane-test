@@ -1,5 +1,7 @@
 package com.handy.portal.manager;
 
+import android.support.annotation.Nullable;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.constant.PrefsKey;
@@ -8,11 +10,9 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.payments.PaymentFlow;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.TimeUnit;
@@ -190,6 +190,7 @@ public class ProviderManager
         });
     }
 
+    @Nullable
     public Provider getCachedActiveProvider()
     {
         return providerCache.getIfPresent(PROVIDER_CACHE_KEY);
