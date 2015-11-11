@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.regex.Pattern;
 
 public final class TextUtils
 {
@@ -152,6 +153,11 @@ public final class TextUtils
             s.setSpan(span, start, end, 0);
         }
         textView.setText(s);
+    }
+
+    public static boolean validateText(CharSequence text, Pattern pattern)
+    {
+        return pattern == null || pattern.matcher(text).matches();
     }
 
     private static final class URLSpanNoUnderline extends URLSpan
