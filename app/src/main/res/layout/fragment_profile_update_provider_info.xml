@@ -26,10 +26,11 @@
                 >
 
                 <ImageView
-                    android:layout_width="5dp"
+                    android:id="@+id/provider_name_error_indicator"
+                    android:layout_width="@dimen/extra_padding"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/error"
-                    android:paddingBottom="1dp"
+                    android:paddingBottom="@dimen/thin_padding"
                     android:src="@drawable/rectangle_red"
                     android:visibility="invisible"
                     />
@@ -54,7 +55,6 @@
                     android:nextFocusDown="@+id/month_value_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:text="Xi Wei"
                     android:textColor="@color/dark_grey"
                     />
 
@@ -67,10 +67,11 @@
                 >
 
                 <ImageView
-                    android:layout_width="5dp"
+                    android:id="@+id/provider_email_error_indicator"
+                    android:layout_width="@dimen/extra_padding"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/error"
-                    android:paddingBottom="1dp"
+                    android:paddingBottom="@dimen/thin_padding"
                     android:src="@drawable/rectangle_red"
                     android:visibility="invisible"
                     />
@@ -107,10 +108,11 @@
                 >
 
                 <ImageView
-                    android:layout_width="5dp"
+                    android:id="@+id/provider_address_error_indicator"
+                    android:layout_width="@dimen/extra_padding"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/error"
-                    android:paddingBottom="1dp"
+                    android:paddingBottom="@dimen/thin_padding"
                     android:src="@drawable/rectangle_red"
                     android:visibility="invisible"
                     />
@@ -146,10 +148,11 @@
                 >
 
                 <ImageView
-                    android:layout_width="5dp"
+                    android:id="@+id/provider_area_error_indicator"
+                    android:layout_width="@dimen/extra_padding"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/error"
-                    android:paddingBottom="1dp"
+                    android:paddingBottom="@dimen/thin_padding"
                     android:src="@drawable/rectangle_red"
                     android:visibility="invisible"
                     />
@@ -175,7 +178,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:hint="City"
                         android:nextFocusDown="@+id/provider_state_edit_text"
                         android:padding="@dimen/default_padding"
                         android:singleLine="true"
@@ -186,7 +188,6 @@
                         android:id="@+id/provider_state_edit_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="State"
                         android:background="@null"
                         android:nextFocusDown="@+id/provider_zip_code_edit_text"
                         android:padding="@dimen/default_padding"
@@ -196,7 +197,6 @@
 
                     <EditText
                         android:id="@+id/provider_zip_code_edit_text"
-                        android:hint="Zip Code"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
@@ -216,10 +216,11 @@
                 >
 
                 <ImageView
-                    android:layout_width="5dp"
+                    android:id="@+id/provider_phone_error_indicator"
+                    android:layout_width="@dimen/extra_padding"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/error"
-                    android:paddingBottom="1dp"
+                    android:paddingBottom="@dimen/thin_padding"
                     android:src="@drawable/rectangle_red"
                     android:visibility="invisible"
                     />
@@ -250,7 +251,7 @@
         </TableLayout>
 
         <Button
-            android:id="@+id/profile_update_provider"
+            android:id="@+id/profile_update_provider_button"
             style="@style/Button.Green.Round"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

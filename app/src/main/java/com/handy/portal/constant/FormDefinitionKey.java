@@ -5,6 +5,7 @@ public class FormDefinitionKey
     //TODO: restructure this later
     public static final String UPDATE_BANK_INFO = "update_bank_info";
     public static final String UPDATE_DEBIT_CARD_INFO = "update_debit_card_info";
+    public static final String UPDATE_PROVIDER_INFO = "update_provider_info";
 
     public static class FieldDefinitionKey
     {
@@ -16,6 +17,12 @@ public class FormDefinitionKey
         public static final String EXPIRATION_DATE = "expiration_date";
         public static final String EXPIRATION_YEAR = "expiration_year";
         public static final String EXPIRATION_MONTH = "expiration_month";
+        public static final String EMAIL = "email";
+        public static final String ADDRESS = "address";
+        public static final String PHONE = "phone";
+        public static final String CITY = "city";
+        public static final String STATE = "state";
+        public static final String ZIP_CODE = "zip_code";
 
     }
 
