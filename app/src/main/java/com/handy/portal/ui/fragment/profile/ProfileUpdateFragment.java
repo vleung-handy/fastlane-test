@@ -20,6 +20,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
@@ -136,10 +137,13 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (validate())
         {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
+                    mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));
         }
         else
         {
-            onFailure(R.string.form_not_filled_out_correctly);
+            showToast(R.string.form_not_filled_out_correctly, Toast.LENGTH_LONG);
         }
     }
 
@@ -148,6 +152,21 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         mFormDefinitionWrapper = event.formDefinitionWrapper;
         updateFormWithDefinitions();
+    }
+
+    @Subscribe
+    public void onReceiveUpdateProfileSuccess(ProfileEvent.ReceiveProfileUpdateSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.update_profile_success, Toast.LENGTH_LONG);
+        UIUtils.dismissOnBackPressed(getActivity());
+    }
+
+    @Subscribe
+    public void onReceiveUpdateProfileError(ProfileEvent.ReceiveProfileUpdateError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.update_debit_card_failed, Toast.LENGTH_LONG);
     }
 
     private void initialize()
@@ -220,12 +239,6 @@ public class ProfileUpdateFragment extends ActionBarFragment
             return false;
         }
         return true;
-    }
-
-    private void onFailure(int errorStringId)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
     private static class FormFieldErrorStateRemover implements TextWatcher

@@ -442,6 +442,8 @@
     <string name="performance">Performance</string>
     <string name="your_contact_information">Your contact information</string>
     <string name="edit_your_profile">Edit your profile</string>
+    <string name="update_profile_success">Successfully updated profile information</string>
+    <string name="update_profile_failed">Failed to update profile information</string>
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>

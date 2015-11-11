@@ -14,8 +14,8 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
@@ -198,6 +198,15 @@ class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<Provide
         super(callback);
     }
 }
+
+class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderPersonalInfo>
+{
+    ProviderPersonalInfoHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
 class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile>
 {
     ResupplyInfoRetrofitCallback(DataManager.Callback callback)
