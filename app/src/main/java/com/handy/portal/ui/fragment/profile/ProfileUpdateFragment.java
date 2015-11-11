@@ -133,16 +133,14 @@ public class ProfileUpdateFragment extends ActionBarFragment
     @OnClick(R.id.profile_update_provider_button)
     public void onSubmitForm()
     {
-        initialize();
-
-//        if (validate())
-//        {
-//            showToast("Input is good");
-//        }
-//        else
-//        {
-//            onFailure(R.string.form_not_filled_out_correctly);
-//        }
+        if (validate())
+        {
+            showToast("Input is good");
+        }
+        else
+        {
+            onFailure(R.string.form_not_filled_out_correctly);
+        }
     }
 
     @Subscribe
@@ -200,6 +198,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         Map<String, FieldDefinition> fieldDefinitionMap = mFormDefinitionWrapper.getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_PROVIDER_INFO);
         if (fieldDefinitionMap != null)
         {
+            mAddress2Text.setHint(fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS2).getHintText());
             mCityText.setHint(fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.CITY).getHintText());
             mStateText.setHint(fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.STATE).getHintText());
             mZipCodeText.setHint(fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ZIP_CODE).getHintText());

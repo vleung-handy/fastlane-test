@@ -34,7 +34,7 @@
           "pattern": "^.*[^\\s].*$"
         },
         "address2": {
-          "hint_text": "Apt/Fl"
+          "hint_text": "Apt"
         },
         "phone": {
           "hint_text": "Phone",
