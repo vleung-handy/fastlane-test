@@ -26,10 +26,10 @@ import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
-import com.handy.portal.ui.fragment.ProfileFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
+import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 

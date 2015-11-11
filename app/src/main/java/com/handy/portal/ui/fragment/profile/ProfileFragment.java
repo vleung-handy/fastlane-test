@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,12 +9,14 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileHeaderViewConstructor;
 import com.handy.portal.ui.constructor.ProfilePerformanceViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
 import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -81,18 +83,18 @@ public class ProfileFragment extends ActionBarFragment
     public void requestProviderProfile()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestProviderProfile());
+        bus.post(new ProfileEvent.RequestProviderProfile());
     }
 
     @Subscribe
-    public void onReceiveProviderProfileSuccess(HandyEvent.ReceiveProviderProfileSuccess event)
+    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         mProviderProfile = event.providerProfile;
         createProfileView();
     }
 
     @Subscribe
-    public void onReceiveProviderProfileError(HandyEvent.ReceiveProviderProfileError event)
+    public void onReceiveProviderProfileError(ProfileEvent.ReceiveProviderProfileError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         fetchErrorText.setText(R.string.error_loading_profile);
@@ -100,7 +102,7 @@ public class ProfileFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveSendResupplyKitSuccess(HandyEvent.ReceiveSendResupplyKitSuccess event)
+    public void onReceiveSendResupplyKitSuccess(ProfileEvent.ReceiveSendResupplyKitSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
@@ -116,7 +118,7 @@ public class ProfileFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveSendResupplyKitError(HandyEvent.ReceiveSendResupplyKitError event)
+    public void onReceiveSendResupplyKitError(ProfileEvent.ReceiveSendResupplyKitError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         String message = event.error.getMessage();

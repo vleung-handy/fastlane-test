@@ -216,10 +216,6 @@
         <item name="android:textColor">@drawable/button_text_booking_action_blue</item>
     </style>
 
-    <style name="Button.BookingAction.Green">
-        <item name="android:background">@drawable/button_booking_action_green</item>
-    </style>
-
     <style name="Button.BookingAction.Blue">
         <item name="android:background">@drawable/button_booking_action_blue</item>
     </style>
