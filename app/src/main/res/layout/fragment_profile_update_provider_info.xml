@@ -16,13 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:stretchColumns="2"
             >
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_payment_method_option"
                 >
 
                 <ImageView
@@ -52,7 +50,7 @@
                     android:background="@null"
                     android:enabled="false"
                     android:hint="@string/name"
-                    android:nextFocusDown="@+id/month_value_text"
+                    android:nextFocusDown="@+id/provider_email_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
                     android:textColor="@color/dark_grey"
@@ -63,7 +61,6 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_payment_method_option"
                 >
 
                 <ImageView
@@ -93,7 +90,7 @@
                     android:background="@null"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
-                    android:nextFocusDown="@+id/month_value_text"
+                    android:nextFocusDown="@+id/provider_address_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
                     android:textColor="@color/dark_grey"
@@ -104,7 +101,6 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_payment_method_option"
                 >
 
                 <ImageView
@@ -118,7 +114,7 @@
                     />
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/default_margin_x2"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/address"
                     android:paddingBottom="@dimen/default_padding"
@@ -127,24 +123,44 @@
                     android:src="@drawable/ic_location"
                     />
 
-                <EditText
-                    android:id="@+id/provider_address_edit_text"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="@string/address"
-                    android:padding="@dimen/default_padding"
-                    android:singleLine="true"
-                    android:textColor="@color/dark_grey"
-                    />
+                    android:orientation="horizontal"
+                    >
 
+                    <EditText
+                        android:id="@+id/provider_address_edit_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:background="@null"
+                        android:hint="@string/address"
+                        android:nextFocusDown="@+id/provider_address2_edit_text"
+                        android:padding="@dimen/default_padding"
+                        android:singleLine="true"
+                        android:textColor="@color/dark_grey"
+                        />
+
+                    <EditText
+                        android:id="@+id/provider_address2_edit_text"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="@string/address2"
+                        android:nextFocusDown="@+id/provider_city_edit_text"
+                        android:padding="@dimen/default_padding"
+                        android:singleLine="true"
+                        android:textColor="@color/dark_grey"
+                        />
+
+                </LinearLayout>
             </TableRow>
 
-            <com.handy.portal.ui.view.DateFormFieldTableRow
-                android:id="@+id/expiration_date_field"
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_bottom_payment_method_option"
                 >
 
                 <ImageView
@@ -168,15 +184,17 @@
                     />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     >
 
                     <EditText
                         android:id="@+id/provider_city_edit_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="New York"
                         android:background="@null"
                         android:nextFocusDown="@+id/provider_state_edit_text"
                         android:padding="@dimen/default_padding"
@@ -186,9 +204,11 @@
 
                     <EditText
                         android:id="@+id/provider_state_edit_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:background="@null"
+                        android:text="NY"
                         android:nextFocusDown="@+id/provider_zip_code_edit_text"
                         android:padding="@dimen/default_padding"
                         android:singleLine="true"
@@ -197,9 +217,11 @@
 
                     <EditText
                         android:id="@+id/provider_zip_code_edit_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:background="@null"
+                        android:text="11373"
                         android:nextFocusDown="@+id/provider_phone_edit_text"
                         android:padding="@dimen/default_padding"
                         android:singleLine="true"
@@ -207,12 +229,11 @@
                         />
 
                 </LinearLayout>
-            </com.handy.portal.ui.view.DateFormFieldTableRow>
+            </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_payment_method_option"
                 >
 
                 <ImageView

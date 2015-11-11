@@ -47,6 +47,8 @@ public class ProfileUpdateFragment extends ActionBarFragment
     ImageView mEmailError;
     @InjectView(R.id.provider_address_edit_text)
     EditText mAddressText;
+    @InjectView(R.id.provider_address2_edit_text)
+    EditText mAddress2Text;
     @InjectView(R.id.provider_address_error_indicator)
     ImageView mAddressError;
     @InjectView(R.id.provider_city_edit_text)
@@ -129,14 +131,16 @@ public class ProfileUpdateFragment extends ActionBarFragment
     @OnClick(R.id.profile_update_provider_button)
     public void onSubmitForm()
     {
-        if (validate())
-        {
-            showToast("Input is good");
-        }
-        else
-        {
-            onFailure(R.string.form_not_filled_out_correctly);
-        }
+        initialize();
+
+//        if (validate())
+//        {
+//            showToast("Input is good");
+//        }
+//        else
+//        {
+//            onFailure(R.string.form_not_filled_out_correctly);
+//        }
     }
 
     @Subscribe
@@ -151,12 +155,13 @@ public class ProfileUpdateFragment extends ActionBarFragment
         ProviderPersonalInfo info = mProviderManager.getCachedProviderProfile().getProviderPersonalInfo();
         if (info == null) { return; }
         mNameText.setText(info.getFirstName() + " " + info.getLastName());
-        mEmailText.setText(info.getEmail());
         mPhoneText.setText(info.getPhone());
         mAddressText.setText(info.getAddress().getAddress1());
+        mAddress2Text.setText(info.getAddress().getAddress2());
         mCityText.setText(info.getAddress().getCity());
         mStateText.setText(info.getAddress().getState());
         mZipCodeText.setText(info.getAddress().getZip());
+        mEmailText.setText(info.getEmail());
     }
 
     private boolean validate()

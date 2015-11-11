@@ -68,6 +68,9 @@
           "hint_text": "Address",
           "pattern": "^.*[^\\s].*$"
         },
+        "address2": {
+          "hint_text": "Apt/Fl"
+        },
         "phone": {
           "hint_text": "Phone",
           "pattern": "^[0-9]{10}$"

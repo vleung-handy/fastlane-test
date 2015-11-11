@@ -99,6 +99,7 @@
     <string name="service">Service</string>
     <string name="job_num">Job #</string>
     <string name="address">Address</string>
+    <string name="address2">Apt.</string>
     <string name="date">Date</string>
     <string name="duration">Duration</string>
     <string name="price">Price</string>

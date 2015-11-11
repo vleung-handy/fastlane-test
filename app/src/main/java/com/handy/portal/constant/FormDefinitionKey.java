@@ -19,6 +19,7 @@ public class FormDefinitionKey
         public static final String EXPIRATION_MONTH = "expiration_month";
         public static final String EMAIL = "email";
         public static final String ADDRESS = "address";
+        public static final String ADDRESS2 = "address2";
         public static final String PHONE = "phone";
         public static final String CITY = "city";
         public static final String STATE = "state";
