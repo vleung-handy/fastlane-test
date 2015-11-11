@@ -38,7 +38,7 @@
         },
         "phone": {
           "hint_text": "Phone",
-          "pattern": "^[0-9]{10}$"
+          "pattern": "^[0-9]{10,11}$"
         },
         "city": {
           "hint_text": "Town/City",
@@ -46,7 +46,7 @@
         },
         "state": {
           "hint_text": "County",
-          "pattern": "^.*[^\\s].*$"
+          "pattern": "^.*$"
         },
         "zip_code": {
           "hint_text": "Postcode",

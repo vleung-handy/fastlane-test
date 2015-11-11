@@ -22,6 +22,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
@@ -135,7 +136,6 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (validate())
         {
-            showToast("Input is good");
         }
         else
         {
@@ -152,19 +152,24 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     private void initialize()
     {
+        Provider provider = mProviderManager.getCachedActiveProvider();
         ProviderPersonalInfo info = mProviderManager.getCachedProviderProfile().getProviderPersonalInfo();
-        if (info == null) { return; }
+        if (info == null || provider == null) { return; }
         mNameText.setText(info.getFirstName() + " " + info.getLastName());
-        mPhoneText.setText(info.getPhone());
+        mPhoneText.setText(info.getLocalPhone());
         mAddressText.setText(info.getAddress().getAddress1());
         mAddress2Text.setText(info.getAddress().getAddress2());
         mCityText.setText(info.getAddress().getCity());
         mStateText.setText(info.getAddress().getState());
         mZipCodeText.setText(info.getAddress().getZip());
         mEmailText.setText(info.getEmail());
+        if (provider.isUK())
+        {
+            mStateText.setVisibility(View.GONE);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
-            mPhoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher(mProviderManager.getCachedActiveProvider().getCountry()));
+            mPhoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher(provider.getCountry()));
         }
     }
 
