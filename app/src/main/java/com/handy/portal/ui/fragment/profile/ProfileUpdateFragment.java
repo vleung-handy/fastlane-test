@@ -1,7 +1,9 @@
 package com.handy.portal.ui.fragment.profile;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -162,6 +164,10 @@ public class ProfileUpdateFragment extends ActionBarFragment
         mStateText.setText(info.getAddress().getState());
         mZipCodeText.setText(info.getAddress().getZip());
         mEmailText.setText(info.getEmail());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            mPhoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher(mProviderManager.getCachedActiveProvider().getCountry()));
+        }
     }
 
     private boolean validate()
