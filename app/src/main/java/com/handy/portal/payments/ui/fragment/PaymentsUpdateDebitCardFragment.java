@@ -13,6 +13,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.payments.PaymentEvent;
@@ -126,11 +127,13 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     {
         if (validate())
         {
+            Provider provider = providerManager.getCachedActiveProvider();
             DebitCardInfo debitCardInfo = new DebitCardInfo();
             debitCardInfo.setCardNumber(debitCardNumberField.getValue().getText().toString());
             debitCardInfo.setCvc(securityCodeField.getValue().getText().toString());
             debitCardInfo.setExpMonth(expirationDateField.getMonthValue().getText().toString());
             debitCardInfo.setExpYear(expirationDateField.getYearValue().getText().toString());
+            debitCardInfo.setCurrency(provider.getPaymentCurrencyCode());
             bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_FOR_CHARGE_REQUEST_ID));
             bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));

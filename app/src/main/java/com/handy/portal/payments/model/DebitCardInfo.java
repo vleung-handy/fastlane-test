@@ -6,6 +6,7 @@ public class DebitCardInfo
     private String expMonth;
     private String expYear;
     private String cvc;
+    private String currency;
 
     public String getCardNumber()
     {
@@ -45,5 +46,13 @@ public class DebitCardInfo
     public void setCvc(String cvc)
     {
         this.cvc = cvc;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }
