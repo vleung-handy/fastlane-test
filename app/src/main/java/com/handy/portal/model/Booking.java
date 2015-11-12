@@ -712,10 +712,13 @@ public class Booking implements Comparable<Booking>, Serializable
         @SerializedName("location_description")
         private String mLocationDescription;
 
+        @Nullable
         public List<String> getTransitDescription() { return mTransitDescription; }
 
+        @Nullable
         public String getLocationDescription() { return mLocationDescription; }
 
+        @Nullable
         public String getZipClusterId() { return mZipClusterId; }
     }
 
