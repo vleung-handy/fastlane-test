@@ -57,6 +57,38 @@
           "pattern": "^[0-9]{9}$"
         }
       }
+    },
+    "update_provider_info": {
+      "field_definitions": {
+        "email": {
+          "hint_text": "Email",
+          "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+        },
+        "address": {
+          "hint_text": "Address",
+          "pattern": "^.*[^\\s].*$"
+        },
+        "address2": {
+          "hint_text": "Apt"
+        },
+        "phone": {
+          "hint_text": "Phone",
+          "pattern": "^[0-9]{10}$"
+        },
+        "city": {
+          "hint_text": "City",
+          "pattern": "^.*[^\\s].*$"
+        },
+        "state": {
+          "hint_text": "State",
+          "pattern": "^.*[^\\s].*$"
+        },
+        "zip_code": {
+          "hint_text": "ZIP code",
+          "pattern": "^.*[^\\s].*$",
+          "input_type": "number"
+        }
+      }
     }
   }
 }

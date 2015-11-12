@@ -9,6 +9,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.util.FontUtils;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 
@@ -51,7 +52,7 @@ public class BookingActionButton extends Button
         setBackgroundResource(bookingActionButtonType.getBackgroundDrawableId());
         setTextAppearance(getContext(), bookingActionButtonType.getTextStyleId());
         setText(bookingActionButtonType.getDisplayNameId(booking));
-        setTypeface(TextUtils.get(getContext(), TextUtils.Fonts.CIRCULAR_BOOK));
+        setTypeface(TextUtils.get(getContext(), FontUtils.CIRCULAR_BOOK));
         setOnClickListener(new View.OnClickListener()
         {
             @Override

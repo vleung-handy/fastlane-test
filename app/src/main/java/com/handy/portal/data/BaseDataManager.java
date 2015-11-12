@@ -12,12 +12,13 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -103,7 +104,13 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getResupplyKit(String providerId, Callback<ResupplyInfo> cb)
+    public void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb)
+    {
+        service.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getResupplyKit(String providerId, Callback<ProviderProfile> cb)
     {
         service.getResupplyKit(providerId, new ResupplyInfoRetrofitCallback(cb));
     }
@@ -269,6 +276,12 @@ public final class BaseDataManager extends DataManager
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb)
     {
         service.getPaymentFlow(providerId, new GetPaymentFlowRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getZipClusterPolygons(String providerId, final Callback<ZipClusterPolygons> cb)
+    {
+        service.getZipClusterPolygon(providerId, new GetZipClusterPolygonRetroFitCallback(cb));
     }
 
     //Stripe

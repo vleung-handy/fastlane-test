@@ -2,9 +2,10 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ProviderPersonalInfo
+public class ProviderPersonalInfo implements Serializable
 {
     @SerializedName("first_name")
     private String firstName;
@@ -14,6 +15,8 @@ public class ProviderPersonalInfo
     private String email;
     @SerializedName("phone")
     private String phone;
+    @SerializedName("local_phone")
+    private String localPhone;
     @SerializedName("address")
     private Address address;
     @SerializedName("activation_date")
@@ -47,5 +50,10 @@ public class ProviderPersonalInfo
     public Date getActivationDate()
     {
         return activationDate;
+    }
+
+    public String getLocalPhone()
+    {
+        return localPhone;
     }
 }

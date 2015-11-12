@@ -29,6 +29,7 @@ import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
+import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -43,6 +44,7 @@ import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
+import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -54,6 +56,7 @@ import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.ProfileFragment;
+import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -62,6 +65,7 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
+import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.securepreferences.SecurePreferences;
@@ -115,6 +119,9 @@ import retrofit.converter.GsonConverter;
         ProfileResupplyViewConstructor.class,
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
+        RequestSuppliesFragment.class,
+        ProfileContactViewConstructor.class,
+        ProfileUpdateFragment.class,
 })
 public final class ApplicationModule
 {
@@ -222,11 +229,8 @@ public final class ApplicationModule
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
                 .setRequestInterceptor(new RequestInterceptor()
                 {
-
                     @Override
-                    public void intercept(RequestFacade request)
-                    {
-                    }
+                    public void intercept(RequestFacade request) { }
                 }).setClient(new OkClient(okHttpClient)).build();
         return restAdapter.create(StripeRetrofitService.class);
     }
@@ -376,6 +380,13 @@ public final class ApplicationModule
     final PaymentsManager providePaymentsManager(Bus bus, final DataManager dataManager)
     {
         return new PaymentsManager(bus, dataManager);
+    }
+
+    @Provides
+    @Singleton
+    final ZipClusterManager provideZipClusterPolygonManager(final Bus bus, final DataManager dataManager)
+    {
+        return new ZipClusterManager(bus, dataManager);
     }
 
     @Provides

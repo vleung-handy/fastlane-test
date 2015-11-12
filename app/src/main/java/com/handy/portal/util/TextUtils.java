@@ -13,17 +13,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.regex.Pattern;
 
 public final class TextUtils
 {
     private static final String URL_PATTERN = "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
-
-    public static final class Fonts
-    {
-        public static final String CIRCULAR_BOLD = "fonts/CircularStd-Bold.otf";
-        public static final String CIRCULAR_BOOK = "fonts/CircularStd-Book.otf";
-        public static final String CIRCULAR_MEDIUM = "fonts/CircularStd-Medium.otf";
-    }
 
     private static final Hashtable<String, Typeface> cache = new Hashtable<>();
 
@@ -159,6 +153,11 @@ public final class TextUtils
             s.setSpan(span, start, end, 0);
         }
         textView.setText(s);
+    }
+
+    public static boolean validateText(CharSequence text, Pattern pattern)
+    {
+        return pattern == null || pattern.matcher(text).matches();
     }
 
     private static final class URLSpanNoUnderline extends URLSpan

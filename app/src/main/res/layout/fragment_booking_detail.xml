@@ -38,10 +38,10 @@
                         android:orientation="vertical"
                         >
 
-                        <LinearLayout
+                        <FrameLayout
                             android:id="@+id/booking_details_map_layout"
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
+                            android:layout_height="280dp"
                             android:orientation="vertical"
                             />
 
@@ -55,7 +55,7 @@
                             />
 
                         <RelativeLayout
-                            android:id="@+id/booking_details_location_layout"
+                            android:id="@+id/booking_details_title_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             />
@@ -79,6 +79,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:orientation="horizontal"
+                            />
+
+                        <FrameLayout
+                            android:id="@+id/booking_details_location_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             />
 
                         <LinearLayout

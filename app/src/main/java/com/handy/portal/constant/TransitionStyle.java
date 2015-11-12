@@ -15,6 +15,7 @@ public enum TransitionStyle
     NATIVE_TO_NATIVE(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
     REFRESH_TAB(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out),
     SLIDE_UP(R.anim.slide_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_down),
+    REQUEST_SUPPLY_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.REQUEST_SUPPLY_SUCCESS),
     NONE();
 
     private int incomingAnimId;

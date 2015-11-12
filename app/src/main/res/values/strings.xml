@@ -246,7 +246,6 @@
     <string name="booking_frequency_non_recurring">One-time only</string>
     <string name="booking_frequency_recurring_generic">Recurring</string>
     <string name="supplies">Supplies</string>
-    <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="full_details_after_claim">Additional details will be displayed after claiming</string>
     <string name="full_details_available_on_date">Full details available on\n%1$s</string>
     <string name="full_details_and_more_available_on_date"><![CDATA[Full job details, including exact address, will be available on <b>%1$s</b>. We\u2019ll send you a reminder at that time.]]></string>
@@ -426,7 +425,7 @@
     <string name="update_bank_info">Update Bank Info</string>
 
     <!-- Profile -->
-    <string name="get_resupply_kit">Get a resupply kit</string>
+    <string name="get_resupply_kit">Get a Resupply Kit</string>
     <string name="share_with">Share with…</string>
     <string name="joined_handy"><![CDATA[Joined Handy <b>%1$s</b>]]></string>
     <string name="earn_a_bonus">Earn a %1$s bonus</string>
@@ -441,6 +440,26 @@
     <string name="resupply_kit_on_its_way">Your resupply kit is on its way!</string>
     <string name="based_on_last_28_days">Based on the last 28 days</string>
     <string name="performance">Performance</string>
-    <string name="your_contact_information">Your contact information</string>
+    <string name="your_contact_information">Contact information</string>
+    <string name="edit_your_profile">Edit Your Profile</string>
+    <string name="update_profile_success">Successfully updated profile information</string>
+    <string name="update_profile_failed">Failed to update profile information</string>
 
+    <!-- Booking Details-->
+    <string name="job_location">Job location</string>
+    <string name="nearby_transit">Nearby Transit</string>
+    <string name="job_instructions">JOB INSTRUCTIONS</string>
+    <string name="location_details">LOCATION DETAILS</string>
+
+    <!-- Special -->
+    <string name="special_empty_string"> </string>
+
+    <!-- Supplies -->
+    <string name="request_supplies">Request Supplies</string>
+    <string name="supply_kit_includes">Supply Kit Includes</string>
+    <string name="shipping_address">Shipping Address</string>
+    <string name="withholding_amount">Withholding Amount</string>
+    <string name="complete_purchase">Complete Purchase</string>
+    <string name="complete_purchase_disclaimer">* completing purchase will withhold %1$s from your next pay period.</string>
+    <string name="no_address_on_file">No Address On File</string>
 </resources>

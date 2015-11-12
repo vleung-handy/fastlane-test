@@ -28,7 +28,8 @@ import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.manager.ZipClusterManager;
+import com.handy.portal.util.FontUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
 
@@ -72,6 +73,8 @@ public class BaseApplication extends Application
     @Inject
     PaymentsManager paymentsManager;
     @Inject
+    ZipClusterManager zipClusterManager;
+    @Inject
     StripeManager stripeManager;
     @Inject
     RegionDefinitionsManager regionDefinitionsManager;
@@ -103,7 +106,7 @@ public class BaseApplication extends Application
         bus.post(new HandyEvent.StartUrbanAirship());
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath(TextUtils.Fonts.CIRCULAR_BOOK)
+                .setDefaultFontPath(FontUtils.CIRCULAR_BOOK)
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 

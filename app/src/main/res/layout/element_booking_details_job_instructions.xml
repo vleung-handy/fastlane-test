@@ -4,9 +4,9 @@
               android:layout_height="match_parent"
               android:background="@color/white"
               android:orientation="vertical"
-              android:paddingLeft="15dp"
-              android:paddingRight="15dp"
-              android:paddingTop="15dp">
+              android:paddingLeft="@dimen/extra_padding_large"
+              android:paddingRight="@dimen/extra_padding_large"
+              android:paddingTop="@dimen/extra_padding_large">
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,15 +22,15 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="@dimen/extra_margin_large"
+        android:layout_marginTop="@dimen/extra_margin_large"
         android:src="@drawable/rectangle_grey"/>
 
     <TextView
         android:id="@+id/job_instructions_reveal_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="@dimen/extra_margin_large"
         android:textColor="@color/black"
         android:textSize="@dimen/default_text_size"
         android:visibility="gone"/>

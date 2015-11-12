@@ -14,11 +14,12 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -197,7 +198,16 @@ class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<Provide
         super(callback);
     }
 }
-class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ResupplyInfo>
+
+class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderPersonalInfo>
+{
+    ProviderPersonalInfoHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile>
 {
     ResupplyInfoRetrofitCallback(DataManager.Callback callback)
     {
@@ -240,6 +250,14 @@ class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<CreateD
 class GetPaymentFlowRetroFitCallback extends TypedHandyRetrofitCallback<PaymentFlow>
 {
     GetPaymentFlowRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class GetZipClusterPolygonRetroFitCallback extends TypedHandyRetrofitCallback<ZipClusterPolygons>
+{
+    GetZipClusterPolygonRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

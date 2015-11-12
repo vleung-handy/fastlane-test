@@ -24,6 +24,8 @@ public interface HandyRetrofitService
     String PROVIDERS_PATH = "/providers/";
     String PAYMENTS_PATH = "/payments/";
     String STRIPE_PATH = "/stripe/";
+    String ZIP_CLUSTER_POLYGONS_PATH = "/zipcluster_polygons/";
+
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor, @Query("version_code") int versionCode, HandyRetrofitCallback cb);
@@ -57,6 +59,9 @@ public interface HandyRetrofitService
     @GET(JOBS_PATH + "{id}")
     void getBookingDetails(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
 
+    @GET(JOBS_PATH + "{id}/complementary_jobs")
+    void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
+
     @GET(PAYMENTS_PATH)
     void getPaymentBatches(@Query("date_range_start") Date startDate, @Query("date_range_end") Date endDate, HandyRetrofitCallback cb);
 
@@ -81,16 +86,22 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/payment_flow")
     void getPaymentFlow(@Path("id") String providerId, HandyRetrofitCallback cb);
 
-    @GET(JOBS_PATH + "{id}/complementary_jobs")
-    void getComplementaryBookings(@Path("id") String bookingId, @Query("type") String type, HandyRetrofitCallback cb);
-
     @GET(PROVIDERS_PATH + "{id}/send_income_verification")
     void sendIncomeVerification(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @GET(ZIP_CLUSTER_POLYGONS_PATH + "{id}")
+    void getZipClusterPolygon(@Path("id") String zipClusterPolygonId, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}")
     void getProviderProfile(@Path("id") String providerId, HandyRetrofitCallback cb);
 
-    @POST(PROVIDERS_PATH + "{id}/send_resupply_kit")
+    @FormUrlEncoded
+    @PUT(PROVIDERS_PATH + "{id}")
+    void updateProviderProfile(@Path("id") String providerId, @FieldMap Map<String, String> params, HandyRetrofitCallback cb);
+
+    // This is temporary; we will be changing back to 'send_resupply_kit' after we
+    // are able to change the endpoint to send back the updated provider profile
+    @POST(PROVIDERS_PATH + "{id}/temp_send_resupply_kit")
     void getResupplyKit(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded

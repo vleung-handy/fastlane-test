@@ -6,12 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,6 +34,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
@@ -47,11 +48,11 @@ import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
-import com.handy.portal.ui.constructor.GoogleMapViewConstructor;
-import com.handy.portal.ui.constructor.MapPlaceholderViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
+import com.handy.portal.ui.view.MapPlaceholderView;
+import com.handy.portal.ui.view.ProxyLocationView;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
@@ -73,43 +74,49 @@ public class BookingDetailsFragment extends ActionBarFragment
 {
     //Layouts points for fragment, the various elements are childed to these
     @InjectView(R.id.booking_details_layout)
-    protected LinearLayout detailsParentLayout;
+    LinearLayout detailsParentLayout;
 
     @InjectView(R.id.booking_details_map_layout)
-    protected LinearLayout mapLayout;
+    ViewGroup mapLayout;
 
     @InjectView(R.id.booking_details_date_layout)
-    protected LinearLayout dateLayout;
+    LinearLayout dateLayout;
 
-    @InjectView(R.id.booking_details_location_layout)
-    protected RelativeLayout locationLayout;
+    @InjectView(R.id.booking_details_title_layout)
+    RelativeLayout titleLayout;
 
     @InjectView(R.id.booking_details_action_layout)
-    protected RelativeLayout actionLayout;
+    RelativeLayout actionLayout;
 
     @InjectView(R.id.booking_details_contact_layout)
-    protected RelativeLayout contactLayout;
+    RelativeLayout contactLayout;
 
     @InjectView(R.id.booking_details_job_instructions_layout)
-    protected LinearLayout jobInstructionsLayout;
+    LinearLayout jobInstructionsLayout;
+
+    @InjectView(R.id.booking_details_location_layout)
+    ViewGroup locationLayout;
 
     @InjectView(R.id.booking_details_remove_job_layout)
-    protected LinearLayout removeJobLayout;
+    LinearLayout removeJobLayout;
 
     @InjectView(R.id.booking_details_full_details_notice_text)
-    protected TextView fullDetailsNoticeText;
+    TextView fullDetailsNoticeText;
 
     @InjectView(R.id.fetch_error_view)
     protected View fetchErrorView;
 
     @InjectView(R.id.fetch_error_text)
-    protected TextView errorText;
+    TextView errorText;
 
     @InjectView(R.id.slide_up_panel_container)
-    protected SlideUpPanelContainer slideUpPanelContainer;
+    SlideUpPanelContainer slideUpPanelContainer;
 
     @Inject
     PrefsManager prefsManager;
+
+    @Inject
+    ZipClusterManager mZipClusterManager;
 
     private String requestedBookingId;
     private BookingType requestedBookingType;
@@ -118,7 +125,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     private boolean isForPayments;
     private MainViewTab currentTab;
 
-    private static String GOOGLE_PLAY_SERVICES_INSTALL_URL = "https://play.google.com/store/apps/details?id=com.google.android.gms";
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
 
     @Override
@@ -138,7 +144,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_booking_detail, null);
+        View view = inflater.inflate(R.layout.fragment_booking_detail, container, false);
 
         ButterKnife.inject(this, view);
 
@@ -177,7 +183,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         if (associatedBooking != null)
         {
-
             int titleStringId = 0;
             String bookingIdPrefix = associatedBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
             String jobLabel = getActivity().getString(R.string.job_num) + bookingIdPrefix + associatedBooking.getId();
@@ -230,6 +235,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+
         if (!MainActivityFragment.clearingBackStack)
         {
             requestBookingDetails(this.requestedBookingId, this.requestedBookingType, this.associatedBookingDate);
@@ -267,7 +273,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
         initCancelNoShowButton();
-        initMapsPlaceHolderButton();
     }
 
     //We use view constructors instead of views so to clear the views just remove all children of layouts
@@ -311,6 +316,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
 
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+
         if (this.isForPayments)
         {
             mapLayout.setVisibility(View.GONE);
@@ -320,16 +327,21 @@ public class BookingDetailsFragment extends ActionBarFragment
             //show either the real map or a placeholder image depending on if we have google play services
             if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
             {
-                viewConstructors.put(mapLayout, new GoogleMapViewConstructor(getActivity(), arguments));
+                BookingMapFragment fragment = BookingMapFragment.newInstance(associatedBooking, bookingStatus, mZipClusterManager.getCachedPolygons(associatedBooking.getZipClusterId()));
+                transaction.replace(mapLayout.getId(), fragment);
             }
             else
             {
-                viewConstructors.put(mapLayout, new MapPlaceholderViewConstructor(getActivity(), arguments));
+                UIUtils.replaceView(mapLayout, new MapPlaceholderView(getContext()));
             }
         }
 
         viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
-        viewConstructors.put(locationLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
+        viewConstructors.put(titleLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
+        if (booking.isProxy())
+        {
+            UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getZipCluster()));
+        }
         viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments));
 
         if (!this.isForPayments)
@@ -339,6 +351,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments));
         }
 
+        transaction.commit();
         return viewConstructors;
     }
 
@@ -375,26 +388,6 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
         }
         return false;
-    }
-
-    //Can not use @onclick b/c the button does not exist at injection time
-    //TODO: Figure out better way to link click listeners sections
-    private void initMapsPlaceHolderButton()
-    {
-        Button mapsInstallButton = (Button) mapLayout.findViewById(R.id.map_placeholder_install_button);
-        //will fail if we didn't use the placeholder version
-        if (mapsInstallButton != null)
-        {
-            mapsInstallButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_SERVICES_INSTALL_URL));
-                    Utils.safeLaunchIntent(browserIntent, BookingDetailsFragment.this.getActivity());
-                }
-            });
-        }
     }
 
     //Dynamically generated Action Buttons based on the allowedActions sent by the server in our booking data
@@ -560,17 +553,21 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void showHelpOptions()
     {
-        slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
+        //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
+        if(slideUpPanelContainer != null)
         {
-            @Override
-            public void initialize(ViewGroup panel)
+            slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
             {
-                new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
-                        .create(panel, associatedBooking);
-                new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
-                        .create(panel, associatedBooking);
-            }
-        });
+                @Override
+                public void initialize(ViewGroup panel)
+                {
+                    new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
+                            .create(panel, associatedBooking);
+                    new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
+                            .create(panel, associatedBooking);
+                }
+            });
+        }
     }
 
     //Check if the current booking data for a given action type has an associated warning to display
@@ -680,14 +677,23 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
-        slideUpPanelContainer.hidePanel();
+        //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
+        if(slideUpPanelContainer != null)
+        {
+            slideUpPanelContainer.hidePanel();
+        }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
     }
 
     private void requestReportNoShow()
     {
-        slideUpPanelContainer.hidePanel();
+        //TODO: Crash #608, this is null sometimes and crashing, butterknife timing?
+        //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
+        if(slideUpPanelContainer != null)
+        {
+            slideUpPanelContainer.hidePanel();
+        }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), getLocationData()));
     }

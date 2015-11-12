@@ -20,7 +20,6 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
@@ -246,11 +245,11 @@ public abstract class HandyEvent
 
     public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent
     {
-        public final ResupplyInfo resupplyInfo;
+        public final ProviderProfile providerProfile;
 
-        public ReceiveSendResupplyKitSuccess(ResupplyInfo resupplyInfo)
+        public ReceiveSendResupplyKitSuccess(ProviderProfile providerProfile)
         {
-            this.resupplyInfo = resupplyInfo;
+            this.providerProfile = providerProfile;
         }
     }
 
@@ -763,9 +762,7 @@ public abstract class HandyEvent
     }
 
     //Help Payments Node
-    public static class RequestHelpPaymentsNode extends HandyEvent
-    {
-    }
+    public static class RequestHelpPaymentsNode extends RequestEvent {}
 
     public static class ReceiveHelpPaymentsNodeSuccess extends ReceiveSuccessEvent
     {

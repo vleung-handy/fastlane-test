@@ -2,7 +2,9 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ReferralInfo
+import java.io.Serializable;
+
+public class ReferralInfo implements Serializable
 {
     @SerializedName("referral_code")
     private String referralCode;

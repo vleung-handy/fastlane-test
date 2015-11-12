@@ -47,7 +47,7 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 702 //0.7.2
+        versionCode 704 //0.7.4
         versionName computeVersionName(versionCode)
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
@@ -161,7 +161,7 @@ dependencies {
     compile 'com.scottyab:secure-preferences-lib:0.1.1'
 
     //Urban Airship SDK
-    compile 'com.urbanairship.android:urbanairship-sdk:6.3.+'
+    compile 'com.urbanairship.android:urbanairship-sdk:6.3.0'
 
     //Testing
     testCompile 'org.robolectric:robolectric:3.0'
