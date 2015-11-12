@@ -2,13 +2,17 @@ package com.handy.portal.manager;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.SuccessWrapper;
+import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.payments.PaymentFlow;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -58,6 +62,28 @@ public class ProviderManager
         {
             requestProviderInfo();
         }
+    }
+
+    @Subscribe
+    public void onUpdateProviderProfile(ProfileEvent.RequestProfileUpdate event)
+    {
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        dataManager.updateProviderProfile(providerId, getNoShowParams(event), new DataManager.Callback<ProviderPersonalInfo>()
+        {
+            @Override
+            public void onSuccess(ProviderPersonalInfo response)
+            {
+                bus.post(new ProfileEvent.ReceiveProfileUpdateSuccess(response));
+                requestProviderInfo();
+                requestProviderProfile();
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                bus.post(new ProfileEvent.ReceiveProfileUpdateError(error));
+            }
+        });
     }
 
     @Subscribe
@@ -196,5 +222,20 @@ public class ProviderManager
     public ProviderProfile getCachedProviderProfile()
     {
         return mProviderProfileCache.getIfPresent(PROVIDER_PROFILE_CACHE_KEY);
+    }
+
+    private static TypeSafeMap<NoShowKey> getNoShowParams(ProfileEvent.RequestProfileUpdate info)
+    {
+        TypeSafeMap<NoShowKey> noShowParams = new TypeSafeMap<>();
+
+        noShowParams.put(NoShowKey.EMAIL, info.email);
+        noShowParams.put(NoShowKey.PHONE, info.phone);
+        noShowParams.put(NoShowKey.ADDRESS1, info.address1);
+        noShowParams.put(NoShowKey.ADDRESS2, info.address2);
+        noShowParams.put(NoShowKey.CITY, info.city);
+        noShowParams.put(NoShowKey.STATE, info.state);
+        noShowParams.put(NoShowKey.ZIPCODE, info.zipCode);
+
+        return noShowParams;
     }
 }

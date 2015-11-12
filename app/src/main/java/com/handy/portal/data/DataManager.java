@@ -12,8 +12,8 @@ import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
@@ -55,6 +55,8 @@ public abstract class DataManager
     public abstract void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb);
 
     public abstract void getProviderProfile(String providerId, Callback<ProviderProfile> cb);
+
+    public abstract void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb);
 
     public abstract void getResupplyKit(String providerId, Callback<ProviderProfile> callback);
 

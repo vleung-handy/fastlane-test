@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
@@ -83,7 +85,6 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         super.onCreate(savedInstance);
         setOptionsMenuEnabled(true);
-        setActionBar(R.string.edit_your_profile, false);
     }
 
     @Override
@@ -101,6 +102,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         setFormFieldErrorStateRemovers();
+        setActionBar(R.string.edit_your_profile, false);
         initialize();
     }
 
@@ -136,10 +138,14 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (validate())
         {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
+                    mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));
+            bus.post(new ProfileEvent.SubmittedProfileUpdate());
         }
         else
         {
-            onFailure(R.string.form_not_filled_out_correctly);
+            showToast(R.string.form_not_filled_out_correctly, Toast.LENGTH_LONG);
         }
     }
 
@@ -150,13 +156,34 @@ public class ProfileUpdateFragment extends ActionBarFragment
         updateFormWithDefinitions();
     }
 
+    @Subscribe
+    public void onReceiveUpdateProfileSuccess(ProfileEvent.ReceiveProfileUpdateSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.update_profile_success, Toast.LENGTH_LONG);
+        UIUtils.dismissOnBackPressed(getActivity());
+    }
+
+    @Subscribe
+    public void onReceiveUpdateProfileError(ProfileEvent.ReceiveProfileUpdateError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        if (event.error.getMessage() != null)
+        {
+            showToast(event.error.getMessage(), Toast.LENGTH_LONG);
+        }
+        else
+        {
+            showToast(R.string.update_profile_failed, Toast.LENGTH_LONG);
+        }
+    }
+
     private void initialize()
     {
         Provider provider = mProviderManager.getCachedActiveProvider();
         ProviderPersonalInfo info = mProviderManager.getCachedProviderProfile().getProviderPersonalInfo();
         if (info == null || provider == null) { return; }
         mNameText.setText(info.getFirstName() + " " + info.getLastName());
-        mPhoneText.setText(info.getLocalPhone());
         mAddressText.setText(info.getAddress().getAddress1());
         mAddress2Text.setText(info.getAddress().getAddress2());
         mCityText.setText(info.getAddress().getCity());
@@ -169,7 +196,14 @@ public class ProfileUpdateFragment extends ActionBarFragment
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
+            String phone = info.getLocalPhone() != null ? info.getLocalPhone() : "";
+            String country = provider.getCountry() != null ? provider.getCountry() : "US";
+            mPhoneText.setText(PhoneNumberUtils.formatNumber(phone, country));
             mPhoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher(provider.getCountry()));
+        }
+        else
+        {
+            mPhoneText.setText(info.getLocalPhone());
         }
     }
 
@@ -178,12 +212,13 @@ public class ProfileUpdateFragment extends ActionBarFragment
         Map<String, FieldDefinition> fieldDefinitionMap = mFormDefinitionWrapper.getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_PROVIDER_INFO);
         if (fieldDefinitionMap == null) { return true; }
 
-        boolean allFieldsValid = validateField(mEmailText, mEmailError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EMAIL).getCompiledPattern());
-        allFieldsValid &= validateField(mAddressText, mAddressError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS).getCompiledPattern());
-        allFieldsValid &= validateField(mPhoneText, mPhoneError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.PHONE).getCompiledPattern());
-        allFieldsValid &= validateField(mCityText, mAreaError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.CITY).getCompiledPattern());
-        allFieldsValid &= validateField(mStateText, mAreaError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.STATE).getCompiledPattern());
-        allFieldsValid &= validateField(mZipCodeText, mAreaError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ZIP_CODE).getCompiledPattern());
+        boolean allFieldsValid = validateField(mEmailText.getText(), mEmailText, mEmailError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EMAIL).getCompiledPattern());
+        allFieldsValid &= validateField(mAddressText.getText(), mAddressText, mAddressError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS).getCompiledPattern());
+        allFieldsValid &= validateField(mCityText.getText(), mCityText, mAreaError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.CITY).getCompiledPattern());
+        allFieldsValid &= validateField(mStateText.getText(), mStateText, mAreaError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.STATE).getCompiledPattern());
+        allFieldsValid &= validateField(mZipCodeText.getText(), mZipCodeText, mAreaError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ZIP_CODE).getCompiledPattern());
+        String phone = mPhoneText.getText().toString().replaceAll("[\\D]", ""); // Remove special characters from phone number
+        allFieldsValid &= validateField(phone, mPhoneText, mPhoneError, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.PHONE).getCompiledPattern());
 
         return allFieldsValid;
     }
@@ -211,21 +246,15 @@ public class ProfileUpdateFragment extends ActionBarFragment
         }
     }
 
-    private boolean validateField(EditText text, View errorIndicator, Pattern pattern)
+    private boolean validateField(CharSequence text, EditText textView, View errorIndicator, Pattern pattern)
     {
-        if (!TextUtils.validateText(text.getText(), pattern))
+        if (!TextUtils.validateText(text, pattern))
         {
-            text.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
+            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
             errorIndicator.setVisibility(View.VISIBLE);
             return false;
         }
         return true;
-    }
-
-    private void onFailure(int errorStringId)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
     private static class FormFieldErrorStateRemover implements TextWatcher
