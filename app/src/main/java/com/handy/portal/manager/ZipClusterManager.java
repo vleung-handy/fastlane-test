@@ -8,6 +8,7 @@ import com.handy.portal.model.ZipClusterPolygons;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -19,6 +20,9 @@ public class ZipClusterManager
 
     private final Cache<String, ZipClusterPolygons> mZipClusterCache;
 
+    //store ids of clusters we are in the process of requesting so we don't request the same cluster multiple times
+    private final HashSet<String> mRequestInProgressClusters;
+
     @Inject
     public ZipClusterManager(final Bus bus, final DataManager dataManager)
     {
@@ -29,6 +33,7 @@ public class ZipClusterManager
                 .maximumSize(10000)
                 .expireAfterWrite(1, TimeUnit.DAYS)
                 .build();
+        mRequestInProgressClusters = new HashSet<>();
     }
 
     public ZipClusterPolygons getCachedPolygons(String id)
@@ -48,20 +53,27 @@ public class ZipClusterManager
             return;
         }
 
-        mDataManager.getZipClusterPolygons(event.zipClusterId, new DataManager.Callback<ZipClusterPolygons>()
+        //ignore cluster ids already being requested
+        if (!mRequestInProgressClusters.contains(event.zipClusterId))
         {
-            @Override
-            public void onSuccess(ZipClusterPolygons response)
+            mRequestInProgressClusters.add(event.zipClusterId);
+            mDataManager.getZipClusterPolygons(event.zipClusterId, new DataManager.Callback<ZipClusterPolygons>()
             {
-                mZipClusterCache.put(event.zipClusterId, response);
-                mBus.post(new BookingEvent.ReceiveZipClusterPolygonsSuccess(response));
-            }
+                @Override
+                public void onSuccess(ZipClusterPolygons response)
+                {
+                    mRequestInProgressClusters.remove(event.zipClusterId);
+                    mZipClusterCache.put(event.zipClusterId, response);
+                    mBus.post(new BookingEvent.ReceiveZipClusterPolygonsSuccess(response));
+                }
 
-            @Override
-            public void onError(DataManager.DataManagerError error)
-            {
-                mBus.post(new BookingEvent.ReceiveZipClusterPolygonsError(error));
-            }
-        });
+                @Override
+                public void onError(DataManager.DataManagerError error)
+                {
+                    mRequestInProgressClusters.remove(event.zipClusterId);
+                    mBus.post(new BookingEvent.ReceiveZipClusterPolygonsError(error));
+                }
+            });
+        }
     }
 }
