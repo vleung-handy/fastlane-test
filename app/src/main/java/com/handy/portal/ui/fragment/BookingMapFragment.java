@@ -42,6 +42,8 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     private static final int ONE_MILE_ZOOM_LEVEL        = 14;
 
     private static final int MAP_POLYGON_STROKE_WIDTH   = 3;
+    private static final int MAP_POLYGON_STROKE_COLOR = 0XFFD1D1D1; //Can not store in colors.xml, colors.xml doesn't use alpha correctly
+    private static final int MAP_POLYGON_FILL_COLOR = 0x80FF5C5C; //Can not store in colors.xml, colors.xml doesn't use alpha correctly
 
     private ScrollView mScrollView;
     private Booking mBooking;
@@ -163,8 +165,8 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
             PolygonOptions polygonOptions = new PolygonOptions();
             polygonOptions.add(polygon);
             polygonOptions.strokeWidth(MAP_POLYGON_STROKE_WIDTH);
-            polygonOptions.strokeColor(R.color.proxy_polygon_stroke);
-            polygonOptions.fillColor(R.color.proxy_polygon_fill);
+            polygonOptions.strokeColor(MAP_POLYGON_STROKE_COLOR);
+            polygonOptions.fillColor(MAP_POLYGON_FILL_COLOR);
             map.addPolygon(polygonOptions);
         }
     }
