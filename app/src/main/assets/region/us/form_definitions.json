@@ -84,7 +84,7 @@
           "pattern": "^.*[^\\s].*$"
         },
         "zip_code": {
-          "hint_text": "Zip code",
+          "hint_text": "ZIP code",
           "pattern": "^.*[^\\s].*$",
           "input_type": "number"
         }
