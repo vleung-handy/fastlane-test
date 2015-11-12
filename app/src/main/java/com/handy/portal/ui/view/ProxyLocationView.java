@@ -56,7 +56,10 @@ public class ProxyLocationView extends FrameLayout
 
     private void init()
     {
-        if (mZipCluster == null || mZipCluster.getTransitDescription().isEmpty() && mZipCluster.getLocationDescription().isEmpty())
+        if (mZipCluster == null ||
+            mZipCluster.getTransitDescription() == null ||
+            mZipCluster.getLocationDescription() == null ||
+            mZipCluster.getTransitDescription().isEmpty() && mZipCluster.getLocationDescription().isEmpty())
         {
             setVisibility(GONE);
             return;
