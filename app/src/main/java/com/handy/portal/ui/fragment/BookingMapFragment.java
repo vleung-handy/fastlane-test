@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,10 +36,14 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
 {
     private static final ViewGroup.LayoutParams LAYOUT_PARAMS =
             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    private static final int DEFAULT_ZOOM_LEVEL = 15;
-    private static final float DEFAULT_RADIUS_METERS = 500f;
-    private static final double MILES_IN_ONE_METER = 0.000621371;
-    private static final int ONE_MILE_ZOOM_LEVEL = 14;
+    private static final int DEFAULT_ZOOM_LEVEL         = 15;
+    private static final float DEFAULT_RADIUS_METERS    = 500f;
+    private static final double MILES_IN_ONE_METER      = 0.000621371;
+    private static final int ONE_MILE_ZOOM_LEVEL        = 14;
+
+    private static final int MAP_POLYGON_STROKE_WIDTH   = 3;
+    private static final int MAP_POLYGON_STROKE_COLOR = 0XFFD1D1D1; //Can not store in colors.xml, colors.xml doesn't use alpha correctly
+    private static final int MAP_POLYGON_FILL_COLOR = 0x80FF5C5C; //Can not store in colors.xml, colors.xml doesn't use alpha correctly
 
     private ScrollView mScrollView;
     private Booking mBooking;
@@ -126,9 +131,15 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         {
             return new LatLng(mPolygons.getCenter().latitude, mPolygons.getCenter().longitude);
         }
-        else
+        else if(mBooking.getMidpoint() != null)
         {
             return new LatLng(mBooking.getMidpoint().getLatitude(), mBooking.getMidpoint().getLongitude());
+        }
+        else
+        {
+            //fallback so we don't crash
+            Crashlytics.log("BookingMapFragment booking has no valid midpoint");
+            return new LatLng(0.0f, 0.0f);
         }
     }
 
@@ -153,9 +164,9 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         {
             PolygonOptions polygonOptions = new PolygonOptions();
             polygonOptions.add(polygon);
-            polygonOptions.strokeWidth(3);
-            polygonOptions.strokeColor(0xFFD1D1D1);
-            polygonOptions.fillColor(0x4C00CDED);
+            polygonOptions.strokeWidth(MAP_POLYGON_STROKE_WIDTH);
+            polygonOptions.strokeColor(MAP_POLYGON_STROKE_COLOR);
+            polygonOptions.fillColor(MAP_POLYGON_FILL_COLOR);
             map.addPolygon(polygonOptions);
         }
     }
