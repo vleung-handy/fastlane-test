@@ -15,6 +15,8 @@ public class ProviderPersonalInfo implements Serializable
     private String email;
     @SerializedName("phone")
     private String phone;
+    @SerializedName("local_phone")
+    private String localPhone;
     @SerializedName("address")
     private Address address;
     @SerializedName("activation_date")
@@ -48,5 +50,10 @@ public class ProviderPersonalInfo implements Serializable
     public Date getActivationDate()
     {
         return activationDate;
+    }
+
+    public String getLocalPhone()
+    {
+        return localPhone;
     }
 }

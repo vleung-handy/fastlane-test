@@ -14,6 +14,7 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
+import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 
 import java.io.Serializable;
@@ -30,6 +31,7 @@ public enum MainViewTab implements Serializable
     PAYMENTS_DETAIL(PaymentsDetailFragment.class),
     PROFILE(ProfileFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
+    PROFILE_UPDATE(ProfileUpdateFragment.class),
     HELP(HelpFragment.class),
     DETAILS(BookingDetailsFragment.class),
     HELP_CONTACT(HelpContactFragment.class),
