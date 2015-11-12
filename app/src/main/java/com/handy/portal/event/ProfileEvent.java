@@ -1,5 +1,6 @@
 package com.handy.portal.event;
 
+import com.handy.portal.annotation.Track;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.ProviderPersonalInfo;
 
@@ -45,4 +46,6 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
+    @Track("provider edit profile submitted")
+    public static class SubmittedProfileUpdate extends HandyEvent {}
 }

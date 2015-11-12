@@ -140,6 +140,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
                     mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));
+            bus.post(new ProfileEvent.SubmittedProfileUpdate());
         }
         else
         {

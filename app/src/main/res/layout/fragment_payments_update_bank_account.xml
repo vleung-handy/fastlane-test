@@ -30,7 +30,7 @@
                 android:id="@+id/account_number_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_bottom_payment_method_option">
+                android:background="@drawable/border_bottom_form_option">
 
                 <include layout="@layout/element_form_field"/>
 
@@ -40,7 +40,7 @@
                 android:id="@+id/tax_id_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_bottom_payment_method_option">
+                android:background="@drawable/border_bottom_form_option">
 
                 <include layout="@layout/element_form_field"/>
 
