@@ -74,6 +74,13 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setActionBarTitle(R.string.add_bank_account);
+    }
+
+    @Override
     protected MainViewTab getTab()
     {
         return MainViewTab.PAYMENTS;
@@ -84,7 +91,6 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     {
         super.onResume();
         setBackButtonEnabled(true);
-        setActionBarTitle(R.string.add_bank_account);
         Provider provider = providerManager.getCachedActiveProvider();
 
         if(provider != null)
@@ -126,8 +132,11 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
             bankAccountInfo.setRoutingNumber(routingNumber);
 
             Provider provider = providerManager.getCachedActiveProvider();
-            bankAccountInfo.setCurrency(provider.getPaymentCurrencyCode());
-            bankAccountInfo.setCountry(provider.getCountry());
+            if (provider != null)
+            {
+                bankAccountInfo.setCurrency(provider.getPaymentCurrencyCode());
+                bankAccountInfo.setCountry(provider.getCountry());
+            }
             bus.post(new StripeEvent.RequestStripeTokenFromBankAccount(bankAccountInfo));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }

@@ -80,6 +80,13 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setActionBarTitle(R.string.add_debit_card);
+    }
+
+    @Override
     protected MainViewTab getTab()
     {
         return MainViewTab.PAYMENTS;
@@ -90,9 +97,12 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     {
         super.onResume();
         setBackButtonEnabled(true);
-        setActionBarTitle(R.string.add_debit_card);
         resetStates();
-        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        if (providerManager.getCachedActiveProvider() != null)
+        {
+            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
+                    providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        }
     }
 
     public boolean validate()

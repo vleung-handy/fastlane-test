@@ -17,13 +17,13 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SupplyListItem;
 import com.handy.portal.ui.element.SupplyListItemView;
-
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -114,11 +114,11 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void requestSendResupplyKit()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestSendResupplyKit());
+        bus.post(new ProfileEvent.RequestSendResupplyKit());
     }
 
     @Subscribe
-    public void onReceiveSendResupplyKitSuccess(HandyEvent.ReceiveSendResupplyKitSuccess event)
+    public void onReceiveSendResupplyKitSuccess(ProfileEvent.ReceiveSendResupplyKitSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         // Verify with Kenny that this transition is ok; may need to refactor later
@@ -126,7 +126,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveSendResupplyKitError(HandyEvent.ReceiveSendResupplyKitError event)
+    public void onReceiveSendResupplyKitError(ProfileEvent.ReceiveSendResupplyKitError event)
     {
         this.handleRequestError(event);
     }

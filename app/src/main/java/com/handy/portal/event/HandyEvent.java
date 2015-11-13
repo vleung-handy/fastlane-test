@@ -19,7 +19,6 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
@@ -226,40 +225,6 @@ public abstract class HandyEvent
     public static class ReceiveSendIncomeVerificationSuccess extends ReceiveSuccessEvent {}
 
     public static class ReceiveSendIncomeVerificationError extends ReceiveErrorEvent {}
-
-    public static class RequestProviderProfile extends RequestEvent {}
-
-    public static class ReceiveProviderProfileSuccess extends ReceiveSuccessEvent
-    {
-        public ProviderProfile providerProfile;
-
-        public ReceiveProviderProfileSuccess(ProviderProfile providerProfile)
-        {
-            this.providerProfile = providerProfile;
-        }
-    }
-
-    public static class ReceiveProviderProfileError extends ReceiveErrorEvent {}
-
-    public static class RequestSendResupplyKit extends RequestEvent {}
-
-    public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent
-    {
-        public final ProviderProfile providerProfile;
-
-        public ReceiveSendResupplyKitSuccess(ProviderProfile providerProfile)
-        {
-            this.providerProfile = providerProfile;
-        }
-    }
-
-    public static class ReceiveSendResupplyKitError extends ReceiveErrorEvent
-    {
-        public ReceiveSendResupplyKitError(DataManager.DataManagerError error)
-        {
-            this.error = error;
-        }
-    }
 
     public static class ProviderIdUpdated extends HandyEvent
     {

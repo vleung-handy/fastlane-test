@@ -105,7 +105,7 @@
 
             <Button
                 android:id="@+id/request_supplies_button"
-                style="@style/Button.BookingAction.Green"
+                style="@style/Button.Green.Round"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/default_margin_x2"
                 android:text="@string/complete_purchase"

@@ -8,6 +8,7 @@ import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
+import com.handy.portal.ui.fragment.profile.ProfileFragment;
 
 import org.junit.Before;
 import org.junit.Ignore;
