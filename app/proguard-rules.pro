@@ -70,6 +70,7 @@
     <fields>;
 }
 -dontwarn com.google.common.**
+-keep class com.google.gson.** { *; }
 -keepattributes EnclosingMethod
 
 #Urban Airship
