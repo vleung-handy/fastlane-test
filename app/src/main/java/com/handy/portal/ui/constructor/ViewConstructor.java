@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 
+@Deprecated
 public abstract class ViewConstructor<T>
 {
     private Context context;

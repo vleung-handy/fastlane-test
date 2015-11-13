@@ -3,9 +3,44 @@ package com.handy.portal.event;
 import com.handy.portal.annotation.Track;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.model.ProviderProfile;
 
 public abstract class ProfileEvent extends HandyEvent
 {
+    public static class RequestProviderProfile extends RequestEvent {}
+
+    public static class ReceiveProviderProfileSuccess extends ReceiveSuccessEvent
+    {
+        public ProviderProfile providerProfile;
+
+        public ReceiveProviderProfileSuccess(ProviderProfile providerProfile)
+        {
+            this.providerProfile = providerProfile;
+        }
+    }
+
+    public static class ReceiveProviderProfileError extends ReceiveErrorEvent {}
+
+    public static class RequestSendResupplyKit extends RequestEvent {}
+
+    public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent
+    {
+        public final ProviderProfile providerProfile;
+
+        public ReceiveSendResupplyKitSuccess(ProviderProfile providerProfile)
+        {
+            this.providerProfile = providerProfile;
+        }
+    }
+
+    public static class ReceiveSendResupplyKitError extends ReceiveErrorEvent
+    {
+        public ReceiveSendResupplyKitError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
     public static class RequestProfileUpdate extends RequestEvent
     {
         public String email;

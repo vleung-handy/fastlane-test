@@ -138,13 +138,13 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestProviderProfile(HandyEvent.RequestProviderProfile event)
+    public void onRequestProviderProfile(ProfileEvent.RequestProviderProfile event)
     {
         final ProviderProfile cachedProviderProfile = getCachedProviderProfile();
 
         if (cachedProviderProfile != null)
         {
-            bus.post(new HandyEvent.ReceiveProviderProfileSuccess(cachedProviderProfile));
+            bus.post(new ProfileEvent.ReceiveProviderProfileSuccess(cachedProviderProfile));
         }
         else
         {
@@ -153,7 +153,7 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestResupplyKit(HandyEvent.RequestSendResupplyKit event)
+    public void onRequestResupplyKit(ProfileEvent.RequestSendResupplyKit event)
     {
         String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
@@ -163,13 +163,13 @@ public class ProviderManager
             public void onSuccess(ProviderProfile providerProfile)
             {
                 mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
-                bus.post(new HandyEvent.ReceiveSendResupplyKitSuccess(providerProfile));
+                bus.post(new ProfileEvent.ReceiveSendResupplyKitSuccess(providerProfile));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveSendResupplyKitError(error));
+                bus.post(new ProfileEvent.ReceiveSendResupplyKitError(error));
             }
         });
     }
@@ -205,13 +205,13 @@ public class ProviderManager
             public void onSuccess(ProviderProfile providerProfile)
             {
                 mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
-                bus.post(new HandyEvent.ReceiveProviderProfileSuccess(providerProfile));
+                bus.post(new ProfileEvent.ReceiveProviderProfileSuccess(providerProfile));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveProviderProfileError());
+                bus.post(new ProfileEvent.ReceiveProviderProfileError());
             }
         });
     }
