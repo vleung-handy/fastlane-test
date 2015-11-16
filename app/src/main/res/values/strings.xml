@@ -223,7 +223,7 @@
         <item quantity="other">hours</item>
     </plurals>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tab_jobs">Jobs</string>
     <string name="tab_schedule">Schedule</string>
@@ -424,6 +424,11 @@
     <string name="debit_card">Debit Card</string>
     <string name="update_bank_info">Update Bank Info</string>
 
+    <!-- Notification Blocker -->
+    <string name="notification_blocker_title">Please turn on push notifications</string>
+    <string name="notification_blocker_body">We use push notifications to send you changes to your schedule, payment updates and more. Please tap below to turn on push notifications.</string>
+    <string name="enable_now">Enable Now</string>
+
     <!-- Profile -->
     <string name="get_resupply_kit">Get a Resupply Kit</string>
     <string name="share_with">Share with…</string>
@@ -462,4 +467,5 @@
     <string name="complete_purchase">Complete Purchase</string>
     <string name="complete_purchase_disclaimer">* completing purchase will withhold %1$s from your next pay period.</string>
     <string name="no_address_on_file">No Address On File</string>
+
 </resources>

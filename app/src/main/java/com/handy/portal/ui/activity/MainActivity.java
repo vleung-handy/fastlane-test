@@ -9,7 +9,9 @@ import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
+import com.handy.portal.util.NotificationUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -35,6 +37,7 @@ public class MainActivity extends BaseActivity
         configManager.prefetch();
         providerManager.prefetch();
         checkForTerms();
+        checkIfNotificationIsEnabled();
     }
 
     @Override
@@ -52,6 +55,15 @@ public class MainActivity extends BaseActivity
     private void checkForTerms()
     {
         bus.post(new HandyEvent.RequestCheckTerms());
+    }
+
+    private void checkIfNotificationIsEnabled()
+    {
+        if (!NotificationUtils.isNotificationEnabled(this))
+        {
+            NotificationBlockerDialogFragment dialog = new NotificationBlockerDialogFragment();
+            dialog.show(getSupportFragmentManager(), NotificationBlockerDialogFragment.FRAGMENT_TAG);
+        }
     }
 
     @Subscribe
@@ -73,7 +85,7 @@ public class MainActivity extends BaseActivity
     public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event)
     {
         //if the code is null we don't need to to show anything
-        if (event.termsDetailsGroup != null && event.termsDetailsGroup.hasTerms())
+        if (event.termsDetailsGroup.hasTerms())
         {
             startActivity(new Intent(this, TermsActivity.class));
         }

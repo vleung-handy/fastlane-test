@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/default_padding"
+    android:paddingLeft="@dimen/default_padding_medium"
+    android:paddingRight="@dimen/default_padding_medium"
+    android:paddingTop="@dimen/default_padding_medium"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="@string/notification_blocker_title"
+        android:textAppearance="@style/TextView.Bold"
+        android:textSize="@dimen/large_text_size"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/payment_container_vertical_padding"
+        android:text="@string/notification_blocker_body"
+        android:textAppearance="@style/HandyTextAppearanceMedium"
+        android:textColor="@color/dark_grey"
+        />
+
+    <Button
+        android:id="@+id/notification_blocker_enable_button"
+        style="@style/Button.Green.Round"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_padding"
+        android:text="@string/enable_now"
+        />
+
+</LinearLayout>
