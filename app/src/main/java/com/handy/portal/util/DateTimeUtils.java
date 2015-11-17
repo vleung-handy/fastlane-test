@@ -21,6 +21,8 @@ public final class DateTimeUtils
     public final static int HOURS_IN_DAY = 24;
     public final static int MILLISECONDS_IN_MINUTE = 60000;
     public final static long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE * 60;
+    public final static long MILLISECONDS_IN_30_MINS = MILLISECONDS_IN_MINUTE * 30;
+    public final static long MILLISECONDS_IN_52_MINS = MILLISECONDS_IN_MINUTE * 52;
 
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)
     {
