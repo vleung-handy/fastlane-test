@@ -9,16 +9,12 @@ import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
-import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.NotificationUtils;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -46,6 +42,7 @@ public class MainActivity extends BaseActivity
         configManager.prefetch();
         providerManager.prefetch();
         checkForTerms();
+        checkIfNotificationIsEnabled();
     }
 
     @Override
@@ -53,14 +50,6 @@ public class MainActivity extends BaseActivity
     {
         bus.unregister(this);
         super.onPause();
-    }
-
-    private void checkIfNotificationIsEnabled()
-    {
-        List<Date> dates = new ArrayList<>();
-        sToday = DateTimeUtils.getDateWithoutTime(new Date());
-        dates.add(sToday);
-        bus.post(new HandyEvent.RequestScheduledBookings(dates, true));
     }
 
     private void checkIfUserShouldUpdatePaymentInfo()
@@ -73,25 +62,9 @@ public class MainActivity extends BaseActivity
         bus.post(new HandyEvent.RequestCheckTerms());
     }
 
-    @Subscribe
-    public void onReceiveScheduledBookingSuccess(HandyEvent.ReceiveScheduledBookingsSuccess event)
+    public void checkIfNotificationIsEnabled()
     {
-        if (!event.day.equals(sToday)) { return; }
-
-        // Do not show notification blocker if now is in between 52 minutes prior and 30 minutes post to a booking.
-        long currentTime = System.currentTimeMillis();
-        boolean disruptable = true;
-
-        for (Booking booking : event.bookings)
-        {
-            if (currentTime > booking.getStartDate().getTime() - DateTimeUtils.MILLISECONDS_IN_52_MINS &&
-                    currentTime < booking.getEndDate().getTime() + DateTimeUtils.MILLISECONDS_IN_30_MINS)
-            {
-                disruptable = false;
-            }
-        }
-
-        if (disruptable && !NotificationUtils.isNotificationEnabled(this) && !dialog.isAdded())
+        if (!NotificationUtils.isNotificationEnabled(this) && !dialog.isAdded())
         {
             dialog.show(getSupportFragmentManager(), NotificationBlockerDialogFragment.FRAGMENT_TAG);
         }
@@ -124,7 +97,6 @@ public class MainActivity extends BaseActivity
         // we must guarantee the shouldUpdatePaymentInfo response comes after the terms response, else activity might be launched and obscure the update payment info prompt
         {
             checkIfUserShouldUpdatePaymentInfo();
-            checkIfNotificationIsEnabled();
             //have to put this check here due to weird startup flow - after terms are accepted, app switches back to SplashActivity and this activity is relaunched and this function will be called again
         }
     }
