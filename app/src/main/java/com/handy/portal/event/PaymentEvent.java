@@ -129,9 +129,9 @@ public abstract class PaymentEvent extends HandyEvent
     {
         public final boolean successfullyCreated;
 
-        public ReceiveCreateBankAccountSuccess(boolean succesfullyCreated)
+        public ReceiveCreateBankAccountSuccess(boolean successfullyCreated)
         {
-            this.successfullyCreated = succesfullyCreated;
+            this.successfullyCreated = successfullyCreated;
         }
     }
 

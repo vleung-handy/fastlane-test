@@ -28,6 +28,7 @@ public class MainActivity extends BaseActivity
     ProviderManager providerManager;
 
     private static Date sToday;
+    private NotificationBlockerDialogFragment dialog = new NotificationBlockerDialogFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -90,9 +91,8 @@ public class MainActivity extends BaseActivity
             }
         }
 
-        if (disruptable && !NotificationUtils.isNotificationEnabled(this))
+        if (disruptable && !NotificationUtils.isNotificationEnabled(this) && !dialog.isAdded())
         {
-            NotificationBlockerDialogFragment dialog = new NotificationBlockerDialogFragment();
             dialog.show(getSupportFragmentManager(), NotificationBlockerDialogFragment.FRAGMENT_TAG);
         }
     }
