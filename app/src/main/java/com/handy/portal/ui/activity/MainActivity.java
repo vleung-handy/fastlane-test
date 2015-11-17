@@ -14,8 +14,6 @@ import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.NotificationUtils;
 import com.squareup.otto.Subscribe;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 public class MainActivity extends BaseActivity
@@ -23,8 +21,8 @@ public class MainActivity extends BaseActivity
     @Inject
     ProviderManager providerManager;
 
-    private static Date sToday;
-    private NotificationBlockerDialogFragment dialog = new NotificationBlockerDialogFragment();
+    private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
+            = new NotificationBlockerDialogFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,9 +62,11 @@ public class MainActivity extends BaseActivity
 
     public void checkIfNotificationIsEnabled()
     {
-        if (!NotificationUtils.isNotificationEnabled(this) && !dialog.isAdded())
+        if (NotificationUtils.isNotificationEnabled(this) == NotificationUtils.NOTIFICATION_DISABLED
+                && !mNotificationBlockerDialogFragment.isAdded())
         {
-            dialog.show(getSupportFragmentManager(), NotificationBlockerDialogFragment.FRAGMENT_TAG);
+            mNotificationBlockerDialogFragment.show(getSupportFragmentManager(),
+                    NotificationBlockerDialogFragment.FRAGMENT_TAG);
         }
     }
 

@@ -19,6 +19,8 @@ public class NotificationBlockerDialogFragment extends InjectedDialogFragment
     @InjectView(R.id.notification_blocker_enable_button)
     protected Button updateNowButton;
 
+    private static final String PACKAGE_PREFIX = "package:";
+
 
     public static final String FRAGMENT_TAG = "fragment_dialog_notification_blocker";
 
@@ -48,7 +50,7 @@ public class NotificationBlockerDialogFragment extends InjectedDialogFragment
             {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                intent.setData(Uri.parse(PACKAGE_PREFIX + getContext().getPackageName()));
                 startActivity(intent);
                 dismiss();
             }
