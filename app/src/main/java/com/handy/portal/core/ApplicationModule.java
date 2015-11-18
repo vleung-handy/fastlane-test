@@ -58,6 +58,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
+import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
@@ -112,6 +113,7 @@ import retrofit.converter.GsonConverter;
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
+        NotificationBlockerDialogFragment.class,
         PaymentsUpdateBankAccountFragment.class,
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,

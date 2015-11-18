@@ -9,7 +9,9 @@ import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
+import com.handy.portal.util.NotificationUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -18,6 +20,9 @@ public class MainActivity extends BaseActivity
 {
     @Inject
     ProviderManager providerManager;
+
+    private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
+            = new NotificationBlockerDialogFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,6 +40,7 @@ public class MainActivity extends BaseActivity
         configManager.prefetch();
         providerManager.prefetch();
         checkForTerms();
+        checkIfNotificationIsEnabled();
     }
 
     @Override
@@ -54,14 +60,24 @@ public class MainActivity extends BaseActivity
         bus.post(new HandyEvent.RequestCheckTerms());
     }
 
+    public void checkIfNotificationIsEnabled()
+    {
+        if (NotificationUtils.isNotificationEnabled(this) == NotificationUtils.NOTIFICATION_DISABLED
+                && !mNotificationBlockerDialogFragment.isAdded())
+        {
+            mNotificationBlockerDialogFragment.show(getSupportFragmentManager(),
+                    NotificationBlockerDialogFragment.FRAGMENT_TAG);
+        }
+    }
+
     @Subscribe
     public void onReceiveUserShouldUpdatePaymentInfo(PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess event)
     {
         //check if we need to show the payment bill blocker
-        if(event.shouldUserUpdatePaymentInfo)
+        if (event.shouldUserUpdatePaymentInfo)
         {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
+            if (fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
             {
                 PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
                 paymentBillBlockerDialogFragment.show(getSupportFragmentManager(), PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
@@ -73,7 +89,7 @@ public class MainActivity extends BaseActivity
     public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event)
     {
         //if the code is null we don't need to to show anything
-        if (event.termsDetailsGroup != null && event.termsDetailsGroup.hasTerms())
+        if (event.termsDetailsGroup.hasTerms())
         {
             startActivity(new Intent(this, TermsActivity.class));
         }
