@@ -26,6 +26,7 @@ import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -117,7 +118,11 @@ public class ProfileUpdateFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        if (mProviderManager.getCachedActiveProvider() != null)
+        {
+            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
+                    mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        }
     }
 
     @Override
@@ -181,8 +186,13 @@ public class ProfileUpdateFragment extends ActionBarFragment
     private void initialize()
     {
         Provider provider = mProviderManager.getCachedActiveProvider();
-        ProviderPersonalInfo info = mProviderManager.getCachedProviderProfile().getProviderPersonalInfo();
-        if (info == null || provider == null) { return; }
+        ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+        if (provider == null || profile == null || profile.getProviderPersonalInfo() == null)
+        {
+            return;
+        }
+
+        ProviderPersonalInfo info = profile.getProviderPersonalInfo();
         mNameText.setText(info.getFirstName() + " " + info.getLastName());
         mAddressText.setText(info.getAddress().getAddress1());
         mAddress2Text.setText(info.getAddress().getAddress2());
