@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
@@ -189,6 +190,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         ProviderProfile profile = mProviderManager.getCachedProviderProfile();
         if (provider == null || profile == null || profile.getProviderPersonalInfo() == null)
         {
+            Crashlytics.logException(new NullPointerException("Provider or ProviderProfile is null."));
             return;
         }
 
