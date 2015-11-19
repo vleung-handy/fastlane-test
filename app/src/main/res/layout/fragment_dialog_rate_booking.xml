@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:id="@+id/rate_booking_window"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    >
+
+    <LinearLayout
+        android:id="@+id/rate_booking_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/default_padding"
+        android:paddingLeft="@dimen/default_padding_medium"
+        android:paddingRight="@dimen/default_padding_medium"
+        android:paddingTop="@dimen/default_padding_medium"
+        >
+
+        <TextView
+            android:id="@+id/rate_booking_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:lineSpacingExtra="@dimen/lineSpacing"
+            android:text="@string/rate_booking_title"
+            android:textAppearance="@style/TextView.Bold"
+            android:textSize="@dimen/large_text_size"
+            />
+
+        <RadioGroup
+            android:id="@+id/rate_booking_rating_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingLeft="@dimen/default_padding_medium"
+            android:paddingRight="@dimen/default_padding_medium"
+            android:paddingTop="@dimen/default_padding_medium"
+            >
+
+            <RadioButton
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_1"
+                android:id="@+id/rating_button_1"
+                />
+
+            <RadioButton
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_2"
+                android:id="@+id/rating_button_2"
+                />
+
+            <RadioButton
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_3"
+                android:id="@+id/rating_button_3"
+                />
+
+            <RadioButton
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_4"
+                android:id="@+id/rating_button_4"
+                />
+
+            <RadioButton
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_5"
+                android:id="@+id/rating_button_5"
+                />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/rate_booking_comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/payment_container_vertical_padding"
+            android:lineSpacingExtra="@dimen/lineSpacing"
+            android:hint="@string/rate_booking_comment_text_hint"
+            android:textAppearance="@style/HandyTextAppearanceMedium"
+            android:textColor="@color/dark_grey"
+            android:maxLength="160"
+            />
+
+        <Button
+            android:id="@+id/rate_booking_confirm_checkout_button"
+            style="@style/Button.Green.Round"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:text="@string/rate_booking_confirm_checkout_button"
+            />
+
+    </LinearLayout>
+</LinearLayout>

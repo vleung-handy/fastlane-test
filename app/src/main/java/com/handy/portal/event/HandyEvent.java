@@ -480,6 +480,8 @@ public abstract class HandyEvent
     {
         public boolean isAuto;
         public LocationData locationData;
+        public int bookingRatingScore = -1;
+        public String bookingRatingComment = "";
 
         public RequestNotifyJobCheckOut(String bookingId, boolean isAuto, LocationData locationData)
         {
@@ -491,6 +493,17 @@ public abstract class HandyEvent
         {
             this.bookingId = bookingId;
             this.locationData = locationData;
+        }
+
+        public RequestNotifyJobCheckOut(String bookingId,
+                                        LocationData locationData,
+                                        int bookingRatingScore,
+                                        String bookingRatingComment)
+        {
+            this.bookingId = bookingId;
+            this.locationData = locationData;
+            this.bookingRatingScore = bookingRatingScore;
+            this.bookingRatingComment = bookingRatingComment;
         }
     }
 
