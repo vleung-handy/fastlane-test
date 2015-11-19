@@ -55,6 +55,12 @@ public final class HelpNodeView extends InjectedRelativeLayout
             return;
         }
 
+        if (node.getType() == null)
+        {
+            Crashlytics.log("Trying to display a help node with null type");
+            return;
+        }
+
         switch (node.getType())
         {
             case HelpNode.HelpNodeType.ROOT:
@@ -102,6 +108,7 @@ public final class HelpNodeView extends InjectedRelativeLayout
         {
             if(childNode == null)
             {
+                Crashlytics.log("HelpNode " + node.getId() + " has a null child");
                 continue;
             }
 
@@ -127,8 +134,15 @@ public final class HelpNodeView extends InjectedRelativeLayout
         {
             final View navView;
 
-            if(childNode == null || childNode.getType() == null)
+            if (childNode == null)
             {
+                Crashlytics.log("HelpNode " + node.getId() + " has a null child or child missing a type");
+                continue;
+            }
+
+            if (childNode.getType() == null)
+            {
+                Crashlytics.log("HelpNode " + node.getId() + " has a child missing a type, child id " + childNode.getId());
                 continue;
             }
 

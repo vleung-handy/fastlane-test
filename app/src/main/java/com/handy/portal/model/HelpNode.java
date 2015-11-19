@@ -2,6 +2,7 @@ package com.handy.portal.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -27,6 +28,7 @@ public final class HelpNode implements Parcelable
         return id;
     }
 
+    @Nullable
     public final String getType() {
         return type;
     }

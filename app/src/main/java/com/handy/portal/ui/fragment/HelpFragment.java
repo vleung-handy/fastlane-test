@@ -106,15 +106,22 @@ public final class HelpFragment extends ActionBarFragment
     private void trackPath(HelpNode node)
     {
         //Don't add the root node to the path as per CX spec
-        if (!node.getType().equals(HelpNode.HelpNodeType.ROOT))
+        if (node != null &&
+                node.getType() != null &&
+                !node.getType().equals(HelpNode.HelpNodeType.ROOT))
         {
             currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + node.getLabel();
         }
     }
 
-    private void updateActionBar(HelpNode node)
+    private void updateActionBar(HelpNode helpNode)
     {
-        switch (node.getType())
+        if (helpNode == null || helpNode.getType() == null)
+        {
+            return;
+        }
+
+        switch (helpNode.getType())
         {
             case HelpNode.HelpNodeType.ROOT:
             case HelpNode.HelpNodeType.BOOKING:
@@ -127,17 +134,17 @@ public final class HelpFragment extends ActionBarFragment
             case HelpNode.HelpNodeType.BOOKINGS_NAV:
             case HelpNode.HelpNodeType.ARTICLE:
             {
-                title = node.getLabel();
+                title = helpNode.getLabel();
             }
             break;
 
             default:
             {
-                Crashlytics.log("Unrecognized node type : " + node.getType());
+                Crashlytics.log("Unrecognized node type : " + helpNode.getType());
             }
             break;
         }
-        boolean enabled = !HelpNode.HelpNodeType.ROOT.equals(node.getType());
+        boolean enabled = !HelpNode.HelpNodeType.ROOT.equals(helpNode.getType());
         setActionBar(title, enabled);
     }
 
@@ -150,6 +157,11 @@ public final class HelpFragment extends ActionBarFragment
 
     private void setupClickListeners(HelpNode helpNode)
     {
+        if (helpNode == null || helpNode.getType() == null)
+        {
+            return;
+        }
+
         switch (helpNode.getType())
         {
             case HelpNode.HelpNodeType.ROOT:
@@ -171,34 +183,53 @@ public final class HelpFragment extends ActionBarFragment
 
     private void setupNavigationListClickListeners(final HelpNode helpNode)
     {
-        for (int i = 0; i < helpNode.getChildren().size(); i++)
+        int nodeViewChildCount = helpNodeView.navOptionsLayout.getChildCount();
+        int helpNodeIndexCounter = 0;
+        HelpNode candidateChildNode = null;
+
+        for (int i = 0; i < nodeViewChildCount; i++)
         {
-            final HelpNode childNode = helpNode.getChildren().get(i);
-            if (childNode == null || childNode.getType() == null)
+            //Skip over dead nodes, they will not have an associated view to init, Crashlytics #523
+            while (helpNodeIndexCounter < helpNode.getChildren().size() &&
+                    (candidateChildNode == null || candidateChildNode.getType() == null))
+            {
+                candidateChildNode = helpNode.getChildren().get(helpNodeIndexCounter);
+                helpNodeIndexCounter++;
+            }
+
+            if (candidateChildNode == null || candidateChildNode.getType() == null)
             {
                 continue;
             }
 
+            //Need to keep childNode and views in sync in case of bad/empty help nodes
+            final HelpNode childNode = candidateChildNode;
             final View navView = helpNodeView.navOptionsLayout.getChildAt(i);
 
-            navView.setOnClickListener(new View.OnClickListener()
+            if (navView != null)
             {
-                @Override
-                public void onClick(final View v)
+                navView.setOnClickListener(new View.OnClickListener()
                 {
-                    if (childNode.getType().equals(HelpNode.HelpNodeType.LOG_IN_FORM))
+                    @Override
+                    public void onClick(final View v)
                     {
-                        showToast(R.string.please_login);
+                        if (HelpNode.HelpNodeType.LOG_IN_FORM.equals(childNode.getType()))
+                        {
+                            showToast(R.string.please_login);
+                        }
+                        else
+                        {
+                            Bundle arguments = new Bundle();
+                            arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
+                            arguments.putString(BundleKeys.PATH, currentPathNodeLabels);
+                            bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
+                        }
                     }
-                    else
-                    {
-                        Bundle arguments = new Bundle();
-                        arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
-                        arguments.putString(BundleKeys.PATH, currentPathNodeLabels);
-                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
-                    }
-                }
-            });
+                });
+            }
+
+            //reset candidate so it picks up the next one at start of loop
+            candidateChildNode = null;
         }
     }
 
