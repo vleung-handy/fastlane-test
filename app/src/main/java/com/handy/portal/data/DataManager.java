@@ -7,6 +7,7 @@ import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
+import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -66,7 +67,7 @@ public abstract class DataManager
 
     public abstract void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
-    public abstract void notifyCheckOutBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
+    public abstract void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, Callback<Booking> cb);
 
     public abstract void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
 

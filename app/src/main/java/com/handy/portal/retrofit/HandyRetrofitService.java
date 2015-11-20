@@ -1,5 +1,7 @@
 package com.handy.portal.retrofit;
 
+import com.handy.portal.model.CheckoutRequest;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -112,9 +114,12 @@ public interface HandyRetrofitService
     @POST(BOOKINGS_PATH + "{booking_id}/check_in")
     void checkIn(@Path("booking_id") String bookingId, @Query("auto") boolean isAuto, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
 
-    @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/check_out")
-    void checkOut(@Path("booking_id") String bookingId, @Query("auto") boolean isAuto, @FieldMap Map<String, String> locationParams, HandyRetrofitCallback cb);
+    void checkOut(
+            @Path("booking_id") String bookingId,
+            @Query("auto") boolean isAuto,
+            @Body CheckoutRequest request,
+            HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/customer_no_show")

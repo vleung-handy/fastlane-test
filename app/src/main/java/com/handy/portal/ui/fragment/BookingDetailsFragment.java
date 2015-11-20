@@ -521,8 +521,13 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CONTACT_PHONE:
             {
-                bus.post(new HandyEvent.CallCustomerClicked());
-                callPhoneNumber(this.associatedBooking.getBookingPhone());
+//                bus.post(new HandyEvent.CallCustomerClicked());
+//                callPhoneNumber(this.associatedBooking.getBookingPhone());
+
+                RateBookingDialogFragment rateBookingDialogFragment = RateBookingDialogFragment
+                        .newInstance(this.associatedBooking);
+                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+
             }
             break;
 
@@ -667,12 +672,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
-    }
-
-    private void requestNotifyCheckOutJob(String bookingId, LocationData locationData)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, locationData));
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
