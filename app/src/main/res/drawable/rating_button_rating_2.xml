@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
-        <bitmap android:alpha="1" android:src="@drawable/ic_menu_jobs"/>
+        <bitmap android:alpha="1" android:src="@drawable/ic_booking_rating_2"/>
     </item>
     <item android:state_checked="false">
-        <bitmap android:alpha="0.5" android:src="@drawable/ic_menu_jobs"/>
+        <bitmap android:alpha="0.5" android:src="@drawable/ic_booking_rating_2"/>
     </item>
 </selector>
