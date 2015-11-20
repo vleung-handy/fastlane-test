@@ -50,6 +50,7 @@ import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructo
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
+import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.view.ProxyLocationView;
@@ -509,7 +510,9 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CHECK_OUT:
             {
-                requestNotifyCheckOutJob(this.associatedBooking.getId(), locationData);
+                RateBookingDialogFragment rateBookingDialogFragment = RateBookingDialogFragment
+                        .newInstance(this.associatedBooking);
+                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
             }
             break;
 
@@ -521,13 +524,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CONTACT_PHONE:
             {
-//                bus.post(new HandyEvent.CallCustomerClicked());
-//                callPhoneNumber(this.associatedBooking.getBookingPhone());
-
-                RateBookingDialogFragment rateBookingDialogFragment = RateBookingDialogFragment
-                        .newInstance(this.associatedBooking);
-                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
-
+                bus.post(new HandyEvent.CallCustomerClicked());
+                callPhoneNumber(this.associatedBooking.getBookingPhone());
             }
             break;
 

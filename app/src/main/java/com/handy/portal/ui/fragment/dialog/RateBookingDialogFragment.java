@@ -12,9 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.CheckoutRequest;
@@ -115,43 +112,16 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
     {
         if (!event.isAuto)
         {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-
-            //return to schedule page
-            returnToTab(MainViewTab.SCHEDULED_JOBS, booking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
-
-            showToast(getString(R.string.check_out_success), Toast.LENGTH_LONG);
-
             dismiss();
         }
     }
 
-    @Subscribe
-    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
-    {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            String errorMessage = event.error.getMessage();
-            showToast(errorMessage != null ? errorMessage : getString(R.string.error_connectivity),
-                    Toast.LENGTH_SHORT);
-        }
-    }
-
+    //TODO: Move to some util or parent class like we do for the other showtoast
     protected void showToast(String message, int length)
     {
         Toast toast = Toast.makeText(getActivity().getApplicationContext(), message, length);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
-    }
-
-    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
-    {
-        //Return to available jobs with success
-        Bundle arguments = new Bundle();
-        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
-        //Return to available jobs on that day
-        bus.post(new HandyEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
 
     private String getBookingId()
