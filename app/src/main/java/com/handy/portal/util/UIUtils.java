@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -294,5 +295,18 @@ public final class UIUtils
         {
             errorable.setErrorState(false);
         }
+    }
+
+    public static int indexOfCheckedRadioButton(RadioGroup radioGroup)
+    {
+        if (radioGroup != null)
+        {
+            View v = radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
+            if (v != null)
+            {
+                return radioGroup.indexOfChild(v);
+            }
+        }
+        return -1;
     }
 }

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +19,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -41,37 +41,20 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
     @InjectView(R.id.rate_booking_title)
     protected TextView ratingTitle;
 
-
-    @InjectView(R.id.rating_button_1)
-    RadioButton mRating1;
-    @InjectView(R.id.rating_button_2)
-    RadioButton mRating2;
-    @InjectView(R.id.rating_button_3)
-    RadioButton mRating3;
-    @InjectView(R.id.rating_button_4)
-    RadioButton mRating4;
-    @InjectView(R.id.rating_button_5)
-    RadioButton mRating5;
-
-
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
     private Booking booking;
-    private LocationData locationData;
 
-    private static final int NUM_RATING_BUTTONS = 5;
-
-    public static RateBookingDialogFragment newInstance(Booking booking, LocationData locationData)
+    public static RateBookingDialogFragment newInstance(Booking booking)
     {
         RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-        rateBookingDialogFragment.setResources(booking, locationData);
+        rateBookingDialogFragment.setResources(booking);
         return rateBookingDialogFragment;
     }
 
-    private void setResources(Booking booking, LocationData locationData)
+    private void setResources(Booking booking)
     {
         this.booking = booking;
-        this.locationData = locationData;
     }
 
     @Override
@@ -86,33 +69,37 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+
+        //Confirming checkout will send checkout and rating data to server
         confirmCheckoutButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                //bus.post(new HandyEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.REFRESH_TAB));
-                //RateBookingDialogFragment.this.dismiss();
-
-                //System.out.println("Index : " + getBookingRatingIndex());
-
                 //TODO: Is the endpoint expecting 0 or 1 indexed ratings?
+                if (getBookingRatingIndex() >= 0)
+                {
+                    bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                    bus.post(new HandyEvent.RequestNotifyJobCheckOut(
+                            getBookingId(),
+                            getLocationData(),
+                            getBookingRatingIndex(),
+                            getBookingRatingComment()));
+                }
+                else
+                {
+                    showToast(getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
+                }
 
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                bus.post(new HandyEvent.RequestNotifyJobCheckOut(
-                        getBookingId(),
-                        getLocationData(),
-                        getBookingRatingIndex(),
-                        getBookingRatingComment()));
             }
         });
 
         //Fill in the name of the user associated with the booking to the question prompt
-        ratingTitle.setText(String.format(ratingTitle.getText().toString(),
+        ratingTitle.setText(
+                String.format(ratingTitle.getText().toString(),
                         (booking.getUser() != null && booking.getUser().getFirstName() != null ?
                                 booking.getUser().getFirstName() : ""))
-        )
-        ;
+        );
     }
 
     //when clicked on, close the dialog, the fragment will listen for the event to come back and transition correctly, if fails brings back
@@ -139,7 +126,9 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
         if (!event.isAuto)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            //handleNotifyCheckOutError(event);
+            String errorMessage = event.error.getMessage();
+            showToast(errorMessage != null ? errorMessage : getString(R.string.error_connectivity),
+                    Toast.LENGTH_SHORT);
         }
     }
 
@@ -149,7 +138,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
-
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
     {
@@ -172,7 +160,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
 
     private int getBookingRatingIndex()
     {
-        return ratingRadioGroup.indexOfChild(ratingRadioGroup.findViewById(ratingRadioGroup.getCheckedRadioButtonId()));
+        return UIUtils.indexOfCheckedRadioButton(ratingRadioGroup);
     }
 
     private String getBookingRatingComment()
