@@ -1,13 +1,12 @@
 package com.handy.portal.ui.fragment.dialog;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +29,6 @@ import butterknife.OnClick;
 
 public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
-
-    @InjectView(R.id.rate_booking_confirm_checkout_button)
-    protected Button confirmCheckoutButton;
-
     @InjectView(R.id.rate_booking_comment_text)
     protected EditText commentText;
 
@@ -43,14 +38,11 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
     @InjectView(R.id.rate_booking_title)
     protected TextView ratingTitle;
 
-    @InjectView(R.id.close_button)
-    protected ImageButton closeButton;
-
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
     private Booking booking;
 
-    public static RateBookingDialogFragment newInstance(Booking booking)
+    public static RateBookingDialogFragment newInstance(@NonNull Booking booking)
     {
         RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
         rateBookingDialogFragment.setResources(booking);
@@ -83,7 +75,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
         );
     }
 
-
     @OnClick(R.id.close_button)
     public void onCloseButtonClick()
     {
@@ -114,26 +105,20 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
     @Subscribe
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
     {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            //return to schedule page
-            returnToTab(MainViewTab.SCHEDULED_JOBS, booking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
-            showToast(getString(R.string.check_out_success), Toast.LENGTH_LONG);
-            dismiss();
-        }
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        //return to schedule page
+        returnToTab(MainViewTab.SCHEDULED_JOBS, booking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+        showToast(getString(R.string.check_out_success), Toast.LENGTH_LONG);
+        dismiss();
     }
 
     @Subscribe
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
-        if (!event.isAuto)
-        {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             String errorMessage = event.error.getMessage();
             showToast(errorMessage != null ? errorMessage : getString(R.string.error_connectivity),
                     Toast.LENGTH_SHORT);
-        }
     }
 
     protected void showToast(String message, int length)
