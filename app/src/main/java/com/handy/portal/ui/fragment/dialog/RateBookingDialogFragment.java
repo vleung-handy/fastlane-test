@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
@@ -40,6 +42,9 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
 
     @InjectView(R.id.rate_booking_title)
     protected TextView ratingTitle;
+
+    @InjectView(R.id.close_button)
+    protected ImageButton closeButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
@@ -70,36 +75,38 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
     {
         super.onViewCreated(view, savedInstanceState);
 
-        //Confirming checkout will send checkout and rating data to server
-        confirmCheckoutButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                //TODO: Is the endpoint expecting 0 or 1 indexed ratings?
-                if (getBookingRatingIndex() >= 0)
-                {
-                    bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                    bus.post(new HandyEvent.RequestNotifyJobCheckOut(
-                            getBookingId(),
-                            getLocationData(),
-                            getBookingRatingIndex(),
-                            getBookingRatingComment()));
-                }
-                else
-                {
-                    showToast(getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
-                }
-
-            }
-        });
-
         //Fill in the name of the user associated with the booking to the question prompt
         ratingTitle.setText(
                 String.format(ratingTitle.getText().toString(),
                         (booking.getUser() != null && booking.getUser().getFirstName() != null ?
                                 booking.getUser().getFirstName() : ""))
         );
+    }
+
+
+    @OnClick(R.id.close_button)
+    public void onCloseButtonClick()
+    {
+        dismiss();
+    }
+
+    @OnClick(R.id.rate_booking_confirm_checkout_button)
+    public void onConfirmCheckoutButtonClick()
+    {
+        //TODO: Is the endpoint expecting 0 or 1 indexed ratings?
+        if (getBookingRatingIndex() >= 0)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            bus.post(new HandyEvent.RequestNotifyJobCheckOut(
+                    getBookingId(),
+                    getLocationData(),
+                    getBookingRatingIndex(),
+                    getBookingRatingComment()));
+        }
+        else
+        {
+            showToast(getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
+        }
     }
 
     //when clicked on, close the dialog, the fragment will listen for the event to come back and transition correctly, if fails brings back
@@ -110,12 +117,9 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
         if (!event.isAuto)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-
             //return to schedule page
             returnToTab(MainViewTab.SCHEDULED_JOBS, booking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
-
             showToast(getString(R.string.check_out_success), Toast.LENGTH_LONG);
-
             dismiss();
         }
     }
