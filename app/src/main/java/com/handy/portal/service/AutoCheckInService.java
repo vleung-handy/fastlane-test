@@ -7,7 +7,9 @@ import android.text.format.DateUtils;
 
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.urbanairship.PendingResult;
@@ -78,7 +80,14 @@ public class AutoCheckInService extends IntentService
                 bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, true, new LocationData(location)));
                 break;
             case ACTION_CHECK_OUT:
-                bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, true, new LocationData(location)));
+                bus.post(new HandyEvent.RequestNotifyJobCheckOut
+                                (
+                                        bookingId,
+                                        true,
+                                        new CheckoutRequest(new LocationData(location),
+                                                new ProBookingFeedback())
+                                )
+                );
                 break;
             default:
                 break;

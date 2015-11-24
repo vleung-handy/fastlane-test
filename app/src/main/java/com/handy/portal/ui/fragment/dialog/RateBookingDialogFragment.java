@@ -2,7 +2,6 @@ package com.handy.portal.ui.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -84,57 +82,33 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
     @OnClick(R.id.rate_booking_confirm_checkout_button)
     public void onConfirmCheckoutButtonClick()
     {
-        //TODO: Is the endpoint expecting 0 or 1 indexed ratings?
-        if (getBookingRatingIndex() >= 0)
+        //Endpoint is expecting a rating of 1 - 5
+        if (getBookingRatingScore() > 0)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestNotifyJobCheckOut(
-                    getBookingId(),
-                    getLocationData(),
-                    getBookingRatingIndex(),
-                    getBookingRatingComment()));
+                            getBookingId(),
+                            new CheckoutRequest(
+                                    getLocationData(),
+                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
+                            )
+                    )
+            );
         }
         else
         {
-            showToast(getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
+            UIUtils.showToast(getContext(), getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
         }
     }
 
     //when clicked on, close the dialog, the fragment will listen for the event to come back and transition correctly, if fails brings back
-
     @Subscribe
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        //return to schedule page
-        returnToTab(MainViewTab.SCHEDULED_JOBS, booking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
-        showToast(getString(R.string.check_out_success), Toast.LENGTH_LONG);
-        dismiss();
-    }
-
-    @Subscribe
-    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
-    {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            String errorMessage = event.error.getMessage();
-            showToast(errorMessage != null ? errorMessage : getString(R.string.error_connectivity),
-                    Toast.LENGTH_SHORT);
-    }
-
-    protected void showToast(String message, int length)
-    {
-        Toast toast = Toast.makeText(getActivity().getApplicationContext(), message, length);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-    }
-
-    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
-    {
-        //Return to available jobs with success
-        Bundle arguments = new Bundle();
-        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
-        //Return to available jobs on that day
-        bus.post(new HandyEvent.NavigateToTab(targetTab, arguments, transitionStyle));
+        if (!event.isAuto)
+        {
+            dismiss();
+        }
     }
 
     private String getBookingId()
@@ -147,9 +121,10 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
         return Utils.getCurrentLocation((BaseActivity) getActivity());
     }
 
-    private int getBookingRatingIndex()
+    private int getBookingRatingScore()
     {
-        return UIUtils.indexOfCheckedRadioButton(ratingRadioGroup);
+        //Endpoint is expected a 1 indexed rating
+        return 1 + UIUtils.indexOfCheckedRadioButton(ratingRadioGroup);
     }
 
     private String getBookingRatingComment()

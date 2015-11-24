@@ -672,12 +672,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
     }
 
-    private void requestNotifyCheckOutJob(String bookingId, LocationData locationData)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, locationData));
-    }
-
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there

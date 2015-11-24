@@ -7,6 +7,7 @@ import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
+import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -152,9 +153,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void notifyCheckOutBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, final Callback<Booking> cb)
     {
-        service.checkOut(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
