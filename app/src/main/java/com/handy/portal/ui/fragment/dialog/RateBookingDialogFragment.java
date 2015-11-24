@@ -1,11 +1,11 @@
 package com.handy.portal.ui.fragment.dialog;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -28,10 +28,6 @@ import butterknife.OnClick;
 
 public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
-
-    @InjectView(R.id.rate_booking_confirm_checkout_button)
-    protected Button confirmCheckoutButton;
-
     @InjectView(R.id.rate_booking_comment_text)
     protected EditText commentText;
 
@@ -45,7 +41,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
 
     private Booking booking;
 
-    public static RateBookingDialogFragment newInstance(Booking booking)
+    public static RateBookingDialogFragment newInstance(@NonNull Booking booking)
     {
         RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
         rateBookingDialogFragment.setResources(booking);

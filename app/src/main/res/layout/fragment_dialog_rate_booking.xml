@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     android:id="@+id/rate_booking_window"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -8,6 +8,15 @@
     android:layout_gravity="center"
     android:gravity="center"
     >
+
+    <ImageButton
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_x"
+        android:layout_alignParentRight="true"
+        />
 
     <LinearLayout
         android:id="@+id/rate_booking_container"
@@ -45,33 +54,33 @@
             >
 
             <RadioButton
+                android:id="@+id/rating_button_1"
                 style="@style/RatingButtonToggle"
                 android:drawableTop="@drawable/rating_button_rating_1"
-                android:id="@+id/rating_button_1"
                 />
 
             <RadioButton
+                android:id="@+id/rating_button_2"
                 style="@style/RatingButtonToggle"
                 android:drawableTop="@drawable/rating_button_rating_2"
-                android:id="@+id/rating_button_2"
                 />
 
             <RadioButton
+                android:id="@+id/rating_button_3"
                 style="@style/RatingButtonToggle"
                 android:drawableTop="@drawable/rating_button_rating_3"
-                android:id="@+id/rating_button_3"
                 />
 
             <RadioButton
+                android:id="@+id/rating_button_4"
                 style="@style/RatingButtonToggle"
                 android:drawableTop="@drawable/rating_button_rating_4"
-                android:id="@+id/rating_button_4"
                 />
 
             <RadioButton
+                android:id="@+id/rating_button_5"
                 style="@style/RatingButtonToggle"
                 android:drawableTop="@drawable/rating_button_rating_5"
-                android:id="@+id/rating_button_5"
                 />
         </RadioGroup>
 
@@ -80,11 +89,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/payment_container_vertical_padding"
-            android:lineSpacingExtra="@dimen/lineSpacing"
             android:hint="@string/rate_booking_comment_text_hint"
+            android:lineSpacingExtra="@dimen/lineSpacing"
+            android:maxLength="160"
             android:textAppearance="@style/HandyTextAppearanceMedium"
             android:textColor="@color/dark_grey"
-            android:maxLength="160"
             />
 
         <Button
@@ -97,4 +106,4 @@
             />
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
