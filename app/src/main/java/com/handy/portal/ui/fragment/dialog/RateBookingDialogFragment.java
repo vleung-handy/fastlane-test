@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: consolidate some of this logic with other dialog fragments
+public class RateBookingDialogFragment extends InjectedDialogFragment
 {
     @InjectView(R.id.rate_booking_comment_text)
     protected EditText commentText;

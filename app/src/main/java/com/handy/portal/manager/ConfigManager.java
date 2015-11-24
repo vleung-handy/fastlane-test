@@ -9,7 +9,12 @@ public class ConfigManager
 {
     public static final String KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS = "Hours to Start Sending Messages";
     public static final String KEY_SHOW_BLOCK_JOB_SCHEDULES = "Show Block Job Schedules";
-    private static final String[] CONFIG_PARAM_KEYS = {KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS};
+
+//TODO: This is not the real key, just a placeholder
+
+    public static final String KEY_PRO_CUSTOMER_FEEDBACK_ENABLED = "Pro Customer Feedback Enabled";
+
+    private static final String[] CONFIG_PARAM_KEYS = {KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, KEY_PRO_CUSTOMER_FEEDBACK_ENABLED};
 
     private final DataManager dataManager;
     private ConfigParams configParams;

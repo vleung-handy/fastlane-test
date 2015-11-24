@@ -33,13 +33,16 @@ import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
@@ -118,6 +121,9 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     @Inject
     ZipClusterManager mZipClusterManager;
+
+    @Inject
+    ConfigManager mConfigManager;
 
     private String requestedBookingId;
     private BookingType requestedBookingType;
@@ -510,9 +516,17 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CHECK_OUT:
             {
-                RateBookingDialogFragment rateBookingDialogFragment = RateBookingDialogFragment
-                        .newInstance(this.associatedBooking);
-                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+                if(mConfigManager.getConfigParamValue(ConfigManager.KEY_PRO_CUSTOMER_FEEDBACK_ENABLED, 0) == 1)
+                {
+                    RateBookingDialogFragment rateBookingDialogFragment = RateBookingDialogFragment
+                            .newInstance(this.associatedBooking);
+                    rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+                }
+                else
+                {
+                    CheckoutRequest checkoutRequest = new CheckoutRequest(locationData, new ProBookingFeedback(-1, ""));
+                    requestNotifyCheckOutJob(this.associatedBooking.getId(), checkoutRequest);
+                }
             }
             break;
 
@@ -701,6 +715,12 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestCancelNoShow(associatedBooking.getId(), getLocationData()));
+    }
+
+    private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action

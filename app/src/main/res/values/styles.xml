@@ -618,7 +618,6 @@
     </style>
 
     <style name="RatingButtonToggle">
-        <item name="android:background">@drawable/rating_button_background</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">match_parent</item>
