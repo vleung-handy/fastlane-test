@@ -2,7 +2,6 @@ package com.handy.portal.ui.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,22 +82,22 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
     @OnClick(R.id.rate_booking_confirm_checkout_button)
     public void onConfirmCheckoutButtonClick()
     {
-        //TODO: Is the endpoint expecting 0 or 1 indexed ratings?
-        if (getBookingRatingIndex() >= 0)
+        //Endpoint is expecting a rating of 1 - 5
+        if (getBookingRatingScore() > 0)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestNotifyJobCheckOut(
                             getBookingId(),
                             new CheckoutRequest(
                                     getLocationData(),
-                                    new ProBookingFeedback(getBookingRatingIndex(), getBookingRatingComment())
+                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
                             )
                     )
             );
         }
         else
         {
-            showToast(getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
+            UIUtils.showToast(getContext(), getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
         }
     }
 
@@ -112,14 +111,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
         }
     }
 
-    //TODO: Move to some util or parent class like we do for the other showtoast
-    protected void showToast(String message, int length)
-    {
-        Toast toast = Toast.makeText(getActivity().getApplicationContext(), message, length);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-    }
-
     private String getBookingId()
     {
         return booking.getId();
@@ -130,9 +121,10 @@ public class RateBookingDialogFragment extends InjectedDialogFragment //TODO: co
         return Utils.getCurrentLocation((BaseActivity) getActivity());
     }
 
-    private int getBookingRatingIndex()
+    private int getBookingRatingScore()
     {
-        return UIUtils.indexOfCheckedRadioButton(ratingRadioGroup);
+        //Endpoint is expected a 1 indexed rating
+        return 1 + UIUtils.indexOfCheckedRadioButton(ratingRadioGroup);
     }
 
     private String getBookingRatingComment()
