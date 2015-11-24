@@ -524,15 +524,17 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CONTACT_PHONE:
             {
-                bus.post(new HandyEvent.CallCustomerClicked());
-                callPhoneNumber(this.associatedBooking.getBookingPhone());
+                RateBookingDialogFragment rateBookingDialogFragment = RateBookingDialogFragment
+                        .newInstance(this.associatedBooking);
+                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
             }
             break;
 
             case CONTACT_TEXT:
             {
-                bus.post(new HandyEvent.TextCustomerClicked());
-                textPhoneNumber(this.associatedBooking.getBookingPhone());
+                RateBookingDialogFragment rateBookingDialogFragment = RateBookingDialogFragment
+                        .newInstance(this.associatedBooking);
+                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
             }
             break;
 
