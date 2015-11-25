@@ -90,11 +90,10 @@
         <item name="android:layout_gravity">bottom</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">bottom|center</item>
-        <item name="android:background">@drawable/tab_button_background</item>
         <item name="android:textColor">@drawable/tab_button_text</item>
         <item name="android:paddingTop">@dimen/tab_top_padding</item>
         <item name="android:paddingBottom">@dimen/tab_bottom_padding</item>
-        <item name="android:textSize">@dimen/xsmall_text_size</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
     </style>
 
     <style name="TrayButton">
