@@ -12,8 +12,8 @@
         android:id="@+id/button_jobs"
         style="@style/TabButton"
         android:layout_weight="1"
-        android:drawableTop="@drawable/tab_button_jobs"
-        android:text="@string/tab_jobs"/>
+        android:drawableTop="@drawable/tab_button_claim"
+        android:text="@string/tab_claim"/>
 
     <RadioButton
         android:id="@+id/button_schedule"
