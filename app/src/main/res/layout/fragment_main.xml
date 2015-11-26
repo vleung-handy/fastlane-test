@@ -1,56 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivityFragment"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivityFragment"
     >
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_top_padding"
+            android:background="?attr/colorPrimary"
+            ></LinearLayout>
+
+        <com.handy.portal.ui.widget.HandyToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:theme="@style/AppTheme.AppBarOverlay"
+            />
+
+        <com.handy.portal.ui.layout.TabbedLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             >
 
-            <com.handy.portal.ui.widget.HandyToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:theme="@style/AppTheme.AppBarOverlay"/>
+            <FrameLayout
+                android:id="@+id/main_container"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_above="@+id/tabs"/>
 
-            <com.handy.portal.ui.layout.TabbedLayout
-                android:id="@+id/content_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+            <include layout="@layout/element_bottom_nav"/>
 
-                <FrameLayout
-                    android:id="@+id/main_container"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_above="@+id/tabs"/>
+            <include layout="@layout/merge_loading"/>
 
-                <include layout="@layout/element_bottom_nav"/>
+        </com.handy.portal.ui.layout.TabbedLayout>
 
-                <include layout="@layout/merge_loading"/>
+    </LinearLayout>
 
-            </com.handy.portal.ui.layout.TabbedLayout>
+    <include layout="@layout/element_navigation_drawer"/>
 
-        </LinearLayout>
-
-        <include layout="@layout/element_navigation_drawer"/>
-
-    </android.support.v4.widget.DrawerLayout>
-
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>
