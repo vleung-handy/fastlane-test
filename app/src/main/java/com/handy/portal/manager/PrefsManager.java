@@ -39,4 +39,24 @@ public class PrefsManager
     {
         prefs.edit().putString(prefsKey.getKey(), value).apply();
     }
+
+    public int getInt(PrefsKey prefsKey, int defaultValue)
+    {
+        return (prefs.getInt(prefsKey.getKey(), defaultValue));
+    }
+
+    public void setInt(PrefsKey prefsKey, int value)
+    {
+        prefs.edit().putInt(prefsKey.getKey(), value).apply();
+    }
+
+    public long getLong(PrefsKey prefsKey, long defaultValue)
+    {
+        return (prefs.getLong(prefsKey.getKey(), defaultValue));
+    }
+
+    public void setLong(PrefsKey prefsKey, long value)
+    {
+        prefs.edit().putLong(prefsKey.getKey(), value).apply();
+    }
 }

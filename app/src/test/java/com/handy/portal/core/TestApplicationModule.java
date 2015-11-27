@@ -6,6 +6,7 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
@@ -152,6 +153,12 @@ public class TestApplicationModule
     final PrefsManager providePrefsManager()
     {
         return mock(PrefsManager.class);
+    }
+
+    @Provides
+    final EventLogManager eventLogManager()
+    {
+        return mock(EventLogManager.class);
     }
 
     @Provides
