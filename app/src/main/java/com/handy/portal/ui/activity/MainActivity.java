@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
@@ -30,6 +31,7 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setFullScreen();
     }
 
     @Override
@@ -68,6 +70,13 @@ public class MainActivity extends BaseActivity
             mNotificationBlockerDialogFragment.show(getSupportFragmentManager(),
                     NotificationBlockerDialogFragment.FRAGMENT_TAG);
         }
+    }
+
+    private void setFullScreen()
+    {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
     @Subscribe

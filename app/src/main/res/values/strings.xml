@@ -66,6 +66,7 @@
     <string name="promotions">Promotions</string>
     <string name="log_in">Log In</string>
     <string name="email">Email</string>
+    <string name="name">Name</string>
     <string name="full_name">Full Name</string>
     <string name="phone">Phone</string>
     <string name="password">Password</string>
@@ -80,6 +81,7 @@
     <string name="share">Share</string>
     <string name="my_bookings">My Bookings</string>
     <string name="profile">Profile</string>
+    <string name="my_profile">My Profile</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="want_to_log_out">Are you sure you want to log out?</string>
     <string name="update">Update</string>
@@ -226,10 +228,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tab_jobs">Jobs</string>
+    <string name="tab_claim">Claim</string>
     <string name="tab_schedule">Schedule</string>
     <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
+    <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
     <string name="scheduled_jobs">Scheduled Jobs</string>
@@ -395,6 +399,7 @@
     <string name="no_more_payments">You have no more payments for this year.</string>
     <string name="expected_deposit">Expect deposit by</string>
     <string name="update_payment_method">Update Payment Method</string>
+    <string name="edit_payment_method">Edit Payment Method</string>
     <string name="select_payment_method">Select Payment Method</string>
     <string name="payment_flow_error">Failed to get payment flow</string>
     <string name="payment_account">Payment Account</string>
