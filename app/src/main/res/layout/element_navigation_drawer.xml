@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navigation_drawer"
+    android:layout_width="264dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="right"
+    android:background="@color/white"
+    android:clickable="true"
+    >
+
+    <TextView
+        style="@style/TextView.XLarge"
+        android:id="@+id/navigation_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingBottom="@dimen/default_padding_medium"
+        android:paddingTop="@dimen/default_padding_xlarge"
+        android:background="@color/tertiary_grey"
+        android:textColor="@color/white"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/default_padding_medium"
+        android:paddingBottom="@dimen/default_padding_medium"
+        >
+
+        <include layout="@layout/element_navigation_links"/>
+
+    </LinearLayout>
+
+</LinearLayout>

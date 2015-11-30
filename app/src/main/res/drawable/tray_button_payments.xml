@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
-        <bitmap android:gravity="bottom" android:src="@drawable/img_menu_glow" />
+        <bitmap android:src="@drawable/ic_tray_wallet" />
     </item>
-    <item android:drawable="@color/dark_grey" android:state_checked="false" />
+    <item android:state_checked="false">
+        <bitmap android:src="@drawable/ic_tray_wallet" />
+    </item>
 </selector>
