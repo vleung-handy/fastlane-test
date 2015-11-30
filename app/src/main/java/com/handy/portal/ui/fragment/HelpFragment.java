@@ -103,20 +103,19 @@ public final class HelpFragment extends ActionBarFragment
     }
 
     //TODO: Make this smarter and recognize back tracking
-    private void trackPath(HelpNode node)
+    private void trackPath(HelpNode helpNode)
     {
         //Don't add the root node to the path as per CX spec
-        if (node != null &&
-                node.getType() != null &&
-                !node.getType().equals(HelpNode.HelpNodeType.ROOT))
+        if (HelpNode.isValid(helpNode) &&
+                !helpNode.getType().equals(HelpNode.HelpNodeType.ROOT))
         {
-            currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + node.getLabel();
+            currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + helpNode.getLabel();
         }
     }
 
     private void updateActionBar(HelpNode helpNode)
     {
-        if (helpNode == null || helpNode.getType() == null)
+        if (!HelpNode.isValid(helpNode))
         {
             return;
         }
@@ -157,7 +156,7 @@ public final class HelpFragment extends ActionBarFragment
 
     private void setupClickListeners(HelpNode helpNode)
     {
-        if (helpNode == null || helpNode.getType() == null)
+        if (!HelpNode.isValid(helpNode))
         {
             return;
         }
@@ -191,13 +190,13 @@ public final class HelpFragment extends ActionBarFragment
         {
             //Skip over dead nodes, they will not have an associated view to init, Crashlytics #523
             while (helpNodeIndexCounter < helpNode.getChildren().size() &&
-                    (candidateChildNode == null || candidateChildNode.getType() == null))
+                    (!HelpNode.isValid(candidateChildNode)))
             {
                 candidateChildNode = helpNode.getChildren().get(helpNodeIndexCounter);
                 helpNodeIndexCounter++;
             }
 
-            if (candidateChildNode == null || candidateChildNode.getType() == null)
+            if (!HelpNode.isValid(candidateChildNode))
             {
                 continue;
             }
@@ -239,19 +238,13 @@ public final class HelpFragment extends ActionBarFragment
         {
             for (final HelpNode childNode : helpNode.getChildren())
             {
-                if (childNode == null)
+                if (!HelpNode.isValid(childNode))
                 {
+                    Crashlytics.log("HelpNode " + helpNode.getId() + " has a child which is null or empty type");
                     continue;
                 }
 
-                String nodeType = childNode.getType();
-                if (nodeType == null)
-                {
-                    Crashlytics.log("HelpNode " + childNode.getId() + " has null data");
-                    continue;
-                }
-
-                if (nodeType.equals(HelpNode.HelpNodeType.CONTACT))
+                if (childNode.getType().equals(HelpNode.HelpNodeType.CONTACT))
                 {
                     helpNodeView.contactButton.setOnClickListener(new View.OnClickListener()
                     {
@@ -269,6 +262,7 @@ public final class HelpFragment extends ActionBarFragment
             }
         }
     }
+
 
 //Event Listeners
 

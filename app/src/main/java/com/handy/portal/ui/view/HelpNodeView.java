@@ -43,44 +43,38 @@ public final class HelpNodeView extends InjectedRelativeLayout
         super(context, attrs, defStyle);
     }
 
-    public void updateDisplay(final HelpNode node)
+    public void updateDisplay(final HelpNode helpNode)
     {
         //clear out the existing ctas and navigation buttons
         navOptionsLayout.removeAllViews();
         helpWebView.clearHtml();//prevent user from seeing previous article's content
 
-        if (node == null)
+        if (!HelpNode.isValid(helpNode))
         {
-            Crashlytics.log("Trying to display a null help node");
+            Crashlytics.log("Trying to display a null or invalid help node");
             return;
         }
 
-        if (node.getType() == null)
-        {
-            Crashlytics.log("Trying to display a help node with null type");
-            return;
-        }
-
-        switch (node.getType())
+        switch (helpNode.getType())
         {
             case HelpNode.HelpNodeType.ROOT:
             case HelpNode.HelpNodeType.NAVIGATION:
             case HelpNode.HelpNodeType.BOOKINGS_NAV:
             case HelpNode.HelpNodeType.BOOKING:
             {
-                layoutNavList(node);
+                layoutNavList(helpNode);
             }
             break;
 
             case HelpNode.HelpNodeType.ARTICLE:
             {
-                layoutForArticle(node);
+                layoutForArticle(helpNode);
             }
             break;
 
             default:
             {
-                Crashlytics.log("Unrecognized node type : " + node.getType());
+                Crashlytics.log("Unrecognized node type : " + helpNode.getType());
             }
             break;
         }
@@ -106,15 +100,9 @@ public final class HelpNodeView extends InjectedRelativeLayout
 
         for (final HelpNode childNode : node.getChildren())
         {
-            if(childNode == null)
+            if (!HelpNode.isValid(childNode))
             {
-                Crashlytics.log("HelpNode " + node.getId() + " has a null child");
-                continue;
-            }
-
-            if (childNode.getType() == null)
-            {
-                Crashlytics.log("HelpNode " + childNode.getId() + " has null type data");
+                Crashlytics.log("HelpNode " + node.getId() + " has an invalid child");
                 continue;
             }
 
@@ -134,15 +122,9 @@ public final class HelpNodeView extends InjectedRelativeLayout
         {
             final View navView;
 
-            if (childNode == null)
+            if (!HelpNode.isValid(childNode))
             {
-                Crashlytics.log("HelpNode " + node.getId() + " has a null child or child missing a type");
-                continue;
-            }
-
-            if (childNode.getType() == null)
-            {
-                Crashlytics.log("HelpNode " + node.getId() + " has a child missing a type, child id " + childNode.getId());
+                Crashlytics.log("HelpNode " + node.getId() + " has an invalid child");
                 continue;
             }
 

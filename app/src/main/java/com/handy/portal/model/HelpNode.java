@@ -124,4 +124,9 @@ public final class HelpNode implements Parcelable
         public static final String BOOKING = "booking";
         public static final String ARTICLE = "article";
     }
+
+    public static boolean isValid(HelpNode helpNode)
+    {
+        return (helpNode != null && helpNode.getType() != null);
+    }
 }
