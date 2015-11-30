@@ -28,17 +28,17 @@ import butterknife.OnClick;
 public class RateBookingDialogFragment extends InjectedDialogFragment
 {
     @InjectView(R.id.rate_booking_comment_text)
-    protected EditText commentText;
+    EditText mCommentText;
 
     @InjectView(R.id.rate_booking_rating_radiogroup)
-    protected RadioGroup ratingRadioGroup;
+    RadioGroup mRatingRadioGroup;
 
     @InjectView(R.id.rate_booking_title)
-    protected TextView ratingTitle;
+    TextView mRatingTitle;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
-    private Booking booking;
+    private Booking mBooking;
 
     public static RateBookingDialogFragment newInstance(@NonNull Booking booking)
     {
@@ -49,7 +49,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 
     private void setResources(Booking booking)
     {
-        this.booking = booking;
+        mBooking = booking;
     }
 
     @Override
@@ -66,10 +66,12 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         super.onViewCreated(view, savedInstanceState);
 
         //Fill in the name of the user associated with the booking to the question prompt
-        ratingTitle.setText(
-                String.format(ratingTitle.getText().toString(),
-                        (booking.getUser() != null && booking.getUser().getFirstName() != null ?
-                                booking.getUser().getFirstName() : ""))
+        mRatingTitle.setText(
+                String.format(mRatingTitle.getText().toString(),
+                        (mBooking.getUser() != null &&
+                                mBooking.getUser().getFirstName() != null ?
+                                mBooking.getUser().getFirstName() : "")
+                )
         );
     }
 
@@ -113,7 +115,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 
     private String getBookingId()
     {
-        return booking.getId();
+        return mBooking.getId();
     }
 
     private LocationData getLocationData()
@@ -124,11 +126,11 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     private int getBookingRatingScore()
     {
         //Endpoint is expected a 1 indexed rating
-        return 1 + UIUtils.indexOfCheckedRadioButton(ratingRadioGroup);
+        return 1 + UIUtils.indexOfCheckedRadioButton(mRatingRadioGroup);
     }
 
     private String getBookingRatingComment()
     {
-        return (commentText.getText() != null ? commentText.getText().toString() : "");
+        return (mCommentText.getText() != null ? mCommentText.getText().toString() : "");
     }
 }

@@ -1,7 +1,7 @@
 package com.handy.portal.manager;
 
-import com.handy.portal.model.ConfigParams;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.model.ConfigParams;
 
 import javax.inject.Inject;
 
@@ -9,12 +9,13 @@ public class ConfigManager
 {
     public static final String KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS = "Hours to Start Sending Messages";
     public static final String KEY_SHOW_BLOCK_JOB_SCHEDULES = "Show Block Job Schedules";
+    public static final String KEY_PRO_CUSTOMER_FEEDBACK_ENABLED = "NATIVE_CHECKOUT_RATING_FLOW_ENABLED";
 
-//TODO: This is not the real key, just a placeholder
-
-    public static final String KEY_PRO_CUSTOMER_FEEDBACK_ENABLED = "Pro Customer Feedback Enabled";
-
-    private static final String[] CONFIG_PARAM_KEYS = {KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, KEY_PRO_CUSTOMER_FEEDBACK_ENABLED};
+    private static final String[] CONFIG_PARAM_KEYS =
+            {
+                    KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS,
+                    KEY_PRO_CUSTOMER_FEEDBACK_ENABLED,
+            };
 
     private final DataManager dataManager;
     private ConfigParams configParams;
