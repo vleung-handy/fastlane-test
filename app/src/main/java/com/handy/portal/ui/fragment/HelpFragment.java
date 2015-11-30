@@ -109,7 +109,17 @@ public final class HelpFragment extends ActionBarFragment
         if (HelpNode.isValid(helpNode) &&
                 !helpNode.getType().equals(HelpNode.HelpNodeType.ROOT))
         {
-            currentPathNodeLabels += (!currentPathNodeLabels.isEmpty() ? PATH_SEPARATOR : "") + helpNode.getLabel();
+            if (currentPathNodeLabels == null)
+            {
+                currentPathNodeLabels = "";
+            }
+
+            if (!currentPathNodeLabels.isEmpty())
+            {
+                currentPathNodeLabels += PATH_SEPARATOR;
+            }
+
+            currentPathNodeLabels += helpNode.getLabel();
         }
     }
 
