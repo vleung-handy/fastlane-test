@@ -31,6 +31,7 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -456,6 +457,13 @@ public final class ApplicationModule
                                                            final WebUrlManager webUrlManager)
     {
         return new TabNavigationManager(bus, providerManager, webUrlManager);
+    }
+
+    @Provides
+    @Singleton
+    final EventLogFactory provideEventLogFactory(final ProviderManager providerManager)
+    {
+        return new EventLogFactory(providerManager);
     }
 
     private String getDeviceId()

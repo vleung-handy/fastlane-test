@@ -1,22 +1,11 @@
 package com.handy.portal.model.logs;
 
-import android.os.Build;
-import android.support.annotation.StringDef;
-
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.BuildConfig;
-import com.handy.portal.core.BaseApplication;
 
-public abstract class EventLog
+public class EventLog
 {
-    public static final String BETA = "beta";
-    public static final String STABLE = "stable";
-
-    @StringDef({BETA, STABLE})
-    @interface Flavor {}
-
     private static final String ANDROID = "Android";
-    private static final String PRODUCT = "Pro";
+    private static final String PROVIDER = "pro";
 
     @SerializedName("product_type")
     private String mProduct;
@@ -32,24 +21,26 @@ public abstract class EventLog
     private long mTimestamp;
     @SerializedName("provider_id")
     private String mProviderId;
-    @SerializedName("flavor")
-    private String mFlavor;
+    @SerializedName("version_track")
+    private String mVersionTrack;
     @SerializedName("event_type")
     private String mEventType;
     @SerializedName("event_context")
     private String mEventContext;
 
-    public EventLog(String providerId, @Flavor String flavor, String eventContext, String eventType)
+    protected EventLog(String osVersion, String appVersion, String deviceId, long timestamp,
+                       String providerId, String versionTrack, String eventType, String eventContext)
     {
-        mProduct = PRODUCT;
+        mProduct = PROVIDER;
         mPlatform = ANDROID;
-        mOsVersion = Build.VERSION.RELEASE;
-        mAppVersion = BuildConfig.VERSION_NAME;
-        mDeviceId = BaseApplication.getDeviceId();
-        mTimestamp = System.currentTimeMillis();
+        mOsVersion = osVersion;
+        mAppVersion = appVersion;
+        mDeviceId = deviceId;
+        mTimestamp = timestamp;
         mProviderId = providerId;
-        mFlavor = flavor;
+        mVersionTrack = versionTrack;
         mEventType = eventType;
         mEventContext = eventContext;
     }
+
 }

@@ -10,9 +10,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Provider;
-import com.handy.portal.model.logs.AppOpenLog;
-import com.handy.portal.model.logs.EventLog;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.NotificationUtils;
@@ -24,6 +22,8 @@ public class MainActivity extends BaseActivity
 {
     @Inject
     ProviderManager providerManager;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
@@ -40,6 +40,8 @@ public class MainActivity extends BaseActivity
     public void onResume()
     {
         super.onResume();
+        mEventLogFactory.createAppOpenLog();
+
         bus.register(this);
         configManager.prefetch();
         providerManager.prefetch();
@@ -47,9 +49,7 @@ public class MainActivity extends BaseActivity
         checkIfNotificationIsEnabled();
 
         bus.post(new LogEvent.SendLogsEvent());
-        Provider provider = providerManager.getCachedActiveProvider();
-        String providerId = provider != null ? provider.getId() : "";
-        bus.post(new LogEvent.AddLogEvent(new AppOpenLog(providerId, EventLog.BETA)));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAppOpenLog()));
     }
 
     @Override
