@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
+    android:background="@drawable/button_white_background"
     >
 
     <ImageButton
@@ -16,6 +17,9 @@
         android:layout_gravity="end"
         android:src="@drawable/ic_x"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginTop="@dimen/default_padding"
+        android:background="@null"
         />
 
     <LinearLayout
@@ -24,10 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/default_padding"
-        android:paddingLeft="@dimen/default_padding_medium"
-        android:paddingRight="@dimen/default_padding_medium"
-        android:paddingTop="@dimen/default_padding_medium"
+        android:padding="@dimen/default_padding"
         >
 
         <TextView
@@ -48,9 +49,6 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/default_padding"
-            android:paddingLeft="@dimen/default_padding_medium"
-            android:paddingRight="@dimen/default_padding_medium"
-            android:paddingTop="@dimen/default_padding_medium"
             >
 
             <RadioButton
@@ -94,11 +92,13 @@
             android:maxLength="160"
             android:textAppearance="@style/HandyTextAppearanceMedium"
             android:textColor="@color/dark_grey"
+            android:lines="4"
+            android:background="@drawable/text_view_box"
             />
 
         <Button
             android:id="@+id/rate_booking_confirm_checkout_button"
-            style="@style/Button.Green.Round"
+            style="@style/Button.Teal.Round"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_padding"

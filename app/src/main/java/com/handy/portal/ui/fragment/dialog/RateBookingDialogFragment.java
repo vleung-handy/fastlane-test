@@ -65,6 +65,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     {
         super.onViewCreated(view, savedInstanceState);
 
+        //TODO: Need to have construction args in bundle and grab here instead of using setreousrcers, otherwise breaks on rotate/resume
+
         //Fill in the name of the user associated with the booking to the question prompt
         mRatingTitle.setText(
                 String.format(mRatingTitle.getText().toString(),
