@@ -94,6 +94,8 @@
             android:textColor="@color/dark_grey"
             android:lines="4"
             android:background="@drawable/text_view_box"
+            android:gravity="top|left"
+            android:padding="10dp"
             />
 
         <Button
