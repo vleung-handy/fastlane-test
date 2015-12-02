@@ -1,7 +1,6 @@
 package com.handy.portal.ui.fragment.dialog;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.CheckoutRequest;
@@ -40,41 +41,33 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 
     private Booking mBooking;
 
-    public static RateBookingDialogFragment newInstance(@NonNull Booking booking)
-    {
-        RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-        rateBookingDialogFragment.setResources(booking);
-        return rateBookingDialogFragment;
-    }
-
-    private void setResources(Booking booking)
-    {
-        mBooking = booking;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dialog_rate_booking, container, false);
         ButterKnife.inject(this, view);
+
+        mBooking = null;
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING))
+        {
+            mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
+        }
+
+        if (mBooking == null)
+        {
+            Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            bus.post(new HandyEvent.RequestNotifyJobCheckOut(
+                            getBookingId(),
+                            new CheckoutRequest(
+                                    getLocationData(),
+                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
+                            )
+                    )
+            );
+        }
+
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-
-        //TODO: Need to have construction args in bundle and grab here instead of using setreousrcers, otherwise breaks on rotate/resume
-
-        //Fill in the name of the user associated with the booking to the question prompt
-        mRatingTitle.setText(
-                String.format(mRatingTitle.getText().toString(),
-                        (mBooking.getUser() != null &&
-                                mBooking.getUser().getFirstName() != null ?
-                                mBooking.getUser().getFirstName() : "")
-                )
-        );
     }
 
     @OnClick(R.id.close_button)

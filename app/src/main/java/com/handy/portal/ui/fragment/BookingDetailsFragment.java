@@ -518,8 +518,10 @@ public class BookingDetailsFragment extends ActionBarFragment
             {
                 if(mConfigManager.getConfigParamValue(ConfigManager.KEY_PRO_CUSTOMER_FEEDBACK_ENABLED, 0) == 1)
                 {
-                    RateBookingDialogFragment rateBookingDialogFragment = RateBookingDialogFragment
-                            .newInstance(this.associatedBooking);
+                    RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putSerializable(BundleKeys.BOOKING, this.associatedBooking);
+                    rateBookingDialogFragment.setArguments(arguments);
                     rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
                 }
                 else

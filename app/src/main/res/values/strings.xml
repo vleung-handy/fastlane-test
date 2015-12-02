@@ -474,7 +474,7 @@
     <string name="no_address_on_file">No Address On File</string>
 
     <!-- Rate Booking -->
-    <string name="rate_booking_title">How was your experience cleaning %1$s\'s home?</string>
+    <string name="rate_booking_title">How did this job go?</string>
     <string name="rate_booking_confirm_checkout_button">Confirm Check Out</string>
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
