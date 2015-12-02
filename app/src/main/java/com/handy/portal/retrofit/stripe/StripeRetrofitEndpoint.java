@@ -2,6 +2,7 @@ package com.handy.portal.retrofit.stripe;
 
 import android.content.Context;
 
+import com.handy.portal.constant.UrlName;
 import com.handy.portal.core.PropertiesReader;
 
 import java.util.Properties;
@@ -18,7 +19,7 @@ public class StripeRetrofitEndpoint implements Endpoint
     public StripeRetrofitEndpoint(Context context)
     {
         final Properties config = PropertiesReader.getConfigProperties(context);
-        baseUrl = config.getProperty("stripe_base_url");
+        baseUrl = config.getProperty(UrlName.STRIPE_BASE_URL);
     }
 
     @Override
