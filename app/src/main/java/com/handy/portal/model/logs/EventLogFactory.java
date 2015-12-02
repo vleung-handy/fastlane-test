@@ -26,6 +26,41 @@ public class EventLogFactory
                 getVersionTrack(), EVENT_CONTEXT_APP, EVENT_TYPE_APP_OPEN);
     }
 
+    public EventLog createReferralSelectedLog()
+    {
+        return new ProfileLog.ReferralSelectedLog(Build.VERSION.RELEASE, BuildConfig.VERSION_NAME,
+                BaseApplication.getDeviceId(), System.currentTimeMillis(), getProviderId(),
+                getVersionTrack());
+    }
+
+    public EventLog createResupplyKitSelectedLog()
+    {
+        return new ProfileLog.ResupplyKitSelectedLog(Build.VERSION.RELEASE, BuildConfig.VERSION_NAME,
+                BaseApplication.getDeviceId(), System.currentTimeMillis(), getProviderId(),
+                getVersionTrack());
+    }
+
+    public EventLog createResupplyKitConfirmedLog()
+    {
+        return new ProfileLog.ResupplyKitConfirmedLog(Build.VERSION.RELEASE, BuildConfig.VERSION_NAME,
+                BaseApplication.getDeviceId(), System.currentTimeMillis(), getProviderId(),
+                getVersionTrack());
+    }
+
+    public EventLog createEditProfileSelectedLog()
+    {
+        return new ProfileLog.EditProfileSelectedLog(Build.VERSION.RELEASE, BuildConfig.VERSION_NAME,
+                BaseApplication.getDeviceId(), System.currentTimeMillis(), getProviderId(),
+                getVersionTrack());
+    }
+
+    public EventLog createEditProfileConfirmedLog()
+    {
+        return new ProfileLog.EditProfileConfirmedLog(Build.VERSION.RELEASE, BuildConfig.VERSION_NAME,
+                BaseApplication.getDeviceId(), System.currentTimeMillis(), getProviderId(),
+                getVersionTrack());
+    }
+
     public EventLog createHelpContactFormSubmittedLog(String path, int helpNodeId, String helpNodeTitle)
     {
         return new HelpContactFormSubmittedLog(Build.VERSION.RELEASE, BuildConfig.VERSION_NAME,

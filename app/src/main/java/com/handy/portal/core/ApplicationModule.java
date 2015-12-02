@@ -49,6 +49,7 @@ import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
+import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
 import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -128,6 +129,7 @@ import retrofit.converter.GsonConverter;
         RequestSuppliesFragment.class,
         ProfileContactViewConstructor.class,
         ProfileUpdateFragment.class,
+        ProfileReferralViewConstructor.class,
 })
 public final class ApplicationModule
 {
