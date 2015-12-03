@@ -17,9 +17,8 @@
         android:layout_gravity="end"
         android:src="@drawable/ic_x"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/default_padding"
-        android:layout_marginTop="@dimen/default_padding"
         android:background="@null"
+        android:padding="@dimen/default_padding"
         />
 
     <LinearLayout
@@ -46,9 +45,10 @@
             android:id="@+id/rate_booking_rating_radiogroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/default_padding"
+            android:layout_marginLeft="-14dp"
+            android:layout_marginRight="-14dp"
             >
 
             <RadioButton
@@ -103,7 +103,6 @@
             style="@style/Button.Teal.Round"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_padding"
             android:text="@string/rate_booking_confirm_checkout_button"
             />
 
