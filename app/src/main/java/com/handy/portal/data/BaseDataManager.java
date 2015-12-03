@@ -7,7 +7,8 @@ import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.CheckoutRequest;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -157,9 +158,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void notifyCheckOutBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, final Callback<Booking> cb)
     {
-        service.checkOut(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
@@ -215,12 +216,6 @@ public final class BaseDataManager extends DataManager
                 cb.onSuccess(null);
             }
         });
-    }
-
-    @Override
-    public void getConfigParams(String[] keys, Callback<ConfigParams> cb)
-    {
-        service.getConfigParams(keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }
 
     @Override
@@ -294,6 +289,13 @@ public final class BaseDataManager extends DataManager
     public void getStripeToken(Map<String, String> params, final Callback<StripeTokenResponse> cb)
     {
         stripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
+    }
+
+    //Eventual replacement for direct access to config params
+    @Override
+    public void getConfiguration(final Callback<ConfigurationResponse> cb)
+    {
+        service.getConfiguration(new ConfigurationResponseHandyRetroFitCallback(cb));
     }
 
     //Log Events

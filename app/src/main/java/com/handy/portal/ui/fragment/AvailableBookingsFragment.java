@@ -6,7 +6,6 @@ import android.widget.LinearLayout;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
@@ -93,7 +92,11 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected int numberOfDaysToDisplay()
     {
-        int daysSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 144) / DateTimeUtils.HOURS_IN_DAY;
+        int daysSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
+        if (configManager.getConfigurationResponse() != null)
+        {
+            daysSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings() / DateTimeUtils.HOURS_IN_DAY;
+        }
         return daysSpanningAvailableBookings + 1; // plus today
     }
 

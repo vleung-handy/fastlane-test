@@ -33,13 +33,16 @@ import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
@@ -50,6 +53,7 @@ import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructo
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
+import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.view.ProxyLocationView;
@@ -117,6 +121,9 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     @Inject
     ZipClusterManager mZipClusterManager;
+
+    @Inject
+    ConfigManager mConfigManager;
 
     private String requestedBookingId;
     private BookingType requestedBookingType;
@@ -509,7 +516,25 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CHECK_OUT:
             {
-                requestNotifyCheckOutJob(this.associatedBooking.getId(), locationData);
+                boolean showCheckoutRatingFlow = false;
+                if (mConfigManager.getConfigurationResponse() != null)
+                {
+                    showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
+                }
+
+                if (showCheckoutRatingFlow)
+                {
+                    RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putSerializable(BundleKeys.BOOKING, this.associatedBooking);
+                    rateBookingDialogFragment.setArguments(arguments);
+                    rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+                }
+                else
+                {
+                    CheckoutRequest checkoutRequest = new CheckoutRequest(locationData, new ProBookingFeedback(-1, ""));
+                    requestNotifyCheckOutJob(this.associatedBooking.getId(), checkoutRequest);
+                }
             }
             break;
 
@@ -669,12 +694,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
     }
 
-    private void requestNotifyCheckOutJob(String bookingId, LocationData locationData)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, locationData));
-    }
-
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
@@ -702,6 +721,12 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestCancelNoShow(associatedBooking.getId(), getLocationData()));
+    }
+
+    private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action

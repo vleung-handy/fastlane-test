@@ -14,6 +14,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
@@ -478,19 +479,19 @@ public abstract class HandyEvent
     @Track("provider checkout submitted")
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
+        public CheckoutRequest checkoutRequest;
         public boolean isAuto;
-        public LocationData locationData;
 
-        public RequestNotifyJobCheckOut(String bookingId, boolean isAuto, LocationData locationData)
+        public RequestNotifyJobCheckOut(String bookingId, boolean isAuto, CheckoutRequest checkoutRequest)
         {
-            this(bookingId, locationData);
+            this(bookingId, checkoutRequest);
             this.isAuto = isAuto;
         }
 
-        public RequestNotifyJobCheckOut(String bookingId, LocationData locationData)
+        public RequestNotifyJobCheckOut(String bookingId, CheckoutRequest checkoutRequest)
         {
             this.bookingId = bookingId;
-            this.locationData = locationData;
+            this.checkoutRequest = checkoutRequest;
         }
     }
 

@@ -12,10 +12,13 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
@@ -294,5 +297,26 @@ public final class UIUtils
         {
             errorable.setErrorState(false);
         }
+    }
+
+    //Return index of child that is checked, -1 otherwise
+    public static int indexOfCheckedRadioButton(RadioGroup radioGroup)
+    {
+        if (radioGroup != null)
+        {
+            View v = radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
+            if (v != null)
+            {
+                return radioGroup.indexOfChild(v);
+            }
+        }
+        return -1;
+    }
+
+    public static void showToast(Context context, String message, int length)
+    {
+        Toast toast = Toast.makeText(context, message, length);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }

@@ -7,7 +7,8 @@ import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.CheckoutRequest;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -42,8 +43,6 @@ public abstract class DataManager
 
     public abstract void acceptTerms(String termsCode, Callback<Void> cb);
 
-    public abstract void getConfigParams(String[] keys, Callback<ConfigParams> cb);
-
     public abstract void sendVersionInformation(Map<String, String> info);
 
     public abstract void getAvailableBookings(Date[] date, Callback<BookingsListWrapper> cb);
@@ -68,7 +67,7 @@ public abstract class DataManager
 
     public abstract void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
 
-    public abstract void notifyCheckOutBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
+    public abstract void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, Callback<Booking> cb);
 
     public abstract void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
 
@@ -117,8 +116,9 @@ public abstract class DataManager
 
     public abstract void postLogs(TypedJsonString params, Callback<EventLogResponse> callback);
 
-    //TODO: refactor. should this be here?
+    public abstract void getConfiguration(Callback<ConfigurationResponse> callback);
 
+    //TODO: refactor. should this be here?
     public interface Callback<T>
     {
         void onSuccess(T response);
