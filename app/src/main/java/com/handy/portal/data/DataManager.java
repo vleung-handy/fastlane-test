@@ -9,6 +9,7 @@ import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -41,6 +42,7 @@ public abstract class DataManager
 
     public abstract void acceptTerms(String termsCode, Callback<Void> cb);
 
+    @Deprecated
     public abstract void getConfigParams(String[] keys, Callback<ConfigParams> cb);
 
     public abstract void sendVersionInformation(Map<String, String> info);
@@ -113,8 +115,10 @@ public abstract class DataManager
     public abstract void getZipClusterPolygons(String providerId, final Callback<ZipClusterPolygons> cb);
 
     public abstract void getStripeToken(Map<String, String> params, Callback<StripeTokenResponse> callback);
-    //TODO: refactor. should this be here?
 
+    public abstract void getConfiguration(Callback<ConfigurationResponse> callback);
+
+    //TODO: refactor. should this be here?
     public interface Callback<T>
     {
         void onSuccess(T response);
