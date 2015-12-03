@@ -198,4 +198,9 @@ public interface HandyRetrofitService
     void createHelpCase(@Body TypedInput body, HandyRetrofitCallback cb);
     //********End Help Center********
 
+    //Configuration wrapper, eventually replacing direct config params access
+    @GET("/configuration")
+    void getConfiguration(HandyRetrofitCallback cb);
+
+
 }

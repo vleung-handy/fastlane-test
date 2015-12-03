@@ -8,7 +8,7 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.CheckoutRequest;
-import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -214,12 +214,6 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getConfigParams(String[] keys, Callback<ConfigParams> cb)
-    {
-        service.getConfigParams(keys, new ConfigParamResponseHandyRetroFitCallback(cb));
-    }
-
-    @Override
     public final void sendVersionInformation(Map<String, String> versionInfo)
     {
         service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback(null));
@@ -290,6 +284,13 @@ public final class BaseDataManager extends DataManager
     public void getStripeToken(Map<String, String> params, final Callback<StripeTokenResponse> cb)
     {
         stripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
+    }
+
+    //Eventual replacement for direct access to config params
+    @Override
+    public void getConfiguration(final Callback<ConfigurationResponse> cb)
+    {
+        service.getConfiguration(new ConfigurationResponseHandyRetroFitCallback(cb));
     }
 
 }

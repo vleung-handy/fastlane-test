@@ -516,7 +516,13 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CHECK_OUT:
             {
-                if(mConfigManager.getConfigParamValue(ConfigManager.KEY_PRO_CUSTOMER_FEEDBACK_ENABLED, 0) == 1)
+                boolean showCheckoutRatingFlow = false;
+                if (mConfigManager.getConfigurationResponse() != null)
+                {
+                    showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
+                }
+
+                if (showCheckoutRatingFlow)
                 {
                     RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
                     Bundle arguments = new Bundle();

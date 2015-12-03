@@ -11,7 +11,6 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -117,9 +116,17 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         bus.post(new HandyEvent.RequestProviderInfo());
 
-        //show Find Jobs buttons only if we're inside of our available bookings length range
-        int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if (bookingsForDay.size() == 0 && DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
+        //Show "Find Jobs" buttons only if we're inside of our available bookings length range and we have no jobs
+
+        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
+        if (configManager.getConfigurationResponse() != null)
+        {
+            hoursSpanningAvailableBookings =
+                    configManager.getConfigurationResponse().getHoursSpanningAvailableBookings();
+        }
+
+        if (bookingsForDay.size() == 0 &&
+            DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
         {
             findJobsForDayButton.setVisibility(View.VISIBLE);
         }
@@ -135,7 +142,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         if (bookingsForSelectedDay == null || selectedDay == null) { return; }
 
         //show Find Matching Jobs buttons only if we're inside of our available bookings length range
-        int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
+        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
+        if (configManager.getConfigurationResponse() != null)
+        {
+            hoursSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings();
+        }
+
         if (event.provider.isComplementaryJobsEnabled()
                 && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings)
                 && bookingsForSelectedDay.size() == 1
