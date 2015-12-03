@@ -20,6 +20,7 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -208,6 +209,14 @@ class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderPr
 class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeTokenResponse>
 {
     StripeTokenRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class LogEventsRetroFitCallback extends TypedHandyRetrofitCallback<EventLogResponse>
+{
+    LogEventsRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

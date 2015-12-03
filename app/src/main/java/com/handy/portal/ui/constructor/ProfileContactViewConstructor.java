@@ -10,8 +10,10 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -22,7 +24,9 @@ import butterknife.InjectView;
 public class ProfileContactViewConstructor extends ViewConstructor<ProviderPersonalInfo>
 {
     @Inject
-    Bus bus;
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     @InjectView(R.id.profile_section_header_title_text)
     TextView titleText;
@@ -80,7 +84,8 @@ public class ProfileContactViewConstructor extends ViewConstructor<ProviderPerso
             @Override
             public void onClick(View v)
             {
-                bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, null, TransitionStyle.SLIDE_UP));
+                mBus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, null, TransitionStyle.SLIDE_UP));
+                mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createEditProfileSelectedLog()));
             }
         });
     }

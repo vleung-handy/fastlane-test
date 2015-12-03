@@ -18,8 +18,10 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
+import com.handy.portal.model.TypedJsonString;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -111,6 +113,8 @@ public abstract class DataManager
     public abstract void getZipClusterPolygons(String providerId, final Callback<ZipClusterPolygons> cb);
 
     public abstract void getStripeToken(Map<String, String> params, Callback<StripeTokenResponse> callback);
+
+    public abstract void postLogs(TypedJsonString params, Callback<EventLogResponse> callback);
 
     public abstract void getConfiguration(Callback<ConfigurationResponse> callback);
 
