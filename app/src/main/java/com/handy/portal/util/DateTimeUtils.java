@@ -17,10 +17,10 @@ public final class DateTimeUtils
     public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
     public final static SimpleDateFormat MONTH_DATE_YEAR_DATE_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
 
-    public final static int DAYS_IN_WEEK = 7;
-    public final static int HOURS_IN_FIVE_DAYS = 144;
-    public final static int HOURS_IN_WEEK = 168;
     public final static int HOURS_IN_DAY = 24;
+    public final static int DAYS_IN_WEEK = 7;
+    public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
+    public final static int HOURS_IN_WEEK = HOURS_IN_DAY * DAYS_IN_WEEK;
     public final static int MILLISECONDS_IN_MINUTE = 60000;
     public final static long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE * 60;
     public final static long MILLISECONDS_IN_30_MINS = MILLISECONDS_IN_MINUTE * 30;

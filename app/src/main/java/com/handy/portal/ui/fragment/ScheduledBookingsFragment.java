@@ -118,8 +118,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         //Show "Find Jobs" buttons only if we're inside of our available bookings length range and we have no jobs
 
-        //default to five days as fallback
-        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_FIVE_DAYS;
+        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
         if (configManager.getConfigurationResponse() != null)
         {
             hoursSpanningAvailableBookings =
@@ -143,7 +142,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         if (bookingsForSelectedDay == null || selectedDay == null) { return; }
 
         //show Find Matching Jobs buttons only if we're inside of our available bookings length range
-        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_FIVE_DAYS; //default to five days as fallback
+        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
         if (configManager.getConfigurationResponse() != null)
         {
             hoursSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings();

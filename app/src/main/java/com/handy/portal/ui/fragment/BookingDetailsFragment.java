@@ -546,25 +546,15 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CONTACT_PHONE:
             {
-                {
-                    RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putSerializable(BundleKeys.BOOKING, this.associatedBooking);
-                    rateBookingDialogFragment.setArguments(arguments);
-                    rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
-                }
+                bus.post(new HandyEvent.CallCustomerClicked());
+                callPhoneNumber(this.associatedBooking.getBookingPhone());
             }
             break;
 
             case CONTACT_TEXT:
             {
-                {
-                    RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putSerializable(BundleKeys.BOOKING, this.associatedBooking);
-                    rateBookingDialogFragment.setArguments(arguments);
-                    rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
-                }
+                bus.post(new HandyEvent.TextCustomerClicked());
+                textPhoneNumber(this.associatedBooking.getBookingPhone());
             }
             break;
 
