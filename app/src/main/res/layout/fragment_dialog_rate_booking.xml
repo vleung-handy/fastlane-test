@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    android:id="@+id/rate_booking_window"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="@drawable/button_white_background"
+    >
+
+    <ImageButton
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_x"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:padding="@dimen/default_padding"
+        />
+
+    <LinearLayout
+        android:id="@+id/rate_booking_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        >
+
+        <TextView
+            android:id="@+id/rate_booking_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:lineSpacingExtra="@dimen/lineSpacing"
+            android:text="@string/rate_booking_title"
+            android:textAppearance="@style/TextView.Bold"
+            android:textSize="@dimen/large_text_size"
+            />
+
+        <RadioGroup
+            android:id="@+id/rate_booking_rating_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/default_padding"
+            android:layout_marginLeft="-14dp"
+            android:layout_marginRight="-14dp"
+            >
+
+            <RadioButton
+                android:id="@+id/rating_button_1"
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_1"
+                />
+
+            <RadioButton
+                android:id="@+id/rating_button_2"
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_2"
+                />
+
+            <RadioButton
+                android:id="@+id/rating_button_3"
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_3"
+                />
+
+            <RadioButton
+                android:id="@+id/rating_button_4"
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_4"
+                />
+
+            <RadioButton
+                android:id="@+id/rating_button_5"
+                style="@style/RatingButtonToggle"
+                android:drawableTop="@drawable/rating_button_rating_5"
+                />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/rate_booking_comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/payment_container_vertical_padding"
+            android:hint="@string/rate_booking_comment_text_hint"
+            android:lineSpacingExtra="@dimen/lineSpacing"
+            android:maxLength="160"
+            android:textAppearance="@style/HandyTextAppearanceMedium"
+            android:textColor="@color/dark_grey"
+            android:lines="4"
+            android:background="@drawable/text_view_box"
+            android:gravity="top|left"
+            android:padding="10dp"
+            />
+
+        <Button
+            android:id="@+id/rate_booking_confirm_checkout_button"
+            style="@style/Button.Teal.Round"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rate_booking_confirm_checkout_button"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

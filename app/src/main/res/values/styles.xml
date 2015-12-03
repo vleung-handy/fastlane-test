@@ -654,4 +654,12 @@
         <item name="android:layout_marginRight">@dimen/default_padding</item>
         <item name="android:background">@drawable/tooltip_blue</item>
     </style>
+    <style name="RatingButtonToggle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:divider">?android:attr/dividerVertical</item>
+        <item name="android:showDividers">middle</item>
+    </style>
 </resources>
