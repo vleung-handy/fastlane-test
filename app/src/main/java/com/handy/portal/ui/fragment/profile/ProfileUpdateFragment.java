@@ -22,6 +22,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.manager.ProviderManager;
@@ -30,6 +31,7 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
@@ -73,6 +75,8 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     private FormDefinitionWrapper mFormDefinitionWrapper;
 
@@ -144,6 +148,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (validate())
         {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createEditProfileConfirmedLog()));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
                     mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));

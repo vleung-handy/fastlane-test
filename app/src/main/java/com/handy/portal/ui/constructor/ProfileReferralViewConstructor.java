@@ -8,13 +8,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.ReferralInfo;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.util.Utils;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.InjectView;
 
 public class ProfileReferralViewConstructor extends ViewConstructor<ReferralInfo>
 {
+    @Inject
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
+
     @InjectView(R.id.profile_section_header_title_text)
     TextView titleText;
     @InjectView(R.id.profile_section_header_subtitle_text)
@@ -27,6 +37,7 @@ public class ProfileReferralViewConstructor extends ViewConstructor<ReferralInfo
     public ProfileReferralViewConstructor(@NonNull Context context)
     {
         super(context);
+        Utils.inject(context, this);
     }
 
     @Override
@@ -46,6 +57,7 @@ public class ProfileReferralViewConstructor extends ViewConstructor<ReferralInfo
             @Override
             public void onClick(View v)
             {
+                mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createReferralSelectedLog()));
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, referralInfo.getReferralLink());
