@@ -12,8 +12,10 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.view.HelpContactView;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
@@ -23,6 +25,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,6 +46,9 @@ public final class HelpContactFragment extends ActionBarFragment
 
     @InjectView(R.id.help_contact_view)
     HelpContactView helpContactView;
+
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     private HelpNode associatedNode;
     private String path;
@@ -214,6 +221,8 @@ public final class HelpContactFragment extends ActionBarFragment
     public void onReceiveNotifyHelpContactSuccess(HandyEvent.ReceiveNotifyHelpContactSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createHelpContactFormSubmittedLog(
+                path, associatedNode.getId(), associatedNode.getLabel())));
         if (bookingId == null || bookingId.isEmpty())
         {
             returnToJobsScreen();

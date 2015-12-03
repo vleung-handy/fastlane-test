@@ -13,8 +13,10 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -25,7 +27,9 @@ import butterknife.InjectView;
 public class ProfileResupplyViewConstructor extends ViewConstructor<ProviderProfile>
 {
     @Inject
-    Bus bus;
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     @InjectView(R.id.get_resupply_kit_button)
     Button resupplyButton;
@@ -48,7 +52,7 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ProviderProf
     protected boolean constructView(ViewGroup container, final ProviderProfile providerProfile)
     {
         final ResupplyInfo resupplyInfo = providerProfile.getResupplyInfo();
-        if (resupplyInfo.providerCanRequestSupplies())
+        if (resupplyInfo != null && resupplyInfo.providerCanRequestSupplies())
         {
             if (resupplyInfo.providerCanRequestSuppliesNow())
             {
@@ -57,9 +61,11 @@ public class ProfileResupplyViewConstructor extends ViewConstructor<ProviderProf
                     @Override
                     public void onClick(View v)
                     {
+                        mBus.post(new LogEvent.AddLogEvent(
+                                mEventLogFactory.createResupplyKitSelectedLog()));
                         final Bundle args = new Bundle();
                         args.putSerializable(BundleKeys.PROVIDER_PROFILE, providerProfile);
-                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, args, TransitionStyle.SLIDE_UP));
+                        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, args, TransitionStyle.SLIDE_UP));
                     }
                 });
             }
