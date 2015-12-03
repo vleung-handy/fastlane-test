@@ -9,7 +9,6 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -153,14 +152,6 @@ class UpdateDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallb
 class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<TermsDetailsGroup>
 {
     TermsDetailsGroupResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
-class ConfigParamResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<ConfigParams>
-{
-    ConfigParamResponseHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

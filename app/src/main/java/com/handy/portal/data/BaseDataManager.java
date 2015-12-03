@@ -8,7 +8,6 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.CheckoutRequest;
-import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -212,13 +211,6 @@ public final class BaseDataManager extends DataManager
                 cb.onSuccess(null);
             }
         });
-    }
-
-    @Deprecated
-    @Override
-    public void getConfigParams(String[] keys, Callback<ConfigParams> cb)
-    {
-        service.getConfigParams(keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }
 
     @Override

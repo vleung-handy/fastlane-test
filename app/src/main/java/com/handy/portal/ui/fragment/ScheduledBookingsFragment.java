@@ -116,9 +116,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         bus.post(new HandyEvent.RequestProviderInfo());
 
-        //show Find Jobs buttons only if we're inside of our available bookings length range
-        //int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-
+        //Show "Find Jobs" buttons only if we're inside of our available bookings length range
         int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_WEEK; //default to one week as a fallback
         if (configManager.getConfigurationResponse() != null)
         {
@@ -141,7 +139,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         if (bookingsForSelectedDay == null || selectedDay == null) { return; }
 
         //show Find Matching Jobs buttons only if we're inside of our available bookings length range
-        //int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
         int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_WEEK; //default to one week as a fallback
         if (configManager.getConfigurationResponse() != null)
         {

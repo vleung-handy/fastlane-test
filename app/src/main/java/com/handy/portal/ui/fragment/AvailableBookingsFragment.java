@@ -92,7 +92,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected int numberOfDaysToDisplay()
     {
-        //int daysSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 144) / DateTimeUtils.HOURS_IN_DAY;
         int daysSpanningAvailableBookings = DateTimeUtils.DAYS_IN_WEEK; //default to one week as a fallback
         if (configManager.getConfigurationResponse() != null)
         {

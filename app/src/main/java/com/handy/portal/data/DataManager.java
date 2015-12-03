@@ -8,7 +8,6 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.CheckoutRequest;
-import com.handy.portal.model.ConfigParams;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
@@ -41,9 +40,6 @@ public abstract class DataManager
     public abstract void checkForAllPendingTerms(Callback<TermsDetailsGroup> cb);
 
     public abstract void acceptTerms(String termsCode, Callback<Void> cb);
-
-    @Deprecated
-    public abstract void getConfigParams(String[] keys, Callback<ConfigParams> cb);
 
     public abstract void sendVersionInformation(Map<String, String> info);
 
