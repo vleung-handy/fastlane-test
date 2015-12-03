@@ -24,13 +24,10 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.SupplyListItem;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.element.SupplyListItemView;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -39,9 +36,6 @@ import butterknife.OnClick;
 
 public class RequestSuppliesFragment extends ActionBarFragment
 {
-    @Inject
-    EventLogFactory mEventLogFactory;
-
     @InjectView(R.id.request_supplies_button)
     Button mRequestSuppliesButton;
 

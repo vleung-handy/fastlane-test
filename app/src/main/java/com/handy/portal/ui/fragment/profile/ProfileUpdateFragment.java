@@ -31,7 +31,6 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
@@ -75,8 +74,6 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     @Inject
     ProviderManager mProviderManager;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     private FormDefinitionWrapper mFormDefinitionWrapper;
 

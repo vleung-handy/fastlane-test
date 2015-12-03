@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,9 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.DateButtonView;
@@ -31,20 +34,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment
 {
+    @Inject
+    protected EventLogFactory mEventLogFactory;
     @InjectView(R.id.fetch_error_view)
-    protected View fetchErrorView;
-
+    View fetchErrorView;
     @InjectView(R.id.fetch_error_text)
-    protected TextView errorText;
-
+    TextView errorText;
     @InjectView(R.id.refresh_layout)
-    protected SwipeRefreshLayout refreshLayout;
+    SwipeRefreshLayout refreshLayout;
 
     protected abstract int getFragmentResourceId();
 
@@ -54,6 +59,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract LinearLayout getDatesLayout();
 
+    @NonNull
     protected abstract String getTrackingType();
 
     protected abstract HandyEvent getRequestEvent(List<Date> dates, boolean useCachedIfPresent);
@@ -296,6 +302,17 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 Booking booking = (Booking) adapter.getItemAtPosition(position);
                 if (booking != null)
                 {
+                    int oneBasedIndex = position + 1;
+                    if (getTrackingType().equalsIgnoreCase(getString(R.string.available_job)))
+                    {
+                        bus.post(new LogEvent.AddLogEvent(mEventLogFactory
+                                .createAvailableJobClickedLog(booking, oneBasedIndex)));
+                    }
+                    else if (getTrackingType().equalsIgnoreCase(getString(R.string.scheduled_job)))
+                    {
+                        bus.post(new LogEvent.AddLogEvent(mEventLogFactory
+                                .createScheduledJobClickedLog(booking, oneBasedIndex)));
+                    }
                     bus.post(new HandyEvent.BookingSelected(getTrackingType(), booking.getId()));
                     showBookingDetails(booking);
                 }

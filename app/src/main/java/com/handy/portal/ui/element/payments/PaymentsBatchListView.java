@@ -9,15 +9,25 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.event.LogEvent;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
+import com.handy.portal.util.Utils;
+import com.squareup.otto.Bus;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+
 public final class PaymentsBatchListView extends InfiniteScrollListView implements AdapterView.OnItemClickListener
 {
+    @Inject
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     private PaymentsBatchListHeaderView paymentsBatchListHeaderView;
     private TextView footerView;
@@ -31,16 +41,20 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     public PaymentsBatchListView(final Context context)
     {
         super(context);
+        Utils.inject(context, this);
+
     }
 
     public PaymentsBatchListView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        Utils.inject(context, this);
     }
 
     public PaymentsBatchListView(final Context context, final AttributeSet attrs, final int defStyle)
     {
         super(context, attrs, defStyle);
+        Utils.inject(context, this);
     }
 
     @Override
@@ -70,6 +84,8 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
                 if (!getWrappedAdapter().isDataEmpty())
                 {
                     notifyDataItemClickListener(getWrappedAdapter().getDataItem(0));
+                    mBus.post(new LogEvent.AddLogEvent(
+                            mEventLogFactory.createPaymentBatchSelectedLog(true, 1)));
                 }
             }
         });
@@ -88,6 +104,8 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPaymentBatchSelectedLog(false,
+                position + 1))); // index needs to be one based
         PaymentBatch paymentBatch = getWrappedAdapter().getDataItem(position);
         notifyDataItemClickListener(paymentBatch);
     }

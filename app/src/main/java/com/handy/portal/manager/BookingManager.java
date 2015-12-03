@@ -247,7 +247,7 @@ public class BookingManager
             {
                 //still need to invalidate so we don't allow them to click on same booking
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveClaimJobError(error));
+                bus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
             }
         });
     }

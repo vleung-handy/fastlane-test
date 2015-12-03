@@ -52,6 +52,7 @@ import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
 import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionViewConstructor;
+import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
@@ -132,6 +133,7 @@ import retrofit.converter.GsonConverter;
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
         ProfileReferralViewConstructor.class,
+        PaymentsBatchListView.class,
 })
 public final class ApplicationModule
 {

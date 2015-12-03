@@ -20,7 +20,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.Provider;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -38,7 +38,7 @@ public class MainActivityFragment extends InjectedFragment
 //TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
     @Inject
     HandyRetrofitEndpoint handyRetrofitEndpoint;
-/////////////Bad useless injection that breaks if not in?
+    /////////////Bad useless injection that breaks if not in?
 
     @InjectView(R.id.tabs)
     RadioGroup tabs;
@@ -117,9 +117,14 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     //Ask the managers to do all the argument processing and post back a SwapFragmentNavigation event
-    private void requestProcessNavigateToTab(MainViewTab targetTab, MainViewTab currentTab, Bundle arguments, TransitionStyle transitionStyle, boolean userTriggered)
+    private void requestProcessNavigateToTab(
+            MainViewTab targetTab, MainViewTab currentTab, Bundle arguments,
+            TransitionStyle transitionStyle, boolean userTriggered)
     {
-        bus.post(new HandyEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments, transitionStyle, userTriggered));
+        bus.post(new HandyEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
+                transitionStyle, userTriggered));
+        bus.post(new LogEvent.AddLogEvent(
+                mEventLogFactory.createNavigationLog(targetTab.name().toLowerCase())));
     }
 
     @Subscribe

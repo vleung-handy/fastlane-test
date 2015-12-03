@@ -15,7 +15,6 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.view.HelpContactView;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
@@ -25,8 +24,6 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -46,9 +43,6 @@ public final class HelpContactFragment extends ActionBarFragment
 
     @InjectView(R.id.help_contact_view)
     HelpContactView helpContactView;
-
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     private HelpNode associatedNode;
     private String path;

@@ -1,7 +1,6 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -10,6 +9,7 @@ import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -26,14 +26,14 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Inject
     DataManager dataManager;
     @Inject
-    protected GoogleManager googleManager;
+    ConfigManager configManager;
 
-    @VisibleForTesting
+    @Inject
+    protected GoogleManager googleManager;
     @Inject
     protected Bus bus;
-
     @Inject
-    ConfigManager configManager;
+    protected EventLogFactory mEventLogFactory;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -66,7 +66,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     //Each fragment if it requires arguments from the bundles should override this list
     protected List<String> requiredArguments()
     {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     protected boolean validateRequiredArguments()
@@ -75,7 +75,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
         Bundle suppliedArguments = this.getArguments();
 
-        if(suppliedArguments == null)
+        if (suppliedArguments == null)
         {
             return requiredArguments().size() == 0;
         }
@@ -102,7 +102,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment
             {
                 throw new Exception(errorDetails);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Crashlytics.logException(e);
         }

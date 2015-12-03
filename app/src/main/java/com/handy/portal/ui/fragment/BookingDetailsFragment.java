@@ -33,6 +33,7 @@ import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ZipClusterManager;
@@ -108,7 +109,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     TextView fullDetailsNoticeText;
 
     @InjectView(R.id.fetch_error_view)
-    protected View fetchErrorView;
+    View fetchErrorView;
 
     @InjectView(R.id.fetch_error_text)
     TextView errorText;
@@ -533,7 +534,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 else
                 {
                     CheckoutRequest checkoutRequest = new CheckoutRequest(locationData, new ProBookingFeedback(-1, ""));
-                    requestNotifyCheckOutJob(this.associatedBooking.getId(), checkoutRequest);
+                    requestNotifyCheckOutJob(this.associatedBooking.getId(), checkoutRequest, locationData);
                 }
             }
             break;
@@ -618,10 +619,11 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     //Show a warning dialog for a button action, confirming triggers the original action
-    private void showBookingActionWarningDialog(String warning, final BookingActionButtonType actionType)
+    private void showBookingActionWarningDialog(final String warning, final BookingActionButtonType actionType)
     {
         trackShowActionWarning(actionType);
-
+        bus.post(new LogEvent.AddLogEvent(
+                mEventLogFactory.createRemoveJobClickedLog(associatedBooking, warning)));
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -635,6 +637,9 @@ public class BookingDetailsFragment extends ActionBarFragment
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
+                                bus.post(new LogEvent.AddLogEvent(mEventLogFactory
+                                        .createRemoveJobConfirmedLog(associatedBooking, warning)));
+
                                 //proceed with action, we have accepted the warning
                                 bus.post(new HandyEvent.ActionWarningAccepted(actionType));
                                 takeAction(actionType, true);
@@ -686,12 +691,14 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createOnMyWayLog(associatedBooking, locationData)));
     }
 
     private void requestNotifyCheckInJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCheckInLog(associatedBooking, locationData)));
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
@@ -723,10 +730,11 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.RequestCancelNoShow(associatedBooking.getId(), getLocationData()));
     }
 
-    private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest)
+    private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCheckOutLog(associatedBooking, locationData)));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
@@ -840,6 +848,9 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
         {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAvailableJobClaimSuccessLog(
+                    bookingClaimDetails.getBooking(), event.source)));
+
             if (bookingClaimDetails.shouldShowClaimTarget())
             {
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
@@ -865,6 +876,8 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAvailableJobClaimErrorLog(
+                event.getBooking(), event.getSource())));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleBookingClaimError(event.error.getMessage());
     }
