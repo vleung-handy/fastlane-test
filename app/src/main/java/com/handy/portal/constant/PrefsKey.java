@@ -8,6 +8,7 @@ public enum PrefsKey
     ONBOARDING_COMPLETED("onboarding_completed"),
     ONBOARDING_NEEDED("onboarding_needed"),
     ENVIRONMENT_PREFIX("environment_prefix"),
+    EVENT_LOG_BUNDLES("event_log_bundles"),
     ;
 
     private String key;

@@ -1,4 +1,4 @@
-package com.handy.portal.retrofit.stripe;
+package com.handy.portal.retrofit.logevents;
 
 import android.content.Context;
 
@@ -11,21 +11,21 @@ import javax.inject.Inject;
 
 import retrofit.Endpoint;
 
-public class StripeRetrofitEndpoint implements Endpoint
+public class EventLogEndpoint implements Endpoint
 {
-    private final String baseUrl;
+    private final String mBaseUrl;
 
     @Inject
-    public StripeRetrofitEndpoint(Context context)
+    public EventLogEndpoint(Context context)
     {
         final Properties config = PropertiesReader.getConfigProperties(context);
-        baseUrl = config.getProperty(UrlName.STRIPE_BASE_URL);
+        mBaseUrl = config.getProperty(UrlName.LOG_EVENTS_BASE_URL);
     }
 
     @Override
     public String getUrl()
     {
-        return baseUrl;
+        return mBaseUrl;
     }
 
     @Override

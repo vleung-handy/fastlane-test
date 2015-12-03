@@ -37,9 +37,9 @@ public class ProviderManager
         this.dataManager = dataManager;
         this.prefsManager = prefsManager;
         this.providerCache = CacheBuilder.newBuilder()
-            .maximumSize(10)
-            .expireAfterWrite(1, TimeUnit.DAYS)
-            .build();
+                .maximumSize(10)
+                .expireAfterWrite(1, TimeUnit.DAYS)
+                .build();
         this.mProviderProfileCache = CacheBuilder.newBuilder()
                 .maximumSize(10)
                 .expireAfterWrite(1, TimeUnit.DAYS)

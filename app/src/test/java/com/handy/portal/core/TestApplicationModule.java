@@ -6,6 +6,7 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
@@ -14,6 +15,7 @@ import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -155,6 +157,12 @@ public class TestApplicationModule
     }
 
     @Provides
+    final EventLogManager eventLogManager()
+    {
+        return mock(EventLogManager.class);
+    }
+
+    @Provides
     final StripeManager provideStripeManager()
     {
         return mock(StripeManager.class);
@@ -182,5 +190,11 @@ public class TestApplicationModule
     final UrbanAirshipManager providerUrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return mock(UrbanAirshipManager.class);
+    }
+
+    @Provides
+    final EventLogFactory provideEventLogFactory(final ProviderManager providerManager)
+    {
+        return mock(EventLogFactory.class);
     }
 }

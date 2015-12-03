@@ -8,8 +8,10 @@ import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.NotificationUtils;
@@ -21,6 +23,8 @@ public class MainActivity extends BaseActivity
 {
     @Inject
     ProviderManager providerManager;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
@@ -38,16 +42,22 @@ public class MainActivity extends BaseActivity
     public void onResume()
     {
         super.onResume();
+        mEventLogFactory.createAppOpenLog();
+
         bus.register(this);
         configManager.prefetch();
         providerManager.prefetch();
         checkForTerms();
         checkIfNotificationIsEnabled();
+
+        bus.post(new LogEvent.SendLogsEvent());
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAppOpenLog()));
     }
 
     @Override
     public void onPause()
     {
+        bus.post(new LogEvent.SaveLogsEvent());
         bus.unregister(this);
         super.onPause();
     }

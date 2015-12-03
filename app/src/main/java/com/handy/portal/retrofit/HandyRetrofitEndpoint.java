@@ -2,6 +2,7 @@ package com.handy.portal.retrofit;
 
 import android.content.Context;
 
+import com.handy.portal.constant.UrlName;
 import com.handy.portal.core.PropertiesReader;
 
 import java.util.Properties;
@@ -21,8 +22,8 @@ public class HandyRetrofitEndpoint implements Endpoint
     public HandyRetrofitEndpoint(Context context)
     {
         final Properties config = PropertiesReader.getConfigProperties(context);
-        apiEndpoint = config.getProperty("api_endpoint");
-        baseUrl = config.getProperty("base_url");
+        apiEndpoint = config.getProperty(UrlName.API_URL);
+        baseUrl = config.getProperty(UrlName.BASE_URL);
     }
 
     @Override

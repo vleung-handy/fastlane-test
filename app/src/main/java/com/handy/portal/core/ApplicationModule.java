@@ -15,6 +15,7 @@ import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
@@ -30,9 +31,12 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.logevents.EventLogEndpoint;
+import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.AutoCheckInService;
@@ -237,6 +241,30 @@ public final class ApplicationModule
         return restAdapter.create(StripeRetrofitService.class);
     }
 
+    //log events
+    @Provides
+    @Singleton
+    final EventLogEndpoint provideLogEventsEndpoint()
+    {
+        return new EventLogEndpoint(context);
+    }
+
+    @Provides
+    @Singleton
+    final EventLogService provideLogEventsService(final EventLogEndpoint endpoint)
+    {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
+
+        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
+                .setRequestInterceptor(new RequestInterceptor()
+                {
+                    @Override
+                    public void intercept(RequestFacade request) { }
+                }).setClient(new OkClient(okHttpClient)).build();
+        return restAdapter.create(EventLogService.class);
+    }
+
     @Provides
     @Singleton
     final Bus provideBus(final Mixpanel mixpanel)
@@ -255,10 +283,11 @@ public final class ApplicationModule
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
-                                         final StripeRetrofitService stripeService //TODO: refactor and move somewhere else?
+                                         final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else?
+                                         final EventLogService eventLogService
     )
     {
-        return new BaseDataManager(service, endpoint, stripeService);
+        return new BaseDataManager(service, endpoint, stripeService, eventLogService);
     }
 
     @Provides
@@ -400,6 +429,15 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final EventLogManager provideLogEventsManager(final Bus bus,
+                                                  final DataManager dataManager,
+                                                  final PrefsManager prefsManager)
+    {
+        return new EventLogManager(bus, dataManager, prefsManager);
+    }
+
+    @Provides
+    @Singleton
     final RegionDefinitionsManager provideRegionDefinitionsManager(final Bus bus)
     {
         return new RegionDefinitionsManager(bus);
@@ -419,6 +457,13 @@ public final class ApplicationModule
                                                            final WebUrlManager webUrlManager)
     {
         return new TabNavigationManager(bus, providerManager, webUrlManager);
+    }
+
+    @Provides
+    @Singleton
+    final EventLogFactory provideEventLogFactory(final ProviderManager providerManager)
+    {
+        return new EventLogFactory(providerManager);
     }
 
     private String getDeviceId()
