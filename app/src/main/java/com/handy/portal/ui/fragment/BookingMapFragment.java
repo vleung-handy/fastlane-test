@@ -123,7 +123,8 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
 
     private LatLng getCenterPoint()
     {
-        if (!mBooking.isProxy() && mStatus == Booking.BookingStatus.CLAIMED)
+        //Currently even for unclaimed booking we get full address information so we are going to use lat/lng on address regardless of status
+        if (!mBooking.isProxy())
         {
             return new LatLng(mBooking.getAddress().getLatitude(), mBooking.getAddress().getLongitude());
         }
@@ -138,7 +139,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         else
         {
             //fallback so we don't crash
-            Crashlytics.log("BookingMapFragment booking has no valid midpoint");
+            Crashlytics.logException(new Exception("BookingMapFragment booking has no valid midpoint " + mBooking.getId()));
             return new LatLng(0.0f, 0.0f);
         }
     }
