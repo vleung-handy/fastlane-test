@@ -14,11 +14,10 @@ public class HelpContactFormSubmittedLog extends EventLog
     @SerializedName("help_node_title")
     private String mHelpNodeTitle;
 
-    protected HelpContactFormSubmittedLog(
-            String osVersion, String appVersion, String deviceId, long timestamp, String providerId,
-            String versionTrack, String path, int helpNodeId, String helpNodeTitle)
+    public HelpContactFormSubmittedLog(
+            String providerId, String versionTrack, String path, int helpNodeId, String helpNodeTitle)
     {
-        super(osVersion, appVersion, deviceId, timestamp, providerId, versionTrack, EVENT_TYPE, EVENT_CONTEXT);
+        super(providerId, versionTrack, EVENT_TYPE, EVENT_CONTEXT);
         mPath = path;
         mHelpNodeId = helpNodeId;
         mHelpNodeTitle = helpNodeTitle;

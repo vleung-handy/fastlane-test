@@ -580,9 +580,25 @@ public abstract class HandyEvent
 
     public static class ReceiveClaimJobError extends ReceiveErrorEvent
     {
-        public ReceiveClaimJobError(DataManager.DataManagerError error)
+        private Booking mBooking;
+        private String mSource;
+
+        public ReceiveClaimJobError(Booking booking, String source, DataManager.DataManagerError error)
         {
+            mBooking = booking;
+            mSource = source;
             this.error = error;
+        }
+
+
+        public String getSource()
+        {
+            return mSource;
+        }
+
+        public Booking getBooking()
+        {
+            return mBooking;
         }
     }
 

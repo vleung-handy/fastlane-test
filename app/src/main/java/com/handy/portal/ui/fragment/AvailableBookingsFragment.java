@@ -1,11 +1,13 @@
 package com.handy.portal.ui.fragment;
 
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
@@ -21,13 +23,11 @@ import butterknife.InjectView;
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
     @InjectView(R.id.available_jobs_list_view)
-    protected BookingListView availableJobsListView;
-
+    BookingListView availableJobsListView;
     @InjectView(R.id.available_bookings_dates_scroll_view_layout)
-    protected LinearLayout availableJobsDatesScrollViewLayout;
-
+    LinearLayout availableJobsDatesScrollViewLayout;
     @InjectView(R.id.available_bookings_empty)
-    protected ViewGroup noAvailableBookingsLayout;
+    ViewGroup noAvailableBookingsLayout;
 
     @Override
     protected MainViewTab getTab()
@@ -70,10 +70,11 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         return (R.layout.fragment_available_bookings);
     }
 
+    @NonNull
     @Override
     protected String getTrackingType()
     {
-        return "available job";
+        return getString(R.string.available_job);
     }
 
     @Override
@@ -107,6 +108,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory
+                .createAvailableJobDateClickedLog(dateOfBookings, bookingsForDay.size())));
     }
 
     @Subscribe

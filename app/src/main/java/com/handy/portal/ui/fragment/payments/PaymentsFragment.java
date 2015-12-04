@@ -19,6 +19,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -258,6 +259,7 @@ public final class PaymentsFragment extends ActionBarFragment
             case R.id.action_help:
                 if (helpNodesListView.getCount() > 0)
                 {
+                    bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPaymentHelpSlideUpLog()));
                     slideUpPanelContainer.showPanel(R.string.payment_help, new SlideUpPanelContainer.ContentInitializer()
                     {
                         @Override
@@ -373,6 +375,8 @@ public final class PaymentsFragment extends ActionBarFragment
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
                 bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
+                bus.post(new LogEvent.AddLogEvent(
+                        mEventLogFactory.createPaymentHelpItemSelectedLog(childNode.getLabel())));
             }
         });
     }

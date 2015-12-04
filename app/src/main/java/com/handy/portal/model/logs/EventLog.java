@@ -1,8 +1,12 @@
 package com.handy.portal.model.logs;
 
-import com.google.gson.annotations.SerializedName;
+import android.os.Build;
 
-public class EventLog
+import com.google.gson.annotations.SerializedName;
+import com.handy.portal.BuildConfig;
+import com.handy.portal.core.BaseApplication;
+
+public abstract class EventLog
 {
     private static final String ANDROID = "Android";
     private static final String PROVIDER = "pro";
@@ -18,7 +22,7 @@ public class EventLog
     @SerializedName("device_id")
     private String mDeviceId;
     @SerializedName("timestamp")
-    private long mTimestamp;
+    private long mTimestampMillis;
     @SerializedName("provider_id")
     private String mProviderId;
     @SerializedName("version_track")
@@ -28,15 +32,14 @@ public class EventLog
     @SerializedName("event_context")
     private String mEventContext;
 
-    protected EventLog(String osVersion, String appVersion, String deviceId, long timestamp,
-                       String providerId, String versionTrack, String eventType, String eventContext)
+    public EventLog(String providerId, String versionTrack, String eventType, String eventContext)
     {
         mProduct = PROVIDER;
         mPlatform = ANDROID;
-        mOsVersion = osVersion;
-        mAppVersion = appVersion;
-        mDeviceId = deviceId;
-        mTimestamp = timestamp;
+        mOsVersion = Build.VERSION.RELEASE;
+        mAppVersion = BuildConfig.VERSION_NAME;
+        mDeviceId = BaseApplication.getDeviceId();
+        mTimestampMillis = System.currentTimeMillis();
         mProviderId = providerId;
         mVersionTrack = versionTrack;
         mEventType = eventType;
