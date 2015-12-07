@@ -46,4 +46,9 @@ public abstract class EventLog
         mEventContext = eventContext;
     }
 
+    public String getEventName()
+    {
+        return mEventContext + "_" + mEventType;
+    }
+
 }
