@@ -80,6 +80,14 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
+    public final void getNearbyBookings(
+            int regionId, double latitude, double longitude, final Callback<BookingsWrapper> cb)
+    {
+        service.getNearbyBookings(
+                regionId, latitude, longitude, new BookingsWrapperRetroFitCallback(cb));
+    }
+
+    @Override
     public final void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> cb)
     {
         service.getComplementaryBookings(bookingId, type.toString().toLowerCase(), new BookingsWrapperRetroFitCallback(cb));

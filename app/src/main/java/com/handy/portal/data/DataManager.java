@@ -49,6 +49,9 @@ public abstract class DataManager
 
     public abstract void getScheduledBookings(Date[] date, Callback<BookingsListWrapper> cb);
 
+    public abstract void getNearbyBookings(int regionId, double latitude, double longitude,
+                                           final Callback<BookingsWrapper> cb);
+
     public abstract void claimBooking(String bookingId, BookingType type, Callback<BookingClaimDetails> cb);
 
     public abstract void removeBooking(String bookingId, BookingType type, Callback<Booking> cb);
@@ -126,10 +129,12 @@ public abstract class DataManager
         void onError(DataManagerError error);
     }
 
+
     public interface CacheResponse<T>
     {
         void onResponse(T response);
     }
+
 
     public static class DataManagerError
     {
@@ -137,6 +142,7 @@ public abstract class DataManager
         {
             OTHER, SERVER, CLIENT, NETWORK
         }
+
 
         private final Type type;
         private final String message;
