@@ -58,6 +58,12 @@ public interface HandyRetrofitService
     void getScheduledBookings(@Query("dates[]") Date[] date,
                               HandyRetrofitCallback cb);
 
+    @GET(JOBS_PATH + "/nearby_jobs")
+    void getNearbyBookings(@Query("region_id") int region_id,
+                           @Query("latitude") double latitude,
+                           @Query("longitude") double longitude,
+                           HandyRetrofitCallback cb);
+
     @PUT(JOBS_PATH + "{id}/claim")
     void claimBooking(@Path("id") String bookingId,
                       @Query("type") String type,
