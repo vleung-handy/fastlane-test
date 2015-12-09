@@ -3,6 +3,7 @@ package com.handy.portal.model;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.constant.Country;
 
 public class Provider
 {
@@ -90,12 +91,12 @@ public class Provider
 
     public boolean isUK()
     {
-        return "GB".equalsIgnoreCase(getCountry());
+        return Country.GB.equalsIgnoreCase(getCountry());
     }
 
     public boolean isUS()
     {
-        return "US".equalsIgnoreCase(getCountry());
+        return Country.US.equalsIgnoreCase(getCountry());
     }
 
     public boolean isComplementaryJobsEnabled()

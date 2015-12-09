@@ -8,6 +8,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
+import com.handy.portal.constant.Country;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -260,7 +261,7 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public boolean isUK()
     {
-        return "GB".equalsIgnoreCase(mCountry);
+        return Country.GB.equalsIgnoreCase(mCountry);
     }
 
     public CheckInSummary getCheckInSummary()

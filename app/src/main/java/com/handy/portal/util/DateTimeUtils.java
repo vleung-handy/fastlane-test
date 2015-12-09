@@ -5,6 +5,7 @@ import android.text.format.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public final class DateTimeUtils
 {
@@ -80,6 +81,7 @@ public final class DateTimeUtils
 
     public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
     {
+        dateFormat.format(123);
         if (start == null || end == null) { return null; }
         return dateFormat.format(start) + " – " + dateFormat.format(end);
     }
@@ -130,5 +132,16 @@ public final class DateTimeUtils
                 && c.get(Calendar.SECOND) == 0
                 && c.get(Calendar.MILLISECOND) == 0
                 && c.get(Calendar.DAY_OF_YEAR) == 1;
+    }
+
+    // return a string in hh:mm:ss format
+    public static String millisecondsToFormattedString(long millis)
+    {
+        return String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     }
 }

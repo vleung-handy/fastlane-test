@@ -132,7 +132,7 @@ public class EventLogFactory
         double accuracy = getAccuracy(location);
         double bookingLatitude = getLatitude(booking.getAddress());
         double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.distFrom(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
+        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
         return new CheckInFlowLog.OnMyWay(getProviderId(), getVersionTrack(), bookingId,
                 proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
@@ -146,7 +146,7 @@ public class EventLogFactory
         double accuracy = getAccuracy(location);
         double bookingLatitude = getLatitude(booking.getAddress());
         double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.distFrom(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
+        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
         return new CheckInFlowLog.CheckIn(getProviderId(), getVersionTrack(), bookingId,
                 proLatitude, proLongitude, bookingLatitude,
@@ -161,7 +161,7 @@ public class EventLogFactory
         double accuracy = getAccuracy(location);
         double bookingLatitude = getLatitude(booking.getAddress());
         double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.distFrom(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
+        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
         return new CheckInFlowLog.CheckOut(getProviderId(), getVersionTrack(), bookingId,
                 proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
