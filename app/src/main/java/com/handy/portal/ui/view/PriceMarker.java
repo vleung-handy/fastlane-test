@@ -9,23 +9,32 @@ import com.handy.portal.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class PriceMarkerActive extends FrameLayout
+public class PriceMarker extends FrameLayout
 {
     @InjectView(R.id.marker_text)
     TextView mMarkerText;
 
-    public PriceMarkerActive(final Context context)
+    private boolean mActive = false;
+
+    public PriceMarker(final Context context, boolean isActive)
     {
         super(context);
+        mActive = isActive;
         init();
     }
 
     private void init()
     {
-        inflate(getContext(), R.layout.price_marker_active, this);
+        if (mActive)
+        {
+            inflate(getContext(), R.layout.price_marker_active, this);
+        }
+        else
+        {
+            inflate(getContext(), R.layout.price_marker_inactive, this);
+        }
         ButterKnife.inject(this);
     }
 
     public void setText(CharSequence text) { mMarkerText.setText(text); }
-
 }

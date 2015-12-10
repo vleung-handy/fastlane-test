@@ -21,7 +21,6 @@
             android:id="@+id/nearby_bookings_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="There are 5 open jobs nearby! Claim one now."
             />
     </FrameLayout>
 

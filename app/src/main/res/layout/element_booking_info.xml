@@ -16,21 +16,18 @@
             android:id="@+id/booking_info_timer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="STARTS IN 00:53:20"
             />
 
         <TextView
             android:id="@+id/booking_info_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="28 Street Madision Avenue"
             />
 
         <TextView
             android:id="@+id/booking_info_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1:00pm - 3:00pm"
             />
     </LinearLayout>
 
@@ -45,14 +42,12 @@
             android:id="@+id/booking_info_claim_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Claim $35 Job"
             />
 
         <TextView
             android:id="@+id/booking_info_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0.5 miles away"
             />
 
     </LinearLayout>

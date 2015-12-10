@@ -81,7 +81,6 @@ public final class DateTimeUtils
 
     public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
     {
-        dateFormat.format(123);
         if (start == null || end == null) { return null; }
         return dateFormat.format(start) + " – " + dateFormat.format(end);
     }
@@ -137,11 +136,9 @@ public final class DateTimeUtils
     // return a string in hh:mm:ss format
     public static String millisecondsToFormattedString(long millis)
     {
-        return String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(minutes);
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }

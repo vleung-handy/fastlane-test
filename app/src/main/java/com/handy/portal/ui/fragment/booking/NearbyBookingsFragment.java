@@ -94,7 +94,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         transaction.replace(mMapContainer.getId(), fragment);
         transaction.commit();
 
-        mDescriptionText.setText(getString(R.string.nearby_booking, mBookings.size()));
+        mDescriptionText.setText(getString(R.string.nearby_booking_formatted, mBookings.size()));
 
         return view;
     }
@@ -111,7 +111,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         PaymentInfo paymentInfo = booking.getPaymentToProvider();
         String timer = DateTimeUtils.millisecondsToFormattedString(
                 booking.getStartDate().getTime() - System.currentTimeMillis());
-        mBookingTimerText.setText(getString(R.string.start_timer, timer));
+        mBookingTimerText.setText(getString(R.string.start_timer_formatted, timer));
         mBookingAddressText.setText(address.getAddress1());
 
         String startTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(booking.getStartDate());
@@ -125,12 +125,12 @@ public class NearbyBookingsFragment extends ActionBarFragment
         Provider provider = mProviderManager.getCachedActiveProvider();
         if (provider != null && Country.US.equalsIgnoreCase(provider.getCountry()))
         {
-            mBookingDistanceText.setText(getString(R.string.kilometers_away,
+            mBookingDistanceText.setText(getString(R.string.kilometers_away_formatted,
                     MathUtils.TWO_DECIMALS_FORMAT.format(km)));
         }
         else
         {
-            mBookingDistanceText.setText(getString(R.string.miles_away,
+            mBookingDistanceText.setText(getString(R.string.miles_away_formatted,
                     MathUtils.TWO_DECIMALS_FORMAT.format(km * MathUtils.MILES_PER_KILOMETER)));
         }
     }

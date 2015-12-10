@@ -16,6 +16,8 @@ public class MathUtils
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                         Math.sin(dLng / 2) * Math.sin(dLng / 2);
 
+        if (a < 0 || a > 1) { return 0; }
+
         double c = 2 * Math.asin(Math.sqrt(a));
 
         return EARTH_RADIUS * c;

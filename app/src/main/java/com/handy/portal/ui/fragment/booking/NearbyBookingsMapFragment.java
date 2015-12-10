@@ -17,8 +17,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
-import com.handy.portal.ui.view.PriceMarkerActive;
-import com.handy.portal.ui.view.PriceMarkerInactive;
+import com.handy.portal.ui.view.PriceMarker;
 import com.handy.portal.util.UIUtils;
 
 import java.util.ArrayList;
@@ -35,8 +34,8 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
     private LatLng mCenter;
     private HashMap<Marker, Booking> mMarkerBookingMap = new HashMap<>();
     private MarkerClickedCallback mMarkerClickedCallback;
-    private PriceMarkerInactive mPriceMarkerInactive;
-    private PriceMarkerActive mPriceMarkerActive;
+    private PriceMarker mPriceMarkerInactive;
+    private PriceMarker mPriceMarkerActive;
 
 
     public interface MarkerClickedCallback
@@ -49,8 +48,8 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
     {
         super.onViewCreated(view, savedInstanceState);
         mMarkerClickedCallback = (MarkerClickedCallback) getParentFragment();
-        mPriceMarkerInactive = new PriceMarkerInactive(getContext());
-        mPriceMarkerActive = new PriceMarkerActive(getContext());
+        mPriceMarkerInactive = new PriceMarker(getContext(), false);
+        mPriceMarkerActive = new PriceMarker(getContext(), true);
     }
 
     public static NearbyBookingsMapFragment newInstance(ArrayList<Booking> bookings, LatLng center)

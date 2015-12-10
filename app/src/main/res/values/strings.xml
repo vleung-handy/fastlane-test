@@ -481,10 +481,10 @@
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
 
     <!-- Nearby Booking -->
-    <string name="start_timer">STARTS IN %1$s</string>
-    <string name="nearby_booking">There are %1$d open jobs nearby! Claim one now.</string>
+    <string name="start_timer_formatted">STARTS IN %1$s</string>
+    <string name="nearby_booking_formatted">There are %1$d open jobs nearby! Claim one now.</string>
     <string name="claim_n_dollar_job">CLAIM %1$s JOB</string>
-    <string name="miles_away">%1$s miles away</string>
-    <string name="kilometers_away">%1$s kilometers away</string>
+    <string name="miles_away_formatted">%1$s miles away</string>
+    <string name="kilometers_away_formatted">%1$s kilometers away</string>
 
 </resources>
