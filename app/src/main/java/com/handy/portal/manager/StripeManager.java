@@ -3,6 +3,7 @@ package com.handy.portal.manager;
 
 import android.content.Context;
 
+import com.handy.portal.constant.Country;
 import com.handy.portal.core.PropertiesReader;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.StripeEvent;
@@ -123,8 +124,8 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     private String pickStripeApiKey(String country) {
-        if ("GB".equalsIgnoreCase(country)) { return STRIPE_API_KEY_GB; }
-        else if ("CA".equalsIgnoreCase(country)) { return STRIPE_API_KEY_CA; }
+        if (Country.GB.equalsIgnoreCase(country)) { return STRIPE_API_KEY_GB; }
+        else if (Country.CA.equalsIgnoreCase(country)) { return STRIPE_API_KEY_CA; }
         else { return STRIPE_API_KEY_US; }
     }
 
