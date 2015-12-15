@@ -22,11 +22,13 @@ import com.handy.portal.constant.Country;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingDialogFragment;
 import com.handy.portal.util.DateTimeUtils;
@@ -47,6 +49,8 @@ public class NearbyBookingsFragment extends ActionBarFragment
 
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     @InjectView(R.id.nearby_bookings_description)
     TextView mDescriptionText;
@@ -66,6 +70,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     private ArrayList<Booking> mBookings;
     private LatLng mCenter;
     private CountDownTimer mCounter;
+    private double mKilometer;
 
     public static NearbyBookingsFragment newInstance(ArrayList<Booking> bookings, LatLng center)
     {
@@ -119,6 +124,14 @@ public class NearbyBookingsFragment extends ActionBarFragment
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.post(new LogEvent.AddLogEvent(
+                mEventLogFactory.createNearbyJobsLaunchedLog(mBookings.size())));
+    }
+
+    @Override
     public void onPause()
     {
         super.onPause();
@@ -148,6 +161,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     @Override
     public void markerClicked(final Booking booking)
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPinSelectedLog()));
         setBookingInfoDisplay(booking);
     }
 
@@ -156,8 +170,10 @@ public class NearbyBookingsFragment extends ActionBarFragment
     {
         if (requestCode == RequestCode.CONFIRM_REQUEST && resultCode == Activity.RESULT_OK)
         {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
+            bus.post(new LogEvent.AddLogEvent(
+                    mEventLogFactory.createNearbyJobClaimSelectedLog(booking, mKilometer)));
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestClaimJob(booking, SOURCE));
         }
     }
@@ -165,9 +181,12 @@ public class NearbyBookingsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event)
     {
+        Booking booking = event.bookingClaimDetails.getBooking();
+        bus.post(new LogEvent.AddLogEvent(
+                mEventLogFactory.createNearbyJobClaimSuccessLog(booking, mKilometer)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Bundle arguments = new Bundle();
-        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, event.bookingClaimDetails.getBooking().getStartDate().getTime());
+        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, booking.getStartDate().getTime());
         bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, null));
     }
 
@@ -191,19 +210,19 @@ public class NearbyBookingsFragment extends ActionBarFragment
         String endTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(booking.getEndDate());
         mBookingTimeText.setText(getString(R.string.time_interval_formatted, startTime, endTime));
 
-        double km = MathUtils.getDistance(mCenter.latitude, mCenter.longitude,
+        mKilometer = MathUtils.getDistance(mCenter.latitude, mCenter.longitude,
                 address.getLatitude(), address.getLongitude());
         Provider provider = mProviderManager.getCachedActiveProvider();
         final String distance;
         if (provider != null && !Country.US.equalsIgnoreCase(provider.getCountry()))
         {
             distance = getString(R.string.kilometers_away_formatted,
-                    MathUtils.TWO_DECIMALS_FORMAT.format(km));
+                    MathUtils.TWO_DECIMALS_FORMAT.format(mKilometer));
         }
         else
         {
             distance = getString(R.string.miles_away_formatted,
-                    MathUtils.TWO_DECIMALS_FORMAT.format(km * MathUtils.MILES_PER_KILOMETER));
+                    MathUtils.TWO_DECIMALS_FORMAT.format(mKilometer * MathUtils.MILES_PER_KILOMETER));
         }
         mBookingDistanceText.setText(distance);
 
