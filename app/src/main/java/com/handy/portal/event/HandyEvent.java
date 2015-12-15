@@ -566,12 +566,12 @@ public abstract class HandyEvent
     @Track("check out")
     public static class ReceiveNotifyJobCheckOutSuccess extends ReceiveBookingSuccessEvent
     {
-        public boolean isAuto;
+        public boolean isAutoCheckIn;
 
-        public ReceiveNotifyJobCheckOutSuccess(Booking booking, boolean isAuto)
+        public ReceiveNotifyJobCheckOutSuccess(Booking booking, boolean isAutoCheckIn)
         {
             this.booking = booking;
-            this.isAuto = isAuto;
+            this.isAutoCheckIn = isAutoCheckIn;
         }
     }
 

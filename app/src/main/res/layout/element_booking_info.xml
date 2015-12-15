@@ -1,54 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="horizontal"
+              android:padding="@dimen/default_padding"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:orientation="vertical"
         >
 
         <TextView
             android:id="@+id/booking_info_timer"
+            style="@style/TextView.Headline.Blue"
+            android:textSize="@dimen/xsmall_text_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:text="@string/start_timer_formatted"
             />
 
         <TextView
             android:id="@+id/booking_info_address"
+            style="@style/HandyTextAppearanceTitle"
             android:layout_width="match_parent"
+            android:textSize="@dimen/large_text_size"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/default_padding"
+            tools:text="@string/address"
             />
 
         <TextView
             android:id="@+id/booking_info_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/subtitle_grey"
+            android:textSize="@dimen/small_text_size"
+            tools:text="@string/time"
             />
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="vertical"
         >
 
         <Button
             android:id="@+id/booking_info_claim_button"
+            style="@style/Button.Green.Round"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/small_text_size"
+            tools:text="@string/claim_n_dollar_job_formatted"
             />
 
         <TextView
             android:id="@+id/booking_info_distance"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/subtitle_grey"
+            android:textSize="@dimen/small_text_size"
+            tools:text="@string/miles_away_formatted"
             />
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
