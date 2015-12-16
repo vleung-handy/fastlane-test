@@ -483,8 +483,11 @@
     <!-- Nearby Booking -->
     <string name="start_timer_formatted">STARTS IN %1$s</string>
     <string name="nearby_booking_formatted">There are %1$d open jobs nearby! Claim one now.</string>
-    <string name="claim_n_dollar_job">CLAIM %1$s JOB</string>
+    <string name="claim_n_dollar_job_formatted">Claim %1$s Job</string>
     <string name="miles_away_formatted">%1$s miles away</string>
     <string name="kilometers_away_formatted">%1$s kilometers away</string>
+    <string name="withholding_charge">Canceling this job will result in a withholding</string>
+    <string name="please_confirm">Please confirm:</string>
+    <string name="time_interval_formatted">%1$s - %2$s</string>
 
 </resources>

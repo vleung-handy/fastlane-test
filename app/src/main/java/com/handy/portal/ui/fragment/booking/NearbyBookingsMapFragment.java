@@ -96,22 +96,21 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
 
     private void addCustomMarkers(GoogleMap map)
     {
+        map.setMyLocationEnabled(false);
         for (int i = 0; i < mBookings.size(); ++i)
         {
             Booking booking = mBookings.get(i);
             Address address = booking.getAddress();
-            PaymentInfo paymentInfo = booking.getPaymentToProvider();
             if (address != null)
             {
-                mPriceMarkerInactive.setText(
-                        paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount());
                 MarkerOptions markerOption = new MarkerOptions()
                         .position(new LatLng(address.getLatitude(), address.getLongitude()));
                 Marker marker = map.addMarker(markerOption);
                 mMarkerBookingMap.put(marker, booking);
-                if (i == 0) { clickMarker(marker); }
             }
         }
+        // click the first maker
+        clickMarker(mMarkerBookingMap.keySet().toArray(new Marker[0])[0]);
     }
 
     private void clickMarker(final Marker marker)
@@ -126,14 +125,13 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
         for (Map.Entry<Marker, Booking> entry : entries)
         {
             PaymentInfo paymentInfo = entry.getValue().getPaymentToProvider();
-            setIcon(entry.getKey(), entry.getKey() == marker,
+            setIcon(entry.getKey(), entry.getKey().getPosition().equals(marker.getPosition()),
                     paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount());
         }
     }
 
     private void setIcon(final Marker marker, final boolean active, final String label)
     {
-        mPriceMarkerInactive.setText(label);
         if (active)
         {
             mPriceMarkerActive.setText(label);

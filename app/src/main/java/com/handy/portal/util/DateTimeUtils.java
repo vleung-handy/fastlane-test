@@ -1,6 +1,10 @@
 package com.handy.portal.util;
 
+import android.os.CountDownTimer;
 import android.text.format.Time;
+import android.widget.TextView;
+
+import com.handy.portal.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,6 +27,7 @@ public final class DateTimeUtils
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
     public final static int HOURS_IN_WEEK = HOURS_IN_DAY * DAYS_IN_WEEK;
     public final static int MILLISECONDS_IN_MINUTE = 60000;
+    public final static int MILLISECONDS_IN_SECOND = 1000;
     public final static long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE * 60;
     public final static long MILLISECONDS_IN_30_MINS = MILLISECONDS_IN_MINUTE * 30;
     public final static long MILLISECONDS_IN_52_MINS = MILLISECONDS_IN_MINUTE * 52;
@@ -140,5 +145,21 @@ public final class DateTimeUtils
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(minutes);
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis)
+    {
+        return new CountDownTimer(timeRemainMillis, DateTimeUtils.MILLISECONDS_IN_SECOND)
+        {
+            @Override
+            public void onTick(final long millisUntilFinished)
+            {
+                textView.setText(textView.getContext().getString(R.string.start_timer_formatted,
+                        DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
+            }
+
+            @Override
+            public void onFinish() { }
+        }.start();
     }
 }

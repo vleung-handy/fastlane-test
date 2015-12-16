@@ -855,7 +855,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             {
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
                 ClaimTargetDialogFragment claimTargetDialogFragment = new ClaimTargetDialogFragment();
-                claimTargetDialogFragment.setDisplayData(claimTargetInfo);
+                claimTargetDialogFragment.setDisplayData(claimTargetInfo); //wrong way to pass argument to a fragment
                 claimTargetDialogFragment.show(getFragmentManager(), ClaimTargetDialogFragment.FRAGMENT_TAG);
 
                 returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null);
@@ -953,7 +953,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
     {
-        if (!event.isAuto)
+        if (!event.isAutoCheckIn)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
