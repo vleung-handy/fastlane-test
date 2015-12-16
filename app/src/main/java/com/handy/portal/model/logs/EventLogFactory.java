@@ -42,7 +42,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -55,7 +55,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -69,7 +69,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -89,7 +89,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -102,7 +102,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -115,7 +115,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -244,18 +244,6 @@ public class EventLogFactory
         else
         {
             return "";
-        }
-    }
-
-    private static int getRegionId(Address address)
-    {
-        if (address != null)
-        {
-            return address.getRegionId();
-        }
-        else
-        {
-            return 0;
         }
     }
 

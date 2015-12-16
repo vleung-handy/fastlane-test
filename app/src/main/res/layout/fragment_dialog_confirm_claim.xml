@@ -32,7 +32,8 @@
 
     <TextView
         android:id="@+id/booking_info_timer"
-        style="@style/TextView.Headline.Blue"
+        style="@style/CircularBold"
+        android:textColor="@color/handy_blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

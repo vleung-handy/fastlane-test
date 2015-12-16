@@ -107,8 +107,14 @@ public class NearbyBookingsFragment extends ActionBarFragment
         transaction.replace(mMapContainer.getId(), fragment);
         transaction.commit();
 
-        mDescriptionText.setText(getString(R.string.nearby_booking_formatted, mBookings.size()));
-
+        if (mBookings.size() > 1)
+        {
+            mDescriptionText.setText(getString(R.string.nearby_booking_formatted, mBookings.size()));
+        }
+        else
+        {
+            mDescriptionText.setText(getString(R.string.nearby_booking_one));
+        }
         return view;
     }
 
@@ -179,7 +185,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
 
         setCountDownTimer(booking.getStartDate().getTime() - System.currentTimeMillis());
 
-        mBookingAddressText.setText(booking.getFormattedLocation(Booking.BookingStatus.AVAILABLE));
+        mBookingAddressText.setText(booking.getAddress().getShortRegion());
 
         String startTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(booking.getStartDate());
         String endTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(booking.getEndDate());

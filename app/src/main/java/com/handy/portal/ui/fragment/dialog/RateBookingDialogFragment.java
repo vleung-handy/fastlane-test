@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLng;
@@ -85,23 +84,29 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @OnClick(R.id.rate_booking_confirm_checkout_button)
     public void onConfirmCheckoutButtonClick()
     {
+        Address address = mBooking.getAddress();
+        if (address != null)
+        {
+            bus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
+                    address.getLatitude(), address.getLongitude()));
+        }
         //Endpoint is expecting a rating of 1 - 5
-        if (getBookingRatingScore() > 0)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestNotifyJobCheckOut(
-                            getBookingId(),
-                            new CheckoutRequest(
-                                    getLocationData(),
-                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
-                            )
-                    )
-            );
-        }
-        else
-        {
-            UIUtils.showToast(getContext(), getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
-        }
+//        if (getBookingRatingScore() > 0)
+//        {
+//            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+//            bus.post(new HandyEvent.RequestNotifyJobCheckOut(
+//                            getBookingId(),
+//                            new CheckoutRequest(
+//                                    getLocationData(),
+//                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
+//                            )
+//                    )
+//            );
+//        }
+//        else
+//        {
+//            UIUtils.showToast(getContext(), getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
+//        }
     }
 
     //when clicked on, close the dialog, the fragment will listen for the event to come back and transition correctly, if fails brings back
@@ -113,8 +118,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
-                bus.post(new BookingEvent.RequestNearbyBookings(address.getRegionId(),
-                        address.getLatitude(), address.getLongitude()));
+                bus.post(new BookingEvent.RequestNearbyBookings(5, 40.7400016784668, -73.99299621582031));
             }
             else
             {
