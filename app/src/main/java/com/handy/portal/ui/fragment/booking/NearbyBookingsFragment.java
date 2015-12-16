@@ -201,6 +201,8 @@ public class NearbyBookingsFragment extends ActionBarFragment
         }
         mBookingDistanceText.setText(distance);
 
+        final ConfirmBookingDialogFragment dialogFragment =
+                ConfirmBookingDialogFragment.newInstance(booking);
         mBookingClaimButton.setText(getString(R.string.claim_n_dollar_job_formatted,
                 paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount()));
         mBookingClaimButton.setOnClickListener(new View.OnClickListener()
@@ -208,8 +210,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
             @Override
             public void onClick(final View v)
             {
-                ConfirmBookingDialogFragment dialogFragment =
-                        ConfirmBookingDialogFragment.newInstance(booking);
+                if (dialogFragment.isVisible()) { return; }
                 dialogFragment.setTargetFragment(NearbyBookingsFragment.this, RequestCode.CONFIRM_REQUEST);
                 dialogFragment.show(getFragmentManager(), ConfirmBookingDialogFragment.FRAGMENT_TAG);
             }
