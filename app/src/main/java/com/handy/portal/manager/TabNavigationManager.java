@@ -16,28 +16,50 @@ public class TabNavigationManager
 {
     private final Bus mBus;
     private final ProviderManager mProviderManager;
+    private final PaymentsManager mPaymentsManager;
     private final WebUrlManager mWebUrlManager;
+    private final ConfigManager mConfigManager;
 
     @Inject
     public TabNavigationManager(final Bus bus,
                                 final ProviderManager providerManager,
-                                final WebUrlManager webUrlManager)
+                                final WebUrlManager webUrlManager,
+                                final PaymentsManager paymentsManager,
+                                final ConfigManager configManager
+    )
     {
         mBus = bus;
         mBus.register(this);
         mProviderManager = providerManager;
         mWebUrlManager = webUrlManager;
+        mPaymentsManager = paymentsManager;
+        mConfigManager = configManager;
     }
 
     @Subscribe
     //catch this , add extra data/process needed data, pass along to fragment for final usage/swap
     public void onRequestProcessNavigateToTab(HandyEvent.RequestProcessNavigateToTab event)
     {
+//Ordering is important, first check if they should ever see anything
+        //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
+        if (doesCachedProviderNeedPaymentInformation() &&
+                configBlockingForPayment() &&
+                (
+                        event.targetTab == MainViewTab.AVAILABLE_JOBS ||
+                                event.targetTab == MainViewTab.SCHEDULED_JOBS ||
+                                event.targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW
+                )
+                )
+        {
+            event.targetTab = MainViewTab.PAYMENT_BLOCKING;
+        }
+
         //HACK : Magical hack to turn block pros available jobs into the webview block jobs
-        if(isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
+        if (isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
         {
             event.targetTab = MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW;
         }
+
 
         SwapFragmentArguments swapFragmentArguments = generateSwapFragmentArguments(
                 event.targetTab,
@@ -53,6 +75,19 @@ public class TabNavigationManager
     private  boolean isCachedProviderBlockPro()
     {
         return mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().isBlockCleaner();
+    }
+
+    private boolean doesCachedProviderNeedPaymentInformation()
+    {
+        //return true;
+        return mPaymentsManager.HACK_directAccessCacheNeedsPayment();
+    }
+
+    private boolean configBlockingForPayment()
+    {
+        //return true;
+        //return (mConfigManager.getConfigurationResponse() != null);
+        return (mConfigManager.getConfigurationResponse() != null && mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation());
     }
 
     public SwapFragmentArguments generateSwapFragmentArguments(MainViewTab targetTab,
