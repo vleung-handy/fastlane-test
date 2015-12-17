@@ -45,16 +45,16 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("booking_id")
         private String mBookingId;
         @SerializedName("distance_to_job")
-        private double mDistance;
+        private double mDistanceInKilometer;
         @SerializedName("payment_to_provider")
         private int mPaymentAmount;
 
         public ClaimJobSelected(String providerId, String versionTrack, String bookingId,
-                                final double distance, final int paymentAmount)
+                                final double distanceInKilometer, final int paymentAmount)
         {
             super(providerId, versionTrack, EVENT_TYPE);
             mBookingId = bookingId;
-            mDistance = distance;
+            mDistanceInKilometer = distanceInKilometer;
             mPaymentAmount = paymentAmount;
         }
     }
@@ -67,16 +67,16 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("booking_id")
         private String mBookingId;
         @SerializedName("distance_to_job")
-        private double mDistance;
+        private double mDistanceInKilometer;
         @SerializedName("payment_to_provider")
         private int mPaymentAmount;
 
         public ClaimJobSuccess(String providerId, String versionTrack, String bookingId,
-                               final double distance, final int paymentAmount)
+                               final double distanceInKilometer, final int paymentAmount)
         {
             super(providerId, versionTrack, EVENT_TYPE);
             mBookingId = bookingId;
-            mDistance = distance;
+            mDistanceInKilometer = distanceInKilometer;
             mPaymentAmount = paymentAmount;
         }
     }

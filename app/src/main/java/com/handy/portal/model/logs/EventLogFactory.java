@@ -43,22 +43,22 @@ public class EventLogFactory
         return new NearbyJobsLog.PinSelected(getProviderId(), getVersionTrack());
     }
 
-    public EventLog createNearbyJobClaimSelectedLog(Booking booking, double distance)
+    public EventLog createNearbyJobClaimSelectedLog(Booking booking, double distanceInKilometer)
     {
         String bookingId = booking.getId();
         int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
 
         return new NearbyJobsLog.ClaimJobSelected(getProviderId(), getVersionTrack(), bookingId,
-                distance, paymentAmount);
+                distanceInKilometer, paymentAmount);
     }
 
-    public EventLog createNearbyJobClaimSuccessLog(Booking booking, double distance)
+    public EventLog createNearbyJobClaimSuccessLog(Booking booking, double distanceInKilometer)
     {
         String bookingId = booking.getId();
         int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
 
         return new NearbyJobsLog.ClaimJobSuccess(getProviderId(), getVersionTrack(), bookingId,
-                distance, paymentAmount);
+                distanceInKilometer, paymentAmount);
     }
 
     // Available Booking Logs
