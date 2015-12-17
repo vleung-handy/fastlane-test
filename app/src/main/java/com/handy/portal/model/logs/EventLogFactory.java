@@ -32,6 +32,35 @@ public class EventLogFactory
         return new BasicLog.Navigation(getProviderId(), getVersionTrack(), tabName);
     }
 
+    // Nearby Bookings Logs
+    public EventLog createNearbyJobsLaunchedLog(int numOfJobs)
+    {
+        return new NearbyJobsLog.Shown(getProviderId(), getVersionTrack(), numOfJobs);
+    }
+
+    public EventLog createPinSelectedLog()
+    {
+        return new NearbyJobsLog.PinSelected(getProviderId(), getVersionTrack());
+    }
+
+    public EventLog createNearbyJobClaimSelectedLog(Booking booking, double distanceInKilometer)
+    {
+        String bookingId = booking.getId();
+        int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+
+        return new NearbyJobsLog.ClaimJobSelected(getProviderId(), getVersionTrack(), bookingId,
+                distanceInKilometer, paymentAmount);
+    }
+
+    public EventLog createNearbyJobClaimSuccessLog(Booking booking, double distanceInKilometer)
+    {
+        String bookingId = booking.getId();
+        int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+
+        return new NearbyJobsLog.ClaimJobSuccess(getProviderId(), getVersionTrack(), bookingId,
+                distanceInKilometer, paymentAmount);
+    }
+
     // Available Booking Logs
     public EventLog createAvailableJobDateClickedLog(Date date, int jobCount)
     {
@@ -42,7 +71,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -55,7 +84,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -69,7 +98,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -89,7 +118,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -102,7 +131,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -115,7 +144,7 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
-        int regionId = getRegionId(booking.getAddress());
+        int regionId = booking.getRegionId();
         String zipCode = getZipCode(booking.getAddress());
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
@@ -132,7 +161,7 @@ public class EventLogFactory
         double accuracy = getAccuracy(location);
         double bookingLatitude = getLatitude(booking.getAddress());
         double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.distFrom(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
+        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
         return new CheckInFlowLog.OnMyWay(getProviderId(), getVersionTrack(), bookingId,
                 proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
@@ -146,7 +175,7 @@ public class EventLogFactory
         double accuracy = getAccuracy(location);
         double bookingLatitude = getLatitude(booking.getAddress());
         double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.distFrom(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
+        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
         return new CheckInFlowLog.CheckIn(getProviderId(), getVersionTrack(), bookingId,
                 proLatitude, proLongitude, bookingLatitude,
@@ -161,7 +190,7 @@ public class EventLogFactory
         double accuracy = getAccuracy(location);
         double bookingLatitude = getLatitude(booking.getAddress());
         double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.distFrom(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
+        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
         return new CheckInFlowLog.CheckOut(getProviderId(), getVersionTrack(), bookingId,
                 proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
@@ -244,18 +273,6 @@ public class EventLogFactory
         else
         {
             return "";
-        }
-    }
-
-    private static int getRegionId(Address address)
-    {
-        if (address != null)
-        {
-            return address.getRegionId();
-        }
-        else
-        {
-            return 0;
         }
     }
 

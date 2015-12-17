@@ -8,6 +8,7 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
@@ -36,6 +37,7 @@ public enum MainViewTab implements Serializable
     DETAILS(BookingDetailsFragment.class),
     HELP_CONTACT(HelpContactFragment.class),
     BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
+    NEARBY_JOBS(NearbyBookingsFragment.class),
     ;
 
     private Class classType;

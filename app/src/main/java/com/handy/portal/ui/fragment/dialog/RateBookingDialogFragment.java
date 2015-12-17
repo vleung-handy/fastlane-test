@@ -10,9 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
@@ -21,6 +25,8 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -102,10 +108,42 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
     {
-        if (!event.isAuto)
+        if (!event.isAutoCheckIn)
         {
-            dismiss();
+            Address address = mBooking.getAddress();
+            if (address != null)
+            {
+                bus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
+                        address.getLatitude(), address.getLongitude()));
+            }
+            else
+            {
+                dismiss();
+            }
         }
+    }
+
+    @Subscribe
+    public void onReceiveNearbyBookingsSuccess(final BookingEvent.ReceiveNearbyBookingsSuccess event)
+    {
+        if (event.getBookings().size() < 1) { return; }
+
+        Address address = mBooking.getAddress();
+        if (address != null)
+        {
+            Bundle args = new Bundle();
+            args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
+            args.putParcelable(BundleKeys.MAP_CENTER,
+                    new LatLng(address.getLatitude(), address.getLongitude()));
+            bus.post(new HandyEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
+        }
+        dismiss();
+    }
+
+    @Subscribe
+    public void onReceiveNearbyBookingsError(final BookingEvent.ReceiveNearbyBookingsError event)
+    {
+        dismiss();
     }
 
     private String getBookingId()

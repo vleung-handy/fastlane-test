@@ -6,6 +6,7 @@ import com.google.common.cache.CacheBuilder;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
@@ -194,6 +195,26 @@ public class BookingManager
                     }
             );
         }
+    }
+
+    @Subscribe
+    public void onRequestNearbyBookings(BookingEvent.RequestNearbyBookings event)
+    {
+        dataManager.getNearbyBookings(event.getRegionId(), event.getLatitude(), event.getLongitude(),
+                new DataManager.Callback<BookingsWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final BookingsWrapper response)
+                    {
+                        bus.post(new BookingEvent.ReceiveNearbyBookingsSuccess(response.getBookings()));
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        bus.post(new BookingEvent.ReceiveNearbyBookingsError(error));
+                    }
+                });
     }
 
     @Subscribe

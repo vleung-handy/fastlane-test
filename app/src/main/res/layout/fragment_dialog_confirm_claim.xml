@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="@dimen/default_padding"
+    >
+
+    <ImageView
+        android:id="@+id/booking_info_dismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:src="@drawable/ic_x"
+        />
+
+    <TextView
+        style="@style/CircularBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:text="@string/please_confirm"
+        android:textColor="@color/black"
+        android:textSize="@dimen/large_text_size"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/booking_info_timer"
+        style="@style/CircularBold"
+        android:textColor="@color/handy_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:textSize="@dimen/small_text_size"
+        tools:text="@string/start_timer_formatted"
+        />
+
+    <TextView
+        android:id="@+id/booking_info_address"
+        style="@style/CircularBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/xxlarge_text_size"
+        android:textStyle="bold"
+        tools:text="28th Street"
+        />
+
+    <TextView
+        android:id="@+id/booking_info_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/medium_text_size"
+        tools:text="1:00pm - 3:00pm"
+        />
+
+    <Button
+        android:id="@+id/booking_info_claim_button"
+        style="@style/Button.Green.Round"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:text="@string/claim_job"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
+        />
+
+    <TextView
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/withholding_charge"
+        android:textColor="@color/black"
+        android:textSize="@dimen/xsmall_text_size"
+        />
+
+</LinearLayout>
+
+
