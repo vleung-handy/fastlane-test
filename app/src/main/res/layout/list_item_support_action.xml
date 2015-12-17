@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/support_action"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/button_white"
-              android:gravity="center_vertical"
-              android:orientation="horizontal"
-              android:paddingBottom="12dp"
-              android:paddingLeft="20dp"
-              android:paddingRight="20dp"
-              android:paddingTop="12dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/support_action"
+    style="@style/List.White.SupportAction"
+    >
 
     <ImageView
         android:id="@+id/support_action_icon"
         android:layout_width="26dp"
-        android:layout_height="26dp"/>
+        android:layout_height="26dp"
+        />
 
     <TextView
         android:id="@+id/support_action_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:textSize="18sp"/>
+        android:layout_marginLeft="@dimen/section_item_margin"
+        android:layout_marginStart="@dimen/section_item_margin"
+        android:textSize="@dimen/large_text_size"
+        />
 
 </LinearLayout>

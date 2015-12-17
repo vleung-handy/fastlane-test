@@ -4,11 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.fragment.payments.PaymentsFragment;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -50,52 +47,7 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     public void givenNoTabSelected_whenActivityResumes_thenLoadJobsScreen() throws Exception
     {
         assertThat(getScreenFragment(), instanceOf(AvailableBookingsFragment.class));
-        assertTrue(activityFragment.jobsButton.isChecked());
-    }
-
-    @Ignore
-    @Test
-    public void whenScheduleButtonClicked_thenLoadScheduledBookingsFragment() throws Exception
-    {
-        activityFragmentView.findViewById(R.id.button_schedule).performClick();
-        assertThat(getScreenFragment(), instanceOf(ScheduledBookingsFragment.class));
-        assertTrue(activityFragment.scheduleButton.isChecked());
-    }
-
-    @Ignore
-    @Test
-    public void whenPaymentsButtonClicked_thenLoadPaymentsFragment() throws Exception
-    {
-        activityFragmentView.findViewById(R.id.button_payments).performClick();
-        assertThat(getScreenFragment(), instanceOf(PaymentsFragment.class));
-        assertTrue(activityFragment.paymentsButton.isChecked());
-    }
-
-    @Ignore
-    @Test
-    public void whenProfileButtonClicked_thenLoadProfileFragment() throws Exception
-    {
-        activityFragmentView.findViewById(R.id.button_profile).performClick();
-        assertThat(getScreenFragment(), instanceOf(ProfileFragment.class));
-        assertTrue(activityFragment.profileButton.isChecked());
-    }
-
-    @Ignore
-    @Test
-    public void whenHelpButtonClicked_thenLoadHelpFragment() throws Exception
-    {
-        activityFragmentView.findViewById(R.id.button_help).performClick();
-        assertThat(getScreenFragment(), instanceOf(HelpFragment.class));
-        assertTrue(activityFragment.helpButton.isChecked());
-    }
-
-    @Ignore
-    @Test
-    public void whenJobsButtonClicked_thenLoadAvailableBookingsFragment() throws Exception
-    {
-        activityFragmentView.findViewById(R.id.button_jobs).performClick();
-        assertThat(getScreenFragment(), instanceOf(AvailableBookingsFragment.class));
-        assertTrue(activityFragment.jobsButton.isChecked());
+        assertTrue(activityFragment.mJobsButton.isChecked());
     }
 
     public Fragment getScreenFragment()

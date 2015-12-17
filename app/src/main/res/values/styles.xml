@@ -21,6 +21,11 @@
         <item name="android:windowExitAnimation">@anim/slide_up_to_top</item>
     </style>
 
+    <style name="dialog_animation_slide_up_down_from_bottom">
+        <item name="android:windowEnterAnimation">@anim/slide_up_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_down_to_bottom</item>
+    </style>
+
     <style name="MenuButtonLayout">
         <item name="android:layout_width">64dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -38,6 +43,19 @@
         <item name="android:background">@color/handy_blue</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Simple font styles -->
+    <style name="CircularBold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="CircularBook">
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+    </style>
+
+    <style name="CircularMedium">
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
     </style>
 
     <!--TODO: clean up these text appearance styles -->
@@ -88,12 +106,26 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_gravity">bottom</item>
         <item name="android:button">@null</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:background">@drawable/tab_button_background</item>
+        <item name="android:gravity">bottom|center</item>
         <item name="android:textColor">@drawable/tab_button_text</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:paddingTop">@dimen/tab_top_padding</item>
+        <item name="android:paddingBottom">@dimen/tab_bottom_padding</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
+    <style name="TrayButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/default_padding</item>
+        <item name="android:paddingRight">@dimen/default_padding</item>
+        <item name="android:paddingTop">@dimen/default_padding</item>
+        <item name="android:paddingBottom">@dimen/default_padding</item>
+        <item name="android:drawablePadding">@dimen/default_padding</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="android:background">@drawable/button_white</item>
     </style>
 
     <style name="Button">
@@ -604,6 +636,30 @@
     <style name="CirclePageIndicatorStyle">
     </style>
 
+    <style name="List">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="List.White">
+        <item name="android:background">@drawable/button_white</item>
+    </style>
+
+    <style name="List.White.SupportAction">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingLeft">@dimen/payment_container_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/payment_container_horizontal_padding</item>
+        <item name="android:paddingTop">12dp</item>
+    </style>
+
+    <style name="List.White.HelpNode">
+        <item name="android:layout_height">60dp</item>
+        <item name="android:paddingLeft">@dimen/default_padding</item>
+        <item name="android:paddingRight">@dimen/default_padding</item>
+    </style>
+
     <style name="Tooltip">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -617,6 +673,12 @@
         <item name="android:background">@drawable/tooltip_blue</item>
     </style>
 
-    <string name="name">Name</string>
-
+    <style name="RatingButtonToggle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:divider">?android:attr/dividerVertical</item>
+        <item name="android:showDividers">middle</item>
+    </style>
 </resources>

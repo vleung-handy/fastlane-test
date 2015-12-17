@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,7 +12,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -28,19 +29,15 @@ import butterknife.OnClick;
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
     @InjectView(R.id.scheduled_jobs_list_view)
-    protected BookingListView scheduledJobsListView;
-
+    BookingListView scheduledJobsListView;
     @InjectView(R.id.scheduled_bookings_dates_scroll_view_layout)
-    protected LinearLayout scheduledJobsDatesScrollViewLayout;
-
+    LinearLayout scheduledJobsDatesScrollViewLayout;
     @InjectView(R.id.scheduled_bookings_empty)
-    protected ViewGroup noScheduledBookingsLayout;
-
+    ViewGroup noScheduledBookingsLayout;
     @InjectView(R.id.find_jobs_for_day_button)
-    protected Button findJobsForDayButton;
-
+    Button findJobsForDayButton;
     @InjectView(R.id.find_matching_jobs_button_container)
-    protected ViewGroup findMatchingJobsButtonContainer;
+    ViewGroup findMatchingJobsButtonContainer;
 
     @Override
     protected MainViewTab getTab()
@@ -83,6 +80,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         return new HandyEvent.RequestScheduledBookings(dates, useCachedIfPresent);
     }
 
+    @NonNull
     @Override
     protected String getTrackingType()
     {
@@ -99,8 +97,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected void beforeRequestBookings()
     {
         //Crash #476, some timing issue where butterknife hasn't injected yet
-            //Ugly hack fix in lieu of restructuring code to track down root issue
-        if(findMatchingJobsButtonContainer != null)
+        //Ugly hack fix in lieu of restructuring code to track down root issue
+        if (findMatchingJobsButtonContainer != null)
         {
             findMatchingJobsButtonContainer.setVisibility(View.GONE);
         }
@@ -115,11 +113,21 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory
+                .createScheduledJobDateClickedLog(dateOfBookings, bookingsForDay.size())));
         bus.post(new HandyEvent.RequestProviderInfo());
 
-        //show Find Jobs buttons only if we're inside of our available bookings length range
-        int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
-        if (bookingsForDay.size() == 0 && DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
+        //Show "Find Jobs" buttons only if we're inside of our available bookings length range and we have no jobs
+
+        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
+        if (configManager.getConfigurationResponse() != null)
+        {
+            hoursSpanningAvailableBookings =
+                    configManager.getConfigurationResponse().getHoursSpanningAvailableBookings();
+        }
+
+        if (bookingsForDay.size() == 0 &&
+            DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
         {
             findJobsForDayButton.setVisibility(View.VISIBLE);
         }
@@ -135,7 +143,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         if (bookingsForSelectedDay == null || selectedDay == null) { return; }
 
         //show Find Matching Jobs buttons only if we're inside of our available bookings length range
-        int hoursSpanningAvailableBookings = configManager.getConfigParamValue(ConfigManager.KEY_HOURS_SPANNING_AVAILABLE_BOOKINGS, 0);
+        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
+        if (configManager.getConfigurationResponse() != null)
+        {
+            hoursSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings();
+        }
+
         if (event.provider.isComplementaryJobsEnabled()
                 && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings)
                 && bookingsForSelectedDay.size() == 1

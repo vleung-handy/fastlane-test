@@ -66,6 +66,7 @@
     <string name="promotions">Promotions</string>
     <string name="log_in">Log In</string>
     <string name="email">Email</string>
+    <string name="name">Name</string>
     <string name="full_name">Full Name</string>
     <string name="phone">Phone</string>
     <string name="password">Password</string>
@@ -80,6 +81,7 @@
     <string name="share">Share</string>
     <string name="my_bookings">My Bookings</string>
     <string name="profile">Profile</string>
+    <string name="my_profile">My Profile</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="want_to_log_out">Are you sure you want to log out?</string>
     <string name="update">Update</string>
@@ -223,18 +225,21 @@
         <item quantity="other">hours</item>
     </plurals>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tab_jobs">Jobs</string>
+    <string name="tab_claim">Claim</string>
     <string name="tab_schedule">Schedule</string>
     <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
+    <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
-    <string name="scheduled_jobs">Scheduled Jobs</string>
-    <string name="block_jobs_schedule">Block Jobs Schedule</string>
     <string name="available_job">Available Job</string>
+    <string name="scheduled_jobs">Scheduled Jobs</string>
+    <string name="scheduled_job">Scheduled Job</string>
+    <string name="block_jobs_schedule">Block Jobs Schedule</string>
     <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
     <string name="payment_value">%s</string>
     <string name="payment_help">Payment Help</string>
@@ -395,6 +400,7 @@
     <string name="no_more_payments">You have no more payments for this year.</string>
     <string name="expected_deposit">Expect deposit by</string>
     <string name="update_payment_method">Update Payment Method</string>
+    <string name="edit_payment_method">Edit Payment Method</string>
     <string name="select_payment_method">Select Payment Method</string>
     <string name="payment_flow_error">Failed to get payment flow</string>
     <string name="payment_account">Payment Account</string>
@@ -423,6 +429,11 @@
     <string name="bank_account">Bank Account</string>
     <string name="debit_card">Debit Card</string>
     <string name="update_bank_info">Update Bank Info</string>
+
+    <!-- Notification Blocker -->
+    <string name="notification_blocker_title">Please turn on push notifications</string>
+    <string name="notification_blocker_body">We use push notifications to send you changes to your schedule, payment updates and more. Please tap below to turn on push notifications.</string>
+    <string name="enable_now">Enable Now</string>
 
     <!-- Profile -->
     <string name="get_resupply_kit">Get a Resupply Kit</string>
@@ -462,4 +473,22 @@
     <string name="complete_purchase">Complete Purchase</string>
     <string name="complete_purchase_disclaimer">* completing purchase will withhold %1$s from your next pay period.</string>
     <string name="no_address_on_file">No Address On File</string>
+
+    <!-- Rate Booking -->
+    <string name="rate_booking_title">How did this job go?</string>
+    <string name="rate_booking_confirm_checkout_button">Confirm Check Out</string>
+    <string name="rate_booking_comment_text_hint">Any additional comments?</string>
+    <string name="rate_booking_need_rating">You must select a rating to check out</string>
+
+    <!-- Nearby Booking -->
+    <string name="start_timer_formatted">STARTS IN %1$s</string>
+    <string name="nearby_booking_one">There is 1 open job nearby! Claim it now.</string>
+    <string name="nearby_booking_formatted">There are %1$d open jobs nearby! Claim one now.</string>
+    <string name="claim_n_dollar_job_formatted">Claim %1$s Job</string>
+    <string name="miles_away_formatted">%1$s miles away</string>
+    <string name="kilometers_away_formatted">%1$s kilometers away</string>
+    <string name="withholding_charge">Canceling this job will result in a withholding</string>
+    <string name="please_confirm">Please confirm:</string>
+    <string name="time_interval_formatted">%1$s - %2$s</string>
+
 </resources>

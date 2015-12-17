@@ -9,7 +9,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -20,6 +20,7 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -56,8 +57,6 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
             Crashlytics.logException(e);
             callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER, e.getMessage()));
         }
-
-
     }
 }
 
@@ -159,14 +158,6 @@ class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitC
     }
 }
 
-class ConfigParamResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<ConfigParams>
-{
-    ConfigParamResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
 class HelpNodeResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<HelpNodeWrapper>
 {
     HelpNodeResponseHandyRetroFitCallback(DataManager.Callback callback)
@@ -223,6 +214,14 @@ class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeToken
     }
 }
 
+class LogEventsRetroFitCallback extends TypedHandyRetrofitCallback<EventLogResponse>
+{
+    LogEventsRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
 class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
 {
     CreateBankAccountRetroFitCallback(DataManager.Callback callback)
@@ -258,6 +257,14 @@ class GetPaymentFlowRetroFitCallback extends TypedHandyRetrofitCallback<PaymentF
 class GetZipClusterPolygonRetroFitCallback extends TypedHandyRetrofitCallback<ZipClusterPolygons>
 {
     GetZipClusterPolygonRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class ConfigurationResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<ConfigurationResponse>
+{
+    ConfigurationResponseHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

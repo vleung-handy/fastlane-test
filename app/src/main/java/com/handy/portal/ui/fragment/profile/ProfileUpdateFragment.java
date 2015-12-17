@@ -17,15 +17,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -117,7 +120,11 @@ public class ProfileUpdateFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        if (mProviderManager.getCachedActiveProvider() != null)
+        {
+            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
+                    mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        }
     }
 
     @Override
@@ -138,6 +145,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (validate())
         {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createEditProfileConfirmedLog()));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
                     mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));
@@ -181,8 +189,14 @@ public class ProfileUpdateFragment extends ActionBarFragment
     private void initialize()
     {
         Provider provider = mProviderManager.getCachedActiveProvider();
-        ProviderPersonalInfo info = mProviderManager.getCachedProviderProfile().getProviderPersonalInfo();
-        if (info == null || provider == null) { return; }
+        ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+        if (provider == null || profile == null || profile.getProviderPersonalInfo() == null)
+        {
+            Crashlytics.logException(new NullPointerException("Provider or ProviderProfile is null."));
+            return;
+        }
+
+        ProviderPersonalInfo info = profile.getProviderPersonalInfo();
         mNameText.setText(info.getFirstName() + " " + info.getLastName());
         mAddressText.setText(info.getAddress().getAddress1());
         mAddress2Text.setText(info.getAddress().getAddress2());

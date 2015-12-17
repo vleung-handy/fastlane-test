@@ -17,6 +17,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
@@ -102,6 +103,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @OnClick(R.id.request_supplies_button)
     public void onRequestSuppliesButtonClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createResupplyKitConfirmedLog()));
         if(mProviderProfile != null)
         {
             if(mProviderProfile.getResupplyInfo().providerCanRequestSuppliesNow() && mProviderProfile.getProviderPersonalInfo().getAddress() != null)

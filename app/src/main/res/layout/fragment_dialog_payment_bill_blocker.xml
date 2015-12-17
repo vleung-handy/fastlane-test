@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:id="@+id/payments_bill_blocker_window"
-                android:gravity="center"
+<RelativeLayout
+    android:id="@+id/payments_bill_blocker_window"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
     >
 
     <!--<ImageView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:translationY="-20dp"-->
-        <!--android:src="@drawable/ic_alert_circle"/>-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:translationY="-20dp"-->
+    <!--android:src="@drawable/ic_alert_circle"/>-->
     <!--TODO: style this so that it doesn't get clipped-->
 
     <LinearLayout
@@ -24,25 +25,30 @@
         android:paddingBottom="@dimen/default_padding"
         android:paddingLeft="@dimen/default_padding_medium"
         android:paddingRight="@dimen/default_padding_medium"
-        android:paddingTop="@dimen/default_padding_medium">
+        android:paddingTop="@dimen/default_padding_medium"
+        >
 
         <TextView
             android:id="@+id/payments_bill_blocker_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
+            android:lineSpacingExtra="@dimen/lineSpacing"
             android:text="@string/payments_bill_blocker_title"
             android:textAppearance="@style/TextView.Bold"
-            android:textSize="@dimen/large_text_size"/>
+            android:textSize="@dimen/large_text_size"
+            />
 
         <TextView
             android:id="@+id/payments_bill_blocker_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/payment_container_vertical_padding"
+            android:lineSpacingExtra="@dimen/lineSpacing"
             android:text="@string/payments_bill_blocker_content"
             android:textAppearance="@style/HandyTextAppearanceMedium"
-            android:textColor="@color/dark_grey"/>
+            android:textColor="@color/dark_grey"
+            />
 
         <Button
             android:id="@+id/payments_bill_blocker_update_now_button"
@@ -50,7 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_padding"
-            android:text="@string/payments_bill_blocker_update_now_button"/>
+            android:text="@string/payments_bill_blocker_update_now_button"
+            />
 
         <Button
             android:id="@+id/payments_bill_blocker_later_button"
@@ -61,7 +68,8 @@
             android:textAllCaps="true"
             android:textAppearance="@style/TextView.Bold"
             android:textColor="@color/tertiary_grey"
-            android:textSize="@dimen/small_text_size"/>
+            android:textSize="@dimen/small_text_size"
+            />
 
     </LinearLayout>
 </RelativeLayout>

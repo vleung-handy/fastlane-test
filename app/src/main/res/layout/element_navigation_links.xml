@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav_tray_links"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <RadioButton
+        android:id="@+id/nav_link_my_profile"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/tray_button_profile"
+        android:text="@string/my_profile"
+        />
+
+    <RadioButton
+        android:id="@+id/nav_link_payments"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/tray_button_payments"
+        android:text="@string/payments"
+        />
+
+    <RadioButton
+        android:id="@+id/nav_link_edit_payment_method"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/tray_button_edit_payment_method"
+        android:text="@string/edit_payment_method"
+        />
+
+    <RadioButton
+        android:id="@+id/nav_link_help"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/tray_button_help"
+        android:text="@string/help"
+        />
+
+</RadioGroup>

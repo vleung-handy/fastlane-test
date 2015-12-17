@@ -1,10 +1,15 @@
 package com.handy.portal.util;
 
+import android.os.CountDownTimer;
 import android.text.format.Time;
+import android.widget.TextView;
+
+import com.handy.portal.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public final class DateTimeUtils
 {
@@ -16,11 +21,16 @@ public final class DateTimeUtils
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
     public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
     public final static SimpleDateFormat MONTH_DATE_YEAR_DATE_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
-    //these are public so that we can pass them in formatDateRange
 
     public final static int HOURS_IN_DAY = 24;
+    public final static int DAYS_IN_WEEK = 7;
+    public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
+    public final static int HOURS_IN_WEEK = HOURS_IN_DAY * DAYS_IN_WEEK;
     public final static int MILLISECONDS_IN_MINUTE = 60000;
+    public final static int MILLISECONDS_IN_SECOND = 1000;
     public final static long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE * 60;
+    public final static long MILLISECONDS_IN_30_MINS = MILLISECONDS_IN_MINUTE * 30;
+    public final static long MILLISECONDS_IN_52_MINS = MILLISECONDS_IN_MINUTE * 52;
 
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)
     {
@@ -126,5 +136,31 @@ public final class DateTimeUtils
                 && c.get(Calendar.SECOND) == 0
                 && c.get(Calendar.MILLISECOND) == 0
                 && c.get(Calendar.DAY_OF_YEAR) == 1;
+    }
+
+    // return a string in hh:mm:ss format
+    public static String millisecondsToFormattedString(long millis)
+    {
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis)
+    {
+        return new CountDownTimer(timeRemainMillis, DateTimeUtils.MILLISECONDS_IN_SECOND)
+        {
+            @Override
+            public void onTick(final long millisUntilFinished)
+            {
+                textView.setText(textView.getContext().getString(R.string.start_timer_formatted,
+                        DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
+            }
+
+            @Override
+            public void onFinish() { }
+        }.start();
     }
 }

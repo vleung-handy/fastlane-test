@@ -7,7 +7,8 @@ import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.ConfigParams;
+import com.handy.portal.model.CheckoutRequest;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -17,8 +18,10 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
+import com.handy.portal.model.TypedJsonString;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -28,6 +31,7 @@ import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 
 import org.json.JSONObject;
@@ -45,14 +49,16 @@ public final class BaseDataManager extends DataManager
     private final HandyRetrofitEndpoint endpoint;
 
     private final StripeRetrofitService stripeService; //TODO: should refactor and move somewhere else?
+    private final EventLogService mEventLogService;
 
     @Inject
     public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
-                           final StripeRetrofitService stripeService)
+                           final StripeRetrofitService stripeService, final EventLogService eventLogService)
     {
         this.service = service;
         this.endpoint = endpoint;
         this.stripeService = stripeService;
+        mEventLogService = eventLogService;
     }
 
     @Override
@@ -71,6 +77,14 @@ public final class BaseDataManager extends DataManager
     public final void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
         service.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public final void getNearbyBookings(
+            int regionId, double latitude, double longitude, final Callback<BookingsWrapper> cb)
+    {
+        service.getNearbyBookings(
+                regionId, latitude, longitude, new BookingsWrapperRetroFitCallback(cb));
     }
 
     @Override
@@ -152,9 +166,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public final void notifyCheckOutBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    public final void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, final Callback<Booking> cb)
     {
-        service.checkOut(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        service.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
     }
 
     @Override
@@ -210,12 +224,6 @@ public final class BaseDataManager extends DataManager
                 cb.onSuccess(null);
             }
         });
-    }
-
-    @Override
-    public void getConfigParams(String[] keys, Callback<ConfigParams> cb)
-    {
-        service.getConfigParams(keys, new ConfigParamResponseHandyRetroFitCallback(cb));
     }
 
     @Override
@@ -291,4 +299,17 @@ public final class BaseDataManager extends DataManager
         stripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
     }
 
+    //Eventual replacement for direct access to config params
+    @Override
+    public void getConfiguration(final Callback<ConfigurationResponse> cb)
+    {
+        service.getConfiguration(new ConfigurationResponseHandyRetroFitCallback(cb));
+    }
+
+    //Log Events
+    @Override
+    public void postLogs(TypedJsonString params, final Callback<EventLogResponse> cb)
+    {
+        mEventLogService.postLogs(params, new LogEventsRetroFitCallback(cb));
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
@@ -13,6 +14,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpContactManager;
 import com.handy.portal.manager.HelpManager;
@@ -40,6 +42,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BaseApplication extends Application
 {
+    private static String sDeviceId = "";
     protected ObjectGraph graph;
     private int started;
     private boolean savedInstance;
@@ -77,6 +80,8 @@ public class BaseApplication extends Application
     @Inject
     StripeManager stripeManager;
     @Inject
+    EventLogManager logEventsManager;
+    @Inject
     RegionDefinitionsManager regionDefinitionsManager;
     @Inject
     UrbanAirshipManager urbanAirshipManager;
@@ -101,7 +106,7 @@ public class BaseApplication extends Application
 
         startNewRelic();
         startCrashlytics();
-
+        sDeviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
 
@@ -185,4 +190,5 @@ public class BaseApplication extends Application
         graph.inject(object);
     }
 
+    public static String getDeviceId() { return sDeviceId; }
 }

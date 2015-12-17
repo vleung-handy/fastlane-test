@@ -5,11 +5,14 @@ import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -17,6 +20,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -34,22 +38,34 @@ public class MainActivityFragment extends InjectedFragment
 //TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
     @Inject
     HandyRetrofitEndpoint handyRetrofitEndpoint;
-/////////////Bad useless injection that breaks if not in?
+    /////////////Bad useless injection that breaks if not in?
 
     @InjectView(R.id.tabs)
     RadioGroup tabs;
     @InjectView(R.id.button_jobs)
-    RadioButton jobsButton;
+    RadioButton mJobsButton;
     @InjectView(R.id.button_schedule)
-    RadioButton scheduleButton;
-    @InjectView(R.id.button_payments)
-    RadioButton paymentsButton;
-    @InjectView(R.id.button_profile)
-    RadioButton profileButton;
-    @InjectView(R.id.button_help)
-    RadioButton helpButton;
+    RadioButton mScheduleButton;
+    @InjectView(R.id.button_more)
+    RadioButton mButtonMore;
     @InjectView(R.id.loading_overlay)
-    LoadingOverlayView loadingOverlayView;
+    LoadingOverlayView mLoadingOverlayView;
+    @InjectView(R.id.nav_link_my_profile)
+    RadioButton mNavLinkMyProfile;
+    @InjectView(R.id.nav_link_payments)
+    RadioButton mNavLinkPayments;
+    @InjectView(R.id.nav_link_edit_payment_method)
+    RadioButton mNavLinkEditPaymentMethod;
+    @InjectView(R.id.nav_link_help)
+    RadioButton mNavLinkHelp;
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @InjectView(R.id.navigation_drawer)
+    LinearLayout mNavigationDrawer;
+    @InjectView(R.id.nav_tray_links)
+    RadioGroup mNavTrayLinks;
+    @InjectView(R.id.navigation_header)
+    TextView mNavigationHeader;
 
     //What tab are we currently displaying
     private MainViewTab currentTab = null;
@@ -68,7 +84,7 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.inject(this, view);
         registerButtonListeners();
-        loadingOverlayView.init();
+        mLoadingOverlayView.init();
         return view;
     }
 
@@ -101,9 +117,14 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     //Ask the managers to do all the argument processing and post back a SwapFragmentNavigation event
-    private void requestProcessNavigateToTab(MainViewTab targetTab, MainViewTab currentTab, Bundle arguments, TransitionStyle transitionStyle, boolean userTriggered)
+    private void requestProcessNavigateToTab(
+            MainViewTab targetTab, MainViewTab currentTab, Bundle arguments,
+            TransitionStyle transitionStyle, boolean userTriggered)
     {
-        bus.post(new HandyEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments, transitionStyle, userTriggered));
+        bus.post(new HandyEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
+                transitionStyle, userTriggered));
+        bus.post(new LogEvent.AddLogEvent(
+                mEventLogFactory.createNavigationLog(targetTab.name().toLowerCase())));
     }
 
     @Subscribe
@@ -128,33 +149,101 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
     {
-        loadingOverlayView.setOverlayVisibility(event.isVisible);
+        mLoadingOverlayView.setOverlayVisibility(event.isVisible);
+    }
+
+    @Subscribe
+    public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
+    {
+        mNavigationHeader.setText(event.provider.getFullName());
     }
 
 //Click Listeners
 
     private void registerButtonListeners()
     {
-        jobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        scheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
-        paymentsButton.setOnClickListener(new TabOnClickListener(MainViewTab.PAYMENTS));
-        profileButton.setOnClickListener(new TabOnClickListener(MainViewTab.PROFILE));
-        helpButton.setOnClickListener(new TabOnClickListener(MainViewTab.HELP));
+        registerBottomNavListeners();
+        registerNavDrawerListeners();
+    }
+
+    private void registerBottomNavListeners()
+    {
+        mJobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
+        mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
+        tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
+    }
+
+    private void registerNavDrawerListeners()
+    {
+        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
+        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
+        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
     }
 
     private class TabOnClickListener implements View.OnClickListener
     {
-        private MainViewTab tab;
+        private MainViewTab mTab;
 
         TabOnClickListener(MainViewTab tab)
         {
-            this.tab = tab;
+            mTab = tab;
         }
 
         @Override
         public void onClick(View view)
         {
-            switchToTab(tab, true);
+            switchToTab(mTab, true);
+        }
+    }
+
+    private class NavDrawerOnClickListener extends TabOnClickListener
+    {
+        private MainViewTab mTab;
+        private TransitionStyle mTransitionStyle;
+
+        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride)
+        {
+            super(tab);
+            mTab = tab;
+            mTransitionStyle = transitionStyleOverride;
+        }
+
+        @Override
+        public void onClick(View view)
+        {
+            if(mTransitionStyle != null)
+            {
+                switchToTab(mTab, null, mTransitionStyle, false);
+            }
+            else
+            {
+                switchToTab(mTab, true);
+            }
+
+            mDrawerLayout.closeDrawers();
+        }
+    }
+
+    private class MoreButtonOnClickListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View view)
+        {
+            mDrawerLayout.openDrawer(mNavigationDrawer);
+        }
+    }
+
+    private class BottomNavOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener
+    {
+        @Override
+        public void onCheckedChanged(RadioGroup radioGroup, int radioButtonId)
+        {
+            if (radioButtonId == mButtonMore.getId() && currentTab != null)
+            {
+                updateSelectedTabButton(currentTab);
+            }
         }
     }
 
@@ -219,27 +308,39 @@ public class MainActivityFragment extends InjectedFragment
                 case AVAILABLE_JOBS:
                 case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
                 {
-                    jobsButton.toggle();
+                    mJobsButton.toggle();
+                    mNavTrayLinks.clearCheck();
+
                 }
                 break;
                 case SCHEDULED_JOBS:
                 {
-                    scheduleButton.toggle();
+                    mScheduleButton.toggle();
+                    mNavTrayLinks.clearCheck();
                 }
                 break;
                 case PAYMENTS:
                 {
-                    paymentsButton.toggle();
+                    mButtonMore.toggle();
+                    mNavLinkPayments.toggle();
                 }
                 break;
                 case PROFILE:
                 {
-                    profileButton.toggle();
+                    mButtonMore.toggle();
+                    mNavLinkMyProfile.toggle();
                 }
                 break;
                 case HELP:
                 {
-                    helpButton.toggle();
+                    mButtonMore.toggle();
+                    mNavLinkHelp.toggle();
+                }
+                break;
+                case SELECT_PAYMENT_METHOD:
+                {
+                    mButtonMore.toggle();
+                    mNavLinkEditPaymentMethod.toggle();
                 }
                 break;
             }

@@ -14,6 +14,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
@@ -478,19 +479,19 @@ public abstract class HandyEvent
     @Track("provider checkout submitted")
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
+        public CheckoutRequest checkoutRequest;
         public boolean isAuto;
-        public LocationData locationData;
 
-        public RequestNotifyJobCheckOut(String bookingId, boolean isAuto, LocationData locationData)
+        public RequestNotifyJobCheckOut(String bookingId, boolean isAuto, CheckoutRequest checkoutRequest)
         {
-            this(bookingId, locationData);
+            this(bookingId, checkoutRequest);
             this.isAuto = isAuto;
         }
 
-        public RequestNotifyJobCheckOut(String bookingId, LocationData locationData)
+        public RequestNotifyJobCheckOut(String bookingId, CheckoutRequest checkoutRequest)
         {
             this.bookingId = bookingId;
-            this.locationData = locationData;
+            this.checkoutRequest = checkoutRequest;
         }
     }
 
@@ -565,12 +566,12 @@ public abstract class HandyEvent
     @Track("check out")
     public static class ReceiveNotifyJobCheckOutSuccess extends ReceiveBookingSuccessEvent
     {
-        public boolean isAuto;
+        public boolean isAutoCheckIn;
 
-        public ReceiveNotifyJobCheckOutSuccess(Booking booking, boolean isAuto)
+        public ReceiveNotifyJobCheckOutSuccess(Booking booking, boolean isAutoCheckIn)
         {
             this.booking = booking;
-            this.isAuto = isAuto;
+            this.isAutoCheckIn = isAutoCheckIn;
         }
     }
 
@@ -579,9 +580,25 @@ public abstract class HandyEvent
 
     public static class ReceiveClaimJobError extends ReceiveErrorEvent
     {
-        public ReceiveClaimJobError(DataManager.DataManagerError error)
+        private Booking mBooking;
+        private String mSource;
+
+        public ReceiveClaimJobError(Booking booking, String source, DataManager.DataManagerError error)
         {
+            mBooking = booking;
+            mSource = source;
             this.error = error;
+        }
+
+
+        public String getSource()
+        {
+            return mSource;
+        }
+
+        public Booking getBooking()
+        {
+            return mBooking;
         }
     }
 

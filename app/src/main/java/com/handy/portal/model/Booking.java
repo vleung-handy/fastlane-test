@@ -8,6 +8,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
+import com.handy.portal.constant.Country;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class Booking implements Comparable<Booking>, Serializable
         BOOKING_PROXY,
         BOOKING,;
     }
+
 
     @SerializedName("id")
     private String mId;
@@ -94,6 +96,8 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("zipcluster")
     private ZipCluster mZipCluster;
 
+    @SerializedName("region_id")
+    private int mRegionId;
 
     public int compareTo(@NonNull Booking other)
     {
@@ -260,7 +264,7 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public boolean isUK()
     {
-        return "GB".equalsIgnoreCase(mCountry);
+        return Country.GB.equalsIgnoreCase(mCountry);
     }
 
     public CheckInSummary getCheckInSummary()
@@ -325,6 +329,8 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public ZipCluster getZipCluster() { return mZipCluster; }
 
+    public int getRegionId() { return mRegionId; }
+
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus
     {
@@ -332,6 +338,7 @@ public class Booking implements Comparable<Booking>, Serializable
         CLAIMED,
         UNAVAILABLE,
     }
+
 
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
@@ -492,6 +499,7 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+
     public static class User implements Serializable
     {
         @SerializedName("email")
@@ -527,6 +535,7 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+
     public static class BookingInstruction implements Serializable
     {
         @SerializedName("description")
@@ -544,6 +553,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return mMachineName;
         }
     }
+
 
     public static class BookingInstructionGroup implements Serializable
     {
@@ -577,6 +587,7 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+
     public static class CheckInSummary implements Serializable
     {
         @SerializedName("is_checked_in")
@@ -595,6 +606,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return mIsCheckedIn;
         }
     }
+
 
     public static class ServiceInfo implements Serializable
     {
@@ -621,6 +633,7 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+
     public static class ExtraInfoWrapper implements Serializable
     {
         public ExtraInfo getExtraInfo()
@@ -633,6 +646,7 @@ public class Booking implements Comparable<Booking>, Serializable
         @SerializedName("quantity")
         private int mQuantity;
     }
+
 
     public static class ExtraInfo implements Serializable
     {
@@ -683,6 +697,7 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+
     public static class Coordinates implements Serializable
     {
         @SerializedName("latitude")
@@ -700,6 +715,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return mLongitude;
         }
     }
+
 
     public static class ZipCluster implements Serializable
     {

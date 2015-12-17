@@ -24,8 +24,6 @@ public class Address implements Serializable
     private float longitude;
     @SerializedName("short_region")
     private String shortRegion;
-    @SerializedName("region_id")
-    private int regionId;
 
     public float getLatitude()
     {
@@ -83,11 +81,6 @@ public class Address implements Serializable
     public String getCountry()
     {
         return country;
-    }
-
-    public int getRegionId()
-    {
-        return regionId;
     }
 
     public String getShippingAddress()

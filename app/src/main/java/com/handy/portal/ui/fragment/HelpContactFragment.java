@@ -12,6 +12,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.HelpNode;
 import com.handy.portal.model.Provider;
 import com.handy.portal.ui.view.HelpContactView;
@@ -214,6 +215,8 @@ public final class HelpContactFragment extends ActionBarFragment
     public void onReceiveNotifyHelpContactSuccess(HandyEvent.ReceiveNotifyHelpContactSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createHelpContactFormSubmittedLog(
+                path, associatedNode.getId(), associatedNode.getLabel())));
         if (bookingId == null || bookingId.isEmpty())
         {
             returnToJobsScreen();

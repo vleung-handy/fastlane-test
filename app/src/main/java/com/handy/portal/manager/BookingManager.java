@@ -6,12 +6,13 @@ import com.google.common.cache.CacheBuilder;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.util.DateTimeUtils;
@@ -197,6 +198,26 @@ public class BookingManager
     }
 
     @Subscribe
+    public void onRequestNearbyBookings(BookingEvent.RequestNearbyBookings event)
+    {
+        dataManager.getNearbyBookings(event.getRegionId(), event.getLatitude(), event.getLongitude(),
+                new DataManager.Callback<BookingsWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final BookingsWrapper response)
+                    {
+                        bus.post(new BookingEvent.ReceiveNearbyBookingsSuccess(response.getBookings()));
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        bus.post(new BookingEvent.ReceiveNearbyBookingsError(error));
+                    }
+                });
+    }
+
+    @Subscribe
     public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
     {
         final Date day = DateTimeUtils.getDateWithoutTime(event.date);
@@ -247,7 +268,7 @@ public class BookingManager
             {
                 //still need to invalidate so we don't allow them to click on same booking
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveClaimJobError(error));
+                bus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
             }
         });
     }
@@ -324,9 +345,7 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyCheckOut(final HandyEvent.RequestNotifyJobCheckOut event)
     {
-        LocationData locationData = event.locationData;
-
-        dataManager.notifyCheckOutBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        dataManager.notifyCheckOutBooking(event.bookingId, event.isAuto, event.checkoutRequest, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)

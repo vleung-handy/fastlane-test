@@ -66,7 +66,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @Override
     protected MainViewTab getTab()
     {
-        return MainViewTab.PAYMENTS;
+        return MainViewTab.SELECT_PAYMENT_METHOD;
     }
 
     @Override

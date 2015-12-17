@@ -1,5 +1,7 @@
 package com.handy.portal.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -15,21 +17,25 @@ public class ProviderProfile implements Serializable
     @SerializedName("resupply_info")
     private ResupplyInfo mResupplyInfo;
 
+    @Nullable
     public ProviderPersonalInfo getProviderPersonalInfo()
     {
         return mProviderPersonalInfo;
     }
 
+    @Nullable
     public ReferralInfo getReferralInfo()
     {
         return mReferralInfo;
     }
 
+    @Nullable
     public PerformanceInfo getPerformanceInfo()
     {
         return mPerformanceInfo;
     }
 
+    @Nullable
     public ResupplyInfo getResupplyInfo()
     {
         return mResupplyInfo;

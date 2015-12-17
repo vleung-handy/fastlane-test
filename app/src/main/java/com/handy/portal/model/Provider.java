@@ -1,6 +1,9 @@
 package com.handy.portal.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.constant.Country;
 
 public class Provider
 {
@@ -25,6 +28,8 @@ public class Provider
     private String paymentCurrencyCode;
     @SerializedName("recommended_payment_flow")
     private String recommendedPaymentFlow;
+    @SerializedName("version_track")
+    private String mVersionTrack;
 
     public boolean isBlockCleaner()
     {
@@ -86,12 +91,12 @@ public class Provider
 
     public boolean isUK()
     {
-        return "GB".equalsIgnoreCase(getCountry());
+        return Country.GB.equalsIgnoreCase(getCountry());
     }
 
     public boolean isUS()
     {
-        return "US".equalsIgnoreCase(getCountry());
+        return Country.US.equalsIgnoreCase(getCountry());
     }
 
     public boolean isComplementaryJobsEnabled()
@@ -108,4 +113,7 @@ public class Provider
     {
         return recommendedPaymentFlow;
     }
+
+    @Nullable
+    public String getVersionTrack() { return mVersionTrack; }
 }
