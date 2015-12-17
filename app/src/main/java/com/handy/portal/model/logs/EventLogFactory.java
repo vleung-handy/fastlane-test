@@ -32,6 +32,35 @@ public class EventLogFactory
         return new BasicLog.Navigation(getProviderId(), getVersionTrack(), tabName);
     }
 
+    // Nearby Bookings Logs
+    public EventLog createNearbyJobsLaunchedLog(int numOfJobs)
+    {
+        return new NearbyJobsLog.Shown(getProviderId(), getVersionTrack(), numOfJobs);
+    }
+
+    public EventLog createPinSelectedLog()
+    {
+        return new NearbyJobsLog.PinSelected(getProviderId(), getVersionTrack());
+    }
+
+    public EventLog createNearbyJobClaimSelectedLog(Booking booking, double distanceInKilometer)
+    {
+        String bookingId = booking.getId();
+        int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+
+        return new NearbyJobsLog.ClaimJobSelected(getProviderId(), getVersionTrack(), bookingId,
+                distanceInKilometer, paymentAmount);
+    }
+
+    public EventLog createNearbyJobClaimSuccessLog(Booking booking, double distanceInKilometer)
+    {
+        String bookingId = booking.getId();
+        int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+
+        return new NearbyJobsLog.ClaimJobSuccess(getProviderId(), getVersionTrack(), bookingId,
+                distanceInKilometer, paymentAmount);
+    }
+
     // Available Booking Logs
     public EventLog createAvailableJobDateClickedLog(Date date, int jobCount)
     {
