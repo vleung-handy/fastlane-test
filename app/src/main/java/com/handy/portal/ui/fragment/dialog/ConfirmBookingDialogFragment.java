@@ -109,7 +109,7 @@ public class ConfirmBookingDialogFragment extends DialogFragment
     {
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
 
-        mBookingAddressText.setText(mBooking.getFormattedLocation(Booking.BookingStatus.AVAILABLE));
+        mBookingAddressText.setText(mBooking.getAddress().getShortRegion());
 
         String startTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(mBooking.getStartDate());
         String endTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(mBooking.getEndDate());

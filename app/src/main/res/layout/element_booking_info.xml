@@ -16,7 +16,8 @@
 
         <TextView
             android:id="@+id/booking_info_timer"
-            style="@style/TextView.Headline.Blue"
+            style="@style/CircularBold"
+            android:textColor="@color/handy_blue"
             android:textSize="@dimen/xsmall_text_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +26,8 @@
 
         <TextView
             android:id="@+id/booking_info_address"
-            style="@style/HandyTextAppearanceTitle"
+            style="@style/CircularBold"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:textSize="@dimen/large_text_size"
             android:layout_height="wrap_content"

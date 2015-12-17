@@ -113,7 +113,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
-                bus.post(new BookingEvent.RequestNearbyBookings(address.getRegionId(),
+                bus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
                         address.getLatitude(), address.getLongitude()));
             }
             else
