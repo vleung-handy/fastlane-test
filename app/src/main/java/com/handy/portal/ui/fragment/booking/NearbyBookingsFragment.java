@@ -111,7 +111,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         {
             mDescriptionText.setText(getString(R.string.nearby_booking_formatted, mBookings.size()));
         }
-        else
+        else if (mBookings.size() == 1)
         {
             mDescriptionText.setText(getString(R.string.nearby_booking_one));
         }
