@@ -1,5 +1,7 @@
 package com.handy.portal.manager;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.model.SuccessWrapper;
@@ -9,7 +11,6 @@ import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentGroup;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
-import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -24,11 +26,20 @@ public class PaymentsManager
 {
     private final Bus bus;
     private final DataManager dataManager;
-    //TODO: add caching when new payments, pagination api comes out
 
-    private long timestampRequestPaymentInfoUpdateNeeded = 0;
-    private final long INTERVAL_REQUEST_PAYMENT_INFO_UPDATED_NEEDED_MS = DateTimeUtils.MILLISECONDS_IN_HOUR;
-    //TODO: use a formal/common system? find a better place to put this
+    //TODO: We're using a cache for what is currently one value, maybe look into Guava Suppliers in future
+    private Cache<String, Boolean> mNeedsUpdatedPaymentInformationCache;
+    private static final String NEEDS_UPDATED_PAYMENT_CACHE_KEY = "needs_updated_payment";
+
+    public boolean HACK_directAccessCacheNeedsPayment()
+    {
+        Boolean cachedValue = mNeedsUpdatedPaymentInformationCache.getIfPresent(NEEDS_UPDATED_PAYMENT_CACHE_KEY);
+        if (cachedValue != null)
+        {
+            return cachedValue;
+        }
+        return false;
+    }
 
     @Inject
     public PaymentsManager(final Bus bus, final DataManager dataManager)
@@ -36,21 +47,29 @@ public class PaymentsManager
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
-
+        this.mNeedsUpdatedPaymentInformationCache = CacheBuilder.newBuilder()
+                .maximumSize(1)
+                .expireAfterWrite(1, TimeUnit.DAYS)
+                .build();
     }
 
     @Subscribe
     public void onRequestShouldUserUpdatePaymentInfo(PaymentEvent.RequestShouldUserUpdatePaymentInfo event)
     {
-        if (System.currentTimeMillis() - timestampRequestPaymentInfoUpdateNeeded > INTERVAL_REQUEST_PAYMENT_INFO_UPDATED_NEEDED_MS)
+        Boolean cachedValue = mNeedsUpdatedPaymentInformationCache.getIfPresent(NEEDS_UPDATED_PAYMENT_CACHE_KEY);
+        if (cachedValue != null)
         {
-            timestampRequestPaymentInfoUpdateNeeded = System.currentTimeMillis();
+            bus.post(new PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess(cachedValue));
+        }
+        else
+        {
             dataManager.getNeedsToUpdatePaymentInfo(new DataManager.Callback<RequiresPaymentInfoUpdate>()
             {
                 @Override
                 public void onSuccess(RequiresPaymentInfoUpdate response)
                 {
                     bus.post(new PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess(response.getNeedsUpdate()));
+                    mNeedsUpdatedPaymentInformationCache.put(NEEDS_UPDATED_PAYMENT_CACHE_KEY, response.getNeedsUpdate());
                 }
 
                 @Override
@@ -59,10 +78,6 @@ public class PaymentsManager
                     bus.post(new PaymentEvent.ReceiveShouldUserUpdatePaymentInfoError(error));
                 }
             });
-        }
-        else
-        {
-            bus.post(new PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess(false));
         }
     }
 
@@ -179,6 +194,7 @@ public class PaymentsManager
         });
     }
 
+
     private final class ParamKeys
     {
         static final String STRIPE_TOKEN = "token";
@@ -188,13 +204,14 @@ public class PaymentsManager
         static final String EXP_YEAR = "exp_year";
         static final String ACCOUNT_TYPE = "account_type";
     }
-    
+
+
     private final class PaymentMethodAccountType
     {
         static final String DEBIT_CARD = "debit_card";
         static final String BANK_ACCOUNT = "bank_account";
     }
-    
+
     private Map<String, String> buildParamsForDebitCardRecipient(String stripeToken, String taxId, String cardNumberLast4Digits, String expMonth, String expYear)
     {
         Map<String, String> params = new HashMap<>();

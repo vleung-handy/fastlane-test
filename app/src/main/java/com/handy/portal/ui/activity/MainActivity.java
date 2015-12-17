@@ -7,11 +7,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.NotificationUtils;
@@ -92,14 +94,29 @@ public class MainActivity extends BaseActivity
     @Subscribe
     public void onReceiveUserShouldUpdatePaymentInfo(PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess event)
     {
-        //check if we need to show the payment bill blocker
+        //check if we need to show the payment bill blocker, we will have either soft and hard blocking (modal and blockingfragment) depending on config params
         if (event.shouldUserUpdatePaymentInfo)
         {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
+            if (configManager.getConfigurationResponse() != null &&
+                    configManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation())
             {
-                PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
-                paymentBillBlockerDialogFragment.show(getSupportFragmentManager(), PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
+                //Tab Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
+                if (fragmentManager.findFragmentByTag(PaymentBlockingFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
+                {
+                    bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENT_BLOCKING, new Bundle()));
+                }
+            }
+            else
+            {
+                //Non-blocking modal
+                if (fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
+                {
+                    //TODO: Pass along config param status of block / non-blocking
+
+                    PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
+                    paymentBillBlockerDialogFragment.show(getSupportFragmentManager(), PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
+                }
             }
         }
     }
