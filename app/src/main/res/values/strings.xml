@@ -386,7 +386,6 @@
 
     <!-- Payments Menu Items -->
     <string name="update_banking_information">Update banking information</string>
-    <string name="email_income_verification">Email income verification</string>
 
     <!-- Payments -->
     <string name="previous_job">Previous Job</string>
@@ -436,7 +435,6 @@
     <string name="enable_now">Enable Now</string>
 
     <!-- Profile -->
-    <string name="get_resupply_kit">Get a Resupply Kit</string>
     <string name="share_with">Share with…</string>
     <string name="joined_handy"><![CDATA[Joined Handy <b>%1$s</b>]]></string>
     <string name="earn_a_bonus">Earn a %1$s bonus</string>
@@ -455,6 +453,9 @@
     <string name="edit_your_profile">Edit Your Profile</string>
     <string name="update_profile_success">Successfully updated profile information</string>
     <string name="update_profile_failed">Failed to update profile information</string>
+    <string name="management_tools">Management tools</string>
+    <string name="email_income_verification">Email income verification</string>
+    <string name="get_resupply_kit">Get a Resupply Kit</string>
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>

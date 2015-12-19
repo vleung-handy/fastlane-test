@@ -50,9 +50,9 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
-import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
+import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
@@ -126,7 +126,6 @@ import retrofit.converter.GsonConverter;
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
         SelectPaymentMethodFragment.class,
-        ProfileResupplyViewConstructor.class,
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
@@ -136,6 +135,7 @@ import retrofit.converter.GsonConverter;
         ProfileReferralViewConstructor.class,
         PaymentsBatchListView.class,
         NearbyBookingsFragment.class,
+        ManagementToolsView.class,
 })
 public final class ApplicationModule
 {

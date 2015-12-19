@@ -53,11 +53,11 @@ import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstruc
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
+import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.view.MapPlaceholderView;
-import com.handy.portal.ui.view.ProxyLocationView;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
@@ -580,7 +580,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void showHelpOptions()
     {
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if(slideUpPanelContainer != null)
+        if (slideUpPanelContainer != null)
         {
             slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
             {
@@ -704,7 +704,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if(slideUpPanelContainer != null)
+        if (slideUpPanelContainer != null)
         {
             slideUpPanelContainer.hidePanel();
         }
@@ -716,7 +716,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         //TODO: Crash #608, this is null sometimes and crashing, butterknife timing?
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if(slideUpPanelContainer != null)
+        if (slideUpPanelContainer != null)
         {
             slideUpPanelContainer.hidePanel();
         }
@@ -1061,7 +1061,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         //Return to available jobs on that day
         bus.post(new HandyEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
-
 
 //Handle Action Response Errors
 

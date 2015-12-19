@@ -22,6 +22,7 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
+import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
@@ -60,6 +61,7 @@ import static org.mockito.Mockito.when;
         PaymentsDetailFragment.class,
         TestActivity.class,
         PaymentsBatchListView.class,
+        ManagementToolsView.class,
 
 
 }, library = true)
