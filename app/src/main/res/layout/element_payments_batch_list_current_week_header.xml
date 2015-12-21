@@ -5,6 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dark_grey_border_bottom"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/current_pay_week_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingLeft="@dimen/payment_container_horizontal_padding"
+            android:paddingRight="@dimen/payment_container_horizontal_padding"
+            android:paddingTop="@dimen/default_padding"
+            android:textColor="@color/payments_batch_list_entry_subtitle"
+            android:textSize="@dimen/small_text_size"
+            />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

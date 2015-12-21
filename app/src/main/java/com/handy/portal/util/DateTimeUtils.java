@@ -21,6 +21,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
     public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
     public final static SimpleDateFormat MONTH_DATE_YEAR_DATE_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
+    public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int DAYS_IN_WEEK = 7;
@@ -45,6 +46,12 @@ public final class DateTimeUtils
         if (date == null) { return null; }
         return MONTH_SHORT_NAME_FORMATTER.format(date);
 
+    }
+
+    public static String getYear(Date date)
+    {
+        if (date == null) { return null; }
+        return YEAR_FORMATTER.format(date);
     }
 
     public static int getDayOfMonth(Date date)

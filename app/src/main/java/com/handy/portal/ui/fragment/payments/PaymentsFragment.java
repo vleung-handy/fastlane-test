@@ -57,9 +57,6 @@ public final class PaymentsFragment extends ActionBarFragment
     @InjectView(R.id.payments_batch_list_view)
     PaymentsBatchListView paymentsBatchListView;
 
-    @InjectView(R.id.element_payments_year_summary_text)
-    TextView yearSummaryText;
-
     @InjectView(R.id.fetch_error_text)
     TextView fetchErrorText;
 
@@ -68,9 +65,6 @@ public final class PaymentsFragment extends ActionBarFragment
 
     @VisibleForTesting
     ListView helpNodesListView;
-
-//    @InjectView(R.id.select_year_spinner)
-//    Spinner selectYearSpinner; //will need later
 
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
@@ -135,8 +129,6 @@ public final class PaymentsFragment extends ActionBarFragment
                 showPaymentDetailsForBatch(paymentBatch);
             }
         });
-        yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
-
     }
 
     @OnClick(R.id.try_again_button)
@@ -154,7 +146,6 @@ public final class PaymentsFragment extends ActionBarFragment
 
     private void requestInitialPaymentsInfo()
     {
-//        requestAnnualPaymentSummaries(); //will need this later when annual summary api complete
         requestNextPaymentBatches(true);
         setLoadingOverlayVisible(true);
     }
@@ -198,10 +189,6 @@ public final class PaymentsFragment extends ActionBarFragment
         if (paymentSummary == null)
         {
             Crashlytics.logException(new Exception("Annual payment summaries is null or empty"));
-        }
-        else
-        {
-            yearSummaryText.setText(getResources().getString(R.string.payment_annual_summary, paymentSummary.getNumCompletedJobs(), CurrencyUtils.formatPriceWithCents(paymentSummary.getNetEarnings().getAmount(), paymentSummary.getNetEarnings().getCurrencySymbol())));
         }
     }
 
