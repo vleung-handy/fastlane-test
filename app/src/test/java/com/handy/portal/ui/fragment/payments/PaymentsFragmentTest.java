@@ -50,21 +50,9 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void shouldHaveCorrectTitleOnActionBar() throws Exception
     {
-        ActionBar actionBar = ((AppCompatActivity)fragment.getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) fragment.getActivity()).getSupportActionBar();
         assertNotNull(actionBar);
         assertEquals(fragment.getString(R.string.payments), actionBar.getTitle());
-    }
-
-    @Test
-    public void shouldShowIncomeVerificationConfirm() throws Exception
-    {
-        ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
-        shadowActivity.clickMenuItem(R.id.action_email_verification);
-
-        ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
-        verify(bus, atLeastOnce()).post(captor.capture());
-        HandyEvent.RequestSendIncomeVerification event = getBusCaptorValue(captor, HandyEvent.RequestSendIncomeVerification.class);
-        assertNotNull("RequestSendIncomeVerification event was not post to bus", event);
     }
 
     @Test

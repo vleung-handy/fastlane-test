@@ -252,10 +252,6 @@ public final class PaymentsFragment extends ActionBarFragment
             case R.id.action_update_banking:
                 bus.post(new HandyEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.SLIDE_UP));
                 return true;
-            case R.id.action_email_verification:
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                bus.post(new HandyEvent.RequestSendIncomeVerification());
-                return true;
             case R.id.action_help:
                 if (helpNodesListView.getCount() > 0)
                 {
@@ -285,7 +281,7 @@ public final class PaymentsFragment extends ActionBarFragment
         fetchErrorView.setVisibility(View.GONE);
         if (Utils.getObjectIdentifier(this) != event.getCallerIdentifier()
                 || !paymentsBatchListView.getWrappedAdapter().canAppendBatch(event.getRequestEndDate()))
-            return;
+        { return; }
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
         if (event.isFromInitialBatchRequest) //if it was previously empty
@@ -337,20 +333,6 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onReceiveAnnualPaymentSummariesError(PaymentEvent.ReceiveAnnualPaymentSummariesError event)
     {
         //TODO: handle annual payments summary error
-    }
-
-    @Subscribe
-    public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENTS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
-    }
-
-    @Subscribe
-    public void onSendIncomeVerificationError(HandyEvent.ReceiveSendIncomeVerificationError event)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(R.string.send_verification_failed);
     }
 
     @Subscribe
