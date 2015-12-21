@@ -2,15 +2,18 @@ package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
@@ -143,7 +146,17 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     {
         if (getWrappedAdapter().isDataEmpty())
         {
-            paymentsBatchListHeaderView.updateDisplay(paymentBatches);
+            if (paymentBatches.getNeoPaymentBatches().length == 0)
+            {
+                Crashlytics.logException(new Exception("No non-legacy payment batches received! Expecting at least one (first entry should be the current week's payment batch)"));
+                return;
+            }
+            NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
+            // Set Header List View
+            paymentsBatchListHeaderView.updateDisplay(neoPaymentBatch);
+            // Set current year
+            Log.d("setting_year", "Set me!");
+            getWrappedAdapter().setCurrentYear(neoPaymentBatch.getEndDate().getYear());
         }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }
