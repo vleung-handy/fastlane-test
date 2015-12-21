@@ -29,6 +29,7 @@
     </LinearLayout>
 
     <TableLayout
+        android:id="@+id/payment_batch_item_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

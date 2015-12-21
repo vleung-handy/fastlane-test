@@ -31,6 +31,9 @@ public class PaymentsBatchListItemView extends TableLayout
     @InjectView(R.id.payments_batch_list_item_status_text)
     protected TextView statusText;
 
+    @InjectView(R.id.payment_batch_item_table)
+    protected TableLayout paymentBatchItemTable;
+
     public PaymentsBatchListItemView(Context context)
     {
         super(context);
@@ -85,6 +88,7 @@ public class PaymentsBatchListItemView extends TableLayout
             statusText.setText(legacyPaymentBatch.getStatus());
             statusText.setTextColor(getResources().getColor(R.color.subtitle_grey));
             jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
+            paymentBatchItemTable.setEnabled(false);
         }
 
     }

@@ -134,7 +134,6 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
         }
         ((PaymentsBatchListItemView) v).updateDisplay(paymentBatch);
 
-        v.setEnabled((paymentBatch instanceof NeoPaymentBatch)); //isEnabled doesn't trigger the enabled styling
         return v;
     }
 }
