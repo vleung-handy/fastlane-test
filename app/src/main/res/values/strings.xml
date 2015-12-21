@@ -455,7 +455,7 @@
     <string name="update_profile_failed">Failed to update profile information</string>
     <string name="management_tools">Management tools</string>
     <string name="email_income_verification">Email income verification</string>
-    <string name="get_resupply_kit">Get a Resupply Kit</string>
+    <string name="get_resupply_kit">Get a resupply kit</string>
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>

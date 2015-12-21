@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ public class ManagementToolsView extends FrameLayout
     TextView mResupplyText;
     @InjectView(R.id.provider_get_resupply_kit_help_text)
     TextView mResupplyHelpText;
+    @InjectView(R.id.provider_get_resupply_kit)
+    ViewGroup mResupply;
 
     private ProviderProfile mProviderProfile;
 
@@ -58,20 +61,20 @@ public class ManagementToolsView extends FrameLayout
 
         mTitleText.setText(R.string.management_tools);
         mSubTitleText.setVisibility(GONE);
+        mResupply.setClickable(false);
 
         final ResupplyInfo resupplyInfo = mProviderProfile.getResupplyInfo();
         if (resupplyInfo != null && resupplyInfo.providerCanRequestSupplies())
         {
             if (resupplyInfo.providerCanRequestSuppliesNow())
             {
-
-                mResupplyText.setEnabled(true);
+                mResupply.setClickable(true);
                 mResupplyText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                 mResupplyHelpText.setVisibility(GONE);
             }
             else
             {
-                mResupplyText.setEnabled(false);
+                mResupply.setClickable(false);
                 mResupplyText.setTextColor(
                         ContextCompat.getColor(getContext(), R.color.subtitle_grey));
                 mResupplyHelpText.setText(resupplyInfo.getHelperText());

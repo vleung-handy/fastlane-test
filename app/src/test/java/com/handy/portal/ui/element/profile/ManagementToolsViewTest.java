@@ -130,8 +130,8 @@ public class ManagementToolsViewTest
         ProviderProfile providerProfile = buildProviderProfile(false);
         mView = new ManagementToolsView(APP, providerProfile);
 
-        TextView resupplyText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_text);
-        assertFalse(resupplyText.isEnabled());
+        View resupplyView = mView.findViewById(R.id.provider_get_resupply_kit);
+        assertFalse(resupplyView.isClickable());
 
         TextView resupplyHelpText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_help_text);
         assertEquals(View.VISIBLE, resupplyHelpText.getVisibility());
@@ -143,8 +143,8 @@ public class ManagementToolsViewTest
         ProviderProfile providerProfile = buildProviderProfile(true);
         mView = new ManagementToolsView(APP, providerProfile);
 
-        TextView resupplyText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_text);
-        assertTrue(resupplyText.isEnabled());
+        View resupplyView = mView.findViewById(R.id.provider_get_resupply_kit);
+        assertTrue(resupplyView.isClickable());
 
         TextView resupplyHelpText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_help_text);
         assertEquals(View.GONE, resupplyHelpText.getVisibility());
