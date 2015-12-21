@@ -51,7 +51,7 @@ public class CheckInFlowLog extends EventLog
 
     public static class CheckIn extends CheckInFlowLog
     {
-        private static final String EVENT_TYPE = "manual_checkin_submitting";
+        private static final String EVENT_TYPE = "manual_checkin_submitted";
 
         public CheckIn(String providerId, String versionTrack, String bookingId, double proLatitude,
                        double proLongitude, double bookingLatitude, double bookingLongitude,
@@ -65,7 +65,7 @@ public class CheckInFlowLog extends EventLog
 
     public static class CheckOut extends CheckInFlowLog
     {
-        private static final String EVENT_TYPE = "manual_checkout_submitting";
+        private static final String EVENT_TYPE = "manual_checkout_submitted";
 
         public CheckOut(String providerId, String versionTrack, String bookingId, double proLatitude,
                         double proLongitude, double bookingLatitude, double bookingLongitude,

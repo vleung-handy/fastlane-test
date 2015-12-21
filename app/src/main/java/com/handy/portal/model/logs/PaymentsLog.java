@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentsLog extends EventLog
 {
-    private static final String EVENT_CONTEXT = "profile";
+    private static final String EVENT_CONTEXT = "payments";
 
     public PaymentsLog(String providerId, String versionTrack, String eventType)
     {

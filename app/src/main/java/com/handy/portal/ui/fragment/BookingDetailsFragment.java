@@ -895,7 +895,10 @@ public class BookingDetailsFragment extends ActionBarFragment
         else
         {
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
-            handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic, R.string.return_to_schedule, this.associatedBooking.getStartDate());
+            handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic,
+                    R.string.return_to_schedule, this.associatedBooking.getStartDate());
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(associatedBooking)));
+
         }
     }
 
@@ -903,6 +906,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(associatedBooking)));
         handleBookingRemoveError(event);
     }
 
