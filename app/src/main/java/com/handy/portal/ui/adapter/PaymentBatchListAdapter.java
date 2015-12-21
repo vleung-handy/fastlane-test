@@ -12,10 +12,8 @@ import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
