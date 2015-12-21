@@ -1,13 +1,16 @@
 package com.handy.portal.ui.element.profile;
 
 import android.app.Application;
+import android.view.View;
 import android.widget.TextView;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.TestUtils;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ResupplyInfo;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
@@ -19,11 +22,16 @@ import org.mockito.Mock;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowToast;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -71,8 +79,8 @@ public class ManagementToolsViewTest
     @Test
     public void shouldPostEmailVerificationEventAfterClick()
     {
-        TextView incomeText = (TextView) mView.findViewById(R.id.provider_email_income_verification_text);
-        incomeText.performClick();
+        View incomeView = mView.findViewById(R.id.provider_email_income_verification);
+        incomeView.performClick();
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
         verify(mBus, atLeastOnce()).post(captor.capture());
@@ -84,8 +92,8 @@ public class ManagementToolsViewTest
     @Test
     public void shouldNavigateToRequestSupplyAfterClick()
     {
-        TextView resupplyText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_text);
-        resupplyText.performClick();
+        View resupplyView = mView.findViewById(R.id.provider_get_resupply_kit);
+        resupplyView.performClick();
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
         verify(mBus, atLeastOnce()).post(captor.capture());
@@ -98,24 +106,58 @@ public class ManagementToolsViewTest
     @Test
     public void shouldShowOverlayWhenEmailVerificationSuccess()
     {
-        // research how to handle subscribed bus event
+        mView.onSendIncomeVerificationSuccess(null);
+
+        ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
+        verify(mBus, atLeastOnce()).post(captor.capture());
+        HandyEvent.NavigateToTab event =
+                TestUtils.getBusCaptorValue(captor, HandyEvent.NavigateToTab.class);
+        assertNotNull("Success Overlay event was not post to bus", event);
+        assertEquals(TransitionStyle.SEND_VERIFICAITON_SUCCESS, event.transitionStyleOverride);
     }
 
     @Test
     public void shouldShowToastWhenEmailVerificationFailed()
     {
-        // research how to handle subscribed bus event
+        mView.onSendIncomeVerificationError(null);
+        assertEquals(mView.getContext().getString(R.string.send_verification_failed),
+                ShadowToast.getTextOfLatestToast());
     }
 
     @Test
     public void shouldDisableResupplyTextWhenUnavailable()
     {
-        // research how to use mockito to fake the ProviderProfile mock
+        ProviderProfile providerProfile = buildProviderProfile(false);
+        mView = new ManagementToolsView(APP, providerProfile);
+
+        TextView resupplyText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_text);
+        assertFalse(resupplyText.isEnabled());
+
+        TextView resupplyHelpText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_help_text);
+        assertEquals(View.VISIBLE, resupplyHelpText.getVisibility());
     }
 
     @Test
     public void shouldEnableResupplyTextWhenAvailable()
     {
-        // research how to use mockito to fake the ProviderProfile mock
+        ProviderProfile providerProfile = buildProviderProfile(true);
+        mView = new ManagementToolsView(APP, providerProfile);
+
+        TextView resupplyText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_text);
+        assertTrue(resupplyText.isEnabled());
+
+        TextView resupplyHelpText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_help_text);
+        assertEquals(View.GONE, resupplyHelpText.getVisibility());
+    }
+
+    private ProviderProfile buildProviderProfile(boolean canRequestSupplies)
+    {
+        ResupplyInfo resupplyInfo = mock(ResupplyInfo.class);
+        when(resupplyInfo.providerCanRequestSupplies()).thenReturn(canRequestSupplies);
+        when(resupplyInfo.providerCanRequestSuppliesNow()).thenReturn(canRequestSupplies);
+        ProviderProfile providerProfile = mock(ProviderProfile.class);
+        when(providerProfile.getResupplyInfo()).thenReturn(resupplyInfo);
+
+        return providerProfile;
     }
 }

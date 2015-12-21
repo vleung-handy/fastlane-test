@@ -19,6 +19,7 @@
         >
 
         <LinearLayout
+            android:id="@+id/provider_email_income_verification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/section_item_margin"
@@ -42,6 +43,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/provider_get_resupply_kit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/section_item_margin"
@@ -64,6 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_margin"
+                    android:enabled="false"
                     android:text="@string/get_resupply_kit"
                     android:textColor="@color/black"
                     android:textSize="@dimen/medium_text_size"

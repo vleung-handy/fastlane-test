@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,20 +75,9 @@ public class ManagementToolsView extends FrameLayout
                 mResupplyText.setTextColor(
                         ContextCompat.getColor(getContext(), R.color.subtitle_grey));
                 mResupplyHelpText.setText(resupplyInfo.getHelperText());
-                mResupplyHelpText.setVisibility(View.VISIBLE);
-                mResupplyHelpText.setTextColor(
-                        ContextCompat.getColor(getContext(), R.color.subtitle_grey));
+                mResupplyHelpText.setVisibility(VISIBLE);
             }
         }
-    }
-
-
-    @Override
-    protected void onFinishInflate()
-    {
-        super.onFinishInflate();
-
-
     }
 
     @Override
@@ -106,14 +94,14 @@ public class ManagementToolsView extends FrameLayout
         super.onDetachedFromWindow();
     }
 
-    @OnClick(R.id.provider_email_income_verification_text)
+    @OnClick(R.id.provider_email_income_verification)
     public void emailVerification()
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mBus.post(new HandyEvent.RequestSendIncomeVerification());
     }
 
-    @OnClick(R.id.provider_get_resupply_kit_text)
+    @OnClick(R.id.provider_get_resupply_kit)
     public void getResupplyKit()
     {
         mBus.post(new LogEvent.AddLogEvent(

@@ -197,8 +197,6 @@ public class TestApplicationModule
     }
 
     @Provides
-    final EventLogFactory provideEventLogFactory(final ProviderManager providerManager)
-    {
-        return mock(EventLogFactory.class);
-    }
+    final EventLogFactory provideEventLogFactory() { return mock(EventLogFactory.class); }
+
 }
