@@ -18,7 +18,7 @@ import java.util.Date;
 public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
-    private final static Date LOWER_BOUND_PAYMENT_REQUEST_DATE = new Date(113, 9, 23); // No payments precede Oct 10, 2013
+    private final static Date LOWER_BOUND_PAYMENT_REQUEST_DATE = new Date(113, 9, 23); // No payments precede Oct 23, 2013
     private Date nextRequestEndDate;
 
 
