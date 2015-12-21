@@ -4,7 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,6 +25,7 @@
             android:textColor="@color/payments_batch_list_entry_subtitle"
             android:textSize="@dimen/small_text_size"
             />
+
     </LinearLayout>
 
     <LinearLayout
