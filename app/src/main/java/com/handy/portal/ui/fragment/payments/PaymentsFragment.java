@@ -167,10 +167,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             Calendar c = Calendar.getInstance();
             c.setTime(endDate);
-            int dayOfYear = Math.max(c.get(Calendar.DAY_OF_YEAR) - PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH, 1); //only request until beginning of this year
-            //TODO: won't have to do this gross thing when we either get annual summaries or new pagination api
-
-            c.set(Calendar.DAY_OF_YEAR, dayOfYear);
+            c.add(Calendar.DATE, -PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH);
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
             bus.post(new PaymentEvent.RequestPaymentBatches(startDate, endDate, isInitialRequest, Utils.getObjectIdentifier(this)));
 

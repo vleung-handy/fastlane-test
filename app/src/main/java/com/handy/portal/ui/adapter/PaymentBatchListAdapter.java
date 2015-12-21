@@ -11,15 +11,18 @@ import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
-import com.handy.portal.util.DateTimeUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
+    private final static Date LOWER_BOUND_PAYMENT_REQUEST_DATE = new Date(113, 9, 23); // No payments precede Oct 10, 2013
     private Date nextRequestEndDate;
+
 
     private ArrayList<Integer> hiddenItemPositions = new ArrayList<>();
 
@@ -71,7 +74,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     {
         if (nextRequestEndDate != null)
         {
-            nextRequestEndDate = (DateTimeUtils.isStartOfYear(requestStartDate) ? null : new Date(requestStartDate.getTime() - 1)); //don't need to request any more entries if we already made a request from start of year
+            Date newDate = new Date(requestStartDate.getTime() - 1);
+            nextRequestEndDate = newDate.before(LOWER_BOUND_PAYMENT_REQUEST_DATE) ? null : newDate;
         }
     }
 
