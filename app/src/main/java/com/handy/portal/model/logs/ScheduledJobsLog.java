@@ -32,6 +32,7 @@ public class ScheduledJobsLog extends EventLog
         }
     }
 
+
     public static class Clicked extends ScheduledJobsLog
     {
         private static final String EVENT_TYPE = "selected";
@@ -65,6 +66,7 @@ public class ScheduledJobsLog extends EventLog
             mListNumber = listNumber;
         }
     }
+
 
     public static class RemoveJobClicked extends ScheduledJobsLog
     {
@@ -102,6 +104,7 @@ public class ScheduledJobsLog extends EventLog
         }
     }
 
+
     public static class RemoveJobConfirmed extends ScheduledJobsLog
     {
         private static final String EVENT_TYPE = "remove_confirmation_accepted";
@@ -134,6 +137,39 @@ public class ScheduledJobsLog extends EventLog
             mRequested = requested;
             mDateStart = dateStart;
             mWarning = warning;
+        }
+    }
+
+
+    public static class RemoveJobError extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "remove_job_error";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+        @SerializedName("service_id")
+        private String mServiceId;
+        @SerializedName("region_id")
+        private int mRegionId;
+        @SerializedName("zipcode")
+        private String mZipCode;
+        @SerializedName("requested")
+        private boolean mRequested;
+        @SerializedName("date_start")
+        private Date mDateStart;
+
+
+        public RemoveJobError(
+                String providerId, String versionTrack, String bookingId, String serviceId,
+                int regionId, String zipCode, boolean requested, Date dateStart)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+            mBookingId = bookingId;
+            mServiceId = serviceId;
+            mRegionId = regionId;
+            mZipCode = zipCode;
+            mRequested = requested;
+            mDateStart = dateStart;
         }
     }
 }
