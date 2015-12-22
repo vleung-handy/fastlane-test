@@ -16,6 +16,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.CheckoutRequest;
@@ -57,13 +58,14 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING))
         {
             mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
+            mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingShownLog()));
         }
 
         if (mBooking == null)
         {
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestNotifyJobCheckOut(
+            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(
                             getBookingId(),
                             new CheckoutRequest(
                                     getLocationData(),
@@ -88,8 +90,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         //Endpoint is expecting a rating of 1 - 5
         if (getBookingRatingScore() > 0)
         {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestNotifyJobCheckOut(
+            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(
                             getBookingId(),
                             new CheckoutRequest(
                                     getLocationData(),
@@ -97,6 +99,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                             )
                     )
             );
+            mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingSubmittedLog(getBookingRatingScore())));
         }
         else
         {
@@ -113,7 +116,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
-                bus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
+                mBus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
                         address.getLatitude(), address.getLongitude()));
             }
             else
@@ -135,7 +138,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
             args.putParcelable(BundleKeys.MAP_CENTER,
                     new LatLng(address.getLatitude(), address.getLongitude()));
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
+            mBus.post(new HandyEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
         }
         dismiss();
     }
