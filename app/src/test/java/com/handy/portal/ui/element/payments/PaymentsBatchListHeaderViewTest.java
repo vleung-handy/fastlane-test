@@ -42,7 +42,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     public void shouldNotDisplayRemainingIfItIsZero()
     {
         when(neoPaymentBatch.getRemainingWithholdingAmount()).thenReturn(0);
-        batchListHeaderView.updateDisplay(paymentBatches);
+        batchListHeaderView.updateDisplay(paymentBatches.getNeoPaymentBatches()[0]);
 
         assertEquals("Should not see remaining payments row if remaining withholding is 0", View.GONE, remainingRow.getVisibility());
     }
@@ -51,7 +51,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     public void shouldDisplayRemainingIfItIsNotZero()
     {
         when(neoPaymentBatch.getRemainingWithholdingAmount()).thenReturn(100);
-        batchListHeaderView.updateDisplay(paymentBatches);
+        batchListHeaderView.updateDisplay(paymentBatches.getNeoPaymentBatches()[0]);
 
         assertEquals("Should see remaining payments row if remaining withholding is not 0", View.VISIBLE, remainingRow.getVisibility());
     }
