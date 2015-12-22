@@ -2,7 +2,6 @@ package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -154,8 +153,6 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
             NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
             // Set Header List View
             paymentsBatchListHeaderView.updateDisplay(neoPaymentBatch);
-            // Set current year
-            Log.d("setting_year", "Set me!");
             getWrappedAdapter().setCurrentYear(neoPaymentBatch.getEndDate().getYear());
         }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
