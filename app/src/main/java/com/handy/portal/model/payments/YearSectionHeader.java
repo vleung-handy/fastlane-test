@@ -5,12 +5,13 @@ public class YearSectionHeader extends PaymentBatch
 {
     private int mYear;
 
-    public YearSectionHeader(int mYear)
+    public YearSectionHeader(int year)
     {
-        this.mYear = mYear;
+        mYear = year;
     }
 
-    public int getYear() {
+    public int getYear()
+    {
         return mYear;
     }
 }
