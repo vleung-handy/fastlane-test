@@ -1,4 +1,4 @@
-package com.handy.portal.ui.view;
+package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.Booking;
+import com.handy.portal.ui.view.RoundedTextView;
 
 import java.util.List;
 

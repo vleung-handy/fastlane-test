@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/section_margin"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <include layout="@layout/element_profile_section_header"/>
 
@@ -13,17 +14,20 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="@dimen/default_padding">
+        android:padding="@dimen/default_padding"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/section_item_margin">
+            android:layout_marginBottom="@dimen/section_item_margin"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_email"/>
+                android:src="@drawable/ic_email"
+                />
 
             <TextView
                 android:id="@+id/provider_email_text"
@@ -31,18 +35,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_margin"
                 android:textColor="@color/black"
-                android:textSize="@dimen/medium_text_size"/>
+                android:textSize="@dimen/medium_text_size"
+                />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/section_item_margin">
+            android:layout_marginBottom="@dimen/section_item_margin"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_phone"/>
+                android:src="@drawable/ic_phone"
+                />
 
             <TextView
                 android:id="@+id/provider_phone_text"
@@ -50,17 +57,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_margin"
                 android:textColor="@color/black"
-                android:textSize="@dimen/medium_text_size"/>
+                android:textSize="@dimen/medium_text_size"
+                />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_location"/>
+                android:src="@drawable/ic_location"
+                />
 
             <TextView
                 android:id="@+id/provider_address_text"
@@ -68,11 +78,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_margin"
                 android:textColor="@color/black"
-                android:textSize="@dimen/medium_text_size"/>
+                android:textSize="@dimen/medium_text_size"
+                />
         </LinearLayout>
 
     </LinearLayout>
 
 </LinearLayout>
 
-            
