@@ -1,7 +1,6 @@
 package com.handy.portal.ui.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import com.handy.portal.model.payments.LegacyPaymentBatch;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
+import com.handy.portal.model.payments.YearSectionHeader;
 import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
 import com.handy.portal.util.DateTimeUtils;
 
@@ -25,8 +25,6 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     private final static Date LOWER_BOUND_PAYMENT_REQUEST_DATE = new Date(113, 9, 23); // No payments precede Oct 23, 2013
     private Date nextRequestEndDate;
     private int currentYear;
-    private int listYear;
-
 
     private ArrayList<Integer> hiddenItemPositions = new ArrayList<>();
 
@@ -62,11 +60,33 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
 
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
     {
-        PaymentBatch[] paymentBatchList = paymentBatches.getAggregateBatchList();
-        addAll(paymentBatchList);
-
+        addPaymentBatch(paymentBatches.getAggregateBatchList());
         updateOldestDate(requestStartDate);
         notifyDataSetChanged();
+    }
+
+    private void addPaymentBatch(PaymentBatch[] paymentBatchList)
+    {
+        for (PaymentBatch paymentBatch : paymentBatchList)
+        {
+            Date batchDate = null;
+            if (paymentBatch instanceof NeoPaymentBatch)
+            {
+                batchDate = ((NeoPaymentBatch) paymentBatch).getEndDate();
+            } else if (paymentBatch instanceof LegacyPaymentBatch) {
+                batchDate = ((LegacyPaymentBatch) paymentBatch).getDate();
+            }
+
+            if (batchDate != null && currentYear > batchDate.getYear())
+            {
+                int year = Integer.parseInt(DateTimeUtils.getYear(batchDate));
+                YearSectionHeader yearSectionHeader = new YearSectionHeader(year);
+                add(yearSectionHeader);
+                currentYear = batchDate.getYear();
+            }
+
+            add(paymentBatch);
+        }
     }
 
     public void setCurrentYear(int year)
@@ -76,7 +96,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
 
     public boolean canAppendBatch(Date batchRequestEndDate) //TODO: do something more elegant
     {
-        return nextRequestEndDate !=null && batchRequestEndDate.equals(nextRequestEndDate); //compares the exact time
+        return nextRequestEndDate != null && batchRequestEndDate.equals(nextRequestEndDate); //compares the exact time
     }
 
     private void updateOldestDate(Date requestStartDate)
@@ -134,34 +154,44 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     }
 
     @Override
+    public int getViewTypeCount()
+    {
+        return 2;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
+        View v;
         PaymentBatch paymentBatch = getItem(position);
-        View v = convertView;
-        if (v == null)
-        {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.element_payments_batch_list_entry, null);
-        }
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        ((PaymentsBatchListItemView) v).updateDisplay(paymentBatch);
+        if (paymentBatch instanceof YearSectionHeader)
+        {
+            if (convertView == null || convertView instanceof PaymentsBatchListItemView)
+            {
+                v = inflater.inflate(R.layout.element_payment_list_year_section_header, null);
+            }
+            else
+            {
+                v = convertView;
+            }
 
-        // Check if the year should be added to the view
-        Date batchDate = null;
+            String year = String.valueOf(((YearSectionHeader) paymentBatch).getYear());
+            ((TextView) v.findViewById(R.id.payment_year)).setText(year);
+        }
+        else
+        {
+            if (convertView == null || !(convertView instanceof PaymentsBatchListItemView))
+            {
+                v = inflater.inflate(R.layout.element_payments_batch_list_entry, null);
+            }
+            else
+            {
+                v = convertView;
+            }
 
-        if (paymentBatch instanceof NeoPaymentBatch)
-        {
-            batchDate = ((NeoPaymentBatch) paymentBatch).getEndDate();
-        }
-        else if (paymentBatch instanceof LegacyPaymentBatch)
-        {
-            batchDate = ((LegacyPaymentBatch) paymentBatch).getDate();
-        }
-        if (batchDate != null && currentYear > batchDate.getYear())
-        {
-            v.findViewById(R.id.change_of_year).setVisibility(View.VISIBLE);
-            ((TextView) v.findViewById(R.id.change_of_year)).setText(DateTimeUtils.getYear(batchDate));
-            currentYear = batchDate.getYear();
+            ((PaymentsBatchListItemView) v).updateDisplay(paymentBatch);
         }
 
         return v;
