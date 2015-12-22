@@ -17,6 +17,7 @@ import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
+import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -153,7 +154,8 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
             NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
             // Set Header List View
             paymentsBatchListHeaderView.updateDisplay(neoPaymentBatch);
-            getWrappedAdapter().setCurrentYear(neoPaymentBatch.getEndDate().getYear());
+            Integer year = DateTimeUtils.getYearInt(neoPaymentBatch.getEndDate());
+            getWrappedAdapter().setCurrentYear(year);
         }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }

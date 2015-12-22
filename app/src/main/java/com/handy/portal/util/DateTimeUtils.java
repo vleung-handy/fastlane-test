@@ -54,6 +54,14 @@ public final class DateTimeUtils
         return YEAR_FORMATTER.format(date);
     }
 
+    public static Integer getYearInt(Date date)
+    {
+        if (date == null) { return null; }
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.YEAR);
+    }
+
     public static int getDayOfMonth(Date date)
     {
         Calendar c = Calendar.getInstance();

@@ -69,23 +69,34 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     {
         for (PaymentBatch paymentBatch : paymentBatchList)
         {
-            Date batchDate = null;
-            if (paymentBatch instanceof NeoPaymentBatch)
-            {
-                batchDate = ((NeoPaymentBatch) paymentBatch).getEndDate();
-            } else if (paymentBatch instanceof LegacyPaymentBatch) {
-                batchDate = ((LegacyPaymentBatch) paymentBatch).getDate();
-            }
-
-            if (batchDate != null && currentYear > batchDate.getYear())
-            {
-                int year = Integer.parseInt(DateTimeUtils.getYear(batchDate));
-                YearSectionHeader yearSectionHeader = new YearSectionHeader(year);
-                add(yearSectionHeader);
-                currentYear = batchDate.getYear();
-            }
-
+            // Adds a year section header if the year changes
+            addYearSectionHeader(paymentBatch);
             add(paymentBatch);
+        }
+    }
+
+    private void addYearSectionHeader(PaymentBatch paymentBatch)
+    {
+        Integer year = null;
+        // Get the payment batch date
+        if (paymentBatch instanceof NeoPaymentBatch)
+        {
+            year = DateTimeUtils.getYearInt(((NeoPaymentBatch) paymentBatch).getEndDate());
+        } else if (paymentBatch instanceof LegacyPaymentBatch) {
+            year = DateTimeUtils.getYearInt(((LegacyPaymentBatch) paymentBatch).getDate());
+        }
+
+        // Check if the year has changed
+        if (year != null && currentYear > year)
+        {
+            // Create year section headers for each year between current year and the year
+            // of the payment batch (inclusive of the payment batch year) being added to the list view
+            for (int previousYear = currentYear - 1; previousYear >= year; previousYear--)
+            {
+                YearSectionHeader yearSectionHeader = new YearSectionHeader(previousYear);
+                add(yearSectionHeader);
+                currentYear--;
+            }
         }
     }
 
