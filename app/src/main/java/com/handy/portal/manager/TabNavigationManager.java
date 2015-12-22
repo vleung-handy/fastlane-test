@@ -60,7 +60,6 @@ public class TabNavigationManager
             event.targetTab = MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW;
         }
 
-
         SwapFragmentArguments swapFragmentArguments = generateSwapFragmentArguments(
                 event.targetTab,
                 event.currentTab,
@@ -79,14 +78,11 @@ public class TabNavigationManager
 
     private boolean doesCachedProviderNeedPaymentInformation()
     {
-        //return true;
         return mPaymentsManager.HACK_directAccessCacheNeedsPayment();
     }
 
     private boolean configBlockingForPayment()
     {
-        //return true;
-        //return (mConfigManager.getConfigurationResponse() != null);
         return (mConfigManager.getConfigurationResponse() != null && mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation());
     }
 

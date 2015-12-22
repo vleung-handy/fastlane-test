@@ -112,8 +112,6 @@ public class MainActivity extends BaseActivity
                 //Non-blocking modal
                 if (fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
                 {
-                    //TODO: Pass along config param status of block / non-blocking
-
                     PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
                     paymentBillBlockerDialogFragment.show(fragmentManager, PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
                 }

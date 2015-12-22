@@ -194,7 +194,6 @@ public class PaymentsManager
         });
     }
 
-
     private final class ParamKeys
     {
         static final String STRIPE_TOKEN = "token";
@@ -204,7 +203,6 @@ public class PaymentsManager
         static final String EXP_YEAR = "exp_year";
         static final String ACCOUNT_TYPE = "account_type";
     }
-
 
     private final class PaymentMethodAccountType
     {
