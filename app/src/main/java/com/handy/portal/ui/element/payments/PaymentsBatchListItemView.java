@@ -75,7 +75,7 @@ public class PaymentsBatchListItemView extends TableLayout
                 }
             }
             jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numWithholdings));
-
+            setEnabled(true);
         }
         else if (paymentBatch instanceof LegacyPaymentBatch)
         {
@@ -85,6 +85,7 @@ public class PaymentsBatchListItemView extends TableLayout
             statusText.setText(legacyPaymentBatch.getStatus());
             statusText.setTextColor(getResources().getColor(R.color.subtitle_grey));
             jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
+            setEnabled(false);
         }
 
     }

@@ -396,7 +396,7 @@
     <string name="withholdings">Withholdings</string>
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
-    <string name="no_more_payments">You have no more payments for this year.</string>
+    <string name="no_more_payments">You have no more payments to load.</string>
     <string name="expected_deposit">Expect deposit by</string>
     <string name="update_payment_method">Update Payment Method</string>
     <string name="edit_payment_method">Edit Payment Method</string>

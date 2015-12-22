@@ -4,7 +4,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dark_grey_border_bottom_light_background"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        >
+
+        <TextView
+            android:id="@+id/current_pay_week_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingLeft="@dimen/payment_container_horizontal_padding"
+            android:paddingRight="@dimen/payment_container_horizontal_padding"
+            android:paddingTop="@dimen/default_padding"
+            android:textColor="@color/payments_batch_list_entry_subtitle"
+            android:textSize="@dimen/small_text_size"
+            />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -211,12 +236,16 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/extra_padding"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
         android:paddingTop="@dimen/default_padding"
         android:text="@string/previous_pay_weeks"
-        android:textAppearance="@style/HandyTextAppearanceListHeader"/>
+        android:textAppearance="@style/HandyTextAppearanceListHeader"
+        android:clickable="true"
+        android:focusable="true"
+        />
+
 </com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView>

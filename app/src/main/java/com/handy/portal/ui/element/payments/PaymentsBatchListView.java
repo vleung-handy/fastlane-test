@@ -8,13 +8,16 @@ import android.widget.AdapterView;
 import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
+import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -143,7 +146,16 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     {
         if (getWrappedAdapter().isDataEmpty())
         {
-            paymentsBatchListHeaderView.updateDisplay(paymentBatches);
+            if (paymentBatches.getNeoPaymentBatches().length == 0)
+            {
+                Crashlytics.logException(new Exception("No non-legacy payment batches received! Expecting at least one (first entry should be the current week's payment batch)"));
+                return;
+            }
+            NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
+            // Set Header List View
+            paymentsBatchListHeaderView.updateDisplay(neoPaymentBatch);
+            Integer year = DateTimeUtils.getYearInt(neoPaymentBatch.getEndDate());
+            getWrappedAdapter().setCurrentYear(year);
         }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }
