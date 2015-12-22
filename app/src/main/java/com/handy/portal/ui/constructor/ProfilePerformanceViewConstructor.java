@@ -30,7 +30,7 @@ public class ProfilePerformanceViewConstructor extends ViewConstructor<Performan
     @InjectView(R.id.trailing_rate_text)
     TextView trailingRateText;
 
-    private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.0");
+    private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.00");
 
     public ProfilePerformanceViewConstructor(@NonNull Context context)
     {
