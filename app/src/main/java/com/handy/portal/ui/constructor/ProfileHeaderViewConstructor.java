@@ -20,7 +20,7 @@ import butterknife.InjectView;
 
 public class ProfileHeaderViewConstructor extends ViewConstructor<ProviderProfile>
 {
-    private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.0");
+    private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.00");
 
     @InjectView(R.id.provider_first_name_text)
     TextView providerFirstNameText;
