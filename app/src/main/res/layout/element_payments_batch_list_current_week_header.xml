@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dark_grey_border_bottom"
+        android:background="@drawable/dark_grey_border_bottom_light_background"
         android:orientation="horizontal"
         android:clickable="true"
         android:focusable="true"
