@@ -15,7 +15,7 @@ import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileHeaderViewConstructor;
 import com.handy.portal.ui.constructor.ProfilePerformanceViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
-import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
+import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.squareup.otto.Subscribe;
 
@@ -69,6 +69,7 @@ public class ProfileFragment extends ActionBarFragment
         super.onResume();
         setActionBar(R.string.profile, false);
 
+        // Do we want to reload this on resume?
         if (mProviderProfile != null)
         {
             createProfileView();
@@ -106,13 +107,14 @@ public class ProfileFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
+        //Do we really need to remove and recreate ManagementToolsView? Or is it handled on resume?
         ViewGroup resupplyLayout = (ViewGroup) getActivity().findViewById(R.id.resupply_layout);
         if (resupplyLayout != null)
         {
             profileLayout.removeView(resupplyLayout);
         }
 
-        new ProfileResupplyViewConstructor(getActivity()).create(profileLayout, event.providerProfile);
+        profileLayout.addView(new ManagementToolsView(getContext(), mProviderProfile));
 
         showToast(R.string.resupply_kit_on_its_way);
     }
@@ -138,7 +140,7 @@ public class ProfileFragment extends ActionBarFragment
         new ProfilePerformanceViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getPerformanceInfo());
         new ProfileReferralViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getReferralInfo());
         new ProfileContactViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getProviderPersonalInfo());
-        new ProfileResupplyViewConstructor(getActivity()).create(profileLayout, mProviderProfile);
+        profileLayout.addView(new ManagementToolsView(getContext(), mProviderProfile));
 
         fetchErrorLayout.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
