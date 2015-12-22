@@ -149,8 +149,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> //TODO: 
     @Override
     public boolean isEnabled(int position)
     {
-        PaymentBatch paymentBatch = getItem(position);
-        return paymentBatch instanceof NeoPaymentBatch; //we're not allowing users to view legacy payment batch details
+        // Setting disabled state via setEnabled(false)
+        return true;
     }
 
     @Override

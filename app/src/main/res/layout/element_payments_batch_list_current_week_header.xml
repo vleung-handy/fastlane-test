@@ -11,7 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/dark_grey_border_bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        >
 
         <TextView
             android:id="@+id/current_pay_week_year"
@@ -233,12 +236,16 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/extra_padding"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
         android:paddingTop="@dimen/default_padding"
         android:text="@string/previous_pay_weeks"
-        android:textAppearance="@style/HandyTextAppearanceListHeader"/>
+        android:textAppearance="@style/HandyTextAppearanceListHeader"
+        android:clickable="true"
+        android:focusable="true"
+        />
+
 </com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView>

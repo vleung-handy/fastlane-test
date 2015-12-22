@@ -138,6 +138,4 @@ public final class Utils //TODO: we should reorganize these methods into more sp
         }
         return locationData;
     }
-
-
 }

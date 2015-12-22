@@ -2,7 +2,6 @@ package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -31,12 +30,6 @@ public class PaymentsBatchListItemView extends TableLayout
 
     @InjectView(R.id.payments_batch_list_item_status_text)
     protected TextView statusText;
-
-    @InjectView(R.id.payment_batch_item_table)
-    protected TableLayout paymentBatchItemTable;
-
-    @InjectView(R.id.change_of_year)
-    protected TextView changeOfYear;
 
     public PaymentsBatchListItemView(Context context)
     {
@@ -82,7 +75,7 @@ public class PaymentsBatchListItemView extends TableLayout
                 }
             }
             jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numWithholdings));
-            paymentBatchItemTable.setEnabled(true);
+            setEnabled(true);
         }
         else if (paymentBatch instanceof LegacyPaymentBatch)
         {
@@ -92,7 +85,7 @@ public class PaymentsBatchListItemView extends TableLayout
             statusText.setText(legacyPaymentBatch.getStatus());
             statusText.setTextColor(getResources().getColor(R.color.subtitle_grey));
             jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
-            paymentBatchItemTable.setEnabled(false);
+            setEnabled(false);
         }
 
     }
