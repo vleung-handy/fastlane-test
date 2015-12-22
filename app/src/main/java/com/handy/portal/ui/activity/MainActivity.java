@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity
                     //TODO: Pass along config param status of block / non-blocking
 
                     PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
-                    paymentBillBlockerDialogFragment.show(getSupportFragmentManager(), PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
+                    paymentBillBlockerDialogFragment.show(fragmentManager, PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
                 }
             }
         }
