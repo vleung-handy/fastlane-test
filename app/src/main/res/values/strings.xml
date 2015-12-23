@@ -429,6 +429,10 @@
     <string name="debit_card">Debit Card</string>
     <string name="update_bank_info">Update Bank Info</string>
 
+    <string name="payments_need_updates_jobs_title">Set up direct deposit to claim a job</string>
+    <string name="add_direct_deposit">Add Direct Deposit</string>
+    <string name="payment_blocking_title">Update Payment Information</string>
+
     <!-- Notification Blocker -->
     <string name="notification_blocker_title">Please turn on push notifications</string>
     <string name="notification_blocker_body">We use push notifications to send you changes to your schedule, payment updates and more. Please tap below to turn on push notifications.</string>

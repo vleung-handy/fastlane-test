@@ -36,6 +36,7 @@ public class ConfigManager
             @Override
             public void onError(DataManager.DataManagerError error)
             {
+                Crashlytics.log("Unable to get configuration response");
             }
         });
 
