@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_top_padding"
             android:background="?attr/colorPrimary"
-            ></LinearLayout>
+            />
 
         <com.handy.portal.ui.widget.HandyToolbar
             android:id="@+id/toolbar"
@@ -38,13 +38,13 @@
 
             <FrameLayout
                 android:id="@+id/main_container"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_above="@+id/tabs"/>
 
             <include layout="@layout/element_bottom_nav"/>
 
-            <include layout="@layout/merge_loading"/>
+            <include layout="@layout/loading_overlay"/>
 
         </com.handy.portal.ui.layout.TabbedLayout>
 

@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.handy.portal.manager.TermsManager;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.element.HandyWebView;
-import com.handy.portal.ui.element.LoadingOverlayView;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ import butterknife.OnClick;
 public class TermsFragment extends InjectedFragment
 {
     @Bind(R.id.loading_overlay)
-    protected LoadingOverlayView loadingOverlay;
+    protected View loadingOverlay;
 
     @Bind(R.id.terms_webview)
     protected HandyWebView termsWebView;
@@ -91,12 +91,12 @@ public class TermsFragment extends InjectedFragment
     {
         if (acceptCheckbox.isChecked())
         {
-            loadingOverlay.setOverlayVisibility(true);
+            loadingOverlay.setVisibility(View.VISIBLE);
             bus.post(new HandyEvent.AcceptTerms(getActiveTermsDetails()));
         }
         else
         {
-            acceptCheckbox.setTextColor(getResources().getColor(R.color.error_red));
+            acceptCheckbox.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
         }
     }
 
@@ -111,7 +111,7 @@ public class TermsFragment extends InjectedFragment
     {
         if (checked)
         {
-            acceptCheckbox.setTextColor(getResources().getColor(R.color.black));
+            acceptCheckbox.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         }
     }
 
@@ -137,14 +137,14 @@ public class TermsFragment extends InjectedFragment
         else
         {
             Crashlytics.logException(new Exception("User tried to accept the same terms twice")); //this shouldn't happen since there's an overlay immediately after user presses accept
-            loadingOverlay.setOverlayVisibility(false);
+            loadingOverlay.setVisibility(View.GONE);
         }
     }
 
     @Subscribe
     public void onAcceptTermsError(HandyEvent.AcceptTermsError event)
     {
-        loadingOverlay.setOverlayVisibility(false);
+        loadingOverlay.setVisibility(View.GONE);
         showToast(R.string.error_accepting_terms);
     }
 
@@ -156,7 +156,7 @@ public class TermsFragment extends InjectedFragment
             instructionsText.setText(termsDetails.getInstructions());
             termsWebView.loadHtml(termsDetails.getContent());
             acceptCheckbox.setChecked(false);
-            acceptCheckbox.setTextColor(getResources().getColor(R.color.black));
+            acceptCheckbox.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
             bus.post(new HandyEvent.TermsDisplayed(termsDetails.getCode()));
         }
@@ -166,7 +166,7 @@ public class TermsFragment extends InjectedFragment
             errorLayout.setVisibility(View.VISIBLE);
             errorText.setText(R.string.error_loading);
         }
-        loadingOverlay.setOverlayVisibility(false);
+        loadingOverlay.setVisibility(View.GONE);
     }
 
 }
