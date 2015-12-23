@@ -12,16 +12,16 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PaymentBlockingFragment extends ActionBarFragment
 {
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     View fetchErrorView;
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView errorText;
-    @InjectView(R.id.try_again_button)
+    @Bind(R.id.try_again_button)
     Button errorCTAButton;
 
     public static final String FRAGMENT_TAG = "fragment_payment_blocking";
@@ -42,7 +42,7 @@ public class PaymentBlockingFragment extends ActionBarFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         setActionBarTitle(R.string.payment_blocking_title);
         return view;
     }
