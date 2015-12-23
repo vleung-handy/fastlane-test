@@ -24,7 +24,6 @@ import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.element.LoadingOverlayView;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.squareup.otto.Subscribe;
 
@@ -49,7 +48,7 @@ public class MainActivityFragment extends InjectedFragment
     @Bind(R.id.button_more)
     RadioButton mButtonMore;
     @Bind(R.id.loading_overlay)
-    LoadingOverlayView mLoadingOverlayView;
+    View mLoadingOverlayView;
     @Bind(R.id.nav_link_my_profile)
     RadioButton mNavLinkMyProfile;
     @Bind(R.id.nav_link_payments)
@@ -84,7 +83,6 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.bind(this, view);
         registerButtonListeners();
-        mLoadingOverlayView.init();
         return view;
     }
 
@@ -149,7 +147,7 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
     {
-        mLoadingOverlayView.setOverlayVisibility(event.isVisible);
+        mLoadingOverlayView.setVisibility(event.isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Subscribe
