@@ -36,19 +36,19 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment
 {
     @Inject
     protected EventLogFactory mEventLogFactory;
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     View fetchErrorView;
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView errorText;
-    @InjectView(R.id.refresh_layout)
+    @Bind(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
 
     protected abstract int getFragmentResourceId();
@@ -90,7 +90,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         //Optional param, needs to be validated
         if (getArguments() != null && getArguments().containsKey(BundleKeys.DATE_EPOCH_TIME))

@@ -31,25 +31,25 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ComplementaryBookingsFragment extends ActionBarFragment
 {
-    @InjectView(R.id.loading_overlay)
+    @Bind(R.id.loading_overlay)
     View loadingOverlay;
-    @InjectView(R.id.complementary_bookings_empty)
+    @Bind(R.id.complementary_bookings_empty)
     View noBookingsView;
-    @InjectView(R.id.earlier_bookings)
+    @Bind(R.id.earlier_bookings)
     ViewGroup earlierBookingsContainer;
-    @InjectView(R.id.later_bookings)
+    @Bind(R.id.later_bookings)
     ViewGroup laterBookingsContainer;
-    @InjectView(R.id.claimed_bookings)
+    @Bind(R.id.claimed_bookings)
     ViewGroup claimedBookingsContainer;
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     View errorView;
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView errorText;
 
     @Inject
@@ -103,7 +103,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_complementary_bookings, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         if (validateRequiredArguments())
         {

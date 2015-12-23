@@ -52,7 +52,7 @@ public class InjectedDialogFragment extends DialogFragment
     @Override
     public void onDestroyView()
     {
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
         super.onDestroyView();
     }
 }

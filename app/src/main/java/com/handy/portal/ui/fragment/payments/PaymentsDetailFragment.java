@@ -19,14 +19,14 @@ import com.handy.portal.ui.element.payments.PaymentDetailExpandableListView;
 import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public final class PaymentsDetailFragment extends ActionBarFragment implements ExpandableListView.OnChildClickListener
 {
-    @InjectView(R.id.payments_detail_list_view)
+    @Bind(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
-    @InjectView(R.id.payment_details_list_header)
+    @Bind(R.id.payment_details_list_header)
     PaymentsDetailListHeaderView paymentsDetailListHeaderView;
 
     private NeoPaymentBatch neoPaymentBatch;
@@ -62,7 +62,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
             fragmentView = inflater
                     .inflate(R.layout.fragment_payments_detail, container, false);
         }
-        ButterKnife.inject(this, fragmentView);
+        ButterKnife.bind(this, fragmentView);
         return fragmentView;
     }
 

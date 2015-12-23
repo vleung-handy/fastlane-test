@@ -18,30 +18,30 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.util.CurrencyUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
-    @InjectView(R.id.claim_target_frame_layout)
+    @Bind(R.id.claim_target_frame_layout)
     protected FrameLayout frameLayout;
 
-    @InjectView(R.id.claim_target_window_layout)
+    @Bind(R.id.claim_target_window_layout)
     protected LinearLayout windowLayout;
 
-    @InjectView(R.id.claim_target_title)
+    @Bind(R.id.claim_target_title)
     protected TextView claimTargetTitle;
 
-    @InjectView(R.id.claim_target_progress_icons_container)
+    @Bind(R.id.claim_target_progress_icons_container)
     protected LinearLayout progressIconsContainer;
 
-    @InjectView(R.id.claim_target_info_text)
+    @Bind(R.id.claim_target_info_text)
     protected TextView textClaimTarget;
 
-    @InjectView(R.id.expected_pay_label)
+    @Bind(R.id.expected_pay_label)
     protected TextView textExpectedPayLabel;
 
-    @InjectView(R.id.claim_target_expected_pay_dollars_text)
+    @Bind(R.id.claim_target_expected_pay_dollars_text)
     protected TextView textExpectedPayDollars;
 
     final Handler handler = new Handler();
@@ -115,7 +115,7 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dialog_claim_target, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         updateDisplay();
         return view;
     }

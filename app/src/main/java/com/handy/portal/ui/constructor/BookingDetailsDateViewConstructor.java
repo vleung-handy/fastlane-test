@@ -14,14 +14,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstructor
 {
-    @InjectView(R.id.booking_details_time_text)
+    @Bind(R.id.booking_details_time_text)
     protected TextView timeText;
 
-    @InjectView(R.id.booking_details_date_text)
+    @Bind(R.id.booking_details_date_text)
     protected TextView dateText;
 
     private static final String DATE_FORMAT = "E, MMM d";

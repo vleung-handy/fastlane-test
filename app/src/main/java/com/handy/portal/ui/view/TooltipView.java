@@ -6,13 +6,13 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class TooltipView extends InjectedRelativeLayout
 {
-    @InjectView(R.id.tooltip_text)
+    @Bind(R.id.tooltip_text)
     TextView tooltipText;
-    @InjectView(R.id.tooltip_subtext)
+    @Bind(R.id.tooltip_subtext)
     TextView tooltipSubtext;
 
     public TooltipView(Context context)

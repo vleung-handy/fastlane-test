@@ -30,8 +30,8 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class MainActivityFragment extends InjectedFragment
 {
@@ -40,31 +40,31 @@ public class MainActivityFragment extends InjectedFragment
     HandyRetrofitEndpoint handyRetrofitEndpoint;
     /////////////Bad useless injection that breaks if not in?
 
-    @InjectView(R.id.tabs)
+    @Bind(R.id.tabs)
     RadioGroup tabs;
-    @InjectView(R.id.button_jobs)
+    @Bind(R.id.button_jobs)
     RadioButton mJobsButton;
-    @InjectView(R.id.button_schedule)
+    @Bind(R.id.button_schedule)
     RadioButton mScheduleButton;
-    @InjectView(R.id.button_more)
+    @Bind(R.id.button_more)
     RadioButton mButtonMore;
-    @InjectView(R.id.loading_overlay)
+    @Bind(R.id.loading_overlay)
     LoadingOverlayView mLoadingOverlayView;
-    @InjectView(R.id.nav_link_my_profile)
+    @Bind(R.id.nav_link_my_profile)
     RadioButton mNavLinkMyProfile;
-    @InjectView(R.id.nav_link_payments)
+    @Bind(R.id.nav_link_payments)
     RadioButton mNavLinkPayments;
-    @InjectView(R.id.nav_link_edit_payment_method)
+    @Bind(R.id.nav_link_edit_payment_method)
     RadioButton mNavLinkEditPaymentMethod;
-    @InjectView(R.id.nav_link_help)
+    @Bind(R.id.nav_link_help)
     RadioButton mNavLinkHelp;
-    @InjectView(R.id.drawer_layout)
+    @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @InjectView(R.id.navigation_drawer)
+    @Bind(R.id.navigation_drawer)
     LinearLayout mNavigationDrawer;
-    @InjectView(R.id.nav_tray_links)
+    @Bind(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
-    @InjectView(R.id.navigation_header)
+    @Bind(R.id.navigation_header)
     TextView mNavigationHeader;
 
     //What tab are we currently displaying
@@ -82,7 +82,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         registerButtonListeners();
         mLoadingOverlayView.init();
         return view;

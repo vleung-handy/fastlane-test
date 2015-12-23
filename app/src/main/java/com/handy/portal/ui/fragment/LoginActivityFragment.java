@@ -34,8 +34,8 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class LoginActivityFragment extends InjectedFragment
@@ -43,21 +43,21 @@ public class LoginActivityFragment extends InjectedFragment
     @VisibleForTesting
     static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
 
-    @InjectView(R.id.phone_input_layout)
+    @Bind(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
-    @InjectView(R.id.pin_code_input_layout)
+    @Bind(R.id.pin_code_input_layout)
     RelativeLayout pinCodeInputLayout;
-    @InjectView(R.id.phone_number_edit_text)
+    @Bind(R.id.phone_number_edit_text)
     PhoneInputTextView phoneNumberEditText;
-    @InjectView(R.id.pin_code_edit_text)
+    @Bind(R.id.pin_code_edit_text)
     PinCodeInputTextView pinCodeEditText;
-    @InjectView(R.id.login_instructions_text)
+    @Bind(R.id.login_instructions_text)
     TextView instructionsText;
-    @InjectView(R.id.login_button)
+    @Bind(R.id.login_button)
     Button loginButton;
-    @InjectView(R.id.back_button)
+    @Bind(R.id.back_button)
     ImageButton backButton;
-    @InjectView(R.id.slide_up_panel_container)
+    @Bind(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
 
 
@@ -91,7 +91,7 @@ public class LoginActivityFragment extends InjectedFragment
 
         View view = inflater.inflate(R.layout.fragment_login, container);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         changeState(LoginState.INIT);
 

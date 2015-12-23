@@ -29,26 +29,26 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 
 public class RequestSuppliesFragment extends ActionBarFragment
 {
-    @InjectView(R.id.request_supplies_button)
+    @Bind(R.id.request_supplies_button)
     Button mRequestSuppliesButton;
 
-    @InjectView(R.id.shipping_address_line_1_content_text)
+    @Bind(R.id.shipping_address_line_1_content_text)
     TextView mShippingAddressLine1ContentText;
 
-    @InjectView(R.id.shipping_address_line_2_content_text)
+    @Bind(R.id.shipping_address_line_2_content_text)
     TextView mShippingAddressLine2ContentText;
 
-    @InjectView(R.id.requested_supplies_list)
+    @Bind(R.id.requested_supplies_list)
     LinearLayout mRequestedSuppliesList;
 
-    @InjectView(R.id.request_supplies_withholding_amount)
+    @Bind(R.id.request_supplies_withholding_amount)
     TextView mRequestSuppliesWithholdingAmount;
 
     @Override
@@ -67,7 +67,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
         mProviderProfile = (ProviderProfile) args.getSerializable(BundleKeys.PROVIDER_PROFILE);
 
         View view = inflater.inflate(R.layout.fragment_request_supplies, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         processProviderProfile(mProviderProfile);
 
         return view;

@@ -25,20 +25,20 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.util.DateTimeUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ConfirmBookingDialogFragment extends DialogFragment
 {
 
-    @InjectView(R.id.booking_info_address)
+    @Bind(R.id.booking_info_address)
     TextView mBookingAddressText;
-    @InjectView(R.id.booking_info_timer)
+    @Bind(R.id.booking_info_timer)
     TextView mBookingTimerText;
-    @InjectView(R.id.booking_info_time)
+    @Bind(R.id.booking_info_time)
     TextView mBookingTimeText;
-    @InjectView(R.id.booking_info_claim_button)
+    @Bind(R.id.booking_info_claim_button)
     TextView mBookingClaimButton;
 
     private Booking mBooking;
@@ -81,7 +81,7 @@ public class ConfirmBookingDialogFragment extends DialogFragment
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dialog_confirm_claim, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         setBookingInfoDisplay();
         return view;

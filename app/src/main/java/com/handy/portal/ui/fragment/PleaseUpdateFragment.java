@@ -17,8 +17,8 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class PleaseUpdateFragment extends InjectedFragment
@@ -26,11 +26,11 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Inject
     VersionManager versionManager;
 
-    @InjectView(R.id.update_image)
+    @Bind(R.id.update_image)
     ImageView updateImage;
-    @InjectView(R.id.update_button)
+    @Bind(R.id.update_button)
     View updateButton;
-    @InjectView(R.id.update_text)
+    @Bind(R.id.update_text)
     TextView updateText;
 
     @Override
@@ -39,7 +39,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_please_update, container);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         ((AnimationDrawable) updateImage.getBackground()).start();
 

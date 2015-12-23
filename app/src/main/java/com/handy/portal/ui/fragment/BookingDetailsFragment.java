@@ -71,50 +71,50 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
     //Layouts points for fragment, the various elements are childed to these
-    @InjectView(R.id.booking_details_layout)
+    @Bind(R.id.booking_details_layout)
     LinearLayout detailsParentLayout;
 
-    @InjectView(R.id.booking_details_map_layout)
+    @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout;
 
-    @InjectView(R.id.booking_details_date_layout)
+    @Bind(R.id.booking_details_date_layout)
     LinearLayout dateLayout;
 
-    @InjectView(R.id.booking_details_title_layout)
+    @Bind(R.id.booking_details_title_layout)
     RelativeLayout titleLayout;
 
-    @InjectView(R.id.booking_details_action_layout)
+    @Bind(R.id.booking_details_action_layout)
     RelativeLayout actionLayout;
 
-    @InjectView(R.id.booking_details_contact_layout)
+    @Bind(R.id.booking_details_contact_layout)
     RelativeLayout contactLayout;
 
-    @InjectView(R.id.booking_details_job_instructions_layout)
+    @Bind(R.id.booking_details_job_instructions_layout)
     LinearLayout jobInstructionsLayout;
 
-    @InjectView(R.id.booking_details_location_layout)
+    @Bind(R.id.booking_details_location_layout)
     ViewGroup locationLayout;
 
-    @InjectView(R.id.booking_details_remove_job_layout)
+    @Bind(R.id.booking_details_remove_job_layout)
     LinearLayout removeJobLayout;
 
-    @InjectView(R.id.booking_details_full_details_notice_text)
+    @Bind(R.id.booking_details_full_details_notice_text)
     TextView fullDetailsNoticeText;
 
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     View fetchErrorView;
 
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView errorText;
 
-    @InjectView(R.id.slide_up_panel_container)
+    @Bind(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
 
     @Inject
@@ -154,7 +154,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_booking_detail, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         if (validateRequiredArguments())
         {

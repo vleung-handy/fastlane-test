@@ -21,8 +21,8 @@
 
 #Butterknife
 -dontwarn butterknife.internal.**
--keep class **$$ViewInjector { *; }
--keepnames class * { @butterknife.InjectView *; }
+-keep class **$$ViewBinder { *; }
+-keepnames class * { @butterknife.Bind *; }
 
 #Dagger
 -dontwarn dagger.internal.codegen.**

@@ -18,15 +18,15 @@ import com.squareup.otto.Subscribe;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
-    @InjectView(R.id.available_jobs_list_view)
+    @Bind(R.id.available_jobs_list_view)
     BookingListView availableJobsListView;
-    @InjectView(R.id.available_bookings_dates_scroll_view_layout)
+    @Bind(R.id.available_bookings_dates_scroll_view_layout)
     LinearLayout availableJobsDatesScrollViewLayout;
-    @InjectView(R.id.available_bookings_empty)
+    @Bind(R.id.available_bookings_empty)
     ViewGroup noAvailableBookingsLayout;
 
     @Override

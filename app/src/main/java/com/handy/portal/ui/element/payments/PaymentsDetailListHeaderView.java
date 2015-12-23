@@ -10,21 +10,21 @@ import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PaymentsDetailListHeaderView extends LinearLayout
 {
-    @InjectView(R.id.payment_detail_date_range_text)
+    @Bind(R.id.payment_detail_date_range_text)
     TextView paymentDetailDateRangeText;
 
-    @InjectView(R.id.payments_detail_total_payment_text)
+    @Bind(R.id.payments_detail_total_payment_text)
     TextView paymentDetailTotalPaymentText;
 
-    @InjectView(R.id.payments_detail_expect_deposit_date)
+    @Bind(R.id.payments_detail_expect_deposit_date)
     TextView paymentDetailExpectDepositDate;
 
-    @InjectView(R.id.payments_detail_expect_deposit_date_layout)
+    @Bind(R.id.payments_detail_expect_deposit_date_layout)
     LinearLayout paymentsDetailExpectDepositLayout;
 
     public PaymentsDetailListHeaderView(Context context)
@@ -41,7 +41,7 @@ public class PaymentsDetailListHeaderView extends LinearLayout
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void updateDisplay(NeoPaymentBatch neoPaymentBatch)

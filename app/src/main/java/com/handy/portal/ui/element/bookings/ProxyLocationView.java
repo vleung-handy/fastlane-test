@@ -13,21 +13,21 @@ import com.handy.portal.ui.view.RoundedTextView;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class ProxyLocationView extends FrameLayout
 {
-    @InjectView(R.id.job_location_title)
+    @Bind(R.id.job_location_title)
     TextView jobLocationTitleTextView;
 
-    @InjectView(R.id.job_location)
+    @Bind(R.id.job_location)
     TextView jobLocationTextView;
 
-    @InjectView(R.id.nearby_transit_title)
+    @Bind(R.id.nearby_transit_title)
     TextView nearbyTransitTextView;
 
-    @InjectView(R.id.nearby_transits)
+    @Bind(R.id.nearby_transits)
     LinearLayout nearbyTransits;
 
     private Booking.ZipCluster mZipCluster;
@@ -67,7 +67,7 @@ public class ProxyLocationView extends FrameLayout
         }
 
         inflate(getContext(), R.layout.element_booking_details_proxy_location, this);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         setJobLocation();
         setNearbyTransit();

@@ -11,23 +11,23 @@ import com.handy.portal.model.PerformanceInfo;
 
 import java.text.DecimalFormat;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class ProfilePerformanceViewConstructor extends ViewConstructor<PerformanceInfo>
 {
-    @InjectView(R.id.profile_section_header_title_text)
+    @Bind(R.id.profile_section_header_title_text)
     TextView titleText;
-    @InjectView(R.id.profile_section_header_subtitle_text)
+    @Bind(R.id.profile_section_header_subtitle_text)
     TextView subtitleText;
-    @InjectView(R.id.tier_text)
+    @Bind(R.id.tier_text)
     TextView tierText;
-    @InjectView(R.id.tier_label)
+    @Bind(R.id.tier_label)
     TextView tierLabel;
-    @InjectView(R.id.trailing_rating_text)
+    @Bind(R.id.trailing_rating_text)
     TextView trailingRatingText;
-    @InjectView(R.id.trailing_jobs_text)
+    @Bind(R.id.trailing_jobs_text)
     TextView trailingJobsText;
-    @InjectView(R.id.trailing_rate_text)
+    @Bind(R.id.trailing_rate_text)
     TextView trailingRateText;
 
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.00");

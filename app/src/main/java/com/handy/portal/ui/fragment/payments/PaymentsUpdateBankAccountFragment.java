@@ -28,22 +28,22 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
 {
-    @InjectView(R.id.routing_number_field)
+    @Bind(R.id.routing_number_field)
     FormFieldTableRow routingNumberField;
 
-    @InjectView(R.id.account_number_field)
+    @Bind(R.id.account_number_field)
     FormFieldTableRow accountNumberField;
 
-    @InjectView(R.id.tax_id_field)
+    @Bind(R.id.tax_id_field)
     FormFieldTableRow taxIdField;
 
-    @InjectView(R.id.bank_account_setup_helper)
+    @Bind(R.id.bank_account_setup_helper)
     ViewGroup bankAccountSetupHelper;
 
     @Inject
@@ -66,7 +66,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_payments_update_bank_account, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         setFormFieldErrorStateRemovers();
 

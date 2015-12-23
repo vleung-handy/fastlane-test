@@ -25,7 +25,7 @@ public abstract class ViewConstructor<T>
     public void create(ViewGroup container, T item)
     {
         View view = LayoutInflater.from(getContext()).inflate(getLayoutResourceId(), container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         if (constructView(container, item))
         {
             container.addView(view);

@@ -10,12 +10,12 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.util.TextUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class BookingDetailsJobInstructionsSectionEntryView extends RelativeLayout
 {
-    @InjectView(R.id.booking_details_job_instructions_entry_text)
+    @Bind(R.id.booking_details_job_instructions_entry_text)
     protected TextView entryText;
 
     public BookingDetailsJobInstructionsSectionEntryView(final Context context)
@@ -35,7 +35,7 @@ public class BookingDetailsJobInstructionsSectionEntryView extends RelativeLayou
 
     public void init(String message)
     {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         String formattedMessage = TextUtils.formatHtmlLinks(message);
         formattedMessage = TextUtils.formatHtmlLineBreaks(formattedMessage);
 

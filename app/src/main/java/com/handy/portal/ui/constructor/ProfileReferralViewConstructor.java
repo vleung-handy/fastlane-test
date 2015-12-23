@@ -16,7 +16,7 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class ProfileReferralViewConstructor extends ViewConstructor<ReferralInfo>
 {
@@ -25,13 +25,13 @@ public class ProfileReferralViewConstructor extends ViewConstructor<ReferralInfo
     @Inject
     EventLogFactory mEventLogFactory;
 
-    @InjectView(R.id.profile_section_header_title_text)
+    @Bind(R.id.profile_section_header_title_text)
     TextView titleText;
-    @InjectView(R.id.profile_section_header_subtitle_text)
+    @Bind(R.id.profile_section_header_subtitle_text)
     TextView subtitleText;
-    @InjectView(R.id.referral_code_layout)
+    @Bind(R.id.referral_code_layout)
     ViewGroup referralCodeLayout;
-    @InjectView(R.id.referral_code_text)
+    @Bind(R.id.referral_code_text)
     TextView referralCodeText;
 
     public ProfileReferralViewConstructor(@NonNull Context context)

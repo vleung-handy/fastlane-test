@@ -16,12 +16,12 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public abstract class PortalWebViewFragment extends ActionBarFragment
 {
-     @InjectView(R.id.portal_web_view)
+    @Bind(R.id.portal_web_view)
     WebView webView;
 
     @Override
@@ -30,7 +30,7 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_webportal, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) //needed to workaround a bug in android 4.4 that cause webview artifacts to show.
         {

@@ -15,17 +15,17 @@ import com.handy.portal.model.HelpNode;
 import com.handy.portal.ui.element.HandyWebView;
 import com.handy.portal.util.TextUtils;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public final class HelpNodeView extends InjectedRelativeLayout
 {
-    @InjectView(R.id.help_webview)
+    @Bind(R.id.help_webview)
     HandyWebView helpWebView;
-    @InjectView(R.id.info_layout)
+    @Bind(R.id.info_layout)
     RelativeLayout infoLayout;
-    @InjectView(R.id.contact_button)
+    @Bind(R.id.contact_button)
     public Button contactButton;
-    @InjectView(R.id.nav_options_layout)
+    @Bind(R.id.nav_options_layout)
     public LinearLayout navOptionsLayout;
 
     public HelpNodeView(final Context context)

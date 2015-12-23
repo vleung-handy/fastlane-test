@@ -32,7 +32,6 @@ import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
-import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -40,27 +39,27 @@ import com.squareup.otto.Subscribe;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public final class PaymentsFragment extends ActionBarFragment
 {
     //TODO: investigate using @Produce and make manager handle more of this logic
     @VisibleForTesting
-    @InjectView(R.id.slide_up_panel_container)
+    @Bind(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
 
-    @InjectView(R.id.payments_scroll_view)
+    @Bind(R.id.payments_scroll_view)
     ScrollView scrollView;
 
-    @InjectView(R.id.payments_batch_list_view)
+    @Bind(R.id.payments_batch_list_view)
     PaymentsBatchListView paymentsBatchListView;
 
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView fetchErrorText;
 
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     ViewGroup fetchErrorView;
 
     @VisibleForTesting
@@ -79,7 +78,7 @@ public final class PaymentsFragment extends ActionBarFragment
             fragmentView = inflater.inflate(R.layout.fragment_payments, container, false);
         }
 
-        ButterKnife.inject(this, fragmentView);
+        ButterKnife.bind(this, fragmentView);
 
         helpNodesListView = new ListView(getActivity());
         helpNodesListView.setDivider(null);
