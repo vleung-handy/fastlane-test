@@ -50,15 +50,15 @@ public interface HandyRetrofitService
     void getConfigParams(@Query("key[]") String[] key,
                          HandyRetrofitCallback cb);
 
-    @GET(JOBS_PATH + "/available_jobs")
+    @GET(JOBS_PATH + "available_jobs")
     void getAvailableBookings(@Query("dates[]") Date[] dates,
                               HandyRetrofitCallback cb);
 
-    @GET(JOBS_PATH + "/scheduled_jobs")
+    @GET(JOBS_PATH + "scheduled_jobs")
     void getScheduledBookings(@Query("dates[]") Date[] date,
                               HandyRetrofitCallback cb);
 
-    @GET(JOBS_PATH + "/nearby_jobs")
+    @GET(JOBS_PATH + "nearby_jobs")
     void getNearbyBookings(@Query("region_id") int region_id,
                            @Query("latitude") double latitude,
                            @Query("longitude") double longitude,

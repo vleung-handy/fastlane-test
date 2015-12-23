@@ -172,4 +172,27 @@ public class ScheduledJobsLog extends EventLog
             mDateStart = dateStart;
         }
     }
+
+    public static class CustomerRatingShown extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "customer_rating_shown";
+        public CustomerRatingShown(String providerId, String versionTrack)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+        }
+    }
+
+    public static class CustomerRatingSubmitted extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "customer_rating_submitted";
+
+        @SerializedName("rating")
+        private int mRating;
+
+        public CustomerRatingSubmitted(String providerId, String versionTrack, int rating)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+            mRating = rating;
+        }
+    }
 }

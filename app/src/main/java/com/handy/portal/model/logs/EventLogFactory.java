@@ -209,6 +209,17 @@ public class EventLogFactory
                 proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
     }
 
+    public EventLog createCustomerRatingShownLog()
+    {
+        return new ScheduledJobsLog.CustomerRatingShown(getProviderId(), getVersionTrack());
+    }
+
+    public EventLog createCustomerRatingSubmittedLog(int rating)
+    {
+        return new ScheduledJobsLog.CustomerRatingSubmitted(getProviderId(), getVersionTrack(), rating);
+    }
+
+
     // Payments Logs
     public EventLog createPaymentBatchSelectedLog(boolean currentWeek, int listNumber)
     {
