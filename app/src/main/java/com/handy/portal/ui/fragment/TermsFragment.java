@@ -22,35 +22,35 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class TermsFragment extends InjectedFragment
 {
-    @InjectView(R.id.loading_overlay)
+    @Bind(R.id.loading_overlay)
     protected LoadingOverlayView loadingOverlay;
 
-    @InjectView(R.id.terms_webview)
+    @Bind(R.id.terms_webview)
     protected HandyWebView termsWebView;
 
-    @InjectView(R.id.accept_button)
+    @Bind(R.id.accept_button)
     protected Button acceptButton;
 
-    @InjectView(R.id.accept_checkbox)
+    @Bind(R.id.accept_checkbox)
     protected CheckBox acceptCheckbox;
 
-    @InjectView(R.id.instructions)
+    @Bind(R.id.instructions)
     protected TextView instructionsText;
 
-    @InjectView(R.id.terms_layout)
+    @Bind(R.id.terms_layout)
     protected ViewGroup termsLayout;
 
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     protected ViewGroup errorLayout;
 
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     protected TextView errorText;
 
     @Inject
@@ -64,7 +64,7 @@ public class TermsFragment extends InjectedFragment
     {
         View view = inflater.inflate(R.layout.fragment_terms, container);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         updateView(getActiveTermsDetails());
 

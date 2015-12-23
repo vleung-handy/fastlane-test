@@ -13,18 +13,18 @@ import com.handy.portal.R;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
 {
-    @InjectView(R.id.booking_details_job_instructions_section_title_text)
+    @Bind(R.id.booking_details_job_instructions_section_title_text)
     protected TextView sectionTitleText;
 
-    @InjectView(R.id.booking_details_job_instructions_section_title_icon)
+    @Bind(R.id.booking_details_job_instructions_section_title_icon)
     protected ImageView sectionIcon;
 
-    @InjectView(R.id.booking_details_job_instructions_section_entries_layout)
+    @Bind(R.id.booking_details_job_instructions_section_entries_layout)
     protected LinearLayout entriesLayout;
 
     public BookingDetailsJobInstructionsSectionView(final Context context)
@@ -44,7 +44,7 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
 
     public void init(String sectionTitle, @Nullable Integer sectionIconId, List<String> entries)
     {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         sectionTitleText.setText(sectionTitle);
         if (sectionIconId != null)

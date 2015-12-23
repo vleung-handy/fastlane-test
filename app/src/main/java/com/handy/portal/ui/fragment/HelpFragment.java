@@ -16,21 +16,21 @@ import com.handy.portal.model.HelpNode;
 import com.handy.portal.ui.view.HelpNodeView;
 import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public final class HelpFragment extends ActionBarFragment
 {
     private final static String PATH_SEPARATOR = " > ";
 
-    @InjectView(R.id.help_node_view)
+    @Bind(R.id.help_node_view)
     HelpNodeView helpNodeView;
-    @InjectView(R.id.scroll_view)
+    @Bind(R.id.scroll_view)
     View scrollView;
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     View errorView;
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView errorText;
 
     private String currentBookingId; //optional param, if help request is associated with a booking
@@ -49,7 +49,7 @@ public final class HelpFragment extends ActionBarFragment
         final View view = getActivity().getLayoutInflater()
                 .inflate(R.layout.fragment_help_page, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) //needed to workaround a bug in android 4.4 that cause webview artifacts to show.
         {

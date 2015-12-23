@@ -18,11 +18,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class SupportActionContainerViewConstructor extends ViewConstructor<Booking>
 {
-    @InjectView(R.id.support_actions_container)
+    @Bind(R.id.support_actions_container)
     ViewGroup supportActionsContainer;
 
     private Collection<String> allowedActionNames;

@@ -28,19 +28,19 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class RateBookingDialogFragment extends InjectedDialogFragment
 {
-    @InjectView(R.id.rate_booking_comment_text)
+    @Bind(R.id.rate_booking_comment_text)
     EditText mCommentText;
 
-    @InjectView(R.id.rate_booking_rating_radiogroup)
+    @Bind(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
 
-    @InjectView(R.id.rate_booking_title)
+    @Bind(R.id.rate_booking_title)
     TextView mRatingTitle;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
@@ -51,7 +51,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dialog_rate_booking, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         mBooking = null;
         if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING))

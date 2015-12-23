@@ -19,20 +19,20 @@ import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 
 public class ProfileFragment extends ActionBarFragment
 {
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     ViewGroup fetchErrorLayout;
 
-    @InjectView(R.id.profile_layout)
+    @Bind(R.id.profile_layout)
     ViewGroup profileLayout;
 
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView fetchErrorText;
 
     private ProviderProfile mProviderProfile;
@@ -49,7 +49,7 @@ public class ProfileFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         if (mProviderProfile != null)
         {

@@ -6,40 +6,38 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.model.payments.NeoPaymentBatch;
-import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we can make this more linked with the batch adapter data
 {
-    @InjectView(R.id.payments_current_week_date_range_text)
+    @Bind(R.id.payments_current_week_date_range_text)
     TextView currentWeekDateRangeText;
 
-    @InjectView(R.id.payments_current_week_total_earnings)
+    @Bind(R.id.payments_current_week_total_earnings)
     TextView currentWeekTotalEarningsText;
 
-    @InjectView(R.id.payments_current_week_withholdings)
+    @Bind(R.id.payments_current_week_withholdings)
     TextView currentWeekWithholdingsText;
 
-    @InjectView(R.id.payments_current_week_expected_payment)
+    @Bind(R.id.payments_current_week_expected_payment)
     TextView currentWeekExpectedPaymentText;
 
-    @InjectView(R.id.payments_current_week_expected_payment_cents)
+    @Bind(R.id.payments_current_week_expected_payment_cents)
     TextView currentWeekExpectedPaymentCentsText;
 
-    @InjectView(R.id.payments_current_week_remaining_withholdings)
+    @Bind(R.id.payments_current_week_remaining_withholdings)
     TextView currentWeekRemainingWithholdingsText;
 
-    @InjectView(R.id.payments_current_week_remaining_withholdings_row)
+    @Bind(R.id.payments_current_week_remaining_withholdings_row)
     TableRow currentWeekRemainingWithholdingsRow;
 
-    @InjectView(R.id.current_pay_week_year)
+    @Bind(R.id.current_pay_week_year)
     TextView currentPayWeekYear;
 
     public PaymentsBatchListHeaderView(Context context)
@@ -56,7 +54,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void updateDisplay(NeoPaymentBatch neoPaymentBatch) //assuming that current pay week is always returned and is the first element

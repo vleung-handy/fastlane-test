@@ -28,7 +28,7 @@ public class LoadingOverlayView extends RelativeLayout
 
     public void init()
     {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         this.setVisibility(GONE);
     }
 

@@ -13,27 +13,27 @@ import com.handy.portal.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class DateButtonView extends RelativeLayout implements Checkable
 {
-    @InjectView(R.id.date_month_text)
+    @Bind(R.id.date_month_text)
     protected TextView monthText;
 
-    @InjectView(R.id.date_day_of_week_text)
+    @Bind(R.id.date_day_of_week_text)
     protected TextView dayOfWeekText;
 
-    @InjectView(R.id.date_day_of_month_text)
+    @Bind(R.id.date_day_of_month_text)
     protected TextView dayOfMonthText;
 
-    @InjectView(R.id.provider_requested_indicator_image)
+    @Bind(R.id.provider_requested_indicator_image)
     protected ImageView requestedIndicator;
 
-    @InjectView(R.id.claimed_job_exists_indicator_image)
+    @Bind(R.id.claimed_job_exists_indicator_image)
     protected ImageView claimedJobExistsIndicator;
 
-    @InjectView(R.id.selected_day_indicator_image)
+    @Bind(R.id.selected_day_indicator_image)
     protected ImageView selectedDayIndicator;
 
     private static final String DATE_FORMAT = "MMM E d";
@@ -57,7 +57,7 @@ public class DateButtonView extends RelativeLayout implements Checkable
 
     public void init(Date date)
     {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         selectedDayIndicator.setVisibility(View.INVISIBLE);
 

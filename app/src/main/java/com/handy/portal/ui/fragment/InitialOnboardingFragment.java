@@ -12,15 +12,15 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.ui.activity.OnboardingActivity;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class InitialOnboardingFragment extends Fragment
 {
-    @InjectView(R.id.body)
+    @Bind(R.id.body)
     ImageView body;
-    @InjectView(R.id.welcome_text)
+    @Bind(R.id.welcome_text)
     TextView welcomeText;
 
     private int bodyDrawableId;
@@ -41,7 +41,7 @@ public class InitialOnboardingFragment extends Fragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_onboarding_initial, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         body.setImageResource(bodyDrawableId);
         welcomeText.setText(String.format(getString(R.string.welcome), providerName));
 

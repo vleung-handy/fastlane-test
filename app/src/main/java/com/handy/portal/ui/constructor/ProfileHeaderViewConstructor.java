@@ -16,19 +16,19 @@ import com.handy.portal.util.DateTimeUtils;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class ProfileHeaderViewConstructor extends ViewConstructor<ProviderProfile>
 {
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.00");
 
-    @InjectView(R.id.provider_first_name_text)
+    @Bind(R.id.provider_first_name_text)
     TextView providerFirstNameText;
-    @InjectView(R.id.provider_last_name_text)
+    @Bind(R.id.provider_last_name_text)
     TextView providerLastNameText;
-    @InjectView(R.id.joined_handy_text)
+    @Bind(R.id.joined_handy_text)
     TextView joinedHandyText;
-    @InjectView(R.id.jobs_rating_text)
+    @Bind(R.id.jobs_rating_text)
     TextView jobsRatingText;
 
     public ProfileHeaderViewConstructor(@NonNull Context context)

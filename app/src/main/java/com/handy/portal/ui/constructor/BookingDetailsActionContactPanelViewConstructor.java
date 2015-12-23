@@ -14,11 +14,11 @@ import com.handy.portal.model.Booking;
 
 import java.util.List;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class BookingDetailsActionContactPanelViewConstructor extends BookingDetailsActionPanelViewConstructor
 {
-    @InjectView(R.id.booking_details_contact_profile_text)
+    @Bind(R.id.booking_details_contact_profile_text)
     protected TextView profileText;
 
     public BookingDetailsActionContactPanelViewConstructor(@NonNull Context context, Bundle arguments)

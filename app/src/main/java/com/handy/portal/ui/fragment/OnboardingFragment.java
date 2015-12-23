@@ -14,19 +14,19 @@ import com.handy.portal.R;
 import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.view.TooltipView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class OnboardingFragment extends Fragment
 {
-    @InjectView(R.id.body)
+    @Bind(R.id.body)
     ImageView body;
-    @InjectView(R.id.footer)
+    @Bind(R.id.footer)
     ImageView footer;
-    @InjectView(R.id.tooltip_top)
+    @Bind(R.id.tooltip_top)
     ViewGroup topTooltipContainer;
-    @InjectView(R.id.tooltip_bottom)
+    @Bind(R.id.tooltip_bottom)
     ViewGroup bottomTooltipContainer;
 
     private int tooltipTextId;
@@ -63,7 +63,7 @@ public class OnboardingFragment extends Fragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_onboarding, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         body.setImageResource(bodyDrawableId);
         footer.setImageResource(footerDrawableId);
 

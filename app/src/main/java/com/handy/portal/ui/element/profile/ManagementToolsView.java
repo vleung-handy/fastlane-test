@@ -24,8 +24,8 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ManagementToolsView extends FrameLayout
@@ -35,15 +35,15 @@ public class ManagementToolsView extends FrameLayout
     @Inject
     EventLogFactory mEventLogFactory;
 
-    @InjectView(R.id.profile_section_header_title_text)
+    @Bind(R.id.profile_section_header_title_text)
     TextView mTitleText;
-    @InjectView(R.id.profile_section_header_subtitle_text)
+    @Bind(R.id.profile_section_header_subtitle_text)
     TextView mSubTitleText;
-    @InjectView(R.id.provider_get_resupply_kit_text)
+    @Bind(R.id.provider_get_resupply_kit_text)
     TextView mResupplyText;
-    @InjectView(R.id.provider_get_resupply_kit_help_text)
+    @Bind(R.id.provider_get_resupply_kit_help_text)
     TextView mResupplyHelpText;
-    @InjectView(R.id.provider_get_resupply_kit)
+    @Bind(R.id.provider_get_resupply_kit)
     ViewGroup mResupply;
 
     private ProviderProfile mProviderProfile;
@@ -55,7 +55,7 @@ public class ManagementToolsView extends FrameLayout
         Utils.inject(context, this);
 
         inflate(getContext(), R.layout.element_profile_management_tools, this);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         mProviderProfile = providerProfile;
 

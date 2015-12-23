@@ -11,16 +11,16 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PaymentBillBlockerDialogFragment extends InjectedDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
 
-    @InjectView(R.id.payments_bill_blocker_update_now_button)
+    @Bind(R.id.payments_bill_blocker_update_now_button)
     protected Button updateNowButton;
 
-    @InjectView(R.id.payments_bill_blocker_later_button)
+    @Bind(R.id.payments_bill_blocker_later_button)
     protected Button laterButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_payment_bill_blocker";
@@ -29,7 +29,7 @@ public class PaymentBillBlockerDialogFragment extends InjectedDialogFragment //T
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dialog_payment_bill_blocker, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         return view;
     }
 

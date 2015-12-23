@@ -21,8 +21,8 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class SelectPaymentMethodFragment extends ActionBarFragment
@@ -30,25 +30,25 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @Inject
     ProviderManager providerManager;
 
-    @InjectView(R.id.bank_account_details)
+    @Bind(R.id.bank_account_details)
     TextView bankAccountDetails;
 
-    @InjectView(R.id.debit_card_details)
+    @Bind(R.id.debit_card_details)
     TextView debitCardDetails;
 
-    @InjectView(R.id.payment_method_container)
+    @Bind(R.id.payment_method_container)
     ViewGroup paymentMethodContainer;
 
-    @InjectView(R.id.debit_card_option)
+    @Bind(R.id.debit_card_option)
     ViewGroup debitCardOption;
 
-    @InjectView(R.id.verified_indicator)
+    @Bind(R.id.verified_indicator)
     View verifiedIndicator;
 
-    @InjectView(R.id.failed_indicator)
+    @Bind(R.id.failed_indicator)
     View failedIndicator;
 
-    @InjectView(R.id.pending_indicator)
+    @Bind(R.id.pending_indicator)
     View pendingIndicator;
 
     @OnClick(R.id.debit_card_option)
@@ -112,7 +112,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_select_payment_method, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         if (providerManager.getCachedActiveProvider() != null &&
                 !providerManager.getCachedActiveProvider().isUS()

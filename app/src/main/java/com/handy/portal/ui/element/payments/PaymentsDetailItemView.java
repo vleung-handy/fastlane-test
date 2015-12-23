@@ -6,30 +6,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.payments.Payment;
 import com.handy.portal.model.payments.NeoPaymentBatch;
+import com.handy.portal.model.payments.Payment;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PaymentsDetailItemView extends LinearLayout
 {
 
-    @InjectView(R.id.payments_detail_month_text)
+    @Bind(R.id.payments_detail_month_text)
     protected TextView monthText;
 
-    @InjectView(R.id.payments_detail_date_text)
+    @Bind(R.id.payments_detail_date_text)
     protected TextView dateText;
 
-    @InjectView(R.id.payments_detail_location_text)
+    @Bind(R.id.payments_detail_location_text)
     protected TextView locationText;
 
-    @InjectView(R.id.payments_detail_time_text)
+    @Bind(R.id.payments_detail_time_text)
     protected TextView timeText;
 
-    @InjectView(R.id.payments_detail_payment_text)
+    @Bind(R.id.payments_detail_payment_text)
     protected TextView paymentText;
 
     public PaymentsDetailItemView(Context context)
@@ -46,7 +46,7 @@ public class PaymentsDetailItemView extends LinearLayout
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void updateDisplay(Payment payment, NeoPaymentBatch parentBatch)

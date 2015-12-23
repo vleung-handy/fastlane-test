@@ -41,7 +41,7 @@ public class OnboardingActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         initSteps();
         showNextStep();
