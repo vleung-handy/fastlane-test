@@ -3,9 +3,8 @@ package com.handy.portal.ui.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.AbsListView;
-import android.widget.ListView;
 
-public class InfiniteScrollListView extends ListView implements AbsListView.OnScrollListener //TODO: WIP. refine
+public class InfiniteScrollListView extends se.emilsjolander.stickylistheaders.StickyListHeadersListView implements AbsListView.OnScrollListener //TODO: WIP. refine
 {
     private OnScrollToBottomListener onScrollToBottomListener;
 

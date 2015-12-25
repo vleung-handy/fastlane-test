@@ -37,9 +37,6 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
     @Bind(R.id.payments_current_week_remaining_withholdings_row)
     TableRow currentWeekRemainingWithholdingsRow;
 
-    @Bind(R.id.current_pay_week_year)
-    TextView currentPayWeekYear;
-
     public PaymentsBatchListHeaderView(Context context)
     {
         super(context);
@@ -66,7 +63,6 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         currentWeekWithholdingsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getWithholdingsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getGrossEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekWithholdingsText.setTextColor(getResources().getColor(neoPaymentBatch.getWithholdingsTotalAmount() < 0 ? R.color.error_red : R.color.black));
-        currentPayWeekYear.setText(DateTimeUtils.getYear(neoPaymentBatch.getEndDate()));
 
         if (neoPaymentBatch.getRemainingWithholdingAmount() == 0)
         {

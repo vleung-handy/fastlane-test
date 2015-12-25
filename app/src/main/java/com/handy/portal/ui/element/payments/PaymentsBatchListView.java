@@ -5,19 +5,15 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.logs.EventLogFactory;
-import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
-import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -32,7 +28,6 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     @Inject
     EventLogFactory mEventLogFactory;
 
-    private PaymentsBatchListHeaderView paymentsBatchListHeaderView;
     private TextView footerView;
     private OnDataItemClickListener onDataItemClickListener; //TODO: WIP. refine
 
@@ -70,8 +65,6 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     public void init()
     {
         PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(getContext());
-        paymentsBatchListHeaderView = (PaymentsBatchListHeaderView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_current_week_header, null);
-        addHeaderView(paymentsBatchListHeaderView);
 
         footerView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_footer, null);
         addFooterView(footerView, null, false);
@@ -79,19 +72,17 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         setAdapter(itemsAdapter);
 
         setOnItemClickListener(this);
-        paymentsBatchListHeaderView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (!getWrappedAdapter().isDataEmpty())
-                {
-                    notifyDataItemClickListener(getWrappedAdapter().getDataItem(0));
-                    mBus.post(new LogEvent.AddLogEvent(
-                            mEventLogFactory.createPaymentBatchSelectedLog(true, 1)));
-                }
-            }
-        });
+//        DO WE NEED THIS SPECIFIC ONCLICKLISTENER FOR THE HEADER LIST VIEW ANYMORE?!?!?!
+//        paymentsBatchListHeaderView.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!getWrappedAdapter().isDataEmpty()) {
+//                    notifyDataItemClickListener(getWrappedAdapter().getDataItem(0));
+//                    mBus.post(new LogEvent.AddLogEvent(
+//                            mEventLogFactory.createPaymentBatchSelectedLog(true, 1)));
+//                }
+//            }
+//        });
     }
 
     public void clear()
@@ -144,25 +135,26 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate)
     {
-        if (getWrappedAdapter().isDataEmpty())
-        {
-            if (paymentBatches.getNeoPaymentBatches().length == 0)
-            {
-                Crashlytics.logException(new Exception("No non-legacy payment batches received! Expecting at least one (first entry should be the current week's payment batch)"));
-                return;
-            }
-            NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
-            // Set Header List View
-            paymentsBatchListHeaderView.updateDisplay(neoPaymentBatch);
-            Integer year = DateTimeUtils.getYearInt(neoPaymentBatch.getEndDate());
-            getWrappedAdapter().setCurrentYear(year);
-        }
+//        WHAT SHOULD WE DO IF WE DON'T HAVE A NEO PAYMENT BATCH?!?!?!?!
+//        if (getWrappedAdapter().isDataEmpty())
+//        {
+//            if (paymentBatches.getNeoPaymentBatches().length == 0)
+//            {
+//                Crashlytics.logException(new Exception("No non-legacy payment batches received! Expecting at least one (first entry should be the current week's payment batch)"));
+//                return;
+//            }
+//            NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
+//            // Set Header List View
+//            paymentsBatchListHeaderView.updateDisplay(neoPaymentBatch);
+//            Integer year = DateTimeUtils.getYearInt(neoPaymentBatch.getEndDate());
+//            getWrappedAdapter().setCurrentYear(year);
+//        }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }
 
     public PaymentBatchListAdapter getWrappedAdapter()
     {
-        return getAdapter() == null ? null : ((PaymentBatchListAdapter) ((HeaderViewListAdapter) getAdapter()).getWrappedAdapter());
+        return (PaymentBatchListAdapter) getAdapter();
     }
 
     public boolean shouldRequestMoreData()
@@ -172,7 +164,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 
     public boolean isDataEmpty()
     {
-        return getWrappedAdapter() == null || getWrappedAdapter().isDataEmpty();
+        return getWrappedAdapter().isDataEmpty();
     }
 
     public Date getNextRequestEndDate()

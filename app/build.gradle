@@ -169,4 +169,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'
 
+    // Sticky list header
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
+
 }
