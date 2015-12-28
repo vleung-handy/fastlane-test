@@ -45,4 +45,9 @@ public class LegacyPaymentBatch extends PaymentBatch
     {
         return earnedByProvider;
     }
+
+    @Override
+    public Date getEffectiveDate() {
+        return getDate();
+    }
 }

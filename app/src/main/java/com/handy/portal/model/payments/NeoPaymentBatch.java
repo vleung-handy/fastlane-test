@@ -136,4 +136,12 @@ public class NeoPaymentBatch extends PaymentBatch
     {
         this.paymentGroups = paymentGroups;
     }
+
+    // Used to make calling of the date for both NeoPaymentBatch and LegacyPaymentBatch objects
+    // easier.
+    @Override
+    public Date getEffectiveDate()
+    {
+        return getEndDate();
+    }
 }
