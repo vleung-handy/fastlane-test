@@ -17,7 +17,9 @@ import com.handy.portal.util.DateTimeUtils;
 
 import java.util.Date;
 
-public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>  implements se.emilsjolander.stickylistheaders.StickyListHeadersAdapter //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
+public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implements StickyListHeadersAdapter //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private final static Date LOWER_BOUND_PAYMENT_REQUEST_DATE = new Date(113, 9, 23); // No payments precede Oct 23, 2013
@@ -95,22 +97,10 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch>  impleme
     }
 
     @Override
-    public int getCount()
-    {
-        return super.getCount();
-    }
-
-    @Override
     public boolean isEnabled(int position)
     {
         // Setting disabled state via setEnabled(false)
         return true;
-    }
-
-    @Override
-    public PaymentBatch getItem(int position) //TODO: WIP. this is a hacky way of hiding the item view without changing the underlying data
-    {
-        return super.getItem(position);
     }
 
     @Override
