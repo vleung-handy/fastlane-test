@@ -122,20 +122,6 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate)
     {
-//        WHAT SHOULD WE DO IF WE DON'T HAVE A NEO PAYMENT BATCH?!?!?!?!
-//        if (getWrappedAdapter().isDataEmpty())
-//        {
-//            if (paymentBatches.getNeoPaymentBatches().length == 0)
-//            {
-//                Crashlytics.logException(new Exception("No non-legacy payment batches received! Expecting at least one (first entry should be the current week's payment batch)"));
-//                return;
-//            }
-//            NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
-//            // Set Header List View
-//            paymentsBatchListHeaderView.updateDisplay(neoPaymentBatch);
-//            Integer year = DateTimeUtils.getYearInt(neoPaymentBatch.getEndDate());
-//            getWrappedAdapter().setCurrentYear(year);
-//        }
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }
 
