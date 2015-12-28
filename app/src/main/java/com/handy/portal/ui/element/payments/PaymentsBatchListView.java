@@ -68,21 +68,8 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 
         footerView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_footer, null);
         addFooterView(footerView, null, false);
-
         setAdapter(itemsAdapter);
-
         setOnItemClickListener(this);
-//        DO WE NEED THIS SPECIFIC ONCLICKLISTENER FOR THE HEADER LIST VIEW ANYMORE?!?!?!
-//        paymentsBatchListHeaderView.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!getWrappedAdapter().isDataEmpty()) {
-//                    notifyDataItemClickListener(getWrappedAdapter().getDataItem(0));
-//                    mBus.post(new LogEvent.AddLogEvent(
-//                            mEventLogFactory.createPaymentBatchSelectedLog(true, 1)));
-//                }
-//            }
-//        });
     }
 
     public void clear()

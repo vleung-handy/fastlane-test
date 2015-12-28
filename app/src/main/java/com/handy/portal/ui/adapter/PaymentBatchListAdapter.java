@@ -150,8 +150,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     public View getHeaderView(int position, View convertView, ViewGroup parent) {
         View v;
         PaymentBatch paymentBatch = getItem(position);
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        LayoutInflater inflater = LayoutInflater.from(getContext());
 
         if (convertView == null)
         {
