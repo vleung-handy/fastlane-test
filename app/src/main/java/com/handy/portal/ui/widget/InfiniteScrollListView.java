@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.AbsListView;
 
-public class InfiniteScrollListView extends se.emilsjolander.stickylistheaders.StickyListHeadersListView implements AbsListView.OnScrollListener //TODO: WIP. refine
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
+public class InfiniteScrollListView extends StickyListHeadersListView implements AbsListView.OnScrollListener //TODO: WIP. refine
 {
     private OnScrollToBottomListener onScrollToBottomListener;
 
