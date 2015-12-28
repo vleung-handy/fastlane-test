@@ -214,7 +214,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/extra_padding"
+        android:paddingBottom="@dimen/extra_padding_medium"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
         android:paddingTop="@dimen/default_padding"
@@ -222,6 +222,7 @@
         android:textAppearance="@style/HandyTextAppearanceListHeader"
         android:clickable="true"
         android:focusable="true"
+        android:background="@drawable/dark_grey_border_top_light_background"
         />
 
 </com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView>
