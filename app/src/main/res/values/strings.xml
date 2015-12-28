@@ -496,4 +496,9 @@
     <string name="please_confirm">Please confirm:</string>
     <string name="time_interval_formatted">%1$s - %2$s</string>
 
+    <!-- Tutorial Overlay -->
+    <string name="got_it">Got it!</string>
+    <string name="new_update">New Update!</string>
+    <string name="we_moved">We moved payments,\nhelp, and profile over here.</string>
+
 </resources>

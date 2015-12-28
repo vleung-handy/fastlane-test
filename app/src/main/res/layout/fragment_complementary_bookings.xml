@@ -5,7 +5,7 @@
               android:background="@color/handy_bg"
               android:orientation="vertical">
 
-    <include layout="@layout/loading_overlay"/>
+    <include layout="@layout/overlay_loading"/>
 
     <include layout="@layout/layout_complementary_bookings_empty"/>
 

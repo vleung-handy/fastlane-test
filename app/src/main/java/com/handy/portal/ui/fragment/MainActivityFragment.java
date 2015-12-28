@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivityFragment extends InjectedFragment
 {
@@ -49,6 +50,8 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mButtonMore;
     @Bind(R.id.loading_overlay)
     View mLoadingOverlayView;
+    @Bind(R.id.tutorial_overlay)
+    View mTutoralOverlay;
     @Bind(R.id.nav_link_my_profile)
     RadioButton mNavLinkMyProfile;
     @Bind(R.id.nav_link_payments)
@@ -104,6 +107,11 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
     }
 
+    @OnClick(R.id.tutorial_dismiss_btn)
+    public void dismissTutorial()
+    {
+        mTutoralOverlay.setVisibility(View.GONE);
+    }
 //Event Listeners
 
     @Subscribe
