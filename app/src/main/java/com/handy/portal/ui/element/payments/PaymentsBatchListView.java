@@ -1,6 +1,7 @@
 package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +71,10 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         addFooterView(footerView, null, false);
         setAdapter(itemsAdapter);
         setOnItemClickListener(this);
+        // Override the StickyListHeaderView not setting these correctly
+        ColorDrawable divider = new ColorDrawable(this.getResources().getColor(R.color.list_divider));
+        getWrappedList().setDivider(divider);
+        getWrappedList().setDividerHeight(1);
     }
 
     public void clear()
