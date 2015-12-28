@@ -18,9 +18,11 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -35,9 +37,11 @@ import butterknife.OnClick;
 
 public class MainActivityFragment extends InjectedFragment
 {
-//TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
+    //TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
     @Inject
     HandyRetrofitEndpoint handyRetrofitEndpoint;
+    @Inject
+    PrefsManager mPrefsManager;
     /////////////Bad useless injection that breaks if not in?
 
     @Bind(R.id.tabs)
@@ -90,6 +94,16 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        if (mPrefsManager.getBoolean(PrefsKey.APP_FIRST_OPEN, true))
+        {
+            mTutoralOverlay.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -111,14 +125,16 @@ public class MainActivityFragment extends InjectedFragment
     public void dismissTutorial()
     {
         mTutoralOverlay.setVisibility(View.GONE);
+        mPrefsManager.setBoolean(PrefsKey.APP_FIRST_OPEN, false);
     }
+
 //Event Listeners
 
     @Subscribe
     public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
         //Catch this event then throw one to have the manager do the processing
-            //We need to bother catching it here because we need to know the current tab of this fragment
+        //We need to bother catching it here because we need to know the current tab of this fragment
         requestProcessNavigateToTab(event.targetTab, this.currentTab, event.arguments, event.transitionStyleOverride, false);
     }
 
