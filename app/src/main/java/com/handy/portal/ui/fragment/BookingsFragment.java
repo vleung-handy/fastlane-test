@@ -178,6 +178,12 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     private void requestBookings(List<Date> dates, boolean showOverlay, boolean useCachedIfPresent)
     {
         Crashlytics.log("Requesting bookings for the following dates" + dates.toString());
+        if (fetchErrorView == null)
+        {
+            Crashlytics.logException(
+                    new NullPointerException("All views are null due to ButterKnife unbind."));
+            return;
+        }
         fetchErrorView.setVisibility(View.GONE);
         if (showOverlay)
         {
