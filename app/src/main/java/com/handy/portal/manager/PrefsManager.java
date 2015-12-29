@@ -15,48 +15,48 @@ public class PrefsManager
         this.prefs = prefs;
     }
 
-    public String getString(PrefsKey prefsKey)
+    public String getString(@PrefsKey.Key String prefsKey)
     {
         return getString(prefsKey, "");
     }
 
-    public String getString(PrefsKey prefsKey, String defaultValue)
+    public String getString(@PrefsKey.Key String prefsKey, String defaultValue)
     {
-        return(prefs.getString(prefsKey.getKey(), defaultValue));
+        return prefs.getString(prefsKey, defaultValue);
     }
 
-    public boolean getBoolean(PrefsKey prefsKey, boolean defaultValue)
+    public void setString(@PrefsKey.Key String prefsKey, String value)
     {
-        return(prefs.getBoolean(prefsKey.getKey(), defaultValue));
+        prefs.edit().putString(prefsKey, value).apply();
     }
 
-    public void setBoolean(PrefsKey prefsKey, boolean value)
+    public boolean getBoolean(@PrefsKey.Key String prefsKey, boolean defaultValue)
     {
-        prefs.edit().putBoolean(prefsKey.getKey(), value).apply();
+        return prefs.getBoolean(prefsKey, defaultValue);
     }
 
-    public void setString(PrefsKey prefsKey, String value)
+    public void setBoolean(@PrefsKey.Key String prefsKey, boolean value)
     {
-        prefs.edit().putString(prefsKey.getKey(), value).apply();
+        prefs.edit().putBoolean(prefsKey, value).apply();
     }
 
-    public int getInt(PrefsKey prefsKey, int defaultValue)
+    public int getInt(@PrefsKey.Key String prefsKey, int defaultValue)
     {
-        return (prefs.getInt(prefsKey.getKey(), defaultValue));
+        return prefs.getInt(prefsKey, defaultValue);
     }
 
-    public void setInt(PrefsKey prefsKey, int value)
+    public void setInt(@PrefsKey.Key String prefsKey, int value)
     {
-        prefs.edit().putInt(prefsKey.getKey(), value).apply();
+        prefs.edit().putInt(prefsKey, value).apply();
     }
 
-    public long getLong(PrefsKey prefsKey, long defaultValue)
+    public long getLong(@PrefsKey.Key String prefsKey, long defaultValue)
     {
-        return (prefs.getLong(prefsKey.getKey(), defaultValue));
+        return prefs.getLong(prefsKey, defaultValue);
     }
 
-    public void setLong(PrefsKey prefsKey, long value)
+    public void setLong(@PrefsKey.Key String prefsKey, long value)
     {
-        prefs.edit().putLong(prefsKey.getKey(), value).apply();
+        prefs.edit().putLong(prefsKey, value).apply();
     }
 }
