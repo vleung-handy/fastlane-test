@@ -97,7 +97,7 @@ public class MainActivityFragment extends InjectedFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        if (mPrefsManager.getBoolean(PrefsKey.APP_FIRST_OPEN, true))
+        if (!mPrefsManager.getBoolean(PrefsKey.NAVIGATION_TUTORIAL_SHOWN, false))
         {
             mTutoralOverlay.setVisibility(View.VISIBLE);
         }
@@ -125,7 +125,7 @@ public class MainActivityFragment extends InjectedFragment
     public void dismissTutorial()
     {
         mTutoralOverlay.setVisibility(View.GONE);
-        mPrefsManager.setBoolean(PrefsKey.APP_FIRST_OPEN, false);
+        mPrefsManager.setBoolean(PrefsKey.NAVIGATION_TUTORIAL_SHOWN, true);
     }
 
 //Event Listeners

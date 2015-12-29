@@ -11,7 +11,7 @@ public interface PrefsKey
     String ONBOARDING_NEEDED = "onboarding_needed";
     String ENVIRONMENT_PREFIX = "environment_prefix";
     String EVENT_LOG_BUNDLES = "event_log_bundles";
-    String APP_FIRST_OPEN = "app_first_open";
+    String NAVIGATION_TUTORIAL_SHOWN = "navigation_tutorial_shown";
 
 
     @StringDef({
@@ -21,7 +21,7 @@ public interface PrefsKey
             ONBOARDING_NEEDED,
             ENVIRONMENT_PREFIX,
             EVENT_LOG_BUNDLES,
-            APP_FIRST_OPEN,
+            NAVIGATION_TUTORIAL_SHOWN,
     })
     @interface Key {}
 }
