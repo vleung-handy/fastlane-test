@@ -147,7 +147,6 @@ public class TabNavigationManager
         {
             //TODO: Some really ugly logic about adding to the backstack, clean this up somehow
             addToBackStack = targetTab == MainViewTab.COMPLEMENTARY_JOBS;
-            addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
             addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
             addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
             addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;

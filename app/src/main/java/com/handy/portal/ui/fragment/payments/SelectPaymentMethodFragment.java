@@ -2,8 +2,6 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,20 +65,6 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     protected MainViewTab getTab()
     {
         return MainViewTab.SELECT_PAYMENT_METHOD;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstance)
-    {
-        super.onCreate(savedInstance);
-        setOptionsMenuEnabled(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.menu_x_back, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

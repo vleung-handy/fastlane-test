@@ -26,7 +26,7 @@
             android:paddingBottom="@dimen/extra_padding_medium"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
-            android:paddingTop="@dimen/extra_padding_medium"
+            android:paddingTop="@dimen/default_padding"
             >
 
             <ImageView
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_list_entry"
-            android:paddingBottom="@dimen/extra_padding_medium"
+            android:paddingBottom="@dimen/default_padding"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             android:paddingTop="@dimen/extra_padding_medium"

@@ -17,7 +17,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
@@ -232,9 +231,6 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         switch (item.getItemId())
         {
-            case R.id.action_update_banking:
-                bus.post(new HandyEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.SLIDE_UP));
-                return true;
             case R.id.action_help:
                 if (helpNodesListView.getCount() > 0)
                 {
