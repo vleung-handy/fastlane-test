@@ -37,6 +37,10 @@ import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
+import org.robolectric.shadows.ShadowPreferenceManager;
+
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -62,11 +66,15 @@ import static org.mockito.Mockito.when;
         TestActivity.class,
         PaymentsBatchListView.class,
         ManagementToolsView.class,
-
-
 }, library = true)
 public class TestApplicationModule
 {
+    private final Application application;
+
+    public TestApplicationModule(final Application application)
+    {
+        this.application = application;
+    }
 
     @Provides
     final BuildConfigWrapper provideBuildConfigWrapper()
@@ -155,9 +163,10 @@ public class TestApplicationModule
     }
 
     @Provides
+    @Singleton
     final PrefsManager providePrefsManager()
     {
-        return mock(PrefsManager.class);
+        return new PrefsManager(ShadowPreferenceManager.getDefaultSharedPreferences(application));
     }
 
     @Provides

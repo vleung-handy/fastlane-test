@@ -1,16 +1,17 @@
 package com.handy.portal.manager;
 
+import android.content.SharedPreferences;
+
 import com.handy.portal.constant.PrefsKey;
-import com.securepreferences.SecurePreferences;
 
 import javax.inject.Inject;
 
 public class PrefsManager
 {
-    private final SecurePreferences prefs;
+    private final SharedPreferences prefs;
 
     @Inject
-    public PrefsManager(final SecurePreferences prefs)
+    public PrefsManager(final SharedPreferences prefs)
     {
         this.prefs = prefs;
     }
