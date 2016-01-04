@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.handy.portal.R;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -16,7 +17,9 @@ import butterknife.ButterKnife;
 public class InjectedDialogFragment extends DialogFragment
 {
     @Inject
-    protected Bus bus;
+    protected Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -39,20 +42,20 @@ public class InjectedDialogFragment extends DialogFragment
     public void onResume()
     {
         super.onResume();
-        this.bus.register(this);
+        mBus.register(this);
     }
 
     @Override
     public void onPause()
     {
-        this.bus.unregister(this);
+        mBus.unregister(this);
         super.onPause();
     }
 
     @Override
     public void onDestroyView()
     {
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
         super.onDestroyView();
     }
 }

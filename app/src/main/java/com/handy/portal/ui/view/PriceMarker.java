@@ -6,12 +6,12 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PriceMarker extends FrameLayout
 {
-    @InjectView(R.id.marker_text)
+    @Bind(R.id.marker_text)
     TextView mMarkerText;
 
     private boolean mActive = false;
@@ -33,7 +33,7 @@ public class PriceMarker extends FrameLayout
         {
             inflate(getContext(), R.layout.price_marker_inactive, this);
         }
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void setText(CharSequence text) { mMarkerText.setText(text); }

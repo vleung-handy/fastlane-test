@@ -2,6 +2,7 @@ package com.handy.portal.constant;
 
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
@@ -38,6 +39,7 @@ public enum MainViewTab implements Serializable
     HELP_CONTACT(HelpContactFragment.class),
     BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     NEARBY_JOBS(NearbyBookingsFragment.class),
+    PAYMENT_BLOCKING(PaymentBlockingFragment.class),
     ;
 
     private Class classType;

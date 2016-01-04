@@ -14,17 +14,17 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.ui.activity.OnboardingActivity;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class TerminalOnboardingFragment extends Fragment
 {
-    @InjectView(R.id.body)
+    @Bind(R.id.body)
     ImageView body;
-    @InjectView(R.id.job_complete_image)
+    @Bind(R.id.job_complete_image)
     ImageView jobCompleteImage;
-    @InjectView(R.id.bottom_tooltip)
+    @Bind(R.id.bottom_tooltip)
     TextView tooltip;
 
     private int bodyDrawableId;
@@ -43,7 +43,7 @@ public class TerminalOnboardingFragment extends Fragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_onboarding_terminal, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         body.setImageResource(bodyDrawableId);
         jobCompleteImage.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_and_grow_in));
         jobCompleteImage.setVisibility(View.VISIBLE);

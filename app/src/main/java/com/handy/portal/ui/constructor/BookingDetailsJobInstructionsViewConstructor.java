@@ -24,13 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class BookingDetailsJobInstructionsViewConstructor extends BookingDetailsViewConstructor
 {
-    @InjectView(R.id.booking_details_job_instructions_list_layout)
+    @Bind(R.id.booking_details_job_instructions_list_layout)
     protected LinearLayout instructionsLayout;
-    @InjectView(R.id.job_instructions_reveal_notice)
+    @Bind(R.id.job_instructions_reveal_notice)
     protected TextView revealNotice;
 
     private final boolean isForPayments;

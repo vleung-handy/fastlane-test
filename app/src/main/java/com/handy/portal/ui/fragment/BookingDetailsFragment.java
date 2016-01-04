@@ -53,11 +53,11 @@ import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstruc
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
+import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.view.MapPlaceholderView;
-import com.handy.portal.ui.view.ProxyLocationView;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
@@ -71,50 +71,50 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
     //Layouts points for fragment, the various elements are childed to these
-    @InjectView(R.id.booking_details_layout)
+    @Bind(R.id.booking_details_layout)
     LinearLayout detailsParentLayout;
 
-    @InjectView(R.id.booking_details_map_layout)
+    @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout;
 
-    @InjectView(R.id.booking_details_date_layout)
+    @Bind(R.id.booking_details_date_layout)
     LinearLayout dateLayout;
 
-    @InjectView(R.id.booking_details_title_layout)
+    @Bind(R.id.booking_details_title_layout)
     RelativeLayout titleLayout;
 
-    @InjectView(R.id.booking_details_action_layout)
+    @Bind(R.id.booking_details_action_layout)
     RelativeLayout actionLayout;
 
-    @InjectView(R.id.booking_details_contact_layout)
+    @Bind(R.id.booking_details_contact_layout)
     RelativeLayout contactLayout;
 
-    @InjectView(R.id.booking_details_job_instructions_layout)
+    @Bind(R.id.booking_details_job_instructions_layout)
     LinearLayout jobInstructionsLayout;
 
-    @InjectView(R.id.booking_details_location_layout)
+    @Bind(R.id.booking_details_location_layout)
     ViewGroup locationLayout;
 
-    @InjectView(R.id.booking_details_remove_job_layout)
+    @Bind(R.id.booking_details_remove_job_layout)
     LinearLayout removeJobLayout;
 
-    @InjectView(R.id.booking_details_full_details_notice_text)
+    @Bind(R.id.booking_details_full_details_notice_text)
     TextView fullDetailsNoticeText;
 
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     View fetchErrorView;
 
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView errorText;
 
-    @InjectView(R.id.slide_up_panel_container)
+    @Bind(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
 
     @Inject
@@ -154,7 +154,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_booking_detail, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         if (validateRequiredArguments())
         {
@@ -580,7 +580,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void showHelpOptions()
     {
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if(slideUpPanelContainer != null)
+        if (slideUpPanelContainer != null)
         {
             slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
             {
@@ -704,7 +704,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if(slideUpPanelContainer != null)
+        if (slideUpPanelContainer != null)
         {
             slideUpPanelContainer.hidePanel();
         }
@@ -716,7 +716,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         //TODO: Crash #608, this is null sometimes and crashing, butterknife timing?
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if(slideUpPanelContainer != null)
+        if (slideUpPanelContainer != null)
         {
             slideUpPanelContainer.hidePanel();
         }
@@ -895,7 +895,10 @@ public class BookingDetailsFragment extends ActionBarFragment
         else
         {
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
-            handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic, R.string.return_to_schedule, this.associatedBooking.getStartDate());
+            handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic,
+                    R.string.return_to_schedule, this.associatedBooking.getStartDate());
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(associatedBooking)));
+
         }
     }
 
@@ -903,6 +906,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(associatedBooking)));
         handleBookingRemoveError(event);
     }
 
@@ -1061,7 +1065,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         //Return to available jobs on that day
         bus.post(new HandyEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
-
 
 //Handle Action Response Errors
 

@@ -19,6 +19,10 @@ public class ConfigurationResponse
     @SerializedName("checkout_rating_flow")
     private boolean mCheckoutRatingFlowEnabled;
 
+    @SerializedName("block_payment_info")
+    private boolean mBlockClaimsIfMissingAccountInformation;
+
+
     public boolean isComplementaryJobsEnabled()
     {
         return mComplementaryJobsEnabled;
@@ -42,5 +46,10 @@ public class ConfigurationResponse
     public int getHoursSpanningAvailableBookings()
     {
         return mHoursSpanningAvailableBookings;
+    }
+
+    public boolean shouldBlockClaimsIfMissingAccountInformation()
+    {
+        return mBlockClaimsIfMissingAccountInformation;
     }
 }

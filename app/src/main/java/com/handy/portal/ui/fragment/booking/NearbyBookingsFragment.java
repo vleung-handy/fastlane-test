@@ -39,8 +39,8 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class NearbyBookingsFragment extends ActionBarFragment
         implements NearbyBookingsMapFragment.MarkerClickedCallback
@@ -52,19 +52,19 @@ public class NearbyBookingsFragment extends ActionBarFragment
     @Inject
     EventLogFactory mEventLogFactory;
 
-    @InjectView(R.id.nearby_bookings_description)
+    @Bind(R.id.nearby_bookings_description)
     TextView mDescriptionText;
-    @InjectView(R.id.nearby_bookings_map)
+    @Bind(R.id.nearby_bookings_map)
     ViewGroup mMapContainer;
-    @InjectView(R.id.booking_info_timer)
+    @Bind(R.id.booking_info_timer)
     TextView mBookingTimerText;
-    @InjectView(R.id.booking_info_address)
+    @Bind(R.id.booking_info_address)
     TextView mBookingAddressText;
-    @InjectView(R.id.booking_info_time)
+    @Bind(R.id.booking_info_time)
     TextView mBookingTimeText;
-    @InjectView(R.id.booking_info_claim_button)
+    @Bind(R.id.booking_info_claim_button)
     Button mBookingClaimButton;
-    @InjectView(R.id.booking_info_distance)
+    @Bind(R.id.booking_info_distance)
     TextView mBookingDistanceText;
 
     private ArrayList<Booking> mBookings;
@@ -101,7 +101,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
                              final Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_nearby_bookings, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         Bundle args = getArguments();
         mBookings = (ArrayList<Booking>) args.getSerializable(BundleKeys.BOOKINGS);

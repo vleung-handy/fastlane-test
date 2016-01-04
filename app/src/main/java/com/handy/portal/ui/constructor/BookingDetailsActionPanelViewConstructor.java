@@ -17,11 +17,11 @@ import com.handy.portal.util.UIUtils;
 
 import java.util.List;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class BookingDetailsActionPanelViewConstructor extends BookingDetailsViewConstructor
 {
-    @InjectView(R.id.booking_details_action_text)
+    @Bind(R.id.booking_details_action_text)
     protected TextView helperText;
 
     public BookingDetailsActionPanelViewConstructor(@NonNull Context context, Bundle arguments)

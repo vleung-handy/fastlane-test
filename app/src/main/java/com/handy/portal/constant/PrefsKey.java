@@ -1,31 +1,27 @@
 package com.handy.portal.constant;
 
+import android.support.annotation.StringDef;
+
 // TODO: this should be refactored into static final Strings instead of enum
-public enum PrefsKey
+public interface PrefsKey
 {
-    LAST_PROVIDER_ID("user_credentials_id"),
-    AUTH_TOKEN("user_credentials"),
-    ONBOARDING_COMPLETED("onboarding_completed"),
-    ONBOARDING_NEEDED("onboarding_needed"),
-    ENVIRONMENT_PREFIX("environment_prefix"),
-    EVENT_LOG_BUNDLES("event_log_bundles"),
-    ;
+    String LAST_PROVIDER_ID = "user_credentials_id";
+    String AUTH_TOKEN = "user_credentials";
+    String ONBOARDING_COMPLETED = "onboarding_completed";
+    String ONBOARDING_NEEDED = "onboarding_needed";
+    String ENVIRONMENT_PREFIX = "environment_prefix";
+    String EVENT_LOG_BUNDLES = "event_log_bundles";
+    String NAVIGATION_TUTORIAL_SHOWN = "navigation_tutorial_shown";
 
-    private String key;
 
-    PrefsKey(String key)
-    {
-        this.key = key;
-    }
-
-    public String getKey()
-    {
-        return this.key;
-    }
-
-    @Override
-    public String toString()
-    {
-        return this.getKey();
-    }
+    @StringDef({
+            LAST_PROVIDER_ID,
+            AUTH_TOKEN,
+            ONBOARDING_COMPLETED,
+            ONBOARDING_NEEDED,
+            ENVIRONMENT_PREFIX,
+            EVENT_LOG_BUNDLES,
+            NAVIGATION_TUTORIAL_SHOWN,
+    })
+    @interface Key {}
 }

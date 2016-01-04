@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +15,8 @@
         android:paddingBottom="@dimen/payment_container_vertical_padding"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
-        android:paddingTop="@dimen/payment_container_vertical_padding">
+        android:paddingTop="@dimen/payment_container_vertical_padding"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -211,12 +213,15 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/extra_padding"
+        android:paddingBottom="@dimen/extra_padding_medium"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
         android:paddingTop="@dimen/default_padding"
         android:text="@string/previous_pay_weeks"
-        android:textAppearance="@style/HandyTextAppearanceListHeader"/>
+        android:textAppearance="@style/HandyTextAppearanceListHeader"
+        android:background="@drawable/dark_grey_border_top_light_background"
+        />
+
 </com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView>

@@ -386,7 +386,6 @@
 
     <!-- Payments Menu Items -->
     <string name="update_banking_information">Update banking information</string>
-    <string name="email_income_verification">Email income verification</string>
 
     <!-- Payments -->
     <string name="previous_job">Previous Job</string>
@@ -397,7 +396,7 @@
     <string name="withholdings">Withholdings</string>
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
-    <string name="no_more_payments">You have no more payments for this year.</string>
+    <string name="no_more_payments">You have no more payments to load.</string>
     <string name="expected_deposit">Expect deposit by</string>
     <string name="update_payment_method">Update Payment Method</string>
     <string name="edit_payment_method">Edit Payment Method</string>
@@ -430,13 +429,16 @@
     <string name="debit_card">Debit Card</string>
     <string name="update_bank_info">Update Bank Info</string>
 
+    <string name="payments_need_updates_jobs_title">Set up direct deposit to claim a job</string>
+    <string name="add_direct_deposit">Add Direct Deposit</string>
+    <string name="payment_blocking_title">Update Payment Information</string>
+
     <!-- Notification Blocker -->
     <string name="notification_blocker_title">Please turn on push notifications</string>
     <string name="notification_blocker_body">We use push notifications to send you changes to your schedule, payment updates and more. Please tap below to turn on push notifications.</string>
     <string name="enable_now">Enable Now</string>
 
     <!-- Profile -->
-    <string name="get_resupply_kit">Get a Resupply Kit</string>
     <string name="share_with">Share with…</string>
     <string name="joined_handy"><![CDATA[Joined Handy <b>%1$s</b>]]></string>
     <string name="earn_a_bonus">Earn a %1$s bonus</string>
@@ -455,6 +457,9 @@
     <string name="edit_your_profile">Edit Your Profile</string>
     <string name="update_profile_success">Successfully updated profile information</string>
     <string name="update_profile_failed">Failed to update profile information</string>
+    <string name="management_tools">Management tools</string>
+    <string name="email_income_verification">Email income verification</string>
+    <string name="get_resupply_kit">Get a resupply kit</string>
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
@@ -490,5 +495,10 @@
     <string name="withholding_charge">Canceling this job will result in a withholding</string>
     <string name="please_confirm">Please confirm:</string>
     <string name="time_interval_formatted">%1$s - %2$s</string>
+
+    <!-- Tutorial Overlay -->
+    <string name="got_it">Got it!</string>
+    <string name="new_update">New Update!</string>
+    <string name="we_moved">We moved payments,\nhelp, and profile over here.</string>
 
 </resources>

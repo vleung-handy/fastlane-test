@@ -6,37 +6,35 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.model.payments.NeoPaymentBatch;
-import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we can make this more linked with the batch adapter data
 {
-    @InjectView(R.id.payments_current_week_date_range_text)
+    @Bind(R.id.payments_current_week_date_range_text)
     TextView currentWeekDateRangeText;
 
-    @InjectView(R.id.payments_current_week_total_earnings)
+    @Bind(R.id.payments_current_week_total_earnings)
     TextView currentWeekTotalEarningsText;
 
-    @InjectView(R.id.payments_current_week_withholdings)
+    @Bind(R.id.payments_current_week_withholdings)
     TextView currentWeekWithholdingsText;
 
-    @InjectView(R.id.payments_current_week_expected_payment)
+    @Bind(R.id.payments_current_week_expected_payment)
     TextView currentWeekExpectedPaymentText;
 
-    @InjectView(R.id.payments_current_week_expected_payment_cents)
+    @Bind(R.id.payments_current_week_expected_payment_cents)
     TextView currentWeekExpectedPaymentCentsText;
 
-    @InjectView(R.id.payments_current_week_remaining_withholdings)
+    @Bind(R.id.payments_current_week_remaining_withholdings)
     TextView currentWeekRemainingWithholdingsText;
 
-    @InjectView(R.id.payments_current_week_remaining_withholdings_row)
+    @Bind(R.id.payments_current_week_remaining_withholdings_row)
     TableRow currentWeekRemainingWithholdingsRow;
 
     public PaymentsBatchListHeaderView(Context context)
@@ -53,18 +51,11 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
-    public void updateDisplay(PaymentBatches paymentBatches) //assuming that current pay week is always returned and is the first element
+    public void updateDisplay(NeoPaymentBatch neoPaymentBatch) //assuming that current pay week is always returned and is the first element
     {
-        if (paymentBatches.getNeoPaymentBatches().length == 0)
-        {
-            Crashlytics.logException(new Exception("No non-legacy payment batches received! Expecting at least one (first entry should be the current week's payment batch)"));
-            return;
-        }
-
-        NeoPaymentBatch neoPaymentBatch = paymentBatches.getNeoPaymentBatches()[0];
         currentWeekDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
         currentWeekRemainingWithholdingsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getRemainingWithholdingAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekExpectedPaymentText.setText(CurrencyUtils.formatPrice(neoPaymentBatch.getNetEarningsTotalAmount() * .01, neoPaymentBatch.getCurrencySymbol()));

@@ -7,15 +7,15 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class SupplyListItemView extends LinearLayout
 {
-    @InjectView(R.id.supply_list_item_amount)
+    @Bind(R.id.supply_list_item_amount)
     protected TextView supplyListItemAmountView;
 
-    @InjectView(R.id.supply_list_item_type)
+    @Bind(R.id.supply_list_item_type)
     protected TextView supplyListItemTypeView;
 
     public SupplyListItemView(Context context)
@@ -32,7 +32,7 @@ public class SupplyListItemView extends LinearLayout
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void updateDisplay(String supplyItemType, String supplyItemAmount)

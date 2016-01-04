@@ -19,7 +19,7 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class ProfileContactViewConstructor extends ViewConstructor<ProviderPersonalInfo>
 {
@@ -28,17 +28,17 @@ public class ProfileContactViewConstructor extends ViewConstructor<ProviderPerso
     @Inject
     EventLogFactory mEventLogFactory;
 
-    @InjectView(R.id.profile_section_header_title_text)
+    @Bind(R.id.profile_section_header_title_text)
     TextView titleText;
-    @InjectView(R.id.profile_section_header_subtitle_text)
+    @Bind(R.id.profile_section_header_subtitle_text)
     TextView subtitleText;
-    @InjectView(R.id.profile_section_update)
+    @Bind(R.id.profile_section_update)
     TextView mUpdateButton;
-    @InjectView(R.id.provider_email_text)
+    @Bind(R.id.provider_email_text)
     TextView providerEmailText;
-    @InjectView(R.id.provider_phone_text)
+    @Bind(R.id.provider_phone_text)
     TextView providerPhoneText;
-    @InjectView(R.id.provider_address_text)
+    @Bind(R.id.provider_address_text)
     TextView providerAddressText;
 
 

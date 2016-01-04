@@ -15,42 +15,42 @@ import com.handy.portal.util.UIUtils;
 
 import java.text.SimpleDateFormat;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class AvailableBookingElementView extends BookingElementView
 {
-    @InjectView(R.id.booking_entry_payment_text)
+    @Bind(R.id.booking_entry_payment_text)
     protected TextView paymentText;
 
-    @InjectView(R.id.booking_entry_cents_text)
+    @Bind(R.id.booking_entry_cents_text)
     protected TextView centsPaymentText;
 
-    @InjectView(R.id.booking_entry_payment_bonus_text)
+    @Bind(R.id.booking_entry_payment_bonus_text)
     protected TextView bonusPaymentText;
 
-    @InjectView(R.id.booking_entry_area_text)
+    @Bind(R.id.booking_entry_area_text)
     protected TextView bookingAreaTextView;
 
-    @InjectView(R.id.booking_entry_service_text)
+    @Bind(R.id.booking_entry_service_text)
     protected TextView bookingServiceTextView;
 
-    @InjectView(R.id.booking_entry_partner_text)
+    @Bind(R.id.booking_entry_partner_text)
     protected TextView partnerText;
 
-    @InjectView(R.id.booking_entry_requested_indicator_layout)
+    @Bind(R.id.booking_entry_requested_indicator_layout)
     protected LinearLayout requestedIndicatorLayout;
 
-    @InjectView(R.id.booking_entry_requested_indicator)
+    @Bind(R.id.booking_entry_requested_indicator)
     protected ImageView requestedIndicatorBar;
 
-    @InjectView(R.id.booking_entry_start_date_text)
+    @Bind(R.id.booking_entry_start_date_text)
     protected TextView startTimeText;
 
-    @InjectView(R.id.booking_entry_end_date_text)
+    @Bind(R.id.booking_entry_end_date_text)
     protected TextView endTimeText;
 
-    @InjectView(R.id.booking_entry_distance_text)
+    @Bind(R.id.booking_entry_distance_text)
     protected TextView formattedDistanceText;
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
@@ -63,7 +63,7 @@ public class AvailableBookingElementView extends BookingElementView
             convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_available_booking_list_entry, parent, false);
         }
 
-        ButterKnife.inject(this, convertView);
+        ButterKnife.bind(this, convertView);
 
         //Payment
         UIUtils.setPaymentInfo(paymentText, centsPaymentText, booking.getPaymentToProvider(), parentContext.getString(R.string.payment_value));

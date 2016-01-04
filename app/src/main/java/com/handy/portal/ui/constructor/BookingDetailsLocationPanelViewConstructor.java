@@ -15,29 +15,29 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.util.UIUtils;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class BookingDetailsLocationPanelViewConstructor extends BookingDetailsViewConstructor
 {
-    @InjectView(R.id.booking_details_location_text)
+    @Bind(R.id.booking_details_location_text)
     protected TextView locationText;
 
-    @InjectView(R.id.booking_details_service_text)
+    @Bind(R.id.booking_details_service_text)
     protected TextView serviceText;
 
-    @InjectView(R.id.booking_details_payment_text)
+    @Bind(R.id.booking_details_payment_text)
     protected TextView paymentText;
 
-    @InjectView(R.id.booking_details_cents_text)
+    @Bind(R.id.booking_details_cents_text)
     protected TextView centsText;
 
-    @InjectView(R.id.booking_details_payment_bonus_text)
+    @Bind(R.id.booking_details_payment_bonus_text)
     protected TextView paymentBonusText;
 
-    @InjectView(R.id.booking_details_partner_text)
+    @Bind(R.id.booking_details_partner_text)
     protected TextView partnerText;
 
-    @InjectView(R.id.booking_details_requested_indicator_layout)
+    @Bind(R.id.booking_details_requested_indicator_layout)
     protected LinearLayout requestedLayout;
 
     private final boolean isForPayments;

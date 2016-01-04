@@ -50,10 +50,11 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
-import com.handy.portal.ui.constructor.ProfileResupplyViewConstructor;
 import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
+import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
@@ -126,7 +127,6 @@ import retrofit.converter.GsonConverter;
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
         SelectPaymentMethodFragment.class,
-        ProfileResupplyViewConstructor.class,
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
@@ -136,6 +136,8 @@ import retrofit.converter.GsonConverter;
         ProfileReferralViewConstructor.class,
         PaymentsBatchListView.class,
         NearbyBookingsFragment.class,
+        PaymentBlockingFragment.class,
+        ManagementToolsView.class,
 })
 public final class ApplicationModule
 {
@@ -462,9 +464,12 @@ public final class ApplicationModule
     @Singleton
     final TabNavigationManager provideTabNavigationManager(final Bus bus,
                                                            final ProviderManager providerManager,
-                                                           final WebUrlManager webUrlManager)
+                                                           final WebUrlManager webUrlManager,
+                                                           final PaymentsManager paymentsManager,
+                                                           final ConfigManager configManager
+    )
     {
-        return new TabNavigationManager(bus, providerManager, webUrlManager);
+        return new TabNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
     }
 
     @Provides

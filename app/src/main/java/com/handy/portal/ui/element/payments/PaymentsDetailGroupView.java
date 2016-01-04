@@ -10,16 +10,16 @@ import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentGroup;
 import com.handy.portal.util.CurrencyUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PaymentsDetailGroupView extends LinearLayout
 {
 
-    @InjectView(R.id.payments_detail_group_title_text)
+    @Bind(R.id.payments_detail_group_title_text)
     protected TextView titleText;
 
-    @InjectView(R.id.payments_detail_group_payments_text)
+    @Bind(R.id.payments_detail_group_payments_text)
     protected TextView paymentsText;
 
     public PaymentsDetailGroupView(Context context)
@@ -36,7 +36,7 @@ public class PaymentsDetailGroupView extends LinearLayout
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void updateDisplay(PaymentGroup paymentGroup, NeoPaymentBatch paymentBatch)

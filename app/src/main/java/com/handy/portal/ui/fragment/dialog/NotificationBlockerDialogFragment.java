@@ -11,12 +11,12 @@ import android.widget.Button;
 
 import com.handy.portal.R;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class NotificationBlockerDialogFragment extends InjectedDialogFragment
 {
-    @InjectView(R.id.notification_blocker_enable_button)
+    @Bind(R.id.notification_blocker_enable_button)
     protected Button updateNowButton;
 
     private static final String PACKAGE_PREFIX = "package:";
@@ -35,7 +35,7 @@ public class NotificationBlockerDialogFragment extends InjectedDialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dialog_notification_blocker, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         return view;
     }
 

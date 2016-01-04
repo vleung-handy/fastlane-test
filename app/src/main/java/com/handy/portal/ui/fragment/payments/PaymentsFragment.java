@@ -17,7 +17,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
@@ -32,7 +31,6 @@ import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.layout.SlideUpPanelContainer;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
-import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -40,37 +38,31 @@ import com.squareup.otto.Subscribe;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public final class PaymentsFragment extends ActionBarFragment
 {
     //TODO: investigate using @Produce and make manager handle more of this logic
     @VisibleForTesting
-    @InjectView(R.id.slide_up_panel_container)
+    @Bind(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
 
-    @InjectView(R.id.payments_scroll_view)
+    @Bind(R.id.payments_scroll_view)
     ScrollView scrollView;
 
-    @InjectView(R.id.payments_batch_list_view)
+    @Bind(R.id.payments_batch_list_view)
     PaymentsBatchListView paymentsBatchListView;
 
-    @InjectView(R.id.element_payments_year_summary_text)
-    TextView yearSummaryText;
-
-    @InjectView(R.id.fetch_error_text)
+    @Bind(R.id.fetch_error_text)
     TextView fetchErrorText;
 
-    @InjectView(R.id.fetch_error_view)
+    @Bind(R.id.fetch_error_view)
     ViewGroup fetchErrorView;
 
     @VisibleForTesting
     ListView helpNodesListView;
-
-//    @InjectView(R.id.select_year_spinner)
-//    Spinner selectYearSpinner; //will need later
 
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
@@ -85,7 +77,7 @@ public final class PaymentsFragment extends ActionBarFragment
             fragmentView = inflater.inflate(R.layout.fragment_payments, container, false);
         }
 
-        ButterKnife.inject(this, fragmentView);
+        ButterKnife.bind(this, fragmentView);
 
         helpNodesListView = new ListView(getActivity());
         helpNodesListView.setDivider(null);
@@ -135,8 +127,6 @@ public final class PaymentsFragment extends ActionBarFragment
                 showPaymentDetailsForBatch(paymentBatch);
             }
         });
-        yearSummaryText.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
-
     }
 
     @OnClick(R.id.try_again_button)
@@ -154,7 +144,6 @@ public final class PaymentsFragment extends ActionBarFragment
 
     private void requestInitialPaymentsInfo()
     {
-//        requestAnnualPaymentSummaries(); //will need this later when annual summary api complete
         requestNextPaymentBatches(true);
         setLoadingOverlayVisible(true);
     }
@@ -167,10 +156,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             Calendar c = Calendar.getInstance();
             c.setTime(endDate);
-            int dayOfYear = Math.max(c.get(Calendar.DAY_OF_YEAR) - PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH, 1); //only request until beginning of this year
-            //TODO: won't have to do this gross thing when we either get annual summaries or new pagination api
-
-            c.set(Calendar.DAY_OF_YEAR, dayOfYear);
+            c.add(Calendar.DATE, -PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH);
             Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
             bus.post(new PaymentEvent.RequestPaymentBatches(startDate, endDate, isInitialRequest, Utils.getObjectIdentifier(this)));
 
@@ -201,10 +187,6 @@ public final class PaymentsFragment extends ActionBarFragment
         if (paymentSummary == null)
         {
             Crashlytics.logException(new Exception("Annual payment summaries is null or empty"));
-        }
-        else
-        {
-            yearSummaryText.setText(getResources().getString(R.string.payment_annual_summary, paymentSummary.getNumCompletedJobs(), CurrencyUtils.formatPriceWithCents(paymentSummary.getNetEarnings().getAmount(), paymentSummary.getNetEarnings().getCurrencySymbol())));
         }
     }
 
@@ -249,13 +231,6 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         switch (item.getItemId())
         {
-            case R.id.action_update_banking:
-                bus.post(new HandyEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.SLIDE_UP));
-                return true;
-            case R.id.action_email_verification:
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                bus.post(new HandyEvent.RequestSendIncomeVerification());
-                return true;
             case R.id.action_help:
                 if (helpNodesListView.getCount() > 0)
                 {
@@ -285,7 +260,7 @@ public final class PaymentsFragment extends ActionBarFragment
         fetchErrorView.setVisibility(View.GONE);
         if (Utils.getObjectIdentifier(this) != event.getCallerIdentifier()
                 || !paymentsBatchListView.getWrappedAdapter().canAppendBatch(event.getRequestEndDate()))
-            return;
+        { return; }
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
         if (event.isFromInitialBatchRequest) //if it was previously empty
@@ -337,20 +312,6 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onReceiveAnnualPaymentSummariesError(PaymentEvent.ReceiveAnnualPaymentSummariesError event)
     {
         //TODO: handle annual payments summary error
-    }
-
-    @Subscribe
-    public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENTS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
-    }
-
-    @Subscribe
-    public void onSendIncomeVerificationError(HandyEvent.ReceiveSendIncomeVerificationError event)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(R.string.send_verification_failed);
     }
 
     @Subscribe

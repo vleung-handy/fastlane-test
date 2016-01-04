@@ -15,14 +15,14 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 public class SupportActionViewConstructor extends ViewConstructor<Action>
 {
-    @InjectView(R.id.support_action_icon)
+    @Bind(R.id.support_action_icon)
     ImageView icon;
-    @InjectView(R.id.support_action_text)
+    @Bind(R.id.support_action_text)
     TextView text;
 
     @Inject

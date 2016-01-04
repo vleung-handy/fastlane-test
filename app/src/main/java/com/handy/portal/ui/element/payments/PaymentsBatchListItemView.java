@@ -13,22 +13,22 @@ import com.handy.portal.model.payments.PaymentGroup;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PaymentsBatchListItemView extends TableLayout
 {
 
-    @InjectView(R.id.payments_batch_list_item_date_text)
+    @Bind(R.id.payments_batch_list_item_date_text)
     protected TextView dateText;
 
-    @InjectView(R.id.payments_batch_list_item_payment_amount_text)
+    @Bind(R.id.payments_batch_list_item_payment_amount_text)
     protected TextView paymentAmountText;
 
-    @InjectView(R.id.payments_batch_list_item_job_info_text)
+    @Bind(R.id.payments_batch_list_item_job_info_text)
     protected TextView jobInfoText;
 
-    @InjectView(R.id.payments_batch_list_item_status_text)
+    @Bind(R.id.payments_batch_list_item_status_text)
     protected TextView statusText;
 
     public PaymentsBatchListItemView(Context context)
@@ -45,7 +45,7 @@ public class PaymentsBatchListItemView extends TableLayout
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     public void updateDisplay(PaymentBatch paymentBatch)
@@ -75,7 +75,7 @@ public class PaymentsBatchListItemView extends TableLayout
                 }
             }
             jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numWithholdings));
-
+            setEnabled(true);
         }
         else if (paymentBatch instanceof LegacyPaymentBatch)
         {
@@ -85,6 +85,7 @@ public class PaymentsBatchListItemView extends TableLayout
             statusText.setText(legacyPaymentBatch.getStatus());
             statusText.setTextColor(getResources().getColor(R.color.subtitle_grey));
             jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
+            setEnabled(false);
         }
 
     }

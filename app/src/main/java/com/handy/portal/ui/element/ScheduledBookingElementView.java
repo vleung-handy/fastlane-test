@@ -13,32 +13,32 @@ import com.handy.portal.model.Booking;
 
 import java.text.SimpleDateFormat;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 //Not setting up a clean UI hierarchy with AvailableBookingElement because ScheduledBookingElement is going to radically change soon to a google calendar style view
 
 public class ScheduledBookingElementView extends BookingElementView
 {
-    @InjectView(R.id.booking_entry_address_text)
+    @Bind(R.id.booking_entry_address_text)
     protected TextView addressTextView;
 
-    @InjectView(R.id.booking_entry_region_text)
+    @Bind(R.id.booking_entry_region_text)
     protected TextView bookingRegionText;
 
-    @InjectView(R.id.booking_entry_claimed_indicator_layout)
+    @Bind(R.id.booking_entry_claimed_indicator_layout)
     protected LinearLayout claimedIndicatorLayout;
 
-    @InjectView(R.id.booking_entry_completed_text)
+    @Bind(R.id.booking_entry_completed_text)
     protected TextView completedText;
 
-    @InjectView(R.id.booking_entry_completed_indicator)
+    @Bind(R.id.booking_entry_completed_indicator)
     protected ImageView completedIndicator;
 
-    @InjectView(R.id.booking_entry_start_date_text)
+    @Bind(R.id.booking_entry_start_date_text)
     protected TextView startTimeText;
 
-    @InjectView(R.id.booking_entry_end_date_text)
+    @Bind(R.id.booking_entry_end_date_text)
     protected TextView endTimeText;
 
     private static final String DATE_FORMAT = "h:mm a";
@@ -51,7 +51,7 @@ public class ScheduledBookingElementView extends BookingElementView
             convertView = LayoutInflater.from(parentContext).inflate(R.layout.element_scheduled_booking_list_entry, parent, false);
         }
 
-        ButterKnife.inject(this, convertView);
+        ButterKnife.bind(this, convertView);
 
         if (booking.isProxy())
         {

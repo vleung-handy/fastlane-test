@@ -1,13 +1,14 @@
 package com.handy.portal.analytics;
 
 import android.content.Context;
-import android.provider.Settings;
+import android.os.Build;
 
 import com.google.gson.Gson;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.annotation.Track;
 import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.PropertiesReader;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.manager.PrefsManager;
@@ -23,15 +24,16 @@ import javax.inject.Inject;
 
 public class Mixpanel
 {
+    private static final String PROVIDER = "pro";
+    private static final String ANDROID = "Android";
+
     private MixpanelAPI mixpanelAPI;
-    private Context context;
     private PrefsManager prefsManager;
     private Gson mGson = new Gson();
 
     @Inject
     public Mixpanel(final Context context, final PrefsManager prefsManager)
     {
-        this.context = context;
         this.prefsManager = prefsManager;
         String mixpanelApiKey = PropertiesReader.getConfigProperties(context).getProperty("mixpanel_api_key");
         this.mixpanelAPI = MixpanelAPI.getInstance(context, mixpanelApiKey);
@@ -47,11 +49,13 @@ public class Mixpanel
     private void setupBaseProperties()
     {
         final JSONObject baseProps = new JSONObject();
-        addProps(baseProps, "device", "android");
-        addProps(baseProps, "app version", BuildConfig.VERSION_NAME);
-        addProps(baseProps, "app flavor", BuildConfig.FLAVOR);
-        addProps(baseProps, "device id", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
-        addProps(baseProps, "user_id", prefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        addProps(baseProps, "product_type", PROVIDER);
+        addProps(baseProps, "platform", ANDROID);
+        addProps(baseProps, "os_version", Build.VERSION.RELEASE);
+        addProps(baseProps, "app_version", BuildConfig.VERSION_NAME);
+        addProps(baseProps, "version_track", BuildConfig.FLAVOR);
+        addProps(baseProps, "device_id", BaseApplication.getDeviceId());
+        addProps(baseProps, "provider_id", prefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
         mixpanelAPI.registerSuperProperties(baseProps);
     }
 

@@ -41,35 +41,35 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ProfileUpdateFragment extends ActionBarFragment
 {
-    @InjectView(R.id.provider_name_edit_text)
+    @Bind(R.id.provider_name_edit_text)
     EditText mNameText;
-    @InjectView(R.id.provider_email_edit_text)
+    @Bind(R.id.provider_email_edit_text)
     EditText mEmailText;
-    @InjectView(R.id.provider_email_error_indicator)
+    @Bind(R.id.provider_email_error_indicator)
     ImageView mEmailError;
-    @InjectView(R.id.provider_address_edit_text)
+    @Bind(R.id.provider_address_edit_text)
     EditText mAddressText;
-    @InjectView(R.id.provider_address2_edit_text)
+    @Bind(R.id.provider_address2_edit_text)
     EditText mAddress2Text;
-    @InjectView(R.id.provider_address_error_indicator)
+    @Bind(R.id.provider_address_error_indicator)
     ImageView mAddressError;
-    @InjectView(R.id.provider_city_edit_text)
+    @Bind(R.id.provider_city_edit_text)
     EditText mCityText;
-    @InjectView(R.id.provider_state_edit_text)
+    @Bind(R.id.provider_state_edit_text)
     EditText mStateText;
-    @InjectView(R.id.provider_zip_code_edit_text)
+    @Bind(R.id.provider_zip_code_edit_text)
     EditText mZipCodeText;
-    @InjectView(R.id.provider_area_error_indicator)
+    @Bind(R.id.provider_area_error_indicator)
     ImageView mAreaError;
-    @InjectView(R.id.provider_phone_edit_text)
+    @Bind(R.id.provider_phone_edit_text)
     EditText mPhoneText;
-    @InjectView(R.id.provider_phone_error_indicator)
+    @Bind(R.id.provider_phone_error_indicator)
     ImageView mPhoneError;
 
     @Inject
@@ -96,7 +96,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_profile_update_provider_info, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         return view;
     }
 

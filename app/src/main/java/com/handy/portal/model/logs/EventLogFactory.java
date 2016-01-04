@@ -153,6 +153,19 @@ public class EventLogFactory
                 bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
     }
 
+    public EventLog createRemoveJobErrorLog(Booking booking)
+    {
+        String bookingId = booking.getId();
+        String serviceId = booking.getService();
+        int regionId = booking.getRegionId();
+        String zipCode = getZipCode(booking.getAddress());
+        boolean requested = booking.isRequested();
+        Date dateStart = booking.getStartDate();
+
+        return new ScheduledJobsLog.RemoveJobError(getProviderId(), getVersionTrack(),
+                bookingId, serviceId, regionId, zipCode, requested, dateStart);
+    }
+
     public EventLog createOnMyWayLog(@NonNull Booking booking, LocationData location)
     {
         String bookingId = booking.getId();
@@ -195,6 +208,17 @@ public class EventLogFactory
         return new CheckInFlowLog.CheckOut(getProviderId(), getVersionTrack(), bookingId,
                 proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
     }
+
+    public EventLog createCustomerRatingShownLog()
+    {
+        return new ScheduledJobsLog.CustomerRatingShown(getProviderId(), getVersionTrack());
+    }
+
+    public EventLog createCustomerRatingSubmittedLog(int rating)
+    {
+        return new ScheduledJobsLog.CustomerRatingSubmitted(getProviderId(), getVersionTrack(), rating);
+    }
+
 
     // Payments Logs
     public EventLog createPaymentBatchSelectedLog(boolean currentWeek, int listNumber)

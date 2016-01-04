@@ -29,7 +29,7 @@ public class InjectedRelativeLayout extends RelativeLayout
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     //convenience methods to return the newly made view, unlike regular inflator which returns the root view for some reason
