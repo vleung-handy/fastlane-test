@@ -34,50 +34,50 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
 {
     @Mock
-    Bus bus;
+    Bus mBus;
 
     @InjectMocks
-    private PaymentsFragment fragment;
+    private PaymentsFragment mFragment;
 
     @Before
     public void setUp() throws Exception
     {
-        fragment = new PaymentsFragment();
-        SupportFragmentTestUtil.startFragment(fragment, MainActivity.class);
+        mFragment = new PaymentsFragment();
+        SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
         initMocks(this);
     }
 
     @Test
     public void shouldHaveCorrectTitleOnActionBar() throws Exception
     {
-        ActionBar actionBar = ((AppCompatActivity) fragment.getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar();
         assertNotNull(actionBar);
-        assertEquals(fragment.getString(R.string.payments), actionBar.getTitle());
+        assertEquals(mFragment.getString(R.string.payments), actionBar.getTitle());
     }
 
     @Test
     public void shouldShowHelpSlideUpWhenHelpIconIsClicked() throws Exception
     {
-        ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
-        fragment.helpNodesListView = spy(fragment.helpNodesListView);
-        when(fragment.helpNodesListView.getCount()).thenReturn(1);
+        ShadowActivity shadowActivity = Shadows.shadowOf(mFragment.getActivity());
+        mFragment.helpNodesListView = spy(mFragment.helpNodesListView);
+        when(mFragment.helpNodesListView.getCount()).thenReturn(1);
 
-        fragment.slideUpPanelContainer = mock(SlideUpPanelContainer.class);
+        mFragment.slideUpPanelContainer = mock(SlideUpPanelContainer.class);
         shadowActivity.clickMenuItem(R.id.action_help);
 
-        verify(fragment.slideUpPanelContainer).showPanel(anyInt(), any(SlideUpPanelContainer.ContentInitializer.class));
+        verify(mFragment.slideUpPanelContainer).showPanel(anyInt(), any(SlideUpPanelContainer.ContentInitializer.class));
     }
 
     @Test
     public void shouldRedirectToHelpCenterWhenHelpIconIsClickedButThereAreNoHelpNodes() throws Exception
     {
-        ShadowActivity shadowActivity = Shadows.shadowOf(fragment.getActivity());
+        ShadowActivity shadowActivity = Shadows.shadowOf(mFragment.getActivity());
 
-        fragment.slideUpPanelContainer = mock(SlideUpPanelContainer.class);
+        mFragment.slideUpPanelContainer = mock(SlideUpPanelContainer.class);
         shadowActivity.clickMenuItem(R.id.action_help);
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
-        verify(bus, atLeastOnce()).post(captor.capture());
+        verify(mBus, atLeastOnce()).post(captor.capture());
         HandyEvent.NavigateToTab event = getBusCaptorValue(captor, HandyEvent.NavigateToTab.class);
         assertNotNull("NavigateToTab event was not post to bus", event);
         assertEquals("Failed to navigate to help tab", MainViewTab.HELP, event.targetTab);

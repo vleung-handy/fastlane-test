@@ -43,9 +43,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class BaseApplication extends Application
 {
     private static String sDeviceId = "";
-    protected ObjectGraph graph;
-    private int started;
-    private boolean savedInstance;
+    protected ObjectGraph mGraph;
+    private int mStarted;
+    private boolean mSavedInstance;
 
     @Inject
     Mixpanel mixpanel;
@@ -128,17 +128,17 @@ public class BaseApplication extends Application
             public void onActivityCreated(final Activity activity,
                                           final Bundle savedInstanceState)
             {
-                savedInstance = savedInstanceState != null;
+                mSavedInstance = savedInstanceState != null;
             }
 
             @Override
             public void onActivityStarted(final Activity activity)
             {
-                ++started;
+                ++mStarted;
 
-                if (started == 1)
+                if (mStarted == 1)
                 {
-                    if (!savedInstance) { mixpanel.trackEventAppOpened(true); }
+                    if (!mSavedInstance) { mixpanel.trackEventAppOpened(true); }
                     else { mixpanel.trackEventAppOpened(false); }
                 }
             }
@@ -182,12 +182,12 @@ public class BaseApplication extends Application
 
     protected void createObjectGraph()
     {
-        graph = ObjectGraph.create(new ApplicationModule(this));
+        mGraph = ObjectGraph.create(new ApplicationModule(this));
     }
 
     public final void inject(final Object object)
     {
-        graph.inject(object);
+        mGraph.inject(object);
     }
 
     public static String getDeviceId() { return sDeviceId; }

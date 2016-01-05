@@ -54,13 +54,13 @@ import com.handy.portal.ui.constructor.SupportActionViewConstructor;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
@@ -304,8 +304,7 @@ public final class ApplicationModule
     @Singleton
     final SecurePreferences providePrefs()
     {
-        return new SecurePreferences(context,
-                configs.getProperty("secure_prefs_key"), "prefs.xml");
+        return new SecurePreferences(context, configs.getProperty("secure_prefs_key"), "prefs.xml");
     }
 
     @Provides

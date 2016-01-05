@@ -7,13 +7,13 @@ import android.widget.Button;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.ui.activity.MainActivity;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.robolectric.Robolectric;
-import org.robolectric.util.ActivityController;
+import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import java.util.List;
 
@@ -25,56 +25,44 @@ import static org.junit.Assert.assertTrue;
 
 public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
 {
-    private View activityFragmentView;
-    private MainActivityFragment activityFragment;
+    private MainActivityFragment mFragment;
 
     @Before
     public void setUp() throws Exception
     {
-        // TODO: Test fragment in isolation. Right now, it relies on its container activity.
-        ActivityController<MainActivity> activityController = Robolectric.buildActivity(MainActivity.class).create();
-        activityController.start().resume().visible();
-
-        activityFragment = (MainActivityFragment) activityController.get().getSupportFragmentManager().getFragments().get(0);
-        activityFragmentView = activityFragment.getView();
+        mFragment = new MainActivityFragment();
+        SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
     }
 
     @Test
     public void shouldHaveActionBar() throws Exception
     {
-        assertNotNull(((AppCompatActivity) activityFragment.getActivity()).getSupportActionBar());
+        assertNotNull(((AppCompatActivity) mFragment.getActivity()).getSupportActionBar());
     }
 
-    @Ignore
     @Test
-    public void shouldSeeOverlayTutorialWhenFirstLaunch()
+    public void shouldSeeTutorialOverlayWhenFirstLaunchAndBeDismissItAfterButtonClick() throws Exception
     {
-        // figure out how to set securepreferences in unit test
-        View view = activityFragmentView.findViewById(R.id.tutorial_overlay);
-        assertNotNull(view);
-        assertEquals(View.VISIBLE, view.getVisibility());
-    }
-
-    @Ignore
-    @Test
-    public void shouldDismissTutorialOverlayAfterDismissButtonClicked()
-    {
-        // figure out how to set securepreferences in unit test
-        View view = activityFragmentView.findViewById(R.id.tutorial_overlay);
-        assertNotNull(view);
-        assertEquals(View.VISIBLE, view.getVisibility());
-        Button dismiss = (Button) view.findViewById(R.id.tutorial_dismiss_btn);
+        // should see it when first launch
+        View tutorialOverlay = mFragment.getView().findViewById(R.id.tutorial_overlay);
+        assertNotNull(tutorialOverlay);
+        assertEquals(View.VISIBLE, tutorialOverlay.getVisibility());
+        // should be able to dismiss it
+        Button dismiss = (Button) tutorialOverlay.findViewById(R.id.tutorial_dismiss_btn);
         dismiss.performClick();
-        assertEquals(View.GONE, view.getVisibility());
+        assertEquals(View.GONE, tutorialOverlay.getVisibility());
     }
 
-    @Ignore
     @Test
-    public void shouldNotSeeOverlayTutorialAfterFirstLaunch()
+    public void shouldNotSeeOverlayTutorialAfterFirstLaunch() throws Exception
     {
-        // figure out how to set securepreferences in unit test
-        View view = activityFragmentView.findViewById(R.id.tutorial_overlay);
-        assertEquals(View.GONE, view.getVisibility());
+        mFragment.mPrefsManager.setBoolean(PrefsKey.NAVIGATION_TUTORIAL_SHOWN, true);
+        // restart the fragment
+        mFragment = new MainActivityFragment();
+        SupportFragmentTestUtil.startFragment(mFragment);
+
+        View tutorialOverlay = mFragment.getView().findViewById(R.id.tutorial_overlay);
+        assertEquals(View.GONE, tutorialOverlay.getVisibility());
     }
 
     @Ignore
@@ -82,12 +70,12 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     public void givenNoTabSelected_whenActivityResumes_thenLoadJobsScreen() throws Exception
     {
         assertThat(getScreenFragment(), instanceOf(AvailableBookingsFragment.class));
-        assertTrue(activityFragment.mJobsButton.isChecked());
+        assertTrue(mFragment.mJobsButton.isChecked());
     }
 
     public Fragment getScreenFragment()
     {
-        List<Fragment> fragments = activityFragment.getActivity().getSupportFragmentManager().getFragments();
+        List<Fragment> fragments = mFragment.getActivity().getSupportFragmentManager().getFragments();
         return fragments.get(fragments.size() - 1);
     }
 }
