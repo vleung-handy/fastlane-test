@@ -1,5 +1,6 @@
 #!/bin/bash
-LOCAL_IP=`ifconfig | grep inet.*broadcast | cut -d ' ' -f 2`
+LOCAL_IP=`ifconfig | grep -m1 inet.*broadcast | cut -d ' ' -f 2`
 sed -i '' 's/https:\/\/{0}-handybook\.hbinternal\.com/http:\/\/'$LOCAL_IP':3000/' app/src/main/assets/config.debug.properties
+sed -i '' 's/https:\/\/{0}-handy-apip\.hbinternal\.com\/v3/http:\/\/'$LOCAL_IP':3000\/api\/portal\/v3/' app/src/main/assets/config.debug.properties
 echo 'Now pointing to '$LOCAL_IP
 
