@@ -69,11 +69,11 @@ import static org.mockito.Mockito.when;
 }, library = true)
 public class TestApplicationModule
 {
-    private final Application application;
+    private final Application mApplication;
 
     public TestApplicationModule(final Application application)
     {
-        this.application = application;
+        mApplication = application;
     }
 
     @Provides
@@ -166,7 +166,7 @@ public class TestApplicationModule
     @Singleton
     final PrefsManager providePrefsManager()
     {
-        return new PrefsManager(ShadowPreferenceManager.getDefaultSharedPreferences(application));
+        return new PrefsManager(ShadowPreferenceManager.getDefaultSharedPreferences(mApplication));
     }
 
     @Provides
