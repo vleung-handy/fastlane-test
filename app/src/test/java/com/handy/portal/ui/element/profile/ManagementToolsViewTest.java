@@ -125,16 +125,13 @@ public class ManagementToolsViewTest
     }
 
     @Test
-    public void shouldDisableResupplyTextWhenUnavailable()
+    public void shouldDisableClickWhenResupplyUnavailable()
     {
         ProviderProfile providerProfile = buildProviderProfile(false);
         mView = new ManagementToolsView(APP, providerProfile);
 
         View resupplyView = mView.findViewById(R.id.provider_get_resupply_kit);
         assertFalse(resupplyView.isClickable());
-
-        TextView resupplyHelpText = (TextView) mView.findViewById(R.id.provider_get_resupply_kit_help_text);
-        assertEquals(View.VISIBLE, resupplyHelpText.getVisibility());
     }
 
     @Test
