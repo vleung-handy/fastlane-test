@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_margin"
                     android:text="@string/get_resupply_kit"
-                    android:textColor="@color/black"
+                    android:textColor="@color/subtitle_grey"
                     android:textSize="@dimen/medium_text_size"
                     />
 
@@ -87,6 +87,7 @@
                     android:layout_marginLeft="@dimen/default_margin"
                     android:textColor="@color/subtitle_grey"
                     android:textSize="@dimen/small_text_size"
+                    android:visibility="gone"
                     tools:text="You cannot order resupply yet."
                     />
             </LinearLayout>
