@@ -7,7 +7,7 @@
     android:background="@drawable/background_list_entry"
     android:divider="?android:attr/dividerHorizontal"
     android:dividerHeight="1dp"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/payment_container_vertical_padding"
     android:paddingLeft="@dimen/payment_container_horizontal_padding"
     android:paddingRight="@dimen/payment_container_horizontal_padding"
@@ -19,6 +19,5 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         />
-
 
 </com.handy.portal.ui.element.notifications.NotificationsListEntryView>

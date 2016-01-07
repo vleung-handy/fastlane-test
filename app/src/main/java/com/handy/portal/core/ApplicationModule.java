@@ -54,6 +54,7 @@ import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
+import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -146,6 +147,7 @@ import retrofit.converter.GsonConverter;
         ManagementToolsView.class,
         SupportActionView.class,
         NotificationsFragment.class,
+        NotificationsListView.class,
         NotificationsListEntryView.class,
 })
 public final class ApplicationModule

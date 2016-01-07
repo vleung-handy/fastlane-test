@@ -1,95 +1,32 @@
 package com.handy.portal.ui.element.notifications;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
-import com.handy.portal.R;
-import com.handy.portal.model.notifications.NotificationMessage;
-import com.handy.portal.ui.adapter.NotificationsListAdapter;
-import com.handy.portal.ui.widget.InfiniteScrollListView;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Bus;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-import javax.inject.Inject;
-
-public final class NotificationsListEntryView extends InfiniteScrollListView
+public class NotificationsListEntryView extends LinearLayout
 {
-    @Inject
-    Bus mBus;
+//    @Bind()
 
-    private TextView mFooterView;
-
-    public NotificationsListEntryView(final Context context)
-    {
+    public NotificationsListEntryView(Context context) {
         super(context);
-        Utils.inject(context, this);
-
     }
 
-    public NotificationsListEntryView(final Context context, final AttributeSet attrs)
-    {
+    public NotificationsListEntryView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Utils.inject(context, this);
     }
 
-    public NotificationsListEntryView(final Context context, final AttributeSet attrs, final int defStyle)
-    {
-        super(context, attrs, defStyle);
-        Utils.inject(context, this);
+    public NotificationsListEntryView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
     @Override
     protected void onFinishInflate()
     {
         super.onFinishInflate();
-        init();
-    }
-
-    private void init()
-    {
-        NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(getContext());
-
-        mFooterView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_footer, null);
-        addFooterView(mFooterView, null, false);
-        setAdapter(notificationsListAdapter);
-//        setOnItemClickListener(this);
-        // Override the StickyListHeaderView not setting these correctly
-        ColorDrawable divider = new ColorDrawable(this.getResources().getColor(R.color.list_divider));
-        getWrappedList().setDivider(divider);
-        getWrappedList().setDividerHeight(1);
-    }
-
-    public void showFooter(int stringResourceId)
-    {
-        setFooterVisible(true);
-        setFooterText(stringResourceId);
-    }
-
-    public void setFooterText(int resourceId)
-    {
-        mFooterView.setText(resourceId);
-    }
-
-    public void setFooterVisible(boolean visible)
-    {
-        mFooterView.setVisibility(visible ? VISIBLE : GONE);
-    }
-
-    public NotificationsListAdapter getWrappedAdapter()
-    {
-        return (NotificationsListAdapter) getAdapter();
-    }
-
-    public boolean shouldRequestMoreNotifications()
-    {
-        return getWrappedAdapter().shouldRequestMoreNotifications();
-    }
-
-    public void appendData(NotificationMessage[] notificationMessages)
-    {
-        getWrappedAdapter().appendData(notificationMessages);
+        ButterKnife.bind(this);
     }
 }

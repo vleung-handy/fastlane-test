@@ -10,7 +10,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NotificationEvent;
-import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
+import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
@@ -19,14 +19,10 @@ import butterknife.ButterKnife;
 public final class NotificationsFragment extends ActionBarFragment
 {
     @Bind(R.id.notifications_list_view)
-    NotificationsListEntryView mNotificationsListEntryView;
+    NotificationsListView mNotificationsListView;
 
     @Bind(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
-
-    @Bind(R.id.notifications_scroll_view)
-    ScrollView mScrollView;
-
 
     private View mFragmentView;
 
@@ -54,7 +50,7 @@ public final class NotificationsFragment extends ActionBarFragment
         super.onResume();
         setActionBar(R.string.tab_notifications, false);
 
-        if (mNotificationsListEntryView.shouldRequestMoreNotifications())
+        if (mNotificationsListView.shouldRequestMoreNotifications())
         {
             setLoadingOverlayVisible(true);
             requestNotifications();
@@ -75,8 +71,8 @@ public final class NotificationsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveNotificationMessagesSuccess(NotificationEvent.ReceiveNotificationMessagesSuccess event)
     {
-        mNotificationsListEntryView.appendData(event.getNotificationMessages());
-        mNotificationsListEntryView.setFooterVisible(false);
+        mNotificationsListView.appendData(event.getNotificationMessages());
+        mNotificationsListView.setFooterVisible(false);
         mFetchErrorView.setVisibility(View.GONE);
         setLoadingOverlayVisible(false);
     }
@@ -85,12 +81,11 @@ public final class NotificationsFragment extends ActionBarFragment
     {
         // TODO: use untilId; get from last notification in feed
         bus.post(new NotificationEvent.RequestNotificationMessages(null, null, 20));
-        mNotificationsListEntryView.showFooter(R.string.loading_more_payments);
+        mNotificationsListView.showFooter(R.string.loading_more_payments);
     }
 
     public void setLoadingOverlayVisible(boolean visible)
     {
-        mScrollView.setVisibility(visible ? View.GONE : View.VISIBLE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
     }
 }

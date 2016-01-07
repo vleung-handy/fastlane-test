@@ -6,13 +6,14 @@
             android:layout_alignParentBottom="true"
             android:background="@color/light_grey"
             android:orientation="horizontal"
-            android:weightSum="5"
+            android:weightSum="50"
     >
 
     <RadioButton
         android:id="@+id/button_jobs"
         style="@style/TabButton"
-        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_weight="10"
         android:drawableTop="@drawable/tab_button_claim"
         android:text="@string/tab_claim"
         />
@@ -20,7 +21,8 @@
     <RadioButton
         android:id="@+id/button_schedule"
         style="@style/TabButton"
-        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_weight="10"
         android:checked="false"
         android:drawableTop="@drawable/tab_button_schedule"
         android:text="@string/tab_schedule"
@@ -29,22 +31,24 @@
     <RadioButton
         android:id="@+id/button_notifications"
         style="@style/TabButton"
-        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_weight="15"
         android:checked="false"
         android:drawableTop="@drawable/tab_button_notifications"
         android:text="@string/tab_notifications"
         />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="5"
         ></LinearLayout>
 
     <RadioButton
         android:id="@+id/button_more"
         style="@style/TabButton"
-        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_weight="10"
         android:drawableTop="@drawable/tab_button_nav_more"
         android:text="@string/tab_more"
         />

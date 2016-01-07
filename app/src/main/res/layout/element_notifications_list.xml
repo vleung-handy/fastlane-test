@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.notifications.NotificationsListEntryView
+<com.handy.portal.ui.element.notifications.NotificationsListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/notifications_list_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:divider="@color/list_divider"
     android:dividerHeight="1px"
     android:footerDividersEnabled="true"
@@ -13,4 +12,4 @@
     android:transcriptMode="disabled"
     >
 
-</com.handy.portal.ui.element.notifications.NotificationsListEntryView>
+</com.handy.portal.ui.element.notifications.NotificationsListView>

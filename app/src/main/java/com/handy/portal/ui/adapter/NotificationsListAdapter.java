@@ -21,6 +21,16 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
         super(context, R.layout.element_notification_list_entry, 0);
     }
 
+    public void appendData(final NotificationMessage[] notificationMessages)
+    {
+        addAll(notificationMessages);
+        if (notificationMessages.length == 0 || notificationMessages.length < 20)
+        {
+            mShouldRequestMoreNotifications = false;
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
@@ -56,15 +66,5 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     public boolean shouldRequestMoreNotifications()
     {
         return mShouldRequestMoreNotifications;
-    }
-
-    public void appendData(final NotificationMessage[] notificationMessages)
-    {
-        addAll(notificationMessages);
-        if (notificationMessages.length == 0 || notificationMessages.length < 20)
-        {
-            mShouldRequestMoreNotifications = false;
-        }
-        notifyDataSetChanged();
     }
 }
