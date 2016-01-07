@@ -3,6 +3,7 @@ package com.handy.portal.model.notifications;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class NotificationMessage implements Serializable
@@ -93,5 +94,10 @@ public class NotificationMessage implements Serializable
     public List<NotificationAction> getActions()
     {
         return mActions;
+    }
+
+    public String getFormattedTime()
+    {
+        return "alskdf";
     }
 }

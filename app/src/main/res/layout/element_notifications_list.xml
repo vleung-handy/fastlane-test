@@ -3,13 +3,14 @@
     android:id="@+id/notifications_list_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:divider="@color/list_divider"
+    android:divider="@drawable/left_inset_divider"
     android:dividerHeight="1px"
     android:footerDividersEnabled="true"
     android:headerDividersEnabled="true"
     android:orientation="vertical"
     android:paddingTop="1dp"
     android:transcriptMode="disabled"
+    android:background="@color/white"
     >
 
 </com.handy.portal.ui.element.notifications.NotificationsListView>

@@ -1,23 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.notifications.NotificationsListEntryView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.handy.portal.ui.element.notifications.NotificationsListEntryView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
     android:background="@drawable/background_list_entry"
-    android:divider="?android:attr/dividerHorizontal"
-    android:dividerHeight="1dp"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/payment_container_vertical_padding"
-    android:paddingLeft="@dimen/payment_container_horizontal_padding"
-    android:paddingRight="@dimen/payment_container_horizontal_padding"
-    android:paddingTop="@dimen/payment_container_vertical_padding"
+    android:orientation="horizontal"
+    android:paddingBottom="12dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="12dp"
     >
 
-    <TextView
-        android:text="Hello World"
+    <ImageView
+        android:id="@+id/notification_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:background="@drawable/notification_cancel"
+        android:orientation="horizontal"
+        android:src="@drawable/ic_notification_cancel"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="10dp"
+        ></ImageView>
+
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        >
+
+        <TextView
+            android:id="@+id/notification_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@drawable/notification_text"
+            android:textSize="@dimen/large_text_size"
+            android:text="Cancellation"
+            />
+
+        <TextView
+            android:id="@+id/notification_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:textColor="@drawable/list_entry_title_text"
+            android:textSize="@dimen/small_text_size"
+            android:text="3:00pm job on Wednesday, Oct 21 has been cancelled."
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/notification_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/bg_inactive_grey"
+        android:textSize="@dimen/xsmall_text_size"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="3dp"
+        android:text="10:35am"
         />
 
 </com.handy.portal.ui.element.notifications.NotificationsListEntryView>
