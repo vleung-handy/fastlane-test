@@ -22,6 +22,7 @@ import com.handy.portal.model.TypedJsonString;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.logs.EventLogResponse;
+import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -311,5 +312,12 @@ public final class BaseDataManager extends DataManager
     public void postLogs(TypedJsonString params, final Callback<EventLogResponse> cb)
     {
         mEventLogService.postLogs(params, new LogEventsRetroFitCallback(cb));
+    }
+
+    // Notifications
+    @Override
+    public void getNotifications(String providerId, Integer sinceId, Integer untilId, Integer count, Callback<NotificationMessages> cb)
+    {
+        service.getNotifications(providerId, sinceId, untilId, count, new NotificationMessagesHandyRetroFitCallback(cb));
     }
 }

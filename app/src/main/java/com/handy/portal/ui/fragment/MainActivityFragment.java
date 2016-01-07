@@ -53,6 +53,8 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mJobsButton;
     @Bind(R.id.button_schedule)
     RadioButton mScheduleButton;
+    @Bind(R.id.button_notifications)
+    RadioButton mNotificationsButton;
     @Bind(R.id.button_more)
     RadioButton mButtonMore;
     @Bind(R.id.loading_overlay)
@@ -202,6 +204,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         mJobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
         mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
         tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
     }
@@ -348,6 +351,12 @@ public class MainActivityFragment extends InjectedFragment
                 case SCHEDULED_JOBS:
                 {
                     mScheduleButton.toggle();
+                    mNavTrayLinks.clearCheck();
+                }
+                break;
+                case NOTIFICATIONS:
+                {
+                    mNotificationsButton.toggle();
                     mNavTrayLinks.clearCheck();
                 }
                 break;

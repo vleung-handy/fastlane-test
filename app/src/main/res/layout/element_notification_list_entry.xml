@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handy.portal.ui.element.notifications.NotificationsListEntryView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@drawable/background_list_entry"
+    android:divider="?android:attr/dividerHorizontal"
+    android:dividerHeight="1dp"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/payment_container_vertical_padding"
+    android:paddingLeft="@dimen/payment_container_horizontal_padding"
+    android:paddingRight="@dimen/payment_container_horizontal_padding"
+    android:paddingTop="@dimen/payment_container_vertical_padding"
+    >
+
+    <TextView
+        android:text="Hello World"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+
+
+</com.handy.portal.ui.element.notifications.NotificationsListEntryView>

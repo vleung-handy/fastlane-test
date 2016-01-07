@@ -2,6 +2,7 @@ package com.handy.portal.constant;
 
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
@@ -25,6 +26,7 @@ public enum MainViewTab implements Serializable
 {
     AVAILABLE_JOBS(AvailableBookingsFragment.class),
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
+    NOTIFICATIONS(NotificationsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
     SELECT_PAYMENT_METHOD(SelectPaymentMethodFragment.class),
     UPDATE_BANK_ACCOUNT(PaymentsUpdateBankAccountFragment.class),

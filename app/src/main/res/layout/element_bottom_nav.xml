@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabs"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@color/light_grey"
-    android:orientation="horizontal"
-    android:weightSum="5">
+<RadioGroup android:id="@+id/tabs"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/light_grey"
+            android:orientation="horizontal"
+            android:weightSum="5"
+    >
 
     <RadioButton
         android:id="@+id/button_jobs"
         style="@style/TabButton"
         android:layout_weight="1"
         android:drawableTop="@drawable/tab_button_claim"
-        android:text="@string/tab_claim"/>
+        android:text="@string/tab_claim"
+        />
 
     <RadioButton
         android:id="@+id/button_schedule"
@@ -21,13 +23,17 @@
         android:layout_weight="1"
         android:checked="false"
         android:drawableTop="@drawable/tab_button_schedule"
-        android:text="@string/tab_schedule"/>
+        android:text="@string/tab_schedule"
+        />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+    <RadioButton
+        android:id="@+id/button_notifications"
+        style="@style/TabButton"
         android:layout_weight="1"
-        ></LinearLayout>
+        android:checked="false"
+        android:drawableTop="@drawable/tab_button_notifications"
+        android:text="@string/tab_notifications"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

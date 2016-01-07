@@ -21,6 +21,7 @@ import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.NotificationMessageManager;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -52,6 +53,7 @@ import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
 import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -61,6 +63,7 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
@@ -142,6 +145,8 @@ import retrofit.converter.GsonConverter;
         PaymentBlockingFragment.class,
         ManagementToolsView.class,
         SupportActionView.class,
+        NotificationsFragment.class,
+        NotificationsListEntryView.class,
 })
 public final class ApplicationModule
 {
@@ -514,5 +519,12 @@ public final class ApplicationModule
         {
             return manufacturer + " " + model;
         }
+    }
+
+    @Provides
+    @Singleton
+    final NotificationMessageManager provideNotificationMessageManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    {
+        return new NotificationMessageManager(bus, dataManager, prefsManager);
     }
 }

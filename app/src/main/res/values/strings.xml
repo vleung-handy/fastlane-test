@@ -230,6 +230,7 @@
     <string name="tab_jobs">Jobs</string>
     <string name="tab_claim">Claim</string>
     <string name="tab_schedule">Schedule</string>
+    <string name="tab_notifications">Notifications</string>
     <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>

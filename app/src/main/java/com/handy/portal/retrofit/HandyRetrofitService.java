@@ -208,5 +208,10 @@ public interface HandyRetrofitService
     @GET("/configuration")
     void getConfiguration(HandyRetrofitCallback cb);
 
-
+    @GET(PROVIDERS_PATH + "{id}/notifications")
+    void getNotifications(@Path("id") String providerId,
+                          @Query("since_id") Integer sinceId,
+                          @Query("until_id") Integer untilId,
+                          @Query("count") Integer count,
+                          HandyRetrofitCallback cb);
 }
