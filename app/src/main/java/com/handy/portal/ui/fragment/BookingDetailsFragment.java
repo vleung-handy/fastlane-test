@@ -52,7 +52,7 @@ import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
-import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
+import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
@@ -587,10 +587,10 @@ public class BookingDetailsFragment extends ActionBarFragment
                 @Override
                 public void initialize(ViewGroup panel)
                 {
-                    new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
-                            .create(panel, associatedBooking);
-                    new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
-                            .create(panel, associatedBooking);
+                    panel.addView(new SupportActionContainerView(
+                            getContext(), SupportActionUtils.ETA_ACTION_NAMES, associatedBooking));
+                    panel.addView(new SupportActionContainerView(
+                            getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, associatedBooking));
                 }
             });
         }
