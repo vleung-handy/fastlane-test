@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.notifications.NotificationMessage;
+import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -34,13 +35,18 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
+        View v = convertView;
+        NotificationMessage notificationMessage = getItem(position);
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null)
+
+        if (v == null)
         {
-            convertView = inflater.inflate(R.layout.element_notification_list_entry, null);
+            v = inflater.inflate(R.layout.element_notification_list_entry, null);
         }
 
-        return convertView;
+        ((NotificationsListEntryView) v).updateDisplay(notificationMessage);
+
+        return v;
     }
 
     @Override

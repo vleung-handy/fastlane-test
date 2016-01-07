@@ -1,6 +1,7 @@
 package com.handy.portal.model.notifications;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.util.DateTimeUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,10 +25,10 @@ public class NotificationMessage implements Serializable
     private String mType;
 
     @SerializedName("created_at")
-    private String mCreatedAt;
+    private Date mCreatedAt;
 
     @SerializedName("expires_at")
-    private String mExpiresAt;
+    private Date mExpiresAt;
 
     @SerializedName("available")
     private boolean mAvailable;
@@ -66,12 +67,12 @@ public class NotificationMessage implements Serializable
         return mType;
     }
 
-    public String getCreatedAt()
+    public Date getCreatedAt()
     {
         return mCreatedAt;
     }
 
-    public String getExpiresAt()
+    public Date getExpiresAt()
     {
         return mExpiresAt;
     }
@@ -98,6 +99,6 @@ public class NotificationMessage implements Serializable
 
     public String getFormattedTime()
     {
-        return "alskdf";
+        return DateTimeUtils.formatDateTo12HourClock(getCreatedAt());
     }
 }
