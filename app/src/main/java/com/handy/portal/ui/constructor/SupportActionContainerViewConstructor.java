@@ -11,6 +11,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
+import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.util.SupportActionUtils;
 
 import java.util.Collection;
@@ -57,7 +58,7 @@ public class SupportActionContainerViewConstructor extends ViewConstructor<Booki
 
             for (Action action : supportActions)
             {
-                new SupportActionViewConstructor(getContext()).create(supportActionsContainer, action);
+                supportActionsContainer.addView(new SupportActionView(getContext(), action));
             }
             return true;
         }
