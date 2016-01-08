@@ -55,4 +55,7 @@
     <color name="list_divider">#E2E2E2</color>
     <color name="payments_batch_list_entry_subtitle">#999999</color>
     <color name="black_20_percent">#14000000</color>
+
+    <!--List colors-->
+    <color name="section_header_text_color">#999999</color>
 </resources>

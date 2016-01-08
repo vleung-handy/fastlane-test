@@ -1,6 +1,8 @@
 package com.handy.portal.ui.element.notifications;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,7 +43,7 @@ public class NotificationsListEntryView extends LinearLayout
     public void updateDisplay(NotificationMessage notificationMessage)
     {
         mNotificationTitle.setText(notificationMessage.getTitle());
-        mNotificationBody.setText(notificationMessage.getBody());
+        mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody()));
         mNotificationTime.setText(notificationMessage.getFormattedTime());
     }
 }
