@@ -1,7 +1,5 @@
 package com.handy.portal.model.notifications;
 
-import android.graphics.drawable.Drawable;
-
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
 
@@ -11,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class NotificationImage implements Serializable
 {
-    public static final String NOTIFICATION_ICON_PATERN_MATCHER = "ic_notification_[^@.]+";
+    public static final String NOTIFICATION_ICON_PATTERN_MATCHER = "ic_notification_[^@.]+";
 
     public static final String NOTIFICATION_GENERIC_MATCHER = "ic_notification_generic";
     public static final String NOTIFICATION_CANCEL_MATCHER = "ic_notification_cancel";
@@ -43,7 +41,7 @@ public class NotificationImage implements Serializable
         if (mDrawableBackground == null)
         {
 
-            Pattern pattern = Pattern.compile(NOTIFICATION_ICON_PATERN_MATCHER);
+            Pattern pattern = Pattern.compile(NOTIFICATION_ICON_PATTERN_MATCHER);
             Matcher matcher = pattern.matcher(getUrl());
             matcher.find();
 
