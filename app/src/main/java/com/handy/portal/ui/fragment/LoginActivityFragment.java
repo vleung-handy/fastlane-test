@@ -25,7 +25,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handy.portal.ui.layout.SlideUpPanelContainer;
+import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
 import com.handy.portal.util.UIUtils;
@@ -58,7 +58,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Bind(R.id.back_button)
     ImageButton backButton;
     @Bind(R.id.slide_up_panel_container)
-    SlideUpPanelContainer slideUpPanelContainer;
+    SlideUpPanelLayout mSlideUpPanelLayout;
 
 
     @Inject
@@ -70,6 +70,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Inject
     PrefsManager prefsManager;
 
+
     private enum LoginState
     {
         INIT,
@@ -79,6 +80,7 @@ public class LoginActivityFragment extends InjectedFragment
         WAITING_FOR_LOGIN_RESPONSE,
         COMPLETE
     }
+
 
     private LoginState currentLoginState;
     private String storedPhoneNumber;
@@ -130,7 +132,6 @@ public class LoginActivityFragment extends InjectedFragment
             }
         });
 
-
         backButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -164,23 +165,19 @@ public class LoginActivityFragment extends InjectedFragment
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         }
-        slideUpPanelContainer.showPanel(R.string.instructions, new SlideUpPanelContainer.ContentInitializer()
+
+        View instructionView =
+                LayoutInflater.from(getActivity()).inflate(R.layout.element_login_instructions, null);
+        instructionView.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void initialize(ViewGroup panel)
+            public void onClick(final View v)
             {
-                LayoutInflater.from(getActivity()).inflate(R.layout.element_login_instructions, panel);
 
-                panel.findViewById(R.id.login_help).setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        goToUrl(HELP_CENTER_URL);
-                    }
-                });
+                goToUrl(HELP_CENTER_URL);
             }
         });
+        mSlideUpPanelLayout.showPanel(R.string.instructions, instructionView);
     }
 
     private void goToUrl(String url)
@@ -189,7 +186,6 @@ public class LoginActivityFragment extends InjectedFragment
         Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
         Utils.safeLaunchIntent(launchBrowser, this.getActivity());
     }
-
 
     //Event Sending
 
@@ -318,7 +314,6 @@ public class LoginActivityFragment extends InjectedFragment
             CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
             CookieSyncManager.getInstance().sync();
         }
-
 
         String providerId = loginDetails.getProviderId();
         prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);//TODO: we need to move away from using PrefsKey.LAST_PROVIDER_ID

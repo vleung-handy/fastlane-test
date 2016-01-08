@@ -22,6 +22,7 @@
     <dimen name="extra_padding">5dp</dimen>
     <dimen name="extra_padding_medium">10dp</dimen>
     <dimen name="extra_padding_large">15dp</dimen>
+    <dimen name="extra_padding_xlarge">20dp</dimen>
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_padding_medium">24dp</dimen>
     <dimen name="default_padding_large">32dp</dimen>
@@ -53,4 +54,7 @@
     <dimen name="thin_padding">1dp</dimen>
     <dimen name="supply_list_bullet_width">25dp</dimen>
     <dimen name="navigation_image_size">24dp</dimen>
+    <dimen name="x_icon_size">60dp</dimen>
+    <dimen name="default_elevation">2dp</dimen>
+
 </resources>

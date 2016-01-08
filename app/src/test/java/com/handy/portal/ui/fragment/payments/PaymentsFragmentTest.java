@@ -2,13 +2,14 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.layout.SlideUpPanelContainer;
+import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;
@@ -62,10 +63,10 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
         mFragment.helpNodesListView = spy(mFragment.helpNodesListView);
         when(mFragment.helpNodesListView.getCount()).thenReturn(1);
 
-        mFragment.slideUpPanelContainer = mock(SlideUpPanelContainer.class);
+        mFragment.mSlideUpPanelLayout = mock(SlideUpPanelLayout.class);
         shadowActivity.clickMenuItem(R.id.action_help);
 
-        verify(mFragment.slideUpPanelContainer).showPanel(anyInt(), any(SlideUpPanelContainer.ContentInitializer.class));
+        verify(mFragment.mSlideUpPanelLayout).showPanel(anyInt(), any(View.class));
     }
 
     @Test
@@ -73,7 +74,7 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     {
         ShadowActivity shadowActivity = Shadows.shadowOf(mFragment.getActivity());
 
-        mFragment.slideUpPanelContainer = mock(SlideUpPanelContainer.class);
+        mFragment.mSlideUpPanelLayout = mock(SlideUpPanelLayout.class);
         shadowActivity.clickMenuItem(R.id.action_help);
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
