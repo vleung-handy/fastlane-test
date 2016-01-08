@@ -58,4 +58,7 @@
 
     <!--List colors-->
     <color name="section_header_text_color">#999999</color>
+
+    <!--Notification colors-->
+    <color name="inactive_notification_icon_color">#EEEEEE</color>
 </resources>

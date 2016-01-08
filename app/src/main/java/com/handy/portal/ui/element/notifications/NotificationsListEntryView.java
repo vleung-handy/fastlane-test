@@ -1,6 +1,8 @@
 package com.handy.portal.ui.element.notifications;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -12,6 +14,9 @@ import com.handy.portal.model.notifications.NotificationImage;
 import com.handy.portal.model.notifications.NotificationMessage;
 import com.handy.portal.util.Utils;
 import com.squareup.picasso.Picasso;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,10 +66,7 @@ public class NotificationsListEntryView extends LinearLayout
         if (notificationImage != null)
         {
             Picasso.with(getContext()).load(notificationImage.getUrl()).into(mNotificationIcon);
-        }
-        else
-        {
-            // Set default notification icon
+            mNotificationIcon.setBackground(ContextCompat.getDrawable(getContext(), notificationImage.getDrawableBackground()));
         }
     }
 
@@ -72,8 +74,7 @@ public class NotificationsListEntryView extends LinearLayout
     {
         if (notificationMessage.getImage() == null && !notificationMessage.hasNoImage())
         {
-//            float density = getResources().getDisplayMetrics().density;
-            float density = (float) 1.0;
+            float density = getResources().getDisplayMetrics().density;
             if (density <= Utils.MDPI)
             {
                 notificationMessage.setImage(Utils.MDPI);

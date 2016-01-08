@@ -11,7 +11,7 @@
                 android:topRightRadius="12dp"
                 />
 
-            <solid android:color="@color/handy_salmon"/>
+            <solid android:color="@color/handy_yellow"/>
         </shape>
     </item>
 

@@ -14,9 +14,9 @@
         android:id="@+id/notification_icon"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:background="@drawable/notification_cancel"
+        android:background="@drawable/notification_generic"
         android:orientation="horizontal"
-        android:src="@drawable/ic_notification_cancel"
+        android:src="@drawable/ic_notification_generic"
         android:layout_marginTop="2dp"
         android:layout_marginRight="10dp"
         ></ImageView>
