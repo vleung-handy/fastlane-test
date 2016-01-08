@@ -40,7 +40,6 @@ public class NotificationImage implements Serializable
 
         if (mDrawableBackground == null)
         {
-
             Pattern pattern = Pattern.compile(NOTIFICATION_ICON_PATTERN_MATCHER);
             Matcher matcher = pattern.matcher(getUrl());
             matcher.find();
