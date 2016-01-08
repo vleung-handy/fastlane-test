@@ -7,12 +7,12 @@ import java.io.Serializable;
 public class NotificationImage implements Serializable
 {
     @SerializedName("scale")
-    private Float mScale;
+    private float mScale;
 
     @SerializedName("url")
     private String mUrl;
 
-    public Float getScale()
+    public float getScale()
     {
         return mScale;
     }

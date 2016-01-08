@@ -143,6 +143,7 @@ dependencies {
     compile 'com.squareup:otto:1.3.5'
     compile 'com.squareup.okhttp:okhttp:2.1.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 
     //Mixpanel analytics

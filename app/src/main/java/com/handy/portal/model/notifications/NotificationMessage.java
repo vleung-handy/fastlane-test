@@ -42,6 +42,9 @@ public class NotificationMessage implements Serializable
     @SerializedName("actions")
     private List<NotificationAction> mActions;
 
+    private NotificationImage mImage;
+    private boolean mHasNoImage = false;
+
     public int getId()
     {
         return mId;
@@ -82,7 +85,7 @@ public class NotificationMessage implements Serializable
         return mAvailable;
     }
 
-    public boolean isReadStatus()
+    public boolean isRead()
     {
         return mReadStatus;
     }
@@ -100,5 +103,30 @@ public class NotificationMessage implements Serializable
     public String getFormattedTime()
     {
         return DateTimeUtils.formatDateTo12HourClock(getCreatedAt());
+    }
+
+    public NotificationImage getImage()
+    {
+        return mImage;
+    }
+
+    public void setImage(float scale)
+    {
+        for (NotificationImage image : getImages()) {
+            if (scale == image.getScale())
+            {
+                mImage = image;
+            }
+        }
+
+        if (mImage == null)
+        {
+            mHasNoImage = true;
+        }
+    }
+
+    public boolean hasNoImage()
+    {
+        return mHasNoImage;
     }
 }
