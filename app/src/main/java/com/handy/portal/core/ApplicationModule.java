@@ -50,7 +50,7 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
-import com.handy.portal.ui.constructor.SupportActionViewConstructor;
+import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -113,7 +113,6 @@ import retrofit.converter.GsonConverter;
         TermsFragment.class,
         HelpFragment.class,
         HelpContactFragment.class,
-        SupportActionViewConstructor.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
         MainActivityFragmentNavigationHelper.class,
@@ -138,6 +137,7 @@ import retrofit.converter.GsonConverter;
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
         ManagementToolsView.class,
+        SupportActionView.class,
 })
 public final class ApplicationModule
 {
