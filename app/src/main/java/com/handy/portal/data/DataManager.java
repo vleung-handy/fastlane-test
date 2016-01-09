@@ -30,6 +30,7 @@ import com.handy.portal.model.payments.PaymentFlow;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -123,6 +124,8 @@ public abstract class DataManager
     public abstract void getConfiguration(Callback<ConfigurationResponse> callback);
 
     public abstract void getNotifications(String providerId, Integer sinceId, Integer untilId, Integer count, Callback<NotificationMessages> callback);
+
+    public abstract void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb);
 
     //TODO: refactor. should this be here?
     public interface Callback<T>

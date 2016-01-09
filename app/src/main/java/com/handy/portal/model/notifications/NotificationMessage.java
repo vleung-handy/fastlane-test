@@ -129,4 +129,9 @@ public class NotificationMessage implements Serializable
     {
         return mHasNoImage;
     }
+
+    public void markAsRead()
+    {
+        mReadStatus = true;
+    }
 }

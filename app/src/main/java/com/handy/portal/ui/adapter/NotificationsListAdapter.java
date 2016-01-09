@@ -10,27 +10,22 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.model.notifications.NotificationMessage;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
+import com.handy.portal.ui.view.NotificationIconImageView;
 import com.handy.portal.util.DateTimeUtils;
+
+import java.util.HashMap;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> implements StickyListHeadersAdapter
 {
     private boolean mShouldRequestMoreNotifications = true;
+    // Key value store of id to position in ListView
+    private HashMap<Integer, Integer> mUnreadNotifications = new HashMap<>();
 
     public NotificationsListAdapter(Context context)
     {
         super(context, R.layout.element_notification_list_entry, 0);
-    }
-
-    public void appendData(final NotificationMessage[] notificationMessages)
-    {
-        addAll(notificationMessages);
-        if (notificationMessages.length == 0 || notificationMessages.length < 20)
-        {
-            mShouldRequestMoreNotifications = false;
-        }
-        notifyDataSetChanged();
     }
 
     @Override
@@ -46,6 +41,10 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
         }
 
         ((NotificationsListEntryView) v).updateDisplay(notificationMessage);
+
+        NotificationIconImageView icon = (NotificationIconImageView) v.findViewById(R.id.notification_icon);
+        icon.setRead(notificationMessage.isRead());
+        icon.refreshDrawableState();
 
         return v;
     }
@@ -76,8 +75,48 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
         return DateTimeUtils.getBeginningOfDay(notificationMessage.getCreatedAt()).getTime();
     }
 
+    public void appendData(final NotificationMessage[] notificationMessages)
+    {
+        if (notificationMessages.length == 0 || notificationMessages.length < 20)
+        {
+            mShouldRequestMoreNotifications = false;
+        }
+        addNotifications(notificationMessages);
+
+        notifyDataSetChanged();
+    }
+
+    private void addNotifications(NotificationMessage[] notificationMessages)
+    {
+        for (NotificationMessage notificationMessage : notificationMessages)
+        {
+            if (!notificationMessage.isRead())
+            {
+                mUnreadNotifications.put(notificationMessage.getId(), getCount());
+            }
+            add(notificationMessage);
+        }
+    }
+
     public boolean shouldRequestMoreNotifications()
     {
         return mShouldRequestMoreNotifications;
+    }
+
+    public void markNotificationAsRead(NotificationMessage notificationMessage)
+    {
+        try
+        {
+            Integer notificationId = notificationMessage.getId();
+            notificationMessage = getItem(mUnreadNotifications.get(notificationId));
+            notificationMessage.markAsRead();
+            mUnreadNotifications.remove(notificationId);
+        }
+        catch (IndexOutOfBoundsException e) {}
+    }
+
+    public Integer getLastNotificationId()
+    {
+        return isEmpty() ? null : getItem(getCount() - 1).getId();
     }
 }

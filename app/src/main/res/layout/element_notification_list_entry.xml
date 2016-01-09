@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.notifications.NotificationsListEntryView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.handy.portal.ui.element.notifications.NotificationsListEntryView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_list_entry"
@@ -10,7 +11,7 @@
     android:paddingTop="14dp"
     >
 
-    <ImageView
+    <com.handy.portal.ui.view.NotificationIconImageView
         android:id="@+id/notification_icon"
         android:layout_width="18dp"
         android:layout_height="18dp"
@@ -19,7 +20,7 @@
         android:src="@drawable/ic_notification_generic"
         android:layout_marginTop="2dp"
         android:layout_marginRight="10dp"
-        ></ImageView>
+        ></com.handy.portal.ui.view.NotificationIconImageView>
 
     <LinearLayout
         android:layout_width="0dp"

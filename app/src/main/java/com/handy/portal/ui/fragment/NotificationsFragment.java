@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NotificationEvent;
+import com.handy.portal.model.notifications.NotificationMessage;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
+import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,6 +28,7 @@ public final class NotificationsFragment extends ActionBarFragment
     ViewGroup mFetchErrorView;
 
     private View mFragmentView;
+    private boolean isRequestingNotifications = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -71,21 +75,79 @@ public final class NotificationsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveNotificationMessagesSuccess(NotificationEvent.ReceiveNotificationMessagesSuccess event)
     {
-        mNotificationsListView.appendData(event.getNotificationMessages());
-        mNotificationsListView.setFooterVisible(false);
+        isRequestingNotifications = false;
+        boolean isFirstRequest = mNotificationsListView.isEmpty();
+        NotificationMessage[] notificationMessages = event.getNotificationMessages();
+        mNotificationsListView.appendData(notificationMessages);
         mFetchErrorView.setVisibility(View.GONE);
         setLoadingOverlayVisible(false);
+        markUnreadNotificationsAsRead(notificationMessages);
+
+        if (mNotificationsListView.shouldRequestMoreNotifications())
+        {
+            mNotificationsListView.setFooterVisible(false);
+            if (isFirstRequest)
+            {
+                setNotificationsListViewOnScrollListener();
+            }
+        }
+        else
+        {
+            mNotificationsListView.setFooterText(R.string.no_more_notifications);
+        }
     }
 
-    private void requestNotifications()
+    @Subscribe
+    public void onReceiveNotificationMessagesSuccess(NotificationEvent.ReceiveMarkNotificationsAsReadSuccess event)
     {
-        // TODO: use untilId; get from last notification in feed
-        bus.post(new NotificationEvent.RequestNotificationMessages(null, null, 20));
-        mNotificationsListView.showFooter(R.string.loading_more_payments);
+        mNotificationsListView.markNotificationsAsRead(event.getNotificationMessages());
     }
 
     public void setLoadingOverlayVisible(boolean visible)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
+    }
+
+    private void markUnreadNotificationsAsRead(final NotificationMessage[] notificationMessages)
+    {
+        ArrayList<Integer> unreadNotifications = new ArrayList<>();
+        for (NotificationMessage notificationMessage : notificationMessages)
+        {
+            if (!notificationMessage.isRead())
+            {
+                unreadNotifications.add(notificationMessage.getId());
+            }
+        }
+
+        if (!unreadNotifications.isEmpty())
+        {
+            bus.post(new NotificationEvent.RequestMarkNotificationsAsRead(unreadNotifications));
+        }
+    }
+
+    private void setNotificationsListViewOnScrollListener()
+    {
+        mNotificationsListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener()
+        {
+            @Override
+            public void onScrollToBottom()
+            {
+                if (mNotificationsListView != null)
+                {
+                    requestNotifications();
+                }
+            }
+        });
+    }
+
+    private void requestNotifications()
+    {
+        if (mNotificationsListView.shouldRequestMoreNotifications() && !isRequestingNotifications)
+        {
+            isRequestingNotifications = true;
+            Integer lastNotificationId = mNotificationsListView.getLastNotificationId();
+            bus.post(new NotificationEvent.RequestNotificationMessages(null, lastNotificationId, 20));
+            mNotificationsListView.showFooter(R.string.load_notifications);
+        }
     }
 }

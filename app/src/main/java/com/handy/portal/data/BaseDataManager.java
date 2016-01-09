@@ -37,11 +37,15 @@ import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import retrofit.http.FieldMap;
 import retrofit.mime.TypedInput;
 
 public final class BaseDataManager extends DataManager
@@ -319,5 +323,11 @@ public final class BaseDataManager extends DataManager
     public void getNotifications(String providerId, Integer sinceId, Integer untilId, Integer count, Callback<NotificationMessages> cb)
     {
         service.getNotifications(providerId, sinceId, untilId, count, new NotificationMessagesHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb)
+    {
+        service.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
     }
 }

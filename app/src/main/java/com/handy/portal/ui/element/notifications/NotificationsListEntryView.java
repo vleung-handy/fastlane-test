@@ -1,22 +1,18 @@
 package com.handy.portal.ui.element.notifications;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.notifications.NotificationImage;
 import com.handy.portal.model.notifications.NotificationMessage;
+import com.handy.portal.ui.view.NotificationIconImageView;
 import com.handy.portal.util.Utils;
 import com.squareup.picasso.Picasso;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,7 +20,7 @@ import butterknife.ButterKnife;
 public class NotificationsListEntryView extends LinearLayout
 {
     @Bind(R.id.notification_icon)
-    protected ImageView mNotificationIcon;
+    protected NotificationIconImageView mNotificationIcon;
 
     @Bind(R.id.notification_title)
     protected TextView mNotificationTitle;

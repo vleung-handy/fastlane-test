@@ -47,4 +47,24 @@ public class NotificationMessageManager
             }
         });
     }
+
+    @Subscribe
+    public void onRequestMarkNotificationsAsRead(final NotificationEvent.RequestMarkNotificationsAsRead event)
+    {
+        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        mDataManager.postMarkNotificationsAsRead(providerId, event.notificationIds, new DataManager.Callback<NotificationMessages>()
+        {
+            @Override
+            public void onSuccess(final NotificationMessages notificationMessages)
+            {
+                mBus.post(new NotificationEvent.ReceiveNotificationMessagesSuccess(notificationMessages.getList()));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new NotificationEvent.ReceiveMarkNotificationsAsReadError(error));
+            }
+        });
+    }
 }
