@@ -22,10 +22,6 @@ public class NotificationMessageManager
         mPrefsManager = prefsManager;
         mBus.register(this);
         mDataManager = dataManager;
-//        mNeedsUpdatedPaymentInformationCache = CacheBuilder.newBuilder()
-//                .maximumSize(1)
-//                .expireAfterWrite(1, TimeUnit.DAYS)
-//                .build();
     }
 
     @Subscribe
