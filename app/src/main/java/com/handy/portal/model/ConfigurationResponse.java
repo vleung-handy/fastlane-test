@@ -22,7 +22,7 @@ public class ConfigurationResponse
     @SerializedName("block_payment_info")
     private boolean mBlockClaimsIfMissingAccountInformation;
 
-    @SerializedName("show_notification_menu_button")
+    @SerializedName("notifications_in_pro_app")
     private boolean mShowNotificationMenuButton;
 
 
