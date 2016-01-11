@@ -12,8 +12,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,6 +119,9 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Bind(R.id.slide_up_panel_container)
     SlideUpPanelContainer slideUpPanelContainer;
 
+    @Bind(R.id.booking_details_scroll_view)
+    ScrollView mScrollView;
+
     @Inject
     PrefsManager prefsManager;
 
@@ -134,6 +139,13 @@ public class BookingDetailsFragment extends ActionBarFragment
     private MainViewTab currentTab;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
+
+    private boolean mHaveTrackedSeenBookingInstructions;
+
+    private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
+
+    private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f;
+
 
     @Override
     protected MainViewTab getTab()
@@ -177,7 +189,50 @@ public class BookingDetailsFragment extends ActionBarFragment
             returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB);
         }
 
+        initScrollViewListener();
+
+
+
+
+
+
         return view;
+    }
+
+    private void initScrollViewListener()
+    {
+        mOnScrollChangedListener = (new ViewTreeObserver.OnScrollChangedListener()
+        {
+            @Override
+            public void onScrollChanged()
+            {
+                if (!mHaveTrackedSeenBookingInstructions &&
+                        mScrollView != null)
+                {
+                    float percentVis = UIUtils.getPercentViewVisibleInScrollView(jobInstructionsLayout, mScrollView);
+                    if(percentVis >= TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD)
+                    {
+                        System.out.println("Huzzah it works!");
+                        //track event
+                        //flip flag
+                    }
+                }
+
+
+            }
+        });
+        mScrollView.getViewTreeObserver().addOnScrollChangedListener(mOnScrollChangedListener);
+    }
+
+
+    @Override
+    public void onDestroyView()
+    {
+        mScrollView.getViewTreeObserver().removeOnScrollChangedListener(mOnScrollChangedListener);
+
+        super.onDestroyView();
+
+
     }
 
     @Override
