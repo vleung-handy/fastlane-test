@@ -219,6 +219,12 @@ public class EventLogFactory
         return new ScheduledJobsLog.CustomerRatingSubmitted(getProviderId(), getVersionTrack(), rating);
     }
 
+    public EventLog createBookingInstructionsSeenLog(Booking booking)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.BookingInstructionsSeen(getProviderId(), getVersionTrack(), bookingId);
+    }
+
 
     // Payments Logs
     public EventLog createPaymentBatchSelectedLog(boolean currentWeek, int listNumber)

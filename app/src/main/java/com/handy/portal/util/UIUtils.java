@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -344,6 +346,41 @@ public final class UIUtils
         view.draw(canvas);
 
         return bitmap;
+    }
+
+    public static float getPercentViewVisibleInScrollView(View view, ScrollView scrollView)
+    {
+        float percentViewVisible = 0f;
+
+        Rect viewHitRect = new Rect();
+        view.getHitRect(viewHitRect);
+
+        Rect scrollBounds = new Rect(scrollView.getScrollX(),
+                                    scrollView.getScrollY(),
+                                    scrollView.getScrollX() + scrollView.getWidth(),
+                                    scrollView.getScrollY() + scrollView.getHeight());
+
+        //Is this at all visible?
+        if (Rect.intersects(viewHitRect, scrollBounds))
+        {
+            //We have at least some overlap, calc the percent
+            percentViewVisible = UIUtils.rectangleOverlapPercent(viewHitRect, scrollBounds);
+        }
+
+        return percentViewVisible;
+    }
+
+    public static float rectangleOverlapPercent(Rect r1, Rect r2)
+    {
+        float xOverlap = Math.max(0, Math.min(r1.right, r2.right) - Math.max(r1.left, r2.left));
+        float yOverlap = Math.max(0, Math.min(r1.bottom, r2.bottom) - Math.max(r1.top, r2.top));
+        float overlapArea = xOverlap * yOverlap;
+        if (overlapArea == 0f)
+        {
+            return 0f;
+        }
+        float overlapPercent = overlapArea / (r1.width() * r1.height());
+        return overlapPercent;
     }
 
     public static LinearLayout createLinearLayout(Context context, int orientation)
