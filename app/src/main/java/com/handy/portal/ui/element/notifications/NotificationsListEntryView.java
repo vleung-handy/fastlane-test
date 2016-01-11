@@ -21,16 +21,16 @@ public class NotificationsListEntryView extends FrameLayout
     private static final int[] STATE_READ = {R.attr.state_read};
 
     @Bind(R.id.notification_icon)
-    protected ImageView mNotificationIcon;
+    ImageView mNotificationIcon;
 
     @Bind(R.id.notification_title)
-    protected TextView mNotificationTitle;
+    TextView mNotificationTitle;
 
     @Bind(R.id.notification_body)
-    protected TextView mNotificationBody;
+    TextView mNotificationBody;
 
     @Bind(R.id.notification_time)
-    protected TextView mNotificationTime;
+    TextView mNotificationTime;
 
     private boolean mIsRead = false;
 
