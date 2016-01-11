@@ -13,6 +13,7 @@ import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.util.DateTimeUtils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -21,6 +22,8 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     private boolean mShouldRequestMoreNotifications = true;
     // Key value store of id to position in ListView
     private HashMap<Integer, Integer> mUnreadNotifications = new HashMap<>();
+    // Unique store of the notification ids to avoid duplicates
+    private HashSet<Integer> mNotificationIds = new HashSet<>();
 
     public NotificationsListAdapter(Context context)
     {
@@ -87,11 +90,16 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     {
         for (NotificationMessage notificationMessage : notificationMessages)
         {
-            if (!notificationMessage.isRead())
+            // Ensure uniqueness of notification feed messages
+            if (!mNotificationIds.contains(notificationMessage.getId()))
             {
-                mUnreadNotifications.put(notificationMessage.getId(), getCount());
+                if (!notificationMessage.isRead())
+                {
+                    mUnreadNotifications.put(notificationMessage.getId(), getCount());
+                }
+                mNotificationIds.add(notificationMessage.getId());
+                add(notificationMessage);
             }
-            add(notificationMessage);
         }
     }
 

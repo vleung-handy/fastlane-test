@@ -42,13 +42,6 @@ public class NotificationsListEntryView extends FrameLayout
     }
 
     @Override
-    protected void onFinishInflate()
-    {
-        super.onFinishInflate();
-        ButterKnife.bind(this);
-    }
-
-    @Override
     public int[] onCreateDrawableState(int extraSpace)
     {
         final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
