@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.model.notifications.NotificationMessage;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
-import com.handy.portal.ui.view.NotificationIconImageView;
 import com.handy.portal.util.DateTimeUtils;
 
 import java.util.HashMap;
@@ -33,18 +32,16 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     {
         View v = convertView;
         NotificationMessage notificationMessage = getItem(position);
-        LayoutInflater inflater = LayoutInflater.from(getContext());
 
         if (v == null)
         {
-            v = inflater.inflate(R.layout.element_notification_list_entry, null);
+            v = new NotificationsListEntryView(getContext());
         }
 
         ((NotificationsListEntryView) v).updateDisplay(notificationMessage);
 
-        NotificationIconImageView icon = (NotificationIconImageView) v.findViewById(R.id.notification_icon);
-        icon.setRead(notificationMessage.isRead());
-        icon.refreshDrawableState();
+        ((NotificationsListEntryView) v).setRead(notificationMessage.isRead());
+        v.refreshDrawableState();
 
         return v;
     }

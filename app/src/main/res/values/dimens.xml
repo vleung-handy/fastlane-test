@@ -57,4 +57,10 @@
     <dimen name="x_icon_size">60dp</dimen>
     <dimen name="default_elevation">2dp</dimen>
 
+    <!--notifications-->
+    <dimen name="notification_list_entry_icon_margin_top">2dp</dimen>
+    <dimen name="notification_list_entry_icon_margin_right">10dp</dimen>
+    <dimen name="notification_list_entry_icon_size">18dp</dimen>
+    <dimen name="notification_list_entry_time_margin_left">8dp</dimen>
+    <dimen name="notification_list_entry_time_margin_top">3dp</dimen>
 </resources>
