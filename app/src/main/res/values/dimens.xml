@@ -58,6 +58,8 @@
     <dimen name="default_elevation">2dp</dimen>
 
     <!--notifications-->
+    <dimen name="notification_list_entry_vertical_padding">14dp</dimen>
+    <dimen name="notification_list_entry_horizontal_padding">16dp</dimen>
     <dimen name="notification_list_entry_icon_margin_top">2dp</dimen>
     <dimen name="notification_list_entry_icon_margin_right">10dp</dimen>
     <dimen name="notification_list_entry_icon_size">18dp</dimen>

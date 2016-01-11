@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_list_entry"
     android:orientation="horizontal"
-    android:paddingBottom="14dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="14dp"
+    android:paddingBottom="@dimen/notification_list_entry_vertical_padding"
+    android:paddingLeft="@dimen/notification_list_entry_horizontal_padding"
+    android:paddingRight="@dimen/notification_list_entry_horizontal_padding"
+    android:paddingTop="@dimen/notification_list_entry_vertical_padding"
     android:duplicateParentState="true"
     >
 
