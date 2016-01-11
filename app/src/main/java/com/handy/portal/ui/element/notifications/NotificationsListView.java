@@ -2,7 +2,6 @@ package com.handy.portal.ui.element.notifications;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.InsetDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
@@ -53,11 +52,11 @@ public final class NotificationsListView extends InfiniteScrollListView
     {
         NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(getContext());
 
-        mFooterView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_footer, null);
+        mFooterView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_infinite_scrolling_list_footer, null);
         addFooterView(mFooterView, null, false);
         setAdapter(notificationsListAdapter);
         // Override the StickyListHeaderView not setting these correctly
-        InsetDrawable divider = (InsetDrawable) this.getResources().getDrawable(R.drawable.left_inset_divider);
+        ColorDrawable divider = new ColorDrawable(this.getResources().getColor(R.color.list_divider));
         getWrappedList().setDivider(divider);
         getWrappedList().setDividerHeight(1);
     }

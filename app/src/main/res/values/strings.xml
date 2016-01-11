@@ -506,6 +506,6 @@
     <string name="handy_account_no_longer_active">Your Handy account is no longer active.</string>
 
     <!--Notifications List-->
-    <string name="load_notifications">Loading more payments…</string>
+    <string name="load_notifications">Loading more notifications…</string>
     <string name="no_more_notifications">You have no more notifications to load.</string>
 </resources>

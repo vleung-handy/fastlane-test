@@ -21,6 +21,8 @@ import butterknife.ButterKnife;
 
 public final class NotificationsFragment extends ActionBarFragment
 {
+    private static final int NUMBER_OF_NOTIFICATIONS_PER_REQUEST = 20;
+
     @Bind(R.id.notifications_list_view)
     NotificationsListView mNotificationsListView;
 
@@ -146,7 +148,7 @@ public final class NotificationsFragment extends ActionBarFragment
         {
             isRequestingNotifications = true;
             Integer lastNotificationId = mNotificationsListView.getLastNotificationId();
-            bus.post(new NotificationEvent.RequestNotificationMessages(null, lastNotificationId, 20));
+            bus.post(new NotificationEvent.RequestNotificationMessages(null, lastNotificationId, NUMBER_OF_NOTIFICATIONS_PER_REQUEST));
             mNotificationsListView.showFooter(R.string.load_notifications);
         }
     }
