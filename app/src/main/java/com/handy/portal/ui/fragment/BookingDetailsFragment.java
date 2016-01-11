@@ -54,11 +54,11 @@ import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
-import com.handy.portal.ui.constructor.SupportActionContainerViewConstructor;
+import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
-import com.handy.portal.ui.layout.SlideUpPanelContainer;
+import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.SupportActionUtils;
@@ -117,7 +117,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     TextView errorText;
 
     @Bind(R.id.slide_up_panel_container)
-    SlideUpPanelContainer slideUpPanelContainer;
+    SlideUpPanelLayout mSlideUpPanelLayout;
 
     @Bind(R.id.booking_details_scroll_view)
     ScrollView mScrollView;
@@ -628,19 +628,14 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void showHelpOptions()
     {
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if (slideUpPanelContainer != null)
+        if (mSlideUpPanelLayout != null)
         {
-            slideUpPanelContainer.showPanel(R.string.on_the_job_support, new SlideUpPanelContainer.ContentInitializer()
-            {
-                @Override
-                public void initialize(ViewGroup panel)
-                {
-                    new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ETA_ACTION_NAMES)
-                            .create(panel, associatedBooking);
-                    new SupportActionContainerViewConstructor(getActivity(), SupportActionUtils.ISSUE_ACTION_NAMES)
-                            .create(panel, associatedBooking);
-                }
-            });
+            LinearLayout layout = UIUtils.createLinearLayout(getContext(), LinearLayout.VERTICAL);
+            layout.addView(new SupportActionContainerView(
+                    getContext(), SupportActionUtils.ETA_ACTION_NAMES, associatedBooking));
+            layout.addView(new SupportActionContainerView(
+                    getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, associatedBooking));
+            mSlideUpPanelLayout.showPanel(R.string.on_the_job_support, layout);
         }
     }
 
@@ -752,9 +747,9 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
     {
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if (slideUpPanelContainer != null)
+        if (mSlideUpPanelLayout != null)
         {
-            slideUpPanelContainer.hidePanel();
+            mSlideUpPanelLayout.hidePanel();
         }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
@@ -764,9 +759,9 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         //TODO: Crash #608, this is null sometimes and crashing, butterknife timing?
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
-        if (slideUpPanelContainer != null)
+        if (mSlideUpPanelLayout != null)
         {
-            slideUpPanelContainer.hidePanel();
+            mSlideUpPanelLayout.hidePanel();
         }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestReportNoShow(associatedBooking.getId(), getLocationData()));

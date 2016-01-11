@@ -42,6 +42,9 @@ import java.util.regex.Pattern;
 
 public final class UIUtils
 {
+    public static final ViewGroup.LayoutParams MATCH_PARENT_PARAMS = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
     public static boolean validateField(FormFieldTableRow field, FieldDefinition fieldDefinition)
     {
         CharSequence value = field.getValue().getText();
@@ -380,5 +383,11 @@ public final class UIUtils
         return overlapPercent;
     }
 
-
+    public static LinearLayout createLinearLayout(Context context, int orientation)
+    {
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(orientation);
+        linearLayout.setLayoutParams(MATCH_PARENT_PARAMS);
+        return linearLayout;
+    }
 }
