@@ -144,7 +144,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
 
-    private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f;
+    private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
 
 
     @Override
@@ -189,16 +189,13 @@ public class BookingDetailsFragment extends ActionBarFragment
             returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB);
         }
 
+        //tracking for when user scrolls to various sections
         initScrollViewListener();
-
-
-
-
-
 
         return view;
     }
 
+    //tracking for when user scrolls to various sections
     private void initScrollViewListener()
     {
         mOnScrollChangedListener = (new ViewTreeObserver.OnScrollChangedListener()
@@ -212,27 +209,23 @@ public class BookingDetailsFragment extends ActionBarFragment
                     float percentVis = UIUtils.getPercentViewVisibleInScrollView(jobInstructionsLayout, mScrollView);
                     if(percentVis >= TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD)
                     {
-                        System.out.println("Huzzah it works!");
+                        //flip flag so we don't spam this event
+                        mHaveTrackedSeenBookingInstructions = true; //not guaranteed to stay flipped throughout session just on screen
                         //track event
-                        //flip flag
+                        bus.post(new LogEvent.AddLogEvent(
+                                mEventLogFactory.createBookingInstructionsSeenLog(associatedBooking)));
                     }
                 }
-
-
             }
         });
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(mOnScrollChangedListener);
     }
 
-
     @Override
     public void onDestroyView()
     {
         mScrollView.getViewTreeObserver().removeOnScrollChangedListener(mOnScrollChangedListener);
-
         super.onDestroyView();
-
-
     }
 
     @Override
