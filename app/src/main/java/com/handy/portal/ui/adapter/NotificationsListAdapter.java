@@ -33,7 +33,7 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     {
         View v = convertView;
         NotificationMessage notificationMessage = getItem(position);
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
 
         if (v == null)
         {
@@ -54,7 +54,7 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     {
         View v = convertView;
         NotificationMessage notificationMessage = getItem(position);
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         if (v == null)
         {
             v = inflater.inflate(R.layout.element_notification_list_section_header, null);

@@ -5,7 +5,7 @@ import com.handy.portal.model.notifications.NotificationMessage;
 
 import java.util.ArrayList;
 
-public class NotificationEvent extends HandyEvent
+public abstract class NotificationEvent extends HandyEvent
 {
     public static class RequestNotificationMessages extends RequestEvent
     {

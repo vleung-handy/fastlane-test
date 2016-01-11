@@ -26,7 +26,6 @@ public final class NotificationsListView extends InfiniteScrollListView
     {
         super(context);
         Utils.inject(context, this);
-
     }
 
     public NotificationsListView(final Context context, final AttributeSet attrs)
@@ -56,7 +55,7 @@ public final class NotificationsListView extends InfiniteScrollListView
         addFooterView(mFooterView, null, false);
         setAdapter(notificationsListAdapter);
         // Override the StickyListHeaderView not setting these correctly
-        ColorDrawable divider = new ColorDrawable(this.getResources().getColor(R.color.list_divider));
+        ColorDrawable divider = new ColorDrawable(getResources().getColor(R.color.list_divider));
         getWrappedList().setDivider(divider);
         getWrappedList().setDividerHeight(1);
     }

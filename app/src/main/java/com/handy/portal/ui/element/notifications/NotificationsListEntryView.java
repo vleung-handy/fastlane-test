@@ -20,23 +20,24 @@ import butterknife.ButterKnife;
 public class NotificationsListEntryView extends LinearLayout
 {
     @Bind(R.id.notification_icon)
-    protected NotificationIconImageView mNotificationIcon;
+    private NotificationIconImageView mNotificationIcon;
 
     @Bind(R.id.notification_title)
-    protected TextView mNotificationTitle;
+    private TextView mNotificationTitle;
 
     @Bind(R.id.notification_body)
-    protected TextView mNotificationBody;
+    private TextView mNotificationBody;
 
     @Bind(R.id.notification_time)
-    protected TextView mNotificationTime;
+    private TextView mNotificationTime;
 
-    public NotificationsListEntryView(Context context) {
+    public NotificationsListEntryView(Context context)
+    {
         super(context);
-
     }
 
-    public NotificationsListEntryView(Context context, AttributeSet attrs) {
+    public NotificationsListEntryView(Context context, AttributeSet attrs)
+    {
         super(context, attrs);
     }
 

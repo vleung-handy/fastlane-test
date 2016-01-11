@@ -11,6 +11,4 @@
     android:orientation="vertical"
     android:transcriptMode="disabled"
     android:background="@color/white"
-    >
-
-</com.handy.portal.ui.element.notifications.NotificationsListView>
+    />
