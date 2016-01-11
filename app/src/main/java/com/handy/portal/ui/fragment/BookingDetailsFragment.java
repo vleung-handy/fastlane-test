@@ -1097,6 +1097,9 @@ public class BookingDetailsFragment extends ActionBarFragment
             case ISSUE_OTHER:
                 goToHelpCenter(event.action.getDeepLinkData());
                 break;
+            case REMOVE:
+                takeAction(BookingActionButtonType.REMOVE, false);
+                break;
         }
     }
 

@@ -19,6 +19,7 @@ public class SupportActionUtils
             Action.ACTION_REPORT_NO_SHOW,
             Action.ACTION_ISSUE_HOURS,
             Action.ACTION_ISSUE_UNSAFE,
+            Action.ACTION_REMOVE,
             Action.ACTION_ISSUE_OTHER
     );
 
@@ -36,6 +37,7 @@ public class SupportActionUtils
         supportActionTypeMap.put(Action.ACTION_REPORT_NO_SHOW, SupportActionType.REPORT_NO_SHOW);
         supportActionTypeMap.put(Action.ACTION_ISSUE_HOURS, SupportActionType.ISSUE_HOURS);
         supportActionTypeMap.put(Action.ACTION_ISSUE_UNSAFE, SupportActionType.ISSUE_UNSAFE);
+        supportActionTypeMap.put(Action.ACTION_REMOVE, SupportActionType.REMOVE);
         supportActionTypeMap.put(Action.ACTION_ISSUE_OTHER, SupportActionType.ISSUE_OTHER);
     }
 }
