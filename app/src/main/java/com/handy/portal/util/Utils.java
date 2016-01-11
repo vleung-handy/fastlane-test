@@ -20,11 +20,11 @@ import com.handy.portal.ui.activity.BaseActivity;
 
 public final class Utils //TODO: we should reorganize these methods into more specific util classes
 {
-    public final static float LDPI = (float) 0.75;
-    public final static float MDPI = (float) 1.0;
-    public final static float HDPI = (float) 1.5;
-    public final static float XHDPI = (float) 2.0;
-    public final static float XXHDPI = (float) 3.0;
+    public final static float LDPI = 0.75f;
+    public final static float MDPI = 1.0f;
+    public final static float HDPI = 1.5f;
+    public final static float XHDPI = 2.0f;
+    public final static float XXHDPI = 3.0f;
 
     public static int getObjectIdentifier(Object object)
     {
