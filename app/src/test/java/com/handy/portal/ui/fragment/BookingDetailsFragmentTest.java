@@ -8,9 +8,12 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.MainActivity;
 
@@ -22,10 +25,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
+import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
 
 import java.util.Date;
+
+import javax.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -50,12 +56,21 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     private PaymentInfo claimTargetPaymentInfo;
     @Captor
     private ArgumentCaptor<Object> captor;
+    @Mock
+    private ConfigurationResponse mConfigurationResponse;
+    @Inject
+    ConfigManager mConfigManager;
 
     private BookingDetailsFragment fragment;
 
     @Before
     public void setUp() throws Exception
     {
+        initMocks(this);
+        ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
+        when(mConfigManager.getConfigurationResponse()).thenReturn(mConfigurationResponse);
+        when(mConfigurationResponse.shouldShowNotificationMenuButton()).thenReturn(false);
+
         ActivityController<MainActivity> activityController = Robolectric.buildActivity(MainActivity.class).create();
         activityController.start().resume().visible();
 
@@ -71,8 +86,6 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
                 .add(fragment, null)
                 .commit();
         fragmentManager.executePendingTransactions();
-
-        initMocks(this);
 
         fragment.prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, "444");
         when(booking.getProviderId()).thenReturn("444");
