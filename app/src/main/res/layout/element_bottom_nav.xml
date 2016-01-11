@@ -36,6 +36,7 @@
         android:checked="false"
         android:drawableTop="@drawable/tab_button_notifications"
         android:text="@string/tab_notifications"
+        android:visibility="invisible"
         />
 
     <LinearLayout
