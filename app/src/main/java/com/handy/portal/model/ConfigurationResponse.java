@@ -22,6 +22,9 @@ public class ConfigurationResponse
     @SerializedName("block_payment_info")
     private boolean mBlockClaimsIfMissingAccountInformation;
 
+    @SerializedName("show_notification_menu_button")
+    private boolean mShowNotificationMenuButton;
+
 
     public boolean isComplementaryJobsEnabled()
     {
@@ -51,5 +54,10 @@ public class ConfigurationResponse
     public boolean shouldBlockClaimsIfMissingAccountInformation()
     {
         return mBlockClaimsIfMissingAccountInformation;
+    }
+
+    public boolean shouldShowNotificationMenuButton()
+    {
+        return mShowNotificationMenuButton;
     }
 }
