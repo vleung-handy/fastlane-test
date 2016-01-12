@@ -100,10 +100,7 @@ public final class NotificationsFragment extends ActionBarFragment
             mNotificationsListView.reset();
         }
         mNotificationsListView.appendData(notificationMessages);
-        mFetchErrorView.setVisibility(View.GONE);
-        setLoadingOverlayVisible(false);
-        mRefreshLayout.setRefreshing(false);
-        isRequestingNotifications = false;
+        cleanUpView();
         markUnreadNotificationsAsRead(notificationMessages);
 
         if (mNotificationsListView.shouldRequestMoreNotifications())
@@ -172,5 +169,13 @@ public final class NotificationsFragment extends ActionBarFragment
             bus.post(new NotificationEvent.RequestNotificationMessages(null, untilId, NUMBER_OF_NOTIFICATIONS_PER_REQUEST));
             mNotificationsListView.showFooter(R.string.load_notifications);
         }
+    }
+
+    private void cleanUpView()
+    {
+        mFetchErrorView.setVisibility(View.GONE);
+        setLoadingOverlayVisible(false);
+        mRefreshLayout.setRefreshing(false);
+        isRequestingNotifications = false;
     }
 }
