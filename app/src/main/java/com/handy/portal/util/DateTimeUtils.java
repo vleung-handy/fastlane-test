@@ -161,6 +161,17 @@ public final class DateTimeUtils
                 && c.get(Calendar.DAY_OF_YEAR) == 1;
     }
 
+    public static boolean isToday(Date date)
+    {
+        Calendar today = Calendar.getInstance();
+        today.setTime(getBeginningOfDay(new Date()));
+
+        Calendar dayToCompare = Calendar.getInstance();
+        dayToCompare.setTime(getBeginningOfDay(date));
+
+        return daysBetween(today.getTime(), dayToCompare.getTime()) == 0;
+    }
+
     // return a string in hh:mm:ss format
     public static String millisecondsToFormattedString(long millis)
     {

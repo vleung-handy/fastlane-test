@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.util.DateTimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,22 +20,25 @@ import butterknife.ButterKnife;
 public class DateButtonView extends RelativeLayout implements Checkable
 {
     @Bind(R.id.date_month_text)
-    protected TextView monthText;
+    protected TextView mMonthText;
 
     @Bind(R.id.date_day_of_week_text)
-    protected TextView dayOfWeekText;
+    protected TextView mDayOfWeekText;
 
     @Bind(R.id.date_day_of_month_text)
-    protected TextView dayOfMonthText;
+    protected TextView mDayOfMonthText;
 
     @Bind(R.id.provider_requested_indicator_image)
-    protected ImageView requestedIndicator;
+    protected ImageView mRequestedIndicator;
 
     @Bind(R.id.claimed_job_exists_indicator_image)
-    protected ImageView claimedJobExistsIndicator;
+    protected ImageView mClaimedJobExistsIndicator;
 
     @Bind(R.id.selected_day_indicator_image)
-    protected ImageView selectedDayIndicator;
+    protected ImageView mSelectedDayIndicator;
+
+    @Bind(R.id.today_text)
+    protected TextView mTodayText;
 
     private static final String DATE_FORMAT = "MMM E d";
 
@@ -59,7 +63,7 @@ public class DateButtonView extends RelativeLayout implements Checkable
     {
         ButterKnife.bind(this);
 
-        selectedDayIndicator.setVisibility(View.INVISIBLE);
+        mSelectedDayIndicator.setVisibility(View.INVISIBLE);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         String[] formattedDate = dateFormat.format(date.getTime()).split(" ");
@@ -67,25 +71,34 @@ public class DateButtonView extends RelativeLayout implements Checkable
         //only display month for first day in a month
         if (Integer.parseInt(formattedDate[2]) == 1)
         {
-            monthText.setText(formattedDate[0]);
+            mMonthText.setText(formattedDate[0]);
         }
         else
         {
-            monthText.setVisibility(View.INVISIBLE);
+            mMonthText.setVisibility(View.INVISIBLE);
         }
 
-        dayOfWeekText.setText(formattedDate[1]);
-        dayOfMonthText.setText(formattedDate[2]);
+        if (DateTimeUtils.isToday(date))
+        {
+            mTodayText.setVisibility(View.VISIBLE);
+            mDayOfMonthText.setVisibility(View.INVISIBLE);
+            mDayOfWeekText.setText(formattedDate[1] + " " + formattedDate[2]);
+        }
+        else
+        {
+            mDayOfWeekText.setText(formattedDate[1]);
+            mDayOfMonthText.setText(formattedDate[2]);
+        }
     }
 
     public void showRequestedIndicator(boolean show)
     {
-        requestedIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        mRequestedIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     public void showClaimedIndicator(boolean show)
     {
-        claimedJobExistsIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        mClaimedJobExistsIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private static int[] DRAWABLE_STATE_CHECKED = {android.R.attr.state_checked};
@@ -106,7 +119,7 @@ public class DateButtonView extends RelativeLayout implements Checkable
     {
         isChecked = checked;
         refreshDrawableState();
-        selectedDayIndicator.setVisibility(checked ? View.VISIBLE : View.INVISIBLE);
+        mSelectedDayIndicator.setVisibility(checked ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
