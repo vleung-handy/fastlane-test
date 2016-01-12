@@ -26,6 +26,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -211,7 +212,7 @@ public class MainActivityFragment extends InjectedFragment
         tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
 
 
-        if (mConfigManager.getConfigurationResponse().shouldShowNotificationMenuButton())
+        if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
         {
             mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
             mNotificationsButton.setVisibility(View.VISIBLE);
@@ -465,6 +466,11 @@ public class MainActivityFragment extends InjectedFragment
 
         // Commit the transaction
         transaction.commit();
+    }
+
+    private ConfigurationResponse getConfigurationResponse()
+    {
+        return mConfigManager.getConfigurationResponse();
     }
 
     private void logOutProvider()
