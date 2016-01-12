@@ -187,6 +187,7 @@ public class MainActivityFragment extends InjectedFragment
     public void onLogOutProvider(HandyEvent.LogOutProvider event)
     {
         logOutProvider();
+        showToast(R.string.handy_account_no_longer_active);
     }
 
 //Click Listeners
