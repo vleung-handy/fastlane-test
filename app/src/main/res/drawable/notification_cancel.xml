@@ -5,10 +5,10 @@
     <item app:state_read="false">
         <shape android:shape="rectangle">
             <corners
-                android:bottomLeftRadius="12dp"
-                android:bottomRightRadius="12dp"
-                android:topLeftRadius="12dp"
-                android:topRightRadius="12dp"
+                android:bottomLeftRadius="@dimen/notification_icon_radius"
+                android:bottomRightRadius="@dimen/notification_icon_radius"
+                android:topLeftRadius="@dimen/notification_icon_radius"
+                android:topRightRadius="@dimen/notification_icon_radius"
                 />
 
             <solid android:color="@color/handy_salmon"/>
@@ -18,10 +18,10 @@
     <item app:state_read="true">
         <shape android:shape="rectangle">
             <corners
-                android:bottomLeftRadius="12dp"
-                android:bottomRightRadius="12dp"
-                android:topLeftRadius="12dp"
-                android:topRightRadius="12dp"
+                android:bottomLeftRadius="@dimen/notification_icon_radius"
+                android:bottomRightRadius="@dimen/notification_icon_radius"
+                android:topLeftRadius="@dimen/notification_icon_radius"
+                android:topRightRadius="@dimen/notification_icon_radius"
                 />
 
             <solid android:color="@color/inactive_notification_icon_color"/>

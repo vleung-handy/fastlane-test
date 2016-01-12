@@ -99,12 +99,6 @@ public final class NotificationsFragment extends ActionBarFragment
         }
     }
 
-    @Subscribe
-    public void onReceiveNotificationMessagesSuccess(NotificationEvent.ReceiveMarkNotificationsAsReadSuccess event)
-    {
-        mNotificationsListView.markNotificationsAsRead(event.getNotificationMessages());
-    }
-
     public void setLoadingOverlayVisible(boolean visible)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));

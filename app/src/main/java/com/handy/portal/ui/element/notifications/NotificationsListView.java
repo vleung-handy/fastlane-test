@@ -91,14 +91,6 @@ public final class NotificationsListView extends InfiniteScrollListView
         getWrappedAdapter().appendData(notificationMessages);
     }
 
-    public void markNotificationsAsRead(final NotificationMessage[] notificationMessages)
-    {
-        for (NotificationMessage notificationMessage : notificationMessages)
-        {
-            getWrappedAdapter().markNotificationAsRead(notificationMessage);
-        }
-    }
-
     public boolean isEmpty()
     {
         return getWrappedAdapter().isEmpty();

@@ -20,8 +20,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> implements StickyListHeadersAdapter
 {
     private boolean mShouldRequestMoreNotifications = true;
-    // Key value store of id to position in ListView
-    private HashMap<Integer, Integer> mUnreadNotifications = new HashMap<>();
     // Unique store of the notification ids to avoid duplicates
     private HashSet<Integer> mNotificationIds = new HashSet<>();
 
@@ -93,10 +91,6 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
             // Ensure uniqueness of notification feed messages
             if (!mNotificationIds.contains(notificationMessage.getId()))
             {
-                if (!notificationMessage.isRead())
-                {
-                    mUnreadNotifications.put(notificationMessage.getId(), getCount());
-                }
                 mNotificationIds.add(notificationMessage.getId());
                 add(notificationMessage);
             }
@@ -106,18 +100,6 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     public boolean shouldRequestMoreNotifications()
     {
         return mShouldRequestMoreNotifications;
-    }
-
-    public void markNotificationAsRead(NotificationMessage notificationMessage)
-    {
-        try
-        {
-            Integer notificationId = notificationMessage.getId();
-            notificationMessage = getItem(mUnreadNotifications.get(notificationId));
-            notificationMessage.markAsRead();
-            mUnreadNotifications.remove(notificationId);
-        }
-        catch (IndexOutOfBoundsException e) {}
     }
 
     public Integer getLastNotificationId()

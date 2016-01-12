@@ -28,7 +28,7 @@ public class NotificationMessageManager
     public void onRequestNotificationMessages(final NotificationEvent.RequestNotificationMessages event)
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.getNotifications(providerId, event.sinceId, event.untilId, event.count, new DataManager.Callback<NotificationMessages>()
+        mDataManager.getNotifications(providerId, event.getSinceId(), event.getUntilId(), event.getCount(), new DataManager.Callback<NotificationMessages>()
         {
             @Override
             public void onSuccess(final NotificationMessages notificationMessages)
@@ -48,12 +48,12 @@ public class NotificationMessageManager
     public void onRequestMarkNotificationsAsRead(final NotificationEvent.RequestMarkNotificationsAsRead event)
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.postMarkNotificationsAsRead(providerId, event.notificationIds, new DataManager.Callback<NotificationMessages>()
+        mDataManager.postMarkNotificationsAsRead(providerId, event.getNotificationIds(), new DataManager.Callback<NotificationMessages>()
         {
             @Override
             public void onSuccess(final NotificationMessages notificationMessages)
             {
-                mBus.post(new NotificationEvent.ReceiveNotificationMessagesSuccess(notificationMessages.getList()));
+                mBus.post(new NotificationEvent.ReceiveMarkNotificationsAsReadSuccess(notificationMessages.getList()));
             }
 
             @Override

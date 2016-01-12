@@ -9,31 +9,46 @@ public abstract class NotificationEvent extends HandyEvent
 {
     public static class RequestNotificationMessages extends RequestEvent
     {
-        public final Integer sinceId;
-        public final Integer untilId;
-        public final Integer count;
+        private final Integer mSinceId;
+        private final Integer mUntilId;
+        private final Integer mCount;
 
         public RequestNotificationMessages(Integer sinceId, Integer untilId, Integer count)
         {
-            this.sinceId = sinceId;
-            this.untilId = untilId;
-            this.count = count;
+            mSinceId = sinceId;
+            mUntilId = untilId;
+            mCount = count;
+        }
+
+        public Integer getSinceId()
+        {
+            return mSinceId;
+        }
+
+        public Integer getUntilId()
+        {
+            return mUntilId;
+        }
+
+        public Integer getCount()
+        {
+            return mCount;
         }
     }
 
     public static class ReceiveNotificationMessagesSuccess extends ReceiveSuccessEvent
     {
-        private final NotificationMessage[] notificationMessages;
+        private final NotificationMessage[] mNotificationMessages;
 
         public NotificationMessage[] getNotificationMessages()
         {
-            return notificationMessages;
+            return mNotificationMessages;
         }
 
 
         public ReceiveNotificationMessagesSuccess(NotificationMessage[] notificationMessages)
         {
-            this.notificationMessages = notificationMessages;
+            mNotificationMessages = notificationMessages;
         }
     }
 
@@ -47,27 +62,31 @@ public abstract class NotificationEvent extends HandyEvent
 
     public static class RequestMarkNotificationsAsRead extends RequestEvent
     {
-        public final ArrayList<Integer> notificationIds;
+        private final ArrayList<Integer> mNotificationIds;
 
         public RequestMarkNotificationsAsRead(ArrayList<Integer> notificationIds)
         {
-            this.notificationIds = notificationIds;
+            mNotificationIds = notificationIds;
+        }
+
+        public ArrayList<Integer> getNotificationIds()
+        {
+            return mNotificationIds;
         }
     }
 
     public static class ReceiveMarkNotificationsAsReadSuccess extends ReceiveSuccessEvent
     {
-        private final NotificationMessage[] notificationMessages;
-
-        public NotificationMessage[] getNotificationMessages()
-        {
-            return notificationMessages;
-        }
-
+        private final NotificationMessage[] mNotificationMessages;
 
         public ReceiveMarkNotificationsAsReadSuccess(NotificationMessage[] notificationMessages)
         {
-            this.notificationMessages = notificationMessages;
+            mNotificationMessages = notificationMessages;
+        }
+
+        public NotificationMessage[] getNotificationMessages()
+        {
+            return mNotificationMessages;
         }
     }
 
