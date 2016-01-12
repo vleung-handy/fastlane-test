@@ -96,8 +96,18 @@ public final class NotificationsListView extends InfiniteScrollListView
         return getWrappedAdapter().isEmpty();
     }
 
+    public Integer getFirstNotificationId()
+    {
+        return getWrappedAdapter().getFirstNotificationId();
+    }
+
     public Integer getLastNotificationId()
     {
         return getWrappedAdapter().getLastNotificationId();
+    }
+
+    public void reset()
+    {
+        getWrappedAdapter().reset();
     }
 }

@@ -106,4 +106,16 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
     {
         return isEmpty() ? null : getItem(getCount() - 1).getId();
     }
+
+    public Integer getFirstNotificationId()
+    {
+        return isEmpty() ? null : getItem(0).getId();
+    }
+
+    public void reset()
+    {
+        clear();
+        mNotificationIds.clear();
+        mShouldRequestMoreNotifications = true;
+    }
 }

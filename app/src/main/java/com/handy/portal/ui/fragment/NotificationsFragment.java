@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,9 @@ public final class NotificationsFragment extends ActionBarFragment
     @Bind(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
 
+    @Bind(R.id.refresh_layout)
+    SwipeRefreshLayout mRefreshLayout;
+
     private View mFragmentView;
     private boolean isRequestingNotifications = false;
 
@@ -40,7 +44,19 @@ public final class NotificationsFragment extends ActionBarFragment
         {
             mFragmentView = inflater.inflate(R.layout.fragment_notifications, container, false);
         }
+
         ButterKnife.bind(this, mFragmentView);
+
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                requestNotifications(true);
+            }
+        });
+        mRefreshLayout.setColorSchemeResources(R.color.handy_blue);
+
         return mFragmentView;
     }
 
@@ -59,7 +75,7 @@ public final class NotificationsFragment extends ActionBarFragment
         if (mNotificationsListView.shouldRequestMoreNotifications())
         {
             setLoadingOverlayVisible(true);
-            requestNotifications();
+            requestNotifications(false);
         }
         else
         {
@@ -77,12 +93,17 @@ public final class NotificationsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveNotificationMessagesSuccess(NotificationEvent.ReceiveNotificationMessagesSuccess event)
     {
-        isRequestingNotifications = false;
-        boolean isFirstRequest = mNotificationsListView.isEmpty();
         NotificationMessage[] notificationMessages = event.getNotificationMessages();
+        boolean isFirstRequest = mNotificationsListView.isEmpty();
+        if (isLoadingInitialNotifications(notificationMessages))
+        {
+            mNotificationsListView.reset();
+        }
         mNotificationsListView.appendData(notificationMessages);
         mFetchErrorView.setVisibility(View.GONE);
         setLoadingOverlayVisible(false);
+        mRefreshLayout.setRefreshing(false);
+        isRequestingNotifications = false;
         markUnreadNotificationsAsRead(notificationMessages);
 
         if (mNotificationsListView.shouldRequestMoreNotifications())
@@ -130,19 +151,25 @@ public final class NotificationsFragment extends ActionBarFragment
             {
                 if (mNotificationsListView != null)
                 {
-                    requestNotifications();
+                    requestNotifications(false);
                 }
             }
         });
     }
 
-    private void requestNotifications()
+    private boolean isLoadingInitialNotifications(final NotificationMessage[] notificationMessages)
     {
-        if (mNotificationsListView.shouldRequestMoreNotifications() && !isRequestingNotifications)
+        Integer firstNotificationId = mNotificationsListView.getFirstNotificationId();
+        return (firstNotificationId == null || notificationMessages[0].getId() >= firstNotificationId);
+    }
+
+    private void requestNotifications(boolean refresh)
+    {
+        if ((mNotificationsListView.shouldRequestMoreNotifications() || refresh) && !isRequestingNotifications)
         {
             isRequestingNotifications = true;
-            Integer lastNotificationId = mNotificationsListView.getLastNotificationId();
-            bus.post(new NotificationEvent.RequestNotificationMessages(null, lastNotificationId, NUMBER_OF_NOTIFICATIONS_PER_REQUEST));
+            Integer untilId = refresh ? null : mNotificationsListView.getLastNotificationId();
+            bus.post(new NotificationEvent.RequestNotificationMessages(null, untilId, NUMBER_OF_NOTIFICATIONS_PER_REQUEST));
             mNotificationsListView.showFooter(R.string.load_notifications);
         }
     }
