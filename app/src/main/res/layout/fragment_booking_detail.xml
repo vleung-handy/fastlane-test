@@ -97,6 +97,12 @@
                             android:orientation="horizontal"
                             />
 
+                        <FrameLayout
+                            android:id="@+id/booking_details_support_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
                     </LinearLayout>
 
                     <TextView

@@ -156,6 +156,10 @@
         <item name="android:textColor">@drawable/button_text_white</item>
     </style>
 
+    <style name="Button.Grey.Round">
+        <item name="android:background">@drawable/button_grey_round</item>
+    </style>
+
     <style name="Button.Transparent">
         <item name="android:background">@color/transparent</item>
         <item name="android:textColor">@color/subtitle_grey</item>
