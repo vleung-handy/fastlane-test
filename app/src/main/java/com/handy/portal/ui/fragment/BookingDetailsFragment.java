@@ -53,7 +53,6 @@ import com.handy.portal.ui.constructor.BookingDetailsActionRemovePanelViewConstr
 import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
@@ -67,9 +66,7 @@ import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -79,43 +76,30 @@ import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
-    //Layouts points for fragment, the various elements are childed to these
     @Bind(R.id.booking_details_layout)
     LinearLayout detailsParentLayout;
-
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout;
-
     @Bind(R.id.booking_details_date_layout)
     LinearLayout dateLayout;
-
     @Bind(R.id.booking_details_title_layout)
     RelativeLayout titleLayout;
-
     @Bind(R.id.booking_details_action_layout)
     RelativeLayout actionLayout;
-
     @Bind(R.id.booking_details_contact_layout)
     RelativeLayout contactLayout;
-
     @Bind(R.id.booking_details_job_instructions_layout)
     LinearLayout jobInstructionsLayout;
-
     @Bind(R.id.booking_details_location_layout)
     ViewGroup locationLayout;
-
     @Bind(R.id.booking_details_remove_job_layout)
     LinearLayout removeJobLayout;
-
     @Bind(R.id.booking_details_full_details_notice_text)
     TextView fullDetailsNoticeText;
-
     @Bind(R.id.fetch_error_view)
     View fetchErrorView;
-
     @Bind(R.id.fetch_error_text)
     TextView errorText;
-
     @Bind(R.id.slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelLayout;
 
@@ -124,10 +108,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     @Inject
     PrefsManager prefsManager;
-
     @Inject
     ZipClusterManager mZipClusterManager;
-
     @Inject
     ConfigManager mConfigManager;
 
@@ -135,7 +117,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private BookingType requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
-    private boolean isForPayments;
+    private boolean mIsForPayments;
     private MainViewTab currentTab;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
@@ -175,7 +157,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             this.requestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
             this.currentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
 
-            this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
+            this.mIsForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
 
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
@@ -243,7 +225,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             String bookingIdPrefix = associatedBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
             String jobLabel = getActivity().getString(R.string.job_num) + bookingIdPrefix + associatedBooking.getId();
 
-            if (this.isForPayments)
+            if (this.mIsForPayments)
             {
                 titleStringId = R.string.previous_job;
                 menu.findItem(R.id.action_job_label).setTitle(jobLabel);
@@ -325,6 +307,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         clearLayouts();
         constructBookingDisplayElements(booking);
         invalidateOptionsMenu();
+        //TODO: This is confusing. We should create the buttons in constructBookingDisplayElements()
         createAllowedActionButtons(booking);
 
         //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
@@ -348,33 +331,25 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void constructBookingDisplayElements(Booking booking)
     {
         //Construct the views for each layout
-        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts(booking);
-        for (Map.Entry<ViewGroup, BookingDetailsViewConstructor> viewConstructorEntry : viewConstructors.entrySet())
-        {
-            ViewGroup layout = viewConstructorEntry.getKey();
-            BookingDetailsViewConstructor constructor = viewConstructorEntry.getValue();
-            constructor.create(layout, booking);
-        }
+        setLayouts(booking);
 
         //Full Details Notice , technically we should move this to its own view panel
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
-        fullDetailsNoticeText.setVisibility(!booking.isProxy() && booking.getServiceInfo().isHomeCleaning() && bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
+        fullDetailsNoticeText.setVisibility(!booking.isProxy() && booking.getServiceInfo().isHomeCleaning()
+                && bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
-    //A listing of all the view constructors we use to populate the layouts
-    //We don't maintain references to these constructors / the view, we always create anew from a booking
-    private Map<ViewGroup, BookingDetailsViewConstructor> getViewConstructorsForLayouts(Booking booking)
+    private void setLayouts(Booking booking)
     {
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
-        arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, this.isForPayments);
+        arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, mIsForPayments);
 
-        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 
-        if (this.isForPayments)
+        if (mIsForPayments)
         {
             mapLayout.setVisibility(View.GONE);
         }
@@ -383,8 +358,9 @@ public class BookingDetailsFragment extends ActionBarFragment
             //show either the real map or a placeholder image depending on if we have google play services
             if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
             {
-                BookingMapFragment fragment = BookingMapFragment.newInstance(associatedBooking, bookingStatus, mZipClusterManager.getCachedPolygons(associatedBooking.getZipClusterId()));
-                transaction.replace(mapLayout.getId(), fragment);
+                BookingMapFragment fragment = BookingMapFragment.newInstance(associatedBooking,
+                        bookingStatus, mZipClusterManager.getCachedPolygons(associatedBooking.getZipClusterId()));
+                transaction.replace(mapLayout.getId(), fragment).commit();
             }
             else
             {
@@ -392,23 +368,20 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
         }
 
-        viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
-        viewConstructors.put(titleLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
+        new BookingDetailsDateViewConstructor(getActivity(), arguments).create(dateLayout, booking);
+        new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments).create(titleLayout, booking);
         if (booking.isProxy())
         {
             UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getZipCluster()));
         }
-        viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments));
+        new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments).create(jobInstructionsLayout, booking);
 
-        if (!this.isForPayments)
+        if (!this.mIsForPayments)
         {
-            viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor(getActivity(), arguments));
-            viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments));
-            viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments));
+            new BookingDetailsActionPanelViewConstructor(getActivity(), arguments).create(actionLayout, booking);
+            new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments).create(contactLayout, booking);
+            new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments).create(removeJobLayout, booking);
         }
-
-        transaction.commit();
-        return viewConstructors;
     }
 
     @OnClick(R.id.try_again_button)
