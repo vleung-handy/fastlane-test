@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -38,6 +39,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
@@ -49,7 +51,6 @@ import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsActionRemovePanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
@@ -94,6 +95,8 @@ public class BookingDetailsFragment extends ActionBarFragment
     ViewGroup locationLayout;
     @Bind(R.id.booking_details_remove_job_layout)
     LinearLayout removeJobLayout;
+    @Bind(R.id.booking_details_support_layout)
+    FrameLayout mSupportLayout;
     @Bind(R.id.booking_details_full_details_notice_text)
     TextView fullDetailsNoticeText;
     @Bind(R.id.fetch_error_view)
@@ -102,7 +105,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     TextView errorText;
     @Bind(R.id.slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelLayout;
-
     @Bind(R.id.booking_details_scroll_view)
     ScrollView mScrollView;
 
@@ -112,12 +114,14 @@ public class BookingDetailsFragment extends ActionBarFragment
     ZipClusterManager mZipClusterManager;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    ProviderManager mProviderManager;
 
     private String requestedBookingId;
     private BookingType requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
-    private boolean mIsForPayments;
+    private boolean mFromPaymentsTab;
     private MainViewTab currentTab;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
@@ -157,7 +161,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             this.requestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
             this.currentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
 
-            this.mIsForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
+            mFromPaymentsTab = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
 
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
@@ -225,7 +229,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             String bookingIdPrefix = associatedBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
             String jobLabel = getActivity().getString(R.string.job_num) + bookingIdPrefix + associatedBooking.getId();
 
-            if (this.mIsForPayments)
+            if (mFromPaymentsTab)
             {
                 titleStringId = R.string.previous_job;
                 menu.findItem(R.id.action_job_label).setTitle(jobLabel);
@@ -344,12 +348,12 @@ public class BookingDetailsFragment extends ActionBarFragment
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
-        arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, mIsForPayments);
+        arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, mFromPaymentsTab);
 
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 
-        if (mIsForPayments)
+        if (mFromPaymentsTab)
         {
             mapLayout.setVisibility(View.GONE);
         }
@@ -376,11 +380,16 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
         new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments).create(jobInstructionsLayout, booking);
 
-        if (!this.mIsForPayments)
+        if (!mFromPaymentsTab)
         {
             new BookingDetailsActionPanelViewConstructor(getActivity(), arguments).create(actionLayout, booking);
             new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments).create(contactLayout, booking);
-            new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments).create(removeJobLayout, booking);
+        }
+        if (booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
+        {
+            BookingActionButton bookingActionButton = new BookingActionButton(getContext());
+            bookingActionButton.init(booking, this, BookingActionButtonType.HELP);
+            mSupportLayout.addView(bookingActionButton);
         }
     }
 
@@ -441,6 +450,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
+
                 BookingActionButton bookingActionButton = (BookingActionButton)
                         ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(action).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
                 bookingActionButton.init(booking, this, action); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
@@ -457,26 +467,25 @@ public class BookingDetailsFragment extends ActionBarFragment
             case ON_MY_WAY:
             case CHECK_IN:
             case CHECK_OUT:
-            case HELP:
             {
                 return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
-
             case CONTACT_PHONE:
             {
                 return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout_slot_1);
             }
-
             case CONTACT_TEXT:
             {
                 return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout_slot_2);
             }
-
+            case HELP:
+            {
+                return mSupportLayout;
+            }
             case REMOVE:
             {
                 return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
-
             default:
             {
                 return null;
@@ -1068,6 +1077,8 @@ public class BookingDetailsFragment extends ActionBarFragment
             case ISSUE_UNSAFE:
             case ISSUE_HOURS:
             case ISSUE_OTHER:
+            case RESCHEDULE:
+            case CANCELLATION_POLICY:
                 goToHelpCenter(event.action.getDeepLinkData());
                 break;
             case REMOVE:

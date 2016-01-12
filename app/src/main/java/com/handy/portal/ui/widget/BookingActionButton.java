@@ -1,6 +1,7 @@
 package com.handy.portal.ui.widget;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -30,9 +31,8 @@ public class BookingActionButton extends Button
         super(context, attrs, defStyle);
     }
 
-    protected BookingDetailsFragment mAssociatedFragment;
-
-    public void init(Booking booking, BookingDetailsFragment fragment, Booking.Action data)
+    public void init(@NonNull final Booking booking, @NonNull final BookingDetailsFragment fragment,
+                     @NonNull final Booking.Action data)
     {
         final BookingActionButtonType bookingActionButtonType = UIUtils.getAssociatedActionType(data);
         if (bookingActionButtonType == null)
@@ -40,8 +40,13 @@ public class BookingActionButton extends Button
             Crashlytics.log("BookingActionButton : No associated action type for : " + data.getActionName());
             return;
         }
+        init(booking, fragment, bookingActionButtonType);
+        setEnabled(data.isEnabled());
+    }
 
-        mAssociatedFragment = fragment;
+    public void init(@NonNull final Booking booking, @NonNull final BookingDetailsFragment fragment,
+                     @NonNull final BookingActionButtonType bookingActionButtonType)
+    {
         setId(bookingActionButtonType.getId());
         setBackgroundResource(bookingActionButtonType.getBackgroundDrawableId());
         setTextAppearance(getContext(), bookingActionButtonType.getTextStyleId());
@@ -52,10 +57,10 @@ public class BookingActionButton extends Button
             @Override
             public void onClick(final View v)
             {
-                BookingActionButton.this.mAssociatedFragment.onActionButtonClick(bookingActionButtonType);
+                fragment.onActionButtonClick(bookingActionButtonType);
             }
         });
-        setEnabled(data.isEnabled());
+        setEnabled(true);
     }
 
 }

@@ -440,6 +440,22 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+    @Nullable
+    public Action getAction(String actionName)
+    {
+        if (mActionList == null) {return null;}
+
+        for (Action action : mActionList)
+        {
+            if (action.getActionName().equals(actionName))
+            {
+                return action;
+            }
+        }
+
+        return null;
+    }
+
     public static class Action implements Serializable
     {
         // KEEP IN SYNC WITH SERVER VALUES
@@ -457,6 +473,8 @@ public class Booking implements Comparable<Booking>, Serializable
         public static final String ACTION_NOTIFY_LATE = "notify_late";
         public static final String ACTION_ISSUE_UNSAFE = "unsafe_conditions";
         public static final String ACTION_ISSUE_HOURS = "change_hours";
+        public static final String ACTION_CUSTOMER_RESCHEDULE = "customer_reschedule";
+        public static final String ACTION_CANCELLATION_POLICY = "cancellation_policy";
         public static final String ACTION_REMOVE = "remove";
         public static final String ACTION_ISSUE_OTHER = "other_issue";
 
