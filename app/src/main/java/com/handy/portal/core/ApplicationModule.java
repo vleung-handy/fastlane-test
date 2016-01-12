@@ -13,6 +13,7 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
@@ -90,9 +91,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.OkClient;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
@@ -181,7 +185,8 @@ public final class ApplicationModule
     @Singleton
     final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
                                                    final HandyRetrofitEndpoint endpoint,
-                                                   final PrefsManager prefsManager)
+                                                   final PrefsManager prefsManager,
+                                                   final Bus bus)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -215,9 +220,21 @@ public final class ApplicationModule
                         request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
+                }).setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(final RetrofitError cause)
+                    {
+                        Response response = cause.getResponse();
+                        if (response != null && response.getStatus() == 401)
+                        {
+                            bus.post(new HandyEvent.LogOutProvider());
+                        }
+
+                        return cause;
+                    }
                 }).setConverter(new GsonConverter(new GsonBuilder()
-                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                        .create())).setClient(new OkClient(okHttpClient)).build();
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (buildConfigWrapper.isDebug())
         {

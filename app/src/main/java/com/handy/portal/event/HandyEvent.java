@@ -1066,4 +1066,6 @@ public abstract class HandyEvent
         }
     }
 
+    // Pro should be logged out
+    public static class LogOutProvider extends HandyEvent {}
 }

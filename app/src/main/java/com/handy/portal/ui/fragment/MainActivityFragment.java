@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -26,6 +28,7 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.squareup.otto.Subscribe;
 
@@ -178,6 +181,12 @@ public class MainActivityFragment extends InjectedFragment
     public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
         mNavigationHeader.setText(event.provider.getFullName());
+    }
+
+    @Subscribe
+    public void onLogOutProvider(HandyEvent.LogOutProvider event)
+    {
+        logOutProvider();
     }
 
 //Click Listeners
@@ -437,5 +446,15 @@ public class MainActivityFragment extends InjectedFragment
 
         // Commit the transaction
         transaction.commit();
+    }
+
+    private void logOutProvider()
+    {
+        mPrefsManager.setString(PrefsKey.AUTH_TOKEN, null);
+        mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, null);
+        clearFragmentBackStack();
+        CookieManager.getInstance().removeAllCookie();
+        startActivity(new Intent(getActivity(), LoginActivity.class));
+        getActivity().finish();
     }
 }
