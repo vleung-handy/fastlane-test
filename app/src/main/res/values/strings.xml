@@ -501,4 +501,6 @@
     <string name="new_update">New Update!</string>
     <string name="we_moved">We moved payments,\nhelp, and profile over here.</string>
 
+    <!-- Logging out a deactivated pro -->
+    <string name="handy_account_no_longer_active">Your Handy account is no longer active.</string>
 </resources>
