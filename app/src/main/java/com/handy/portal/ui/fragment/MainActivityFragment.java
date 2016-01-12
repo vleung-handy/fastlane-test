@@ -24,6 +24,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -45,6 +46,8 @@ public class MainActivityFragment extends InjectedFragment
     HandyRetrofitEndpoint handyRetrofitEndpoint;
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    ConfigManager mConfigManager;
     /////////////Bad useless injection that breaks if not in?
 
     @Bind(R.id.tabs)
@@ -53,6 +56,8 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mJobsButton;
     @Bind(R.id.button_schedule)
     RadioButton mScheduleButton;
+    @Bind(R.id.button_notifications)
+    RadioButton mNotificationsButton;
     @Bind(R.id.button_more)
     RadioButton mButtonMore;
     @Bind(R.id.loading_overlay)
@@ -204,6 +209,13 @@ public class MainActivityFragment extends InjectedFragment
         mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
         tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
+
+
+        if (mConfigManager.getConfigurationResponse().shouldShowNotificationMenuButton())
+        {
+            mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
+            mNotificationsButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void registerNavDrawerListeners()
@@ -348,6 +360,12 @@ public class MainActivityFragment extends InjectedFragment
                 case SCHEDULED_JOBS:
                 {
                     mScheduleButton.toggle();
+                    mNavTrayLinks.clearCheck();
+                }
+                break;
+                case NOTIFICATIONS:
+                {
+                    mNotificationsButton.toggle();
                     mNavTrayLinks.clearCheck();
                 }
                 break;

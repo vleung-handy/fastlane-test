@@ -154,7 +154,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
         if (convertView == null)
         {
-            v = inflater.inflate(R.layout.element_payment_list_year_section_header, null);
+            v = inflater.inflate(R.layout.element_payment_list_section_header, null);
         }
         else
         {
@@ -163,7 +163,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
 
         String year = DateTimeUtils.getYear(paymentBatch.getEffectiveDate());
-        ((TextView) v.findViewById(R.id.payment_year)).setText(year);
+        ((TextView) v.findViewById(R.id.payment_list_section_header_text)).setText(year);
 
         return v;
     }

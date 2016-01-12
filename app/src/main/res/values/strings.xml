@@ -230,6 +230,7 @@
     <string name="tab_jobs">Jobs</string>
     <string name="tab_claim">Claim</string>
     <string name="tab_schedule">Schedule</string>
+    <string name="tab_notifications">Notifications</string>
     <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_help">Help</string>
@@ -503,4 +504,8 @@
 
     <!-- Logging out a deactivated pro -->
     <string name="handy_account_no_longer_active">Your Handy account is no longer active.</string>
+
+    <!--Notifications List-->
+    <string name="load_notifications">Loading more notifications…</string>
+    <string name="no_more_notifications">You have no more notifications to load.</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView
-    android:id="@+id/payments_batch_list_footer_text"
+    android:id="@+id/infinite_scrolling_list_footer_text"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -9,4 +9,5 @@
     android:padding="@dimen/default_padding"
     android:textColor="@color/helper_text_grey"
     android:textSize="@dimen/small_text_size"
-    android:visibility="gone"/>
+    android:visibility="gone"
+    />

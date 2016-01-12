@@ -2,6 +2,7 @@ package com.handy.portal.retrofit;
 
 import com.handy.portal.model.CheckoutRequest;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -208,5 +209,16 @@ public interface HandyRetrofitService
     @GET("/configuration")
     void getConfiguration(HandyRetrofitCallback cb);
 
+    @GET(PROVIDERS_PATH + "{id}/notifications")
+    void getNotifications(@Path("id") String providerId,
+                          @Query("since_id") Integer sinceId,
+                          @Query("until_id") Integer untilId,
+                          @Query("count") Integer count,
+                          HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(PROVIDERS_PATH + "{id}/notifications/mark_as_read")
+    void postMarkNotificationsAsRead(@Path("id") String providerId,
+                                     @Field("notification_ids[]") ArrayList<Integer> notificationIds,
+                                     HandyRetrofitCallback cb);
 }

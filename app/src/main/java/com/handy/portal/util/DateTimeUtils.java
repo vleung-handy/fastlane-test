@@ -9,18 +9,21 @@ import com.handy.portal.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public final class DateTimeUtils
 {
     //TODO: refactor code throughout the app to put date formats here
     //TODO: rename these fields & methods to something better
+
     public final static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("EEE, MMM d");
     public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER = new SimpleDateFormat("MMM");
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
     public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
-    public final static SimpleDateFormat MONTH_DATE_YEAR_DATE_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
+    public final static SimpleDateFormat MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
+    public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
 
     public final static int HOURS_IN_DAY = 24;
@@ -44,14 +47,13 @@ public final class DateTimeUtils
     public static String getMonthShortName(Date date)
     {
         if (date == null) { return null; }
-        return MONTH_SHORT_NAME_FORMATTER.format(date);
-
+        return getMonthShortNameFormatter().format(date);
     }
 
     public static String getYear(Date date)
     {
         if (date == null) { return null; }
-        return YEAR_FORMATTER.format(date);
+        return getYearFormatter().format(date);
     }
 
     public static Integer getYearInt(Date date)
@@ -72,31 +74,37 @@ public final class DateTimeUtils
     public static String formatDateTo12HourClock(Date date)
     {
         if (date == null) { return null; }
-        return CLOCK_FORMATTER_12HR.format(date);
+        return getClockFormatter12hr().format(date);
     }
 
     public static String formatDateDayOfWeekMonthDay(Date date)
     {
         if (date == null) { return null; }
-        return DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(date);
+        return getDayOfWeekMonthDayFormatter().format(date);
     }
 
     public static String formatDateMonthDay(Date date)
     {
         if (date == null) { return null; }
-        return SUMMARY_DATE_FORMATTER.format(date);
+        return getSummaryDateFormatter().format(date);
     }
 
     public static String formatDetailedDate(Date date)
     {
         if (date == null) { return null; }
-        return DETAILED_DATE_FORMATTER.format(date);
+        return getDetailedDateFormatter().format(date);
     }
 
     public static String formatMonthDateYear(Date date)
     {
         if (date == null) { return null; }
-        return MONTH_DATE_YEAR_DATE_FORMATTER.format(date);
+        return getMonthDateYearFormatter().format(date);
+    }
+
+    public static String formatDayOfWeekMonthDateYear(Date date)
+    {
+        if (date == null) { return null; }
+        return getDayOfWeekMonthDateYearFormatter().format(date);
     }
 
     public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
@@ -178,4 +186,94 @@ public final class DateTimeUtils
             public void onFinish() { }
         }.start();
     }
+
+    public static String dayDifferenceInWords(final Date date)
+    {
+        Calendar today = Calendar.getInstance();
+        today.setTime(getBeginningOfDay(new Date()));
+
+        Calendar dayToCompare = Calendar.getInstance();
+        dayToCompare.setTime(getBeginningOfDay(date));
+
+        int daysBetween = daysBetween(today.getTime(), dayToCompare.getTime());
+
+        String dayDifferenceInWords;
+
+        if (daysBetween == 0)
+        {
+            dayDifferenceInWords = "Today";
+        }
+        else if (daysBetween == 1)
+        {
+            dayDifferenceInWords = "Tomorrow";
+        }
+        else if (daysBetween == -1)
+        {
+            dayDifferenceInWords = "Yesterday";
+        }
+        else if (daysBetween > 1)
+        {
+            dayDifferenceInWords = String.valueOf(Math.abs(daysBetween)) + " days from now";
+        }
+        else
+        {
+            dayDifferenceInWords = String.valueOf(Math.abs(daysBetween)) + " days ago";
+        }
+
+        return dayDifferenceInWords;
+    }
+
+    public static int daysBetween(Date d1, Date d2)
+    {
+        return (int)( (d2.getTime() - d1.getTime()) / (MILLISECONDS_IN_HOUR * HOURS_IN_DAY));
+    }
+
+    private static SimpleDateFormat getClockFormatter12hr()
+    {
+        CLOCK_FORMATTER_12HR.setTimeZone(TimeZone.getDefault());
+        return CLOCK_FORMATTER_12HR;
+    }
+
+    private static SimpleDateFormat getDayOfWeekMonthDayFormatter()
+    {
+        DAY_OF_WEEK_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return DAY_OF_WEEK_MONTH_DAY_FORMATTER;
+    }
+
+    private static SimpleDateFormat getMonthShortNameFormatter()
+    {
+        MONTH_SHORT_NAME_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return MONTH_SHORT_NAME_FORMATTER;
+    }
+
+    private static SimpleDateFormat getSummaryDateFormatter()
+    {
+        SUMMARY_DATE_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return SUMMARY_DATE_FORMATTER;
+    }
+
+    private static SimpleDateFormat getDetailedDateFormatter()
+    {
+        DETAILED_DATE_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return DETAILED_DATE_FORMATTER;
+    }
+
+    private static SimpleDateFormat getMonthDateYearFormatter()
+    {
+        MONTH_DATE_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return MONTH_DATE_YEAR_FORMATTER;
+    }
+
+    private static SimpleDateFormat getDayOfWeekMonthDateYearFormatter()
+    {
+        DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER;
+    }
+
+    private static SimpleDateFormat getYearFormatter()
+    {
+        YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return YEAR_FORMATTER;
+    }
+
 }

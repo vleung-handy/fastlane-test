@@ -67,7 +67,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     {
         PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(getContext());
 
-        footerView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_payments_batch_list_footer, null);
+        footerView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_infinite_scrolling_list_footer, null);
         addFooterView(footerView, null, false);
         setAdapter(itemsAdapter);
         setOnItemClickListener(this);
