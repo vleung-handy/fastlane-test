@@ -1,6 +1,7 @@
 package com.handy.portal.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,11 +103,13 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
         return mShouldRequestMoreNotifications;
     }
 
+    @Nullable
     public Integer getLastNotificationId()
     {
         return isEmpty() ? null : getItem(getCount() - 1).getId();
     }
 
+    @Nullable
     public Integer getFirstNotificationId()
     {
         return isEmpty() ? null : getItem(0).getId();
