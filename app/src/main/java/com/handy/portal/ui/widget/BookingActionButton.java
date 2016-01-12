@@ -30,12 +30,7 @@ public class BookingActionButton extends Button
         super(context, attrs, defStyle);
     }
 
-    public BookingActionButton(Context context, View parent)
-    {
-        super(context);
-    }
-
-    protected BookingDetailsFragment associatedFragment;
+    protected BookingDetailsFragment mAssociatedFragment;
 
     public void init(Booking booking, BookingDetailsFragment fragment, Booking.Action data)
     {
@@ -46,8 +41,7 @@ public class BookingActionButton extends Button
             return;
         }
 
-        final BookingActionButton self = this;
-        associatedFragment = fragment;
+        mAssociatedFragment = fragment;
         setId(bookingActionButtonType.getId());
         setBackgroundResource(bookingActionButtonType.getBackgroundDrawableId());
         setTextAppearance(getContext(), bookingActionButtonType.getTextStyleId());
@@ -58,7 +52,7 @@ public class BookingActionButton extends Button
             @Override
             public void onClick(final View v)
             {
-                self.associatedFragment.onActionButtonClick(bookingActionButtonType);
+                BookingActionButton.this.mAssociatedFragment.onActionButtonClick(bookingActionButtonType);
             }
         });
         setEnabled(data.isEnabled());
