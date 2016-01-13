@@ -264,7 +264,8 @@ public final class UIUtils
         for (int i = 0; i < environments.length; i++)
         {
             EnvironmentModifier.Environment environment = environments[i];
-            environmentNames[i] = environment + (currentEnvironmentPrefix.equals(environment.getPrefix()) ? " (selected)" : "");
+            boolean matchesCurrentEnvironment = currentEnvironmentPrefix != null && currentEnvironmentPrefix.equals(environment.getPrefix());
+            environmentNames[i] = environment + (matchesCurrentEnvironment ? " (selected)" : "");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
