@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.notifications;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
@@ -96,11 +97,13 @@ public final class NotificationsListView extends InfiniteScrollListView
         return getWrappedAdapter().isEmpty();
     }
 
+    @Nullable
     public Integer getFirstNotificationId()
     {
         return getWrappedAdapter().getFirstNotificationId();
     }
 
+    @Nullable
     public Integer getLastNotificationId()
     {
         return getWrappedAdapter().getLastNotificationId();
