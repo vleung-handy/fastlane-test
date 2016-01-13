@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ResupplyInfo;
 import com.handy.portal.model.logs.EventLogFactory;
@@ -64,6 +66,7 @@ public class ManagementToolsView extends FrameLayout
         mResupply.setClickable(false);
 
         final ResupplyInfo resupplyInfo = mProviderProfile.getResupplyInfo();
+
         if (resupplyInfo != null && resupplyInfo.providerCanRequestSupplies())
         {
             if (resupplyInfo.providerCanRequestSuppliesNow())
@@ -80,6 +83,10 @@ public class ManagementToolsView extends FrameLayout
                 mResupplyHelpText.setText(resupplyInfo.getHelperText());
                 mResupplyHelpText.setVisibility(VISIBLE);
             }
+        }
+        else
+        {
+            mResupply.setVisibility(View.GONE);
         }
     }
 
