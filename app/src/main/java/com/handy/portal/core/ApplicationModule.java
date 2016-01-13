@@ -13,6 +13,7 @@ import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
@@ -20,6 +21,7 @@ import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.NotificationMessageManager;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -50,7 +52,9 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
 import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
-import com.handy.portal.ui.constructor.SupportActionViewConstructor;
+import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
+import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -60,6 +64,7 @@ import com.handy.portal.ui.fragment.HelpContactFragment;
 import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
@@ -90,9 +95,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.OkClient;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
@@ -113,7 +121,6 @@ import retrofit.converter.GsonConverter;
         TermsFragment.class,
         HelpFragment.class,
         HelpContactFragment.class,
-        SupportActionViewConstructor.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
         MainActivityFragmentNavigationHelper.class,
@@ -138,6 +145,10 @@ import retrofit.converter.GsonConverter;
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
         ManagementToolsView.class,
+        SupportActionView.class,
+        NotificationsFragment.class,
+        NotificationsListView.class,
+        NotificationsListEntryView.class,
 })
 public final class ApplicationModule
 {
@@ -181,7 +192,8 @@ public final class ApplicationModule
     @Singleton
     final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
                                                    final HandyRetrofitEndpoint endpoint,
-                                                   final PrefsManager prefsManager)
+                                                   final PrefsManager prefsManager,
+                                                   final Bus bus)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -215,9 +227,21 @@ public final class ApplicationModule
                         request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
+                }).setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(final RetrofitError cause)
+                    {
+                        Response response = cause.getResponse();
+                        if (response != null && response.getStatus() == 401)
+                        {
+                            bus.post(new HandyEvent.LogOutProvider());
+                        }
+
+                        return cause;
+                    }
                 }).setConverter(new GsonConverter(new GsonBuilder()
-                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                        .create())).setClient(new OkClient(okHttpClient)).build();
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (buildConfigWrapper.isDebug())
         {
@@ -497,5 +521,12 @@ public final class ApplicationModule
         {
             return manufacturer + " " + model;
         }
+    }
+
+    @Provides
+    @Singleton
+    final NotificationMessageManager provideNotificationMessageManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    {
+        return new NotificationMessageManager(bus, dataManager, prefsManager);
     }
 }

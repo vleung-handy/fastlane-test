@@ -9,8 +9,11 @@ import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
+import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -26,8 +29,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -54,7 +60,6 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     private EnvironmentModifier environmentModifier;
     @Mock
     private DataManager dataManager;
-
     @InjectMocks
     private LoginActivityFragment fragment;
 

@@ -5,4 +5,8 @@
     <declare-styleable name="BasicInputTextView">
         <attr name="minLength" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="notification">
+        <attr name="state_read" format="boolean"></attr>
+    </declare-styleable>
 </resources>

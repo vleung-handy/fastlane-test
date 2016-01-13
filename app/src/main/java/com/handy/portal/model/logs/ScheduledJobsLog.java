@@ -195,4 +195,19 @@ public class ScheduledJobsLog extends EventLog
             mRating = rating;
         }
     }
+
+
+    public static class BookingInstructionsSeen extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "job_instructions_viewed";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+
+        public BookingInstructionsSeen(String providerId, String versionTrack, String bookingId)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+            mBookingId = bookingId;
+        }
+    }
 }

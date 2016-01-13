@@ -8,28 +8,46 @@ import android.widget.Button;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.TestBaseApplication;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.MainActivity;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
 {
     private MainActivityFragment mFragment;
 
+    @Mock
+    private ConfigurationResponse mConfigurationResponse;
+    @Inject
+    ConfigManager mConfigManager;
+
     @Before
     public void setUp() throws Exception
     {
+        initMocks(this);
+        ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
+        when(mConfigManager.getConfigurationResponse()).thenReturn(mConfigurationResponse);
+        when(mConfigurationResponse.shouldShowNotificationMenuButton()).thenReturn(false);
         mFragment = new MainActivityFragment();
         SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
     }

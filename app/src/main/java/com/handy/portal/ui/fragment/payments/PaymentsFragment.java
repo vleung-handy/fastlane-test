@@ -29,7 +29,7 @@ import com.handy.portal.ui.adapter.HelpNodesAdapter;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.layout.SlideUpPanelContainer;
+import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
@@ -45,9 +45,8 @@ import butterknife.OnClick;
 public final class PaymentsFragment extends ActionBarFragment
 {
     //TODO: investigate using @Produce and make manager handle more of this logic
-    @VisibleForTesting
     @Bind(R.id.slide_up_panel_container)
-    SlideUpPanelContainer slideUpPanelContainer;
+    SlideUpPanelLayout mSlideUpPanelLayout;
 
     @Bind(R.id.payments_scroll_view)
     ScrollView scrollView;
@@ -235,14 +234,7 @@ public final class PaymentsFragment extends ActionBarFragment
                 if (helpNodesListView.getCount() > 0)
                 {
                     bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPaymentHelpSlideUpLog()));
-                    slideUpPanelContainer.showPanel(R.string.payment_help, new SlideUpPanelContainer.ContentInitializer()
-                    {
-                        @Override
-                        public void initialize(ViewGroup panel)
-                        {
-                            panel.addView(helpNodesListView);
-                        }
-                    });
+                    mSlideUpPanelLayout.showPanel(R.string.payment_help, helpNodesListView);
                 }
                 else
                 {
@@ -331,7 +323,7 @@ public final class PaymentsFragment extends ActionBarFragment
                     return;
                 }
 
-                slideUpPanelContainer.hidePanel();
+                mSlideUpPanelLayout.hidePanel();
 
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));

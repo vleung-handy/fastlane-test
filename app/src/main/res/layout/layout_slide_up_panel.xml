@@ -6,13 +6,15 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:clickable="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="2dp"
-        android:background="@drawable/grey_border_bottom">
+        android:background="@drawable/grey_border_bottom"
+        android:elevation="@dimen/default_elevation"
+        >
 
         <TextView
             android:id="@+id/slide_up_panel_title"
@@ -21,21 +23,29 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="@dimen/extra_padding_xlarge"
+            android:layout_marginStart="@dimen/extra_padding_xlarge"
             android:gravity="center_vertical"
             android:textColor="@color/tertiary_grey"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/large_text_size"
+            />
 
         <ImageView
             android:id="@+id/slide_up_panel_close"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/x_icon_size"
+            android:layout_height="@dimen/x_icon_size"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:padding="20dp"
-            android:src="@drawable/ic_x"/>
+            android:padding="@dimen/extra_padding_xlarge"
+            android:src="@drawable/ic_x"
+            />
 
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/slide_up_panel_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
 </LinearLayout>

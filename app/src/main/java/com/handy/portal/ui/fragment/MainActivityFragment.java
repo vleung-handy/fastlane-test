@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -22,10 +24,13 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.squareup.otto.Subscribe;
 
@@ -42,6 +47,8 @@ public class MainActivityFragment extends InjectedFragment
     HandyRetrofitEndpoint handyRetrofitEndpoint;
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    ConfigManager mConfigManager;
     /////////////Bad useless injection that breaks if not in?
 
     @Bind(R.id.tabs)
@@ -50,6 +57,8 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mJobsButton;
     @Bind(R.id.button_schedule)
     RadioButton mScheduleButton;
+    @Bind(R.id.button_notifications)
+    RadioButton mNotificationsButton;
     @Bind(R.id.button_more)
     RadioButton mButtonMore;
     @Bind(R.id.loading_overlay)
@@ -180,6 +189,13 @@ public class MainActivityFragment extends InjectedFragment
         mNavigationHeader.setText(event.provider.getFullName());
     }
 
+    @Subscribe
+    public void onLogOutProvider(HandyEvent.LogOutProvider event)
+    {
+        logOutProvider();
+        showToast(R.string.handy_account_no_longer_active);
+    }
+
 //Click Listeners
 
     private void registerButtonListeners()
@@ -194,6 +210,13 @@ public class MainActivityFragment extends InjectedFragment
         mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
         tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
+
+
+        if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
+        {
+            mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
+            mNotificationsButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void registerNavDrawerListeners()
@@ -341,6 +364,12 @@ public class MainActivityFragment extends InjectedFragment
                     mNavTrayLinks.clearCheck();
                 }
                 break;
+                case NOTIFICATIONS:
+                {
+                    mNotificationsButton.toggle();
+                    mNavTrayLinks.clearCheck();
+                }
+                break;
                 case PAYMENTS:
                 {
                     mButtonMore.toggle();
@@ -437,5 +466,20 @@ public class MainActivityFragment extends InjectedFragment
 
         // Commit the transaction
         transaction.commit();
+    }
+
+    private ConfigurationResponse getConfigurationResponse()
+    {
+        return mConfigManager.getConfigurationResponse();
+    }
+
+    private void logOutProvider()
+    {
+        mPrefsManager.setString(PrefsKey.AUTH_TOKEN, null);
+        mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, null);
+        clearFragmentBackStack();
+        CookieManager.getInstance().removeAllCookie();
+        startActivity(new Intent(getActivity(), LoginActivity.class));
+        getActivity().finish();
     }
 }

@@ -21,6 +21,7 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.logs.EventLogResponse;
+import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -52,13 +53,15 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
             {
                 callback.onSuccess(returnData);
             }
-        } catch (JsonSyntaxException e)
+        }
+        catch (JsonSyntaxException e)
         {
             Crashlytics.logException(e);
             callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER, e.getMessage()));
         }
     }
 }
+
 
 //We need to trick the compiler into holding onto the generic type so we don't lose it to erasure
 class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking>
@@ -69,6 +72,7 @@ class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking>
     }
 }
 
+
 class PaymentBatchesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentBatches>
 {
     PaymentBatchesRetroFitCallback(DataManager.Callback callback)
@@ -76,6 +80,7 @@ class PaymentBatchesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentB
         super(callback);
     }
 }
+
 
 class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<AnnualPaymentSummaries>
 {
@@ -85,6 +90,7 @@ class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<
     }
 }
 
+
 class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresPaymentInfoUpdate>
 {
     NeedsToUpdatePaymentInfoRetroFitCallback(DataManager.Callback callback)
@@ -93,6 +99,7 @@ class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallbac
     }
 }
 
+
 class BookingClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingClaimDetails>
 {
     BookingClaimHandyRetroFitCallback(DataManager.Callback callback)
@@ -100,6 +107,7 @@ class BookingClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booki
         super(callback);
     }
 }
+
 
 class BookingsListWrapperHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingsListWrapper>
 {
@@ -118,6 +126,7 @@ class BookingsWrapperRetroFitCallback extends TypedHandyRetrofitCallback<Booking
     }
 }
 
+
 class PinRequestDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<PinRequestDetails>
 {
     PinRequestDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
@@ -125,6 +134,7 @@ class PinRequestDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitC
         super(callback);
     }
 }
+
 
 class LoginDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<LoginDetails>
 {
@@ -134,6 +144,7 @@ class LoginDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallba
     }
 }
 
+
 class ProviderResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<Provider>
 {
     ProviderResponseHandyRetroFitCallback(DataManager.Callback callback)
@@ -141,6 +152,7 @@ class ProviderResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<P
         super(callback);
     }
 }
+
 
 class UpdateDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<UpdateDetails>
 {
@@ -150,6 +162,7 @@ class UpdateDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallb
     }
 }
 
+
 class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<TermsDetailsGroup>
 {
     TermsDetailsGroupResponseHandyRetroFitCallback(DataManager.Callback callback)
@@ -157,6 +170,7 @@ class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitC
         super(callback);
     }
 }
+
 
 class HelpNodeResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<HelpNodeWrapper>
 {
@@ -166,6 +180,7 @@ class HelpNodeResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<H
     }
 }
 
+
 class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 {
     EmptyHandyRetroFitCallback(DataManager.Callback callback)
@@ -173,6 +188,7 @@ class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
         super(callback);
     }
 }
+
 
 class SuccessWrapperRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
 {
@@ -182,6 +198,7 @@ class SuccessWrapperRetroFitCallback extends TypedHandyRetrofitCallback<SuccessW
     }
 }
 
+
 class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile>
 {
     ProviderProfileRetrofitCallback(DataManager.Callback callback)
@@ -189,6 +206,7 @@ class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<Provide
         super(callback);
     }
 }
+
 
 class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderPersonalInfo>
 {
@@ -198,6 +216,7 @@ class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallba
     }
 }
 
+
 class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile>
 {
     ResupplyInfoRetrofitCallback(DataManager.Callback callback)
@@ -205,6 +224,7 @@ class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderPr
         super(callback);
     }
 }
+
 
 class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeTokenResponse>
 {
@@ -214,6 +234,7 @@ class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeToken
     }
 }
 
+
 class LogEventsRetroFitCallback extends TypedHandyRetrofitCallback<EventLogResponse>
 {
     LogEventsRetroFitCallback(DataManager.Callback callback)
@@ -221,6 +242,7 @@ class LogEventsRetroFitCallback extends TypedHandyRetrofitCallback<EventLogRespo
         super(callback);
     }
 }
+
 
 class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
 {
@@ -230,6 +252,7 @@ class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<Succe
     }
 }
 
+
 class CreateDebitCardRecipientRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
 {
     CreateDebitCardRecipientRetroFitCallback(DataManager.Callback callback)
@@ -237,6 +260,7 @@ class CreateDebitCardRecipientRetroFitCallback extends TypedHandyRetrofitCallbac
         super(callback);
     }
 }
+
 
 class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<CreateDebitCardResponse>
 {
@@ -246,6 +270,7 @@ class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<CreateD
     }
 }
 
+
 class GetPaymentFlowRetroFitCallback extends TypedHandyRetrofitCallback<PaymentFlow>
 {
     GetPaymentFlowRetroFitCallback(DataManager.Callback callback)
@@ -253,6 +278,7 @@ class GetPaymentFlowRetroFitCallback extends TypedHandyRetrofitCallback<PaymentF
         super(callback);
     }
 }
+
 
 class GetZipClusterPolygonRetroFitCallback extends TypedHandyRetrofitCallback<ZipClusterPolygons>
 {
@@ -262,9 +288,19 @@ class GetZipClusterPolygonRetroFitCallback extends TypedHandyRetrofitCallback<Zi
     }
 }
 
+
 class ConfigurationResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<ConfigurationResponse>
 {
     ConfigurationResponseHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class NotificationMessagesHandyRetroFitCallback extends TypedHandyRetrofitCallback<NotificationMessages>
+{
+    NotificationMessagesHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

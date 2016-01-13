@@ -20,6 +20,7 @@ import com.handy.portal.manager.HelpContactManager;
 import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.NotificationMessageManager;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -93,6 +94,8 @@ public class BaseApplication extends Application
     TabNavigationManager tabNavigationManager;
     @Inject
     WebUrlManager webUrlManager;
+    @Inject
+    NotificationMessageManager notificationMessageManager;
 
     @Inject
     Bus bus;

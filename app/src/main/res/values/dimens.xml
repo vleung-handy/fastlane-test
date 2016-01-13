@@ -22,6 +22,7 @@
     <dimen name="extra_padding">5dp</dimen>
     <dimen name="extra_padding_medium">10dp</dimen>
     <dimen name="extra_padding_large">15dp</dimen>
+    <dimen name="extra_padding_xlarge">20dp</dimen>
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_padding_medium">24dp</dimen>
     <dimen name="default_padding_large">32dp</dimen>
@@ -53,4 +54,19 @@
     <dimen name="thin_padding">1dp</dimen>
     <dimen name="supply_list_bullet_width">25dp</dimen>
     <dimen name="navigation_image_size">24dp</dimen>
+    <dimen name="x_icon_size">60dp</dimen>
+    <dimen name="default_elevation">2dp</dimen>
+
+    <!--notifications-->
+    <dimen name="notification_list_entry_vertical_padding">14dp</dimen>
+    <dimen name="notification_list_entry_horizontal_padding">16dp</dimen>
+    <dimen name="notification_list_entry_icon_margin_top">2dp</dimen>
+    <dimen name="notification_list_entry_icon_margin_right">10dp</dimen>
+    <dimen name="notification_list_entry_icon_size">18dp</dimen>
+    <dimen name="notification_icon_radius">9dp</dimen>
+    <dimen name="notification_list_entry_time_margin_left">8dp</dimen>
+    <dimen name="notification_list_entry_time_margin_top">3dp</dimen>
+
+    <dimen name="notification_section_header_horizontal_padding">16dp</dimen>
+    <dimen name="notification_section_header_vertical_padding">10dp</dimen>
 </resources>
