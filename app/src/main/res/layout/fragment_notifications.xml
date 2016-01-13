@@ -6,6 +6,13 @@
 
     <include layout="@layout/layout_fetch_error" />
 
-    <include layout="@layout/element_notifications_list" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/element_notifications_list" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
