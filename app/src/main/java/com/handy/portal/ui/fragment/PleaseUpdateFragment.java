@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.VersionManager;
@@ -65,13 +66,15 @@ public class PleaseUpdateFragment extends InjectedFragment
         ((AnimationDrawable) mUpdateImage.getBackground()).start();
         checkPermissions();
 
-        mGrantAccessButton.setOnClickListener(new Button.OnClickListener() {
+        mGrantAccessButton.setOnClickListener(new Button.OnClickListener()
+        {
             @Override
             public void onClick(final View v)
             {
                 requestPermissions();
             }
         });
+        Crashlytics.log("Starting the update process");
 
         return view;
     }

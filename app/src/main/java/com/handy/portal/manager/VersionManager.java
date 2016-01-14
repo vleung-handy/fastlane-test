@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
@@ -197,6 +198,15 @@ public class VersionManager
                 {
                     bus.post(new HandyEvent.DownloadUpdateFailed());
                 }
+            }
+            else
+            {
+                String exceptionString = "Download reference id (";
+                exceptionString += downloadReferenceId;
+                exceptionString += ") did not match the extra download id (";
+                exceptionString += referenceId;
+                exceptionString += ")";
+                Crashlytics.logException(new Exception(exceptionString));
             }
         }
     };
