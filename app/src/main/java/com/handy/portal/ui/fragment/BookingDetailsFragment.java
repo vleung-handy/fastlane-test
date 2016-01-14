@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -38,6 +39,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
@@ -49,11 +51,9 @@ import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsActionRemovePanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsViewConstructor;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
@@ -67,9 +67,7 @@ import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -79,63 +77,51 @@ import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
-    //Layouts points for fragment, the various elements are childed to these
     @Bind(R.id.booking_details_layout)
     LinearLayout detailsParentLayout;
-
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout;
-
     @Bind(R.id.booking_details_date_layout)
     LinearLayout dateLayout;
-
     @Bind(R.id.booking_details_title_layout)
     RelativeLayout titleLayout;
-
     @Bind(R.id.booking_details_action_layout)
     RelativeLayout actionLayout;
-
     @Bind(R.id.booking_details_contact_layout)
     RelativeLayout contactLayout;
-
     @Bind(R.id.booking_details_job_instructions_layout)
     LinearLayout jobInstructionsLayout;
-
     @Bind(R.id.booking_details_location_layout)
     ViewGroup locationLayout;
-
     @Bind(R.id.booking_details_remove_job_layout)
     LinearLayout removeJobLayout;
-
+    @Bind(R.id.booking_details_support_layout)
+    FrameLayout mSupportLayout;
     @Bind(R.id.booking_details_full_details_notice_text)
     TextView fullDetailsNoticeText;
-
     @Bind(R.id.fetch_error_view)
     View fetchErrorView;
-
     @Bind(R.id.fetch_error_text)
     TextView errorText;
-
     @Bind(R.id.slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelLayout;
-
     @Bind(R.id.booking_details_scroll_view)
     ScrollView mScrollView;
 
     @Inject
     PrefsManager prefsManager;
-
     @Inject
     ZipClusterManager mZipClusterManager;
-
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    ProviderManager mProviderManager;
 
     private String requestedBookingId;
     private BookingType requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
-    private boolean isForPayments;
+    private boolean mFromPaymentsTab;
     private MainViewTab currentTab;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
@@ -175,7 +161,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             this.requestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
             this.currentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
 
-            this.isForPayments = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
+            mFromPaymentsTab = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
 
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
@@ -243,7 +229,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             String bookingIdPrefix = associatedBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
             String jobLabel = getActivity().getString(R.string.job_num) + bookingIdPrefix + associatedBooking.getId();
 
-            if (this.isForPayments)
+            if (mFromPaymentsTab)
             {
                 titleStringId = R.string.previous_job;
                 menu.findItem(R.id.action_job_label).setTitle(jobLabel);
@@ -325,6 +311,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         clearLayouts();
         constructBookingDisplayElements(booking);
         invalidateOptionsMenu();
+        //TODO: This is confusing. We should create the buttons in constructBookingDisplayElements()
         createAllowedActionButtons(booking);
 
         //I do not like having these button linkages here, strongly considering having buttons generate events we listen for so the fragment doesn't init them
@@ -348,33 +335,25 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void constructBookingDisplayElements(Booking booking)
     {
         //Construct the views for each layout
-        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = getViewConstructorsForLayouts(booking);
-        for (Map.Entry<ViewGroup, BookingDetailsViewConstructor> viewConstructorEntry : viewConstructors.entrySet())
-        {
-            ViewGroup layout = viewConstructorEntry.getKey();
-            BookingDetailsViewConstructor constructor = viewConstructorEntry.getValue();
-            constructor.create(layout, booking);
-        }
+        setLayouts(booking);
 
         //Full Details Notice , technically we should move this to its own view panel
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
-        fullDetailsNoticeText.setVisibility(!booking.isProxy() && booking.getServiceInfo().isHomeCleaning() && bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
+        fullDetailsNoticeText.setVisibility(!booking.isProxy() && booking.getServiceInfo().isHomeCleaning()
+                && bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
     }
 
-    //A listing of all the view constructors we use to populate the layouts
-    //We don't maintain references to these constructors / the view, we always create anew from a booking
-    private Map<ViewGroup, BookingDetailsViewConstructor> getViewConstructorsForLayouts(Booking booking)
+    private void setLayouts(Booking booking)
     {
         BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
-        arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, this.isForPayments);
+        arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, mFromPaymentsTab);
 
-        Map<ViewGroup, BookingDetailsViewConstructor> viewConstructors = new HashMap<>();
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 
-        if (this.isForPayments)
+        if (mFromPaymentsTab)
         {
             mapLayout.setVisibility(View.GONE);
         }
@@ -383,8 +362,9 @@ public class BookingDetailsFragment extends ActionBarFragment
             //show either the real map or a placeholder image depending on if we have google play services
             if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
             {
-                BookingMapFragment fragment = BookingMapFragment.newInstance(associatedBooking, bookingStatus, mZipClusterManager.getCachedPolygons(associatedBooking.getZipClusterId()));
-                transaction.replace(mapLayout.getId(), fragment);
+                BookingMapFragment fragment = BookingMapFragment.newInstance(associatedBooking,
+                        bookingStatus, mZipClusterManager.getCachedPolygons(associatedBooking.getZipClusterId()));
+                transaction.replace(mapLayout.getId(), fragment).commit();
             }
             else
             {
@@ -392,23 +372,25 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
         }
 
-        viewConstructors.put(dateLayout, new BookingDetailsDateViewConstructor(getActivity(), arguments));
-        viewConstructors.put(titleLayout, new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments));
+        new BookingDetailsDateViewConstructor(getActivity(), arguments).create(dateLayout, booking);
+        new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments).create(titleLayout, booking);
         if (booking.isProxy())
         {
             UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getZipCluster()));
         }
-        viewConstructors.put(jobInstructionsLayout, new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments));
+        new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments).create(jobInstructionsLayout, booking);
 
-        if (!this.isForPayments)
+        if (!mFromPaymentsTab)
         {
-            viewConstructors.put(actionLayout, new BookingDetailsActionPanelViewConstructor(getActivity(), arguments));
-            viewConstructors.put(contactLayout, new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments));
-            viewConstructors.put(removeJobLayout, new BookingDetailsActionRemovePanelViewConstructor(getActivity(), arguments));
+            new BookingDetailsActionPanelViewConstructor(getActivity(), arguments).create(actionLayout, booking);
+            new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments).create(contactLayout, booking);
         }
-
-        transaction.commit();
-        return viewConstructors;
+        if (booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
+        {
+            BookingActionButton bookingActionButton = new BookingActionButton(getContext());
+            bookingActionButton.init(booking, this, BookingActionButtonType.HELP);
+            mSupportLayout.addView(bookingActionButton);
+        }
     }
 
     @OnClick(R.id.try_again_button)
@@ -468,6 +450,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
+
                 BookingActionButton bookingActionButton = (BookingActionButton)
                         ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(action).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
                 bookingActionButton.init(booking, this, action); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
@@ -484,26 +467,25 @@ public class BookingDetailsFragment extends ActionBarFragment
             case ON_MY_WAY:
             case CHECK_IN:
             case CHECK_OUT:
-            case HELP:
             {
                 return (ViewGroup) actionLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
-
             case CONTACT_PHONE:
             {
                 return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout_slot_1);
             }
-
             case CONTACT_TEXT:
             {
                 return (ViewGroup) contactLayout.findViewById(R.id.booking_details_contact_action_button_layout_slot_2);
             }
-
+            case HELP:
+            {
+                return mSupportLayout;
+            }
             case REMOVE:
             {
                 return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
-
             default:
             {
                 return null;
@@ -1095,7 +1077,12 @@ public class BookingDetailsFragment extends ActionBarFragment
             case ISSUE_UNSAFE:
             case ISSUE_HOURS:
             case ISSUE_OTHER:
+            case RESCHEDULE:
+            case CANCELLATION_POLICY:
                 goToHelpCenter(event.action.getDeepLinkData());
+                break;
+            case REMOVE:
+                takeAction(BookingActionButtonType.REMOVE, false);
                 break;
         }
     }
