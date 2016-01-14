@@ -49,9 +49,9 @@ import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView;
+import com.handy.portal.ui.element.bookings.BookingDetailsActionPanelView;
 import com.handy.portal.ui.element.bookings.BookingDetailsDateView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
@@ -381,7 +381,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         if (!mFromPaymentsTab)
         {
-            new BookingDetailsActionPanelViewConstructor(getActivity(), arguments).create(actionLayout, booking);
+            actionLayout.addView(new BookingDetailsActionPanelView(getContext(), booking));
             contactLayout.addView(new BookingDetailsActionContactPanelView(getContext(), booking));
         }
         if (mProviderManager.getCachedActiveProvider() != null &&

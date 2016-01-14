@@ -1,63 +1,75 @@
-package com.handy.portal.ui.constructor;
+package com.handy.portal.ui.element.bookings;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.util.UIUtils;
 
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
-public class BookingDetailsActionPanelViewConstructor extends BookingDetailsViewConstructor
+public class BookingDetailsActionPanelView extends FrameLayout
 {
     @Bind(R.id.booking_details_action_text)
-    protected TextView helperText;
+    TextView mHelperText;
 
-    public BookingDetailsActionPanelViewConstructor(@NonNull Context context, Bundle arguments)
+    private final ImmutableList<BookingActionButtonType> associatedButtonActionTypes = ImmutableList.of(
+            BookingActionButtonType.CLAIM,
+            BookingActionButtonType.ON_MY_WAY,
+            BookingActionButtonType.CHECK_IN,
+            BookingActionButtonType.CHECK_OUT
+    );
+
+    public BookingDetailsActionPanelView(final Context context, Booking booking)
     {
-        super(context, arguments);
+        super(context);
+        init(booking);
     }
 
-    protected int getLayoutResourceId()
+    public BookingDetailsActionPanelView(final Context context, final AttributeSet attrs)
     {
-        return R.layout.element_booking_details_action;
+        super(context, attrs);
     }
 
-    @Override
-    protected boolean constructView(ViewGroup container, Booking booking)
+    public BookingDetailsActionPanelView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
-        BookingStatus bookingStatus = (BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(21)
+    public BookingDetailsActionPanelView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
+    {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    public void init(final Booking booking)
+    {
+        inflate(getContext(), R.layout.element_booking_details_action, this);
+        ButterKnife.bind(this);
+
         List<Booking.Action> allowedActions = booking.getAllowedActions();
-        boolean removeSection = shouldRemoveSection(booking, allowedActions, bookingStatus);
+        boolean removeSection = !hasAllowedAction(allowedActions);
         if (removeSection)
         {
-            container.setVisibility(View.GONE);
-            return false;
+            setVisibility(View.GONE);
         }
         else
         {
             initHelperText(allowedActions);
-            return true;
         }
     }
 
-    protected boolean shouldRemoveSection(Booking booking, List<Booking.Action> allowedActions, BookingStatus bookingStatus)
-    {
-        return !hasAllowedAction(allowedActions);
-    }
-
-    protected boolean hasAllowedAction(List<Booking.Action> allowedActions)
+    private boolean hasAllowedAction(List<Booking.Action> allowedActions)
     {
         boolean hasAnAction = false;
         for (Booking.Action action : allowedActions)
@@ -71,7 +83,7 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
         return hasAnAction;
     }
 
-    protected void initHelperText(List<Booking.Action> allowedActions)
+    private void initHelperText(List<Booking.Action> allowedActions)
     {
         String helperContent = "";
         for (Booking.Action action : allowedActions)
@@ -92,12 +104,12 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
 
         if (!helperContent.isEmpty())
         {
-            helperText.setVisibility(View.VISIBLE);
-            helperText.setText(helperContent);
+            mHelperText.setVisibility(View.VISIBLE);
+            mHelperText.setText(helperContent);
         }
         else
         {
-            helperText.setVisibility(View.GONE);
+            mHelperText.setVisibility(View.GONE);
         }
     }
 
@@ -105,13 +117,4 @@ public class BookingDetailsActionPanelViewConstructor extends BookingDetailsView
     {
         return associatedButtonActionTypes;
     }
-
-    private final ImmutableList<BookingActionButtonType> associatedButtonActionTypes =
-            ImmutableList.of(
-                    BookingActionButtonType.CLAIM,
-                    BookingActionButtonType.ON_MY_WAY,
-                    BookingActionButtonType.CHECK_IN,
-                    BookingActionButtonType.CHECK_OUT,
-                    BookingActionButtonType.HELP
-            );
 }
