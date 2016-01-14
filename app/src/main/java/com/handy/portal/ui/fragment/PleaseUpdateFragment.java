@@ -2,10 +2,13 @@ package com.handy.portal.ui.fragment;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -41,12 +44,15 @@ public class PleaseUpdateFragment extends InjectedFragment
     View mUpdateButton;
     @Bind(R.id.update_text)
     TextView mUpdateText;
-    @Bind(R.id.grant_permissions_secion)
-    LinearLayout mGrantPermissionsSection;
     @Bind(R.id.grant_access_button)
     Button mGrantAccessButton;
+    @Bind(R.id.grant_permissions_section)
+    LinearLayout mGrantPermissionsSection;
+    @Bind(R.id.install_update_section)
+    LinearLayout mInstallUpdateSection;
 
     private boolean mAlreadyAskedPermissions = false;
+    private Uri mApkUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,10 +83,12 @@ public class PleaseUpdateFragment extends InjectedFragment
         if (!mVersionManager.hasRequestedDownload() && !shouldRequestPermissions())
         {
             mGrantPermissionsSection.setVisibility(View.GONE);
+            mInstallUpdateSection.setVisibility(View.VISIBLE);
             downloadApk();
         }
-        else if (mAlreadyAskedPermissions)
+        else if (mAlreadyAskedPermissions && mApkUri == null)
         {
+            mInstallUpdateSection.setVisibility(View.GONE);
             mGrantPermissionsSection.setVisibility(View.VISIBLE);
         }
     }
@@ -97,6 +105,7 @@ public class PleaseUpdateFragment extends InjectedFragment
         mUpdateImage.setBackgroundResource(R.drawable.img_update_success);
         mUpdateButton.setEnabled(true);
         mUpdateText.setText(R.string.update_copy);
+        mApkUri = mVersionManager.getNewApkUri();
     }
 
     @Subscribe
@@ -110,8 +119,14 @@ public class PleaseUpdateFragment extends InjectedFragment
     protected void installApk()
     {
         Intent installIntent = new Intent(Intent.ACTION_VIEW);
-        installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            ComponentName comp = new ComponentName("com.android.packageinstaller", "com.android.packageinstaller.PackageInstallerActivity");
+            installIntent.setComponent(comp);
+        }
+
         installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
         Utils.safeLaunchIntent(installIntent, getActivity());
     }
 

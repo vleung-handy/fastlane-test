@@ -66,7 +66,9 @@ public class VersionManager
 
     public Uri getNewApkUri()
     {
-        return downloadManager.getUriForDownloadedFile(downloadReferenceId);
+        File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(downloadsDirectory, APK_FILE_NAME);
+        return Uri.fromFile(file);
     }
 
     @Produce

@@ -219,6 +219,11 @@
     <string name="update_copy">Please install the update to continue using Portal.</string>
     <string name="update_button_label">Install Update</string>
     <string name="download_copy">Downloading update. Please wait…</string>
+    <string name="allow_external_storage_write_title">Important update</string>
+    <string name="allow_external_storage_write_message">Select “Allow” on the next screen in order to download the latest version of the Handy Pro Portal.</string>
+    <string name="allow_external_storage_write_button">OK</string>
+    <string name="grant_access_copy">Handy Pro Portal needs access to download the latest and greatest.</string>
+    <string name="grant_access_button">Grant Access</string>
 
     <plurals name="hour">
         <item quantity="one">hour</item>
@@ -508,9 +513,4 @@
     <!--Notifications List-->
     <string name="load_notifications">Loading more notifications…</string>
     <string name="no_more_notifications">You have no more notifications to load.</string>
-
-    <!-- Write to external storage permissions context -->
-    <string name="allow_external_storage_write_title">Important update</string>
-    <string name="allow_external_storage_write_message">Select “Allow” on the next screen in order to download the latest version of the Handy Pro Portal.</string>
-    <string name="allow_external_storage_write_button">OK</string>
 </resources>
