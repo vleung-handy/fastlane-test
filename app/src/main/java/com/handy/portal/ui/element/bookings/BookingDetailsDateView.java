@@ -1,9 +1,9 @@
-package com.handy.portal.ui.constructor;
+package com.handy.portal.ui.element.bookings;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.ViewGroup;
+import android.util.AttributeSet;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -15,31 +15,45 @@ import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
-public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstructor
+public class BookingDetailsDateView extends FrameLayout
 {
     @Bind(R.id.booking_details_time_text)
-    protected TextView timeText;
-
+    TextView timeText;
     @Bind(R.id.booking_details_date_text)
-    protected TextView dateText;
+    TextView dateText;
 
     private static final String DATE_FORMAT = "E, MMM d";
     private static final String INTERPUNCT = "\u00B7";
 
-    public BookingDetailsDateViewConstructor(@NonNull Context context, Bundle arguments)
+    public BookingDetailsDateView(final Context context, Booking booking)
     {
-        super(context, arguments);
+        super(context);
+        init(booking);
     }
 
-    protected int getLayoutResourceId()
+    public BookingDetailsDateView(final Context context, final AttributeSet attrs)
     {
-        return R.layout.element_booking_details_date;
+        super(context, attrs);
     }
 
-    @Override
-    protected boolean constructView(ViewGroup container, Booking booking)
+    public BookingDetailsDateView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(21)
+    public BookingDetailsDateView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
+    {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    public void init(final Booking booking)
+    {
+        inflate(getContext(), R.layout.element_booking_details_date, this);
+        ButterKnife.bind(this);
+
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
 
@@ -50,8 +64,6 @@ public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstru
 
         dateText.setText(getPrependByStartDate(startDate) + formattedDate.toUpperCase());
         timeText.setText(formattedTime.toUpperCase());
-
-        return true;
     }
 
     //returns a today or tomorrow prepend as needed
@@ -77,5 +89,4 @@ public class BookingDetailsDateViewConstructor extends BookingDetailsViewConstru
 
         return prepend;
     }
-
 }
