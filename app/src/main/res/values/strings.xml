@@ -508,4 +508,9 @@
     <!--Notifications List-->
     <string name="load_notifications">Loading more notifications…</string>
     <string name="no_more_notifications">You have no more notifications to load.</string>
+
+    <!-- Write to external storage permissions context -->
+    <string name="allow_external_storage_write_title">Important update</string>
+    <string name="allow_external_storage_write_message">Select “Allow” on the next screen in order to download the latest version of the Handy Pro Portal.</string>
+    <string name="allow_external_storage_write_button">OK</string>
 </resources>

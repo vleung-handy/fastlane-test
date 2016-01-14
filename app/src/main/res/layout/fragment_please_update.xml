@@ -1,7 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:orientation="vertical"
-    tools:context="com.handy.portal.ui.fragment.PleaseUpdateFragment" android:background="#00CDED">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#00CDED"
+    tools:context="com.handy.portal.ui.fragment.PleaseUpdateFragment"
+    >
 
     <!-- TODO: Update blank fragment layout -->
     <ImageView
@@ -44,5 +49,41 @@
         android:layout_marginTop="10dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-        android:enabled="false"/>
+        android:enabled="false"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/grant_permissions_secion"
+        android:layout_marginTop="@dimen/default_margin"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            style="@style/TextView.Medium"
+            android:text="Handy Pro Portal needs access to download the latest and greatest"
+            android:maxWidth="300dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            />
+
+        <Button
+            style="@style/Button.Green.Round"
+            android:id="@+id/grant_access_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grant Access"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/default_margin"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            />
+
+    </LinearLayout>
+
 </LinearLayout>
