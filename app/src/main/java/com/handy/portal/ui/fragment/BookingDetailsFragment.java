@@ -384,12 +384,13 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             new BookingDetailsActionPanelViewConstructor(getActivity(), arguments).create(actionLayout, booking);
             new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments).create(contactLayout, booking);
-            if (booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
-            {
-                BookingActionButton bookingActionButton = new BookingActionButton(getContext());
-                bookingActionButton.init(booking, this, BookingActionButtonType.HELP);
-                mSupportLayout.addView(bookingActionButton);
-            }
+        }
+        if (mProviderManager.getCachedActiveProvider() != null &&
+                booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
+        {
+            BookingActionButton bookingActionButton = new BookingActionButton(getContext());
+            bookingActionButton.init(booking, this, BookingActionButtonType.HELP);
+            mSupportLayout.addView(bookingActionButton);
         }
     }
 
@@ -441,19 +442,26 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
 
             //the client knows what layout to insert a given button into, this should never come from the server
-            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(UIUtils.getAssociatedActionType(action));
+            BookingActionButtonType type = UIUtils.getAssociatedActionType(action);
+            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(type);
 
             if (buttonParentLayout == null)
             {
-                Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(action).getActionName());
+                Crashlytics.log("Could not find parent layout for " + action.getActionName());
+            }
+            else if (type == null)
+            {
+                Crashlytics.log("Could not find action type for " + action.getActionName());
             }
             else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
 
-                BookingActionButton bookingActionButton = (BookingActionButton)
-                        ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(action).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
-                bookingActionButton.init(booking, this, action); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
+                ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext())
+                        .inflate(type.getLayoutTemplateId(), buttonParentLayout);
+                BookingActionButton bookingActionButton =
+                        (BookingActionButton) viewGroup.getChildAt(newChildIndex);
+                bookingActionButton.init(booking, this, action);
             }
         }
     }
