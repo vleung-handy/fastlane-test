@@ -1,7 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:orientation="vertical"
-    tools:context="com.handy.portal.ui.fragment.PleaseUpdateFragment" android:background="#00CDED">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#00CDED"
+    tools:context="com.handy.portal.ui.fragment.PleaseUpdateFragment"
+    >
 
     <!-- TODO: Update blank fragment layout -->
     <ImageView
@@ -22,27 +27,73 @@
         android:layout_marginTop="20dp"
         android:textStyle="bold"/>
 
-    <TextView
-        android:id="@+id/update_text"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="@string/download_copy"
-        style="@style/TextView.Medium"
-        android:gravity="center_horizontal"
-        android:textColor="@color/white"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"/>
-
-    <Button
-        style="@style/Button.SalmonRound"
-        android:id="@+id/update_button"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/update_button_label"
-        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:id="@+id/install_update_section"
         android:layout_marginTop="10dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:enabled="false"/>
+        >
+
+        <TextView
+            android:id="@+id/update_text"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/download_copy"
+            style="@style/TextView.Medium"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            />
+
+        <Button
+            style="@style/Button.SalmonRound"
+            android:id="@+id/update_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update_button_label"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:enabled="false"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/grant_permissions_section"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            style="@style/TextView.Medium"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="@string/grant_access_copy"
+            />
+
+        <Button
+            style="@style/Button.Green.Round"
+            android:id="@+id/grant_access_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/grant_access_button"
+            />
+
+    </LinearLayout>
+
 </LinearLayout>
