@@ -67,7 +67,7 @@
                             android:id="@+id/booking_details_action_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginBottom="@dimen/extra_margin_medium"
                             />
 
                         <RelativeLayout
@@ -87,14 +87,14 @@
                             android:id="@+id/booking_details_location_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="@dimen/extra_margin_medium"
                             />
 
                         <LinearLayout
                             android:id="@+id/booking_details_remove_job_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="@dimen/extra_margin_medium"
                             android:background="@color/transparent"
                             android:orientation="horizontal"
                             />
