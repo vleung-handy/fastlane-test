@@ -15,6 +15,7 @@ import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -149,7 +150,11 @@ public class TestApplicationModule
     @Provides
     final ProviderManager provideProviderManager()
     {
-        return mock(ProviderManager.class);
+        Provider provider = mock(Provider.class);
+        when(provider.getId()).thenReturn("444");
+        ProviderManager providerManager = mock(ProviderManager.class);
+        when(providerManager.getCachedActiveProvider()).thenReturn(provider);
+        return providerManager;
     }
 
     @Provides
