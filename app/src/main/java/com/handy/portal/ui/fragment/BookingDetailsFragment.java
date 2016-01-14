@@ -52,9 +52,9 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.BookingDetailsDateView;
+import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
@@ -373,7 +373,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
 
         dateLayout.addView(new BookingDetailsDateView(getContext(), booking));
-        new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments).create(titleLayout, booking);
+        titleLayout.addView(new BookingDetailsTitleView(getContext(), booking, mFromPaymentsTab, bookingStatus));
         if (booking.isProxy())
         {
             UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getZipCluster()));
