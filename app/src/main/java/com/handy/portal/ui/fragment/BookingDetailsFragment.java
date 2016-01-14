@@ -51,9 +51,9 @@ import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.BookingDetailsDateView;
+import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
@@ -378,7 +378,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getZipCluster()));
         }
-        new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments).create(jobInstructionsLayout, booking);
+        jobInstructionsLayout.addView(new BookingDetailsJobInstructionsView(getContext(), booking, mFromPaymentsTab, bookingStatus));
 
         if (!mFromPaymentsTab)
         {
