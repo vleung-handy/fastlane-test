@@ -17,8 +17,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-
 public class InjectedFragment extends android.support.v4.app.Fragment
 {
     protected Toast toast;
@@ -54,13 +52,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     {
         this.bus.unregister(this);
         super.onPause();
-    }
-
-    @Override
-    public void onDestroyView()
-    {
-        ButterKnife.unbind(this); //TODO: this doesn't actually remove the injected views' listeners! need to be careful when handling the listeners' callbacks
-        super.onDestroyView();
     }
 
     //Each fragment if it requires arguments from the bundles should override this list

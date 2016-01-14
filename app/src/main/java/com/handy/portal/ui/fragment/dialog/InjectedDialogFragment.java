@@ -12,8 +12,6 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-
 public class InjectedDialogFragment extends DialogFragment
 {
     @Inject
@@ -52,10 +50,4 @@ public class InjectedDialogFragment extends DialogFragment
         super.onPause();
     }
 
-    @Override
-    public void onDestroyView()
-    {
-        ButterKnife.unbind(this);
-        super.onDestroyView();
-    }
 }
