@@ -49,9 +49,9 @@ import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
 import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
 import com.handy.portal.ui.element.SupportActionContainerView;
+import com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView;
 import com.handy.portal.ui.element.bookings.BookingDetailsDateView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
@@ -193,7 +193,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                         mScrollView != null)
                 {
                     float percentVis = UIUtils.getPercentViewVisibleInScrollView(jobInstructionsLayout, mScrollView);
-                    if(percentVis >= TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD)
+                    if (percentVis >= TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD)
                     {
                         //flip flag so we don't spam this event
                         mHaveTrackedSeenBookingInstructions = true; //not guaranteed to stay flipped throughout session just on screen
@@ -350,7 +350,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
         arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, mFromPaymentsTab);
 
-
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 
         if (mFromPaymentsTab)
@@ -383,7 +382,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (!mFromPaymentsTab)
         {
             new BookingDetailsActionPanelViewConstructor(getActivity(), arguments).create(actionLayout, booking);
-            new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments).create(contactLayout, booking);
+            contactLayout.addView(new BookingDetailsActionContactPanelView(getContext(), booking));
         }
         if (mProviderManager.getCachedActiveProvider() != null &&
                 booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
