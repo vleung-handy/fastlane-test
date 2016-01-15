@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public final class NotificationsFragment extends ActionBarFragment
 {
@@ -29,6 +31,9 @@ public final class NotificationsFragment extends ActionBarFragment
 
     @Bind(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
+
+    @Bind(R.id.fetch_error_text)
+    TextView mFetchErrorTextView;
 
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
@@ -86,8 +91,15 @@ public final class NotificationsFragment extends ActionBarFragment
     @Override
     public void onPause()
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));//don't want overlay to persist when this fragment is paused
+        setLoadingOverlayVisible(false); //don't want overlay to persist when this fragment is paused
         super.onPause();
+    }
+
+    @OnClick(R.id.try_again_button)
+    public void doInitialRequestAgain()
+    {
+        setLoadingOverlayVisible(true);
+        requestNotifications(true);
     }
 
     @Subscribe
@@ -114,6 +126,22 @@ public final class NotificationsFragment extends ActionBarFragment
         else
         {
             mNotificationsListView.setFooterText(R.string.no_more_notifications);
+        }
+    }
+
+    @Subscribe
+    public void onReceiveNotificationMessagesError(NotificationEvent.ReceiveNotificationMessagesError event)
+    {
+        cleanUpView();
+        if (mNotificationsListView.isEmpty())
+        {
+            mFetchErrorView.setVisibility(View.VISIBLE);
+            mFetchErrorTextView.setText(R.string.error_loading_notifications);
+        }
+        else
+        {
+            mNotificationsListView.stopRequestingNotifications();
+            mNotificationsListView.showFooter(R.string.error_loading_notifications);
         }
     }
 
