@@ -384,12 +384,12 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             new BookingDetailsActionPanelViewConstructor(getActivity(), arguments).create(actionLayout, booking);
             new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments).create(contactLayout, booking);
-        }
-        if (booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
-        {
-            BookingActionButton bookingActionButton = new BookingActionButton(getContext());
-            bookingActionButton.init(booking, this, BookingActionButtonType.HELP);
-            mSupportLayout.addView(bookingActionButton);
+            if (booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
+            {
+                BookingActionButton bookingActionButton = new BookingActionButton(getContext());
+                bookingActionButton.init(booking, this, BookingActionButtonType.HELP);
+                mSupportLayout.addView(bookingActionButton);
+            }
         }
     }
 
