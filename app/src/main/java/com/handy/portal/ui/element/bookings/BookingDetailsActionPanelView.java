@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.model.Booking;
@@ -23,12 +23,13 @@ public class BookingDetailsActionPanelView extends FrameLayout
     @Bind(R.id.booking_details_action_text)
     TextView mHelperText;
 
-    private final ImmutableList<BookingActionButtonType> associatedButtonActionTypes = ImmutableList.of(
-            BookingActionButtonType.CLAIM,
-            BookingActionButtonType.ON_MY_WAY,
-            BookingActionButtonType.CHECK_IN,
-            BookingActionButtonType.CHECK_OUT
-    );
+    private static final ImmutableSet<BookingActionButtonType> ASSOCIATED_BUTTON_ACTION_TYPES =
+            ImmutableSet.of(
+                    BookingActionButtonType.CLAIM,
+                    BookingActionButtonType.ON_MY_WAY,
+                    BookingActionButtonType.CHECK_IN,
+                    BookingActionButtonType.CHECK_OUT
+            );
 
     public BookingDetailsActionPanelView(final Context context, Booking booking)
     {
@@ -74,7 +75,7 @@ public class BookingDetailsActionPanelView extends FrameLayout
         boolean hasAnAction = false;
         for (Booking.Action action : allowedActions)
         {
-            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(action)))
+            if (ASSOCIATED_BUTTON_ACTION_TYPES.contains(UIUtils.getAssociatedActionType(action)))
             {
                 hasAnAction = true;
                 break;
@@ -88,7 +89,7 @@ public class BookingDetailsActionPanelView extends FrameLayout
         String helperContent = "";
         for (Booking.Action action : allowedActions)
         {
-            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(action)))
+            if (ASSOCIATED_BUTTON_ACTION_TYPES.contains(UIUtils.getAssociatedActionType(action)))
             {
                 if (action.getHelperText() != null && !action.getHelperText().isEmpty())
                 {
@@ -113,8 +114,4 @@ public class BookingDetailsActionPanelView extends FrameLayout
         }
     }
 
-    protected ImmutableList<BookingActionButtonType> getAssociatedButtonActionTypes()
-    {
-        return associatedButtonActionTypes;
-    }
 }

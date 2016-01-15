@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.model.Booking;
@@ -23,8 +23,8 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
     @Bind(R.id.booking_details_contact_profile_text)
     TextView mProfileText;
 
-    protected final ImmutableList<BookingActionButtonType> associatedButtonActionTypes =
-            ImmutableList.of(
+    private final ImmutableSet<BookingActionButtonType> ASSOCIATED_BUTTON_ACTION_TYPES =
+            ImmutableSet.of(
                     BookingActionButtonType.CONTACT_PHONE,
                     BookingActionButtonType.CONTACT_TEXT
             );
@@ -73,7 +73,7 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
         boolean hasAnAction = false;
         for (Booking.Action action : allowedActions)
         {
-            if (getAssociatedButtonActionTypes().contains(UIUtils.getAssociatedActionType(action)))
+            if (ASSOCIATED_BUTTON_ACTION_TYPES.contains(UIUtils.getAssociatedActionType(action)))
             {
                 hasAnAction = true;
                 break;
@@ -82,8 +82,4 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
         return hasAnAction;
     }
 
-    private ImmutableList<BookingActionButtonType> getAssociatedButtonActionTypes()
-    {
-        return associatedButtonActionTypes;
-    }
 }
