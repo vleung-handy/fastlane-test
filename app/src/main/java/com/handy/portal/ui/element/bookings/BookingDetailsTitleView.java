@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,19 +20,19 @@ import butterknife.ButterKnife;
 public class BookingDetailsTitleView extends FrameLayout
 {
     @Bind(R.id.booking_details_location_text)
-    TextView locationText;
+    TextView mLocationText;
     @Bind(R.id.booking_details_service_text)
-    TextView serviceText;
+    TextView mServiceText;
     @Bind(R.id.booking_details_payment_text)
-    TextView paymentText;
+    TextView mPaymentText;
     @Bind(R.id.booking_details_cents_text)
-    TextView centsText;
+    TextView mCentsText;
     @Bind(R.id.booking_details_payment_bonus_text)
-    TextView paymentBonusText;
+    TextView mPaymentBonusText;
     @Bind(R.id.booking_details_partner_text)
-    TextView partnerText;
+    TextView mPartnerText;
     @Bind(R.id.booking_details_requested_indicator_layout)
-    LinearLayout requestedLayout;
+    LinearLayout mRequestedLayout;
 
     public BookingDetailsTitleView(final Context context, Booking booking,
                                    boolean isFromPayments, Booking.BookingStatus status)
@@ -56,49 +57,50 @@ public class BookingDetailsTitleView extends FrameLayout
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void init(final Booking booking, boolean isFromPayments, Booking.BookingStatus status)
+    public void init(@NonNull final Booking booking, boolean isFromPayments,
+                     @NonNull Booking.BookingStatus status)
     {
         inflate(getContext(), R.layout.element_booking_details_location, this);
         ButterKnife.bind(this);
 
         Booking.BookingStatus bookingStatus = isFromPayments ? Booking.BookingStatus.UNAVAILABLE : status;
 
-        locationText.setText(booking.getFormattedLocation(bookingStatus));
+        mLocationText.setText(booking.getFormattedLocation(bookingStatus));
 
         Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
         if (serviceInfo.isHomeCleaning())
         {
-            UIUtils.setFrequencyInfo(booking, serviceText, getContext());
+            UIUtils.setFrequencyInfo(booking, mServiceText, getContext());
         }
         else
         {
-            serviceText.setText(serviceInfo.getDisplayName());
+            mServiceText.setText(serviceInfo.getDisplayName());
         }
 
         if (!isFromPayments)
         {
-            UIUtils.setPaymentInfo(paymentText, centsText, booking.getPaymentToProvider(),
+            UIUtils.setPaymentInfo(mPaymentText, mCentsText, booking.getPaymentToProvider(),
                     getContext().getString(R.string.payment_value));
-            UIUtils.setPaymentInfo(paymentBonusText, null, booking.getBonusPaymentToProvider(),
+            UIUtils.setPaymentInfo(mPaymentBonusText, null, booking.getBonusPaymentToProvider(),
                     getContext().getString(R.string.bonus_payment_value));
         }
 
         //Partner takes priority over requested
         if (booking.getPartner() != null)
         {
-            partnerText.setVisibility(booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ?
+            mPartnerText.setVisibility(booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ?
                     View.VISIBLE : View.GONE);
-            requestedLayout.setVisibility(View.GONE);
+            mRequestedLayout.setVisibility(View.GONE);
         }
         else if (booking.isRequested() && !isFromPayments)
         {
-            partnerText.setVisibility(View.GONE);
-            requestedLayout.setVisibility(View.VISIBLE);
+            mPartnerText.setVisibility(View.GONE);
+            mRequestedLayout.setVisibility(View.VISIBLE);
         }
         else
         {
-            partnerText.setVisibility(View.GONE);
-            requestedLayout.setVisibility(View.GONE);
+            mPartnerText.setVisibility(View.GONE);
+            mRequestedLayout.setVisibility(View.GONE);
         }
     }
 }

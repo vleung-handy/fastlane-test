@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -20,9 +21,9 @@ import butterknife.ButterKnife;
 public class BookingDetailsDateView extends FrameLayout
 {
     @Bind(R.id.booking_details_time_text)
-    TextView timeText;
+    TextView mTimeText;
     @Bind(R.id.booking_details_date_text)
-    TextView dateText;
+    TextView mDateText;
 
     private static final String DATE_FORMAT = "E, MMM d";
     private static final String INTERPUNCT = "\u00B7";
@@ -49,7 +50,7 @@ public class BookingDetailsDateView extends FrameLayout
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void init(final Booking booking)
+    public void init(@NonNull final Booking booking)
     {
         inflate(getContext(), R.layout.element_booking_details_date, this);
         ButterKnife.bind(this);
@@ -62,8 +63,8 @@ public class BookingDetailsDateView extends FrameLayout
 
         String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " - " + DateTimeUtils.formatDateTo12HourClock(endDate);
 
-        dateText.setText(getPrependByStartDate(startDate) + formattedDate.toUpperCase());
-        timeText.setText(formattedTime.toUpperCase());
+        mDateText.setText(getPrependByStartDate(startDate) + formattedDate.toUpperCase());
+        mTimeText.setText(formattedTime.toUpperCase());
     }
 
     //returns a today or tomorrow prepend as needed

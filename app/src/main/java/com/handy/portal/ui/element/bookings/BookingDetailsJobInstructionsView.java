@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.AttributeSet;
@@ -28,9 +29,9 @@ import butterknife.ButterKnife;
 public class BookingDetailsJobInstructionsView extends FrameLayout
 {
     @Bind(R.id.booking_details_job_instructions_list_layout)
-    LinearLayout instructionsLayout;
+    LinearLayout mInstructionsLayout;
     @Bind(R.id.job_instructions_reveal_notice)
-    TextView revealNotice;
+    TextView mRevealNotice;
 
     private static final Map<String, Integer> GROUP_ICONS;
 
@@ -67,13 +68,15 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void init(final Booking booking, boolean isFromPayments, Booking.BookingStatus bookingStatus)
+    public void init(@NonNull final Booking booking, boolean isFromPayments,
+                     @NonNull Booking.BookingStatus bookingStatus)
     {
         inflate(getContext(), R.layout.element_booking_details_job_instructions, this);
         ButterKnife.bind(this);
 
         boolean isHomeCleaning = booking.getServiceInfo().isHomeCleaning();
-        boolean fullDetails = isFromPayments || !isHomeCleaning || (bookingStatus == Booking.BookingStatus.CLAIMED);
+        boolean shouldShowFullDetails =
+                isFromPayments || !isHomeCleaning || (bookingStatus == Booking.BookingStatus.CLAIMED);
 
         boolean jobInstructionsSectionConstructed = false; //if we don't add any sections we will not add the view
 
@@ -82,15 +85,15 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             Spanned noticeText = Html.fromHtml(
                     getContext().getResources().getString(R.string.full_details_and_more_available_on_date,
                             DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
-            revealNotice.setText(noticeText);
-            revealNotice.setVisibility(View.VISIBLE);
+            mRevealNotice.setText(noticeText);
+            mRevealNotice.setVisibility(View.VISIBLE);
             jobInstructionsSectionConstructed = true;
         }
 
         //Show description field regardless of claim status if the booking is not for cleaning (e.g. furniture assembly)
         if (!isHomeCleaning && booking.getDescription() != null && !booking.getDescription().isEmpty())
         {
-            BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
+            BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
             sectionView.init(getContext().getString(R.string.description),
                     R.drawable.ic_details_notes, Lists.newArrayList(booking.getDescription()));
 
@@ -105,7 +108,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             List<String> entries = new ArrayList<>();
             entries.add(getContext().getString(R.string.bring_cleaning_supplies));
 
-            BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
+            BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
             sectionView.init(getContext().getString(R.string.supplies), R.drawable.ic_details_supplies, entries);
 
             jobInstructionsSectionConstructed = true;
@@ -126,21 +129,21 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
 
             if (entries.size() > 0)
             {
-                BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
+                BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
                 sectionView.init(getContext().getString(R.string.extras), R.drawable.ic_details_extras, entries);
 
                 jobInstructionsSectionConstructed = true;
             }
         }
 
-        if (fullDetails)
+        if (shouldShowFullDetails)
         {
             List<Booking.BookingInstructionGroup> bookingInstructionGroups = booking.getBookingInstructionGroups();
             if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
             {
                 for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
                 {
-                    BookingDetailsJobInstructionsSectionView sectionView = addSection(instructionsLayout);
+                    BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
                     sectionView.init(group.getLabel(), GROUP_ICONS.get(group.getGroup()), group.getItems());
                 }
 
