@@ -72,16 +72,14 @@ public class BookingDetailsActionPanelView extends FrameLayout
 
     private boolean hasAllowedAction(List<Booking.Action> allowedActions)
     {
-        boolean hasAnAction = false;
         for (Booking.Action action : allowedActions)
         {
             if (ASSOCIATED_BUTTON_ACTION_TYPES.contains(UIUtils.getAssociatedActionType(action)))
             {
-                hasAnAction = true;
-                break;
+                return true;
             }
         }
-        return hasAnAction;
+        return false;
     }
 
     private void initHelperText(List<Booking.Action> allowedActions)
