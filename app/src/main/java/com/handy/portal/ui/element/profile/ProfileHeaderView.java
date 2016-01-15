@@ -1,10 +1,9 @@
-package com.handy.portal.ui.constructor;
+package com.handy.portal.ui.element.profile;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -17,9 +16,13 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
-public class ProfileHeaderViewConstructor extends ViewConstructor<ProviderProfile>
-{
+/**
+ * Created by dhillman on 1/15/16.
+ */
+public class ProfileHeaderView extends FrameLayout {
+
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.00");
 
     @Bind(R.id.provider_first_name_text)
@@ -31,29 +34,26 @@ public class ProfileHeaderViewConstructor extends ViewConstructor<ProviderProfil
     @Bind(R.id.jobs_rating_text)
     TextView jobsRatingText;
 
-    public ProfileHeaderViewConstructor(@NonNull Context context)
-    {
+    private ProviderProfile mProfileProfile;
+
+    public ProfileHeaderView(Context context, ProviderProfile profile) {
         super(context);
-    }
 
-    @Override
-    protected int getLayoutResourceId()
-    {
-        return R.layout.element_profile_header;
-    }
+        // Inflate view using ButterKnife
+        inflate(getContext(), R.layout.element_profile_header, this);
+        ButterKnife.bind(this);
 
-    @Override
-    protected boolean constructView(ViewGroup container, ProviderProfile providerProfile)
-    {
-        ProviderPersonalInfo providerPersonalInfo = providerProfile.getProviderPersonalInfo();
-        PerformanceInfo performanceInfo = providerProfile.getPerformanceInfo();
+        // Fetch provider info to populate into ProfileHeaderView
+        ProviderPersonalInfo providerPersonalInfo = profile.getProviderPersonalInfo();
+        PerformanceInfo performanceInfo = profile.getPerformanceInfo();
+        String formattedTotalRating = RATING_FORMAT.format(performanceInfo.getTotalRating());
 
+        // Set text of view elements
         providerFirstNameText.setText(providerPersonalInfo.getFirstName());
         providerLastNameText.setText(providerPersonalInfo.getLastName());
-
-        String formattedTotalRating = RATING_FORMAT.format(performanceInfo.getTotalRating());
         jobsRatingText.setText(Html.fromHtml(getContext().getString(R.string.jobs_and_rating, performanceInfo.getTotalJobsCount(), formattedTotalRating)));
 
+        // Bind activation date if applicable
         Date activationDate = providerPersonalInfo.getActivationDate();
         if (activationDate != null)
         {
@@ -63,7 +63,5 @@ public class ProfileHeaderViewConstructor extends ViewConstructor<ProviderProfil
         {
             joinedHandyText.setVisibility(View.GONE);
         }
-
-        return true;
     }
 }
