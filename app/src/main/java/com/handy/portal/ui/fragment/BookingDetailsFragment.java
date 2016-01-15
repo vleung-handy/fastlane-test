@@ -49,12 +49,12 @@ import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.constructor.BookingDetailsActionContactPanelViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsActionPanelViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsDateViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsJobInstructionsViewConstructor;
-import com.handy.portal.ui.constructor.BookingDetailsLocationPanelViewConstructor;
 import com.handy.portal.ui.element.SupportActionContainerView;
+import com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView;
+import com.handy.portal.ui.element.bookings.BookingDetailsActionPanelView;
+import com.handy.portal.ui.element.bookings.BookingDetailsDateView;
+import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
+import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
@@ -193,7 +193,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                         mScrollView != null)
                 {
                     float percentVis = UIUtils.getPercentViewVisibleInScrollView(jobInstructionsLayout, mScrollView);
-                    if(percentVis >= TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD)
+                    if (percentVis >= TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD)
                     {
                         //flip flag so we don't spam this event
                         mHaveTrackedSeenBookingInstructions = true; //not guaranteed to stay flipped throughout session just on screen
@@ -350,7 +350,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
         arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, mFromPaymentsTab);
 
-
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 
         if (mFromPaymentsTab)
@@ -372,24 +371,25 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
         }
 
-        new BookingDetailsDateViewConstructor(getActivity(), arguments).create(dateLayout, booking);
-        new BookingDetailsLocationPanelViewConstructor(getActivity(), arguments).create(titleLayout, booking);
+        dateLayout.addView(new BookingDetailsDateView(getContext(), booking));
+        titleLayout.addView(new BookingDetailsTitleView(getContext(), booking, mFromPaymentsTab, bookingStatus));
         if (booking.isProxy())
         {
             UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getZipCluster()));
         }
-        new BookingDetailsJobInstructionsViewConstructor(getActivity(), arguments).create(jobInstructionsLayout, booking);
+        jobInstructionsLayout.addView(new BookingDetailsJobInstructionsView(getContext(), booking, mFromPaymentsTab, bookingStatus));
 
         if (!mFromPaymentsTab)
         {
-            new BookingDetailsActionPanelViewConstructor(getActivity(), arguments).create(actionLayout, booking);
-            new BookingDetailsActionContactPanelViewConstructor(getActivity(), arguments).create(contactLayout, booking);
-            if (booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
-            {
-                BookingActionButton bookingActionButton = new BookingActionButton(getContext());
-                bookingActionButton.init(booking, this, BookingActionButtonType.HELP);
-                mSupportLayout.addView(bookingActionButton);
-            }
+            actionLayout.addView(new BookingDetailsActionPanelView(getContext(), booking));
+            contactLayout.addView(new BookingDetailsActionContactPanelView(getContext(), booking));
+        }
+        if (mProviderManager.getCachedActiveProvider() != null &&
+                booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
+        {
+            BookingActionButton bookingActionButton = new BookingActionButton(getContext());
+            bookingActionButton.init(booking, this, BookingActionButtonType.HELP);
+            mSupportLayout.addView(bookingActionButton);
         }
     }
 
@@ -441,19 +441,26 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
 
             //the client knows what layout to insert a given button into, this should never come from the server
-            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(UIUtils.getAssociatedActionType(action));
+            BookingActionButtonType type = UIUtils.getAssociatedActionType(action);
+            ViewGroup buttonParentLayout = getParentLayoutForButtonActionType(type);
 
             if (buttonParentLayout == null)
             {
-                Crashlytics.log("Could not find parent layout for " + UIUtils.getAssociatedActionType(action).getActionName());
+                Crashlytics.log("Could not find parent layout for " + action.getActionName());
+            }
+            else if (type == null)
+            {
+                Crashlytics.log("Could not find action type for " + action.getActionName());
             }
             else
             {
                 int newChildIndex = buttonParentLayout.getChildCount(); //new index is equal to the old count since the new count is +1
 
-                BookingActionButton bookingActionButton = (BookingActionButton)
-                        ((ViewGroup) getActivity().getLayoutInflater().inflate(UIUtils.getAssociatedActionType(action).getLayoutTemplateId(), buttonParentLayout)).getChildAt(newChildIndex);
-                bookingActionButton.init(booking, this, action); //not sure if this is the better way or to have buttons dispatch specific events the fragment catches, for now this will suffice
+                ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext())
+                        .inflate(type.getLayoutTemplateId(), buttonParentLayout);
+                BookingActionButton bookingActionButton =
+                        (BookingActionButton) viewGroup.getChildAt(newChildIndex);
+                bookingActionButton.init(booking, this, action);
             }
         }
     }
