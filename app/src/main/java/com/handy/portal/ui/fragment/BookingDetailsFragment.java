@@ -117,21 +117,17 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Inject
     ProviderManager mProviderManager;
 
+    private static final String BOOKING_PROXY_ID_PREFIX = "P";
+    private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
+
     private String requestedBookingId;
     private BookingType requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
     private boolean mFromPaymentsTab;
     private MainViewTab currentTab;
-
-    private static final String BOOKING_PROXY_ID_PREFIX = "P";
-
     private boolean mHaveTrackedSeenBookingInstructions;
-
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
-
-    private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
-
 
     @Override
     protected MainViewTab getTab()
@@ -654,8 +650,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void showBookingActionWarningDialog(final String warning, final BookingActionButtonType actionType)
     {
         trackShowActionWarning(actionType);
-        bus.post(new LogEvent.AddLogEvent(
-                mEventLogFactory.createRemoveJobClickedLog(associatedBooking, warning)));
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -1089,9 +1083,24 @@ public class BookingDetailsFragment extends ActionBarFragment
                 goToHelpCenter(event.action.getDeepLinkData());
                 break;
             case REMOVE:
-                takeAction(BookingActionButtonType.REMOVE, false);
+                removeJob(event.action);
                 break;
         }
+    }
+
+    private void removeJob(Booking.Action removeAction)
+    {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
+                associatedBooking, removeAction.getWarningText())));
+
+        takeAction(BookingActionButtonType.REMOVE, false);
+
+        // New remove job confirmation that's currently hidden.
+//        Bundle arguments = new Bundle();
+//        arguments.putSerializable(BundleKeys.BOOKING, associatedBooking);
+//        arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
+//        bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)

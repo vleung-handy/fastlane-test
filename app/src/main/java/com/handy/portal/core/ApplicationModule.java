@@ -70,6 +70,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
+import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -144,6 +145,7 @@ import retrofit.converter.GsonConverter;
         PaymentsBatchListView.class,
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
+        CancellationRequestFragment.class,
         ManagementToolsView.class,
         SupportActionView.class,
         NotificationsFragment.class,

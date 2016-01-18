@@ -61,6 +61,7 @@ public class BookingActionButton extends Button
             }
         });
         setEnabled(true);
+        setTransformationMethod(null);
     }
 
 }

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -357,9 +359,9 @@ public final class UIUtils
         view.getHitRect(viewHitRect);
 
         Rect scrollBounds = new Rect(scrollView.getScrollX(),
-                                    scrollView.getScrollY(),
-                                    scrollView.getScrollX() + scrollView.getWidth(),
-                                    scrollView.getScrollY() + scrollView.getHeight());
+                scrollView.getScrollY(),
+                scrollView.getScrollX() + scrollView.getWidth(),
+                scrollView.getScrollY() + scrollView.getHeight());
 
         //Is this at all visible?
         if (Rect.intersects(viewHitRect, scrollBounds))
@@ -380,8 +382,7 @@ public final class UIUtils
         {
             return 0f;
         }
-        float overlapPercent = overlapArea / (r1.width() * r1.height());
-        return overlapPercent;
+        return overlapArea / (r1.width() * r1.height());
     }
 
     public static LinearLayout createLinearLayout(Context context, int orientation)
@@ -390,5 +391,19 @@ public final class UIUtils
         linearLayout.setOrientation(orientation);
         linearLayout.setLayoutParams(MATCH_PARENT_PARAMS);
         return linearLayout;
+    }
+
+    @Nullable
+    public static RadioButton getCheckedRadioButton(RadioGroup radioGroup)
+    {
+        for (int i = 0; i < radioGroup.getChildCount(); ++i)
+        {
+            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+            if (radioButton.isChecked())
+            {
+                return radioButton;
+            }
+        }
+        return null;
     }
 }
