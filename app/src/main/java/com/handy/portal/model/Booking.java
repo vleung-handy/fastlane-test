@@ -490,6 +490,9 @@ public class Booking implements Comparable<Booking>, Serializable
         private boolean mEnabled;
         @SerializedName("deep_link_data")
         private String mDeepLinkData;
+        @SerializedName("extras")
+        private Extras mExtras;
+
 
         public String getActionName()
         {
@@ -514,6 +517,22 @@ public class Booking implements Comparable<Booking>, Serializable
         public String getDeepLinkData()
         {
             return mDeepLinkData;
+        }
+
+        public int getWithholdingAmount() { return mExtras.getWithholdingAmount(); }
+
+        public List<String> getRemoveReasons() { return mExtras.getRemoveReasons(); }
+
+        public static class Extras implements Serializable
+        {
+            @SerializedName("withholding_amount")
+            private int mWithholdingAmount;
+            @SerializedName("remove_reasons")
+            private List<String> mRemoveReasons;
+
+            public int getWithholdingAmount() { return mWithholdingAmount; }
+
+            public List<String> getRemoveReasons() { return mRemoveReasons; }
         }
     }
 
