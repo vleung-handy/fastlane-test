@@ -103,6 +103,8 @@ public class CancellationRequestFragment extends ActionBarFragment
         }
         else
         {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
+                    mBooking, reasonBtn.getText().toString())));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestRemoveJob(mBooking));
 

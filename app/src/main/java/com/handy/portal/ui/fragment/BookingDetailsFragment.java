@@ -48,6 +48,7 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
+import com.handy.portal.model.logs.ScheduledJobsLog;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView;
@@ -612,6 +613,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void showHelpOptions()
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createSupportSelectedLog(associatedBooking)));
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
         if (mSlideUpPanelLayout != null)
         {
@@ -694,7 +696,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     //Service request bus posts
-    //
+
     private void requestClaimJob(Booking booking)
     {
         String source = "";
@@ -709,6 +711,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestRemoveJob(Booking booking)
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
+                associatedBooking, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
@@ -1064,6 +1068,9 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onSupportActionTriggered(HandyEvent.SupportActionTriggered event)
     {
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createHelpItemSelectedLog(
+                associatedBooking, event.action.getActionName())));
+
         switch (supportActionType)
         {
             case NOTIFY_EARLY:
@@ -1093,9 +1100,13 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
                 associatedBooking, removeAction.getWarningText())));
 
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                associatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
         takeAction(BookingActionButtonType.REMOVE, false);
 
         // New remove job confirmation that's currently hidden.
+//        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+//                associatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
 //        Bundle arguments = new Bundle();
 //        arguments.putSerializable(BundleKeys.BOOKING, associatedBooking);
 //        arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);

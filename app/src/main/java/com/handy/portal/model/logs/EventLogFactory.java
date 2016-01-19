@@ -225,6 +225,30 @@ public class EventLogFactory
         return new ScheduledJobsLog.BookingInstructionsSeen(getProviderId(), getVersionTrack(), bookingId);
     }
 
+    public EventLog createSupportSelectedLog(Booking booking)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.SupportSelected(getProviderId(), getVersionTrack(), bookingId);
+    }
+
+    public EventLog createHelpItemSelectedLog(Booking booking, String helpItemLabel)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.HelpItemSelected(getProviderId(), getVersionTrack(), bookingId, helpItemLabel);
+    }
+
+    public EventLog createRemoveConfirmationShownLog(Booking booking, String removalType)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.RemoveConfirmationShown(getProviderId(), getVersionTrack(), bookingId, removalType);
+    }
+
+    public EventLog createRemoveConfirmationAcceptedLog(Booking booking, String reason)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.RemoveConfirmationShown(getProviderId(), getVersionTrack(), bookingId, reason);
+    }
+
 
     // Payments Logs
     public EventLog createPaymentBatchSelectedLog(boolean currentWeek, int listNumber)
