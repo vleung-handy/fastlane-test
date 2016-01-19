@@ -121,4 +121,9 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
         mNotificationIds.clear();
         mShouldRequestMoreNotifications = true;
     }
+
+    public void stopRequestingNotifications()
+    {
+        mShouldRequestMoreNotifications = false;
+    }
 }
