@@ -209,7 +209,7 @@
     <string name="i_still_need_help">I Still Need Help</string>
     <string name="contact_us">Contact Us</string>
     <string name="send_message">Send Message</string>
-    <string name="contact_form_hint">Please describe your issue</string>
+    <string name="contact_form_hint">Help us serve you faster by including as many details as you have. Please note that Handy performs our support via email, and aims to respond to urgent issues as soon as possible.</string>
     <string name="please_login">Please log in</string>
     <string name="back">Back</string>
     <string name="contact_received">Message sent! \nWe\u2019ll follow up shortly.</string>
