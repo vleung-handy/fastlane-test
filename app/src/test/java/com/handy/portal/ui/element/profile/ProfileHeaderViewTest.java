@@ -30,25 +30,13 @@ import static org.mockito.Mockito.when;
         sdk = 19)
 public class ProfileHeaderViewTest
 {
-    @InjectMocks
-    ProfileHeaderView phView;
-
-    @InjectMocks
-    ProviderProfile providerProfile;
-
-    @InjectMocks
-    String firstName;
-
-    @InjectMocks
-    String lastName;
-
-    @InjectMocks
-    Float jobsRating;
-
-    @InjectMocks
-    Date activationDate;
-
     private static final Application APP = RuntimeEnvironment.application;
+    private ProfileHeaderView phView;
+    private ProviderProfile providerProfile;
+    private String firstName;
+    private String lastName;
+    private Float jobsRating;
+    private Date activationDate;
 
     @Before
     public void setUp() throws Exception {
