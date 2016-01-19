@@ -18,9 +18,6 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by dhillman on 1/15/16.
- */
 public class ProfileHeaderView extends FrameLayout {
 
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.00");
