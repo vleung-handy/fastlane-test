@@ -114,9 +114,7 @@ public class CancellationRequestFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveRemoveJobSuccess(final HandyEvent.ReceiveRemoveJobSuccess event)
     {
-        Booking booking = event.booking;
-        if ((!booking.isClaimedByMe() || booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
-                && booking.getId().equals(mBooking.getId()))
+        if (event.booking.getId().equals(mBooking.getId()))
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -124,10 +122,6 @@ public class CancellationRequestFragment extends ActionBarFragment
             arguments.putLong(BundleKeys.DATE_EPOCH_TIME, event.booking.getStartDate().getTime());
             //Return to available jobs on that day
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, transitionStyle));
-        }
-        else
-        {
-            onReceiveRemoveJobError(null);
         }
     }
 
