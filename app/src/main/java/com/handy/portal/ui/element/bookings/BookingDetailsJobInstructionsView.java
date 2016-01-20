@@ -17,6 +17,7 @@ import com.handy.portal.R;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.UIUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,6 +73,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                      @NonNull Booking.BookingStatus bookingStatus)
     {
         inflate(getContext(), R.layout.element_booking_details_job_instructions, this);
+        setLayoutParams(UIUtils.MATCH_PARENT_PARAMS);
         ButterKnife.bind(this);
 
         boolean isHomeCleaning = booking.getServiceInfo().isHomeCleaning();

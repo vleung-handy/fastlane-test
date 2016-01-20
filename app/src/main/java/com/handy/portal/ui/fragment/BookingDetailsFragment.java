@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +49,7 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
+import com.handy.portal.model.logs.ScheduledJobsLog;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView;
@@ -117,21 +119,17 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Inject
     ProviderManager mProviderManager;
 
+    private static final String BOOKING_PROXY_ID_PREFIX = "P";
+    private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
+
     private String requestedBookingId;
     private BookingType requestedBookingType;
     private Booking associatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date associatedBookingDate;
     private boolean mFromPaymentsTab;
     private MainViewTab currentTab;
-
-    private static final String BOOKING_PROXY_ID_PREFIX = "P";
-
     private boolean mHaveTrackedSeenBookingInstructions;
-
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
-
-    private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
-
 
     @Override
     protected MainViewTab getTab()
@@ -616,6 +614,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void showHelpOptions()
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createSupportSelectedLog(associatedBooking)));
         //TODO: Ugly defensive programming against bad timing on butterknife, root issue still there
         if (mSlideUpPanelLayout != null)
         {
@@ -654,8 +653,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void showBookingActionWarningDialog(final String warning, final BookingActionButtonType actionType)
     {
         trackShowActionWarning(actionType);
-        bus.post(new LogEvent.AddLogEvent(
-                mEventLogFactory.createRemoveJobClickedLog(associatedBooking, warning)));
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -700,7 +697,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     //Service request bus posts
-    //
+
     private void requestClaimJob(Booking booking)
     {
         String source = "";
@@ -713,8 +710,10 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.RequestClaimJob(booking, source));
     }
 
-    private void requestRemoveJob(Booking booking)
+    private void requestRemoveJob(@NonNull Booking booking)
     {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
+                booking, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
@@ -1070,6 +1069,9 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onSupportActionTriggered(HandyEvent.SupportActionTriggered event)
     {
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createHelpItemSelectedLog(
+                associatedBooking, event.action.getActionName())));
+
         switch (supportActionType)
         {
             case NOTIFY_EARLY:
@@ -1089,9 +1091,36 @@ public class BookingDetailsFragment extends ActionBarFragment
                 goToHelpCenter(event.action.getDeepLinkData());
                 break;
             case REMOVE:
-                takeAction(BookingActionButtonType.REMOVE, false);
+                removeJob(event.action);
                 break;
         }
+    }
+
+    private void removeJob(@NonNull Booking.Action removeAction)
+    {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
+                associatedBooking, removeAction.getWarningText())));
+
+        if (!useNewUnassignFlow())
+        {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                    associatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
+            takeAction(BookingActionButtonType.REMOVE, false);
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                    associatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(BundleKeys.BOOKING, associatedBooking);
+            arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
+            bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+        }
+    }
+
+    private boolean useNewUnassignFlow()
+    {
+        return true;
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)

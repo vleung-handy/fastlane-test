@@ -16,7 +16,6 @@
     <dimen name="default_margin_large">32dp</dimen>
     <dimen name="default_margin_xxlarge">60dp</dimen>
 
-
     <!-- padding -->
     <dimen name="payment_container_horizontal_padding">20dp</dimen>
     <dimen name="payment_container_vertical_padding">20dp</dimen>
@@ -48,6 +47,7 @@
     <dimen name="xlarge_text_size">22sp</dimen>
     <dimen name="hero_text_size">28sp</dimen>
     <dimen name="xxlarge_text_size">32sp</dimen>
+    <dimen name="title_text_size">25dp</dimen>
 
     <!-- miscellaneous -->
     <dimen name="round_button_radius">5dp</dimen>
@@ -70,4 +70,5 @@
 
     <dimen name="notification_section_header_horizontal_padding">16dp</dimen>
     <dimen name="notification_section_header_vertical_padding">10dp</dimen>
+
 </resources>

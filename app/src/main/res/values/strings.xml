@@ -165,7 +165,6 @@
     <string name="reschedule_all_bookings">Reschedule all subsequent bookings?</string>
     <string name="cancel_booking">Cancel Booking</string>
     <string name="cancel">Cancel</string>
-    <string name="why_cancel">Why are you canceling?</string>
     <string name="get_started">Get Started</string>
     <string name="onboard_msg">Book trusted cleaners\n &amp; handymen instantly</string>
     <string name="onboard_msg_pro">We’ll match you with\n a highly rated professional</string>
@@ -476,6 +475,15 @@
     <string name="nearby_transit">Nearby Transit</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
+
+    <!-- Booking Cancellation -->
+    <string name="cancellation_request">Cancellation Request</string>
+    <string name="why_cancel">Why do you need to cancel?</string>
+    <string name="select_a_reason">Oops! Let us know why you need to cancel.</string>
+    <string name="sure_to_cancel">Are you sure you need to cancel?</string>
+    <string name="will_be_charged">You’ll be charged a&#160;</string>
+    <string name="withholding_fee_formatted">%1$s withholding fee.</string>
+    <string name="confirm_cancellation">Confirm Cancellation</string>
 
     <!-- Special -->
     <string name="special_empty_string"> </string>

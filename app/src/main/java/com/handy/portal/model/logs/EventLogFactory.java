@@ -219,10 +219,34 @@ public class EventLogFactory
         return new ScheduledJobsLog.CustomerRatingSubmitted(getProviderId(), getVersionTrack(), rating);
     }
 
-    public EventLog createBookingInstructionsSeenLog(Booking booking)
+    public EventLog createBookingInstructionsSeenLog(@NonNull Booking booking)
     {
         String bookingId = booking.getId();
         return new ScheduledJobsLog.BookingInstructionsSeen(getProviderId(), getVersionTrack(), bookingId);
+    }
+
+    public EventLog createSupportSelectedLog(@NonNull Booking booking)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.SupportSelected(getProviderId(), getVersionTrack(), bookingId);
+    }
+
+    public EventLog createHelpItemSelectedLog(@NonNull Booking booking, String helpItemLabel)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.HelpItemSelected(getProviderId(), getVersionTrack(), bookingId, helpItemLabel);
+    }
+
+    public EventLog createRemoveConfirmationShownLog(@NonNull Booking booking, String removalType)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.RemoveConfirmationShown(getProviderId(), getVersionTrack(), bookingId, removalType);
+    }
+
+    public EventLog createRemoveConfirmationAcceptedLog(@NonNull Booking booking, String reason)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.RemoveConfirmationShown(getProviderId(), getVersionTrack(), bookingId, reason);
     }
 
 
