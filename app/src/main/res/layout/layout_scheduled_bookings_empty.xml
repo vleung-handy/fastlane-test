@@ -6,32 +6,35 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:visibility="gone">
+    android:visibility="gone"
+    >
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_no_scheduled_jobs"/>
+        android:src="@drawable/ic_no_scheduled_jobs"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="30dp"
         android:gravity="center_horizontal"
         android:text="@string/no_scheduled_jobs"
         android:textColor="@color/subtitle_grey"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        />
 
     <Button
         android:id="@+id/find_jobs_for_day_button"
+        style="@style/Button.PartnerBlueEmpty.Round"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cta_find_jobs_for_this_day"
         android:layout_gravity="center_horizontal"
-        style="@style/Button.PartnerBlueEmpty.Round"
+        android:text="@string/cta_find_jobs_for_this_day"
         />
 
 </LinearLayout>

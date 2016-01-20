@@ -526,4 +526,6 @@
     <string name="load_notifications">Loading more notifications…</string>
     <string name="no_more_notifications">You have no more notifications to load.</string>
     <string name="error_loading_notifications">Oops! There was an error loading your notifications.</string>
+
+    <string name="notify_available_jobs">Notify me of open jobs today</string>
 </resources>

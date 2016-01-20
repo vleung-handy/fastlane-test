@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,9 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -44,12 +47,16 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 {
     @Inject
     protected EventLogFactory mEventLogFactory;
+    @Inject
+    ConfigManager mConfigManager;
     @Bind(R.id.fetch_error_view)
     View fetchErrorView;
     @Bind(R.id.fetch_error_text)
     TextView errorText;
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
+    @Bind(R.id.toggle_available_job_notification)
+    SwitchCompat mToggleAvailableJobNotification;
 
     protected abstract int getFragmentResourceId();
 
@@ -119,6 +126,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void onResume()
     {
         super.onResume();
+
         if (!MainActivityFragment.clearingBackStack)
         {
             bus.post(new HandyEvent.RequestProviderInfo());
@@ -133,6 +141,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             if (dateButtonMap.containsKey(selectedDay))
             {
                 dateButtonMap.get(selectedDay).setChecked(true);
+            }
+
+            if (shouldShowAvailableBookingsToggle())
+            {
+                mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
 
             requestAllBookings();
@@ -287,6 +300,15 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
         dateButtonMap.get(day).setChecked(true);
         selectedDay = day;
+
+        if (shouldShowAvailableBookingsToggle())
+        {
+            mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mToggleAvailableJobNotification.setVisibility(View.GONE);
+        }
     }
 
     private void displayBookings(List<Booking> bookings, Date dateOfBookings)
@@ -336,4 +358,16 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         bus.post(event);
     }
 
+    private boolean shouldShowAvailableBookingsToggle()
+    {
+        return selectedDay != null &&
+                DateTimeUtils.isToday(selectedDay) &&
+                getConfigurationResponse() != null &&
+                getConfigurationResponse().shouldShowLateDispatchOptIn();
+    }
+
+    private ConfigurationResponse getConfigurationResponse()
+    {
+        return mConfigManager.getConfigurationResponse();
+    }
 }
