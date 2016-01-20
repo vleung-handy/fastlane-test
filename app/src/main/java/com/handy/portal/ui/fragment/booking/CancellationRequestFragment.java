@@ -125,6 +125,10 @@ public class CancellationRequestFragment extends ActionBarFragment
             //Return to available jobs on that day
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, transitionStyle));
         }
+        else
+        {
+            onReceiveRemoveJobError(null);
+        }
     }
 
     @Subscribe
