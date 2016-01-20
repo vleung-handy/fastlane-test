@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -709,10 +710,10 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.RequestClaimJob(booking, source));
     }
 
-    private void requestRemoveJob(Booking booking)
+    private void requestRemoveJob(@NonNull Booking booking)
     {
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
-                associatedBooking, null)));
+                booking, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
@@ -1095,23 +1096,31 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
     }
 
-    private void removeJob(Booking.Action removeAction)
+    private void removeJob(@NonNull Booking.Action removeAction)
     {
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
                 associatedBooking, removeAction.getWarningText())));
 
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                associatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
-        takeAction(BookingActionButtonType.REMOVE, false);
+        if (!useNewUnassignFlow())
+        {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                    associatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
+            takeAction(BookingActionButtonType.REMOVE, false);
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                    associatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(BundleKeys.BOOKING, associatedBooking);
+            arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
+            bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+        }
+    }
 
-        // New remove job confirmation that's currently hidden.
-//        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-//                associatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
-//        Bundle arguments = new Bundle();
-//        arguments.putSerializable(BundleKeys.BOOKING, associatedBooking);
-//        arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-//        bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
-
+    private boolean useNewUnassignFlow()
+    {
+        return false;
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
