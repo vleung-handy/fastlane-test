@@ -30,6 +30,8 @@
 
         <include layout="@layout/layout_scheduled_bookings_empty"/>
 
+        <include layout="@layout/element_same_day_notification_toggle" />
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="wrap_content"

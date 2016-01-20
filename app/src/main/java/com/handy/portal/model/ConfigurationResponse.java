@@ -25,6 +25,9 @@ public class ConfigurationResponse
     @SerializedName("notifications_in_pro_app")
     private boolean mShowNotificationMenuButton;
 
+    @SerializedName("show_late_dispatch_opt_in")
+    private boolean mShowLateDispatchOptIn;
+
 
     public boolean isComplementaryJobsEnabled()
     {
@@ -59,5 +62,10 @@ public class ConfigurationResponse
     public boolean shouldShowNotificationMenuButton()
     {
         return mShowNotificationMenuButton;
+    }
+
+    public boolean shouldShowLateDispatchOptIn()
+    {
+        return mShowLateDispatchOptIn;
     }
 }
