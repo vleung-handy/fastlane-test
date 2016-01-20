@@ -126,6 +126,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public void onResume()
     {
         super.onResume();
+
         if (!MainActivityFragment.clearingBackStack)
         {
             bus.post(new HandyEvent.RequestProviderInfo());
@@ -140,6 +141,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             if (dateButtonMap.containsKey(selectedDay))
             {
                 dateButtonMap.get(selectedDay).setChecked(true);
+            }
+
+            if (shouldShowAvailableBookingsToggle())
+            {
+                mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
 
             requestAllBookings();
@@ -294,6 +300,15 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
         dateButtonMap.get(day).setChecked(true);
         selectedDay = day;
+
+        if (shouldShowAvailableBookingsToggle())
+        {
+            mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mToggleAvailableJobNotification.setVisibility(View.GONE);
+        }
     }
 
     private void displayBookings(List<Booking> bookings, Date dateOfBookings)

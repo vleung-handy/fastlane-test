@@ -3,39 +3,44 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context=".AvailableBookingsFragment">
+              tools:context=".AvailableBookingsFragment"
+              >
 
     <LinearLayout
         android:id="@+id/bookings_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <HorizontalScrollView
             android:id="@+id/available_bookings_dates_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none">
+            android:scrollbars="none"
+            >
 
             <LinearLayout
                 android:id="@+id/available_bookings_dates_scroll_view_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
             </LinearLayout>
 
         </HorizontalScrollView>
 
         <include layout="@layout/layout_fetch_error"/>
 
-        <include layout="@layout/layout_available_bookings_empty"/>
+        <include layout="@layout/element_same_day_notification_toggle"/>
 
-        <include layout="@layout/element_same_day_notification_toggle" />
+        <include layout="@layout/layout_available_bookings_empty"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <com.handy.portal.ui.element.BookingListView
                 android:id="@+id/available_jobs_list_view"
@@ -43,7 +48,8 @@
                 android:layout_height="wrap_content"
                 android:divider="@color/white_trans"
                 android:dividerHeight="1dp"
-                android:paddingTop="1dp"/>
+                android:paddingTop="1dp"
+                />
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
