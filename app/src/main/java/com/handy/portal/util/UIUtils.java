@@ -378,10 +378,7 @@ public final class UIUtils
         float xOverlap = Math.max(0, Math.min(r1.right, r2.right) - Math.max(r1.left, r2.left));
         float yOverlap = Math.max(0, Math.min(r1.bottom, r2.bottom) - Math.max(r1.top, r2.top));
         float overlapArea = xOverlap * yOverlap;
-        if (overlapArea == 0f)
-        {
-            return 0f;
-        }
+
         return overlapArea / (r1.width() * r1.height());
     }
 
