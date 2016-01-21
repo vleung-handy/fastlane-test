@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -18,12 +19,14 @@ import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.ProviderSettings;
@@ -52,6 +55,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected EventLogFactory mEventLogFactory;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    PrefsManager mPrefsManager;
     @Bind(R.id.fetch_error_view)
     View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
@@ -60,6 +65,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
+    @Bind(R.id.bookings_content)
+    LinearLayout mBookingsContent;
 
     protected abstract int getFragmentResourceId();
 
@@ -175,17 +182,26 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     {
         mProviderSettings = event.getProviderSettings().clone();
         mToggleAvailableJobNotification.setChecked(mProviderSettings.hasOptedInToLateDispatchNotifications());
+        if (shouldShowAvailableBookingsToggle())
+        {
+            mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
+        }
     }
 
-    public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event)
-    {
-        // show toast? snack bar?
-    }
+    public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event) {}
 
     public void onReceiveProviderSettingsUpdateSuccess(ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess event)
     {
         mProviderSettings = event.getProviderSettings().clone();
-        // show toast? snack bar?
+        if (!mPrefsManager.getBoolean(PrefsKey.SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED, false) &&
+                mProviderSettings.hasOptedInToLateDispatchNotifications())
+        {
+            mPrefsManager.setBoolean(PrefsKey.SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED, true);
+            Snackbar snackbar = Snackbar
+                    .make(mBookingsContent, R.string.notify_available_jobs_update_intro_success, Snackbar.LENGTH_LONG);
+
+            snackbar.show();
+        }
     }
 
     public void onReceiveProviderSettingsUpdateError(ProviderSettingsEvent.ReceiveProviderSettingsUpdateError event)
@@ -201,7 +217,10 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             bus.post(new ProviderSettingsEvent.RequestProviderSettings());
         }
 
-        // show toast? snack bar?
+        Snackbar snackbar = Snackbar
+                .make(mBookingsContent, R.string.notify_available_jobs_update_error, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
     }
 
     private void requestBookingsForSelectedDay(boolean showOverlay)
@@ -402,7 +421,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         return mSelectedDay != null &&
                 DateTimeUtils.isToday(mSelectedDay) &&
                 getConfigurationResponse() != null &&
-                getConfigurationResponse().shouldShowLateDispatchOptIn();
+                getConfigurationResponse().shouldShowLateDispatchOptIn() &&
+                mProviderSettings != null;
     }
 
     private ConfigurationResponse getConfigurationResponse()

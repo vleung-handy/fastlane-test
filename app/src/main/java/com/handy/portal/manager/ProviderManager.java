@@ -50,7 +50,7 @@ public class ProviderManager
                 .build();
         mProviderSettingsCache = CacheBuilder.newBuilder()
                 .maximumSize(10)
-                .expireAfterWrite(1, TimeUnit.DAYS)
+                .expireAfterWrite(1, TimeUnit.HOURS)
                 .build();
         bus.register(this);
     }
