@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,9 +22,11 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -50,11 +53,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @Inject
     ConfigManager mConfigManager;
     @Bind(R.id.fetch_error_view)
-    View fetchErrorView;
+    View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
-    TextView errorText;
+    TextView mErrorText;
     @Bind(R.id.refresh_layout)
-    SwipeRefreshLayout refreshLayout;
+    SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
 
@@ -87,9 +90,10 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public abstract void onBookingsRetrieved(T event);
 
     //should use date without time for these entries, see Utils.getDateWithoutTime
-    private Map<Date, DateButtonView> dateButtonMap;
-    protected Date selectedDay;
-    protected List<Booking> bookingsForSelectedDay;
+    private Map<Date, DateButtonView> mDateDateButtonViewMap;
+    protected Date mSelectedDay;
+    protected List<Booking> mBookingsForSelectedDay;
+    protected ProviderSettings mProviderSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,11 +109,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
             if (targetDateTime > 0)
             {
-                this.selectedDay = DateTimeUtils.getDateWithoutTime(new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME)));
+                mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME)));
             }
         }
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
@@ -117,7 +121,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 requestBookingsForSelectedDay(false);
             }
         });
-        refreshLayout.setColorSchemeResources(R.color.handy_blue);
+        mRefreshLayout.setColorSchemeResources(R.color.handy_blue);
 
         return view;
     }
@@ -130,17 +134,18 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         if (!MainActivityFragment.clearingBackStack)
         {
             bus.post(new HandyEvent.RequestProviderInfo());
+            bus.post(new ProviderSettingsEvent.RequestProviderSettings());
 
             initDateButtons();
 
-            if (selectedDay == null || !dateButtonMap.containsKey(selectedDay))
+            if (mSelectedDay == null || !mDateDateButtonViewMap.containsKey(mSelectedDay))
             {
-                selectedDay = DateTimeUtils.getDateWithoutTime(new Date());
+                mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date());
             }
 
-            if (dateButtonMap.containsKey(selectedDay))
+            if (mDateDateButtonViewMap.containsKey(mSelectedDay))
             {
-                dateButtonMap.get(selectedDay).setChecked(true);
+                mDateDateButtonViewMap.get(mSelectedDay).setChecked(true);
             }
 
             if (shouldShowAvailableBookingsToggle())
@@ -148,6 +153,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
 
+            setLateDispatchOptInToggleListener();
             requestAllBookings();
         }
     }
@@ -162,12 +168,45 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     {
         requestBookingsForSelectedDay(true);
 
-        requestBookingsForOtherDays(selectedDay);
+        requestBookingsForOtherDays(mSelectedDay);
+    }
+
+    public void onReceiveProviderSettingsSuccess(ProviderSettingsEvent.ReceiveProviderSettingsSuccess event)
+    {
+        mProviderSettings = event.getProviderSettings().clone();
+        mToggleAvailableJobNotification.setChecked(mProviderSettings.hasOptedInToLateDispatchNotifications());
+    }
+
+    public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event)
+    {
+        // show toast? snack bar?
+    }
+
+    public void onReceiveProviderSettingsUpdateSuccess(ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess event)
+    {
+        mProviderSettings = event.getProviderSettings().clone();
+        // show toast? snack bar?
+    }
+
+    public void onReceiveProviderSettingsUpdateError(ProviderSettingsEvent.ReceiveProviderSettingsUpdateError event)
+    {
+        if (mProviderSettings != null)
+        {
+            boolean optedIn = !mProviderSettings.hasOptedInToLateDispatchNotifications();
+            mProviderSettings.setLateDispatchOptIn(optedIn);
+            mToggleAvailableJobNotification.setChecked(optedIn);
+        }
+        else
+        {
+            bus.post(new ProviderSettingsEvent.RequestProviderSettings());
+        }
+
+        // show toast? snack bar?
     }
 
     private void requestBookingsForSelectedDay(boolean showOverlay)
     {
-        requestBookings(Lists.newArrayList(selectedDay), showOverlay, false);
+        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, false);
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)
@@ -191,13 +230,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     private void requestBookings(List<Date> dates, boolean showOverlay, boolean useCachedIfPresent)
     {
         Crashlytics.log("Requesting bookings for the following dates" + dates.toString());
-        if (fetchErrorView == null)
+        if (mFetchErrorView == null)
         {
             Crashlytics.logException(
                     new NullPointerException("All views are null due to ButterKnife unbind."));
             return;
         }
-        fetchErrorView.setVisibility(View.GONE);
+        mFetchErrorView.setVisibility(View.GONE);
         if (showOverlay)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -207,7 +246,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
-        refreshLayout.setRefreshing(false);
+        mRefreshLayout.setRefreshing(false);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         List<Booking> bookings = event.bookings;
@@ -221,7 +260,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
         }
 
-        DateButtonView dateButtonView = dateButtonMap.get(event.day);
+        DateButtonView dateButtonView = mDateDateButtonViewMap.get(event.day);
         if (dateButtonView != null)
         {
             dateButtonView.showRequestedIndicator(shouldShowRequestedIndicator(bookings));
@@ -232,27 +271,27 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             Crashlytics.logException(new RuntimeException("Date button for " + event.day + " not found"));
         }
 
-        if (selectedDay.equals(event.day))
+        if (mSelectedDay.equals(event.day))
         {
-            displayBookings(bookings, selectedDay);
+            displayBookings(bookings, mSelectedDay);
         }
     }
 
     protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
-        refreshLayout.setRefreshing(false);
-        if (event.days.contains(selectedDay))
+        mRefreshLayout.setRefreshing(false);
+        if (event.days.contains(mSelectedDay))
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
             {
-                errorText.setText(R.string.error_fetching_connectivity_issue);
+                mErrorText.setText(R.string.error_fetching_connectivity_issue);
             }
             else
             {
-                errorText.setText(errorStateStringId);
+                mErrorText.setText(errorStateStringId);
             }
-            fetchErrorView.setVisibility(View.VISIBLE);
+            mFetchErrorView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -261,7 +300,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         LinearLayout datesLayout = getDatesLayout();
         datesLayout.removeAllViews();
 
-        dateButtonMap = new HashMap<>(numberOfDaysToDisplay());
+        mDateDateButtonViewMap = new HashMap<>(numberOfDaysToDisplay());
 
         Context context = getActivity();
 
@@ -287,19 +326,19 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 }
             });
 
-            dateButtonMap.put(day, dateButtonView);
+            mDateDateButtonViewMap.put(day, dateButtonView);
         }
     }
 
     private void selectDay(Date day)
     {
-        DateButtonView selectedDateButtonView = dateButtonMap.get(selectedDay);
+        DateButtonView selectedDateButtonView = mDateDateButtonViewMap.get(mSelectedDay);
         if (selectedDateButtonView != null)
         {
             selectedDateButtonView.setChecked(false);
         }
-        dateButtonMap.get(day).setChecked(true);
-        selectedDay = day;
+        mDateDateButtonViewMap.get(day).setChecked(true);
+        mSelectedDay = day;
 
         if (shouldShowAvailableBookingsToggle())
         {
@@ -313,7 +352,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void displayBookings(List<Booking> bookings, Date dateOfBookings)
     {
-        bookingsForSelectedDay = bookings;
+        mBookingsForSelectedDay = bookings;
         getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();
         getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
@@ -360,8 +399,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private boolean shouldShowAvailableBookingsToggle()
     {
-        return selectedDay != null &&
-                DateTimeUtils.isToday(selectedDay) &&
+        return mSelectedDay != null &&
+                DateTimeUtils.isToday(mSelectedDay) &&
                 getConfigurationResponse() != null &&
                 getConfigurationResponse().shouldShowLateDispatchOptIn();
     }
@@ -369,5 +408,25 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     private ConfigurationResponse getConfigurationResponse()
     {
         return mConfigManager.getConfigurationResponse();
+    }
+
+    private void setLateDispatchOptInToggleListener()
+    {
+        mToggleAvailableJobNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
+            {
+                if (mProviderSettings == null)
+                {
+                    bus.post(new ProviderSettingsEvent.RequestProviderSettings());
+                }
+                else if (mProviderSettings.hasOptedInToLateDispatchNotifications() != isChecked)
+                {
+                    mProviderSettings.setLateDispatchOptIn(isChecked);
+                    bus.post(new ProviderSettingsEvent.RequestProviderSettingsUpdate(mProviderSettings));
+                }
+            }
+        });
     }
 }

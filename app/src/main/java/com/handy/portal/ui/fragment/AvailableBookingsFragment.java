@@ -8,6 +8,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
@@ -23,11 +24,11 @@ import butterknife.Bind;
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
     @Bind(R.id.available_jobs_list_view)
-    BookingListView availableJobsListView;
+    BookingListView mAvailableJobsListView;
     @Bind(R.id.available_bookings_dates_scroll_view_layout)
-    LinearLayout availableJobsDatesScrollViewLayout;
+    LinearLayout mAvailableJobsDatesScrollViewLayout;
     @Bind(R.id.available_bookings_empty)
-    ViewGroup noAvailableBookingsLayout;
+    ViewGroup mNoAvailableBookingsLayout;
 
     @Override
     protected MainViewTab getTab()
@@ -44,18 +45,18 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     protected BookingListView getBookingListView()
     {
-        return availableJobsListView;
+        return mAvailableJobsListView;
     }
 
     @Override
     protected ViewGroup getNoBookingsView()
     {
-        return noAvailableBookingsLayout;
+        return mNoAvailableBookingsLayout;
     }
 
     protected LinearLayout getDatesLayout()
     {
-        return availableJobsDatesScrollViewLayout;
+        return mAvailableJobsDatesScrollViewLayout;
     }
 
     @Override
@@ -102,8 +103,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected void beforeRequestBookings()
+    protected void beforeRequestBookings() {}
+
+    @Override
+    protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
+        return AvailableBookingElementView.class;
     }
 
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
@@ -118,15 +123,34 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         handleBookingsRetrieved(event);
     }
 
-    @Override
-    protected Class<? extends BookingElementView> getBookingElementViewClass()
-    {
-        return AvailableBookingElementView.class;
-    }
-
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event)
     {
         handleBookingsRetrievalError(event, R.string.error_fetching_available_jobs);
+    }
+
+    @Subscribe
+    public void onReceiveProviderSettingsSuccess(ProviderSettingsEvent.ReceiveProviderSettingsSuccess event)
+    {
+        super.onReceiveProviderSettingsSuccess(event);
+    }
+
+
+    @Subscribe
+    public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event)
+    {
+        super.onReceiveProviderSettingsError(event);
+    }
+
+    @Subscribe
+    public void onReceiveProviderSettingsUpdateSuccess(ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess event)
+    {
+        super.onReceiveProviderSettingsUpdateSuccess(event);
+    }
+
+    @Subscribe
+    public void onReceiveProviderSettingsUpdateError(ProviderSettingsEvent.ReceiveProviderSettingsUpdateError event)
+    {
+        super.onReceiveProviderSettingsUpdateError(event);
     }
 }
