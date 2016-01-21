@@ -527,5 +527,8 @@
     <string name="no_more_notifications">You have no more notifications to load.</string>
     <string name="error_loading_notifications">Oops! There was an error loading your notifications.</string>
 
+    <!-- Late dispatch available job notification toggle -->
     <string name="notify_available_jobs">Notify me of open jobs today</string>
+    <string name="notify_available_jobs_update_intro_success">Great! We’ll send you a notification for any available jobs that arrive the rest of the day.</string>
+    <string name="notify_available_jobs_update_error">Oops! There was an error turning on notifications. Please check your connection and try again.</string>
 </resources>

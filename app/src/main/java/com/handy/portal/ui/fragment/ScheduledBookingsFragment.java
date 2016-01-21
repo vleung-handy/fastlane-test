@@ -13,6 +13,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -29,15 +30,15 @@ import butterknife.OnClick;
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
     @Bind(R.id.scheduled_jobs_list_view)
-    BookingListView scheduledJobsListView;
+    BookingListView mScheduledJobsListView;
     @Bind(R.id.scheduled_bookings_dates_scroll_view_layout)
-    LinearLayout scheduledJobsDatesScrollViewLayout;
+    LinearLayout mScheduledJobsDatesScrollViewLayout;
     @Bind(R.id.scheduled_bookings_empty)
-    ViewGroup noScheduledBookingsLayout;
+    ViewGroup mNoScheduledBookingsLayout;
     @Bind(R.id.find_jobs_for_day_button)
-    Button findJobsForDayButton;
+    Button mFindJobsForDayButton;
     @Bind(R.id.find_matching_jobs_button_container)
-    ViewGroup findMatchingJobsButtonContainer;
+    ViewGroup mFindMatchingJobsButtonContainer;
 
     @Override
     protected MainViewTab getTab()
@@ -54,7 +55,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     protected LinearLayout getDatesLayout()
     {
-        return scheduledJobsDatesScrollViewLayout;
+        return mScheduledJobsDatesScrollViewLayout;
     }
 
     protected int getFragmentResourceId()
@@ -65,13 +66,13 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected BookingListView getBookingListView()
     {
-        return scheduledJobsListView;
+        return mScheduledJobsListView;
     }
 
     @Override
     protected ViewGroup getNoBookingsView()
     {
-        return noScheduledBookingsLayout;
+        return mNoScheduledBookingsLayout;
     }
 
     @Override
@@ -98,9 +99,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         //Crash #476, some timing issue where butterknife hasn't injected yet
         //Ugly hack fix in lieu of restructuring code to track down root issue
-        if (findMatchingJobsButtonContainer != null)
+        if (mFindMatchingJobsButtonContainer != null)
         {
-            findMatchingJobsButtonContainer.setVisibility(View.GONE);
+            mFindMatchingJobsButtonContainer.setVisibility(View.GONE);
         }
     }
 
@@ -129,18 +130,18 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         if (bookingsForDay.size() == 0 &&
             DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
         {
-            findJobsForDayButton.setVisibility(View.VISIBLE);
+            mFindJobsForDayButton.setVisibility(View.VISIBLE);
         }
         else
         {
-            findJobsForDayButton.setVisibility(View.GONE);
+            mFindJobsForDayButton.setVisibility(View.GONE);
         }
     }
 
     @Subscribe
     public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
-        if (bookingsForSelectedDay == null || selectedDay == null) { return; }
+        if (mBookingsForSelectedDay == null || mSelectedDay == null) { return; }
 
         //show Find Matching Jobs buttons only if we're inside of our available bookings length range
         int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
@@ -150,11 +151,11 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
 
         if (event.provider.isComplementaryJobsEnabled()
-                && DateTimeUtils.isDateWithinXHoursFromNow(selectedDay, hoursSpanningAvailableBookings)
-                && bookingsForSelectedDay.size() == 1
-                && !bookingsForSelectedDay.get(0).isProxy()) // currently disable "Find Matching Jobs" for proxies
+                && DateTimeUtils.isDateWithinXHoursFromNow(mSelectedDay, hoursSpanningAvailableBookings)
+                && mBookingsForSelectedDay.size() == 1
+                && !mBookingsForSelectedDay.get(0).isProxy()) // currently disable "Find Matching Jobs" for proxies
         {
-            findMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
+            mFindMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -162,7 +163,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onFindJobsButtonClicked()
     {
         TransitionStyle transitionStyle = TransitionStyle.TAB_TO_TAB;
-        long epochTime = selectedDay.getTime();
+        long epochTime = mSelectedDay.getTime();
         //navigate back to available bookings for this day
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
@@ -173,7 +174,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @OnClick(R.id.find_matching_jobs_button)
     public void onFindMatchingJobsButtonClicked()
     {
-        Booking booking = bookingsForSelectedDay.get(0);
+        Booking booking = mBookingsForSelectedDay.get(0);
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
@@ -212,5 +213,30 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
         handleBookingsRetrievalError(event, R.string.error_fetching_scheduled_jobs);
+    }
+
+    @Subscribe
+    public void onReceiveProviderSettingsSuccess(ProviderSettingsEvent.ReceiveProviderSettingsSuccess event)
+    {
+        super.onReceiveProviderSettingsSuccess(event);
+    }
+
+
+    @Subscribe
+    public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event)
+    {
+        super.onReceiveProviderSettingsError(event);
+    }
+
+    @Subscribe
+    public void onReceiveProviderSettingsUpdateSuccess(ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess event)
+    {
+        super.onReceiveProviderSettingsUpdateSuccess(event);
+    }
+
+    @Subscribe
+    public void onReceiveProviderSettingsUpdateError(ProviderSettingsEvent.ReceiveProviderSettingsUpdateError event)
+    {
+        super.onReceiveProviderSettingsUpdateError(event);
     }
 }
