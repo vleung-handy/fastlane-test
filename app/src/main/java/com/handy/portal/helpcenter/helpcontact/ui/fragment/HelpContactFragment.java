@@ -1,4 +1,4 @@
-package com.handy.portal.helpcenter.ui.fragment;
+package com.handy.portal.helpcenter.helpcontact.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,8 +13,9 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.helpcenter.helpcontact.HelpContactEvent;
+import com.handy.portal.helpcenter.helpcontact.ui.view.HelpContactView;
 import com.handy.portal.helpcenter.model.HelpNode;
-import com.handy.portal.helpcenter.ui.view.HelpContactView;
 import com.handy.portal.model.Provider;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
@@ -177,7 +178,7 @@ public final class HelpContactFragment extends ActionBarFragment
 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
 
-        bus.post(new HandyEvent.RequestNotifyHelpContact(body));
+        bus.post(new HelpContactEvent.RequestNotifyHelpContact(body));
     }
 
     private HashMap<String, String> extractDispositions(HelpNode node)
@@ -214,7 +215,7 @@ public final class HelpContactFragment extends ActionBarFragment
 
     //Event Listeners
     @Subscribe
-    public void onReceiveNotifyHelpContactSuccess(HandyEvent.ReceiveNotifyHelpContactSuccess event)
+    public void onReceiveNotifyHelpContactSuccess(HelpContactEvent.ReceiveNotifyHelpContactSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createHelpContactFormSubmittedLog(
@@ -232,7 +233,7 @@ public final class HelpContactFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveNotifyHelpContactError(HandyEvent.ReceiveNotifyHelpContactError event)
+    public void onReceiveNotifyHelpContactError(HelpContactEvent.ReceiveNotifyHelpContactError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(getString(R.string.an_error_has_occurred));

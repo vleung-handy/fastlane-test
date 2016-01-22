@@ -1,7 +1,6 @@
-package com.handy.portal.manager;
+package com.handy.portal.helpcenter.helpcontact;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -23,7 +22,7 @@ public class HelpContactManager
     }
 
     @Subscribe
-    public void onRequestNotifyHelpContact(HandyEvent.RequestNotifyHelpContact event)
+    public void onRequestNotifyHelpContact(HelpContactEvent.RequestNotifyHelpContact event)
     {
         TypedInput body = event.body;
 
@@ -32,13 +31,13 @@ public class HelpContactManager
             @Override
             public void onSuccess(Void response)
             {
-                bus.post(new HandyEvent.ReceiveNotifyHelpContactSuccess());
+                bus.post(new HelpContactEvent.ReceiveNotifyHelpContactSuccess());
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveNotifyHelpContactError(error));
+                bus.post(new HelpContactEvent.ReceiveNotifyHelpContactError(error));
             }
         });
     }
