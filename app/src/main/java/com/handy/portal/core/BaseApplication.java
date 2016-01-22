@@ -17,7 +17,7 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.HelpContactManager;
-import com.handy.portal.manager.HelpManager;
+import com.handy.portal.helpcenter.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.NotificationMessageManager;

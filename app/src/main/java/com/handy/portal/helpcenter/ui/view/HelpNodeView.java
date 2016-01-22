@@ -1,4 +1,4 @@
-package com.handy.portal.ui.view;
+package com.handy.portal.helpcenter.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,8 +11,9 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.model.HelpNode;
+import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.ui.element.HandyWebView;
+import com.handy.portal.ui.view.InjectedRelativeLayout;
 import com.handy.portal.util.TextUtils;
 
 import butterknife.Bind;

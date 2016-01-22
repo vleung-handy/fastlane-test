@@ -15,7 +15,7 @@ import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.CheckoutRequest;
-import com.handy.portal.model.HelpNode;
+import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;

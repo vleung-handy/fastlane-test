@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.helpcenter.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,9 +13,11 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
-import com.handy.portal.model.HelpNode;
+import com.handy.portal.helpcenter.model.HelpNode;
+import com.handy.portal.helpcenter.ui.view.HelpContactView;
 import com.handy.portal.model.Provider;
-import com.handy.portal.ui.view.HelpContactView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 

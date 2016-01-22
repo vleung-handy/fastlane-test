@@ -10,7 +10,7 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.HelpNodeWrapper;
+import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
