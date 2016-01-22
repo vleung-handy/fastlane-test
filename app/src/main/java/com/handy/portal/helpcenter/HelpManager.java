@@ -1,9 +1,8 @@
-package com.handy.portal.helpcenter.manager;
+package com.handy.portal.helpcenter;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.squareup.otto.Bus;
@@ -44,7 +43,7 @@ public class HelpManager
     }
 
     @Subscribe
-    public void onRequestHelpNodeDetails(HandyEvent.RequestHelpNode event)
+    public void onRequestHelpNodeDetails(HelpEvent.RequestHelpNode event)
     {
         final boolean requestingRootNote = event.nodeId == null;
         String nodeId = requestingRootNote ? helpNodeIdCache.getIfPresent(ROOT_NODE_ID_KEY) : event.nodeId;
@@ -55,7 +54,7 @@ public class HelpManager
             final HelpNode cachedHelpNode = helpNodeCache.getIfPresent(nodeId);
             if (cachedHelpNode != null)
             {
-                bus.post(new HandyEvent.ReceiveHelpNodeSuccess(cachedHelpNode));
+                bus.post(new HelpEvent.ReceiveHelpNodeSuccess(cachedHelpNode));
                 return;
             }
         }
@@ -72,19 +71,19 @@ public class HelpManager
                 {
                     helpNodeIdCache.put(ROOT_NODE_ID_KEY, Integer.toString(helpNode.getId()));
                 }
-                bus.post(new HandyEvent.ReceiveHelpNodeSuccess(helpNode));
+                bus.post(new HelpEvent.ReceiveHelpNodeSuccess(helpNode));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveHelpNodeError(error));
+                bus.post(new HelpEvent.ReceiveHelpNodeError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestHelpBookingNodeDetails(HandyEvent.RequestHelpBookingNode event)
+    public void onRequestHelpBookingNodeDetails(HelpEvent.RequestHelpBookingNode event)
     {
         String nodeId = event.nodeId;
         String bookingId = event.bookingId;
@@ -96,19 +95,19 @@ public class HelpManager
             public void onSuccess(HelpNodeWrapper helpNodeWrapper)
             {
                 HelpNode helpNode = helpNodeWrapper.getHelpNode();
-                bus.post(new HandyEvent.ReceiveHelpBookingNodeSuccess(helpNode));
+                bus.post(new HelpEvent.ReceiveHelpBookingNodeSuccess(helpNode));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveHelpBookingNodeError(error));
+                bus.post(new HelpEvent.ReceiveHelpBookingNodeError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestHelpPaymentsNode(HandyEvent.RequestHelpPaymentsNode event)
+    public void onRequestHelpPaymentsNode(HelpEvent.RequestHelpPaymentsNode event)
     {
         String cachedPaymentsSupportId = helpNodeIdCache.getIfPresent(PAYMENTS_NODE_ID_KEY);
         if (cachedPaymentsSupportId != null) //nulls will crash our cache on the getIfPresentCall
@@ -116,7 +115,7 @@ public class HelpManager
             final HelpNode cachedHelpNode = helpNodeCache.getIfPresent(cachedPaymentsSupportId);
             if (cachedHelpNode != null)
             {
-                bus.post(new HandyEvent.ReceiveHelpPaymentsNodeSuccess(cachedHelpNode));
+                bus.post(new HelpEvent.ReceiveHelpPaymentsNodeSuccess(cachedHelpNode));
                 return;
             }
         }
@@ -129,13 +128,13 @@ public class HelpManager
                 String cachedPaymentsSupportId = Integer.toString(helpNode.getId());
                 helpNodeCache.put(cachedPaymentsSupportId, helpNode);
                 helpNodeIdCache.put(PAYMENTS_NODE_ID_KEY, cachedPaymentsSupportId);
-                bus.post(new HandyEvent.ReceiveHelpPaymentsNodeSuccess(helpNode));
+                bus.post(new HelpEvent.ReceiveHelpPaymentsNodeSuccess(helpNode));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveHelpPaymentsNodeError(error));
+                bus.post(new HelpEvent.ReceiveHelpPaymentsNodeError(error));
             }
         });
     }

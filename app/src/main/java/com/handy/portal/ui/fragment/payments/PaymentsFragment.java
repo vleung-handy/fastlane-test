@@ -20,6 +20,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
+import com.handy.portal.helpcenter.HelpEvent;
 import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
@@ -95,7 +96,7 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.payments, false);
-        bus.post(new HandyEvent.RequestHelpPaymentsNode());
+        bus.post(new HelpEvent.RequestHelpPaymentsNode());
 
         if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {
@@ -307,7 +308,7 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveHelpPaymentsNodeSuccess(final HandyEvent.ReceiveHelpPaymentsNodeSuccess event)
+    public void onReceiveHelpPaymentsNodeSuccess(final HelpEvent.ReceiveHelpPaymentsNodeSuccess event)
     {
         HelpNodesAdapter adapter =
                 new HelpNodesAdapter(getActivity(), R.layout.list_item_support_action, event.helpNode.getChildren());

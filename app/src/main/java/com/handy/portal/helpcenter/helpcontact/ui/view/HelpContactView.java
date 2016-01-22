@@ -1,4 +1,4 @@
-package com.handy.portal.helpcenter.ui.view;
+package com.handy.portal.helpcenter.helpcontact.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

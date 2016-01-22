@@ -12,6 +12,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.helpcenter.HelpEvent;
 import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.helpcenter.ui.view.HelpNodeView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -100,7 +101,7 @@ public final class HelpFragment extends ActionBarFragment
         if (!MainActivityFragment.clearingBackStack)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, currentBookingId));
+            bus.post(new HelpEvent.RequestHelpNode(nodeIdToRequest, currentBookingId));
         }
     }
 
@@ -279,7 +280,7 @@ public final class HelpFragment extends ActionBarFragment
 //Event Listeners
 
     @Subscribe
-    public void onReceiveHelpNodeSuccess(HandyEvent.ReceiveHelpNodeSuccess event)
+    public void onReceiveHelpNodeSuccess(HelpEvent.ReceiveHelpNodeSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         scrollView.setVisibility(View.VISIBLE);
@@ -289,7 +290,7 @@ public final class HelpFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveHelpNodeError(HandyEvent.ReceiveHelpNodeError event)
+    public void onReceiveHelpNodeError(HelpEvent.ReceiveHelpNodeError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         scrollView.setVisibility(View.GONE);
@@ -302,6 +303,6 @@ public final class HelpFragment extends ActionBarFragment
     {
         errorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestHelpNode(nodeIdToRequest, currentBookingId));
+        bus.post(new HelpEvent.RequestHelpNode(nodeIdToRequest, currentBookingId));
     }
 }
