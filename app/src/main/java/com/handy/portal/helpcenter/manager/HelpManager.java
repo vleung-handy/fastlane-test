@@ -1,11 +1,11 @@
-package com.handy.portal.manager;
+package com.handy.portal.helpcenter.manager;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.HelpNode;
-import com.handy.portal.model.HelpNodeWrapper;
+import com.handy.portal.helpcenter.model.HelpNode;
+import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

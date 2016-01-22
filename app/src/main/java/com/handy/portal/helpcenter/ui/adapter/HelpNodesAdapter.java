@@ -1,4 +1,4 @@
-package com.handy.portal.ui.adapter;
+package com.handy.portal.helpcenter.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.HelpNode;
+import com.handy.portal.helpcenter.model.HelpNode;
 
 import java.util.List;
 

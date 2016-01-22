@@ -1,4 +1,4 @@
-package com.handy.portal.ui.view;
+package com.handy.portal.helpcenter.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,8 +7,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.HelpNode;
+import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.model.Provider;
+import com.handy.portal.ui.view.InjectedRelativeLayout;
 import com.handy.portal.ui.widget.BasicInputTextView;
 import com.handy.portal.ui.widget.EmailInputTextView;
 import com.handy.portal.ui.widget.FirstNameInputTextView;

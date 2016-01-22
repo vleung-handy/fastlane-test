@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.helpcenter.ui.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -12,8 +12,10 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.HelpNode;
-import com.handy.portal.ui.view.HelpNodeView;
+import com.handy.portal.helpcenter.model.HelpNode;
+import com.handy.portal.helpcenter.ui.view.HelpNodeView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;

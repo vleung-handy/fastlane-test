@@ -1,7 +1,7 @@
 package com.handy.portal.ui.widget;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.model.HelpNode;
+import com.handy.portal.helpcenter.model.HelpNode;
 
 import org.json.JSONObject;
 
