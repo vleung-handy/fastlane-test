@@ -11,9 +11,9 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
-import com.handy.portal.ui.constructor.ProfilePerformanceViewConstructor;
-import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
+import com.handy.portal.ui.constructor.ProfileContactView;
+import com.handy.portal.ui.constructor.ProfilePerformanceView;
+import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.element.profile.ProfileHeaderView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -137,10 +137,9 @@ public class ProfileFragment extends ActionBarFragment
         profileLayout.removeAllViews();
 
         profileLayout.addView(new ProfileHeaderView(getContext(), mProviderProfile));
-        new ProfilePerformanceViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getPerformanceInfo());
-        new ProfileReferralViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getReferralInfo());
-        new ProfileContactViewConstructor(getActivity()).create(profileLayout, mProviderProfile.getProviderPersonalInfo());
-
+        profileLayout.addView(new ProfilePerformanceView(getActivity(), mProviderProfile.getPerformanceInfo()));
+        profileLayout.addView(new ProfileReferralView(getActivity(), mProviderProfile.getReferralInfo()));
+        profileLayout.addView(new ProfileContactView(getActivity(), mProviderProfile.getProviderPersonalInfo()));
         profileLayout.addView(new ManagementToolsView(getContext(), mProviderProfile));
 
         fetchErrorLayout.setVisibility(View.GONE);

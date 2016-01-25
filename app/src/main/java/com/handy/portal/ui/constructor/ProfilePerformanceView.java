@@ -4,16 +4,19 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.PerformanceInfo;
+import com.handy.portal.util.Utils;
 
 import java.text.DecimalFormat;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
-public class ProfilePerformanceViewConstructor extends ViewConstructor<PerformanceInfo>
+public class ProfilePerformanceView extends FrameLayout
 {
     @Bind(R.id.profile_section_header_title_text)
     TextView titleText;
@@ -30,28 +33,27 @@ public class ProfilePerformanceViewConstructor extends ViewConstructor<Performan
     @Bind(R.id.trailing_rate_text)
     TextView trailingRateText;
 
+    private PerformanceInfo mPerformanceInfo;
+
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.00");
 
-    public ProfilePerformanceViewConstructor(@NonNull Context context)
+    public ProfilePerformanceView(final Context context, @NonNull final PerformanceInfo performanceInfo)
     {
         super(context);
-    }
 
-    @Override
-    protected int getLayoutResourceId()
-    {
-        return R.layout.element_profile_performance;
-    }
+        Utils.inject(context, this);
 
-    @Override
-    protected boolean constructView(ViewGroup container, PerformanceInfo performanceInfo)
-    {
+        inflate(getContext(), R.layout.element_profile_performance, this);
+        ButterKnife.bind(this);
+
+        mPerformanceInfo = performanceInfo;
+
         titleText.setText(R.string.performance);
         subtitleText.setText(R.string.based_on_last_28_days);
 
-        if (performanceInfo.getTier() > 0)
+        if (mPerformanceInfo.getTier() > 0)
         {
-            tierText.setText(getContext().getString(R.string.tier_x, performanceInfo.getTier()));
+            tierText.setText(getContext().getString(R.string.tier_x, mPerformanceInfo.getTier()));
         }
         else
         {
@@ -59,10 +61,8 @@ public class ProfilePerformanceViewConstructor extends ViewConstructor<Performan
             tierLabel.setVisibility(View.GONE);
         }
 
-        trailingRatingText.setText(RATING_FORMAT.format(performanceInfo.getTrailing28DayRating()));
-        trailingJobsText.setText(Integer.toString(performanceInfo.getTrailing28DayJobsCount()));
-        trailingRateText.setText(performanceInfo.getRate());
-
-        return true;
+        trailingRatingText.setText(RATING_FORMAT.format(mPerformanceInfo.getTrailing28DayRating()));
+        trailingJobsText.setText(Integer.toString(mPerformanceInfo.getTrailing28DayJobsCount()));
+        trailingRateText.setText(mPerformanceInfo.getRate());
     }
 }

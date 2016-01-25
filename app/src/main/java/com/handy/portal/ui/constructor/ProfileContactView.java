@@ -3,7 +3,7 @@ package com.handy.portal.ui.constructor;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -20,8 +20,10 @@ import com.squareup.otto.Bus;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class ProfileContactViewConstructor extends ViewConstructor<ProviderPersonalInfo>
+public class ProfileContactView extends FrameLayout
 {
     @Inject
     Bus mBus;
@@ -41,52 +43,40 @@ public class ProfileContactViewConstructor extends ViewConstructor<ProviderPerso
     @Bind(R.id.provider_address_text)
     TextView providerAddressText;
 
+    private ProviderPersonalInfo mProviderPersonalInfo;
 
-    public ProfileContactViewConstructor(@NonNull Context context)
+    public ProfileContactView(final Context context, @NonNull final ProviderPersonalInfo providerPersonalInfo)
     {
         super(context);
+
         Utils.inject(context, this);
-    }
 
-    @Override
-    protected int getLayoutResourceId()
-    {
-        return R.layout.element_profile_contact;
-    }
+        inflate(getContext(), R.layout.element_profile_contact, this);
+        ButterKnife.bind(this);
 
-    @Override
-    protected boolean constructView(ViewGroup container, ProviderPersonalInfo providerPersonalInfo)
-    {
+        mProviderPersonalInfo = providerPersonalInfo;
+
         titleText.setText(R.string.your_contact_information);
         subtitleText.setVisibility(View.GONE);
 
         String noData = getContext().getString(R.string.no_data);
 
-        String email = providerPersonalInfo.getEmail();
+        String email = mProviderPersonalInfo.getEmail();
         providerEmailText.setText(email != null ? email : noData);
 
-        String phone = providerPersonalInfo.getPhone();
+        String phone = mProviderPersonalInfo.getPhone();
         providerPhoneText.setText(phone != null ? phone : noData);
 
-        Address address = providerPersonalInfo.getAddress();
+        Address address = mProviderPersonalInfo.getAddress();
         providerAddressText.setText(address != null ? (address.getStreetAddress() + "\n" + address.getCityStateZip()) : noData);
 
-        setupUpdateButton();
-
-        return true;
+        mUpdateButton.setVisibility(View.VISIBLE);
     }
 
-    private void setupUpdateButton()
+    @OnClick(R.id.profile_section_update)
+    public void setupUpdateButton()
     {
-        mUpdateButton.setVisibility(View.VISIBLE);
-        mUpdateButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mBus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, null, TransitionStyle.SLIDE_UP));
-                mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createEditProfileSelectedLog()));
-            }
-        });
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, null, TransitionStyle.SLIDE_UP));
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createEditProfileSelectedLog()));
     }
 }
