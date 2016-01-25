@@ -14,11 +14,13 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.helpcenter.HelpManager;
+import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
-import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.NotificationMessageManager;
@@ -50,8 +52,9 @@ import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
-import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
+import com.handy.portal.ui.constructor.ProfileContactView;
+import com.handy.portal.ui.constructor.ProfilePerformanceView;
+import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
@@ -60,8 +63,6 @@ import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
-import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
@@ -138,10 +139,11 @@ import retrofit.converter.GsonConverter;
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
-        ProfileContactViewConstructor.class,
+        ProfileContactView.class,
+        ProfilePerformanceView.class,
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
-        ProfileReferralViewConstructor.class,
+        ProfileReferralView.class,
         PaymentsBatchListView.class,
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,

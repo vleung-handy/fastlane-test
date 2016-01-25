@@ -3,8 +3,6 @@ package com.handy.portal.ui.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.handy.portal.ui.widget.InputTextField;
-
 public final class EmailInputTextView extends InputTextField
 {
 
