@@ -11,7 +11,6 @@ public interface PrefsKey
     String ONBOARDING_NEEDED = "onboarding_needed";
     String ENVIRONMENT_PREFIX = "environment_prefix";
     String EVENT_LOG_BUNDLES = "event_log_bundles";
-    String NAVIGATION_TUTORIAL_SHOWN = "navigation_tutorial_shown";
     String SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED = "same_day_late_dispatch_available_job_notification_explained";
 
 
@@ -22,7 +21,6 @@ public interface PrefsKey
             ONBOARDING_NEEDED,
             ENVIRONMENT_PREFIX,
             EVENT_LOG_BUNDLES,
-            NAVIGATION_TUTORIAL_SHOWN,
             SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED,
     })
     @interface Key {}
