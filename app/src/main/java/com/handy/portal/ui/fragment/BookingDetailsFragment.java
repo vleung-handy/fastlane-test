@@ -1120,7 +1120,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private boolean useNewUnassignFlow()
     {
-        return true;
+        return false;
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
