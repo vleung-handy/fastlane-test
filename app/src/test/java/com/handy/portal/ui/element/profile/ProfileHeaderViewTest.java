@@ -39,7 +39,8 @@ public class ProfileHeaderViewTest
     private Date activationDate;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         firstName = "My";
         lastName = "Pro";
         jobsRating = 3.5f;
@@ -55,24 +56,28 @@ public class ProfileHeaderViewTest
     }
 
     @Test
-    public void shouldHaveLastName() {
+    public void shouldHaveLastName()
+    {
         TextView titleText = (TextView) phView.findViewById(R.id.provider_last_name_text);
         assertEquals(providerProfile.getProviderPersonalInfo().getLastName(), titleText.getText());
     }
 
     @Test
-    public void shouldHaveJobsRating() {
+    public void shouldHaveJobsRating()
+    {
         TextView titleText = (TextView) phView.findViewById(R.id.jobs_rating_text);
         assertTrue(titleText.getText().toString().contains(jobsRating.toString()));
     }
 
     @Test
-    public void shouldHaveActivationDate() {
+    public void shouldHaveActivationDate()
+    {
         TextView titleText = (TextView) phView.findViewById(R.id.joined_handy_text);
         assertTrue(titleText.getText().toString().contains(DateTimeUtils.formatMonthDateYear(activationDate)));
     }
 
-    private ProviderProfile buildProviderProfile() {
+    private ProviderProfile buildProviderProfile()
+    {
         ProviderPersonalInfo personalInfo = mock(ProviderPersonalInfo.class);
         when(personalInfo.getFirstName()).thenReturn(firstName);
         when(personalInfo.getLastName()).thenReturn(lastName);

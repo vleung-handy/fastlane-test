@@ -54,7 +54,8 @@ public class ProfileReferralView extends FrameLayout
     }
 
     @OnClick(R.id.referral_code_layout)
-    public void setupReferral(){
+    public void createReferral()
+    {
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createReferralSelectedLog()));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);

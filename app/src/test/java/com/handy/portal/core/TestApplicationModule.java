@@ -22,6 +22,8 @@ import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
+import com.handy.portal.ui.constructor.ProfilePerformanceView;
+import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
@@ -75,6 +77,8 @@ import static org.mockito.Mockito.when;
         BookingDetailsFragmentTest.class,
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
+        ProfileReferralView.class,
+        ProfilePerformanceView.class,
 }, library = true)
 public class TestApplicationModule
 {
