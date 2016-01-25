@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/extra_margin_xlarge"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:id="@+id/booking_details_job_instructions_checklist_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/row_margin"
+            android:layout_marginRight="@dimen/row_margin"
+            android:cropToPadding="false"
+            android:src="@drawable/ic_details_extras"
+            />
+
+        <TextView
+            android:id="@+id/booking_details_job_instructions_checklist_title_text"
+            style="@style/TextView.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/checklist_title_padding_top"
+            android:textColor="@color/bg_inactive_grey"
+            android:textSize="@dimen/default_text_size"
+            tools:text="Customer Requests"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/booking_details_job_instructions_checklist_entries_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/row_margin"
+        android:orientation="vertical"
+        />
+
+</LinearLayout>
