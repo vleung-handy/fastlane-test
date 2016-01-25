@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="@dimen/extra_margin_xlarge"
     android:background="@color/white"
     android:orientation="vertical"
     >
@@ -19,8 +19,8 @@
             android:id="@+id/booking_details_job_instructions_checklist_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="@dimen/row_margin"
+            android:layout_marginRight="@dimen/row_margin"
             android:cropToPadding="false"
             android:src="@drawable/ic_details_extras"
             />
@@ -30,9 +30,9 @@
             style="@style/TextView.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
+            android:paddingTop="@dimen/checklist_title_padding_top"
             android:textColor="@color/bg_inactive_grey"
-            android:textSize="16sp"
+            android:textSize="@dimen/default_text_size"
             tools:text="Customer Requests"
             />
     </LinearLayout>
@@ -41,19 +41,8 @@
         android:id="@+id/booking_details_job_instructions_checklist_entries_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/row_margin"
         android:orientation="vertical"
-        >
-
-        <TextView
-            style="@style/TextView.Bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="2dp"
-            android:textColor="@color/bg_inactive_grey"
-            android:textSize="16sp"
-            tools:text="Customer Requestsasdfasdfasdf"
-            />
-    </LinearLayout>
+        />
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.handy.portal.ui.element.bookings;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -46,7 +47,7 @@ public class CustomerRequestsView extends FrameLayout
         super(context, attrs, defStyle);
     }
 
-    public void init(String sectionTitle, @Nullable Integer sectionIconId, List<String> entries)
+    public void init(String sectionTitle, @Nullable Integer sectionIconId, @NonNull List<String> entries)
     {
         inflate(getContext(), R.layout.element_booking_details_job_instructions_checklist, this);
         ButterKnife.bind(this);
@@ -67,7 +68,7 @@ public class CustomerRequestsView extends FrameLayout
         }
     }
 
-    public boolean requestChecked()
+    public boolean isChecked()
     {
         for (CheckBox checkBox : mCheckBoxEntries)
         {
