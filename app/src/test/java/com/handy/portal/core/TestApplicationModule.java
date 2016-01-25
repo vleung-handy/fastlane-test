@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
@@ -30,8 +32,6 @@ import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragmentTest;
-import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;

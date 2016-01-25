@@ -15,7 +15,6 @@ import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.CheckoutRequest;
-import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -27,8 +26,6 @@ import com.handy.portal.model.UpdateDetails;
 
 import java.util.Date;
 import java.util.List;
-
-import retrofit.mime.TypedInput;
 
 public abstract class HandyEvent
 {

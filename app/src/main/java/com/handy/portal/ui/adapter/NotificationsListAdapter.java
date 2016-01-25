@@ -13,7 +13,6 @@ import com.handy.portal.model.notifications.NotificationMessage;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.util.DateTimeUtils;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;

@@ -3,7 +3,6 @@ package com.handy.portal.ui.constructor;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 

@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -9,7 +10,6 @@ import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
