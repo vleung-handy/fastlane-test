@@ -58,31 +58,6 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
         assertNotNull(((AppCompatActivity) mFragment.getActivity()).getSupportActionBar());
     }
 
-    @Test
-    public void shouldSeeTutorialOverlayWhenFirstLaunchAndBeDismissItAfterButtonClick() throws Exception
-    {
-        // should see it when first launch
-        View tutorialOverlay = mFragment.getView().findViewById(R.id.tutorial_overlay);
-        assertNotNull(tutorialOverlay);
-        assertEquals(View.VISIBLE, tutorialOverlay.getVisibility());
-        // should be able to dismiss it
-        Button dismiss = (Button) tutorialOverlay.findViewById(R.id.tutorial_dismiss_btn);
-        dismiss.performClick();
-        assertEquals(View.GONE, tutorialOverlay.getVisibility());
-    }
-
-    @Test
-    public void shouldNotSeeOverlayTutorialAfterFirstLaunch() throws Exception
-    {
-        mFragment.mPrefsManager.setBoolean(PrefsKey.NAVIGATION_TUTORIAL_SHOWN, true);
-        // restart the fragment
-        mFragment = new MainActivityFragment();
-        SupportFragmentTestUtil.startFragment(mFragment);
-
-        View tutorialOverlay = mFragment.getView().findViewById(R.id.tutorial_overlay);
-        assertEquals(View.GONE, tutorialOverlay.getVisibility());
-    }
-
     @Ignore
     @Test
     public void givenNoTabSelected_whenActivityResumes_thenLoadJobsScreen() throws Exception
