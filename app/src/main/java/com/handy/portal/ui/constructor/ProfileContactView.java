@@ -31,17 +31,17 @@ public class ProfileContactView extends FrameLayout
     EventLogFactory mEventLogFactory;
 
     @Bind(R.id.profile_section_header_title_text)
-    TextView titleText;
+    TextView mTitleText;
     @Bind(R.id.profile_section_header_subtitle_text)
-    TextView subtitleText;
+    TextView mSubtitleText;
     @Bind(R.id.profile_section_update)
     TextView mUpdateButton;
     @Bind(R.id.provider_email_text)
-    TextView providerEmailText;
+    TextView mProviderEmailText;
     @Bind(R.id.provider_phone_text)
-    TextView providerPhoneText;
+    TextView mProviderPhoneText;
     @Bind(R.id.provider_address_text)
-    TextView providerAddressText;
+    TextView mProviderAddressText;
 
     private ProviderPersonalInfo mProviderPersonalInfo;
 
@@ -56,19 +56,19 @@ public class ProfileContactView extends FrameLayout
 
         mProviderPersonalInfo = providerPersonalInfo;
 
-        titleText.setText(R.string.your_contact_information);
-        subtitleText.setVisibility(View.GONE);
+        mTitleText.setText(R.string.your_contact_information);
+        mSubtitleText.setVisibility(View.GONE);
 
         String noData = getContext().getString(R.string.no_data);
 
         String email = mProviderPersonalInfo.getEmail();
-        providerEmailText.setText(email != null ? email : noData);
+        mProviderEmailText.setText(email != null ? email : noData);
 
         String phone = mProviderPersonalInfo.getPhone();
-        providerPhoneText.setText(phone != null ? phone : noData);
+        mProviderPhoneText.setText(phone != null ? phone : noData);
 
         Address address = mProviderPersonalInfo.getAddress();
-        providerAddressText.setText(address != null ? (address.getStreetAddress() + "\n" + address.getCityStateZip()) : noData);
+        mProviderAddressText.setText(address != null ? (address.getStreetAddress() + "\n" + address.getCityStateZip()) : noData);
 
         mUpdateButton.setVisibility(View.VISIBLE);
     }

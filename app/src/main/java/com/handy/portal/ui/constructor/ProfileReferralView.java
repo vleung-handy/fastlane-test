@@ -27,11 +27,11 @@ public class ProfileReferralView extends FrameLayout
     EventLogFactory mEventLogFactory;
 
     @Bind(R.id.profile_section_header_title_text)
-    TextView titleText;
+    TextView mTitleText;
     @Bind(R.id.profile_section_header_subtitle_text)
-    TextView subtitleText;
+    TextView mSubtitleText;
     @Bind(R.id.referral_code_text)
-    TextView referralCodeText;
+    TextView mReferralCodeText;
 
     private ReferralInfo mReferralInfo;
 
@@ -46,9 +46,9 @@ public class ProfileReferralView extends FrameLayout
 
         mReferralInfo = referralInfo;
 
-        titleText.setText(getContext().getString(R.string.earn_a_bonus, referralInfo.getBonusAmount()));
-        subtitleText.setText(R.string.refer_a_pro);
-        referralCodeText.setText(referralInfo.getReferralCode());
+        mTitleText.setText(getContext().getString(R.string.earn_a_bonus, referralInfo.getBonusAmount()));
+        mSubtitleText.setText(R.string.refer_a_pro);
+        mReferralCodeText.setText(referralInfo.getReferralCode());
     }
 
     @OnClick(R.id.referral_code_layout)

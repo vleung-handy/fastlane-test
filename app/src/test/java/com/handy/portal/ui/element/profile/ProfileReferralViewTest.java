@@ -26,29 +26,29 @@ import static org.mockito.Mockito.when;
 public class ProfileReferralViewTest
 {
     private static final Application APP = RuntimeEnvironment.application;
-    private ProfileReferralView prView;
-    private ReferralInfo referralInfo;
-    private String referralCode;
+    private ProfileReferralView mProfileReferralView;
+    private ReferralInfo mReferralInfo;
+    private String mReferralCode;
 
     @Before
     public void setUp() throws Exception
     {
-        referralCode = "Ref Code";
-        prView = new ProfileReferralView(APP, buildReferralInfo());
+        mReferralCode = "Ref Code";
+        mProfileReferralView = new ProfileReferralView(APP, buildReferralInfo());
     }
 
     @Test
     public void shouldShowReferralCode()
     {
-        TextView referralCodeText = (TextView) prView.findViewById(R.id.referral_code_text);
-        assertEquals(referralInfo.getReferralCode(), referralCodeText.getText());
+        TextView referralCodeText = (TextView) mProfileReferralView.findViewById(R.id.referral_code_text);
+        assertEquals(mReferralInfo.getReferralCode(), referralCodeText.getText());
     }
 
     private ReferralInfo buildReferralInfo()
     {
-        referralInfo = mock(ReferralInfo.class);
-        when(referralInfo.getReferralCode()).thenReturn(referralCode);
+        mReferralInfo = mock(ReferralInfo.class);
+        when(mReferralInfo.getReferralCode()).thenReturn(mReferralCode);
 
-        return referralInfo;
+        return mReferralInfo;
     }
 }

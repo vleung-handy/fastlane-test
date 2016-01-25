@@ -18,19 +18,19 @@ import butterknife.ButterKnife;
 public class ProfilePerformanceView extends FrameLayout
 {
     @Bind(R.id.profile_section_header_title_text)
-    TextView titleText;
+    TextView mTitleText;
     @Bind(R.id.profile_section_header_subtitle_text)
-    TextView subtitleText;
+    TextView mSubtitleText;
     @Bind(R.id.tier_text)
-    TextView tierText;
+    TextView mTierText;
     @Bind(R.id.tier_label)
-    TextView tierLabel;
+    TextView mTierLabel;
     @Bind(R.id.trailing_rating_text)
-    TextView trailingRatingText;
+    TextView mTrailingRatingText;
     @Bind(R.id.trailing_jobs_text)
-    TextView trailingJobsText;
+    TextView mTrailingJobsText;
     @Bind(R.id.trailing_rate_text)
-    TextView trailingRateText;
+    TextView mTrailingRateText;
 
     private PerformanceInfo mPerformanceInfo;
 
@@ -47,21 +47,21 @@ public class ProfilePerformanceView extends FrameLayout
 
         mPerformanceInfo = performanceInfo;
 
-        titleText.setText(R.string.performance);
-        subtitleText.setText(R.string.based_on_last_28_days);
+        mTitleText.setText(R.string.performance);
+        mSubtitleText.setText(R.string.based_on_last_28_days);
 
         if (mPerformanceInfo.getTier() > 0)
         {
-            tierText.setText(getContext().getString(R.string.tier_x, mPerformanceInfo.getTier()));
+            mTierText.setText(getContext().getString(R.string.tier_x, mPerformanceInfo.getTier()));
         }
         else
         {
-            tierText.setVisibility(View.GONE);
-            tierLabel.setVisibility(View.GONE);
+            mTierText.setVisibility(View.GONE);
+            mTierLabel.setVisibility(View.GONE);
         }
 
-        trailingRatingText.setText(RATING_FORMAT.format(mPerformanceInfo.getTrailing28DayRating()));
-        trailingJobsText.setText(Integer.toString(mPerformanceInfo.getTrailing28DayJobsCount()));
-        trailingRateText.setText(mPerformanceInfo.getRate());
+        mTrailingRatingText.setText(RATING_FORMAT.format(mPerformanceInfo.getTrailing28DayRating()));
+        mTrailingJobsText.setText(Integer.toString(mPerformanceInfo.getTrailing28DayJobsCount()));
+        mTrailingRateText.setText(mPerformanceInfo.getRate());
     }
 }

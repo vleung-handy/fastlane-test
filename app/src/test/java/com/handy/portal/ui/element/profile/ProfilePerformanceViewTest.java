@@ -27,50 +27,50 @@ import static org.mockito.Mockito.when;
 public class ProfilePerformanceViewTest
 {
     private static final Application APP = RuntimeEnvironment.application;
-    private ProfilePerformanceView profilePerformanceView;
-    private PerformanceInfo performanceInfo;
-    private float trailing28DayRating;
-    private int trailing28DayJobsCount;
-    private String rate;
+    private ProfilePerformanceView mProfilePerformanceView;
+    private PerformanceInfo mPerformanceInfo;
+    private float mTrailing28DayRating;
+    private int mTrailing28DayJobsCount;
+    private String mRate;
 
     @Before
     public void setUp() throws Exception
     {
-        trailing28DayRating = 4.50f;
-        trailing28DayJobsCount = 20;
-        rate = "45";
-        profilePerformanceView = new ProfilePerformanceView(APP, buildPerformanceInfo());
+        mTrailing28DayRating = 4.50f;
+        mTrailing28DayJobsCount = 20;
+        mRate = "45";
+        mProfilePerformanceView = new ProfilePerformanceView(APP, buildPerformanceInfo());
     }
 
     @Test
     public void shouldHaveTrailingRating()
     {
-        TextView trailingRatingText = (TextView) profilePerformanceView.findViewById(R.id.trailing_rating_text);
-        assertEquals(performanceInfo.getTrailing28DayRating(), Float.parseFloat(trailingRatingText.getText().toString())
+        TextView trailingRatingText = (TextView) mProfilePerformanceView.findViewById(R.id.trailing_rating_text);
+        assertEquals(mPerformanceInfo.getTrailing28DayRating(), Float.parseFloat(trailingRatingText.getText().toString())
                 , 0.01);
     }
 
     @Test
     public void shouldHaveTrailingJobs()
     {
-        TextView trailingJobsText = (TextView) profilePerformanceView.findViewById(R.id.trailing_jobs_text);
-        assertEquals(performanceInfo.getTrailing28DayJobsCount(), Integer.parseInt(trailingJobsText.getText().toString()));
+        TextView trailingJobsText = (TextView) mProfilePerformanceView.findViewById(R.id.trailing_jobs_text);
+        assertEquals(mPerformanceInfo.getTrailing28DayJobsCount(), Integer.parseInt(trailingJobsText.getText().toString()));
     }
 
     @Test
     public void shouldHaveTrailingRate()
     {
-        TextView trailingRateText = (TextView) profilePerformanceView.findViewById(R.id.trailing_rate_text);
-        assertEquals(performanceInfo.getRate(), trailingRateText.getText());
+        TextView trailingRateText = (TextView) mProfilePerformanceView.findViewById(R.id.trailing_rate_text);
+        assertEquals(mPerformanceInfo.getRate(), trailingRateText.getText());
     }
 
     private PerformanceInfo buildPerformanceInfo()
     {
-        performanceInfo = mock(PerformanceInfo.class);
-        when(performanceInfo.getTrailing28DayRating()).thenReturn(trailing28DayRating);
-        when(performanceInfo.getTrailing28DayJobsCount()).thenReturn(trailing28DayJobsCount);
-        when(performanceInfo.getRate()).thenReturn(rate);
+        mPerformanceInfo = mock(PerformanceInfo.class);
+        when(mPerformanceInfo.getTrailing28DayRating()).thenReturn(mTrailing28DayRating);
+        when(mPerformanceInfo.getTrailing28DayJobsCount()).thenReturn(mTrailing28DayJobsCount);
+        when(mPerformanceInfo.getRate()).thenReturn(mRate);
 
-        return performanceInfo;
+        return mPerformanceInfo;
     }
 }
