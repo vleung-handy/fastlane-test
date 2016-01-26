@@ -37,8 +37,6 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     private static final int DEFAULT_ZOOM_LEVEL         = 15;
     private static final int DEFAULT_BOUND_PADDING      = 15;
     private static final float DEFAULT_RADIUS_METERS    = 500f;
-    private static final double MILES_IN_ONE_METER      = 0.000621371;
-    private static final int ONE_MILE_ZOOM_LEVEL        = 14;
 
     private static final int MAP_POLYGON_STROKE_WIDTH   = 3;
     private static final int MAP_POLYGON_STROKE_COLOR = 0XFFD1D1D1; //Can not store in colors.xml, colors.xml doesn't use alpha correctly
