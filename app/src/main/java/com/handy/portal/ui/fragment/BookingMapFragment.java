@@ -100,7 +100,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         // Default points
         List<LatLng> points = new LinkedList<>();
         LatLng center = getCenterPoint();
-        points.add(getCenterPoint());
+        points.add(center);
         if (mStatus == Booking.BookingStatus.CLAIMED && !mBooking.isProxy())
         {
             MarkerOptions marker = new MarkerOptions().position(center).draggable(false);
