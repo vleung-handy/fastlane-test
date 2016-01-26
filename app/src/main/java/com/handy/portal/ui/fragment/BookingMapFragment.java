@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.handy.portal.R;
@@ -30,6 +31,8 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.util.Utils;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 public class BookingMapFragment extends SupportMapFragment implements OnMapReadyCallback
@@ -37,6 +40,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     private static final ViewGroup.LayoutParams LAYOUT_PARAMS =
             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private static final int DEFAULT_ZOOM_LEVEL         = 15;
+    private static final int DEFAULT_BOUND_PADDING      = 15;
     private static final float DEFAULT_RADIUS_METERS    = 500f;
     private static final double MILES_IN_ONE_METER      = 0.000621371;
     private static final int ONE_MILE_ZOOM_LEVEL        = 14;
@@ -100,12 +104,10 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
 
         map.setMyLocationEnabled(true);
 
+        // Default points
+        List<LatLng> points = new LinkedList<>();
         LatLng center = getCenterPoint();
-        CameraPosition targetCameraPosition =
-                new CameraPosition.Builder().target(center).zoom(getZoomLevel()).build();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
-        map.moveCamera(cameraUpdate);
-
+        points.add(getCenterPoint());
         if (mStatus == Booking.BookingStatus.CLAIMED && !mBooking.isProxy())
         {
             MarkerOptions marker = new MarkerOptions().position(center).draggable(false);
@@ -114,13 +116,52 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         else if (mBooking.isProxy() && mPolygons != null)
         {
             showPolygon(map, mPolygons.getOutlines());
+            points = mPolygons.getPoints();
         }
         else
         {
             showRangeOverlay(map, center, getRadius());
         }
+
+        positionCamera(map, points);
     }
 
+    /**
+     * Given a map and a list of points, this functions bounds the map camera by the points
+     * so they fit perfectly within the camera view with some default amount of padding.
+     *
+     * In the case of normal bookings with a center point, the map zooms in too far.
+     * To combat that, the camera zoom is checked after the bounding and forced to the default
+     * zoom if the zoom is greater than the default.
+     *
+     */
+    private void positionCamera(GoogleMap map, List<LatLng> points)
+    {
+        CameraUpdate cameraUpdate = buildCameraUpdate(points);
+        map.moveCamera(cameraUpdate);
+        if (map.getCameraPosition().zoom > DEFAULT_ZOOM_LEVEL)
+        {
+            map.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_LEVEL));
+        }
+    }
+
+    private CameraUpdate buildCameraUpdate(List<LatLng> points)
+    {
+        LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
+        for (LatLng point : points)
+        {
+            boundsBuilder.include(point);
+        }
+        LatLngBounds bounds = boundsBuilder.build();
+
+        return CameraUpdateFactory.newLatLngBounds(bounds, DEFAULT_BOUND_PADDING);
+    }
+
+    /**
+     * Currently calculates center based on whether booking is a proxy
+     *
+     * @return LatLng
+     */
     private LatLng getCenterPoint()
     {
         //Currently even for unclaimed booking we get full address information so we are going to use lat/lng on address regardless of status
@@ -128,7 +169,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         {
             return new LatLng(mBooking.getAddress().getLatitude(), mBooking.getAddress().getLongitude());
         }
-        else if (mBooking.isProxy() && mPolygons != null)
+        else if (mPolygons != null)
         {
             return new LatLng(mPolygons.getCenter().latitude, mPolygons.getCenter().longitude);
         }
@@ -144,19 +185,9 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         }
     }
 
-    private int getZoomLevel()
-    {
-        return mBooking.isProxy() ? calculateZoomLevelFromRadius() : DEFAULT_ZOOM_LEVEL;
-    }
-
     private float getRadius()
     {
         return mBooking.getRadius() > 0 ? mBooking.getRadius() : DEFAULT_RADIUS_METERS;
-    }
-
-    private int calculateZoomLevelFromRadius()
-    {
-        return (int) (Math.round(ONE_MILE_ZOOM_LEVEL - Math.log(getRadius() * MILES_IN_ONE_METER) / Math.log(Math.E)) - 1);
     }
 
     private static void showPolygon(GoogleMap map, LatLng[][] polygons)
@@ -178,16 +209,6 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_radius))
                 .position(target, radius);
         map.addGroundOverlay(groundOverlay);
-    }
-
-    private void openNativeMap(LatLng target, String fullAddress)
-    {
-        //Query format: lat,long,?optionalZoomLevel&q=address
-        //the lat long are used to bias the search queries address and are used as a fallback if address not found
-        String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=%d&q=%s",
-                target.latitude, target.longitude, getZoomLevel(), fullAddress);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        Utils.safeLaunchIntent(intent, getContext());
     }
 
     // This is used to disable the scrolling of the scroll view so we can scroll our map
