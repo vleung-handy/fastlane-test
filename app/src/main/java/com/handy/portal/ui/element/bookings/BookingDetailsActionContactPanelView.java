@@ -23,6 +23,8 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
     @Bind(R.id.booking_details_contact_profile_text)
     TextView mProfileText;
 
+    private boolean mHasContent;
+
     private final ImmutableSet<BookingActionButtonType> ASSOCIATED_BUTTON_ACTION_TYPES =
             ImmutableSet.of(
                     BookingActionButtonType.CONTACT_PHONE,
@@ -56,8 +58,8 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
         inflate(getContext(), R.layout.element_booking_details_contact, this);
         ButterKnife.bind(this);
 
-        boolean actionPanelExists = hasAllowedAction(booking.getAllowedActions());
-        if (actionPanelExists)
+        mHasContent = hasAllowedAction(booking.getAllowedActions());
+        if (mHasContent)
         {
             Booking.User bookingUser = booking.getUser();
             mProfileText.setText(bookingUser.getFullName());
@@ -66,6 +68,11 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
         {
             setVisibility(View.GONE);
         }
+    }
+
+    public boolean hasContent()
+    {
+        return mHasContent;
     }
 
     private boolean hasAllowedAction(List<Booking.Action> allowedActions)

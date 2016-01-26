@@ -34,6 +34,8 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     @Bind(R.id.job_instructions_reveal_notice)
     TextView mRevealNotice;
 
+    private boolean mHasContent;
+
     private static final Map<String, Integer> GROUP_ICONS;
 
     static
@@ -80,7 +82,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
         boolean shouldShowFullDetails =
                 isFromPayments || !isHomeCleaning || (bookingStatus == Booking.BookingStatus.CLAIMED);
 
-        boolean jobInstructionsSectionConstructed = false; //if we don't add any sections we will not add the view
+        mHasContent = false;
 
         if (booking.getRevealDate() != null && booking.isClaimedByMe())
         {
@@ -89,7 +91,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                             DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
             mRevealNotice.setText(noticeText);
             mRevealNotice.setVisibility(View.VISIBLE);
-            jobInstructionsSectionConstructed = true;
+            mHasContent = true;
         }
 
         //Show description field regardless of claim status if the booking is not for cleaning (e.g. furniture assembly)
@@ -99,7 +101,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             sectionView.init(getContext().getString(R.string.description),
                     R.drawable.ic_details_notes, Lists.newArrayList(booking.getDescription()));
 
-            jobInstructionsSectionConstructed = true;
+            mHasContent = true;
         }
 
         //Special section for "Supplies" extras (UK only)
@@ -113,7 +115,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
             sectionView.init(getContext().getString(R.string.supplies), R.drawable.ic_details_supplies, entries);
 
-            jobInstructionsSectionConstructed = true;
+            mHasContent = true;
         }
 
         //Extras - excluding Supplies instructions
@@ -134,7 +136,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                 BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
                 sectionView.init(getContext().getString(R.string.extras), R.drawable.ic_details_extras, entries);
 
-                jobInstructionsSectionConstructed = true;
+                mHasContent = true;
             }
         }
 
@@ -149,14 +151,19 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                     sectionView.init(group.getLabel(), GROUP_ICONS.get(group.getGroup()), group.getItems());
                 }
 
-                jobInstructionsSectionConstructed = true;
+                mHasContent = true;
             }
         }
 
-        if (!jobInstructionsSectionConstructed)
+        if (!mHasContent)
         {
             setVisibility(View.GONE);
         }
+    }
+
+    public boolean hasContent()
+    {
+        return mHasContent;
     }
 
     private BookingDetailsJobInstructionsSectionView addSection(LinearLayout instructionsLayout)

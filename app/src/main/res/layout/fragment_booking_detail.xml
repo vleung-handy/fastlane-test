@@ -44,42 +44,43 @@
                         <FrameLayout
                             android:id="@+id/booking_details_map_layout"
                             android:layout_width="match_parent"
-                            android:layout_height="280dp"
+                            android:layout_height="@dimen/booking_details_map_height"
                             android:orientation="vertical"
                             />
 
-                        <LinearLayout
+                        <FrameLayout
                             android:id="@+id/booking_details_date_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="@dimen/booking_details_date_margin"
+                            android:layout_marginTop="@dimen/booking_details_date_margin"
                             android:orientation="horizontal"
                             />
 
-                        <RelativeLayout
+                        <FrameLayout
                             android:id="@+id/booking_details_title_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             />
 
-                        <RelativeLayout
+                        <FrameLayout
                             android:id="@+id/booking_details_action_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/extra_margin_medium"
                             />
 
-                        <RelativeLayout
+                        <FrameLayout
                             android:id="@+id/booking_details_contact_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/extra_margin_medium"
                             />
 
-                        <LinearLayout
+                        <FrameLayout
                             android:id="@+id/booking_details_job_instructions_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/extra_margin_medium"
                             android:orientation="horizontal"
                             />
 
@@ -88,15 +89,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/extra_margin_medium"
-                            />
-
-                        <LinearLayout
-                            android:id="@+id/booking_details_remove_job_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/extra_margin_medium"
-                            android:background="@color/transparent"
-                            android:orientation="horizontal"
                             />
 
                         <FrameLayout
@@ -115,11 +107,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="@dimen/booking_details_notice_text_margin"
+                        android:layout_marginTop="@dimen/booking_details_notice_text_margin"
                         android:text="@string/full_details_after_claim"
                         android:textColor="@color/helper_text_grey"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/small_text_size"
                         android:visibility="invisible"
                         />
 

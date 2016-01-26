@@ -14,9 +14,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,25 +78,23 @@ import butterknife.OnClick;
 public class BookingDetailsFragment extends ActionBarFragment
 {
     @Bind(R.id.booking_details_layout)
-    LinearLayout detailsParentLayout;
+    ViewGroup detailsParentLayout;
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout;
     @Bind(R.id.booking_details_date_layout)
-    LinearLayout dateLayout;
+    ViewGroup dateLayout;
     @Bind(R.id.booking_details_title_layout)
-    RelativeLayout titleLayout;
+    ViewGroup titleLayout;
     @Bind(R.id.booking_details_action_layout)
-    RelativeLayout actionLayout;
+    ViewGroup actionLayout;
     @Bind(R.id.booking_details_contact_layout)
-    RelativeLayout contactLayout;
+    ViewGroup contactLayout;
     @Bind(R.id.booking_details_job_instructions_layout)
-    LinearLayout jobInstructionsLayout;
+    ViewGroup jobInstructionsLayout;
     @Bind(R.id.booking_details_location_layout)
     ViewGroup locationLayout;
-    @Bind(R.id.booking_details_remove_job_layout)
-    LinearLayout removeJobLayout;
     @Bind(R.id.booking_details_support_layout)
-    FrameLayout mSupportLayout;
+    ViewGroup mSupportLayout;
     @Bind(R.id.booking_details_full_details_notice_text)
     TextView fullDetailsNoticeText;
     @Bind(R.id.fetch_error_view)
@@ -375,12 +371,30 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             UIUtils.replaceView(locationLayout, new ProxyLocationView(getContext(), booking.getZipCluster()));
         }
-        jobInstructionsLayout.addView(new BookingDetailsJobInstructionsView(getContext(), booking, mFromPaymentsTab, bookingStatus));
+        BookingDetailsJobInstructionsView jobInstructionsView = new BookingDetailsJobInstructionsView(
+                getContext(), booking, mFromPaymentsTab, bookingStatus);
+        if (jobInstructionsView.hasContent())
+        {
+            jobInstructionsLayout.addView(jobInstructionsView);
+        }
+        else
+        {
+            jobInstructionsLayout.setVisibility(View.GONE);
+        }
 
         if (!mFromPaymentsTab)
         {
             actionLayout.addView(new BookingDetailsActionPanelView(getContext(), booking));
-            contactLayout.addView(new BookingDetailsActionContactPanelView(getContext(), booking));
+            BookingDetailsActionContactPanelView contactPanelView =
+                    new BookingDetailsActionContactPanelView(getContext(), booking);
+            if (contactPanelView.hasContent())
+            {
+                contactLayout.addView(new BookingDetailsActionContactPanelView(getContext(), booking));
+            }
+            else
+            {
+                contactLayout.setVisibility(View.GONE);
+            }
         }
         if (mProviderManager.getCachedActiveProvider() != null &&
                 booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
@@ -486,10 +500,6 @@ public class BookingDetailsFragment extends ActionBarFragment
             case HELP:
             {
                 return mSupportLayout;
-            }
-            case REMOVE:
-            {
-                return (ViewGroup) removeJobLayout.findViewById(R.id.booking_details_action_panel_button_layout);
             }
             default:
             {
