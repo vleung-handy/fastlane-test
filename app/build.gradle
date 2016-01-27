@@ -44,12 +44,14 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 800 //0.8.0
         versionName computeVersionName(versionCode)
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -78,8 +80,7 @@ android {
             minifyEnabled true
         }
         debug {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-rules-debug.pro'
+            minifyEnabled false
             applicationIdSuffix ".debug"
         }
     }
@@ -121,6 +122,9 @@ tasks.withType(Test) {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //Multidexing support
+    compile 'com.android.support:multidex:1.0.0'
 
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
@@ -169,6 +173,10 @@ dependencies {
     testCompile 'org.robolectric:shadows-support-v4:3.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'
+
+    //Espresso libraries for automation testing
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 
     // Sticky list header
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
