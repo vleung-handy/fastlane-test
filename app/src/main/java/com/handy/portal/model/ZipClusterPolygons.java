@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ZipClusterPolygons implements Serializable
@@ -27,6 +28,20 @@ public class ZipClusterPolygons implements Serializable
             }
         }
         return polygons;
+    }
+
+    public List<LatLng> getPoints() {
+
+        LinkedList<LatLng> points = new LinkedList<>();
+        for (List<Coordinates> polygon : mOutlines)
+        {
+            for (Coordinates coordinates : polygon)
+            {
+                points.add(new LatLng(coordinates.mLatitude, coordinates.mLongitude));
+            }
+        }
+
+        return points;
     }
 
     public static class Coordinates implements Serializable
