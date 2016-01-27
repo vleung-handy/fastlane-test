@@ -218,7 +218,7 @@ public final class ApplicationModule
                         String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
                         if (authToken != null)
                         {
-                            request.addQueryParam("auth_token", authToken);
+                            request.addHeader("X-Auth-Token", authToken);
                         }
 
                         request.addHeader("Authorization", auth);
@@ -244,7 +244,7 @@ public final class ApplicationModule
                         return cause;
                     }
                 }).setConverter(new GsonConverter(new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (buildConfigWrapper.isDebug())
