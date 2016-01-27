@@ -87,7 +87,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
                 .commit();
         fragmentManager.executePendingTransactions();
 
-        fragment.prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, "444");
+        fragment.mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, "444");
         when(booking.getProviderId()).thenReturn("444");
         when(booking.inferBookingStatus(anyString())).thenReturn(Booking.BookingStatus.CLAIMED);
         when(booking.getStartDate()).thenReturn(new Date());

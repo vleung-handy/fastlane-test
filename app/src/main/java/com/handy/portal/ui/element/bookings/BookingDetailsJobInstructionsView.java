@@ -49,35 +49,34 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     }
 
 
-    public BookingDetailsJobInstructionsView(final Context context, Booking booking, boolean isFromPayments, Booking.BookingStatus status)
+    public BookingDetailsJobInstructionsView(final Context context)
     {
         super(context);
-        init(booking, isFromPayments, status);
+        init();
     }
 
     public BookingDetailsJobInstructionsView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public BookingDetailsJobInstructionsView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(21)
     public BookingDetailsJobInstructionsView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
-    public void init(@NonNull final Booking booking, boolean isFromPayments,
-                     @NonNull Booking.BookingStatus bookingStatus)
+    public void refreshDisplay(@NonNull final Booking booking, boolean isFromPayments,
+                               @NonNull Booking.BookingStatus bookingStatus)
     {
-        inflate(getContext(), R.layout.element_booking_details_job_instructions, this);
-        setLayoutParams(UIUtils.MATCH_PARENT_PARAMS);
-        ButterKnife.bind(this);
-
         boolean isHomeCleaning = booking.getServiceInfo().isHomeCleaning();
         boolean shouldShowFullDetails =
                 isFromPayments || !isHomeCleaning || (bookingStatus == Booking.BookingStatus.CLAIMED);
@@ -155,15 +154,14 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             }
         }
 
-        if (!mHasContent)
-        {
-            setVisibility(View.GONE);
-        }
+        setVisibility(mHasContent ? VISIBLE : GONE);
     }
 
-    public boolean hasContent()
+    private void init()
     {
-        return mHasContent;
+        inflate(getContext(), R.layout.element_booking_details_job_instructions, this);
+        ButterKnife.bind(this);
+        setLayoutParams(UIUtils.MATCH_PARENT_PARAMS);
     }
 
     private BookingDetailsJobInstructionsSectionView addSection(LinearLayout instructionsLayout)

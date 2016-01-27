@@ -3,7 +3,6 @@ package com.handy.portal.ui.element.bookings;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -31,48 +30,55 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
                     BookingActionButtonType.CONTACT_TEXT
             );
 
-    public BookingDetailsActionContactPanelView(final Context context, Booking booking)
+    public BookingDetailsActionContactPanelView(final Context context)
     {
         super(context);
-        init(booking);
+        init();
     }
 
     public BookingDetailsActionContactPanelView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public BookingDetailsActionContactPanelView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(21)
     public BookingDetailsActionContactPanelView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
-    public void init(final Booking booking)
+    public void refreshDisplay(final Booking booking)
     {
-        inflate(getContext(), R.layout.element_booking_details_contact, this);
-        ButterKnife.bind(this);
+        // TODO: Currently BookingDetailsFragment is adding ActionButtons. Eventually, the display should be handled here, not from outside.
+        // Remove ActionButtons added from outside
+        removeAllViews();
+        init();
 
-        mHasContent = hasAllowedAction(booking.getAllowedActions());
-        if (mHasContent)
+        boolean hasAllowedAction = hasAllowedAction(booking.getAllowedActions());
+        if (hasAllowedAction)
         {
             Booking.User bookingUser = booking.getUser();
             mProfileText.setText(bookingUser.getFullName());
+            setVisibility(VISIBLE);
         }
         else
         {
-            setVisibility(View.GONE);
+            setVisibility(GONE);
         }
     }
 
-    public boolean hasContent()
+    private void init()
     {
-        return mHasContent;
+        inflate(getContext(), R.layout.element_booking_details_contact, this);
+        ButterKnife.bind(this);
     }
 
     private boolean hasAllowedAction(List<Booking.Action> allowedActions)

@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,35 +33,34 @@ public class BookingDetailsTitleView extends FrameLayout
     @Bind(R.id.booking_details_requested_indicator_layout)
     LinearLayout mRequestedLayout;
 
-    public BookingDetailsTitleView(final Context context, Booking booking,
-                                   boolean isFromPayments, Booking.BookingStatus status)
+    public BookingDetailsTitleView(final Context context)
     {
         super(context);
-        init(booking, isFromPayments, status);
+        init();
     }
 
     public BookingDetailsTitleView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public BookingDetailsTitleView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(21)
     public BookingDetailsTitleView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
-    public void init(@NonNull final Booking booking, boolean isFromPayments,
-                     @NonNull Booking.BookingStatus status)
+    public void refreshDisplay(@NonNull final Booking booking, boolean isFromPayments,
+                               @NonNull Booking.BookingStatus status)
     {
-        inflate(getContext(), R.layout.element_booking_details_location, this);
-        ButterKnife.bind(this);
-
         Booking.BookingStatus bookingStatus = isFromPayments ? Booking.BookingStatus.UNAVAILABLE : status;
 
         mLocationText.setText(booking.getFormattedLocation(bookingStatus));
@@ -89,18 +87,24 @@ public class BookingDetailsTitleView extends FrameLayout
         if (booking.getPartner() != null)
         {
             mPartnerText.setVisibility(booking.getPartner().equalsIgnoreCase(PartnerNames.AIRBNB) ?
-                    View.VISIBLE : View.GONE);
-            mRequestedLayout.setVisibility(View.GONE);
+                    VISIBLE : GONE);
+            mRequestedLayout.setVisibility(GONE);
         }
         else if (booking.isRequested() && !isFromPayments)
         {
-            mPartnerText.setVisibility(View.GONE);
-            mRequestedLayout.setVisibility(View.VISIBLE);
+            mPartnerText.setVisibility(GONE);
+            mRequestedLayout.setVisibility(VISIBLE);
         }
         else
         {
-            mPartnerText.setVisibility(View.GONE);
-            mRequestedLayout.setVisibility(View.GONE);
+            mPartnerText.setVisibility(GONE);
+            mRequestedLayout.setVisibility(GONE);
         }
+    }
+
+    private void init()
+    {
+        inflate(getContext(), R.layout.element_booking_details_location, this);
+        ButterKnife.bind(this);
     }
 }

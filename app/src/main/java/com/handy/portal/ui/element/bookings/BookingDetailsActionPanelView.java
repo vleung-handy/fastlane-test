@@ -31,43 +31,55 @@ public class BookingDetailsActionPanelView extends FrameLayout
                     BookingActionButtonType.CHECK_OUT
             );
 
-    public BookingDetailsActionPanelView(final Context context, Booking booking)
+    public BookingDetailsActionPanelView(final Context context)
     {
         super(context);
-        init(booking);
+        init();
     }
 
     public BookingDetailsActionPanelView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public BookingDetailsActionPanelView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(21)
     public BookingDetailsActionPanelView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
-    public void init(final Booking booking)
+    public void refreshDisplay(final Booking booking)
     {
-        inflate(getContext(), R.layout.element_booking_details_action, this);
-        ButterKnife.bind(this);
+        // TODO: Currently BookingDetailsFragment is adding ActionButtons. Eventually, the display should be handled here, not from outside.
+        // Remove ActionButtons added from outside
+        removeAllViews();
+        init();
 
         List<Booking.Action> allowedActions = booking.getAllowedActions();
         boolean removeSection = !hasAllowedAction(allowedActions);
         if (removeSection)
         {
-            setVisibility(View.GONE);
+            setVisibility(GONE);
         }
         else
         {
             initHelperText(allowedActions);
+            setVisibility(VISIBLE);
         }
+    }
+
+    private void init()
+    {
+        inflate(getContext(), R.layout.element_booking_details_action, this);
+        ButterKnife.bind(this);
     }
 
     private boolean hasAllowedAction(List<Booking.Action> allowedActions)
