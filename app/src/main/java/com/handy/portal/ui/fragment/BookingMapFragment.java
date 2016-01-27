@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -128,7 +129,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
      * zoom if the zoom is greater than the default.
      *
      */
-    private void positionCamera(GoogleMap map, List<LatLng> points)
+    private void positionCamera(@NonNull GoogleMap map, @NonNull List<LatLng> points)
     {
         CameraUpdate cameraUpdate = buildCameraUpdate(points);
         map.moveCamera(cameraUpdate);
@@ -138,7 +139,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         }
     }
 
-    private CameraUpdate buildCameraUpdate(List<LatLng> points)
+    private CameraUpdate buildCameraUpdate(@NonNull List<LatLng> points)
     {
         LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
         for (LatLng point : points)
