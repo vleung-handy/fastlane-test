@@ -47,10 +47,10 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("distance_to_job")
         private double mDistanceInKilometer;
         @SerializedName("payment_to_provider")
-        private int mPaymentAmount;
+        private float mPaymentAmount;
 
         public ClaimJobSelected(String providerId, String versionTrack, String bookingId,
-                                final double distanceInKilometer, final int paymentAmount)
+                                final double distanceInKilometer, final float paymentAmount)
         {
             super(providerId, versionTrack, EVENT_TYPE);
             mBookingId = bookingId;
@@ -69,10 +69,10 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("distance_to_job")
         private double mDistanceInKilometer;
         @SerializedName("payment_to_provider")
-        private int mPaymentAmount;
+        private float mPaymentAmount;
 
         public ClaimJobSuccess(String providerId, String versionTrack, String bookingId,
-                               final double distanceInKilometer, final int paymentAmount)
+                               final double distanceInKilometer, final float paymentAmount)
         {
             super(providerId, versionTrack, EVENT_TYPE);
             mBookingId = bookingId;
