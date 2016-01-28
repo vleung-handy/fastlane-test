@@ -341,7 +341,6 @@ public class MainActivityFragment extends InjectedFragment
                 {
                     mJobsButton.toggle();
                     mNavTrayLinks.clearCheck();
-
                 }
                 break;
                 case SCHEDULED_JOBS:
