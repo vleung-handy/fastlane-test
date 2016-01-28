@@ -22,8 +22,6 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
     @Bind(R.id.booking_details_contact_profile_text)
     TextView mProfileText;
 
-    private boolean mHasContent;
-
     private final ImmutableSet<BookingActionButtonType> ASSOCIATED_BUTTON_ACTION_TYPES =
             ImmutableSet.of(
                     BookingActionButtonType.CONTACT_PHONE,

@@ -149,16 +149,16 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (validateRequiredArguments())
         {
             Bundle arguments = getArguments();
-            this.mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
-            this.mRequestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
-            this.mCurrentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
+            mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
+            mRequestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
+            mCurrentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
 
             mFromPaymentsTab = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
 
             if (arguments.containsKey(BundleKeys.BOOKING_DATE))
             {
                 long bookingDateLong = arguments.getLong(BundleKeys.BOOKING_DATE, 0L);
-                this.mAssociatedBookingDate = new Date(bookingDateLong);
+                mAssociatedBookingDate = new Date(bookingDateLong);
             }
         }
         else
@@ -272,7 +272,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         if (!MainActivityFragment.clearingBackStack)
         {
-            requestBookingDetails(this.mRequestedBookingId, this.mRequestedBookingType, this.mAssociatedBookingDate);
+            requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
         }
     }
 
@@ -366,7 +366,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     @OnClick(R.id.try_again_button)
     public void onClickRequestDetails()
     {
-        requestBookingDetails(this.mRequestedBookingId, this.mRequestedBookingType, this.mAssociatedBookingDate);
+        requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
     }
 
     private void initCancelNoShowButton()
@@ -492,19 +492,19 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             case CLAIM:
             {
-                requestClaimJob(this.mAssociatedBooking);
+                requestClaimJob(mAssociatedBooking);
             }
             break;
 
             case ON_MY_WAY:
             {
-                requestNotifyOnMyWayJob(this.mAssociatedBooking.getId(), locationData);
+                requestNotifyOnMyWayJob(mAssociatedBooking.getId(), locationData);
             }
             break;
 
             case CHECK_IN:
             {
-                requestNotifyCheckInJob(this.mAssociatedBooking.getId(), locationData);
+                requestNotifyCheckInJob(mAssociatedBooking.getId(), locationData);
             }
             break;
 
@@ -526,35 +526,35 @@ public class BookingDetailsFragment extends ActionBarFragment
                 {
                     RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
                     Bundle arguments = new Bundle();
-                    arguments.putSerializable(BundleKeys.BOOKING, this.mAssociatedBooking);
+                    arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
                     rateBookingDialogFragment.setArguments(arguments);
                     rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
                 }
                 else
                 {
                     CheckoutRequest checkoutRequest = new CheckoutRequest(locationData, new ProBookingFeedback(-1, ""));
-                    requestNotifyCheckOutJob(this.mAssociatedBooking.getId(), checkoutRequest, locationData);
+                    requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
                 }
             }
             break;
 
             case REMOVE:
             {
-                requestRemoveJob(this.mAssociatedBooking);
+                requestRemoveJob(mAssociatedBooking);
             }
             break;
 
             case CONTACT_PHONE:
             {
                 bus.post(new HandyEvent.CallCustomerClicked());
-                callPhoneNumber(this.mAssociatedBooking.getBookingPhone());
+                callPhoneNumber(mAssociatedBooking.getBookingPhone());
             }
             break;
 
             case CONTACT_TEXT:
             {
                 bus.post(new HandyEvent.TextCustomerClicked());
-                textPhoneNumber(this.mAssociatedBooking.getBookingPhone());
+                textPhoneNumber(mAssociatedBooking.getBookingPhone());
             }
             break;
 
@@ -596,7 +596,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         boolean showingWarningDialog = false;
 
-        List<Booking.Action> allowedActions = this.mAssociatedBooking.getAllowedActions();
+        List<Booking.Action> allowedActions = mAssociatedBooking.getAllowedActions();
 
         //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
         for (Booking.Action action : allowedActions)
@@ -791,7 +791,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         try
         {
-            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), this.getActivity());
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getActivity());
         }
         catch (ActivityNotFoundException activityException)
         {
@@ -804,7 +804,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         try
         {
-            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), this.getActivity());
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getActivity());
         }
         catch (ActivityNotFoundException activityException)
         {
@@ -825,7 +825,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onReceiveBookingDetailsSuccess(HandyEvent.ReceiveBookingDetailsSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        this.mAssociatedBooking = event.booking;
+        mAssociatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
     }
 
@@ -864,7 +864,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         else
         {
             //Something has gone very wrong, the claim came back as success but the data shows not claimed, show a generic error and return to date based on original associated booking
-            handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error_generic, R.string.return_to_available_jobs, this.mAssociatedBooking.getStartDate());
+            handleBookingClaimError(getString(R.string.job_claim_error), R.string.job_claim_error_generic, R.string.return_to_available_jobs, mAssociatedBooking.getStartDate());
         }
     }
 
@@ -891,7 +891,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
             handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic,
-                    R.string.return_to_schedule, this.mAssociatedBooking.getStartDate());
+                    R.string.return_to_schedule, mAssociatedBooking.getStartDate());
             bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(mAssociatedBooking)));
 
         }
@@ -911,7 +911,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         //refresh the page with the new booking
-        this.mAssociatedBooking = event.booking;
+        mAssociatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
 
         showToast(R.string.omw_success, Toast.LENGTH_LONG);
@@ -932,7 +932,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
             //refresh the page with the new booking
-            this.mAssociatedBooking = event.booking;
+            mAssociatedBooking = event.booking;
             updateDisplayForBooking(event.booking);
 
             showToast(R.string.check_in_success, Toast.LENGTH_LONG);
@@ -957,7 +957,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
             //return to schedule page
-            returnToTab(MainViewTab.SCHEDULED_JOBS, this.mAssociatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+            returnToTab(MainViewTab.SCHEDULED_JOBS, mAssociatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
 
             showToast(R.string.check_out_success, Toast.LENGTH_LONG);
         }
@@ -979,7 +979,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         //refresh the page with the new booking
-        this.mAssociatedBooking = event.booking;
+        mAssociatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
 
         showToast(R.string.eta_success, Toast.LENGTH_LONG);
@@ -996,7 +996,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onReceiveReportNoShowSuccess(HandyEvent.ReceiveReportNoShowSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        this.mAssociatedBooking = event.booking;
+        mAssociatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.thanks_for_reporting)
@@ -1017,7 +1017,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onReceiveCancelNoShowSuccess(HandyEvent.ReceiveCancelNoShowSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        this.mAssociatedBooking = event.booking;
+        mAssociatedBooking = event.booking;
         updateDisplayForBooking(event.booking);
         showToast(R.string.customer_no_show_cancelled, Toast.LENGTH_LONG);
     }
@@ -1100,7 +1100,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void handleBookingClaimError(String errorMessage)
     {
-        handleBookingClaimError(errorMessage, R.string.job_claim_error, R.string.return_to_available_jobs, this.mAssociatedBooking.getStartDate());
+        handleBookingClaimError(errorMessage, R.string.job_claim_error, R.string.return_to_available_jobs, mAssociatedBooking.getStartDate());
     }
 
     private void handleBookingClaimError(String errorMessage, int titleId, int option1Id, Date returnDate)
@@ -1123,7 +1123,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void handleBookingRemoveError(final HandyEvent.ReceiveRemoveJobError event)
     {
-        handleBookingRemoveError(event.error.getMessage(), R.string.job_remove_error, R.string.return_to_schedule, this.mAssociatedBooking.getStartDate());
+        handleBookingRemoveError(event.error.getMessage(), R.string.job_remove_error, R.string.return_to_schedule, mAssociatedBooking.getStartDate());
     }
 
     private void handleBookingRemoveError(String errorMessage, int titleId, int option1Id, Date returnDate)
