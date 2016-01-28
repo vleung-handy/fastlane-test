@@ -246,7 +246,12 @@ public class EventLogFactory
     public EventLog createRemoveConfirmationAcceptedLog(@NonNull Booking booking, String reason)
     {
         String bookingId = booking.getId();
-        return new ScheduledJobsLog.RemoveConfirmationShown(getProviderId(), getVersionTrack(), bookingId, reason);
+        return new ScheduledJobsLog.RemoveConfirmationAccepted(getProviderId(), getVersionTrack(), bookingId, reason);
+    }
+
+    public EventLog createFindJobsSelectedLog()
+    {
+        return new ScheduledJobsLog.FindJobsSelected(getProviderId(), getVersionTrack());
     }
 
 

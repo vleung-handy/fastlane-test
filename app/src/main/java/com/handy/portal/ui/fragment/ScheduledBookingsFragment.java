@@ -162,6 +162,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @OnClick(R.id.find_jobs_for_day_button)
     public void onFindJobsButtonClicked()
     {
+        mEventLogFactory.createFindJobsSelectedLog();
         TransitionStyle transitionStyle = TransitionStyle.TAB_TO_TAB;
         long epochTime = mSelectedDay.getTime();
         //navigate back to available bookings for this day

@@ -288,4 +288,15 @@ public class ScheduledJobsLog extends EventLog
             mReason = reason;
         }
     }
+
+
+    public static class FindJobsSelected extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "find_jobs_selected";
+
+        public FindJobsSelected(String providerId, String versionTrack)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+        }
+    }
 }
