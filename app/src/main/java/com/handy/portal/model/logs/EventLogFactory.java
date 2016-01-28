@@ -46,7 +46,7 @@ public class EventLogFactory
     public EventLog createNearbyJobClaimSelectedLog(Booking booking, double distanceInKilometer)
     {
         String bookingId = booking.getId();
-        int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+        float paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
 
         return new NearbyJobsLog.ClaimJobSelected(getProviderId(), getVersionTrack(), bookingId,
                 distanceInKilometer, paymentAmount);
@@ -55,7 +55,7 @@ public class EventLogFactory
     public EventLog createNearbyJobClaimSuccessLog(Booking booking, double distanceInKilometer)
     {
         String bookingId = booking.getId();
-        int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+        float paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
 
         return new NearbyJobsLog.ClaimJobSuccess(getProviderId(), getVersionTrack(), bookingId,
                 distanceInKilometer, paymentAmount);

@@ -9,7 +9,7 @@ public class PaymentInfo implements Serializable
     @SerializedName("amount")
     private int amount;
     @SerializedName("adjusted_amount")
-    private int adjustedAmount;
+    private float adjustedAmount;
     @SerializedName("code")
     private String currencyCode;
     @SerializedName("symbol")
@@ -22,7 +22,7 @@ public class PaymentInfo implements Serializable
         return amount;
     }
 
-    public int getAdjustedAmount()
+    public float getAdjustedAmount()
     {
         return adjustedAmount;
     }
