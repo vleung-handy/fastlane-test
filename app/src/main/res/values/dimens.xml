@@ -75,5 +75,9 @@
     <!--bookings-->
     <dimen name="checklist_title_padding_top">2dp</dimen>
 
+    <!--booking details-->
+    <dimen name="booking_details_map_height">280dp</dimen>
+    <dimen name="booking_details_date_margin">2dp</dimen>
+    <dimen name="booking_details_notice_text_margin">15dp</dimen>
 
 </resources>

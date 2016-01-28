@@ -47,40 +47,39 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     }
 
 
-    public BookingDetailsJobInstructionsView(final Context context, Booking booking, boolean isFromPayments, Booking.BookingStatus status)
+    public BookingDetailsJobInstructionsView(final Context context)
     {
         super(context);
-        init(booking, isFromPayments, status);
+        init();
     }
 
     public BookingDetailsJobInstructionsView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public BookingDetailsJobInstructionsView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(21)
     public BookingDetailsJobInstructionsView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
-    public void init(@NonNull final Booking booking, boolean isFromPayments,
-                     @NonNull Booking.BookingStatus bookingStatus)
+    public void refreshDisplay(@NonNull final Booking booking, boolean isFromPayments,
+                               @NonNull Booking.BookingStatus bookingStatus)
     {
-        inflate(getContext(), R.layout.element_booking_details_job_instructions, this);
-        setLayoutParams(UIUtils.MATCH_PARENT_PARAMS);
-        ButterKnife.bind(this);
-
         boolean isHomeCleaning = booking.getServiceInfo().isHomeCleaning();
         boolean shouldShowFullDetails =
                 isFromPayments || !isHomeCleaning || (bookingStatus == Booking.BookingStatus.CLAIMED);
 
-        boolean jobInstructionsSectionConstructed = false; //if we don't add any sections we will not add the view
+        boolean hasContent = false;
 
         if (booking.getRevealDate() != null && booking.isClaimedByMe())
         {
@@ -89,7 +88,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                             DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
             mRevealNotice.setText(noticeText);
             mRevealNotice.setVisibility(View.VISIBLE);
-            jobInstructionsSectionConstructed = true;
+            hasContent = true;
         }
 
         //Show description field regardless of claim status if the booking is not for cleaning (e.g. furniture assembly)
@@ -99,7 +98,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             sectionView.init(getContext().getString(R.string.description),
                     R.drawable.ic_details_notes, Lists.newArrayList(booking.getDescription()));
 
-            jobInstructionsSectionConstructed = true;
+            hasContent = true;
         }
 
         //Special section for "Supplies" extras (UK only)
@@ -113,7 +112,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
             sectionView.init(getContext().getString(R.string.supplies), R.drawable.ic_details_supplies, entries);
 
-            jobInstructionsSectionConstructed = true;
+            hasContent = true;
         }
 
         //Extras - excluding Supplies instructions
@@ -134,7 +133,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                 BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
                 sectionView.init(getContext().getString(R.string.extras), R.drawable.ic_details_extras, entries);
 
-                jobInstructionsSectionConstructed = true;
+                hasContent = true;
             }
         }
 
@@ -149,14 +148,18 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                     sectionView.init(group.getLabel(), GROUP_ICONS.get(group.getGroup()), group.getItems());
                 }
 
-                jobInstructionsSectionConstructed = true;
+                hasContent = true;
             }
         }
 
-        if (!jobInstructionsSectionConstructed)
-        {
-            setVisibility(View.GONE);
-        }
+        setVisibility(hasContent ? VISIBLE : GONE);
+    }
+
+    private void init()
+    {
+        inflate(getContext(), R.layout.element_booking_details_job_instructions, this);
+        ButterKnife.bind(this);
+        setLayoutParams(UIUtils.MATCH_PARENT_PARAMS);
     }
 
     private BookingDetailsJobInstructionsSectionView addSection(LinearLayout instructionsLayout)

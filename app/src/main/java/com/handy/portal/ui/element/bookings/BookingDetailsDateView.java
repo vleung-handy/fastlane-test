@@ -28,33 +28,33 @@ public class BookingDetailsDateView extends FrameLayout
     private static final String DATE_FORMAT = "E, MMM d";
     private static final String INTERPUNCT = "\u00B7";
 
-    public BookingDetailsDateView(final Context context, Booking booking)
+    public BookingDetailsDateView(final Context context)
     {
         super(context);
-        init(booking);
+        init();
     }
 
     public BookingDetailsDateView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public BookingDetailsDateView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(21)
     public BookingDetailsDateView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
-    public void init(@NonNull final Booking booking)
+    public void refreshDisplay(@NonNull final Booking booking)
     {
-        inflate(getContext(), R.layout.element_booking_details_date, this);
-        ButterKnife.bind(this);
-
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
 
@@ -65,6 +65,12 @@ public class BookingDetailsDateView extends FrameLayout
 
         mDateText.setText(getPrependByStartDate(startDate) + formattedDate.toUpperCase());
         mTimeText.setText(formattedTime.toUpperCase());
+    }
+
+    private void init()
+    {
+        inflate(getContext(), R.layout.element_booking_details_date, this);
+        ButterKnife.bind(this);
     }
 
     //returns a today or tomorrow prepend as needed
