@@ -484,6 +484,10 @@
         <item name="android:textSize">@dimen/large_text_size</item>
     </style>
 
+    <style name="TextView.Large.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
     <style name="TextView.Large.Med">
         <item name="fontPath">fonts/CircularStd-Medium.otf</item>
     </style>
