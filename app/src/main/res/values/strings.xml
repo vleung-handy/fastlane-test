@@ -253,7 +253,7 @@
     <string name="bonus_payment_value">+ %s BONUS</string>
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
-    <string name="booking_frequency_non_recurring">One-time only</string>
+    <string name="booking_frequency_non_recurring">One-time</string>
     <string name="booking_frequency_recurring_generic">Recurring</string>
     <string name="supplies">Supplies</string>
     <string name="full_details_after_claim">Additional details will be displayed after claiming</string>
@@ -354,6 +354,7 @@
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
 
     <string name="bullet">⋅</string>
+    <string name="dash">\u2013</string>
     <string name="undo">Undo</string>
     <string name="ok">OK</string>
 

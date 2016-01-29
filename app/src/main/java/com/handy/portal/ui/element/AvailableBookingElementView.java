@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,9 +39,6 @@ public class AvailableBookingElementView extends BookingElementView
 
     @Bind(R.id.booking_entry_requested_indicator_layout)
     protected LinearLayout requestedIndicatorLayout;
-
-    @Bind(R.id.booking_entry_requested_indicator)
-    protected ImageView requestedIndicatorBar;
 
     @Bind(R.id.booking_entry_start_date_text)
     protected TextView startTimeText;
@@ -106,7 +102,6 @@ public class AvailableBookingElementView extends BookingElementView
         }
 
         //Requested Provider
-        requestedIndicatorBar.setVisibility(isRequested ? View.VISIBLE : View.INVISIBLE);
         requestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
 
         //Partner

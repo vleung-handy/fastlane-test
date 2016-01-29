@@ -1,171 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="95dp"
-                android:background="@drawable/background_list_entry"
-                android:orientation="horizontal">
-
-    <RelativeLayout
-        android:id="@+id/booking_entry_time_layout"
-        android:layout_width="80dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <ImageView
-            android:id="@+id/booking_entry_requested_indicator"
-            android:layout_width="5dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="start"
-            android:src="@drawable/rectangle_green"/>
-
-        <LinearLayout
-            android:id="@+id/booking_entry_date_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical|end"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/booking_entry_start_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:textColor="@color/title_grey"
-                android:textSize="15sp"/>
-
-            <TextView
-                android:id="@+id/booking_entry_end_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/subtitle_grey"
-                android:textSize="15sp"/>
-        </LinearLayout>
-
-    </RelativeLayout>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_list_entry"
+    android:minHeight="@dimen/job_cell_min_height"
+    android:padding="@dimen/default_padding"
+    >
 
     <LinearLayout
         android:id="@+id/booking_entry_details_layout"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="14dp"
-        android:layout_marginStart="14dp"
-        android:layout_toEndOf="@+id/booking_entry_time_layout"
-        android:layout_toLeftOf="@+id/booking_entry_right_layout"
-        android:layout_toRightOf="@+id/booking_entry_time_layout"
-        android:layout_toStartOf="@+id/booking_entry_right_layout"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/booking_entry_payment_layout"
+        android:layout_toStartOf="@+id/booking_entry_payment_layout"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <LinearLayout
             android:id="@+id/booking_entry_requested_indicator_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:visibility="visible"
+            >
 
             <ImageView
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="@dimen/job_cell_dot_size"
+                android:layout_height="@dimen/job_cell_dot_size"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/circle_green"/>
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:src="@drawable/circle_green"
+                />
 
             <TextView
-                style="@style/TextView.Bold"
+                style="@style/TextView.XSmall.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/youre_requested"
                 android:textAllCaps="true"
                 android:textColor="@color/requested_green"
-                android:textSize="12sp"/>
+                tools:text="You're Requested"
+                />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/booking_entry_partner_text"
-            style="@style/TextView.Bold"
+            style="@style/TextView.XSmall.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="true"
             android:textColor="@color/partner_blue"
-            android:textSize="12sp"/>
+            tools:text="Airbnb"
+            tools:visibility="gone"
+            />
 
         <TextView
             android:id="@+id/booking_entry_area_text"
-            style="@style/TextView.Bold"
+            style="@style/TextView.Large.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:ellipsize="end"
-            android:singleLine="true"
+            android:maxLines="2"
             android:textColor="@color/title_grey"
-            android:textSize="18sp"/>
+            tools:text="Midtown East, Murray Hill"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/booking_entry_date_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/extra_margin"
+            >
+
+            <TextView
+                android:id="@+id/booking_entry_start_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/default_text_size"
+                tools:text="10:00 am"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:text="@string/dash"
+                />
+
+            <TextView
+                android:id="@+id/booking_entry_end_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/default_text_size"
+                tools:text="1:00 pm"
+                />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/booking_entry_service_text"
+            style="@style/TextView.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/extra_margin"
             android:textColor="@color/subtitle_grey"
-            android:textSize="16sp"/>
+            tools:text="One Time"
+            />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/booking_entry_right_layout"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
+        android:id="@+id/booking_entry_payment_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
         android:gravity="center_vertical|end"
         android:orientation="vertical"
-        android:paddingEnd="20dp"
-        android:paddingRight="20dp">
+        >
 
         <TextView
             android:id="@+id/booking_entry_distance_text"
+            style="@style/TextView.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/subtitle_grey"
-            android:textSize="14sp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:text="0.5 miles"
+            tools:visibility="gone"
+            />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="top">
+            android:gravity="top"
+            >
 
             <TextView
                 android:id="@+id/booking_entry_payment_text"
+                style="@style/TextView.XXLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/title_grey"
-                android:textSize="30sp"/>
+                tools:text="$45"
+                />
 
             <TextView
                 android:id="@+id/booking_entry_cents_text"
+                style="@style/TextView.Small"
                 android:layout_width="wrap_content"
-                android:layout_toRightOf="@id/booking_entry_payment_text"
-                android:layout_toEndOf="@id/booking_entry_payment_text"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_margin"
+                android:layout_toEndOf="@id/booking_entry_payment_text"
+                android:layout_toRightOf="@id/booking_entry_payment_text"
                 android:textColor="@color/title_grey"
-                android:layout_marginTop="4sp"
-                android:textSize="16sp"/>
+                tools:text=".50"
+                />
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/booking_entry_payment_bonus_text"
-            style="@style/TextView.Bold"
+            style="@style/TextView.XSmall.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="true"
-            android:textColor="@color/subtitle_grey"
-            android:textSize="12sp"/>
+            android:textColor="@color/handy_green"
+            tools:text="+$5 bonus"
+            />
     </LinearLayout>
 
 </RelativeLayout>

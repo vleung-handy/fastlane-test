@@ -1,135 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="95dp"
-                android:background="@drawable/background_list_entry"
-                android:orientation="horizontal"
-                android:paddingRight="15dp"
-                android:paddingEnd="15dp">
-
-    <RelativeLayout
-        android:id="@+id/booking_entry_time_layout"
-        android:layout_width="80dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <ImageView
-            android:id="@+id/booking_entry_claimed_indicator"
-            android:layout_width="5dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="start"
-            android:src="@drawable/rectangle_teal"
-            android:visibility="gone"/>
-
-        <LinearLayout
-            android:id="@+id/booking_entry_date_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical|end"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/booking_entry_start_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:textColor="@color/title_grey"
-                android:textSize="15sp"/>
-
-            <TextView
-                android:id="@+id/booking_entry_end_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/subtitle_grey"
-                android:textSize="15sp"/>
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/booking_entry_completed_indicator"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_check_complete"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"/>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_list_entry"
+    android:minHeight="@dimen/job_cell_min_height"
+    android:padding="@dimen/default_padding"
+    >
 
     <LinearLayout
         android:id="@+id/booking_entry_details_layout"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="14dp"
-        android:layout_marginStart="14dp"
-        android:layout_toEndOf="@+id/booking_entry_time_layout"
-        android:layout_toRightOf="@+id/booking_entry_time_layout"
-        android:layout_toStartOf="@+id/booking_entry_completed_indicator"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/booking_entry_completed_indicator"
+        android:layout_toStartOf="@+id/booking_entry_completed_indicator"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <LinearLayout
             android:id="@+id/booking_entry_claimed_indicator_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <ImageView
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="@dimen/job_cell_dot_size"
+                android:layout_height="@dimen/job_cell_dot_size"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/circle_teal"/>
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:src="@drawable/circle_teal"
+                />
 
             <TextView
-                style="@style/TextView.Bold"
+                style="@style/TextView.XSmall.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/claimed"
                 android:textAllCaps="true"
                 android:textColor="@color/handy_teal"
-                android:textSize="12sp"/>
+                />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/booking_entry_completed_text"
-            style="@style/TextView.Bold"
+            style="@style/TextView.XSmall.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/completed"
             android:textAllCaps="true"
             android:textColor="@color/black_pressed"
-            android:textSize="12sp"/>
+            tools:visibility="gone"
+            />
 
         <TextView
             android:id="@+id/booking_entry_address_text"
-            style="@style/TextView.Bold"
+            style="@style/TextView.Large.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:ellipsize="end"
-            android:singleLine="true"
+            android:maxLines="2"
             android:textColor="@color/title_grey"
-            android:textSize="18sp"/>
+            tools:text="123 Handy St"
+            />
 
-        <TextView
-            android:id="@+id/booking_entry_region_text"
+        <LinearLayout
+            android:id="@+id/booking_entry_date_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/subtitle_grey"
-            android:textSize="16sp"/>
+            android:layout_marginTop="@dimen/extra_margin"
+            >
+
+            <TextView
+                android:id="@+id/booking_entry_start_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/default_text_size"
+                tools:text="10:00 am"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:text="@string/dash"
+                />
+
+            <TextView
+                android:id="@+id/booking_entry_end_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/default_text_size"
+                tools:text="1:00 pm"
+                />
+        </LinearLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/booking_entry_completed_indicator"
+        android:layout_width="@dimen/job_cell_icon_size"
+        android:layout_height="@dimen/job_cell_icon_size"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:src="@drawable/ic_check_complete"
+        tools:visibility="invisible"
+        />
 
 </RelativeLayout>
