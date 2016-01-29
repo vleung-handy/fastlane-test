@@ -73,6 +73,7 @@ import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
@@ -132,6 +133,7 @@ import retrofit.converter.GsonConverter;
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
         NotificationBlockerDialogFragment.class,
+        LocationSettingsBlockerDialogFragment.class,
         PaymentsUpdateBankAccountFragment.class,
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
@@ -152,7 +154,7 @@ import retrofit.converter.GsonConverter;
         SupportActionView.class,
         NotificationsFragment.class,
         NotificationsListView.class,
-        NotificationsListEntryView.class,
+        NotificationsListEntryView.class
 })
 public final class ApplicationModule
 {
