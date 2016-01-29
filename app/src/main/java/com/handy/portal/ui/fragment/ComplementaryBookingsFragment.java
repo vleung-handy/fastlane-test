@@ -240,7 +240,6 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         View claimedBookingEntryView = createBookingEntryView(claimedBooking, claimedBookingsContainer, ScheduledBookingElementView.class);
         claimedBookingsContainer.addView(claimedBookingEntryView);
         claimedBookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(claimedBooking));
-        claimedBookingEntryView.findViewById(R.id.booking_entry_claimed_indicator).setVisibility(View.VISIBLE);
 
         Collections.sort(bookings);
         for (Booking booking : bookings)

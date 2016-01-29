@@ -80,4 +80,9 @@
     <dimen name="booking_details_date_margin">2dp</dimen>
     <dimen name="booking_details_notice_text_margin">15dp</dimen>
 
+    <!--job list-->
+    <dimen name="job_cell_min_height">128dp</dimen>
+    <dimen name="job_cell_icon_size">40dp</dimen>
+    <dimen name="job_cell_dot_size">8dp</dimen>
+
 </resources>

@@ -354,7 +354,7 @@
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
 
     <string name="bullet">⋅</string>
-    <string name="dash">\u2014</string>
+    <string name="dash">\u2013</string>
     <string name="undo">Undo</string>
     <string name="ok">OK</string>
 

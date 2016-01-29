@@ -18,13 +18,11 @@ import butterknife.ButterKnife;
 
 //Not setting up a clean UI hierarchy with AvailableBookingElement because ScheduledBookingElement is going to radically change soon to a google calendar style view
 
+
 public class ScheduledBookingElementView extends BookingElementView
 {
     @Bind(R.id.booking_entry_address_text)
     protected TextView addressTextView;
-
-    @Bind(R.id.booking_entry_region_text)
-    protected TextView bookingRegionText;
 
     @Bind(R.id.booking_entry_claimed_indicator_layout)
     protected LinearLayout claimedIndicatorLayout;
@@ -57,14 +55,11 @@ public class ScheduledBookingElementView extends BookingElementView
         {
             //Show general location instead of address for proxies
             addressTextView.setText(booking.getLocationName());
-            bookingRegionText.setVisibility(View.GONE);
         }
         else
         {
             //Address
             addressTextView.setText(booking.getAddress().getStreetAddress());
-            //Area
-            bookingRegionText.setText(booking.getAddress().getShortRegion());
         }
 
         //Claimed
@@ -72,7 +67,7 @@ public class ScheduledBookingElementView extends BookingElementView
 
         //Completed
         completedText.setVisibility(booking.isEnded() ? View.VISIBLE : View.GONE);
-        completedIndicator.setVisibility(booking.isEnded() ? View.VISIBLE : View.GONE);
+        completedIndicator.setVisibility(booking.isEnded() ? View.VISIBLE : View.INVISIBLE);
 
         //Date and Time
         SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);

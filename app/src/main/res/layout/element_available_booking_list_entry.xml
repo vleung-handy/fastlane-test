@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_list_entry"
-    android:minHeight="128dp"
-    android:orientation="horizontal"
+    android:minHeight="@dimen/job_cell_min_height"
     android:padding="@dimen/default_padding"
     >
 
@@ -28,26 +27,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            tools:visibility="gone"
+            tools:visibility="visible"
             >
 
             <ImageView
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="@dimen/job_cell_dot_size"
+                android:layout_height="@dimen/job_cell_dot_size"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
                 android:src="@drawable/circle_green"
                 />
 
             <TextView
-                style="@style/TextView.Bold"
+                style="@style/TextView.XSmall.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/youre_requested"
                 android:textAllCaps="true"
                 android:textColor="@color/requested_green"
-                android:textSize="12sp"
                 tools:text="You're Requested"
                 />
 
@@ -110,11 +108,11 @@
 
         <TextView
             android:id="@+id/booking_entry_service_text"
+            style="@style/TextView.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/extra_margin"
             android:textColor="@color/subtitle_grey"
-            android:textSize="16sp"
             tools:text="One Time"
             />
 
