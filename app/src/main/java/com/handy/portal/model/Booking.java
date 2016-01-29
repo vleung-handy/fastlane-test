@@ -95,6 +95,10 @@ public class Booking implements Comparable<Booking>, Serializable
     private String mZipClusterId;
     @SerializedName("zipcluster")
     private ZipCluster mZipCluster;
+    @SerializedName("min_hrs")
+    private float mMinimumHours;
+    @SerializedName("hrs")
+    private float mHours;
 
     @SerializedName("region_id")
     private int mRegionId;
@@ -330,6 +334,17 @@ public class Booking implements Comparable<Booking>, Serializable
     public ZipCluster getZipCluster() { return mZipCluster; }
 
     public int getRegionId() { return mRegionId; }
+
+    public float getMinimumHours()
+    {
+        return mMinimumHours;
+    }
+
+    public float getHours()
+    {
+        return mHours;
+    }
+
 
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus

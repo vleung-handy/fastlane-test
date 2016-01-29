@@ -106,15 +106,32 @@
                 />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/booking_entry_service_text"
-            style="@style/TextView.Medium"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/extra_margin"
-            android:textColor="@color/subtitle_grey"
-            tools:text="One Time"
-            />
+            >
+
+            <TextView
+                android:id="@+id/booking_entry_service_text"
+                style="@style/TextView.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/subtitle_grey"
+                tools:text="One Time"
+                />
+
+            <TextView
+                android:id="@+id/booking_entry_time_window_text"
+                style="@style/TextView.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/subtitle_grey"
+                android:visibility="gone"
+                tools:text=" · 2-3.5 hour job"
+                tools:visibility="visible"
+                />
+        </LinearLayout>
 
     </LinearLayout>
 
