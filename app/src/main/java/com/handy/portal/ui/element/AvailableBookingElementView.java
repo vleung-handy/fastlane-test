@@ -12,9 +12,6 @@ import com.handy.portal.constant.PartnerNames;
 import com.handy.portal.model.Booking;
 import com.handy.portal.util.UIUtils;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -85,37 +82,10 @@ public class AvailableBookingElementView extends BookingElementView
         }
 
         //Service or frequency for home cleaning jobs
-        Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
-        if (serviceInfo.isHomeCleaning())
-        {
-            String frequencyInfo = UIUtils.getFrequencyInfo(booking, parentContext);
-            if (booking.isUK() &&
-                    booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES)
-                            .size() > 0)
-            {
-                frequencyInfo += " \u22C5 " + parentContext.getString(R.string.supplies);
-            }
-            mBookingServiceTextView.setText(frequencyInfo);
-        }
-        else
-        {
-            mBookingServiceTextView.setText(serviceInfo.getDisplayName());
-        }
+        UIUtils.setService(mBookingServiceTextView, booking);
 
-        //Time window for flex proxies
-        if (booking.getMinimumHours() > 0 && booking.getMinimumHours() < booking.getHours())
-        {
-            final DecimalFormat decimalFormat = new DecimalFormat("0.#");
-            final String minimumHoursFormatted = decimalFormat.format(booking.getMinimumHours());
-            final String hoursFormatted = decimalFormat.format(booking.getHours());
-            mTimeWindowText.setText(parentContext.getString(R.string.time_window_formatted,
-                    minimumHoursFormatted, hoursFormatted));
-            mTimeWindowText.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mTimeWindowText.setVisibility(View.GONE);
-        }
+        //Time window
+        UIUtils.setTimeWindow(mTimeWindowText, booking.getMinimumHours(), booking.getHours());
 
         //Distance
         String formattedDistance = booking.getFormattedDistance();
@@ -132,9 +102,8 @@ public class AvailableBookingElementView extends BookingElementView
         setPartnerText(booking.getPartner());
 
         //Date and Time
-        SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);
-        String formattedStartDate = timeOfDayFormat.format(booking.getStartDate());
-        String formattedEndDate = timeOfDayFormat.format(booking.getEndDate());
+        final String formattedStartDate = TIME_OF_DAY_FORMAT.format(booking.getStartDate());
+        final String formattedEndDate = TIME_OF_DAY_FORMAT.format(booking.getEndDate());
         mStartTimeText.setText(formattedStartDate.toLowerCase());
         mEndTimeText.setText(formattedEndDate.toLowerCase());
 

@@ -40,10 +40,13 @@ import com.handy.portal.ui.view.Errorable;
 import com.handy.portal.ui.view.FormFieldTableRow;
 
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.regex.Pattern;
 
 public final class UIUtils
 {
+    private static final Format TIME_WINDOW_HOURS_FORMAT = new DecimalFormat("0.#");
+
     public static final ViewGroup.LayoutParams MATCH_PARENT_PARAMS = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -206,6 +209,45 @@ public final class UIUtils
             {
                 centsTextView.setVisibility(View.GONE);
             }
+        }
+    }
+
+    public static void setTimeWindow(final TextView timeWindowTextView, final float minimumHours,
+                                     final float hours)
+    {
+        if (minimumHours > 0 && minimumHours < hours)
+        {
+            final String minimumHoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(minimumHours);
+            final String hoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(hours);
+            final Context context = timeWindowTextView.getContext();
+            timeWindowTextView.setText(context.getString(R.string.time_window_formatted,
+                    minimumHoursFormatted, hoursFormatted));
+            timeWindowTextView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            timeWindowTextView.setVisibility(View.GONE);
+        }
+    }
+
+    public static void setService(final TextView serviceTextView, final Booking booking)
+    {
+        Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
+        if (serviceInfo.isHomeCleaning())
+        {
+            final Context context = serviceTextView.getContext();
+            String frequencyInfo = UIUtils.getFrequencyInfo(booking, context);
+            if (booking.isUK() &&
+                    booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES)
+                            .size() > 0)
+            {
+                frequencyInfo += " \u22C5 " + context.getString(R.string.supplies);
+            }
+            serviceTextView.setText(frequencyInfo);
+        }
+        else
+        {
+            serviceTextView.setText(serviceInfo.getDisplayName());
         }
     }
 
