@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -22,6 +23,8 @@ public class BookingDetailsTitleView extends FrameLayout
     TextView mLocationText;
     @Bind(R.id.booking_details_service_text)
     TextView mServiceText;
+    @Bind(R.id.booking_details_time_window_text)
+    TextView mTimeWindowText;
     @Bind(R.id.booking_details_payment_text)
     TextView mPaymentText;
     @Bind(R.id.booking_details_cents_text)
@@ -51,7 +54,7 @@ public class BookingDetailsTitleView extends FrameLayout
         init();
     }
 
-    @TargetApi(21)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BookingDetailsTitleView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -65,15 +68,9 @@ public class BookingDetailsTitleView extends FrameLayout
 
         mLocationText.setText(booking.getFormattedLocation(bookingStatus));
 
-        Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
-        if (serviceInfo.isHomeCleaning())
-        {
-            UIUtils.setFrequencyInfo(booking, mServiceText, getContext());
-        }
-        else
-        {
-            mServiceText.setText(serviceInfo.getDisplayName());
-        }
+        UIUtils.setService(mServiceText, booking);
+
+        UIUtils.setTimeWindow(mTimeWindowText, booking.getMinimumHours(), booking.getHours());
 
         if (!isFromPayments)
         {
