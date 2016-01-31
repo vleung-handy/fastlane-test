@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.PartnerNames;
 import com.handy.portal.model.Booking;
+import com.handy.portal.ui.element.BookingDetailsPaymentView;
 import com.handy.portal.util.UIUtils;
 
 import butterknife.Bind;
@@ -25,10 +26,8 @@ public class BookingDetailsTitleView extends FrameLayout
     TextView mServiceText;
     @Bind(R.id.booking_details_time_window_text)
     TextView mTimeWindowText;
-    @Bind(R.id.booking_details_payment_text)
-    TextView mPaymentText;
-    @Bind(R.id.booking_details_cents_text)
-    TextView mCentsText;
+    @Bind(R.id.booking_details_payment)
+    BookingDetailsPaymentView mPayment;
     @Bind(R.id.booking_details_payment_bonus_text)
     TextView mPaymentBonusText;
     @Bind(R.id.booking_details_partner_text)
@@ -74,8 +73,7 @@ public class BookingDetailsTitleView extends FrameLayout
 
         if (!isFromPayments)
         {
-            UIUtils.setPaymentInfo(mPaymentText, mCentsText, booking.getPaymentToProvider(),
-                    getContext().getString(R.string.payment_value));
+            mPayment.init(booking);
             UIUtils.setPaymentInfo(mPaymentBonusText, null, booking.getBonusPaymentToProvider(),
                     getContext().getString(R.string.bonus_payment_value));
         }
