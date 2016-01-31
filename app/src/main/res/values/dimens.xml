@@ -7,6 +7,8 @@
     <dimen name="row_margin">8dp</dimen>
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_margin_medium">24dp</dimen>
+    <dimen name="extra_margin_xxsmall">1dp</dimen>
+    <dimen name="extra_margin_xsmall">2dp</dimen>
     <dimen name="extra_margin">5dp</dimen>
     <dimen name="extra_margin_medium">10dp</dimen>
     <dimen name="extra_margin_large">15dp</dimen>
@@ -41,6 +43,7 @@
 
     <!-- text sizes -->
     <dimen name="default_text_size">16sp</dimen>
+    <dimen name="xxsmall_text_size">10sp</dimen>
     <dimen name="xsmall_text_size">12sp</dimen>
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>

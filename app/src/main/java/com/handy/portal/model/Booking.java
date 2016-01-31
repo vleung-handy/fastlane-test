@@ -57,6 +57,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private PaymentInfo mPaymentToProvider;
     @SerializedName("bonus")
     private PaymentInfo mBonusPayment;
+    @SerializedName("hourly_rate")
+    private PaymentInfo mHourlyRate;
     @SerializedName("frequency")
     private int mFrequency;
     @SerializedName("provider_id")
@@ -164,6 +166,11 @@ public class Booking implements Comparable<Booking>, Serializable
     public PaymentInfo getBonusPaymentToProvider()
     {
         return mBonusPayment;
+    }
+
+    public PaymentInfo getHourlyRate()
+    {
+        return mHourlyRate;
     }
 
     public boolean isRequested()

@@ -17,11 +17,8 @@ import butterknife.ButterKnife;
 
 public class AvailableBookingElementView extends BookingElementView
 {
-    @Bind(R.id.booking_entry_payment_text)
-    protected TextView mPaymentText;
-
-    @Bind(R.id.booking_entry_cents_text)
-    protected TextView mCentsPaymentText;
+    @Bind(R.id.booking_entry_payment)
+    protected BookingDetailsPaymentView mPayment;
 
     @Bind(R.id.booking_entry_payment_bonus_text)
     protected TextView mBonusPaymentText;
@@ -64,8 +61,7 @@ public class AvailableBookingElementView extends BookingElementView
         ButterKnife.bind(this, convertView);
 
         //Payment
-        UIUtils.setPaymentInfo(mPaymentText, mCentsPaymentText, booking.getPaymentToProvider(),
-                parentContext.getString(R.string.payment_value));
+        mPayment.init(booking);
 
         //Bonus Payment
         UIUtils.setPaymentInfo(mBonusPaymentText, null, booking.getBonusPaymentToProvider(),

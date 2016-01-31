@@ -356,6 +356,7 @@
 
     <string name="bullet">⋅</string>
     <string name="dash">\u2013</string>
+    <string name="long_dash">\u2014</string>
     <string name="undo">Undo</string>
     <string name="ok">OK</string>
 

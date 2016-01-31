@@ -448,6 +448,10 @@
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
+    <style name="TextView.XXSmall">
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+    </style>
+
     <style name="TextView.Medium">
         <item name="android:textSize">@dimen/medium_text_size</item>
     </style>

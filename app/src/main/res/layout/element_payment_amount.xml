@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+    >
+
+    <TextView
+        android:id="@+id/booking_entry_payment_text"
+        style="@style/TextView.XXLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/title_grey"
+        tools:text="$45"
+        />
+
+    <TextView
+        android:id="@+id/booking_entry_cents_text"
+        style="@style/TextView.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_margin"
+        android:layout_toEndOf="@id/booking_entry_payment_text"
+        android:layout_toRightOf="@id/booking_entry_payment_text"
+        android:textColor="@color/title_grey"
+        tools:text=".50"
+        />
+
+</RelativeLayout>
