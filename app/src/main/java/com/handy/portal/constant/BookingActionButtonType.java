@@ -10,7 +10,7 @@ public enum BookingActionButtonType
     ON_MY_WAY(R.id.on_my_way_button, Booking.Action.ACTION_ON_MY_WAY, R.string.on_my_way, BookingActionButtonStyle.BLUE),
     CHECK_IN(R.id.check_in_button, Booking.Action.ACTION_CHECK_IN, R.string.check_in, BookingActionButtonStyle.TEAL),
     CHECK_OUT(R.id.check_out_button, Booking.Action.ACTION_CHECK_OUT, R.string.check_out, BookingActionButtonStyle.TEAL),
-    HELP(R.id.i_need_help_button, Booking.Action.ACTION_HELP, R.string.booking_support, BookingActionButtonStyle.GREY),
+    HELP(R.id.i_need_help_button, Booking.Action.ACTION_HELP, R.string.job_support, BookingActionButtonStyle.GREY),
     CONTACT_PHONE(R.id.contact_call_button, Booking.Action.ACTION_CONTACT_PHONE, R.string.call, BookingActionButtonStyle.CONTACT),
     CONTACT_TEXT(R.id.contact_text_button, Booking.Action.ACTION_CONTACT_TEXT, R.string.text, BookingActionButtonStyle.CONTACT),
     RETRACT_NO_SHOW(0, Booking.Action.ACTION_RETRACT_NO_SHOW, 0, null),;

@@ -291,7 +291,7 @@
     <string name="update_arrival_time">Update Arrival Time</string>
     <string name="disclaimer_on_my_way">Button activates 1 hour before booking</string>
     <string name="remove_job">Remove Job</string>
-    <string name="booking_support">Booking Support</string>
+    <string name="job_support">Job Support</string>
     <string name="job_remove_error">Error Removing Job"</string>
     <string name="job_remove_error_generic">This job could not be removed</string>
     <string name="job_action_error">There was a problem taking that action, please try again</string>
