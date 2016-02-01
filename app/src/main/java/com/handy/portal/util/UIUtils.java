@@ -212,24 +212,6 @@ public final class UIUtils
         }
     }
 
-    public static void setTimeWindow(final TextView timeWindowTextView, final float minimumHours,
-                                     final float hours)
-    {
-        if (minimumHours > 0 && minimumHours < hours)
-        {
-            final String minimumHoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(minimumHours);
-            final String hoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(hours);
-            final Context context = timeWindowTextView.getContext();
-            timeWindowTextView.setText(context.getString(R.string.time_window_formatted,
-                    minimumHoursFormatted, hoursFormatted));
-            timeWindowTextView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            timeWindowTextView.setVisibility(View.GONE);
-        }
-    }
-
     public static void setService(final TextView serviceTextView, final Booking booking)
     {
         Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
@@ -248,6 +230,23 @@ public final class UIUtils
         else
         {
             serviceTextView.setText(serviceInfo.getDisplayName());
+        }
+        appendTimeWindow(serviceTextView, booking.getMinimumHours(), booking.getHours());
+    }
+
+    private static void appendTimeWindow(
+            final TextView timeWindowTextView,
+            final float minimumHours,
+            final float hours
+    )
+    {
+        if (minimumHours > 0 && minimumHours < hours)
+        {
+            final String minimumHoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(minimumHours);
+            final String hoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(hours);
+            final Context context = timeWindowTextView.getContext();
+            timeWindowTextView.append(" " + context.getString(R.string.time_window_formatted,
+                            minimumHoursFormatted, hoursFormatted));
         }
     }
 

@@ -246,7 +246,7 @@
     <string name="scheduled_job">Scheduled Job</string>
     <string name="block_jobs_schedule">Block Jobs Schedule</string>
     <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
-    <string name="time_window_formatted">\u200A\u22C5\u200A%1$s\u200A\u2013\u200A%2$s hour job</string>
+    <string name="time_window_formatted">\u22C5 %1$s\u200A\u2013\u200A%2$s hour job</string>
     <string name="payment_value">%s</string>
     <string name="payment_help">Payment Help</string>
     <string name="payments">Payments</string>

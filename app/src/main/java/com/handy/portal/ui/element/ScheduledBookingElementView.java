@@ -35,9 +35,6 @@ public class ScheduledBookingElementView extends BookingElementView
     @Bind(R.id.booking_entry_service_text)
     protected TextView mBookingServiceTextView;
 
-    @Bind(R.id.booking_entry_time_window_text)
-    protected TextView mTimeWindowText;
-
     @Bind(R.id.booking_entry_start_date_text)
     protected TextView mStartTimeText;
 
@@ -72,9 +69,6 @@ public class ScheduledBookingElementView extends BookingElementView
 
         //Service or frequency for home cleaning jobs
         UIUtils.setService(mBookingServiceTextView, booking);
-
-        //Time window
-        UIUtils.setTimeWindow(mTimeWindowText, booking.getMinimumHours(), booking.getHours());
 
         this.associatedView = convertView;
 
