@@ -47,6 +47,7 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.logs.ScheduledJobsLog;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
@@ -348,8 +349,11 @@ public class BookingDetailsFragment extends ActionBarFragment
         mJobInstructionsView.refreshDisplay(booking, mFromPaymentsTab, bookingStatus);
         mProxyLocationView.refreshDisplay(booking);
 
-        if (mProviderManager.getCachedActiveProvider() != null &&
-                booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
+        final Provider cachedActiveProvider = mProviderManager.getCachedActiveProvider();
+        final String bookingProviderId = booking.getProviderId();
+        if (booking.isClaimedByMe() ||
+                (cachedActiveProvider != null &&
+                        bookingProviderId.equals(cachedActiveProvider.getId())))
         {
             mSupportButton.init(booking, this, BookingActionButtonType.HELP);
             mSupportButton.setVisibility(View.VISIBLE);
