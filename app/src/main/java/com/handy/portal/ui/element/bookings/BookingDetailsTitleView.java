@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.PartnerNames;
 import com.handy.portal.model.Booking;
+import com.handy.portal.ui.element.BookingDetailsPaymentView;
 import com.handy.portal.util.UIUtils;
 
 import butterknife.Bind;
@@ -22,10 +24,8 @@ public class BookingDetailsTitleView extends FrameLayout
     TextView mLocationText;
     @Bind(R.id.booking_details_service_text)
     TextView mServiceText;
-    @Bind(R.id.booking_details_payment_text)
-    TextView mPaymentText;
-    @Bind(R.id.booking_details_cents_text)
-    TextView mCentsText;
+    @Bind(R.id.booking_details_payment)
+    BookingDetailsPaymentView mPayment;
     @Bind(R.id.booking_details_payment_bonus_text)
     TextView mPaymentBonusText;
     @Bind(R.id.booking_details_partner_text)
@@ -51,7 +51,7 @@ public class BookingDetailsTitleView extends FrameLayout
         init();
     }
 
-    @TargetApi(21)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BookingDetailsTitleView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -65,20 +65,11 @@ public class BookingDetailsTitleView extends FrameLayout
 
         mLocationText.setText(booking.getFormattedLocation(bookingStatus));
 
-        Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
-        if (serviceInfo.isHomeCleaning())
-        {
-            UIUtils.setFrequencyInfo(booking, mServiceText, getContext());
-        }
-        else
-        {
-            mServiceText.setText(serviceInfo.getDisplayName());
-        }
+        UIUtils.setService(mServiceText, booking);
 
         if (!isFromPayments)
         {
-            UIUtils.setPaymentInfo(mPaymentText, mCentsText, booking.getPaymentToProvider(),
-                    getContext().getString(R.string.payment_value));
+            mPayment.init(booking);
             UIUtils.setPaymentInfo(mPaymentBonusText, null, booking.getBonusPaymentToProvider(),
                     getContext().getString(R.string.bonus_payment_value));
         }

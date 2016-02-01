@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/title_grey"
+            android:textColor="@color/black"
             tools:text="123 Handy St"
             />
 
@@ -103,6 +103,15 @@
                 />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/booking_entry_service_text"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/extra_margin"
+            android:textColor="@color/subtitle_grey"
+            tools:text="One Time · 2-3.5 hour job"
+            />
     </LinearLayout>
 
     <ImageView

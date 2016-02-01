@@ -1,127 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingLeft="@dimen/default_padding"
-    android:paddingRight="@dimen/default_padding"
-    android:paddingTop="@dimen/default_padding">
+    android:padding="@dimen/default_padding"
+    >
 
-    <RelativeLayout
-        android:id="@+id/booking_details_indicators_layout"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/booking_details_partner_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/airbnb"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/partner_blue"
-            android:textSize="@dimen/small_text_size"
-            />
-
-        <LinearLayout
-            android:id="@+id/booking_details_requested_indicator_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/circle_green"/>
-
-            <TextView
-                style="@style/TextView.Bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/youre_requested"
-                android:textAllCaps="true"
-                android:textColor="@color/requested_green"
-                android:textSize="@dimen/xsmall_text_size"
-                />
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/booking_details_location_text"
-        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/booking_details_indicators_layout"
-        android:scrollHorizontally="false"
-        android:singleLine="false"
-        android:text="@string/location"
-        android:textAppearance="@style/TextView.Bold"
-        android:textColor="@color/black"
-        android:textSize="@dimen/xlarge_text_size"
-        android:textStyle="bold"
-        />
-
-    <TextView
-        android:id="@+id/booking_details_service_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/booking_details_location_text"
-        android:text="@string/booking_frequency_every_week"
-        android:textColor="@color/subtitle_grey"
-        android:textSize="@dimen/medium_text_size"
-        />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/booking_details_location_text"
-        android:gravity="top">
+        android:layout_toLeftOf="@+id/booking_details_payment_layout"
+        android:layout_toStartOf="@+id/booking_details_payment_layout"
+        android:orientation="vertical"
+        >
 
         <RelativeLayout
-            android:id="@+id/booking_details_payment"
+            android:id="@+id/booking_details_indicators_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:gravity="top">
+            >
 
             <TextView
-                android:id="@+id/booking_details_payment_text"
+                android:id="@+id/booking_details_partner_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/xxlarge_text_size"/>
+                android:text="@string/airbnb"
+                android:textAppearance="@style/TextView.Small.Bold"
+                android:textColor="@color/partner_blue"
+                tools:visibility="gone"
+                />
 
-            <TextView
-                android:id="@+id/booking_details_cents_text"
+            <LinearLayout
+                android:id="@+id/booking_details_requested_indicator_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4sp"
-                android:layout_toEndOf="@id/booking_details_payment_text"
-                android:layout_toRightOf="@id/booking_details_payment_text"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text_size"/>
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/job_cell_dot_size"
+                    android:layout_height="@dimen/job_cell_dot_size"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/extra_margin"
+                    android:layout_marginRight="@dimen/extra_margin"
+                    android:src="@drawable/circle_green"
+                    />
+
+                <TextView
+                    style="@style/TextView.XSmall.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/youre_requested"
+                    android:textAllCaps="true"
+                    android:textColor="@color/requested_green"
+                    />
+
+            </LinearLayout>
+
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/booking_details_payment_bonus_text"
-            style="@style/TextView.Bold"
+            android:id="@+id/booking_details_location_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/booking_details_payment"
-            android:textColor="@color/subtitle_grey"
-            android:textSize="@dimen/xsmall_text_size"/>
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:textAppearance="@style/TextView.XLarge.Bold"
+            android:textColor="@color/black"
+            tools:text="123 Saint Marcus McDonald Street 10001"
+            />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/booking_details_service_text"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/extra_margin"
+            android:textColor="@color/subtitle_grey"
+            tools:text="One Time"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/booking_details_payment_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:gravity="center_vertical|end"
+        android:orientation="vertical"
+        >
+
+        <com.handy.portal.ui.element.BookingDetailsPaymentView
+            android:id="@+id/booking_details_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/booking_details_payment_bonus_text"
+            style="@style/TextView.XSmall.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="@color/handy_green"
+            tools:text="+$5 bonus"
+            />
+    </LinearLayout>
 
 </RelativeLayout>
