@@ -17,8 +17,6 @@ public class Provider
     private String lastName;
     @SerializedName("country")
     private String country;
-    @SerializedName("onboarding_enabled")
-    private boolean onboardingEnabled;
     @SerializedName("complementary_jobs_enabled")
     private boolean complementaryJobsEnabled;
     @SerializedName("block_cleaner")
@@ -77,11 +75,6 @@ public class Provider
     public String getFullName()
     {
         return firstName + " " + lastName;
-    }
-
-    public boolean isOnboardingEnabled()
-    {
-        return onboardingEnabled;
     }
 
     public String getCountry()

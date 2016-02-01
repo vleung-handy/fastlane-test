@@ -48,7 +48,6 @@ import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
@@ -126,7 +125,6 @@ import retrofit.converter.GsonConverter;
         UrbanAirshipManager.class,
         DeepLinkService.class,
         MainActivityFragmentNavigationHelper.class,
-        OnboardingActivity.class,
         ComplementaryBookingsFragment.class,
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
