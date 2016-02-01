@@ -75,6 +75,8 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     public void refreshDisplay(@NonNull final Booking booking, boolean isFromPayments,
                                @NonNull Booking.BookingStatus bookingStatus)
     {
+        mInstructionsLayout.removeAllViews();
+
         boolean isHomeCleaning = booking.getServiceInfo().isHomeCleaning();
         boolean shouldShowFullDetails =
                 isFromPayments || !isHomeCleaning || (bookingStatus == Booking.BookingStatus.CLAIMED);
