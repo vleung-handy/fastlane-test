@@ -9,22 +9,22 @@
 
     <TextView
         android:id="@+id/booking_entry_payment_text"
-        style="@style/TextView.Large"
+        style="@style/TextView.XLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/title_grey"
+        android:textColor="@color/black"
         tools:text="$45"
         />
 
     <TextView
         android:id="@+id/booking_entry_cents_text"
-        style="@style/TextView.XXSmall"
+        style="@style/TextView.XSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/extra_margin_xxsmall"
+        android:layout_marginTop="@dimen/extra_margin_xsmall"
         android:layout_toEndOf="@id/booking_entry_payment_text"
         android:layout_toRightOf="@id/booking_entry_payment_text"
-        android:textColor="@color/title_grey"
+        android:textColor="@color/black"
         tools:text=".50"
         />
 

@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/title_grey"
+            android:textColor="@color/black"
             tools:text="123 Handy St"
             />
 

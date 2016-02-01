@@ -12,7 +12,7 @@
         style="@style/TextView.XXLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/title_grey"
+        android:textColor="@color/black"
         tools:text="$45"
         />
 
@@ -24,7 +24,7 @@
         android:layout_marginTop="@dimen/extra_margin"
         android:layout_toEndOf="@id/booking_entry_payment_text"
         android:layout_toRightOf="@id/booking_entry_payment_text"
-        android:textColor="@color/title_grey"
+        android:textColor="@color/black"
         tools:text=".50"
         />
 
