@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -78,5 +79,14 @@ public class CheckListItemView extends FrameLayout
     {
         inflate(getContext(), R.layout.list_item_checkbox, this);
         ButterKnife.bind(this);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v)
+            {
+                mCheckBox.setChecked(true);
+            }
+        });
     }
+
 }
