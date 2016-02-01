@@ -215,9 +215,11 @@
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
+    <string name="automatic_update_failed">Automatic update failed</string>
     <string name="update_copy">Please install the update to continue using Portal.</string>
     <string name="update_button_label">Install Update</string>
     <string name="download_copy">Downloading update. Please wait…</string>
+    <string name="download_update_manually">Please download update manually.</string>
     <string name="allow_external_storage_write_title">Important update</string>
     <string name="allow_external_storage_write_message">Select “Allow” on the next screen in order to download the latest version of the Handy Pro Portal.</string>
     <string name="allow_external_storage_write_button">OK</string>
@@ -279,7 +281,7 @@
     <string name="i_agree">I agree to the Service Professional Agreement</string>
     <string name="error_accepting_terms">There was an error accepting the terms. Please try again.</string>
     <string name="error_loading">There was a loading error. Please click below to try again.</string>
-    <string name="update_failed">Failed to download update</string>
+    <string name="download_update">Download Update</string>
 
     <string name="call">Call</string>
     <string name="text">Text</string>

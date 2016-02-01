@@ -1,5 +1,7 @@
 package com.handy.portal.ui.fragment.payments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
