@@ -18,31 +18,31 @@ import butterknife.ButterKnife;
 public class AvailableBookingElementView extends BookingElementView
 {
     @Bind(R.id.booking_entry_payment)
-    protected BookingDetailsPaymentView mPayment;
+    BookingDetailsPaymentView mPayment;
 
     @Bind(R.id.booking_entry_payment_bonus_text)
-    protected TextView mBonusPaymentText;
+    TextView mBonusPaymentText;
 
     @Bind(R.id.booking_entry_area_text)
-    protected TextView mBookingAreaTextView;
+    TextView mBookingAreaTextView;
 
     @Bind(R.id.booking_entry_service_text)
-    protected TextView mBookingServiceTextView;
+    TextView mBookingServiceTextView;
 
     @Bind(R.id.booking_entry_partner_text)
-    protected TextView mPartnerText;
+    TextView mPartnerText;
 
     @Bind(R.id.booking_entry_requested_indicator_layout)
-    protected LinearLayout mRequestedIndicatorLayout;
+    LinearLayout mRequestedIndicatorLayout;
 
     @Bind(R.id.booking_entry_start_date_text)
-    protected TextView mStartTimeText;
+    TextView mStartTimeText;
 
     @Bind(R.id.booking_entry_end_date_text)
-    protected TextView mEndTimeText;
+    TextView mEndTimeText;
 
     @Bind(R.id.booking_entry_distance_text)
-    protected TextView mFormattedDistanceText;
+    TextView mFormattedDistanceText;
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {

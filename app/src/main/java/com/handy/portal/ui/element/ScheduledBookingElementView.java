@@ -21,25 +21,25 @@ import butterknife.ButterKnife;
 public class ScheduledBookingElementView extends BookingElementView
 {
     @Bind(R.id.booking_entry_address_text)
-    protected TextView mAddressTextView;
+    TextView mAddressTextView;
 
     @Bind(R.id.booking_entry_claimed_indicator_layout)
-    protected LinearLayout mClaimedIndicatorLayout;
+    LinearLayout mClaimedIndicatorLayout;
 
     @Bind(R.id.booking_entry_completed_text)
-    protected TextView mCompletedText;
+    TextView mCompletedText;
 
     @Bind(R.id.booking_entry_completed_indicator)
-    protected ImageView mCompletedIndicator;
+    ImageView mCompletedIndicator;
 
     @Bind(R.id.booking_entry_service_text)
-    protected TextView mBookingServiceTextView;
+    TextView mBookingServiceTextView;
 
     @Bind(R.id.booking_entry_start_date_text)
-    protected TextView mStartTimeText;
+    TextView mStartTimeText;
 
     @Bind(R.id.booking_entry_end_date_text)
-    protected TextView mEndTimeText;
+    TextView mEndTimeText;
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
