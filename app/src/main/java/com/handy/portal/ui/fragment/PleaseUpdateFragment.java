@@ -40,6 +40,8 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Inject
     VersionManager mVersionManager;
 
+    @Bind(R.id.update_header_text)
+    TextView mUpdateHeaderText;
     @Bind(R.id.update_image)
     ImageView mUpdateImage;
     @Bind(R.id.update_button)
@@ -126,6 +128,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     public void onDownloadUpdateFailed(HandyEvent.DownloadUpdateFailed event)
     {
         // Fallback to opening link and downloading manually
+        mUpdateHeaderText.setText(R.string.automatic_update_failed);
         mUpdateText.setText(R.string.download_update_manually);
         mUpdateButton.setText(getResources().getString(R.string.download_update));
         mUpdateButton.setEnabled(true);

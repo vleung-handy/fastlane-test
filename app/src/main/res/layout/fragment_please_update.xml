@@ -18,6 +18,7 @@
         android:layout_marginTop="90dp"/>
 
     <TextView
+        android:id="@+id/update_header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/update_header"
