@@ -84,7 +84,7 @@ public class CheckListItemView extends FrameLayout
             @Override
             public void onClick(final View v)
             {
-                mCheckBox.setChecked(true);
+                mCheckBox.toggle();
             }
         });
     }
