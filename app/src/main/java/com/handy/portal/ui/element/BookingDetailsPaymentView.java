@@ -3,7 +3,6 @@ package com.handy.portal.ui.element;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -41,9 +40,10 @@ public class BookingDetailsPaymentView extends FrameLayout
         removeAllViews();
         float minimumHours = booking.getMinimumHours();
         float hours = booking.getHours();
-        if (minimumHours > 0 && minimumHours < hours)
+        final PaymentInfo hourlyRate = booking.getHourlyRate();
+        if (hourlyRate != null && minimumHours > 0 && minimumHours < hours)
         {
-            addBookingDetailsRangePaymentView(booking.getHourlyRate(), minimumHours, hours);
+            addBookingDetailsRangePaymentView(hourlyRate, minimumHours, hours);
         }
         else
         {
@@ -54,7 +54,6 @@ public class BookingDetailsPaymentView extends FrameLayout
         }
     }
 
-    @NonNull
     private void addBookingDetailsRangePaymentView(
             final PaymentInfo hourlyRate, final float minimumHours, final float hours)
     {
