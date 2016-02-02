@@ -352,6 +352,10 @@ public class Booking implements Comparable<Booking>, Serializable
         return mHours;
     }
 
+    public boolean hasFlexibleHours()
+    {
+        return mMinimumHours > 0 && mMinimumHours < mHours;
+    }
 
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus

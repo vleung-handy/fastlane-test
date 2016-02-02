@@ -591,7 +591,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     getContext(), SupportActionUtils.ETA_ACTION_NAMES, mAssociatedBooking));
             layout.addView(new SupportActionContainerView(
                     getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, mAssociatedBooking));
-            mSlideUpPanelLayout.showPanel(R.string.on_the_job_support, layout);
+            mSlideUpPanelLayout.showPanel(R.string.job_support, layout);
         }
     }
 
