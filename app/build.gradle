@@ -48,7 +48,7 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 802 //0.8.2
+        versionCode 803 //0.8.3
         versionName computeVersionName(versionCode)
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
