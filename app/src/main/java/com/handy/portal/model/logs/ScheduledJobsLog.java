@@ -173,14 +173,17 @@ public class ScheduledJobsLog extends EventLog
         }
     }
 
+
     public static class CustomerRatingShown extends ScheduledJobsLog
     {
         private static final String EVENT_TYPE = "customer_rating_shown";
+
         public CustomerRatingShown(String providerId, String versionTrack)
         {
             super(providerId, versionTrack, EVENT_TYPE);
         }
     }
+
 
     public static class CustomerRatingSubmitted extends ScheduledJobsLog
     {
@@ -208,6 +211,92 @@ public class ScheduledJobsLog extends EventLog
         {
             super(providerId, versionTrack, EVENT_TYPE);
             mBookingId = bookingId;
+        }
+    }
+
+
+    public static class SupportSelected extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "booking_support_selected";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+
+        public SupportSelected(String providerId, String versionTrack, String bookingId)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+            mBookingId = bookingId;
+        }
+    }
+
+
+    public static class HelpItemSelected extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "help_item_selected";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+        @SerializedName("help_item_label")
+        private String mHelpItemLabel;
+
+
+        public HelpItemSelected(String providerId, String versionTrack, String bookingId, String helpItemLabel)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+            mBookingId = bookingId;
+            mHelpItemLabel = helpItemLabel;
+        }
+    }
+
+
+    public static class RemoveConfirmationShown extends ScheduledJobsLog
+    {
+        public static final String REASON_FLOW = "reason_flow";
+        public static final String POPUP = "popup";
+
+        private static final String EVENT_TYPE = "remove_confirmation_shown";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+        @SerializedName("removal_type")
+        private String mRemovalType;
+
+
+        public RemoveConfirmationShown(String providerId, String versionTrack, String bookingId, String removalType)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+            mBookingId = bookingId;
+            mRemovalType = removalType;
+        }
+    }
+
+
+    public static class RemoveConfirmationAccepted extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "remove_confirmation_accepted";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+        @SerializedName("reason")
+        private String mReason;
+
+
+        public RemoveConfirmationAccepted(String providerId, String versionTrack, String bookingId, String reason)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
+            mBookingId = bookingId;
+            mReason = reason;
+        }
+    }
+
+
+    public static class FindJobsSelected extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "find_jobs_selected";
+
+        public FindJobsSelected(String providerId, String versionTrack)
+        {
+            super(providerId, versionTrack, EVENT_TYPE);
         }
     }
 }

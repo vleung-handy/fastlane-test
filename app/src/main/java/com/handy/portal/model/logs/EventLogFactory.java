@@ -46,7 +46,7 @@ public class EventLogFactory
     public EventLog createNearbyJobClaimSelectedLog(Booking booking, double distanceInKilometer)
     {
         String bookingId = booking.getId();
-        int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+        float paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
 
         return new NearbyJobsLog.ClaimJobSelected(getProviderId(), getVersionTrack(), bookingId,
                 distanceInKilometer, paymentAmount);
@@ -55,7 +55,7 @@ public class EventLogFactory
     public EventLog createNearbyJobClaimSuccessLog(Booking booking, double distanceInKilometer)
     {
         String bookingId = booking.getId();
-        int paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+        float paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
 
         return new NearbyJobsLog.ClaimJobSuccess(getProviderId(), getVersionTrack(), bookingId,
                 distanceInKilometer, paymentAmount);
@@ -219,10 +219,39 @@ public class EventLogFactory
         return new ScheduledJobsLog.CustomerRatingSubmitted(getProviderId(), getVersionTrack(), rating);
     }
 
-    public EventLog createBookingInstructionsSeenLog(Booking booking)
+    public EventLog createBookingInstructionsSeenLog(@NonNull Booking booking)
     {
         String bookingId = booking.getId();
         return new ScheduledJobsLog.BookingInstructionsSeen(getProviderId(), getVersionTrack(), bookingId);
+    }
+
+    public EventLog createSupportSelectedLog(@NonNull Booking booking)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.SupportSelected(getProviderId(), getVersionTrack(), bookingId);
+    }
+
+    public EventLog createHelpItemSelectedLog(@NonNull Booking booking, String helpItemLabel)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.HelpItemSelected(getProviderId(), getVersionTrack(), bookingId, helpItemLabel);
+    }
+
+    public EventLog createRemoveConfirmationShownLog(@NonNull Booking booking, String removalType)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.RemoveConfirmationShown(getProviderId(), getVersionTrack(), bookingId, removalType);
+    }
+
+    public EventLog createRemoveConfirmationAcceptedLog(@NonNull Booking booking, String reason)
+    {
+        String bookingId = booking.getId();
+        return new ScheduledJobsLog.RemoveConfirmationAccepted(getProviderId(), getVersionTrack(), bookingId, reason);
+    }
+
+    public EventLog createFindJobsSelectedLog()
+    {
+        return new ScheduledJobsLog.FindJobsSelected(getProviderId(), getVersionTrack());
     }
 
 

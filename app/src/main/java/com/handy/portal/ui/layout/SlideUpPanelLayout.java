@@ -84,6 +84,8 @@ public class SlideUpPanelLayout extends RelativeLayout
             hideElement(mPanel, R.anim.slide_down);
             hideElement(mPanelOverlay, R.anim.fade_out);
 
+            ((BaseActivity) getContext()).clearOnBackPressedListenerStack();
+
             mPanelShown = false;
         }
     }

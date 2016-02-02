@@ -5,17 +5,18 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
@@ -211,6 +212,25 @@ class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<Provide
 class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderPersonalInfo>
 {
     ProviderPersonalInfoHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class GetProviderSettingsRetrofitCallback extends TypedHandyRetrofitCallback<ProviderSettings>
+{
+    GetProviderSettingsRetrofitCallback(final DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class UpdateProviderSettingsRetroFitCallback extends TypedHandyRetrofitCallback<ProviderSettings>
+{
+
+    UpdateProviderSettingsRetroFitCallback(final DataManager.Callback callback)
     {
         super(callback);
     }

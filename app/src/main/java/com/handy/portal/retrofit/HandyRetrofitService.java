@@ -1,6 +1,7 @@
 package com.handy.portal.retrofit;
 
 import com.handy.portal.model.CheckoutRequest;
+import com.handy.portal.model.ProviderSettings;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -132,6 +133,14 @@ public interface HandyRetrofitService
     void updateProviderProfile(@Path("id") String providerId,
                                @FieldMap Map<String, String> params,
                                HandyRetrofitCallback cb);
+
+    @PUT(PROVIDERS_PATH + "{id}/settings")
+    void putUpdateProviderSettings(@Path("id") String providerId,
+                                   @Body ProviderSettings providerSettings,
+                                   HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "{id}/settings")
+    void getProviderSettings(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     // This is temporary; we will be changing back to 'send_resupply_kit' after we
     // are able to change the endpoint to send back the updated provider profile

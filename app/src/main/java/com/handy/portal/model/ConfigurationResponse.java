@@ -10,9 +10,6 @@ public class ConfigurationResponse
     @SerializedName("complementary_jobs_enabled")
     private boolean mComplementaryJobsEnabled;
 
-    @SerializedName("onboarding_enabled")
-    private boolean mOnboardingEnabled;
-
     @SerializedName("block_cleaner")
     private boolean mIsBlockCleaner;
 
@@ -25,15 +22,13 @@ public class ConfigurationResponse
     @SerializedName("notifications_in_pro_app")
     private boolean mShowNotificationMenuButton;
 
+    @SerializedName("show_late_dispatch_opt_in")
+    private boolean mShowLateDispatchOptIn;
+
 
     public boolean isComplementaryJobsEnabled()
     {
         return mComplementaryJobsEnabled;
-    }
-
-    public boolean isOnboardingEnabled()
-    {
-        return mOnboardingEnabled;
     }
 
     public boolean isBlockCleaner()
@@ -59,5 +54,10 @@ public class ConfigurationResponse
     public boolean shouldShowNotificationMenuButton()
     {
         return mShowNotificationMenuButton;
+    }
+
+    public boolean shouldShowLateDispatchOptIn()
+    {
+        return mShowLateDispatchOptIn;
     }
 }

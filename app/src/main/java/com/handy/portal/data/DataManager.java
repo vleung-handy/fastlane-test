@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -9,12 +10,12 @@ import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
@@ -63,6 +64,10 @@ public abstract class DataManager
     public abstract void getProviderProfile(String providerId, Callback<ProviderProfile> cb);
 
     public abstract void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb);
+
+    public abstract void getProviderSettings(final String providerId, final Callback<ProviderSettings> callback);
+
+    public abstract void putUpdateProviderSettings(String providerId, ProviderSettings providerSettings, Callback<ProviderSettings> cb);
 
     public abstract void getResupplyKit(String providerId, Callback<ProviderProfile> callback);
 

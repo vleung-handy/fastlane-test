@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -38,10 +40,13 @@ import com.handy.portal.ui.view.Errorable;
 import com.handy.portal.ui.view.FormFieldTableRow;
 
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.regex.Pattern;
 
 public final class UIUtils
 {
+    private static final Format TIME_WINDOW_HOURS_FORMAT = new DecimalFormat("0.#");
+
     public static final ViewGroup.LayoutParams MATCH_PARENT_PARAMS = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -207,6 +212,44 @@ public final class UIUtils
         }
     }
 
+    public static void setService(final TextView serviceTextView, final Booking booking)
+    {
+        Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
+        if (serviceInfo.isHomeCleaning())
+        {
+            final Context context = serviceTextView.getContext();
+            String frequencyInfo = UIUtils.getFrequencyInfo(booking, context);
+            if (booking.isUK() &&
+                    booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES)
+                            .size() > 0)
+            {
+                frequencyInfo += " \u22C5 " + context.getString(R.string.supplies);
+            }
+            serviceTextView.setText(frequencyInfo);
+        }
+        else
+        {
+            serviceTextView.setText(serviceInfo.getDisplayName());
+        }
+        appendTimeWindow(serviceTextView, booking.getMinimumHours(), booking.getHours());
+    }
+
+    private static void appendTimeWindow(
+            final TextView timeWindowTextView,
+            final float minimumHours,
+            final float hours
+    )
+    {
+        if (minimumHours > 0 && minimumHours < hours)
+        {
+            final String minimumHoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(minimumHours);
+            final String hoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(hours);
+            final Context context = timeWindowTextView.getContext();
+            timeWindowTextView.append(" " + context.getString(R.string.time_window_formatted,
+                            minimumHoursFormatted, hoursFormatted));
+        }
+    }
+
     public static String getFrequencyInfo(Booking booking, Context parentContext)
     {
         //Frequency
@@ -357,9 +400,9 @@ public final class UIUtils
         view.getHitRect(viewHitRect);
 
         Rect scrollBounds = new Rect(scrollView.getScrollX(),
-                                    scrollView.getScrollY(),
-                                    scrollView.getScrollX() + scrollView.getWidth(),
-                                    scrollView.getScrollY() + scrollView.getHeight());
+                scrollView.getScrollY(),
+                scrollView.getScrollX() + scrollView.getWidth(),
+                scrollView.getScrollY() + scrollView.getHeight());
 
         //Is this at all visible?
         if (Rect.intersects(viewHitRect, scrollBounds))
@@ -376,12 +419,8 @@ public final class UIUtils
         float xOverlap = Math.max(0, Math.min(r1.right, r2.right) - Math.max(r1.left, r2.left));
         float yOverlap = Math.max(0, Math.min(r1.bottom, r2.bottom) - Math.max(r1.top, r2.top));
         float overlapArea = xOverlap * yOverlap;
-        if (overlapArea == 0f)
-        {
-            return 0f;
-        }
-        float overlapPercent = overlapArea / (r1.width() * r1.height());
-        return overlapPercent;
+
+        return overlapArea / (r1.width() * r1.height());
     }
 
     public static LinearLayout createLinearLayout(Context context, int orientation)
@@ -390,5 +429,19 @@ public final class UIUtils
         linearLayout.setOrientation(orientation);
         linearLayout.setLayoutParams(MATCH_PARENT_PARAMS);
         return linearLayout;
+    }
+
+    @Nullable
+    public static RadioButton getCheckedRadioButton(RadioGroup radioGroup)
+    {
+        for (int i = 0; i < radioGroup.getChildCount(); ++i)
+        {
+            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+            if (radioButton.isChecked())
+            {
+                return radioButton;
+            }
+        }
+        return null;
     }
 }

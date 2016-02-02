@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
@@ -48,6 +49,7 @@ public class VersionManager
     private DataManager dataManager;
     private PrefsManager prefsManager;
     private DownloadManager downloadManager;
+    private String mDownloadUrl;
 
     private long downloadReferenceId;
 
@@ -65,7 +67,9 @@ public class VersionManager
 
     public Uri getNewApkUri()
     {
-        return downloadManager.getUriForDownloadedFile(downloadReferenceId);
+        File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(downloadsDirectory, APK_FILE_NAME);
+        return Uri.fromFile(file);
     }
 
     @Produce
@@ -113,7 +117,7 @@ public class VersionManager
                             {
                                 if (updateDetails.getShouldUpdate())
                                 {
-                                    downloadApk(updateDetails.getDownloadUrl());
+                                    mDownloadUrl = updateDetails.getDownloadUrl();
                                     bus.post(new HandyEvent.ReceiveUpdateAvailableSuccess(updateDetails));
                                 }
                             }
@@ -153,8 +157,9 @@ public class VersionManager
         dataManager.sendVersionInformation(getVersionInfo());
     }
 
-    public void downloadApk(String apkUrl)
+    public void downloadApk()
     {
+        String apkUrl = getDownloadUrl();
         File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         downloadsDirectory.mkdirs();
 
@@ -194,6 +199,15 @@ public class VersionManager
                     bus.post(new HandyEvent.DownloadUpdateFailed());
                 }
             }
+            else
+            {
+                String exceptionString = "Download reference id (";
+                exceptionString += downloadReferenceId;
+                exceptionString += ") did not match the extra download id (";
+                exceptionString += referenceId;
+                exceptionString += ")";
+                Crashlytics.logException(new Exception(exceptionString));
+            }
         }
     };
 
@@ -204,7 +218,7 @@ public class VersionManager
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadReferenceId);
             Cursor cursor = downloadManager.query(query);
-            if (cursor!=null && cursor.moveToFirst())
+            if (cursor != null && cursor.moveToFirst())
             {
                 return cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
             }
@@ -239,5 +253,15 @@ public class VersionManager
         info.put("os_version", android.os.Build.VERSION.RELEASE);
         info.put("os_version_code", Integer.toString(android.os.Build.VERSION.SDK_INT));
         return info;
+    }
+
+    public String getDownloadUrl()
+    {
+        return mDownloadUrl;
+    }
+
+    public boolean hasRequestedDownload()
+    {
+        return downloadReferenceId != 0;
     }
 }

@@ -51,8 +51,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/overlay_tutorial"/>
-
     <include layout="@layout/element_navigation_drawer"/>
 
 </android.support.v4.widget.DrawerLayout>

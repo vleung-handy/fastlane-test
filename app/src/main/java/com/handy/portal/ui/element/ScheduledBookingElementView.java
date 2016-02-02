@@ -10,38 +10,36 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.Booking;
-
-import java.text.SimpleDateFormat;
+import com.handy.portal.util.UIUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 //Not setting up a clean UI hierarchy with AvailableBookingElement because ScheduledBookingElement is going to radically change soon to a google calendar style view
 
+
 public class ScheduledBookingElementView extends BookingElementView
 {
     @Bind(R.id.booking_entry_address_text)
-    protected TextView addressTextView;
-
-    @Bind(R.id.booking_entry_region_text)
-    protected TextView bookingRegionText;
+    TextView mAddressTextView;
 
     @Bind(R.id.booking_entry_claimed_indicator_layout)
-    protected LinearLayout claimedIndicatorLayout;
+    LinearLayout mClaimedIndicatorLayout;
 
     @Bind(R.id.booking_entry_completed_text)
-    protected TextView completedText;
+    TextView mCompletedText;
 
     @Bind(R.id.booking_entry_completed_indicator)
-    protected ImageView completedIndicator;
+    ImageView mCompletedIndicator;
+
+    @Bind(R.id.booking_entry_service_text)
+    TextView mBookingServiceTextView;
 
     @Bind(R.id.booking_entry_start_date_text)
-    protected TextView startTimeText;
+    TextView mStartTimeText;
 
     @Bind(R.id.booking_entry_end_date_text)
-    protected TextView endTimeText;
-
-    private static final String DATE_FORMAT = "h:mm a";
+    TextView mEndTimeText;
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
@@ -53,33 +51,24 @@ public class ScheduledBookingElementView extends BookingElementView
 
         ButterKnife.bind(this, convertView);
 
-        if (booking.isProxy())
-        {
-            //Show general location instead of address for proxies
-            addressTextView.setText(booking.getLocationName());
-            bookingRegionText.setVisibility(View.GONE);
-        }
-        else
-        {
-            //Address
-            addressTextView.setText(booking.getAddress().getStreetAddress());
-            //Area
-            bookingRegionText.setText(booking.getAddress().getShortRegion());
-        }
+        //Location
+        mAddressTextView.setText(booking.getFormattedLocation(Booking.BookingStatus.CLAIMED));
 
         //Claimed
-        claimedIndicatorLayout.setVisibility(booking.isEnded() ? View.GONE : View.VISIBLE);
+        mClaimedIndicatorLayout.setVisibility(booking.isEnded() ? View.GONE : View.VISIBLE);
 
         //Completed
-        completedText.setVisibility(booking.isEnded() ? View.VISIBLE : View.GONE);
-        completedIndicator.setVisibility(booking.isEnded() ? View.VISIBLE : View.GONE);
+        mCompletedText.setVisibility(booking.isEnded() ? View.VISIBLE : View.GONE);
+        mCompletedIndicator.setVisibility(booking.isEnded() ? View.VISIBLE : View.INVISIBLE);
 
         //Date and Time
-        SimpleDateFormat timeOfDayFormat = new SimpleDateFormat(DATE_FORMAT);
-        String formattedStartDate = timeOfDayFormat.format(booking.getStartDate());
-        String formattedEndDate = timeOfDayFormat.format(booking.getEndDate());
-        startTimeText.setText(formattedStartDate.toLowerCase());
-        endTimeText.setText(formattedEndDate.toLowerCase());
+        final String formattedStartDate = TIME_OF_DAY_FORMAT.format(booking.getStartDate());
+        final String formattedEndDate = TIME_OF_DAY_FORMAT.format(booking.getEndDate());
+        mStartTimeText.setText(formattedStartDate.toLowerCase());
+        mEndTimeText.setText(formattedEndDate.toLowerCase());
+
+        //Service or frequency for home cleaning jobs
+        UIUtils.setService(mBookingServiceTextView, booking);
 
         this.associatedView = convertView;
 

@@ -14,11 +14,13 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.helpcenter.HelpManager;
+import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
-import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.NotificationMessageManager;
@@ -46,12 +48,12 @@ import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.activity.OnboardingActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.handy.portal.ui.constructor.ProfileContactViewConstructor;
-import com.handy.portal.ui.constructor.ProfileReferralViewConstructor;
+import com.handy.portal.ui.constructor.ProfileContactView;
+import com.handy.portal.ui.constructor.ProfilePerformanceView;
+import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
@@ -60,8 +62,6 @@ import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
-import com.handy.portal.ui.fragment.HelpContactFragment;
-import com.handy.portal.ui.fragment.HelpFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
@@ -70,6 +70,7 @@ import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
+import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -124,7 +125,6 @@ import retrofit.converter.GsonConverter;
         UrbanAirshipManager.class,
         DeepLinkService.class,
         MainActivityFragmentNavigationHelper.class,
-        OnboardingActivity.class,
         ComplementaryBookingsFragment.class,
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
@@ -137,13 +137,15 @@ import retrofit.converter.GsonConverter;
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
-        ProfileContactViewConstructor.class,
+        ProfileContactView.class,
+        ProfilePerformanceView.class,
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
-        ProfileReferralViewConstructor.class,
+        ProfileReferralView.class,
         PaymentsBatchListView.class,
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
+        CancellationRequestFragment.class,
         ManagementToolsView.class,
         SupportActionView.class,
         NotificationsFragment.class,
@@ -214,7 +216,7 @@ public final class ApplicationModule
                         String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
                         if (authToken != null)
                         {
-                            request.addQueryParam("auth_token", authToken);
+                            request.addHeader("X-Auth-Token", authToken);
                         }
 
                         request.addHeader("Authorization", auth);
@@ -240,7 +242,7 @@ public final class ApplicationModule
                         return cause;
                     }
                 }).setConverter(new GsonConverter(new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (buildConfigWrapper.isDebug())

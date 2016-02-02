@@ -1,10 +1,10 @@
 package com.handy.portal.core;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
@@ -12,12 +12,12 @@ import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.helpcenter.HelpManager;
+import com.handy.portal.helpcenter.helpcontact.HelpContactManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
-import com.handy.portal.manager.HelpContactManager;
-import com.handy.portal.manager.HelpManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.NotificationMessageManager;
@@ -41,7 +41,7 @@ import javax.inject.Inject;
 import dagger.ObjectGraph;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class BaseApplication extends Application
+public class BaseApplication extends MultiDexApplication
 {
     private static String sDeviceId = "";
     protected ObjectGraph mGraph;

@@ -318,7 +318,6 @@ public class LoginActivityFragment extends InjectedFragment
         String providerId = loginDetails.getProviderId();
         prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);//TODO: we need to move away from using PrefsKey.LAST_PROVIDER_ID
 
-        prefsManager.setBoolean(PrefsKey.ONBOARDING_NEEDED, true);
         startActivity(new Intent(this.getActivity(), SplashActivity.class));
     }
 

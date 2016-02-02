@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:background="@color/white"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="15dp"
+    >
+
     <TextView
+        android:id="@+id/booking_details_date_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextView.Bold"
-        android:text="SUN, SEPT 2"
-        android:id="@+id/booking_details_date_text"
-        android:textSize="14sp"
         android:textColor="@color/black"
+        android:textSize="14sp"
+        tools:text="SUN, SEPT 2"
         />
+
     <TextView
+        android:id="@+id/booking_details_time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="4:00 PM - 6:00PM"
-        android:id="@+id/booking_details_time_text"
-        android:textSize="14sp"
-        android:textIsSelectable="true"
-        android:elegantTextHeight="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:elegantTextHeight="false"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
+        android:textIsSelectable="true"
+        android:textSize="14sp"
+        tools:text="4:00PM - 6:00PM"
         />
 </RelativeLayout>

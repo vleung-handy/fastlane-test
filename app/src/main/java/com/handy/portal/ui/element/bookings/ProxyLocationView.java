@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -30,72 +31,78 @@ public class ProxyLocationView extends FrameLayout
     @Bind(R.id.nearby_transits)
     LinearLayout nearbyTransits;
 
-    private Booking.ZipCluster mZipCluster;
-
-    public ProxyLocationView(Context context, Booking.ZipCluster zipCluster)
+    public ProxyLocationView(Context context)
     {
         super(context);
-        mZipCluster = zipCluster;
         init();
     }
 
     public ProxyLocationView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public ProxyLocationView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(21)
     public ProxyLocationView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    public void refreshDisplay(@NonNull Booking booking)
+    {
+        if (!booking.isProxy() || booking.getZipCluster() == null ||
+                booking.getZipCluster().getTransitDescription() == null ||
+                booking.getZipCluster().getLocationDescription() == null ||
+                booking.getZipCluster().getTransitDescription().isEmpty()
+                        && booking.getZipCluster().getLocationDescription().isEmpty())
+        {
+            setVisibility(GONE);
+        }
+        else
+        {
+            setVisibility(VISIBLE);
+            setJobLocation(booking.getZipCluster());
+            setNearbyTransit(booking.getZipCluster());
+        }
     }
 
     private void init()
     {
-        if (mZipCluster == null ||
-            mZipCluster.getTransitDescription() == null ||
-            mZipCluster.getLocationDescription() == null ||
-            mZipCluster.getTransitDescription().isEmpty() && mZipCluster.getLocationDescription().isEmpty())
-        {
-            setVisibility(GONE);
-            return;
-        }
-
         inflate(getContext(), R.layout.element_booking_details_proxy_location, this);
         ButterKnife.bind(this);
-
-        setJobLocation();
-        setNearbyTransit();
     }
 
-    private void setJobLocation()
+    private void setJobLocation(Booking.ZipCluster zipCluster)
     {
-        if (mZipCluster.getLocationDescription() == null || mZipCluster.getLocationDescription().isEmpty())
+        if (zipCluster.getLocationDescription() == null || zipCluster.getLocationDescription().isEmpty())
         {
             jobLocationTitleTextView.setVisibility(GONE);
             jobLocationTextView.setVisibility(GONE);
         }
         else
         {
-            jobLocationTextView.setText(mZipCluster.getLocationDescription());
+            jobLocationTextView.setText(zipCluster.getLocationDescription());
         }
 
     }
 
-    private void setNearbyTransit()
+    private void setNearbyTransit(Booking.ZipCluster zipCluster)
     {
-        if (mZipCluster.getTransitDescription() == null || mZipCluster.getTransitDescription().isEmpty())
+        if (zipCluster.getTransitDescription() == null || zipCluster.getTransitDescription().isEmpty())
         {
             nearbyTransitTextView.setVisibility(GONE);
         }
         else
         {
-            List<String> transitsMarkers = mZipCluster.getTransitDescription();
+            List<String> transitsMarkers = zipCluster.getTransitDescription();
             for (String transitMarker : transitsMarkers)
             {
                 RoundedTextView transitMarkerView = new RoundedTextView(getContext());

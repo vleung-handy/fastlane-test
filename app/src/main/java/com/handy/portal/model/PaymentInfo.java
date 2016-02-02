@@ -7,38 +7,51 @@ import java.io.Serializable;
 public class PaymentInfo implements Serializable
 {
     @SerializedName("amount")
-    private int amount;
+    private int mAmount;
+    // TODO: Remove
     @SerializedName("adjusted_amount")
-    private int adjustedAmount;
-    @SerializedName("code")
-    private String currencyCode;
+    private float mAdjustedAmount;
     @SerializedName("symbol")
-    private String currencySymbol;
-    @SerializedName("suffix")
-    private String currencySuffix;
+    private String mCurrencySymbol;
 
     public int getAmount()
     {
-        return amount;
+        return mAmount;
     }
 
-    public int getAdjustedAmount()
+    public float getAdjustedAmount()
     {
-        return adjustedAmount;
+        return mAdjustedAmount;
     }
 
     public String getCurrencySymbol()
     {
-        return currencySymbol;
+        return mCurrencySymbol;
     }
 
-    public String getCurrencySuffix()
+    public static class Builder
     {
-        return currencySuffix;
-    }
+        private int mAmount;
+        private String mCurrencySymbol;
 
-    public String getCurrencyCode()
-    {
-        return currencyCode;
+        public Builder withAmount(final int amount)
+        {
+            mAmount = amount;
+            return this;
+        }
+
+        public Builder withCurrencySymbol(final String currencySymbol)
+        {
+            mCurrencySymbol = currencySymbol;
+            return this;
+        }
+
+        public PaymentInfo build()
+        {
+            final PaymentInfo paymentInfo = new PaymentInfo();
+            paymentInfo.mAmount = this.mAmount;
+            paymentInfo.mCurrencySymbol = this.mCurrencySymbol;
+            return paymentInfo;
+        }
     }
 }

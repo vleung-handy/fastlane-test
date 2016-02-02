@@ -2,6 +2,7 @@ package com.handy.portal.data;
 
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -9,12 +10,12 @@ import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.HelpNodeWrapper;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
@@ -39,13 +40,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import retrofit.http.FieldMap;
 import retrofit.mime.TypedInput;
 
 public final class BaseDataManager extends DataManager
@@ -126,6 +124,18 @@ public final class BaseDataManager extends DataManager
     public void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb)
     {
         service.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getProviderSettings(String providerId, Callback<ProviderSettings> cb)
+    {
+        service.getProviderSettings(providerId, new GetProviderSettingsRetrofitCallback(cb));
+    }
+
+    @Override
+    public void putUpdateProviderSettings(String providerId, ProviderSettings providerSettings, Callback<ProviderSettings> cb)
+    {
+        service.putUpdateProviderSettings(providerId, providerSettings, new UpdateProviderSettingsRetroFitCallback(cb));
     }
 
     @Override

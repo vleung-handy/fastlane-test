@@ -2,12 +2,8 @@ package com.handy.portal.ui.fragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 
-import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
@@ -25,7 +21,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -56,31 +51,6 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     public void shouldHaveActionBar() throws Exception
     {
         assertNotNull(((AppCompatActivity) mFragment.getActivity()).getSupportActionBar());
-    }
-
-    @Test
-    public void shouldSeeTutorialOverlayWhenFirstLaunchAndBeDismissItAfterButtonClick() throws Exception
-    {
-        // should see it when first launch
-        View tutorialOverlay = mFragment.getView().findViewById(R.id.tutorial_overlay);
-        assertNotNull(tutorialOverlay);
-        assertEquals(View.VISIBLE, tutorialOverlay.getVisibility());
-        // should be able to dismiss it
-        Button dismiss = (Button) tutorialOverlay.findViewById(R.id.tutorial_dismiss_btn);
-        dismiss.performClick();
-        assertEquals(View.GONE, tutorialOverlay.getVisibility());
-    }
-
-    @Test
-    public void shouldNotSeeOverlayTutorialAfterFirstLaunch() throws Exception
-    {
-        mFragment.mPrefsManager.setBoolean(PrefsKey.NAVIGATION_TUTORIAL_SHOWN, true);
-        // restart the fragment
-        mFragment = new MainActivityFragment();
-        SupportFragmentTestUtil.startFragment(mFragment);
-
-        View tutorialOverlay = mFragment.getView().findViewById(R.id.tutorial_overlay);
-        assertEquals(View.GONE, tutorialOverlay.getVisibility());
     }
 
     @Ignore

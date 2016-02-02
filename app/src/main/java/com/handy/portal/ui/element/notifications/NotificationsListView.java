@@ -113,4 +113,9 @@ public final class NotificationsListView extends InfiniteScrollListView
     {
         getWrappedAdapter().reset();
     }
+
+    public void stopRequestingNotifications()
+    {
+        getWrappedAdapter().stopRequestingNotifications();
+    }
 }

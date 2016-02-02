@@ -1,15 +1,16 @@
 package com.handy.portal.constant;
 
+import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.NotificationsFragment;
-import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
-import com.handy.portal.ui.fragment.HelpContactFragment;
-import com.handy.portal.ui.fragment.HelpFragment;
+import com.handy.portal.ui.fragment.NotificationsFragment;
+import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
@@ -42,6 +43,7 @@ public enum MainViewTab implements Serializable
     BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     NEARBY_JOBS(NearbyBookingsFragment.class),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
+    CANCELLATION_REQUEST(CancellationRequestFragment.class),
     ;
 
     private Class classType;

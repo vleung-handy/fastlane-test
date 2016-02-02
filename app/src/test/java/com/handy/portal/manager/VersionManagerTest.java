@@ -2,7 +2,6 @@ package com.handy.portal.manager;
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -22,14 +21,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.robolectric.RuntimeEnvironment;
-import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowDownloadManager;
 import org.robolectric.shadows.ShadowEnvironment;
 
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -94,13 +92,10 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     @Test
     public void givenSuccessfulUpdateCheck_whenUpdateNeeded_thenRegisterApkDownloadBroadcastReceiver() throws Exception
     {
+        assertNull(versionManager.getDownloadUrl());
         when(updateDetails.getShouldUpdate()).thenReturn(true);
-
         updateDetailsCallBack.onSuccess(updateDetails);
-
-        List<ShadowApplication.Wrapper> registeredReceivers = shadowOf(RuntimeEnvironment.application).getRegisteredReceivers();
-        BroadcastReceiver lastAddedBroadcastReceiver = registeredReceivers.get(registeredReceivers.size() - 1).getBroadcastReceiver();
-        assertThat(lastAddedBroadcastReceiver, equalTo(versionManager.downloadReceiver));
+        assertNotNull(versionManager.getDownloadUrl());
     }
 
     @Test
@@ -112,16 +107,6 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
 
         verify(bus).post(eventArgumentCaptor.capture());
         assertThat(eventArgumentCaptor.getValue(), instanceOf(HandyEvent.ReceiveUpdateAvailableSuccess.class));
-    }
-
-    @Test
-    public void givenSuccessfulUpdateCheck_whenUpdateNeeded_thenDownloadNewApk() throws Exception
-    {
-        when(updateDetails.getShouldUpdate()).thenReturn(true);
-
-        updateDetailsCallBack.onSuccess(updateDetails);
-
-        assertThat(downloadManager.getRequestCount(), equalTo(1));
     }
 
     @Test

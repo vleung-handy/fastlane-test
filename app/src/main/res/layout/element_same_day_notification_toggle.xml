@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.SwitchCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toggle_available_job_notification"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/notify_available_jobs"
+    android:background="@drawable/background_white_bottom_border"
+    android:textColor="@color/black"
+    android:padding="@dimen/default_padding"
+    android:textSize="@dimen/default_text_size"
+    android:checked="true"
+    android:visibility="gone"
+    />

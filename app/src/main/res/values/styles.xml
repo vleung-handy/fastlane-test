@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/handy_blue</item>
+        <item name="colorControlActivated">@color/handy_blue</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -154,6 +155,10 @@
     <style name="Button.Grey">
         <item name="android:background">@drawable/button_grey</item>
         <item name="android:textColor">@drawable/button_text_white</item>
+    </style>
+
+    <style name="Button.Grey.Round">
+        <item name="android:background">@drawable/button_grey_round</item>
     </style>
 
     <style name="Button.Transparent">
@@ -443,6 +448,10 @@
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
+    <style name="TextView.XXSmall">
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+    </style>
+
     <style name="TextView.Medium">
         <item name="android:textSize">@dimen/medium_text_size</item>
     </style>
@@ -477,6 +486,10 @@
 
     <style name="TextView.Large">
         <item name="android:textSize">@dimen/large_text_size</item>
+    </style>
+
+    <style name="TextView.Large.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
     <style name="TextView.Large.Med">

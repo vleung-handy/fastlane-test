@@ -57,6 +57,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private PaymentInfo mPaymentToProvider;
     @SerializedName("bonus")
     private PaymentInfo mBonusPayment;
+    @SerializedName("hourly_rate")
+    private PaymentInfo mHourlyRate;
     @SerializedName("frequency")
     private int mFrequency;
     @SerializedName("provider_id")
@@ -95,6 +97,10 @@ public class Booking implements Comparable<Booking>, Serializable
     private String mZipClusterId;
     @SerializedName("zipcluster")
     private ZipCluster mZipCluster;
+    @SerializedName("min_hrs")
+    private float mMinimumHours;
+    @SerializedName("hrs")
+    private float mHours;
 
     @SerializedName("region_id")
     private int mRegionId;
@@ -160,6 +166,11 @@ public class Booking implements Comparable<Booking>, Serializable
     public PaymentInfo getBonusPaymentToProvider()
     {
         return mBonusPayment;
+    }
+
+    public PaymentInfo getHourlyRate()
+    {
+        return mHourlyRate;
     }
 
     public boolean isRequested()
@@ -331,6 +342,17 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public int getRegionId() { return mRegionId; }
 
+    public float getMinimumHours()
+    {
+        return mMinimumHours;
+    }
+
+    public float getHours()
+    {
+        return mHours;
+    }
+
+
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus
     {
@@ -440,11 +462,26 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+    @Nullable
+    public Action getAction(String actionName)
+    {
+        if (mActionList == null) {return null;}
+
+        for (Action action : mActionList)
+        {
+            if (action.getActionName().equals(actionName))
+            {
+                return action;
+            }
+        }
+
+        return null;
+    }
+
     public static class Action implements Serializable
     {
         // KEEP IN SYNC WITH SERVER VALUES
         public static final String ACTION_CLAIM = "claim";
-        public static final String ACTION_REMOVE = "remove";
         public static final String ACTION_ON_MY_WAY = "on_my_way";
         public static final String ACTION_CHECK_IN = "check_in";
         public static final String ACTION_CHECK_OUT = "check_out";
@@ -458,6 +495,9 @@ public class Booking implements Comparable<Booking>, Serializable
         public static final String ACTION_NOTIFY_LATE = "notify_late";
         public static final String ACTION_ISSUE_UNSAFE = "unsafe_conditions";
         public static final String ACTION_ISSUE_HOURS = "change_hours";
+        public static final String ACTION_CUSTOMER_RESCHEDULE = "customer_reschedule";
+        public static final String ACTION_CANCELLATION_POLICY = "cancellation_policy";
+        public static final String ACTION_REMOVE = "remove";
         public static final String ACTION_ISSUE_OTHER = "other_issue";
 
         public static final String ACTION_RETRACT_NO_SHOW = "retract_no_show";
@@ -472,6 +512,9 @@ public class Booking implements Comparable<Booking>, Serializable
         private boolean mEnabled;
         @SerializedName("deep_link_data")
         private String mDeepLinkData;
+        @SerializedName("extras")
+        private Extras mExtras;
+
 
         public String getActionName()
         {
@@ -496,6 +539,22 @@ public class Booking implements Comparable<Booking>, Serializable
         public String getDeepLinkData()
         {
             return mDeepLinkData;
+        }
+
+        public int getWithholdingAmount() { return mExtras.getWithholdingAmount(); }
+
+        public List<String> getRemoveReasons() { return mExtras.getRemoveReasons(); }
+
+        public static class Extras implements Serializable
+        {
+            @SerializedName("withholding_amount")
+            private int mWithholdingAmount;
+            @SerializedName("remove_reasons")
+            private List<String> mRemoveReasons;
+
+            public int getWithholdingAmount() { return mWithholdingAmount; }
+
+            public List<String> getRemoveReasons() { return mRemoveReasons; }
         }
     }
 
