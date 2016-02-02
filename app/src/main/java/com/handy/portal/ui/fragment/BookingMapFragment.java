@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
@@ -129,13 +130,40 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
      * zoom if the zoom is greater than the default.
      *
      */
-    private void positionCamera(@NonNull GoogleMap map, @NonNull List<LatLng> points)
+    private void positionCamera(@NonNull final GoogleMap map, @NonNull List<LatLng> points)
     {
-        CameraUpdate cameraUpdate = buildCameraUpdate(points);
-        map.moveCamera(cameraUpdate);
-        if (map.getCameraPosition().zoom > DEFAULT_ZOOM_LEVEL)
-        {
-            map.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_LEVEL));
+        final CameraUpdate cameraUpdate = buildCameraUpdate(points);
+
+        // Sometimes the google map is ready but fragment it's placed in has not performed layout.
+        // In that case, attempting to moveCamera will raise an IllegalStateException because
+        // the map has no physical size.
+        //
+        // To get around this, catch the exception, add a listener to the fragments layout callback,
+        // and re-attempt to move once layout has occurred
+        try {
+            map.moveCamera(cameraUpdate);
+            if (map.getCameraPosition().zoom > DEFAULT_ZOOM_LEVEL)
+            {
+                map.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_LEVEL));
+            }
+        } catch (IllegalStateException e) {
+            final View mapView = getView();
+            if(mapView != null && mapView.getViewTreeObserver().isAlive()) {
+                mapView.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout()
+                        {
+                            mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            map.moveCamera(cameraUpdate);
+                            if (map.getCameraPosition().zoom > DEFAULT_ZOOM_LEVEL)
+                            {
+                                map.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_LEVEL));
+                            }
+                        }
+                    }
+                );
+            }
         }
     }
 
