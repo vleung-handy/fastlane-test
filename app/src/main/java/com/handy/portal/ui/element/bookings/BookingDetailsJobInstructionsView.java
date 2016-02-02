@@ -103,12 +103,10 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                         (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
                 final String startDateFormatted = DateTimeUtils.formatDetailedDate(booking.getStartDate());
                 final String endDateFormatted = DateTimeUtils.formatDetailedDate(booking.getEndDate());
-                final String revealDateFormatted = DateTimeUtils.formatDetailedDate(booking.getRevealDate());
                 noticeText = Html.fromHtml(getResources()
                         .getString(R.string.full_details_and_more_available_on_date_flex,
                                 minimumHoursFormatted, maximumHoursFormatted,
-                                minimumHoursFormatted, maximumHoursFormatted,
-                                startDateFormatted, endDateFormatted, revealDateFormatted,
+                                startDateFormatted, endDateFormatted,
                                 minimumPaymentFormatted, minimumHoursFormatted,
                                 maximumPaymentFormatted, maximumHoursFormatted
                         ));
