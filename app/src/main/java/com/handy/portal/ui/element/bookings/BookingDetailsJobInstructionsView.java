@@ -89,11 +89,11 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
         if (booking.getRevealDate() != null && booking.isClaimedByMe())
         {
             Spanned noticeText;
-            if (booking.hasFlexibleHours())
+            final PaymentInfo hourlyRate = booking.getHourlyRate();
+            if (hourlyRate != null && booking.hasFlexibleHours())
             {
                 final float minimumHours = booking.getMinimumHours();
                 final float maximumHours = booking.getHours();
-                final PaymentInfo hourlyRate = booking.getHourlyRate();
                 final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
                 final String maximumHoursFormatted = TextUtils.formatHours(maximumHours);
                 final String currencySymbol = hourlyRate.getCurrencySymbol();
