@@ -15,8 +15,11 @@ import android.widget.TextView;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 
 import java.util.ArrayList;
@@ -85,9 +88,37 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
 
         if (booking.getRevealDate() != null && booking.isClaimedByMe())
         {
-            Spanned noticeText = Html.fromHtml(
-                    getContext().getResources().getString(R.string.full_details_and_more_available_on_date,
-                            DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
+            Spanned noticeText;
+            if (booking.hasFlexibleHours())
+            {
+                final float minimumHours = booking.getMinimumHours();
+                final float maximumHours = booking.getHours();
+                final PaymentInfo hourlyRate = booking.getHourlyRate();
+                final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
+                final String maximumHoursFormatted = TextUtils.formatHours(maximumHours);
+                final String currencySymbol = hourlyRate.getCurrencySymbol();
+                final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                        (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
+                final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                        (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
+                final String startDateFormatted = DateTimeUtils.formatDetailedDate(booking.getStartDate());
+                final String endDateFormatted = DateTimeUtils.formatDetailedDate(booking.getEndDate());
+                final String revealDateFormatted = DateTimeUtils.formatDetailedDate(booking.getRevealDate());
+                noticeText = Html.fromHtml(getResources()
+                        .getString(R.string.full_details_and_more_available_on_date_flex,
+                                minimumHoursFormatted, maximumHoursFormatted,
+                                minimumHoursFormatted, maximumHoursFormatted,
+                                startDateFormatted, endDateFormatted, revealDateFormatted,
+                                minimumPaymentFormatted, minimumHoursFormatted,
+                                maximumPaymentFormatted, maximumHoursFormatted
+                        ));
+            }
+            else
+            {
+                noticeText = Html.fromHtml(getResources()
+                        .getString(R.string.full_details_and_more_available_on_date,
+                                DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
+            }
             mRevealNotice.setText(noticeText);
             mRevealNotice.setVisibility(View.VISIBLE);
             hasContent = true;

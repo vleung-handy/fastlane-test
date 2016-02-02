@@ -40,13 +40,10 @@ import com.handy.portal.ui.view.Errorable;
 import com.handy.portal.ui.view.FormFieldTableRow;
 
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.util.regex.Pattern;
 
 public final class UIUtils
 {
-    private static final Format TIME_WINDOW_HOURS_FORMAT = new DecimalFormat("0.#");
-
     public static final ViewGroup.LayoutParams MATCH_PARENT_PARAMS = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -242,8 +239,8 @@ public final class UIUtils
     {
         if (minimumHours > 0 && minimumHours < hours)
         {
-            final String minimumHoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(minimumHours);
-            final String hoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(hours);
+            final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
+            final String hoursFormatted = TextUtils.formatHours(hours);
             final Context context = timeWindowTextView.getContext();
             timeWindowTextView.append(" " + context.getString(R.string.time_window_formatted,
                             minimumHoursFormatted, hoursFormatted));
