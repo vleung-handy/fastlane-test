@@ -74,8 +74,6 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("booking_phone")
     private String mBookingPhone;
 
-    @SerializedName("booking_instructions")
-    private List<BookingInstruction> mBookingInstructions;
     @SerializedName("booking_instruction_groups")
     private List<BookingInstructionGroup> mBookingInstructionGroups;
     @SerializedName("booking_extras")
@@ -136,11 +134,6 @@ public class Booking implements Comparable<Booking>, Serializable
     public String getStatus()
     {
         return mStatus;
-    }
-
-    public List<BookingInstruction> getBookingInstructions()
-    {
-        return mBookingInstructions;
     }
 
     public List<BookingInstructionGroup> getBookingInstructionGroups()
@@ -601,10 +594,38 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public static class BookingInstruction implements Serializable
     {
+        @SerializedName("id")
+        private String mId;
+        @SerializedName("instruction_type")
+        private String mInstructionType;
         @SerializedName("description")
         private String mDescription;
         @SerializedName("machine_name")
         private String mMachineName;
+        @SerializedName("title")
+        private String mTitle;
+        @SerializedName("finished")
+        private boolean mFinished;
+
+        public String getId()
+        {
+            return mId;
+        }
+
+        public String getInstructionType()
+        {
+            return mInstructionType;
+        }
+
+        public String getTitle()
+        {
+            return mTitle;
+        }
+
+        public boolean isFinished()
+        {
+            return mFinished;
+        }
 
         public String getDescription()
         {
@@ -625,14 +646,15 @@ public class Booking implements Comparable<Booking>, Serializable
         public static String GROUP_REFRIGERATOR = "refrigerator";
         public static String GROUP_TRASH = "trash";
         public static String GROUP_NOTE_TO_PRO = "note_to_pro";
+        public static String GROUP_PREFERENCES = "preferences";
         public static String OTHER = "other";
 
         @SerializedName("group")
         private String mGroup;
         @SerializedName("label")
         private String mLabel;
-        @SerializedName("items")
-        private List<String> mItems;
+        @SerializedName("instructions")
+        private List<BookingInstruction> mInstructions;
 
         public String getGroup()
         {
@@ -644,9 +666,9 @@ public class Booking implements Comparable<Booking>, Serializable
             return mLabel;
         }
 
-        public List<String> getItems()
+        public List<BookingInstruction> getInstructions()
         {
-            return mItems;
+            return mInstructions;
         }
     }
 

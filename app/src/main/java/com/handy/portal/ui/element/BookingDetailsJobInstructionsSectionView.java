@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.Booking;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
         super(context, attrs, defStyle);
     }
 
-    public void init(String sectionTitle, @Nullable Integer sectionIconId, List<String> entries)
+    public void init(String sectionTitle, @Nullable Integer sectionIconId, List<?> entries)
     {
         ButterKnife.bind(this);
 
@@ -56,7 +57,14 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
         {
             LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_entry, entriesLayout);
             BookingDetailsJobInstructionsSectionEntryView entryView = ((BookingDetailsJobInstructionsSectionEntryView) (entriesLayout.getChildAt(i)));
-            entryView.init(entries.get(i));
+            if (entries.get(i) instanceof Booking.BookingInstruction)
+            {
+                entryView.init(((Booking.BookingInstruction) entries.get(i)).getDescription());
+            }
+            else
+            {
+                entryView.init(entries.get(i).toString());
+            }
         }
     }
 }

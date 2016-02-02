@@ -47,6 +47,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
         GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_REFRIGERATOR, R.drawable.ic_details_fridge);
         GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_TRASH, R.drawable.ic_details_trash);
         GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_NOTE_TO_PRO, R.drawable.ic_details_request);
+        GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_PREFERENCES, R.drawable.ic_details_request);
     }
 
 
@@ -173,10 +174,25 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             List<Booking.BookingInstructionGroup> bookingInstructionGroups = booking.getBookingInstructionGroups();
             if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
             {
+                Booking.BookingInstructionGroup preferencesGroup = null;
                 for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
                 {
-                    BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
-                    sectionView.init(group.getLabel(), GROUP_ICONS.get(group.getGroup()), group.getItems());
+                    if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+                    {
+                        preferencesGroup = group;
+                    }
+                    else
+                    {
+                        BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
+                        sectionView.init(group.getLabel(), GROUP_ICONS.get(group.getGroup()),
+                                group.getInstructions());
+                    }
+                }
+                if (preferencesGroup != null)
+                {
+                    mInstructionsLayout.addView(new CustomerRequestsView(getContext(),
+                            preferencesGroup.getLabel(), GROUP_ICONS.get(preferencesGroup.getGroup()),
+                            preferencesGroup.getInstructions()));
                 }
 
                 hasContent = true;

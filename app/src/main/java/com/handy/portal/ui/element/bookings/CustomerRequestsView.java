@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.Booking;
 import com.handy.portal.ui.widget.CheckListItemView;
 
 import java.util.LinkedList;
@@ -29,38 +30,41 @@ public class CustomerRequestsView extends FrameLayout
 
     private List<CheckListItemView> mCheckBoxEntries = new LinkedList<>();
 
-    public CustomerRequestsView(final Context context, final String sectionTitle,
-                                @Nullable final Integer sectionIconId, final List<String> entries)
+    public CustomerRequestsView(
+            final Context context, final String sectionTitle, @Nullable final Integer sectionIconId,
+            @NonNull final List<Booking.BookingInstruction> entries)
     {
         super(context);
-        init(sectionTitle, sectionIconId, entries);
+        init();
+        setDisplay(sectionTitle, sectionIconId, entries);
     }
 
     public CustomerRequestsView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public CustomerRequestsView(final Context context, final AttributeSet attrs, final int defStyle)
     {
         super(context, attrs, defStyle);
+        init();
     }
 
-    public void init(String sectionTitle, @Nullable Integer sectionIconId, @NonNull List<String> entries)
+    public void setDisplay(String sectionTitle, @Nullable Integer sectionIconId,
+                           @NonNull List<Booking.BookingInstruction> instructions)
     {
-        inflate(getContext(), R.layout.element_booking_details_job_instructions_checklist, this);
-        ButterKnife.bind(this);
-
         mSectionTitleText.setText(sectionTitle);
         if (sectionIconId != null)
         {
             mSectionIcon.setImageResource(sectionIconId);
         }
 
-        for (String entry : entries)
+        for (Booking.BookingInstruction instruction : instructions)
         {
             CheckListItemView checkListItemView = new CheckListItemView(getContext());
-            checkListItemView.refreshDisplay(false, null, entry);
+            checkListItemView.refreshDisplay(
+                    instruction.isFinished(), instruction.getTitle(), instruction.getDescription());
             mEntriesLayout.addView(checkListItemView);
             mCheckBoxEntries.add(checkListItemView);
         }
@@ -73,5 +77,11 @@ public class CustomerRequestsView extends FrameLayout
             if (checkListItemView.isChecked()) { return true; }
         }
         return false;
+    }
+
+    private void init()
+    {
+        inflate(getContext(), R.layout.element_booking_details_job_instructions_checklist, this);
+        ButterKnife.bind(this);
     }
 }
