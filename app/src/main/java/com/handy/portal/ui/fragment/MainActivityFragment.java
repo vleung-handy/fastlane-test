@@ -107,25 +107,20 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onResume();
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
-        boolean deeplinkHandled = handleDeeplink();
-        if (!deeplinkHandled && currentTab == null)
+        if (currentTab == null)
         {
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
+        handleDeeplink();
     }
 
-    private boolean handleDeeplink()
+    private void handleDeeplink()
     {
         final String deeplink = getDeeplink();
         final MainViewTab targetTab = MainViewTab.forDeeplink(deeplink);
         if (targetTab != null)
         {
             switchToTab(targetTab, getActivity().getIntent().getExtras(), false);
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 
