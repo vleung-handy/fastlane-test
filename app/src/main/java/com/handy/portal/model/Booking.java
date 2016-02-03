@@ -141,6 +141,40 @@ public class Booking implements Comparable<Booking>, Serializable
         return mBookingInstructionGroups;
     }
 
+    @Nullable
+    public List<BookingInstruction> getPreferences()
+    {
+        if (mBookingInstructionGroups == null) { return null; }
+        for (BookingInstructionGroup group : mBookingInstructionGroups)
+        {
+            if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+            {
+                return group.getInstructions();
+            }
+        }
+        return null;
+    }
+
+    public boolean isAnyPreferencesChecked()
+    {
+        List<BookingInstruction> preferences = getPreferences();
+        if (preferences != null)
+        {
+            for (BookingInstruction preference : preferences)
+            {
+                if (preference.isFinished())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else // if there isn't a list to check
+        {
+            return true;
+        }
+    }
+
     public int getFrequency()
     {
         return mFrequency;
@@ -635,6 +669,11 @@ public class Booking implements Comparable<Booking>, Serializable
         public String getMachineName()
         {
             return mMachineName;
+        }
+
+        public void setFinished(boolean finished)
+        {
+            mFinished = finished;
         }
     }
 

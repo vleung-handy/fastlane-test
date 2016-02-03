@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.Booking;
-import com.handy.portal.ui.widget.CheckListItemView;
+import com.handy.portal.ui.widget.InstructionCheckItemView;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class CustomerRequestsView extends FrameLayout
     @Bind(R.id.booking_details_job_instructions_checklist_entries_layout)
     LinearLayout mEntriesLayout;
 
-    private List<CheckListItemView> mCheckBoxEntries = new LinkedList<>();
+    private List<InstructionCheckItemView> mCheckBoxEntries = new LinkedList<>();
 
     public CustomerRequestsView(
             final Context context, final String sectionTitle, @Nullable final Integer sectionIconId,
@@ -62,17 +62,16 @@ public class CustomerRequestsView extends FrameLayout
 
         for (Booking.BookingInstruction instruction : instructions)
         {
-            CheckListItemView checkListItemView = new CheckListItemView(getContext());
-            checkListItemView.refreshDisplay(
-                    instruction.isFinished(), instruction.getTitle(), instruction.getDescription());
-            mEntriesLayout.addView(checkListItemView);
-            mCheckBoxEntries.add(checkListItemView);
+            InstructionCheckItemView checkItem = new InstructionCheckItemView(getContext());
+            checkItem.refreshDisplay(instruction);
+            mEntriesLayout.addView(checkItem);
+            mCheckBoxEntries.add(checkItem);
         }
     }
 
     public boolean isChecked()
     {
-        for (CheckListItemView checkListItemView : mCheckBoxEntries)
+        for (InstructionCheckItemView checkListItemView : mCheckBoxEntries)
         {
             if (checkListItemView.isChecked()) { return true; }
         }

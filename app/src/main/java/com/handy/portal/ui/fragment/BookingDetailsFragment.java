@@ -546,18 +546,26 @@ public class BookingDetailsFragment extends ActionBarFragment
                     showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
                 }
 
-                if (showCheckoutRatingFlow)
+                if (mAssociatedBooking.isAnyPreferencesChecked())
                 {
-                    RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-                    rateBookingDialogFragment.setArguments(arguments);
-                    rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+                    if (showCheckoutRatingFlow)
+                    {
+                        RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
+                        Bundle arguments = new Bundle();
+                        arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
+                        rateBookingDialogFragment.setArguments(arguments);
+                        rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+                    }
+                    else
+                    {
+                        CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
+                                new ProBookingFeedback(-1, ""), mJobInstructionsView.getInstructions());
+                        requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
+                    }
                 }
                 else
                 {
-                    CheckoutRequest checkoutRequest = new CheckoutRequest(locationData, new ProBookingFeedback(-1, ""));
-                    requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
+                    showToast(R.string.must_check_completed);
                 }
             }
             break;

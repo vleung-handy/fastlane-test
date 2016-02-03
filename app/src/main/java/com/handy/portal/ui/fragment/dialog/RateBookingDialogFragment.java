@@ -65,14 +65,10 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         {
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(
-                            getBookingId(),
-                            new CheckoutRequest(
-                                    getLocationData(),
-                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
-                            )
-                    )
-            );
+            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(getBookingId(), new CheckoutRequest(
+                    getLocationData(),
+                    new ProBookingFeedback(getBookingRatingScore(),
+                            getBookingRatingComment()), null)));
         }
 
         return view;
@@ -91,14 +87,10 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         if (getBookingRatingScore() > 0)
         {
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(
-                            getBookingId(),
-                            new CheckoutRequest(
-                                    getLocationData(),
-                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
-                            )
-                    )
-            );
+            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(getBookingId(), new CheckoutRequest(
+                    getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
+                    getBookingRatingComment()), mBooking.getPreferences())
+            ));
             mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingSubmittedLog(getBookingRatingScore())));
         }
         else

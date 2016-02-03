@@ -37,6 +37,8 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     @Bind(R.id.job_instructions_reveal_notice)
     TextView mRevealNotice;
 
+    private Booking.BookingInstructionGroup mPreferencesGroup;
+
     private static final Map<String, Integer> GROUP_ICONS;
 
     static
@@ -174,12 +176,12 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             List<Booking.BookingInstructionGroup> bookingInstructionGroups = booking.getBookingInstructionGroups();
             if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
             {
-                Booking.BookingInstructionGroup preferencesGroup = null;
+                mPreferencesGroup = null;
                 for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
                 {
                     if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
                     {
-                        preferencesGroup = group;
+                        mPreferencesGroup = group;
                     }
                     else
                     {
@@ -188,11 +190,11 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                                 group.getInstructions());
                     }
                 }
-                if (preferencesGroup != null)
+                if (mPreferencesGroup != null)
                 {
                     mInstructionsLayout.addView(new CustomerRequestsView(getContext(),
-                            preferencesGroup.getLabel(), GROUP_ICONS.get(preferencesGroup.getGroup()),
-                            preferencesGroup.getInstructions()));
+                            mPreferencesGroup.getLabel(), GROUP_ICONS.get(mPreferencesGroup.getGroup()),
+                            mPreferencesGroup.getInstructions()));
                 }
 
                 hasContent = true;
@@ -213,5 +215,17 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     {
         LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_section, instructionsLayout);
         return (BookingDetailsJobInstructionsSectionView) instructionsLayout.getChildAt(instructionsLayout.getChildCount() - 1);
+    }
+
+    public List<Booking.BookingInstruction> getInstructions()
+    {
+        if (mPreferencesGroup != null)
+        {
+            return mPreferencesGroup.getInstructions();
+        }
+        else
+        {
+            return null;
+        }
     }
 }

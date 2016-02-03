@@ -3,7 +3,6 @@ package com.handy.portal.ui.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
@@ -11,11 +10,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.Booking;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CheckListItemView extends FrameLayout
+public class InstructionCheckItemView extends FrameLayout
 {
     @Bind(R.id.checklist_item_check_box)
     CheckBox mCheckBox;
@@ -25,49 +25,54 @@ public class CheckListItemView extends FrameLayout
     TextView mDescriptionTextView;
 
 
-    public CheckListItemView(final Context context)
+    public InstructionCheckItemView(final Context context)
     {
         super(context);
         init();
     }
 
-    public CheckListItemView(final Context context, final AttributeSet attrs)
+    public InstructionCheckItemView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public CheckListItemView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    public InstructionCheckItemView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(21)
-    public CheckListItemView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
+    public InstructionCheckItemView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    public void refreshDisplay(boolean checked, @Nullable String title, @NonNull String description)
+    public void refreshDisplay(@NonNull final Booking.BookingInstruction instruction)
     {
-        mCheckBox.setChecked(checked);
-        if (title != null && !title.isEmpty())
+        mCheckBox.setChecked(instruction.isFinished());
+        if (instruction.getTitle() != null && !instruction.getTitle().isEmpty())
         {
             mTitleTextView.setVisibility(VISIBLE);
-            mTitleTextView.setText(title);
+            mTitleTextView.setText(instruction.getTitle());
         }
         else
         {
             mTitleTextView.setVisibility(GONE);
         }
-        mDescriptionTextView.setText(description);
-    }
+        mDescriptionTextView.setText(instruction.getDescription());
 
-    public void setChecked(boolean checked)
-    {
-        mCheckBox.setChecked(checked);
+        setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                mCheckBox.toggle();
+                instruction.setFinished(mCheckBox.isChecked());
+            }
+        });
     }
 
     public boolean isChecked()
@@ -79,14 +84,6 @@ public class CheckListItemView extends FrameLayout
     {
         inflate(getContext(), R.layout.list_item_checkbox, this);
         ButterKnife.bind(this);
-
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v)
-            {
-                mCheckBox.toggle();
-            }
-        });
     }
 
 }
