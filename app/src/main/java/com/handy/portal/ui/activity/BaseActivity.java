@@ -58,17 +58,21 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     public void startActivity(final Intent intent)
     {
         final Bundle currentExtras = getIntent().getExtras();
-        // Pass extras along if there is a deeplink
-        if (currentExtras != null && currentExtras.getString(BundleKeys.DEEPLINK) != null)
+        if (currentExtras != null)
         {
-            intent.putExtras(currentExtras);
+            final Bundle deeplinkData = currentExtras.getBundle(BundleKeys.DEEPLINK_DATA);
+            // Pass deeplink data along if it exists
+            if (deeplinkData != null)
+            {
+                intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkData);
+            }
         }
         super.startActivity(intent);
     }
 
     public void setDeeplinkHandled()
     {
-        getIntent().removeExtra(BundleKeys.DEEPLINK);
+        getIntent().removeExtra(BundleKeys.DEEPLINK_DATA);
     }
 
     @Override

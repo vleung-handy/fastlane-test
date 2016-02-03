@@ -3,7 +3,6 @@ package com.handy.portal.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -116,13 +115,18 @@ public class MainActivityFragment extends InjectedFragment
 
     private void handleDeeplink()
     {
-        final String deeplink = getDeeplink();
-        final MainViewTab targetTab = MainViewTab.forDeeplink(deeplink);
-        if (targetTab != null)
+        final Bundle deeplinkData =
+                getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
+        if (deeplinkData != null)
         {
-            switchToTab(targetTab, getActivity().getIntent().getExtras(), false);
+            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            final MainViewTab targetTab = MainViewTab.forDeeplink(deeplink);
+            if (targetTab != null)
+            {
+                switchToTab(targetTab, deeplinkData, false);
+            }
+            ((BaseActivity) getActivity()).setDeeplinkHandled();
         }
-        ((BaseActivity) getActivity()).setDeeplinkHandled();
     }
 
     @Override
@@ -478,17 +482,4 @@ public class MainActivityFragment extends InjectedFragment
         getActivity().finish();
     }
 
-    @Nullable
-    private String getDeeplink()
-    {
-        final Bundle activityIntentExtras = getActivity().getIntent().getExtras();
-        if (activityIntentExtras != null)
-        {
-            return activityIntentExtras.getString(BundleKeys.DEEPLINK);
-        }
-        else
-        {
-            return null;
-        }
-    }
 }

@@ -86,7 +86,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
         final Intent intent = new Intent(context, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtras(arguments);
+        intent.putExtra(BundleKeys.DEEPLINK_DATA, arguments);
         context.startActivity(intent);
     }
 }
