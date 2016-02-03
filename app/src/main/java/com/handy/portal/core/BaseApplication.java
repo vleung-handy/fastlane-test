@@ -15,6 +15,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.HelpContactManager;
+import com.handy.portal.location.LocationManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
@@ -101,6 +102,8 @@ public class BaseApplication extends MultiDexApplication
     WebUrlManager webUrlManager;
     @Inject
     NotificationMessageManager notificationMessageManager;
+    @Inject
+    LocationManager locationManager;
 
     @Inject
     Bus bus;

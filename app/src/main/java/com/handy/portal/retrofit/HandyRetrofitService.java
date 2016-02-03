@@ -1,5 +1,6 @@
 package com.handy.portal.retrofit;
 
+import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ProviderSettings;
 
@@ -29,6 +30,13 @@ public interface HandyRetrofitService
     String PAYMENTS_PATH = "/payments/";
     String STRIPE_PATH = "/stripe/";
     String ZIP_CLUSTER_POLYGONS_PATH = "/zipcluster_polygons/";
+
+
+    @POST(PROVIDERS_PATH + "{id}/geolocation")
+    void sendGeolocation(
+            @Path("id") int providerId,
+            @Body LocationUpdate locationUpdate,
+                                HandyRetrofitCallback cb);
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor,

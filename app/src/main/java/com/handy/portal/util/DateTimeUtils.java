@@ -35,6 +35,7 @@ public final class DateTimeUtils
     public final static long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE * 60;
     public final static long MILLISECONDS_IN_30_MINS = MILLISECONDS_IN_MINUTE * 30;
     public final static long MILLISECONDS_IN_52_MINS = MILLISECONDS_IN_MINUTE * 52;
+    public final static int SECONDS_IN_MINUTE = 60;
 
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)
     {
@@ -237,6 +238,18 @@ public final class DateTimeUtils
     public static int daysBetween(Date d1, Date d2)
     {
         return (int)( (d2.getTime() - d1.getTime()) / (MILLISECONDS_IN_HOUR * HOURS_IN_DAY));
+    }
+
+    /**
+     *
+     * @param timeMs
+     * @param startDate inclusive
+     * @param endDate exclusive
+     * @return
+     */
+    public static boolean isTimeBetweenDates(long timeMs, Date startDate, Date endDate)
+    {
+        return timeMs >= startDate.getTime()  && timeMs <endDate.getTime();
     }
 
     private static SimpleDateFormat getClockFormatter12hr()

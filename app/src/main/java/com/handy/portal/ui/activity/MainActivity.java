@@ -6,11 +6,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
+import com.handy.portal.location.LocationService;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
@@ -38,6 +40,21 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setFullScreen();
+
+        //TODO: move this somewhere else?
+        try
+        {
+            //TODO: ensure this service is only started once. only once instance of it running
+            Intent i = new Intent(this, LocationService.class);
+            startService(i);
+        }
+        catch (Exception e)
+        {
+            //TODO: should never happen, but log it just in case
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+
     }
 
     @Override

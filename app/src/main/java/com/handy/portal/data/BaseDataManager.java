@@ -3,6 +3,7 @@ package com.handy.portal.data;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
+import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -62,6 +63,12 @@ public final class BaseDataManager extends DataManager
         this.endpoint = endpoint;
         this.stripeService = stripeService;
         mEventLogService = eventLogService;
+    }
+
+    @Override
+    public void sendGeolocation(int providerId, LocationUpdate locationUpdate, Callback<SuccessWrapper> cb)
+    {
+        service.sendGeolocation(providerId, locationUpdate, new SuccessWrapperRetroFitCallback(cb));
     }
 
     @Override
