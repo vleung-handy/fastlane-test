@@ -84,7 +84,6 @@ public class MainActivityFragment extends InjectedFragment
     public static boolean clearingBackStack = false;
 
     private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
-    private boolean mDeeplinkHandled = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,16 +116,13 @@ public class MainActivityFragment extends InjectedFragment
 
     private void handleDeeplink()
     {
-        if (!mDeeplinkHandled)
+        final String deeplink = getDeeplink();
+        final MainViewTab targetTab = MainViewTab.forDeeplink(deeplink);
+        if (targetTab != null)
         {
-            final String deeplink = getDeeplink();
-            final MainViewTab targetTab = MainViewTab.forDeeplink(deeplink);
-            if (targetTab != null)
-            {
-                switchToTab(targetTab, getActivity().getIntent().getExtras(), false);
-            }
-            mDeeplinkHandled = true;
+            switchToTab(targetTab, getActivity().getIntent().getExtras(), false);
         }
+        ((BaseActivity) getActivity()).setDeeplinkHandled();
     }
 
     @Override
