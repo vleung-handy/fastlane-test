@@ -54,6 +54,17 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     ConfigManager configManager;
 
     @Override
+    public void startActivity(final Intent intent)
+    {
+        final Bundle currentExtras = getIntent().getExtras();
+        if (currentExtras != null)
+        {
+            intent.putExtras(currentExtras);
+        }
+        super.startActivity(intent);
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
