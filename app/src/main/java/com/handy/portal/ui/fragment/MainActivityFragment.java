@@ -41,9 +41,6 @@ import butterknife.ButterKnife;
 
 public class MainActivityFragment extends InjectedFragment
 {
-    //TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
-    @Inject
-    HandyRetrofitEndpoint handyRetrofitEndpoint;
     @Inject
     PrefsManager mPrefsManager;
     @Inject
