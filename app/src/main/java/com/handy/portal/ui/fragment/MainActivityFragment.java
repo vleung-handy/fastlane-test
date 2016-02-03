@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -28,7 +29,6 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
-import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
@@ -107,9 +107,25 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onResume();
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
-        if (currentTab == null)
+        boolean deeplinkHandled = handleDeeplink();
+        if (!deeplinkHandled && currentTab == null)
         {
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+        }
+    }
+
+    private boolean handleDeeplink()
+    {
+        final String deeplink = getDeeplink();
+        final MainViewTab targetTab = MainViewTab.forDeeplink(deeplink);
+        if (targetTab != null)
+        {
+            switchToTab(targetTab, getActivity().getIntent().getExtras(), false);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -194,7 +210,6 @@ public class MainActivityFragment extends InjectedFragment
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
         tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
 
-
         if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
         {
             mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
@@ -226,6 +241,7 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+
     private class NavDrawerOnClickListener extends TabOnClickListener
     {
         private MainViewTab mTab;
@@ -241,7 +257,7 @@ public class MainActivityFragment extends InjectedFragment
         @Override
         public void onClick(View view)
         {
-            if(mTransitionStyle != null)
+            if (mTransitionStyle != null)
             {
                 switchToTab(mTab, null, mTransitionStyle, false);
             }
@@ -254,6 +270,7 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+
     private class MoreButtonOnClickListener implements View.OnClickListener
     {
         @Override
@@ -262,6 +279,7 @@ public class MainActivityFragment extends InjectedFragment
             mDrawerLayout.openDrawer(mNavigationDrawer);
         }
     }
+
 
     private class BottomNavOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener
     {
@@ -289,7 +307,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
     }
-
 
 ///Fragment swapping and related
 
@@ -463,5 +480,19 @@ public class MainActivityFragment extends InjectedFragment
         CookieManager.getInstance().removeAllCookie();
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
+    }
+
+    @Nullable
+    private String getDeeplink()
+    {
+        final Bundle activityIntentExtras = getActivity().getIntent().getExtras();
+        if (activityIntentExtras != null)
+        {
+            return activityIntentExtras.getString(BundleKeys.DEEPLINK);
+        }
+        else
+        {
+            return null;
+        }
     }
 }

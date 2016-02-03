@@ -151,7 +151,11 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             Bundle arguments = getArguments();
             mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
-            mRequestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
+            final String bookingType = arguments.getString(BundleKeys.BOOKING_TYPE);
+            if (bookingType != null)
+            {
+                mRequestedBookingType = BookingType.valueOf(bookingType.toUpperCase());
+            }
             mCurrentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
 
             mFromPaymentsTab = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);

@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.service.AutoCheckInService;
-import com.handy.portal.util.PushUtils;
+import com.handy.portal.ui.activity.SplashActivity;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 
@@ -56,9 +56,18 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                            @NonNull PushMessage pushMessage,
                                            int notificationId)
     {
-
         final Bundle pushBundle = pushMessage.getPushBundle();
-        return PushUtils.handleDeeplink(context, pushBundle);
+        final String deeplink = pushBundle.getString(BundleKeys.DEEPLINK);
+        if (deeplink != null)
+        {
+            // BaseActivity will preserve the bundle through activity launches
+            launchSplashActivity(context, pushBundle);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     @Override
@@ -69,5 +78,15 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                                  boolean isForeground)
     {
         return false;
+    }
+
+    private static void launchSplashActivity(@NonNull final Context context,
+                                             @NonNull final Bundle arguments)
+    {
+        final Intent intent = new Intent(context, SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtras(arguments);
+        context.startActivity(intent);
     }
 }

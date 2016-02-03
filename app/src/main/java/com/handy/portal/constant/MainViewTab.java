@@ -1,5 +1,7 @@
 package com.handy.portal.constant;
 
+import android.support.annotation.Nullable;
+
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.WebUrlManager;
@@ -38,36 +40,47 @@ public enum MainViewTab implements Serializable
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
     HELP(HelpFragment.class),
-    DETAILS(BookingDetailsFragment.class),
+    DETAILS(BookingDetailsFragment.class, null, DeeplinkConstants.DEEPLINK_BOOKING_DETAILS),
     HELP_CONTACT(HelpContactFragment.class),
     BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     NEARBY_JOBS(NearbyBookingsFragment.class),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
-    CANCELLATION_REQUEST(CancellationRequestFragment.class),
-    ;
+    CANCELLATION_REQUEST(CancellationRequestFragment.class),;
 
-    private Class classType;
-    private @WebUrlManager.TargetPage String webViewTarget;
+    private Class mClassType;
+    private
+    @WebUrlManager.TargetPage
+    String mWebViewTarget;
+    @Nullable
+    private String mDeeplink;
 
     MainViewTab(Class classType)
     {
-        this.classType = classType;
+        mClassType = classType;
     }
 
     MainViewTab(Class classType, @WebUrlManager.TargetPage String target)
     {
-        this.classType = classType;
-        this.webViewTarget = target;
+        mClassType = classType;
+        mWebViewTarget = target;
+    }
+
+    MainViewTab(Class classType, @WebUrlManager.TargetPage String target, String deeplink)
+    {
+        this(classType, target);
+        mDeeplink = deeplink;
     }
 
     public Class getClassType()
     {
-        return classType;
+        return mClassType;
     }
 
-    public @WebUrlManager.TargetPage String getWebViewTarget()
+    public
+    @WebUrlManager.TargetPage
+    String getWebViewTarget()
     {
-        return webViewTarget;
+        return mWebViewTarget;
     }
 
     //If this gets complex setup small state machines to have a transition for each to/from tab
@@ -86,6 +99,26 @@ public enum MainViewTab implements Serializable
         return TransitionStyle.NATIVE_TO_NATIVE;
     }
 
+    @Nullable
+    public String getDeeplink()
+    {
+        return mDeeplink;
+    }
 
-
+    @Nullable
+    public static MainViewTab forDeeplink(@Nullable final String deeplink)
+    {
+        if (deeplink != null)
+        {
+            for (MainViewTab tab : values())
+            {
+                final String tabDeeplink = tab.getDeeplink();
+                if (tabDeeplink != null && tabDeeplink.equals(deeplink))
+                {
+                    return tab;
+                }
+            }
+        }
+        return null;
+    }
 }
