@@ -164,6 +164,7 @@
     <string name="yes">Yes</string>
     <string name="reschedule_all_bookings">Reschedule all subsequent bookings?</string>
     <string name="cancel_booking">Cancel Booking</string>
+    <string name="set">Set</string>
     <string name="cancel">Cancel</string>
     <string name="get_started">Get Started</string>
     <string name="onboard_msg">Book trusted cleaners\n &amp; handymen instantly</string>

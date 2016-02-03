@@ -52,16 +52,6 @@ public class EnvironmentModifier
         }
     }
 
-    public enum Environment
-    {
-        S, Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12;
-
-        public String getPrefix()
-        {
-            return this.toString().toLowerCase();
-        }
-    }
-
     public interface OnEnvironmentChangedListener
     {
         void onEnvironmentChanged(String newEnvironmentPrefix);
