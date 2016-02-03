@@ -61,7 +61,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
         if (deeplink != null)
         {
             // BaseActivity will preserve the bundle through activity launches
-            launchSplashActivity(context, pushBundle);
+            launchSplashActivityWithDeeplinkData(context, pushBundle);
             return true;
         }
         else
@@ -80,13 +80,13 @@ public class HandyPushReceiver extends BaseIntentReceiver
         return false;
     }
 
-    private static void launchSplashActivity(@NonNull final Context context,
-                                             @NonNull final Bundle arguments)
+    private static void launchSplashActivityWithDeeplinkData(@NonNull final Context context,
+                                                             @NonNull final Bundle deeplinkData)
     {
         final Intent intent = new Intent(context, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(BundleKeys.DEEPLINK_DATA, arguments);
+        intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkData);
         context.startActivity(intent);
     }
 }
