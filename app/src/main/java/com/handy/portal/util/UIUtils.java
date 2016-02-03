@@ -247,7 +247,7 @@ public final class UIUtils
             final String hoursFormatted = TIME_WINDOW_HOURS_FORMAT.format(hours);
             final Context context = timeWindowTextView.getContext();
             timeWindowTextView.append(" " + context.getString(R.string.time_window_formatted,
-                            minimumHoursFormatted, hoursFormatted));
+                    minimumHoursFormatted, hoursFormatted));
         }
     }
 
@@ -309,9 +309,11 @@ public final class UIUtils
         input.setText(currentEnvironmentPrefix);
         builder.setTitle("Set environment")
                 .setView(input)
-                .setPositiveButton(R.string.set, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.set, new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         environmentModifier.setEnvironmentPrefix(input.getText().toString(), callback);
                     }
                 })
