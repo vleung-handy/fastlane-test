@@ -111,6 +111,8 @@
         <item name="android:textColor">@drawable/tab_button_text</item>
         <item name="android:paddingTop">@dimen/tab_top_padding</item>
         <item name="android:paddingBottom">@dimen/tab_bottom_padding</item>
+        <item name="android:paddingLeft">@dimen/tab_side_padding</item>
+        <item name="android:paddingRight">@dimen/tab_side_padding</item>
         <item name="android:textSize">@dimen/small_text_size</item>
     </style>
 
