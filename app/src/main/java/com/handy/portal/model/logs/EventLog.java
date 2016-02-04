@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public abstract class EventLog
 {
     @SerializedName("timestamp")
-    private long mTimestampMillis;
+    private long mTimestampSecs;
     @SerializedName("provider_id")
     private String mProviderId;
     @SerializedName("version_track")
@@ -17,7 +17,7 @@ public abstract class EventLog
 
     public EventLog(String providerId, String versionTrack, String eventType, String eventContext)
     {
-        mTimestampMillis = System.currentTimeMillis();
+        mTimestampSecs = System.currentTimeMillis() / 1000;
         mProviderId = providerId;
         mVersionTrack = versionTrack;
         mEventType = eventType;
