@@ -28,7 +28,8 @@ public class BookingDetailsActionPanelView extends FrameLayout
                     BookingActionButtonType.CLAIM,
                     BookingActionButtonType.ON_MY_WAY,
                     BookingActionButtonType.CHECK_IN,
-                    BookingActionButtonType.CHECK_OUT
+                    BookingActionButtonType.CHECK_OUT,
+                    BookingActionButtonType.CONTACT_PHONE
             );
 
     public BookingDetailsActionPanelView(final Context context)
