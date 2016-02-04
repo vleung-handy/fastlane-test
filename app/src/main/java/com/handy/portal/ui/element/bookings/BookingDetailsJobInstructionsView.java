@@ -192,9 +192,14 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                 }
                 if (mPreferencesGroup != null)
                 {
-                    mInstructionsLayout.addView(new CustomerRequestsView(getContext(),
+                    CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
                             mPreferencesGroup.getLabel(), GROUP_ICONS.get(mPreferencesGroup.getGroup()),
-                            mPreferencesGroup.getInstructions()));
+                            mPreferencesGroup.getInstructions());
+                    if (booking.getCheckInSummary() == null || !booking.getCheckInSummary().isCheckedIn())
+                    {
+                        customerRequestsView.setEnabled(false);
+                    }
+                    mInstructionsLayout.addView(customerRequestsView);
                 }
 
                 hasContent = true;

@@ -69,13 +69,14 @@ public class CustomerRequestsView extends FrameLayout
         }
     }
 
-    public boolean isChecked()
+    @Override
+    public void setEnabled(final boolean enabled)
     {
-        for (InstructionCheckItemView checkListItemView : mCheckBoxEntries)
+        super.setEnabled(enabled);
+        for (InstructionCheckItemView entry : mCheckBoxEntries)
         {
-            if (checkListItemView.isChecked()) { return true; }
+            entry.setEnabled(enabled);
         }
-        return false;
     }
 
     private void init()

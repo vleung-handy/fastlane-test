@@ -75,6 +75,15 @@ public class InstructionCheckItemView extends FrameLayout
         });
     }
 
+    @Override
+    public void setEnabled(final boolean enabled)
+    {
+        super.setEnabled(enabled);
+        mTitleTextView.setEnabled(enabled);
+        mDescriptionTextView.setEnabled(enabled);
+        mCheckBox.setEnabled(enabled);
+    }
+
     public boolean isChecked()
     {
         return mCheckBox.isChecked();
