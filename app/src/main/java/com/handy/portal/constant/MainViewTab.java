@@ -1,7 +1,5 @@
 package com.handy.portal.constant;
 
-import android.support.annotation.Nullable;
-
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.WebUrlManager;
@@ -40,7 +38,7 @@ public enum MainViewTab implements Serializable
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
     HELP(HelpFragment.class),
-    DETAILS(BookingDetailsFragment.class, null, DeeplinkConstants.DEEPLINK_BOOKING_DETAILS),
+    DETAILS(BookingDetailsFragment.class),
     HELP_CONTACT(HelpContactFragment.class),
     BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     NEARBY_JOBS(NearbyBookingsFragment.class),
@@ -51,8 +49,6 @@ public enum MainViewTab implements Serializable
     private
     @WebUrlManager.TargetPage
     String mWebViewTarget;
-    @Nullable
-    private String mDeeplink;
 
     MainViewTab(Class classType)
     {
@@ -63,12 +59,6 @@ public enum MainViewTab implements Serializable
     {
         mClassType = classType;
         mWebViewTarget = target;
-    }
-
-    MainViewTab(Class classType, @WebUrlManager.TargetPage String target, String deeplink)
-    {
-        this(classType, target);
-        mDeeplink = deeplink;
     }
 
     public Class getClassType()
@@ -97,28 +87,5 @@ public enum MainViewTab implements Serializable
         }
 
         return TransitionStyle.NATIVE_TO_NATIVE;
-    }
-
-    @Nullable
-    public String getDeeplink()
-    {
-        return mDeeplink;
-    }
-
-    @Nullable
-    public static MainViewTab forDeeplink(@Nullable final String deeplink)
-    {
-        if (deeplink != null)
-        {
-            for (MainViewTab tab : values())
-            {
-                final String tabDeeplink = tab.getDeeplink();
-                if (tabDeeplink != null && tabDeeplink.equals(deeplink))
-                {
-                    return tab;
-                }
-            }
-        }
-        return null;
     }
 }

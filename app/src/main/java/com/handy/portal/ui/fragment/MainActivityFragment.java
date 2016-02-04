@@ -31,6 +31,7 @@ import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
+import com.handy.portal.util.DeeplinkMapper;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -120,10 +121,13 @@ public class MainActivityFragment extends InjectedFragment
         if (deeplinkData != null)
         {
             final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
-            final MainViewTab targetTab = MainViewTab.forDeeplink(deeplink);
-            if (targetTab != null)
+            if (deeplink != null)
             {
-                switchToTab(targetTab, deeplinkData, false);
+                final MainViewTab targetTab = DeeplinkMapper.getTabForDeeplink(deeplink);
+                if (targetTab != null)
+                {
+                    switchToTab(targetTab, deeplinkData, false);
+                }
             }
             ((BaseActivity) getActivity()).setDeeplinkHandled();
         }
