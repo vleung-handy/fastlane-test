@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PleaseUpdateFragment extends InjectedFragment
 {
@@ -42,12 +44,10 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Inject
     VersionManager mVersionManager;
 
-    @Bind(R.id.update_header_text)
-    TextView mUpdateHeaderText;
     @Bind(R.id.update_image)
     ImageView mUpdateImage;
     @Bind(R.id.update_button)
-    Button mUpdateButton;
+    View mUpdateButton;
     @Bind(R.id.update_text)
     TextView mUpdateText;
     @Bind(R.id.grant_access_button)
@@ -56,11 +56,11 @@ public class PleaseUpdateFragment extends InjectedFragment
     LinearLayout mGrantPermissionsSection;
     @Bind(R.id.install_update_section)
     LinearLayout mInstallUpdateSection;
+    @Bind(R.id.manual_download_text)
+    TextView manualDownloadText;
 
     private boolean mAlreadyAskedPermissions = false;
     private Uri mApkUri;
-
-    private static final String MANUAL_DOWNLOAD_URL = "https://www.handy.com/p";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +82,9 @@ public class PleaseUpdateFragment extends InjectedFragment
             }
         });
         Crashlytics.log("Starting the update process");
+
+        // Make link in text clickable
+        manualDownloadText.setMovementMethod(LinkMovementMethod.getInstance());
 
         return view;
     }
@@ -129,25 +132,11 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Subscribe
     public void onDownloadUpdateFailed(HandyEvent.DownloadUpdateFailed event)
     {
-        // Fallback to opening link and downloading manually
-        mUpdateHeaderText.setText(R.string.automatic_update_failed);
-        mUpdateText.setText(R.string.download_update_manually);
-        mUpdateButton.setText(getResources().getString(R.string.download_update));
-        mUpdateButton.setEnabled(true);
-        mUpdateButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                downloadApkManually();
-            }
-        });
-
-        // Button shake/wiggle to grab attention
-        Animation shakeAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
-        mUpdateButton.startAnimation(shakeAnimation);
+        showToast(R.string.update_failed);
+        getActivity().finish();
     }
 
+    @OnClick(R.id.update_button)
     protected void installApk()
     {
         final Intent installIntent = new Intent(Intent.ACTION_VIEW);
@@ -183,14 +172,6 @@ public class PleaseUpdateFragment extends InjectedFragment
         {
             Crashlytics.logException(e);
         }
-    }
-
-    protected void downloadApkManually()
-    {
-        Uri uri = Uri.parse(MANUAL_DOWNLOAD_URL);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        getActivity().finish();
-        startActivity(intent);
     }
 
     private void checkPermissions()
