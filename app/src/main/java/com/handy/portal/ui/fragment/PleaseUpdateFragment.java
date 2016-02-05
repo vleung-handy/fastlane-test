@@ -5,10 +5,10 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +37,8 @@ import butterknife.ButterKnife;
 public class PleaseUpdateFragment extends InjectedFragment
 {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
+    private static final String ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME = "com.android.packageinstaller";
+    private static final String ANDROID_PACKAGE_INSTALLER_ACTIVITY_NAME = "com.android.packageinstaller.PackageInstallerActivity";
     @Inject
     VersionManager mVersionManager;
 
@@ -148,16 +150,39 @@ public class PleaseUpdateFragment extends InjectedFragment
 
     protected void installApk()
     {
-        Intent installIntent = new Intent(Intent.ACTION_VIEW);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            ComponentName comp = new ComponentName("com.android.packageinstaller", "com.android.packageinstaller.PackageInstallerActivity");
-            installIntent.setComponent(comp);
-        }
+        final Intent installIntent = new Intent(Intent.ACTION_VIEW);
+        setPackageInstallerComponent(installIntent);
 
         installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
         Utils.safeLaunchIntent(installIntent, getActivity());
+    }
+
+    private void setPackageInstallerComponent(final Intent installIntent)
+    {
+        final ComponentName packageInstallerComponentName =
+                new ComponentName(ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME,
+                        ANDROID_PACKAGE_INSTALLER_ACTIVITY_NAME);
+        try
+        {
+            final PackageManager packageManager = getActivity().getPackageManager();
+            final ActivityInfo activityInfo =
+                    packageManager.getActivityInfo(packageInstallerComponentName, 0);
+            if (activityInfo != null)
+            {
+                installIntent.setComponent(packageInstallerComponentName);
+            }
+            else
+            {
+                Crashlytics.logException(
+                        new RuntimeException(
+                                "Unable to use " + ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME));
+            }
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
     protected void downloadApkManually()
