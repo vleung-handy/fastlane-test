@@ -6,7 +6,6 @@
             android:layout_alignParentBottom="true"
             android:background="@color/light_grey"
             android:orientation="horizontal"
-            android:weightSum="50"
     >
 
     <com.handy.portal.ui.widget.DimRadioButton
