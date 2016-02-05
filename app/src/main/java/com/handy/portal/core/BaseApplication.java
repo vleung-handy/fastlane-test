@@ -32,6 +32,7 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.util.FontUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
@@ -54,6 +55,8 @@ public class BaseApplication extends MultiDexApplication
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
     DataManager dataManager;
+    @Inject
+    HandyRetrofitEndpoint handyRetrofitEndpoint;
     @Inject
     GoogleManager googleManager;
     @Inject

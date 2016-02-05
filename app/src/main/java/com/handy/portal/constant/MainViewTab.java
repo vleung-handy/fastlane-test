@@ -43,31 +43,34 @@ public enum MainViewTab implements Serializable
     BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     NEARBY_JOBS(NearbyBookingsFragment.class),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
-    CANCELLATION_REQUEST(CancellationRequestFragment.class),
-    ;
+    CANCELLATION_REQUEST(CancellationRequestFragment.class),;
 
-    private Class classType;
-    private @WebUrlManager.TargetPage String webViewTarget;
+    private Class mClassType;
+    private
+    @WebUrlManager.TargetPage
+    String mWebViewTarget;
 
     MainViewTab(Class classType)
     {
-        this.classType = classType;
+        mClassType = classType;
     }
 
     MainViewTab(Class classType, @WebUrlManager.TargetPage String target)
     {
-        this.classType = classType;
-        this.webViewTarget = target;
+        mClassType = classType;
+        mWebViewTarget = target;
     }
 
     public Class getClassType()
     {
-        return classType;
+        return mClassType;
     }
 
-    public @WebUrlManager.TargetPage String getWebViewTarget()
+    public
+    @WebUrlManager.TargetPage
+    String getWebViewTarget()
     {
-        return webViewTarget;
+        return mWebViewTarget;
     }
 
     //If this gets complex setup small state machines to have a transition for each to/from tab
@@ -85,7 +88,4 @@ public enum MainViewTab implements Serializable
 
         return TransitionStyle.NATIVE_TO_NATIVE;
     }
-
-
-
 }
