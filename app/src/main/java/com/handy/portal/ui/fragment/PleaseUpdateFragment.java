@@ -5,13 +5,14 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,19 +34,20 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PleaseUpdateFragment extends InjectedFragment
 {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
+    private static final String ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME = "com.android.packageinstaller";
+    private static final String ANDROID_PACKAGE_INSTALLER_ACTIVITY_NAME = "com.android.packageinstaller.PackageInstallerActivity";
     @Inject
     VersionManager mVersionManager;
 
-    @Bind(R.id.update_header_text)
-    TextView mUpdateHeaderText;
     @Bind(R.id.update_image)
     ImageView mUpdateImage;
     @Bind(R.id.update_button)
-    Button mUpdateButton;
+    View mUpdateButton;
     @Bind(R.id.update_text)
     TextView mUpdateText;
     @Bind(R.id.grant_access_button)
@@ -54,11 +56,11 @@ public class PleaseUpdateFragment extends InjectedFragment
     LinearLayout mGrantPermissionsSection;
     @Bind(R.id.install_update_section)
     LinearLayout mInstallUpdateSection;
+    @Bind(R.id.manual_download_text)
+    TextView manualDownloadText;
 
     private boolean mAlreadyAskedPermissions = false;
     private Uri mApkUri;
-
-    private static final String MANUAL_DOWNLOAD_URL = "https://www.handy.com/p";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +82,9 @@ public class PleaseUpdateFragment extends InjectedFragment
             }
         });
         Crashlytics.log("Starting the update process");
+
+        // Make link in text clickable
+        manualDownloadText.setMovementMethod(LinkMovementMethod.getInstance());
 
         return view;
     }
@@ -127,45 +132,46 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Subscribe
     public void onDownloadUpdateFailed(HandyEvent.DownloadUpdateFailed event)
     {
-        // Fallback to opening link and downloading manually
-        mUpdateHeaderText.setText(R.string.automatic_update_failed);
-        mUpdateText.setText(R.string.download_update_manually);
-        mUpdateButton.setText(getResources().getString(R.string.download_update));
-        mUpdateButton.setEnabled(true);
-        mUpdateButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                downloadApkManually();
-            }
-        });
-
-        // Button shake/wiggle to grab attention
-        Animation shakeAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
-        mUpdateButton.startAnimation(shakeAnimation);
+        showToast(R.string.update_failed);
+        getActivity().finish();
     }
 
+    @OnClick(R.id.update_button)
     protected void installApk()
     {
-        Intent installIntent = new Intent(Intent.ACTION_VIEW);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            ComponentName comp = new ComponentName("com.android.packageinstaller", "com.android.packageinstaller.PackageInstallerActivity");
-            installIntent.setComponent(comp);
-        }
+        final Intent installIntent = new Intent(Intent.ACTION_VIEW);
+        setPackageInstallerComponent(installIntent);
 
         installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
         Utils.safeLaunchIntent(installIntent, getActivity());
     }
 
-    protected void downloadApkManually()
+    private void setPackageInstallerComponent(final Intent installIntent)
     {
-        Uri uri = Uri.parse(MANUAL_DOWNLOAD_URL);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        getActivity().finish();
-        startActivity(intent);
+        final ComponentName packageInstallerComponentName =
+                new ComponentName(ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME,
+                        ANDROID_PACKAGE_INSTALLER_ACTIVITY_NAME);
+        try
+        {
+            final PackageManager packageManager = getActivity().getPackageManager();
+            final ActivityInfo activityInfo =
+                    packageManager.getActivityInfo(packageInstallerComponentName, 0);
+            if (activityInfo != null)
+            {
+                installIntent.setComponent(packageInstallerComponentName);
+            }
+            else
+            {
+                Crashlytics.logException(
+                        new RuntimeException(
+                                "Unable to use " + ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME));
+            }
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
     private void checkPermissions()
