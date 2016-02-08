@@ -851,9 +851,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
         {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAvailableJobClaimSuccessLog(
-                    bookingClaimDetails.getBooking(), event.source)));
-
             if (bookingClaimDetails.shouldShowClaimTarget())
             {
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
@@ -879,8 +876,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAvailableJobClaimErrorLog(
-                event.getBooking(), event.getSource())));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleBookingClaimError(event.error.getMessage());
     }

@@ -8,6 +8,7 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -15,6 +16,7 @@ import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -28,19 +30,22 @@ import javax.inject.Inject;
 
 public class BookingManager
 {
-    private final Bus bus;
-    private final DataManager dataManager;
+    private final Bus mBus;
+    private EventLogFactory mEventLogFactory;
+    private final DataManager mDataManager;
 
     private final Cache<Date, List<Booking>> availableBookingsCache;
     private final Cache<Date, List<Booking>> scheduledBookingsCache;
     private final Cache<Date, List<Booking>> complementaryBookingsCache;
 
     @Inject
-    public BookingManager(final Bus bus, final DataManager dataManager)
+    public BookingManager(final Bus bus, final DataManager dataManager,
+                          final EventLogFactory eventLogFactory)
     {
-        this.bus = bus;
-        this.bus.register(this);
-        this.dataManager = dataManager;
+        mBus = bus;
+        mEventLogFactory = eventLogFactory;
+        mBus.register(this);
+        mDataManager = dataManager;
 
         this.availableBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
@@ -70,18 +75,18 @@ public class BookingManager
         String bookingId = event.bookingId;
         BookingType type = event.type;
 
-        dataManager.getBookingDetails(bookingId, type, new DataManager.Callback<Booking>()
+        mDataManager.getBookingDetails(bookingId, type, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveBookingDetailsSuccess(booking));
+                mBus.post(new HandyEvent.ReceiveBookingDetailsSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveBookingDetailsError(error));
+                mBus.post(new HandyEvent.ReceiveBookingDetailsError(error));
                 if (event.date != null && error.getType() != DataManager.DataManagerError.Type.NETWORK)
                 {
                     Date day = DateTimeUtils.getDateWithoutTime(event.date);
@@ -103,7 +108,7 @@ public class BookingManager
                 final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
-                    bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
+                    mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
                 }
                 else
                 {
@@ -118,7 +123,7 @@ public class BookingManager
 
         if (!datesToRequest.isEmpty())
         {
-            dataManager.getAvailableBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
+            mDataManager.getAvailableBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
                     new DataManager.Callback<BookingsListWrapper>()
                     {
                         @Override
@@ -130,14 +135,14 @@ public class BookingManager
                                 Crashlytics.log("Received available bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
                                 availableBookingsCache.put(day, bookings);
-                                bus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings, day));
+                                mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings, day));
                             }
                         }
 
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            bus.post(new HandyEvent.ReceiveAvailableBookingsError(error, datesToRequest));
+                            mBus.post(new HandyEvent.ReceiveAvailableBookingsError(error, datesToRequest));
                         }
                     }
             );
@@ -156,7 +161,7 @@ public class BookingManager
                 final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
-                    bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
+                    mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
                 }
                 else
                 {
@@ -171,7 +176,7 @@ public class BookingManager
 
         if (!datesToRequest.isEmpty())
         {
-            dataManager.getScheduledBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
+            mDataManager.getScheduledBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
                     new DataManager.Callback<BookingsListWrapper>()
                     {
                         @Override
@@ -183,14 +188,14 @@ public class BookingManager
                                 Crashlytics.log("Received scheduled bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
                                 scheduledBookingsCache.put(day, bookings);
-                                bus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
+                                mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
                             }
                         }
 
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            bus.post(new HandyEvent.ReceiveScheduledBookingsError(error, datesToRequest));
+                            mBus.post(new HandyEvent.ReceiveScheduledBookingsError(error, datesToRequest));
                         }
                     }
             );
@@ -200,19 +205,19 @@ public class BookingManager
     @Subscribe
     public void onRequestNearbyBookings(BookingEvent.RequestNearbyBookings event)
     {
-        dataManager.getNearbyBookings(event.getRegionId(), event.getLatitude(), event.getLongitude(),
+        mDataManager.getNearbyBookings(event.getRegionId(), event.getLatitude(), event.getLongitude(),
                 new DataManager.Callback<BookingsWrapper>()
                 {
                     @Override
                     public void onSuccess(final BookingsWrapper response)
                     {
-                        bus.post(new BookingEvent.ReceiveNearbyBookingsSuccess(response.getBookings()));
+                        mBus.post(new BookingEvent.ReceiveNearbyBookingsSuccess(response.getBookings()));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
-                        bus.post(new BookingEvent.ReceiveNearbyBookingsError(error));
+                        mBus.post(new BookingEvent.ReceiveNearbyBookingsError(error));
                     }
                 });
     }
@@ -224,24 +229,24 @@ public class BookingManager
         final List<Booking> cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
         if (cachedComplementaryBookings != null)
         {
-            bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(cachedComplementaryBookings));
+            mBus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(cachedComplementaryBookings));
         }
         else
         {
-            dataManager.getComplementaryBookings(event.bookingId, event.type, new DataManager.Callback<BookingsWrapper>()
+            mDataManager.getComplementaryBookings(event.bookingId, event.type, new DataManager.Callback<BookingsWrapper>()
             {
                 @Override
                 public void onSuccess(BookingsWrapper bookingsWrapper)
                 {
                     List<Booking> bookings = bookingsWrapper.getBookings();
                     complementaryBookingsCache.put(day, bookings);
-                    bus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
+                    mBus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
                 }
 
                 @Override
                 public void onError(DataManager.DataManagerError error)
                 {
-                    bus.post(new HandyEvent.ReceiveComplementaryBookingsError(error));
+                    mBus.post(new HandyEvent.ReceiveComplementaryBookingsError(error));
                 }
             });
         }
@@ -254,13 +259,18 @@ public class BookingManager
         BookingType bookingType = event.booking.getType();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
-        dataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<BookingClaimDetails>()
+        mDataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<BookingClaimDetails>()
         {
             @Override
             public void onSuccess(BookingClaimDetails bookingClaimDetails)
             {
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
+                mBus.post(new LogEvent.AddLogEvent(
+                        mEventLogFactory.createAvailableJobClaimSuccessLog(
+                                bookingClaimDetails.getBooking(),
+                                event.source)));
+                mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
+
             }
 
             @Override
@@ -268,7 +278,10 @@ public class BookingManager
             {
                 //still need to invalidate so we don't allow them to click on same booking
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
+                mBus.post(new LogEvent.AddLogEvent(
+                        mEventLogFactory.createAvailableJobClaimErrorLog(event.booking,
+                                event.source)));
+                mBus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
             }
         });
     }
@@ -280,13 +293,13 @@ public class BookingManager
         BookingType bookingType = event.booking.getType();
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
-        dataManager.removeBooking(bookingId, bookingType, new DataManager.Callback<Booking>()
+        mDataManager.removeBooking(bookingId, bookingType, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
+                mBus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
             }
 
             @Override
@@ -294,7 +307,7 @@ public class BookingManager
             {
                 //still need to invalidate so we don't allow them to click on same booking
                 invalidateCachesForDay(day);
-                bus.post(new HandyEvent.ReceiveRemoveJobError(error));
+                mBus.post(new HandyEvent.ReceiveRemoveJobError(error));
             }
         });
     }
@@ -304,18 +317,18 @@ public class BookingManager
     {
         LocationData locationData = event.locationData;
 
-        dataManager.notifyOnMyWayBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        mDataManager.notifyOnMyWayBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobOnMyWaySuccess(booking));
+                mBus.post(new HandyEvent.ReceiveNotifyJobOnMyWaySuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobOnMyWayError(error));
+                mBus.post(new HandyEvent.ReceiveNotifyJobOnMyWayError(error));
             }
         });
     }
@@ -325,19 +338,19 @@ public class BookingManager
     {
         LocationData locationData = event.locationData;
 
-        dataManager.notifyCheckInBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        mDataManager.notifyCheckInBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking, event.isAuto));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error, event.isAuto));
             }
         });
     }
@@ -345,18 +358,18 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyCheckOut(final HandyEvent.RequestNotifyJobCheckOut event)
     {
-        dataManager.notifyCheckOutBooking(event.bookingId, event.isAuto, event.checkoutRequest, new DataManager.Callback<Booking>()
+        mDataManager.notifyCheckOutBooking(event.bookingId, event.isAuto, event.checkoutRequest, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking, event.isAuto));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error, event.isAuto));
             }
         });
     }
@@ -366,18 +379,18 @@ public class BookingManager
     {
         Booking.ArrivalTimeOption arrivalTimeOption = event.arrivalTimeOption;
 
-        dataManager.notifyUpdateArrivalTimeBooking(event.bookingId, arrivalTimeOption, new DataManager.Callback<Booking>()
+        mDataManager.notifyUpdateArrivalTimeBooking(event.bookingId, arrivalTimeOption, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess(booking));
+                mBus.post(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeError(error));
+                mBus.post(new HandyEvent.ReceiveNotifyJobUpdateArrivalTimeError(error));
             }
         });
     }
@@ -385,18 +398,18 @@ public class BookingManager
     @Subscribe
     public void onRequestReportNoShow(HandyEvent.RequestReportNoShow event)
     {
-        dataManager.reportNoShow(event.bookingId, getNoShowParams(true, event.locationData), new DataManager.Callback<Booking>()
+        mDataManager.reportNoShow(event.bookingId, getNoShowParams(true, event.locationData), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveReportNoShowSuccess(booking));
+                mBus.post(new HandyEvent.ReceiveReportNoShowSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveReportNoShowError(error));
+                mBus.post(new HandyEvent.ReceiveReportNoShowError(error));
             }
         });
     }
@@ -404,18 +417,18 @@ public class BookingManager
     @Subscribe
     public void onRequestCancelNoShow(HandyEvent.RequestCancelNoShow event)
     {
-        dataManager.reportNoShow(event.bookingId, getNoShowParams(false, event.locationData), new DataManager.Callback<Booking>()
+        mDataManager.reportNoShow(event.bookingId, getNoShowParams(false, event.locationData), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                bus.post(new HandyEvent.ReceiveCancelNoShowSuccess(booking));
+                mBus.post(new HandyEvent.ReceiveCancelNoShowSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                bus.post(new HandyEvent.ReceiveCancelNoShowError(error));
+                mBus.post(new HandyEvent.ReceiveCancelNoShowError(error));
             }
         });
     }
