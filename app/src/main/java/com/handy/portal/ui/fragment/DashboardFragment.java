@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 
 import butterknife.Bind;
@@ -18,6 +19,7 @@ public class DashboardFragment extends ActionBarFragment
 {
     @Bind(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
+
 
     @Override
     protected MainViewTab getTab()
@@ -49,5 +51,11 @@ public class DashboardFragment extends ActionBarFragment
     private void createDashboardView()
     {
         mDashboardLayout.addView(new WelcomeProPerformanceView(getContext()));
+
+        RatingsProPerformanceView ratingsProPerformanceView = new RatingsProPerformanceView(getContext());
+        ratingsProPerformanceView.addItem("8", "5 star ratings");
+        ratingsProPerformanceView.addItem("10", "Rated jobs");
+        ratingsProPerformanceView.addItem("15", "Total jobs");
+        mDashboardLayout.addView(ratingsProPerformanceView);
     }
 }

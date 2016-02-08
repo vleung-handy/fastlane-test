@@ -10,8 +10,6 @@ import android.widget.FrameLayout;
 import com.handy.portal.R;
 import com.handy.portal.util.Utils;
 
-import butterknife.ButterKnife;
-
 public class WelcomeProPerformanceView extends FrameLayout
 {
 
@@ -43,10 +41,6 @@ public class WelcomeProPerformanceView extends FrameLayout
     private void init(final Context context)
     {
         Utils.inject(context, this);
-
         inflate(getContext(), R.layout.element_welcome_pro_performance, this);
-        ButterKnife.bind(this);
-
-
     }
 }

@@ -55,6 +55,8 @@ import com.handy.portal.ui.constructor.ProfileContactView;
 import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.element.dashboard.JobRatingView;
+import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
@@ -155,6 +157,8 @@ import retrofit.converter.GsonConverter;
         NotificationsListView.class,
         NotificationsListEntryView.class,
         WelcomeProPerformanceView.class,
+        RatingsProPerformanceView.class,
+        JobRatingView.class,
 })
 public final class ApplicationModule
 {

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
+
+    <TextView
+        style="@style/TextView.Large.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Past 28 days"
+        />
+
+    <TextView
+        style="@style/TextView.Small.Med"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="January 5 - February 5, 2016"
+        android:textColor="@color/tertiary_grey"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/default_margin_x2"
+        android:background="@color/tertiary_grey"
+        />
+
+    <LinearLayout
+        android:id="@+id/jobs_ratings_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_x2"
+        android:orientation="horizontal"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:id="@+id/tier_option"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/background_list_entry"
+            android:clickable="true"
+            android:layout_marginTop="1dp"
+            android:padding="@dimen/default_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                style="@style/TextView.Small.Bold"
+                android:text="Tier 1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/tier_chevron"
+                android:textColor="@color/tertiary_grey"
+                android:text="$15"/>
+
+            <ImageView
+                android:id="@+id/tier_chevron"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/extra_margin_large"
+                android:src="@drawable/ic_chevron"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/feedback_option"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/background_list_entry"
+            android:clickable="true"
+            android:layout_marginTop="1dp"
+            android:padding="@dimen/default_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                style="@style/TextView.Small.Bold"
+                android:text="Feedback"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/feedback_chevron"
+                android:textColor="@color/error_red"
+                android:text="Quality of Service"/>
+
+            <ImageView
+                android:id="@+id/feedback_chevron"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/extra_margin_large"
+                android:src="@drawable/ic_chevron"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
