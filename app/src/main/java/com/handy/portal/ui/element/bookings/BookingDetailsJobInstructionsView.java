@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
@@ -13,7 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.handy.portal.R;
+import com.handy.portal.constant.PrefsType;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView;
@@ -23,6 +26,7 @@ import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +44,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     private Booking.BookingInstructionGroup mPreferencesGroup;
 
     private static final Map<String, Integer> GROUP_ICONS;
+    private static final Gson GSON = new Gson();
 
     static
     {
@@ -192,9 +197,24 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                 }
                 if (mPreferencesGroup != null)
                 {
+                    SharedPreferences checklistPreferences =
+                            getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
+                    List<Booking.BookingInstruction> checklist;
+                    if (checklistPreferences.getString(booking.getId(), "").isEmpty())
+                    {
+                        checklist = mPreferencesGroup.getInstructions();
+                    }
+                    else
+                    {
+                        Booking.BookingInstruction[] checklistArray = GSON.fromJson(
+                                checklistPreferences.getString(booking.getId(), ""),
+                                Booking.BookingInstruction[].class);
+                        checklist = Arrays.asList(checklistArray);
+                        mPreferencesGroup.setInstructions(checklist);
+                    }
                     CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
                             mPreferencesGroup.getLabel(), GROUP_ICONS.get(mPreferencesGroup.getGroup()),
-                            mPreferencesGroup.getInstructions());
+                            checklist);
                     if (booking.getCheckInSummary() == null || !booking.getCheckInSummary().isCheckedIn())
                     {
                         customerRequestsView.setEnabled(false);

@@ -155,6 +155,18 @@ public class Booking implements Comparable<Booking>, Serializable
         return null;
     }
 
+    public void setPreferences(List<BookingInstruction> preferences)
+    {
+        if (mBookingInstructionGroups == null) { return; }
+        for (BookingInstructionGroup group : mBookingInstructionGroups)
+        {
+            if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+            {
+                group.setInstructions(preferences);
+            }
+        }
+    }
+
     public boolean isAnyPreferencesChecked()
     {
         List<BookingInstruction> preferences = getPreferences();
@@ -708,6 +720,11 @@ public class Booking implements Comparable<Booking>, Serializable
         public List<BookingInstruction> getInstructions()
         {
             return mInstructions;
+        }
+
+        public void setInstructions(List<BookingInstruction> instructions)
+        {
+            mInstructions = instructions;
         }
     }
 

@@ -2,8 +2,10 @@ package com.handy.portal.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,11 +28,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.PrefsType;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
@@ -117,6 +121,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
     private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
+    private static final Gson GSON = new Gson();
 
     private String mRequestedBookingId;
     private BookingType mRequestedBookingType;
@@ -294,6 +299,23 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (!MainActivityFragment.clearingBackStack)
         {
             requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        if (mAssociatedBooking.getCheckInSummary() != null
+                && mAssociatedBooking.getCheckInSummary().isCheckedIn())
+        {
+            List<Booking.BookingInstruction> checklist = mAssociatedBooking.getPreferences();
+            if (checklist != null)
+            {
+                SharedPreferences checklistPreferences =
+                        getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
+                checklistPreferences.edit().putString(mAssociatedBooking.getId(), GSON.toJson(checklist)).apply();
+            }
         }
     }
 
