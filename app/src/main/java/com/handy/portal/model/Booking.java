@@ -322,6 +322,11 @@ public class Booking implements Comparable<Booking>, Serializable
         return mCheckInSummary;
     }
 
+    public boolean isCheckedIn()
+    {
+        return mCheckInSummary != null && mCheckInSummary.isCheckedIn();
+    }
+
     public Integer getProviderMinutesLate()
     {
         return mProviderMinutesLate;
