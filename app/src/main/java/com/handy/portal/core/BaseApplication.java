@@ -40,6 +40,7 @@ import com.squareup.otto.Bus;
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
+import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BaseApplication extends MultiDexApplication
@@ -182,7 +183,7 @@ public class BaseApplication extends MultiDexApplication
     {
         if (!BuildConfig.DEBUG)
         {
-            Crashlytics.start(this);
+            Fabric.with(this, new Crashlytics());
         }
     }
 
