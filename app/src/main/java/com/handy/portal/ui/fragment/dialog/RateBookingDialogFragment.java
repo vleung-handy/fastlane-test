@@ -1,5 +1,7 @@
 package com.handy.portal.ui.fragment.dialog;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsType;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
@@ -108,6 +111,10 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
+                SharedPreferences checklistPreferences =
+                        getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
+                checklistPreferences.edit().putString(mBooking.getId(), null).apply();
+
                 mBus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
                         address.getLatitude(), address.getLongitude()));
             }

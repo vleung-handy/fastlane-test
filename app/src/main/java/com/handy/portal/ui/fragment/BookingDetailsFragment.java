@@ -586,6 +586,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 }
                 else
                 {
+                    mScrollView.fullScroll(View.FOCUS_DOWN);
                     showToast(R.string.must_check_completed);
                 }
             }
@@ -978,6 +979,8 @@ public class BookingDetailsFragment extends ActionBarFragment
             updateDisplayForBooking(event.booking);
 
             showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+
+            mScrollView.fullScroll(View.FOCUS_DOWN);
         }
     }
 
@@ -997,6 +1000,9 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (!event.isAutoCheckIn)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            SharedPreferences checklistPreferences =
+                    getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
+            checklistPreferences.edit().putString(mAssociatedBooking.getId(), null).apply();
 
             //return to schedule page
             returnToTab(MainViewTab.SCHEDULED_JOBS, mAssociatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
