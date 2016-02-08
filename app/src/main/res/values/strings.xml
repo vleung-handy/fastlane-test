@@ -82,6 +82,7 @@
     <string name="my_bookings">My Bookings</string>
     <string name="profile">Profile</string>
     <string name="my_profile">My Profile</string>
+    <string name="my_performance">My Performance</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="want_to_log_out">Are you sure you want to log out?</string>
     <string name="update">Update</string>
@@ -127,7 +128,6 @@
     <string name="credit_card">Credit Card</string>
     <string name="cvc">CVC</string>
     <string name="contact">Contact</string>
-    <string name="welcome_back" formatted="false">Welcome back, %s!</string>
     <string name="skip">Skip</string>
     <string name="peak_price_info">Due to high demand, peak pricing is in \neffect at this time. If you’d like, you can \npick a different time.</string>
     <string name="peak_price_info_recur">Due to high demand, \nwe don’t have availability at that time. \nPlease select a different time.</string>
@@ -241,6 +241,7 @@
     <string name="tab_notifications">Notifications</string>
     <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
+    <string name="dashboard">Dashboard</string>
     <string name="tab_help">Help</string>
     <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
@@ -475,6 +476,9 @@
     <string name="management_tools">Management tools</string>
     <string name="email_income_verification">Email income verification</string>
     <string name="get_resupply_kit">Get a resupply kit</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_back">Welcome back, %1$s</string>
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
