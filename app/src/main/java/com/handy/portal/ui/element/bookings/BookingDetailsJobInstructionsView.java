@@ -215,7 +215,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                     CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
                             mPreferencesGroup.getLabel(), GROUP_ICONS.get(mPreferencesGroup.getGroup()),
                             checklist);
-                    if (booking.isCheckedIn())
+                    if (!booking.isCheckedIn())
                     {
                         customerRequestsView.setEnabled(false);
                     }
