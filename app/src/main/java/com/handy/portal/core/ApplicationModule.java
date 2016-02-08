@@ -336,9 +336,10 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final Bus bus,
-                                               final DataManager dataManager)
+                                               final DataManager dataManager,
+                                               final EventLogFactory eventLogFactory)
     {
-        return new BookingManager(bus, dataManager);
+        return new BookingManager(bus, dataManager, eventLogFactory);
     }
 
     @Provides

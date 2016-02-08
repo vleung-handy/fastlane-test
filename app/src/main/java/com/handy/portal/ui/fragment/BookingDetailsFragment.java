@@ -78,6 +78,7 @@ import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
+    private static final String SOURCE_DISPATCH_NOTIFICATION_TOGGLE = "dispatch_notification_toggle";
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout; // Maybe use fragment instead of view group?
     @Bind(R.id.booking_details_date_view)
@@ -125,6 +126,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private MainViewTab mCurrentTab;
     private boolean mHaveTrackedSeenBookingInstructions;
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
+    private String mSource;
 
     @Override
     protected MainViewTab getTab()
@@ -165,6 +167,8 @@ public class BookingDetailsFragment extends ActionBarFragment
                 long bookingDateLong = arguments.getLong(BundleKeys.BOOKING_DATE, 0L);
                 mAssociatedBookingDate = new Date(bookingDateLong);
             }
+
+            setSource();
         }
         else
         {
@@ -176,6 +180,18 @@ public class BookingDetailsFragment extends ActionBarFragment
         initScrollViewListener();
 
         return view;
+    }
+
+    private void setSource()
+    {
+        if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
+        {
+            mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
+        }
+        else if (getArguments().containsKey(BundleKeys.DEEPLINK))
+        {
+            mSource = SOURCE_DISPATCH_NOTIFICATION_TOGGLE;
+        }
     }
 
     //tracking for when user scrolls to various sections
@@ -672,14 +688,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestClaimJob(Booking booking)
     {
-        String source = "";
-        if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
-        {
-            source = getArguments().getString(BundleKeys.BOOKING_SOURCE, "");
-        }
-
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(booking, source));
+        bus.post(new HandyEvent.RequestClaimJob(booking, mSource));
     }
 
     private void requestRemoveJob(@NonNull Booking booking)
@@ -851,9 +861,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
         {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAvailableJobClaimSuccessLog(
-                    bookingClaimDetails.getBooking(), event.source)));
-
             if (bookingClaimDetails.shouldShowClaimTarget())
             {
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
@@ -879,8 +886,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAvailableJobClaimErrorLog(
-                event.getBooking(), event.getSource())));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleBookingClaimError(event.error.getMessage());
     }

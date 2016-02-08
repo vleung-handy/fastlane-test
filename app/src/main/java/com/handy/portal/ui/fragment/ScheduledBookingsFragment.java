@@ -28,6 +28,7 @@ import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
+    private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @Bind(R.id.scheduled_jobs_list_view)
     BookingListView mScheduledJobsListView;
     @Bind(R.id.scheduled_bookings_dates_scroll_view_layout)
@@ -108,6 +109,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
         return ScheduledBookingElementView.class;
+    }
+
+    @Override
+    protected String getBookingSourceName()
+    {
+        return SOURCE_SCHEDULED_JOBS_LIST;
     }
 
     @Override
