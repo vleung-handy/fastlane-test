@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -587,7 +588,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 else
                 {
                     mScrollView.fullScroll(View.FOCUS_DOWN);
-                    showToast(R.string.must_check_completed);
+                    showToast(R.string.must_check_completed, Toast.LENGTH_LONG, Gravity.TOP);
                 }
             }
             break;
@@ -978,9 +979,15 @@ public class BookingDetailsFragment extends ActionBarFragment
             mAssociatedBooking = event.booking;
             updateDisplayForBooking(event.booking);
 
-            showToast(R.string.check_in_success, Toast.LENGTH_LONG);
-
-            mScrollView.fullScroll(View.FOCUS_DOWN);
+            if (mAssociatedBooking.getPreferences() != null)
+            {
+                showToast(R.string.check_customers_requests, Toast.LENGTH_LONG, Gravity.TOP);
+                mScrollView.fullScroll(View.FOCUS_DOWN);
+            }
+            else
+            {
+                showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+            }
         }
     }
 

@@ -481,6 +481,7 @@
     <string name="nearby_transit">Nearby Transit</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
+    <string name="check_customers_requests">Be sure to read customers requests and check them off when completed.</string>
     <string name="must_check_completed">You must check off what you\'ve completed before you check out.</string>
 
 

@@ -103,6 +103,8 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("region_id")
     private int mRegionId;
 
+    private List<BookingInstruction> mCustomerPreferences;
+
     public int compareTo(@NonNull Booking other)
     {
         boolean isComparingWithProxy = this.isProxy() || other.isProxy();
@@ -144,12 +146,15 @@ public class Booking implements Comparable<Booking>, Serializable
     @Nullable
     public List<BookingInstruction> getPreferences()
     {
+        if (mCustomerPreferences != null) { return mCustomerPreferences; }
         if (mBookingInstructionGroups == null) { return null; }
+
         for (BookingInstructionGroup group : mBookingInstructionGroups)
         {
             if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
             {
-                return group.getInstructions();
+                mCustomerPreferences = group.getInstructions();
+                return mCustomerPreferences;
             }
         }
         return null;
