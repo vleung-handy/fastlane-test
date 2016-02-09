@@ -1,7 +1,5 @@
 package com.handy.portal.ui.fragment.dialog;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +14,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.PrefsType;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.CheckoutRequest;
@@ -32,18 +30,21 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RateBookingDialogFragment extends InjectedDialogFragment
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
     @Bind(R.id.rate_booking_comment_text)
     EditText mCommentText;
-
     @Bind(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
-
     @Bind(R.id.rate_booking_title)
     TextView mRatingTitle;
 
@@ -111,9 +112,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
-                SharedPreferences checklistPreferences =
-                        getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
-                checklistPreferences.edit().putString(mBooking.getId(), null).apply();
+                mPrefsManager.setBookingInstructions(mBooking.getId(), null);
 
                 mBus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
                         address.getLatitude(), address.getLongitude()));

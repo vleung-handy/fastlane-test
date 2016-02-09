@@ -2,10 +2,8 @@ package com.handy.portal.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,7 +33,6 @@ import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.constant.PrefsType;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
@@ -312,9 +309,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             List<Booking.BookingInstruction> checklist = mAssociatedBooking.getPreferences();
             if (checklist != null)
             {
-                SharedPreferences checklistPreferences =
-                        getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
-                checklistPreferences.edit().putString(mAssociatedBooking.getId(), GSON.toJson(checklist)).apply();
+                mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), GSON.toJson(checklist));
             }
         }
     }
@@ -1007,9 +1002,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (!event.isAutoCheckIn)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            SharedPreferences checklistPreferences =
-                    getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
-            checklistPreferences.edit().putString(mAssociatedBooking.getId(), null).apply();
+            mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), null);
 
             //return to schedule page
             returnToTab(MainViewTab.SCHEDULED_JOBS, mAssociatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);

@@ -2,7 +2,6 @@ package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.handy.portal.R;
-import com.handy.portal.constant.PrefsType;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView;
@@ -24,6 +23,7 @@ import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
+import com.handy.portal.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,11 +31,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class BookingDetailsJobInstructionsView extends FrameLayout
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
     @Bind(R.id.booking_details_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
     @Bind(R.id.job_instructions_reveal_notice)
@@ -195,17 +200,15 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                 }
                 if (preferencesGroup != null)
                 {
-                    SharedPreferences checklistPreferences =
-                            getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
                     List<Booking.BookingInstruction> checklist;
-                    if (checklistPreferences.getString(booking.getId(), "").isEmpty())
+                    if (mPrefsManager.getBookingInstructions(booking.getId()).isEmpty())
                     {
                         checklist = preferencesGroup.getInstructions();
                     }
                     else
                     {
                         Booking.BookingInstruction[] checklistArray = GSON.fromJson(
-                                checklistPreferences.getString(booking.getId(), ""),
+                                mPrefsManager.getBookingInstructions(booking.getId()),
                                 Booking.BookingInstruction[].class);
                         checklist = Arrays.asList(checklistArray);
                         preferencesGroup.setInstructions(checklist);
@@ -226,6 +229,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
 
     private void init()
     {
+        Utils.inject(getContext(), this);
         inflate(getContext(), R.layout.element_booking_details_job_instructions, this);
         ButterKnife.bind(this);
         setLayoutParams(UIUtils.MATCH_PARENT_PARAMS);
