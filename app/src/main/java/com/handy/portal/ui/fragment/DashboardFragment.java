@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 
@@ -19,7 +21,14 @@ public class DashboardFragment extends ActionBarFragment
 {
     @Bind(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
-
+    @Bind(R.id.welcome_pro_performance_view)
+    WelcomeProPerformanceView mWelcomeProPerformanceView;
+    @Bind(R.id.ratings_performance_view)
+    RatingsProPerformanceView mRatingsProPerformanceView;
+    @Bind(R.id.dashboard_options_view)
+    DashboardOptionsPerformanceView mDashboardOptionsPerformanceView;
+    @Bind(R.id.lifetime_rating_text)
+    TextView mLifetimeRatingText;
 
     @Override
     protected MainViewTab getTab()
@@ -36,9 +45,14 @@ public class DashboardFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         ButterKnife.bind(this, view);
 
-        createDashboardView();
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        createDashboardView();
     }
 
     @Override
@@ -50,12 +64,12 @@ public class DashboardFragment extends ActionBarFragment
 
     private void createDashboardView()
     {
-        mDashboardLayout.addView(new WelcomeProPerformanceView(getContext()));
+        mWelcomeProPerformanceView.setDisplay("Welcome back, [Name]", "Things are lookin good!");
 
-        RatingsProPerformanceView ratingsProPerformanceView = new RatingsProPerformanceView(getContext());
-        ratingsProPerformanceView.addItem("8", "5 star ratings");
-        ratingsProPerformanceView.addItem("10", "Rated jobs");
-        ratingsProPerformanceView.addItem("15", "Total jobs");
-        mDashboardLayout.addView(ratingsProPerformanceView);
+        mRatingsProPerformanceView.addItem("8", "5 star ratings");
+        mRatingsProPerformanceView.addItem("10", "Rated jobs");
+        mRatingsProPerformanceView.addItem("15", "Total jobs");
+
+        mLifetimeRatingText.setText("4.8");
     }
 }

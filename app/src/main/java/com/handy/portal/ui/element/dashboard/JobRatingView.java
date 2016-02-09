@@ -54,7 +54,8 @@ public class JobRatingView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void setText(String mainText, String subtitleText){
+    public void setText(String mainText, String subtitleText)
+    {
         mMainText.setText(mainText);
         mSubtitleText.setText(subtitleText);
     }

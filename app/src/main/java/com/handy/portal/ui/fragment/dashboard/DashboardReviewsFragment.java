@@ -21,6 +21,13 @@ public class DashboardReviewsFragment extends ActionBarFragment
     }
 
     @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setOptionsMenuEnabled(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -36,5 +43,12 @@ public class DashboardReviewsFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.five_star_reviews);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        setBackButtonEnabled(true);
     }
 }

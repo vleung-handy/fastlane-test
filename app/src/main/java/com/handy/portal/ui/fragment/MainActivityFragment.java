@@ -111,7 +111,7 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentTab == null)
         {
-            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            switchToTab(MainViewTab.DASHBOARD, false);
         }
         handleDeeplink();
     }

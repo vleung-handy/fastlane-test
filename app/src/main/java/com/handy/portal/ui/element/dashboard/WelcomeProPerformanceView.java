@@ -6,12 +6,19 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.util.Utils;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class WelcomeProPerformanceView extends FrameLayout
 {
+    @Bind(R.id.welcome_back_text)
+    TextView mWelcomeBackText;
+    @Bind(R.id.pro_status_text)
+    TextView mProStatusText;
 
     public WelcomeProPerformanceView(final Context context)
     {
@@ -38,9 +45,14 @@ public class WelcomeProPerformanceView extends FrameLayout
         init(context);
     }
 
+    public void setDisplay(String welcomeBackText, String proStatusText){
+        mWelcomeBackText.setText(welcomeBackText);
+        mProStatusText.setText(proStatusText);
+    }
+
     private void init(final Context context)
     {
-        Utils.inject(context, this);
         inflate(getContext(), R.layout.element_welcome_pro_performance, this);
+        ButterKnife.bind(this);
     }
 }

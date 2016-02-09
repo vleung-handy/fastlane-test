@@ -55,6 +55,7 @@ import com.handy.portal.ui.constructor.ProfileContactView;
 import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.JobRatingView;
 import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
@@ -160,6 +161,7 @@ import retrofit.converter.GsonConverter;
         WelcomeProPerformanceView.class,
         RatingsProPerformanceView.class,
         DashboardReviewsFragment.class,
+        DashboardOptionsPerformanceView.class,
         JobRatingView.class,
 })
 public final class ApplicationModule

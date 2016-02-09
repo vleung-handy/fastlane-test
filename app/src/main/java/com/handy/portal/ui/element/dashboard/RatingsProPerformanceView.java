@@ -10,8 +10,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -19,7 +17,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class RatingsProPerformanceView extends FrameLayout
 {
@@ -66,10 +63,5 @@ public class RatingsProPerformanceView extends FrameLayout
         JobRatingView jobRatingView = new JobRatingView(getContext());
         jobRatingView.setText(mainText, subtitleText);
         mJobRatingsLayout.addView(jobRatingView, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-    }
-
-    @OnClick(R.id.reviews_option)
-    public void switchToReviews(){
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS));
     }
 }

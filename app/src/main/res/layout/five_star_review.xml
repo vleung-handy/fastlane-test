@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="@dimen/default_padding"
+    >
+
+    <ImageView
+        android:id="@+id/stars_image"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        />
+
+    <TextView
+        android:id="@+id/review_text"
+        style="@style/TextView.Medium.Book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Jane is the best! Everything is spotless. We are happy with the cleaning."
+        />
+
+    <TextView
+        android:id="@+id/review_date"
+        style="@style/TextView.Small.Book.Light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/extra_padding"
+        android:text="Sam, May 2015"
+        />
+
+</LinearLayout>
