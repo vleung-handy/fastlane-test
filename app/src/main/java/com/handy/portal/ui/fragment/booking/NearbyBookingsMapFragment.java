@@ -97,10 +97,14 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
     private void addCustomMarkers(GoogleMap map)
     {
         map.setMyLocationEnabled(false);
+
+        System.out.println("WE GOT SOME BOOKINGS : " + mBookings.size());
+
         for (int i = 0; i < mBookings.size(); ++i)
         {
             Booking booking = mBookings.get(i);
             Address address = booking.getAddress();
+
             if (address != null)
             {
                 MarkerOptions markerOption = new MarkerOptions()
@@ -109,8 +113,15 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
                 mMarkerBookingMap.put(marker, booking);
             }
         }
-        // click the first maker
-        clickMarker(mMarkerBookingMap.keySet().toArray(new Marker[0])[0]);
+
+        if (mMarkerBookingMap.size() > 0)
+        {// click the first marker
+            clickMarker(mMarkerBookingMap.keySet().toArray(new Marker[0])[0]);
+        }
+        else
+        {
+            System.out.println("WE DID NOT HAVE ANY BOOKING MARKER THINGIES");
+        }
     }
 
     private void clickMarker(final Marker marker)

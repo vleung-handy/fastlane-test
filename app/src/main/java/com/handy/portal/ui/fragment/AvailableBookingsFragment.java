@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.SwitchCompat;
@@ -8,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
@@ -22,6 +25,7 @@ import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -158,6 +162,38 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onBookingsRetrieved(HandyEvent.ReceiveAvailableBookingsSuccess event)
     {
         handleBookingsRetrieved(event);
+
+        ArrayList<Booking> bookings = (ArrayList<Booking>) event.bookings;
+        if (bookings.size() > 0)
+        {
+
+            LatLng fakeCenter = null;
+            int i = 0;
+            while (fakeCenter == null && i < bookings.size())
+            {
+                if (bookings.get(i).getAddress() != null)
+                {
+                    fakeCenter = new LatLng(bookings.get(i).getAddress().getLatitude(), bookings.get(i).getAddress().getLongitude());
+                    break;
+                }
+                i++;
+            }
+
+            if (fakeCenter != null)
+            {
+
+                Bundle b = new Bundle();
+                b.putSerializable(BundleKeys.BOOKINGS, bookings);
+                //LatLng fakeCenter = new LatLng(bookings.get(0).getMidpoint().getLatitude(), bookings.get(0).getMidpoint().getLongitude());
+                b.putParcelable(BundleKeys.MAP_CENTER, fakeCenter);
+                HandyEvent.NavigateToTab navigateToTab = new HandyEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, b);
+                bus.post(navigateToTab);
+            }
+            else
+            {
+                System.out.println("NOPE NOPE NOPE");
+            }
+        }
     }
 
     @Subscribe
