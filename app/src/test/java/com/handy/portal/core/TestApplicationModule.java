@@ -44,8 +44,6 @@ import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
-import org.robolectric.shadows.ShadowPreferenceManager;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -184,7 +182,7 @@ public class TestApplicationModule
     @Singleton
     final PrefsManager providePrefsManager()
     {
-        return new PrefsManager(ShadowPreferenceManager.getDefaultSharedPreferences(mApplication));
+        return mock(PrefsManager.class);
     }
 
     @Provides

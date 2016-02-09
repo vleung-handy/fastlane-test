@@ -92,6 +92,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
         when(booking.inferBookingStatus(anyString())).thenReturn(Booking.BookingStatus.CLAIMED);
         when(booking.getStartDate()).thenReturn(new Date());
         when(booking.getEndDate()).thenReturn(new Date());
+        when(booking.getPreferences()).thenReturn(null);
 
         when(bookingClaimDetails.getBooking()).thenReturn(booking);
         when(claimTargetInfo.getNumBookingsThreshold()).thenReturn(5);
@@ -122,6 +123,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     public void onClaimBookingSuccess_switchToScheduleTab() throws Exception
     {
         when(bookingClaimDetails.shouldShowClaimTarget()).thenReturn(false); //case when claim target is not shown
+        when(bookingClaimDetails.getBooking().isClaimedByMe()).thenReturn(true);
         fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, null));
 
         assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
