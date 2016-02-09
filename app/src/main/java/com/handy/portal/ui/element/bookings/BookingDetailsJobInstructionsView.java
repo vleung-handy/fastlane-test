@@ -41,8 +41,6 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     @Bind(R.id.job_instructions_reveal_notice)
     TextView mRevealNotice;
 
-    private Booking.BookingInstructionGroup mPreferencesGroup;
-
     private static final Map<String, Integer> GROUP_ICONS;
     private static final Gson GSON = new Gson();
 
@@ -181,12 +179,12 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             List<Booking.BookingInstructionGroup> bookingInstructionGroups = booking.getBookingInstructionGroups();
             if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
             {
-                mPreferencesGroup = null;
+                Booking.BookingInstructionGroup preferencesGroup = null;
                 for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
                 {
                     if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
                     {
-                        mPreferencesGroup = group;
+                        preferencesGroup = group;
                     }
                     else
                     {
@@ -195,14 +193,14 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                                 group.getInstructions());
                     }
                 }
-                if (mPreferencesGroup != null)
+                if (preferencesGroup != null)
                 {
                     SharedPreferences checklistPreferences =
                             getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
                     List<Booking.BookingInstruction> checklist;
                     if (checklistPreferences.getString(booking.getId(), "").isEmpty())
                     {
-                        checklist = mPreferencesGroup.getInstructions();
+                        checklist = preferencesGroup.getInstructions();
                     }
                     else
                     {
@@ -210,19 +208,13 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                                 checklistPreferences.getString(booking.getId(), ""),
                                 Booking.BookingInstruction[].class);
                         checklist = Arrays.asList(checklistArray);
-                        mPreferencesGroup.setInstructions(checklist);
+                        preferencesGroup.setInstructions(checklist);
                     }
                     CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
-                            mPreferencesGroup.getLabel(), GROUP_ICONS.get(mPreferencesGroup.getGroup()),
+                            preferencesGroup.getLabel(), GROUP_ICONS.get(preferencesGroup.getGroup()),
                             checklist);
                     customerRequestsView.setEnabled(booking.isCheckedIn());
                     mInstructionsLayout.addView(customerRequestsView);
-                }
-                else if (mPreferencesGroup != null)
-                {
-                    BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
-                    sectionView.init(mPreferencesGroup.getLabel(), GROUP_ICONS.get(mPreferencesGroup.getGroup()),
-                            mPreferencesGroup.getInstructions());
                 }
 
                 hasContent = true;
@@ -243,17 +235,5 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     {
         LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_section, instructionsLayout);
         return (BookingDetailsJobInstructionsSectionView) instructionsLayout.getChildAt(instructionsLayout.getChildCount() - 1);
-    }
-
-    public List<Booking.BookingInstruction> getInstructions()
-    {
-        if (mPreferencesGroup != null)
-        {
-            return mPreferencesGroup.getInstructions();
-        }
-        else
-        {
-            return null;
-        }
     }
 }

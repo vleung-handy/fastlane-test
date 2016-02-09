@@ -581,7 +581,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     else
                     {
                         CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
-                                new ProBookingFeedback(-1, ""), mJobInstructionsView.getInstructions());
+                                new ProBookingFeedback(-1, ""), mAssociatedBooking.getPreferences());
                         requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
                     }
                 }
