@@ -28,6 +28,12 @@ public class ConfigurationResponse
     @SerializedName("location_schedule_service_enabled")
     private boolean mLocationScheduleServiceEnabled; //false by default
 
+    @SerializedName("onboarding_enabled")
+    private boolean mOnboardingEnabled;
+
+    @SerializedName("onboarding_web_url")
+    private String mOnboardingWebUrl;
+
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
@@ -67,4 +73,15 @@ public class ConfigurationResponse
     {
         return mShowLateDispatchOptIn;
     }
+
+    public boolean isOnboardingEnabled()
+    {
+        return mOnboardingEnabled;
+    }
+
+    public String getOnboardingWebUrl()
+    {
+        return mOnboardingWebUrl;
+    }
+
 }

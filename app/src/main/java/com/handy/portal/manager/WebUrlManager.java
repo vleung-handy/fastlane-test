@@ -24,18 +24,36 @@ public class WebUrlManager
     private final ProviderManager mProviderManager;
     private final HandyRetrofitEndpoint mEndpoint;
     private final PrefsManager mPrefsManager;
+    private final ConfigManager mConfigManager;
 
     @Inject
-    public WebUrlManager(final ProviderManager providerManager, final PrefsManager prefsManager, final HandyRetrofitEndpoint endpoint)
+    public WebUrlManager(final ProviderManager providerManager,
+                         final PrefsManager prefsManager,
+                         final HandyRetrofitEndpoint endpoint,
+                         final ConfigManager configManager)
     {
         mProviderManager = providerManager;
         mEndpoint = endpoint;
         mPrefsManager = prefsManager;
+        mConfigManager = configManager;
     }
 
     public String constructUrlForTargetTab(MainViewTab targetTab)
     {
-        String targetUrl = mEndpoint.getBaseUrl() + targetTab.getWebViewTarget();
+        String targetUrl = mEndpoint.getBaseUrl();// + targetTab.getWebViewTarget();
+
+        if (targetTab.getWebViewTarget() != null && targetTab.getWebViewTarget().equals(ONBOARDING_PAGE))
+        {
+            if (mConfigManager.getConfigurationResponse() != null)
+            {
+                targetUrl += mConfigManager.getConfigurationResponse().getOnboardingWebUrl();
+            }
+        }
+        else
+        {
+            targetUrl += targetTab.getWebViewTarget();
+        }
+
         return replaceVariablesInUrl(targetUrl);
     }
 

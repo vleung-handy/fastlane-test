@@ -76,6 +76,12 @@ public class TabNavigationManager
         return mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().isBlockCleaner();
     }
 
+    private boolean doesCachedProviderNeedOnboarding()
+    {
+        return (mConfigManager.getConfigurationResponse() != null && mConfigManager.getConfigurationResponse().isOnboardingEnabled()) &&
+                mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().doesRequireOnboarding();
+    }
+
     private boolean doesCachedProviderNeedPaymentInformation()
     {
         return mPaymentsManager.HACK_directAccessCacheNeedsPayment();
