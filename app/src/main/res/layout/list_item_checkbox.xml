@@ -14,8 +14,18 @@
         android:id="@+id/checklist_item_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="false"
         android:button="@drawable/selector_blue_checkbox"
+        android:clickable="false"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/checklist_item_bullet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="@string/bullet"
+        android:textSize="16sp"
         />
 
     <LinearLayout
@@ -28,6 +38,7 @@
 
         <TextView
             android:id="@+id/checklist_item_title"
+            style="@style/CircularBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/lineSpacing"
@@ -42,6 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="false"
+            android:textColor="@color/black"
             android:textSize="@dimen/default_text_size"
             tools:text="Load dishwasher, wipe surfaces, and clean sink."
             />

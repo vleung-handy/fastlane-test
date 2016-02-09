@@ -19,6 +19,8 @@ public class InstructionCheckItemView extends FrameLayout
 {
     @Bind(R.id.checklist_item_check_box)
     CheckBox mCheckBox;
+    @Bind(R.id.checklist_item_bullet)
+    TextView mBulletTextView;
     @Bind(R.id.checklist_item_title)
     TextView mTitleTextView;
     @Bind(R.id.checklist_item_description)
@@ -79,9 +81,16 @@ public class InstructionCheckItemView extends FrameLayout
     public void setEnabled(final boolean enabled)
     {
         super.setEnabled(enabled);
-        mTitleTextView.setEnabled(enabled);
-        mDescriptionTextView.setEnabled(enabled);
-        mCheckBox.setEnabled(enabled);
+        if (enabled)
+        {
+            mCheckBox.setVisibility(VISIBLE);
+            mBulletTextView.setVisibility(GONE);
+        }
+        else
+        {
+            mCheckBox.setVisibility(GONE);
+            mBulletTextView.setVisibility(VISIBLE);
+        }
     }
 
     public boolean isChecked()

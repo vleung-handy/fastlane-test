@@ -195,7 +195,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                                 group.getInstructions());
                     }
                 }
-                if (mPreferencesGroup != null && booking.isCheckedIn())
+                if (mPreferencesGroup != null)
                 {
                     SharedPreferences checklistPreferences =
                             getContext().getSharedPreferences(PrefsType.CHECKLIST, Context.MODE_PRIVATE);
@@ -215,10 +215,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                     CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
                             mPreferencesGroup.getLabel(), GROUP_ICONS.get(mPreferencesGroup.getGroup()),
                             checklist);
-                    if (!booking.isCheckedIn())
-                    {
-                        customerRequestsView.setEnabled(false);
-                    }
+                    customerRequestsView.setEnabled(booking.isCheckedIn());
                     mInstructionsLayout.addView(customerRequestsView);
                 }
                 else if (mPreferencesGroup != null)
