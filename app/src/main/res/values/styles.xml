@@ -445,6 +445,10 @@
         <item name="android:textSize">@dimen/default_text_size</item>
         <item name="android:freezesText">true</item>
     </style>
+d
+    <style name="TextView.Book">
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+    </style>
 
     <style name="TextView.Bold">
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
@@ -458,12 +462,28 @@
         <item name="android:textSize">@dimen/medium_text_size</item>
     </style>
 
+    <style name="TextView.Medium.MediumFont">
+        <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+    </style>
+
+    <style name="TextView.Medium.Book">
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+    </style>
+
     <style name="TextView.Medium.Bold">
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
     <style name="TextView.Small">
         <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
+    <style name="TextView.Small.Book">
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+    </style>
+
+    <style name="TextView.Small.Book.Light">
+        <item name="android:textColor">@color/subtitle_grey</item>
     </style>
 
     <style name="TextView.Small.Bold">
@@ -490,12 +510,28 @@
         <item name="android:textSize">@dimen/large_text_size</item>
     </style>
 
+    <style name="TextView.Large.Book">
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+    </style>
+
     <style name="TextView.Large.Bold">
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
     <style name="TextView.Large.Med">
         <item name="fontPath">fonts/CircularStd-Medium.otf</item>
+    </style>
+
+    <style name="TextView.LargeMedium">
+        <item name="android:textSize">@dimen/large_medium_text_size</item>
+    </style>
+
+    <style name="TextView.LargeMedium.Book">
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+    </style>
+
+    <style name="TextView.LargeMedium.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
     <style name="TextView.XLarge">

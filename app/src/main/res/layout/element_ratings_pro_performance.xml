@@ -1,81 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="wrap_content"
               android:orientation="vertical"
     >
 
-    <TextView
-        style="@style/TextView.Large.Bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Past 28 days"
-        />
-
-    <TextView
-        style="@style/TextView.Small.Med"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="January 5 - February 5, 2016"
-        android:textColor="@color/tertiary_grey"
-        />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/default_margin_x2"
-        android:background="@color/tertiary_grey"
-        />
-
-    <LinearLayout
-        android:id="@+id/jobs_ratings_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin_x2"
-        android:orientation="horizontal"
-        />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="@dimen/extra_margin_medium"
+        android:orientation="vertical"
+        android:background="@color/white"
+        >
+
+        <TextView
+            style="@style/TextView.LargeMedium.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/default_padding_large_medium"
+            android:gravity="center_horizontal"
+            android:text="Past 28 days"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/lineSpacing"
+            android:paddingBottom="@dimen/default_padding"
+            android:gravity="center_horizontal"
+            style="@style/TextView.Medium.Book"
+            android:text="January 5 - February 5, 2016"
+            android:textColor="@color/tertiary_grey"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/default_margin_x2"
+            />
+
+        <LinearLayout
+            android:id="@+id/jobs_ratings_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:paddingBottom="25dp"
+            android:orientation="horizontal"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_margin_medium"
         android:orientation="vertical"
         >
 
         <RelativeLayout
             android:id="@+id/tier_option"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
+            android:padding="@dimen/default_padding"
             android:background="@drawable/background_list_entry"
             android:clickable="true"
-            android:layout_marginTop="1dp"
-            android:padding="@dimen/default_padding">
+            android:layout_marginTop="1dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                style="@style/TextView.Small.Bold"
+                style="@style/TextView.Medium.Bold"
                 android:text="Tier 1"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/tier_chevron"
+                style="@style/TextView.Large.Book"
+                android:layout_centerVertical="true"
                 android:textColor="@color/tertiary_grey"
                 android:text="$15"/>
 
             <ImageView
                 android:id="@+id/tier_chevron"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/extra_margin_large"
+                android:layout_marginLeft="@dimen/default_margin"
                 android:src="@drawable/ic_chevron"/>
 
         </RelativeLayout>
@@ -83,38 +97,121 @@
         <RelativeLayout
             android:id="@+id/feedback_option"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingTop="@dimen/extra_padding_xlarge"
+            android:paddingBottom="@dimen/extra_padding_xlarge"
             android:background="@drawable/background_list_entry"
             android:clickable="true"
-            android:layout_marginTop="1dp"
-            android:padding="@dimen/default_padding">
+            android:layout_marginTop="1dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                style="@style/TextView.Small.Bold"
+                style="@style/TextView.Medium.Bold"
                 android:text="Feedback"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                style="@style/TextView.Large.Book"
                 android:layout_toLeftOf="@+id/feedback_chevron"
                 android:textColor="@color/error_red"
                 android:text="Quality of Service"/>
 
             <ImageView
                 android:id="@+id/feedback_chevron"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/extra_margin_large"
+                android:layout_marginLeft="@dimen/default_margin"
                 android:src="@drawable/ic_chevron"/>
 
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/reviews_option"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingTop="@dimen/extra_padding_xlarge"
+            android:paddingBottom="@dimen/extra_padding_xlarge"
+            android:background="@drawable/background_list_entry"
+            android:clickable="true"
+            android:layout_marginTop="1dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                style="@style/TextView.Medium.Bold"
+                android:text="5 Star Reviews"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                style="@style/TextView.Large.Book"
+                android:layout_toLeftOf="@+id/reviews_chevron"
+                android:textColor="@color/tertiary_grey"
+                android:text="18"/>
+
+            <ImageView
+                android:id="@+id/reviews_chevron"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:src="@drawable/ic_chevron"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextView.Medium.Book"
+                android:gravity="center_horizontal"
+                android:text="Lifetime Rating "/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextView.Medium.Bold"
+                android:text="4.8"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextView.Small.Book.Light"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/small_text_size"
+            android:text="*must maintain at least a 4.2"/>
 
     </LinearLayout>
 

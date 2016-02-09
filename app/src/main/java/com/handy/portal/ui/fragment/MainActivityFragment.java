@@ -389,6 +389,7 @@ public class MainActivityFragment extends InjectedFragment
                 }
                 break;
                 case DASHBOARD:
+                case DASHBOARD_REVIEWS:
                 {
                     mButtonMore.toggle();
                     mNavLinkDashboard.toggle();

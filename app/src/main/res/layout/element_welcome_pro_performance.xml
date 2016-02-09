@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/default_margin"
+              android:paddingTop="@dimen/extra_padding_xlarge"
+              android:paddingBottom="@dimen/extra_padding_xlarge"
               android:orientation="vertical"
+              android:background="@color/white"
     >
 
     <TextView
-        style="@style/TextView.Med"
+        style="@style/TextView.Book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -15,12 +17,13 @@
         />
 
     <TextView
-        style="@style/TextView.Large.Bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/TextView"
         android:gravity="center_horizontal"
+        android:fontFamily="fonts/CircularStd-Medium.otf"
+        android:textColor="@color/requested_green"
         android:text="Things are lookin good!"
-        android:textColor="@color/handy_green"
         />
 
 </LinearLayout>

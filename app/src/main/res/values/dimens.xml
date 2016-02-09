@@ -29,6 +29,7 @@
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_padding_medium">24dp</dimen>
     <dimen name="default_padding_large">32dp</dimen>
+    <dimen name="default_padding_large_medium">35dp</dimen>
     <dimen name="default_padding_xlarge">48dp</dimen>
     <dimen name="default_padding_xxlarge">60dp</dimen>
     <dimen name="options_wheel_padding">10dp</dimen>
@@ -49,6 +50,7 @@
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
     <dimen name="large_text_size">18sp</dimen>
+    <dimen name="large_medium_text_size">21sp</dimen>
     <dimen name="xlarge_text_size">22sp</dimen>
     <dimen name="hero_text_size">28sp</dimen>
     <dimen name="xxlarge_text_size">32sp</dimen>
