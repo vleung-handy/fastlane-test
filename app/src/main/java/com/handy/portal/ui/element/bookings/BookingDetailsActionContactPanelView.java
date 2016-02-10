@@ -3,6 +3,7 @@ package com.handy.portal.ui.element.bookings;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,8 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
 {
     @Bind(R.id.booking_details_contact_profile_text)
     TextView mProfileText;
+    @Bind(R.id.booking_details_action_text)
+    TextView mHelperText;
 
     private final ImmutableSet<BookingActionButtonType> ASSOCIATED_BUTTON_ACTION_TYPES =
             ImmutableSet.of(
@@ -60,11 +63,13 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
         removeAllViews();
         init();
 
-        boolean hasAllowedAction = hasAllowedAction(booking.getAllowedActions());
+        List<Booking.Action> allowedActions = booking.getAllowedActions();
+        boolean hasAllowedAction = hasAllowedAction(allowedActions);
         if (hasAllowedAction)
         {
             Booking.User bookingUser = booking.getUser();
             mProfileText.setText(bookingUser.getFullName());
+            initHelperText(allowedActions);
             setVisibility(VISIBLE);
         }
         else
@@ -91,4 +96,33 @@ public class BookingDetailsActionContactPanelView extends FrameLayout
         return false;
     }
 
+    private void initHelperText(List<Booking.Action> allowedActions)
+    {
+        String helperContent = "";
+        for (Booking.Action action : allowedActions)
+        {
+            if (ASSOCIATED_BUTTON_ACTION_TYPES.contains(UIUtils.getAssociatedActionType(action)))
+            {
+                if (action.getHelperText() != null && !action.getHelperText().isEmpty())
+                {
+                    //allow accumulation of helper text, it will all display below the buttons instead of below each button
+                    if (!helperContent.isEmpty())
+                    {
+                        helperContent += "\n";
+                    }
+                    helperContent += action.getHelperText();
+                }
+            }
+        }
+
+        if (!helperContent.isEmpty())
+        {
+            mHelperText.setVisibility(View.VISIBLE);
+            mHelperText.setText(helperContent);
+        }
+        else
+        {
+            mHelperText.setVisibility(View.GONE);
+        }
+    }
 }

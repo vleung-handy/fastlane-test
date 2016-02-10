@@ -28,10 +28,10 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
-import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
+import com.handy.portal.util.DeeplinkMapper;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -41,9 +41,6 @@ import butterknife.ButterKnife;
 
 public class MainActivityFragment extends InjectedFragment
 {
-    //TODO: If we take out this entirely unused injection the app complains about: No instance field endpoint of type , to investigate in morning
-    @Inject
-    HandyRetrofitEndpoint handyRetrofitEndpoint;
     @Inject
     PrefsManager mPrefsManager;
     @Inject
@@ -113,6 +110,26 @@ public class MainActivityFragment extends InjectedFragment
         if (currentTab == null)
         {
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+        }
+        handleDeeplink();
+    }
+
+    private void handleDeeplink()
+    {
+        final Bundle deeplinkData =
+                getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
+        if (deeplinkData != null)
+        {
+            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            if (deeplink != null)
+            {
+                final MainViewTab targetTab = DeeplinkMapper.getTabForDeeplink(deeplink);
+                if (targetTab != null)
+                {
+                    switchToTab(targetTab, deeplinkData, false);
+                }
+            }
+            ((BaseActivity) getActivity()).setDeeplinkHandled();
         }
     }
 
@@ -197,7 +214,6 @@ public class MainActivityFragment extends InjectedFragment
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
         tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
 
-
         if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
         {
             mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
@@ -229,6 +245,7 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+
     private class NavDrawerOnClickListener extends TabOnClickListener
     {
         private MainViewTab mTab;
@@ -244,7 +261,7 @@ public class MainActivityFragment extends InjectedFragment
         @Override
         public void onClick(View view)
         {
-            if(mTransitionStyle != null)
+            if (mTransitionStyle != null)
             {
                 switchToTab(mTab, null, mTransitionStyle, false);
             }
@@ -257,6 +274,7 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+
     private class MoreButtonOnClickListener implements View.OnClickListener
     {
         @Override
@@ -265,6 +283,7 @@ public class MainActivityFragment extends InjectedFragment
             mDrawerLayout.openDrawer(mNavigationDrawer);
         }
     }
+
 
     private class BottomNavOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener
     {
@@ -292,7 +311,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
     }
-
 
 ///Fragment swapping and related
 
@@ -467,4 +485,5 @@ public class MainActivityFragment extends InjectedFragment
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
     }
+
 }

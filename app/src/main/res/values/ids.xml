@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="claim_button" type="id"/>
-    <item name="on_my_way_button" type="id"/>
-    <item name="check_in_button" type="id"/>
-    <item name="check_out_button" type="id"/>
-    <item name="contact_text_button" type="id"/>
-    <item name="contact_call_button" type="id"/>
-    <item name="remove_button" type="id"/>
-    <item name="i_need_help_button" type="id"/>
-    <item name="action_bar_title" type="id"/>
+    <item name="claim_button"
+          type="id"/>
+    <item name="on_my_way_button"
+          type="id"/>
+    <item name="check_in_button"
+          type="id"/>
+    <item name="check_out_button"
+          type="id"/>
+    <item name="contact_text_button"
+          type="id"/>
+    <item name="contact_call_button"
+          type="id"/>
+    <item name="remove_button"
+          type="id"/>
+    <item name="i_need_help_button"
+          type="id"/>
+    <item name="action_bar_title"
+          type="id"/>
 </resources>

@@ -28,4 +28,7 @@ public class BundleKeys
 
     //Webview
     public static final String TARGET_URL = "target_url";
+
+    public static final String DEEPLINK = "deep_link";
+    public static final String DEEPLINK_DATA = "deep_link_data";
 }

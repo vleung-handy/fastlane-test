@@ -25,9 +25,9 @@ import javax.inject.Inject;
 public class EventLogManager
 {
     private static final int MAX_NUM_PER_BUNDLE = 100;
+    private static final Gson GSON = new Gson();
 
     private static List<EventLog> sLogs = new ArrayList<>();
-    private static Gson sGson = new Gson();
     private final Bus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
@@ -82,7 +82,7 @@ public class EventLogManager
         {
             List<String> eventLogBundles = loadSavedEventBundles();
             String bundleId = createBundleId();
-            eventLogBundles.add(sGson.toJson(new EventLogBundle(bundleId, sLogs)));
+            eventLogBundles.add(GSON.toJson(new EventLogBundle(bundleId, sLogs)));
             saveToPreference(eventLogBundles);
             sLogs = new ArrayList<>();
         }
@@ -96,7 +96,7 @@ public class EventLogManager
     private List<String> loadSavedEventBundles()
     {
         String json = mPrefsManager.getString(PrefsKey.EVENT_LOG_BUNDLES, "");
-        String[] bundles = sGson.fromJson(json, String[].class);
+        String[] bundles = GSON.fromJson(json, String[].class);
         if (bundles != null)
         {
             return new ArrayList<>(Arrays.asList(bundles));
@@ -109,7 +109,7 @@ public class EventLogManager
 
     private void saveToPreference(List<String> eventLogBundles)
     {
-        String json = sGson.toJson(eventLogBundles);
+        String json = GSON.toJson(eventLogBundles);
         mPrefsManager.setString(PrefsKey.EVENT_LOG_BUNDLES, json);
     }
 }

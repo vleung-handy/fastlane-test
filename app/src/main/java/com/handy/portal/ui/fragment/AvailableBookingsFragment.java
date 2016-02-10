@@ -29,6 +29,9 @@ import butterknife.Bind;
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
+    private final static int DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS = 6;
+    private static final String SOURCE_AVAILABLE_JOBS_LIST = "available_jobs_list";
+
     @Bind(R.id.available_jobs_list_view)
     BookingListView mAvailableJobsListView;
     @Bind(R.id.available_bookings_dates_scroll_view_layout)
@@ -112,7 +115,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected int numberOfDaysToDisplay()
     {
-        int daysSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
+        int daysSpanningAvailableBookings = DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS;
         if (configManager.getConfigurationResponse() != null)
         {
             daysSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings() / DateTimeUtils.HOURS_IN_DAY;
@@ -137,6 +140,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
         return AvailableBookingElementView.class;
+    }
+
+    @Override
+    protected String getBookingSourceName()
+    {
+        return SOURCE_AVAILABLE_JOBS_LIST;
     }
 
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)

@@ -17,6 +17,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.CheckoutRequest;
@@ -29,18 +30,21 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RateBookingDialogFragment extends InjectedDialogFragment
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
     @Bind(R.id.rate_booking_comment_text)
     EditText mCommentText;
-
     @Bind(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
-
     @Bind(R.id.rate_booking_title)
     TextView mRatingTitle;
 
@@ -65,14 +69,10 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         {
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(
-                            getBookingId(),
-                            new CheckoutRequest(
-                                    getLocationData(),
-                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
-                            )
-                    )
-            );
+            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(getBookingId(), new CheckoutRequest(
+                    getLocationData(),
+                    new ProBookingFeedback(getBookingRatingScore(),
+                            getBookingRatingComment()), null)));
         }
 
         return view;
@@ -90,15 +90,12 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         //Endpoint is expecting a rating of 1 - 5
         if (getBookingRatingScore() > 0)
         {
+            // TODO: combine this with line 71
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(
-                            getBookingId(),
-                            new CheckoutRequest(
-                                    getLocationData(),
-                                    new ProBookingFeedback(getBookingRatingScore(), getBookingRatingComment())
-                            )
-                    )
-            );
+            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(getBookingId(), new CheckoutRequest(
+                    getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
+                    getBookingRatingComment()), mBooking.getCustomerPreferences())
+            ));
             mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingSubmittedLog(getBookingRatingScore())));
         }
         else
@@ -116,6 +113,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
+                mPrefsManager.setBookingInstructions(mBooking.getId(), null);
+
                 mBus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
                         address.getLatitude(), address.getLongitude()));
             }

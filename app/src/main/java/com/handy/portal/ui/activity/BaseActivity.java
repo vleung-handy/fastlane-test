@@ -14,6 +14,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.analytics.Mixpanel;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
@@ -52,6 +53,27 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     Bus bus;
     @Inject
     ConfigManager configManager;
+
+    @Override
+    public void startActivity(final Intent intent)
+    {
+        final Bundle currentExtras = getIntent().getExtras();
+        if (currentExtras != null)
+        {
+            final Bundle deeplinkData = currentExtras.getBundle(BundleKeys.DEEPLINK_DATA);
+            // Pass deeplink data along if it exists
+            if (deeplinkData != null)
+            {
+                intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkData);
+            }
+        }
+        super.startActivity(intent);
+    }
+
+    public void setDeeplinkHandled()
+    {
+        getIntent().removeExtra(BundleKeys.DEEPLINK_DATA);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)

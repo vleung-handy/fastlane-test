@@ -7,6 +7,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
@@ -32,6 +33,7 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.util.FontUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
@@ -39,6 +41,7 @@ import com.squareup.otto.Bus;
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
+import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BaseApplication extends MultiDexApplication
@@ -54,6 +57,8 @@ public class BaseApplication extends MultiDexApplication
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
     DataManager dataManager;
+    @Inject
+    HandyRetrofitEndpoint handyRetrofitEndpoint;
     @Inject
     GoogleManager googleManager;
     @Inject
@@ -177,10 +182,8 @@ public class BaseApplication extends MultiDexApplication
 
     protected void startCrashlytics()
     {
-        if (!BuildConfig.DEBUG)
-        {
-            Crashlytics.start(this);
-        }
+        Crashlytics crashlytics = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build();
+        Fabric.with(this, crashlytics);
     }
 
     protected void createObjectGraph()

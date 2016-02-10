@@ -35,6 +35,7 @@
     <dimen name="inner_textfield_padding">12dp</dimen>
     <dimen name="tab_top_padding">8dp</dimen>
     <dimen name="tab_bottom_padding">8dp</dimen>
+    <dimen name="tab_side_padding">4dp</dimen>
     <dimen name="toolbar_top_padding">24dp</dimen>
 
     <!-- line spacing -->
