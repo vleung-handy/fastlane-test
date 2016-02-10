@@ -32,8 +32,9 @@ public class WebUrlManager
     @Inject
     public WebUrlManager(final ProviderManager providerManager,
                          final PrefsManager prefsManager,
-                         final HandyRetrofitEndpoint endpoint,
-                         final ConfigManager configManager)
+                         final ConfigManager configManager,
+                         final HandyRetrofitEndpoint endpoint
+    )
     {
         mProviderManager = providerManager;
         mEndpoint = endpoint;
