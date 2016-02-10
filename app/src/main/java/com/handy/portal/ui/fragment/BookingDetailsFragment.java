@@ -306,7 +306,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         super.onPause();
         if (mAssociatedBooking.isCheckedIn())
         {
-            List<Booking.BookingInstructionCopy> checklist = mAssociatedBooking.getCustomerPreferences();
+            List<Booking.BookingInstructionUpdateRequest> checklist = mAssociatedBooking.getCustomerPreferences();
             if (checklist != null)
             {
                 mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), GSON.toJson(checklist));
@@ -617,6 +617,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
     }
 
+    //TODO: check if the dialog is already shown
     private void showCheckoutRatingFlow()
     {
         RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();

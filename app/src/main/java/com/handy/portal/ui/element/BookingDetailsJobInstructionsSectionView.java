@@ -61,7 +61,7 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
                 Booking.BookingInstruction instruction = (Booking.BookingInstruction) entry;
                 entryView.init(instruction.getDescription());
             }
-            else
+            else if (entry instanceof String)
             {
                 entryView.init(entry.toString());
             }

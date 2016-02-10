@@ -51,9 +51,9 @@ public class InstructionCheckItemView extends FrameLayout
         init();
     }
 
-    public void refreshDisplay(@NonNull final Booking.BookingInstructionCopy instruction)
+    public void refreshDisplay(@NonNull final Booking.BookingInstructionUpdateRequest instruction)
     {
-        mCheckBox.setChecked(instruction.isFinished());
+        mCheckBox.setChecked(instruction.isInstructionCompleted());
         if (instruction.getTitle() != null && !instruction.getTitle().isEmpty())
         {
             mTitleTextView.setVisibility(VISIBLE);
@@ -71,7 +71,7 @@ public class InstructionCheckItemView extends FrameLayout
             public void onClick(final View v)
             {
                 mCheckBox.toggle();
-                instruction.setFinished(mCheckBox.isChecked());
+                instruction.setInstructionCompleted(mCheckBox.isChecked());
             }
         });
     }

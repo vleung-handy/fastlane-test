@@ -12,8 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.handy.portal.R;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
@@ -200,18 +202,25 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                 }
                 if (preferencesGroup != null)
                 {
-                    List<Booking.BookingInstructionCopy> checklist;
+                    List<Booking.BookingInstructionUpdateRequest> checklist = null;
                     if (mPrefsManager.getBookingInstructions(booking.getId()).isEmpty())
                     {
                         checklist = booking.getCustomerPreferences();
                     }
                     else
                     {
-                        Booking.BookingInstructionCopy[] checklistArray = GSON.fromJson(
-                                mPrefsManager.getBookingInstructions(booking.getId()),
-                                Booking.BookingInstructionCopy[].class);
-                        checklist = Arrays.asList(checklistArray);
-                        booking.setCustomerPreferences(checklist);
+                        try
+                        {
+                            Booking.BookingInstructionUpdateRequest[] checklistArray = GSON.fromJson(
+                                    mPrefsManager.getBookingInstructions(booking.getId()),
+                                    Booking.BookingInstructionUpdateRequest[].class);
+                            checklist = Arrays.asList(checklistArray);
+                            booking.setCustomerPreferences(checklist);
+                        }
+                        catch (JsonSyntaxException e)
+                        {
+                            Crashlytics.logException(e);
+                        }
                     }
                     if (checklist != null)
                     {

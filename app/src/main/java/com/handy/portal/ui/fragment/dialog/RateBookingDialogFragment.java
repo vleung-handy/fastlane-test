@@ -90,6 +90,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         //Endpoint is expecting a rating of 1 - 5
         if (getBookingRatingScore() > 0)
         {
+            // TODO: combine this with line 71
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(getBookingId(), new CheckoutRequest(
                     getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
