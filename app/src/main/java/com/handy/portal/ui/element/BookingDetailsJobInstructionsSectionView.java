@@ -56,6 +56,7 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
             BookingDetailsJobInstructionsSectionEntryView entryView =
                     (BookingDetailsJobInstructionsSectionEntryView) LayoutInflater.from(getContext())
                             .inflate(R.layout.element_booking_details_job_instructions_entry, mEntriesLayout, false);
+            mEntriesLayout.addView(entryView);
             if (entry instanceof Booking.BookingInstruction)
             {
                 Booking.BookingInstruction instruction = (Booking.BookingInstruction) entry;
