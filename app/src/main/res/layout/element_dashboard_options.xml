@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="@dimen/extra_margin_medium"
     android:orientation="vertical"
     >
@@ -12,26 +12,29 @@
         android:id="@+id/tier_option"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:padding="@dimen/default_padding"
+        android:layout_marginTop="1dp"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
-        android:layout_marginTop="1dp">
+        android:padding="@dimen/default_padding"
+        >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             style="@style/TextView.Medium.Bold"
-            android:text="Tier 1"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/tier_chevron"
-            style="@style/TextView.Large.Book"
             android:layout_centerVertical="true"
+            android:text="Tier 1"
+            />
+
+        <TextView
+            style="@style/TextView.Large.Book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tier_chevron"
             android:textColor="@color/tertiary_grey"
-            tools:text="$15"/>
+            tools:text="$15"
+            />
 
         <ImageView
             android:id="@+id/tier_chevron"
@@ -41,7 +44,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
-            android:src="@drawable/ic_chevron"/>
+            android:src="@drawable/ic_chevron"
+            />
 
     </RelativeLayout>
 
@@ -49,29 +53,32 @@
         android:id="@+id/feedback_option"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/background_list_entry"
+        android:clickable="true"
+        android:paddingBottom="@dimen/extra_padding_xlarge"
         android:paddingLeft="@dimen/default_padding"
         android:paddingRight="@dimen/default_padding"
         android:paddingTop="@dimen/extra_padding_xlarge"
-        android:paddingBottom="@dimen/extra_padding_xlarge"
-        android:background="@drawable/background_list_entry"
-        android:clickable="true"
-        android:layout_marginTop="1dp">
+        >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             style="@style/TextView.Medium.Bold"
-            android:text="Feedback"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:text="Feedback"
+            />
+
+        <TextView
             style="@style/TextView.Large.Book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/feedback_chevron"
             android:textColor="@color/error_red"
-            tools:text="Quality of Service"/>
+            tools:text="Quality of Service"
+            />
 
         <ImageView
             android:id="@+id/feedback_chevron"
@@ -81,7 +88,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
-            android:src="@drawable/ic_chevron"/>
+            android:src="@drawable/ic_chevron"
+            />
 
     </RelativeLayout>
 
@@ -89,29 +97,33 @@
         android:id="@+id/reviews_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/background_list_entry"
+        android:clickable="true"
+        android:paddingBottom="@dimen/extra_padding_xlarge"
         android:paddingLeft="@dimen/default_padding"
         android:paddingRight="@dimen/default_padding"
         android:paddingTop="@dimen/extra_padding_xlarge"
-        android:paddingBottom="@dimen/extra_padding_xlarge"
-        android:background="@drawable/background_list_entry"
-        android:clickable="true"
-        android:layout_marginTop="1dp">
+        >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:id="@+id/five_star_reviews_text"
             style="@style/TextView.Medium.Bold"
-            android:text="5 Star Reviews"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:text="5 Star Reviews"
+            />
+
+        <TextView
             style="@style/TextView.Large.Book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/reviews_chevron"
             android:textColor="@color/tertiary_grey"
-            tools:text="18"/>
+            tools:text="18"
+            />
 
         <ImageView
             android:id="@+id/reviews_chevron"
@@ -121,8 +133,15 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
-            android:src="@drawable/ic_chevron"/>
+            android:src="@drawable/ic_chevron"
+            />
 
     </RelativeLayout>
+
+    <include
+        layout="@layout/five_star_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
 </LinearLayout>
