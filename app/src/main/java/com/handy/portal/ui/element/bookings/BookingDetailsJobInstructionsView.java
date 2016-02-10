@@ -200,24 +200,27 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
                 }
                 if (preferencesGroup != null)
                 {
-                    List<Booking.BookingInstruction> checklist;
+                    List<Booking.BookingInstructionCopy> checklist;
                     if (mPrefsManager.getBookingInstructions(booking.getId()).isEmpty())
                     {
-                        checklist = preferencesGroup.getInstructions();
+                        checklist = booking.getCustomerPreferences();
                     }
                     else
                     {
-                        Booking.BookingInstruction[] checklistArray = GSON.fromJson(
+                        Booking.BookingInstructionCopy[] checklistArray = GSON.fromJson(
                                 mPrefsManager.getBookingInstructions(booking.getId()),
-                                Booking.BookingInstruction[].class);
+                                Booking.BookingInstructionCopy[].class);
                         checklist = Arrays.asList(checklistArray);
-                        preferencesGroup.setInstructions(checklist);
+                        booking.setCustomerPreferences(checklist);
                     }
-                    CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
-                            preferencesGroup.getLabel(), GROUP_ICONS.get(preferencesGroup.getGroup()),
-                            checklist);
-                    customerRequestsView.setEnabled(booking.isCheckedIn());
-                    mInstructionsLayout.addView(customerRequestsView);
+                    if (checklist != null)
+                    {
+                        CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
+                                preferencesGroup.getLabel(), GROUP_ICONS.get(preferencesGroup.getGroup()),
+                                checklist);
+                        customerRequestsView.setEnabled(booking.isCheckedIn());
+                        mInstructionsLayout.addView(customerRequestsView);
+                    }
                 }
 
                 hasContent = true;

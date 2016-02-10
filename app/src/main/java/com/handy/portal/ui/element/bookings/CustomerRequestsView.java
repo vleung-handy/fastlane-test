@@ -32,7 +32,7 @@ public class CustomerRequestsView extends FrameLayout
 
     public CustomerRequestsView(
             final Context context, final String sectionTitle, @Nullable final Integer sectionIconId,
-            @NonNull final List<Booking.BookingInstruction> entries)
+            @NonNull final List<Booking.BookingInstructionCopy> entries)
     {
         super(context);
         init();
@@ -52,7 +52,7 @@ public class CustomerRequestsView extends FrameLayout
     }
 
     public void setDisplay(String sectionTitle, @Nullable Integer sectionIconId,
-                           @NonNull List<Booking.BookingInstruction> instructions)
+                           @NonNull List<Booking.BookingInstructionCopy> customerPreferences)
     {
         mSectionTitleText.setText(sectionTitle);
         if (sectionIconId != null)
@@ -60,7 +60,7 @@ public class CustomerRequestsView extends FrameLayout
             mSectionIcon.setImageResource(sectionIconId);
         }
 
-        for (Booking.BookingInstruction instruction : instructions)
+        for (Booking.BookingInstructionCopy instruction : customerPreferences)
         {
             InstructionCheckItemView checkItem = new InstructionCheckItemView(getContext());
             checkItem.refreshDisplay(instruction);

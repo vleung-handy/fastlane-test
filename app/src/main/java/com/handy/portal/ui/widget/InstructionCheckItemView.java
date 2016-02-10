@@ -2,6 +2,7 @@ package com.handy.portal.ui.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
@@ -45,14 +46,14 @@ public class InstructionCheckItemView extends FrameLayout
         init();
     }
 
-    @TargetApi(21)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public InstructionCheckItemView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    public void refreshDisplay(@NonNull final Booking.BookingInstruction instruction)
+    public void refreshDisplay(@NonNull final Booking.BookingInstructionCopy instruction)
     {
         mCheckBox.setChecked(instruction.isFinished());
         if (instruction.getTitle() != null && !instruction.getTitle().isEmpty())

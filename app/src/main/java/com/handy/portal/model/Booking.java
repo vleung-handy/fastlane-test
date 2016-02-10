@@ -103,7 +103,7 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("region_id")
     private int mRegionId;
 
-    private List<BookingInstruction> mCustomerPreferences;
+    private List<BookingInstructionCopy> mCustomerPreferences;
 
     public int compareTo(@NonNull Booking other)
     {
@@ -144,7 +144,7 @@ public class Booking implements Comparable<Booking>, Serializable
     }
 
     @Nullable
-    public List<BookingInstruction> getPreferences()
+    public List<BookingInstructionCopy> getCustomerPreferences()
     {
         if (mCustomerPreferences != null) { return mCustomerPreferences; }
         if (mBookingInstructionGroups == null) { return null; }
@@ -153,28 +153,21 @@ public class Booking implements Comparable<Booking>, Serializable
         {
             if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
             {
-                mCustomerPreferences = group.getInstructions();
+                mCustomerPreferences = BookingInstruction.listCopy(group.getInstructions());
                 return mCustomerPreferences;
             }
         }
         return null;
     }
 
-    public void setPreferences(List<BookingInstruction> preferences)
+    public void setCustomerPreferences(List<BookingInstructionCopy> customerPreferences)
     {
-        if (mBookingInstructionGroups == null) { return; }
-        for (BookingInstructionGroup group : mBookingInstructionGroups)
-        {
-            if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
-            {
-                group.setInstructions(preferences);
-            }
-        }
+        mCustomerPreferences = customerPreferences;
     }
 
-    public boolean isAnyPreferencesChecked()
+    public boolean isAnyPreferenceChecked()
     {
-        List<BookingInstruction> preferences = getPreferences();
+        List<BookingInstructionCopy> preferences = getCustomerPreferences();
         if (preferences != null)
         {
             for (BookingInstruction preference : preferences)
@@ -651,46 +644,57 @@ public class Booking implements Comparable<Booking>, Serializable
     public static class BookingInstruction implements Serializable
     {
         @SerializedName("id")
-        private String mId;
+        protected String mId;
         @SerializedName("instruction_type")
-        private String mInstructionType;
+        protected String mInstructionType;
         @SerializedName("description")
-        private String mDescription;
+        protected String mDescription;
         @SerializedName("machine_name")
-        private String mMachineName;
+        protected String mMachineName;
         @SerializedName("title")
-        private String mTitle;
+        protected String mTitle;
         @SerializedName("finished")
-        private boolean mFinished;
+        protected boolean mFinished;
 
-        public String getId()
+        public static List<BookingInstructionCopy> listCopy(List<BookingInstruction> input)
         {
-            return mId;
+            List<BookingInstructionCopy> copiedList = new ArrayList<>(input.size());
+            for (BookingInstruction entry : input)
+            {
+                copiedList.add(entry.copy());
+            }
+            return copiedList;
         }
 
-        public String getInstructionType()
+        public BookingInstructionCopy copy()
         {
-            return mInstructionType;
+            return new BookingInstructionCopy(this);
         }
 
-        public String getTitle()
-        {
-            return mTitle;
-        }
+        public String getId() { return mId; }
 
-        public boolean isFinished()
-        {
-            return mFinished;
-        }
+        public String getInstructionType() { return mInstructionType; }
 
-        public String getDescription()
-        {
-            return mDescription;
-        }
+        public String getTitle() { return mTitle; }
 
-        public String getMachineName()
+        public boolean isFinished() { return mFinished; }
+
+        public String getDescription() { return mDescription; }
+
+        public String getMachineName() { return mMachineName; }
+    }
+
+
+    public static class BookingInstructionCopy extends BookingInstruction
+    {
+        public BookingInstructionCopy(Booking.BookingInstruction bookingInstruction)
         {
-            return mMachineName;
+            mId = bookingInstruction.getId();
+            mInstructionType = bookingInstruction.getInstructionType();
+            mDescription = bookingInstruction.getDescription();
+            mMachineName = bookingInstruction.getMachineName();
+            mTitle = bookingInstruction.getTitle();
+            mFinished = bookingInstruction.isFinished();
         }
 
         public void setFinished(boolean finished)

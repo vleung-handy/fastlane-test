@@ -92,7 +92,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
         when(booking.inferBookingStatus(anyString())).thenReturn(Booking.BookingStatus.CLAIMED);
         when(booking.getStartDate()).thenReturn(new Date());
         when(booking.getEndDate()).thenReturn(new Date());
-        when(booking.getPreferences()).thenReturn(null);
+        when(booking.getCustomerPreferences()).thenReturn(null);
 
         when(bookingClaimDetails.getBooking()).thenReturn(booking);
         when(claimTargetInfo.getNumBookingsThreshold()).thenReturn(5);

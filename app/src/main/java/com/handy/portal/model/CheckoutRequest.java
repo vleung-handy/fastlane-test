@@ -1,5 +1,7 @@
 package com.handy.portal.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.constant.LocationKey;
 
@@ -17,16 +19,16 @@ public class CheckoutRequest
     @SerializedName("pro_feedback")
     private ProBookingFeedback mProFeedback;
     @SerializedName("booking_instructions")
-    private List<Booking.BookingInstruction> mBookingInstructions;
+    private List<Booking.BookingInstructionCopy> mCustomerPreferences;
 
 
     public CheckoutRequest(LocationData locationData, ProBookingFeedback feedback,
-                           List<Booking.BookingInstruction> bookingInstructions)
+                           @Nullable List<Booking.BookingInstructionCopy> customerPreferences)
     {
         mLatitude = locationData.getLocationMap().get(LocationKey.LATITUDE);
         mLongitude = locationData.getLocationMap().get(LocationKey.LONGITUDE);
         mAccuracy = locationData.getLocationMap().get(LocationKey.ACCURACY);
         mProFeedback = feedback;
-        mBookingInstructions = bookingInstructions;
+        mCustomerPreferences = customerPreferences;
     }
 }

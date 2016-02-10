@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:text="@string/bullet"
-        android:textSize="16sp"
+        android:textSize="@dimen/default_text_size"
         />
 
     <LinearLayout

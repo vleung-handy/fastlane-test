@@ -20,13 +20,11 @@ import butterknife.ButterKnife;
 public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
 {
     @Bind(R.id.booking_details_job_instructions_section_title_text)
-    protected TextView sectionTitleText;
-
+    TextView mSectionTitleText;
     @Bind(R.id.booking_details_job_instructions_section_title_icon)
-    protected ImageView sectionIcon;
-
+    ImageView mSectionIcon;
     @Bind(R.id.booking_details_job_instructions_section_entries_layout)
-    protected LinearLayout entriesLayout;
+    LinearLayout mEntriesLayout;
 
     public BookingDetailsJobInstructionsSectionView(final Context context)
     {
@@ -47,24 +45,25 @@ public class BookingDetailsJobInstructionsSectionView extends RelativeLayout
     {
         ButterKnife.bind(this);
 
-        sectionTitleText.setText(sectionTitle);
+        mSectionTitleText.setText(sectionTitle);
         if (sectionIconId != null)
         {
-            sectionIcon.setImageResource(sectionIconId);
+            mSectionIcon.setImageResource(sectionIconId);
         }
 
-        for (int i = 0; i < entries.size(); i++)
+        for (Object entry : entries)
         {
-            LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_entry, entriesLayout);
-            BookingDetailsJobInstructionsSectionEntryView entryView = ((BookingDetailsJobInstructionsSectionEntryView) (entriesLayout.getChildAt(i)));
-            if (entries.get(i) instanceof Booking.BookingInstruction)
+            BookingDetailsJobInstructionsSectionEntryView entryView =
+                    (BookingDetailsJobInstructionsSectionEntryView) LayoutInflater.from(getContext())
+                            .inflate(R.layout.element_booking_details_job_instructions_entry, mEntriesLayout, false);
+            if (entry instanceof Booking.BookingInstruction)
             {
-                Booking.BookingInstruction instruction = (Booking.BookingInstruction) entries.get(i);
+                Booking.BookingInstruction instruction = (Booking.BookingInstruction) entry;
                 entryView.init(instruction.getDescription());
             }
             else
             {
-                entryView.init(entries.get(i).toString());
+                entryView.init(entry.toString());
             }
         }
     }

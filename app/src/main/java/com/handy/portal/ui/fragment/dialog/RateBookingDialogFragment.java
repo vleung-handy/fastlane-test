@@ -93,7 +93,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(getBookingId(), new CheckoutRequest(
                     getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
-                    getBookingRatingComment()), mBooking.getPreferences())
+                    getBookingRatingComment()), mBooking.getCustomerPreferences())
             ));
             mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingSubmittedLog(getBookingRatingScore())));
         }
