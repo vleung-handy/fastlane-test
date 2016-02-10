@@ -579,7 +579,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 else
                 {
                     mScrollView.fullScroll(View.FOCUS_DOWN);
-                    showToast(R.string.must_check_completed, Toast.LENGTH_LONG, Gravity.TOP);
+                    showToast(R.string.check_customer_preferences, Toast.LENGTH_LONG, Gravity.TOP);
                 }
             }
             break;
@@ -988,7 +988,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             if (mAssociatedBooking.getCustomerPreferences() != null)
             {
-                showToast(R.string.check_customers_requests, Toast.LENGTH_LONG, Gravity.TOP);
+                showToast(R.string.read_customer_preferences, Toast.LENGTH_LONG, Gravity.TOP);
                 mScrollView.fullScroll(View.FOCUS_DOWN);
             }
             else

@@ -481,8 +481,8 @@
     <string name="nearby_transit">Nearby Transit</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
-    <string name="check_customers_requests">Be sure to read customer\u2019s requests and check them off when completed.</string>
-    <string name="must_check_completed">You must check off what you\u2019ve completed before you check out.</string>
+    <string name="read_customer_preferences">Please read customer preferences, and check them off when you\u2019re done!</string>
+    <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
 
 
     <!-- Booking Cancellation -->
