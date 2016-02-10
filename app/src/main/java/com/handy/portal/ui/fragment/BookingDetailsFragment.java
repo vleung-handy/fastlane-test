@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
@@ -117,6 +119,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
     private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
+    private static final Gson GSON = new Gson();
 
     private String mRequestedBookingId;
     private BookingType mRequestedBookingType;
@@ -294,6 +297,20 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (!MainActivityFragment.clearingBackStack)
         {
             requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        if (mAssociatedBooking.isCheckedIn())
+        {
+            List<Booking.BookingInstructionUpdateRequest> checklist = mAssociatedBooking.getCustomerPreferences();
+            if (checklist != null)
+            {
+                mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), GSON.toJson(checklist));
+            }
         }
     }
 
@@ -546,18 +563,23 @@ public class BookingDetailsFragment extends ActionBarFragment
                     showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
                 }
 
-                if (showCheckoutRatingFlow)
+                if (mAssociatedBooking.isAnyPreferenceChecked())
                 {
-                    RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-                    rateBookingDialogFragment.setArguments(arguments);
-                    rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+                    if (showCheckoutRatingFlow)
+                    {
+                        showCheckoutRatingFlow();
+                    }
+                    else
+                    {
+                        CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
+                                new ProBookingFeedback(-1, ""), mAssociatedBooking.getCustomerPreferences());
+                        requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
+                    }
                 }
                 else
                 {
-                    CheckoutRequest checkoutRequest = new CheckoutRequest(locationData, new ProBookingFeedback(-1, ""));
-                    requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
+                    mScrollView.fullScroll(View.FOCUS_DOWN);
+                    showToast(R.string.check_customer_preferences, Toast.LENGTH_LONG, Gravity.TOP);
                 }
             }
             break;
@@ -592,6 +614,23 @@ public class BookingDetailsFragment extends ActionBarFragment
             {
                 Crashlytics.log("Could not find associated behavior for : " + actionType.getActionName());
             }
+        }
+    }
+
+    //TODO: check if the dialog is already shown
+    private void showCheckoutRatingFlow()
+    {
+        RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
+        rateBookingDialogFragment.setArguments(arguments);
+        try
+        {
+            rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+        }
+        catch (IllegalStateException e)
+        {
+            Crashlytics.logException(e);
         }
     }
 
@@ -948,7 +987,15 @@ public class BookingDetailsFragment extends ActionBarFragment
             mAssociatedBooking = event.booking;
             updateDisplayForBooking(event.booking);
 
-            showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+            if (mAssociatedBooking.getCustomerPreferences() != null)
+            {
+                showToast(R.string.read_customer_preferences, Toast.LENGTH_LONG, Gravity.TOP);
+                mScrollView.fullScroll(View.FOCUS_DOWN);
+            }
+            else
+            {
+                showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+            }
         }
     }
 
@@ -968,6 +1015,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (!event.isAutoCheckIn)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), null);
 
             //return to schedule page
             returnToTab(MainViewTab.SCHEDULED_JOBS, mAssociatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);

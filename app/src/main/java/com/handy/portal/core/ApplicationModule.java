@@ -55,6 +55,7 @@ import com.handy.portal.ui.constructor.ProfileContactView;
 import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
@@ -84,7 +85,6 @@ import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
-import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -151,6 +151,7 @@ import retrofit.converter.GsonConverter;
         NotificationsFragment.class,
         NotificationsListView.class,
         NotificationsListEntryView.class,
+        BookingDetailsJobInstructionsView.class,
 })
 public final class ApplicationModule
 {
@@ -229,7 +230,8 @@ public final class ApplicationModule
                         request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
-                }).setErrorHandler(new ErrorHandler() {
+                }).setErrorHandler(new ErrorHandler()
+                {
                     @Override
                     public Throwable handleError(final RetrofitError cause)
                     {
@@ -243,7 +245,7 @@ public final class ApplicationModule
                     }
                 }).setConverter(new GsonConverter(new GsonBuilder()
                         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                .create())).setClient(new OkClient(okHttpClient)).build();
+                        .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (buildConfigWrapper.isDebug())
         {
@@ -328,13 +330,6 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final SecurePreferences providePrefs()
-    {
-        return new SecurePreferences(context, configs.getProperty("secure_prefs_key"), "prefs.xml");
-    }
-
-    @Provides
-    @Singleton
     final BookingManager provideBookingManager(final Bus bus,
                                                final DataManager dataManager,
                                                final EventLogFactory eventLogFactory)
@@ -383,9 +378,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final PrefsManager providePrefsManager(final SecurePreferences prefs)
+    final PrefsManager providePrefsManager()
     {
-        return new PrefsManager(prefs);
+        return new PrefsManager(context);
     }
 
     @Provides

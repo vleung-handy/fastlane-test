@@ -120,8 +120,18 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
     protected void showToast(String message, int length)
     {
+        showToast(message, length, Gravity.CENTER);
+    }
+
+    protected void showToast(int stringId, int length, int gravity)
+    {
+        showToast(getString(stringId), length, gravity);
+    }
+
+    protected void showToast(String message, int length, int gravity)
+    {
         toast = Toast.makeText(getActivity().getApplicationContext(), message, length);
-        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setGravity(gravity, 0, 0);
         toast.show();
     }
 }

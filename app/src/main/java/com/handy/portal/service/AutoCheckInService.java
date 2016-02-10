@@ -85,7 +85,7 @@ public class AutoCheckInService extends IntentService
                                         bookingId,
                                         true,
                                         new CheckoutRequest(new LocationData(location),
-                                                new ProBookingFeedback())
+                                                new ProBookingFeedback(), null)
                                 )
                 );
                 break;
