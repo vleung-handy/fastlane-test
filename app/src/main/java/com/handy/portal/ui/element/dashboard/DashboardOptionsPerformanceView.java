@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
@@ -15,6 +16,7 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -22,6 +24,9 @@ public class DashboardOptionsPerformanceView extends FrameLayout
 {
     @Inject
     Bus mBus;
+
+    @Bind(R.id.five_star_review_text)
+    TextView fiveStarReviewText;
 
     public DashboardOptionsPerformanceView(final Context context)
     {

@@ -13,6 +13,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
@@ -86,41 +87,55 @@ public class DashboardFragment extends ActionBarFragment
         else
         { welcomeString = "Welcome back"; }
 
-        // TODO: Determine how things are via response
+        // TODO: Everything below is placeholder stuff
         String status = "Things are lookin good!";
         mWelcomeProPerformanceView.setDisplay(welcomeString, status);
+        mRatingsProPerformanceView.setDate("January 5 - February 5, 2016");
 
+        mRatingsProPerformanceView.addItem("8", FIVE_STAR_RATINGS);
+        mRatingsProPerformanceView.addItem("10", RATED_JOBS);
+        mRatingsProPerformanceView.addItem("15", TOTAL_JOBS);
+
+        mLifetimeRatingText.setText("4.8");
     }
 
     @Subscribe
     public void onReceiveProviderEvaluationSuccess(ProviderDashboardEvent.ReceiveProviderEvaluationSuccess event)
     {
+        /*
         ProviderEvaluation providerEvaluation = event.providerEvaluation;
         String lifetimeRating = Double.toString(providerEvaluation.getLifeTime().getProRating());
         mLifetimeRatingText.setText(lifetimeRating);
+        */
 
+        /*
         ProviderEvaluation.Rolling rollingProviderEvaluation = providerEvaluation.getRolling();
         mRatingsProPerformanceView.addItem(Integer.toString(rollingProviderEvaluation.getFiveStarRatedBookingCount()), FIVE_STAR_RATINGS);
         mRatingsProPerformanceView.addItem(Integer.toString(rollingProviderEvaluation.getRatedBookingCount()), RATED_JOBS);
         mRatingsProPerformanceView.addItem(Integer.toString(rollingProviderEvaluation.getTotalBookingCount()), TOTAL_JOBS);
+        */
 
-        // TODO: Determine date via response
-        mRatingsProPerformanceView.setDate("January 5 - February 5, 2016");
+        /*
+        String startDate = rollingProviderEvaluation.getStartDate().toString();
+        String endDate = rollingProviderEvaluation.getEndDate().toString();
+        String dateString = startDate + endDate;
+        mRatingsProPerformanceView.setDate(dateString);
+        */
     }
 
     @Subscribe
     public void onReceiveProviderEvaluationFailure(ProviderDashboardEvent.ReceiveProviderEvaluationError event)
     {
+
     }
 
     @Subscribe
-    public void onReceiveProviderFiveStarRatingsSuccess(ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess event)
+    public void onReceiveProviderFeedbackSuccess(ProviderDashboardEvent.ReceiveProviderFeedbackSuccess event)
     {
-
     }
 
     @Subscribe
-    public void onReceiveProviderFiveStarRatingsFailure(ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError event)
+    public void onReceiveProviderFeedbackFailure(ProviderDashboardEvent.ReceiveProviderFeedbackError event)
     {
     }
 }

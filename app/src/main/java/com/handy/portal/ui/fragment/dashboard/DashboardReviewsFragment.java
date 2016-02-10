@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.ProviderDashboardEvent;
+import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.squareup.otto.Subscribe;
 
@@ -37,6 +38,8 @@ public class DashboardReviewsFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_dashboard_reviews, container, false);
         ButterKnife.bind(this, view);
 
+        //TODO: Fake data right now
+
         return view;
     }
 
@@ -55,13 +58,13 @@ public class DashboardReviewsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveProviderFeedbackSuccess(ProviderDashboardEvent.ReceiveProviderFeedbackSuccess event)
+    public void onReceiveProviderFiveStarRatingsSuccess(ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess event)
     {
-
+        //TODO: Add feedback to a recycler view adapter
     }
 
     @Subscribe
-    public void onReceiveProviderFeedbackFailure(ProviderDashboardEvent.ReceiveProviderFeedbackError event)
+    public void onReceiveProviderFiveStarRatingsFailure(ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError event)
     {
     }
 }

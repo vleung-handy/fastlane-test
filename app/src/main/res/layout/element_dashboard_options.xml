@@ -139,6 +139,7 @@
     </RelativeLayout>
 
     <include
+        android:id="@+id/five_star_review_text"
         layout="@layout/five_star_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -222,7 +222,7 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestProviderEvaluation()
+    public void onRequestProviderEvaluation(ProviderDashboardEvent.RequestProviderEvaluation event)
     {
         String providerId = "";
 
@@ -244,7 +244,7 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestProviderFiveStarRatings()
+    public void onRequestProviderFiveStarRatings(ProviderDashboardEvent.RequestProviderFiveStarRatings event)
     {
         String providerId = "";
 
@@ -267,7 +267,7 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestProviderFeedback()
+    public void onRequestProviderFeedback(ProviderDashboardEvent.RequestProviderFeedback event)
     {
         String providerId = "";
 
