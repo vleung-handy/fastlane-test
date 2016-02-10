@@ -51,7 +51,8 @@ public enum MainViewTab implements Serializable
     BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     NEARBY_JOBS(NearbyBookingsFragment.class),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
-    CANCELLATION_REQUEST(CancellationRequestFragment.class),;
+    CANCELLATION_REQUEST(CancellationRequestFragment.class),
+    ONBOARDING(BlockScheduleFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),;
 
     private Class mClassType;
     private
