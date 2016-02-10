@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:paddingTop="@dimen/extra_padding_xlarge"
-              android:paddingBottom="@dimen/extra_padding_xlarge"
-              android:orientation="vertical"
               android:background="@color/white"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/extra_padding_xlarge"
+              android:paddingTop="@dimen/extra_padding_xlarge"
     >
 
     <TextView
@@ -20,11 +20,11 @@
 
     <TextView
         android:id="@+id/pro_status_text"
+        style="@style/TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextView"
-        android:gravity="center_horizontal"
         android:fontFamily="fonts/CircularStd-Medium.otf"
+        android:gravity="center_horizontal"
         android:textColor="@color/requested_green"
         tools:text="Things are lookin good!"
         />

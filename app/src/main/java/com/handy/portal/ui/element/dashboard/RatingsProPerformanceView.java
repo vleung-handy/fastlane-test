@@ -7,9 +7,10 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -25,6 +26,8 @@ public class RatingsProPerformanceView extends FrameLayout
 
     @Bind(R.id.jobs_ratings_layout)
     ViewGroup mJobRatingsLayout;
+    @Bind(R.id.date_text)
+    TextView mDateText;
 
     public RatingsProPerformanceView(final Context context)
     {
@@ -54,7 +57,6 @@ public class RatingsProPerformanceView extends FrameLayout
     private void init()
     {
         Utils.inject(getContext(), this);
-
         inflate(getContext(), R.layout.element_ratings_pro_performance, this);
         ButterKnife.bind(this);
     }
@@ -62,6 +64,10 @@ public class RatingsProPerformanceView extends FrameLayout
     public void addItem(String mainText, String subtitleText){
         JobRatingView jobRatingView = new JobRatingView(getContext());
         jobRatingView.setText(mainText, subtitleText);
-        mJobRatingsLayout.addView(jobRatingView, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        mJobRatingsLayout.addView(jobRatingView, UIUtils.EQUAL_WEIGHT_PARAMS);
+    }
+
+    public void setDate(String date){
+        mDateText.setText(date);
     }
 }

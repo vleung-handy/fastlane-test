@@ -230,4 +230,14 @@ public interface HandyRetrofitService
     void postMarkNotificationsAsRead(@Path("id") String providerId,
                                      @Field("notification_ids[]") ArrayList<Integer> notificationIds,
                                      HandyRetrofitCallback cb);
+
+    // Dashboard
+    @GET(PROVIDERS_PATH + "evaluation/{id}")
+    void getProviderEvaluation(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "rating/{id}?min_star=5")
+    void getProviderFiveStarRatings(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "feedback/{id}")
+    void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
 }

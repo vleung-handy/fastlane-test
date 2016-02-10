@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
     >
 
@@ -23,14 +24,15 @@
             />
 
         <TextView
+            android:id="@+id/date_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/lineSpacing"
             android:paddingBottom="@dimen/default_padding"
             android:gravity="center_horizontal"
             style="@style/TextView.Medium.Book"
-            android:text="January 5 - February 5, 2016"
             android:textColor="@color/tertiary_grey"
+            tools:text="January 5 - February 5, 2016"
             />
 
         <View

@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 
@@ -50,5 +52,16 @@ public class DashboardReviewsFragment extends ActionBarFragment
     {
         super.onResume();
         setBackButtonEnabled(true);
+    }
+
+    @Subscribe
+    public void onReceiveProviderFeedbackSuccess(ProviderDashboardEvent.ReceiveProviderFeedbackSuccess event)
+    {
+
+    }
+
+    @Subscribe
+    public void onReceiveProviderFeedbackFailure(ProviderDashboardEvent.ReceiveProviderFeedbackError event)
+    {
     }
 }

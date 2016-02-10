@@ -22,6 +22,9 @@ import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.TypedJsonString;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.dashboard.ProviderRatings;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -340,4 +343,23 @@ public final class BaseDataManager extends DataManager
     {
         service.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
     }
+
+    @Override
+    public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)
+    {
+        service.getProviderEvaluation(providerId, new GetProviderEvaluationRetrofitCallback(cb));
+    }
+
+    @Override
+    public void getProviderFiveStarRatings(final String providerId, final Callback<ProviderRatings> cb)
+    {
+        service.getProviderFiveStarRatings(providerId, new GetProviderFiveStarRatingsRetrofitCallback(cb));
+    }
+
+    @Override
+    public void getProviderFeedback(final String providerId, final Callback<ProviderFeedback> cb)
+    {
+        service.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
+    }
+
 }
