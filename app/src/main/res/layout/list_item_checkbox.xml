@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:button="@drawable/selector_blue_checkbox"
         android:clickable="false"
-        android:visibility="gone"
         />
 
     <TextView
@@ -26,6 +25,7 @@
         android:layout_alignParentLeft="true"
         android:text="@string/bullet"
         android:textSize="@dimen/default_text_size"
+        android:visibility="gone"
         />
 
     <LinearLayout
