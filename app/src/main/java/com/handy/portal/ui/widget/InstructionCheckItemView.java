@@ -25,6 +25,10 @@ public class InstructionCheckItemView extends FrameLayout
     @Bind(R.id.checklist_item_description)
     TextView mDescriptionTextView;
 
+    // cannot user selector for alpha because it doesn't work for pre lollipop
+    private final static float ALPHA_ENABLED = 1f;
+    private final static float ALPHA_DISABLED = .2f;
+
 
     public InstructionCheckItemView(final Context context)
     {
@@ -82,11 +86,11 @@ public class InstructionCheckItemView extends FrameLayout
         super.setEnabled(enabled);
         if (enabled)
         {
-            mCheckBox.setAlpha(1);
+            mCheckBox.setAlpha(ALPHA_ENABLED);
         }
         else
         {
-            mCheckBox.setAlpha(.2f);
+            mCheckBox.setAlpha(ALPHA_DISABLED);
         }
     }
 
