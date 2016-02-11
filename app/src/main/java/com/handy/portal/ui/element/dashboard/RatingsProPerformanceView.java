@@ -4,33 +4,26 @@ package com.handy.portal.ui.element.dashboard;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Bus;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class RatingsProPerformanceView extends FrameLayout
 {
-    @Inject
-    Bus mBus;
-
     @Bind(R.id.five_star_ratings_view)
     JobRatingView mFiveStarRatingsView;
+    @Bind(R.id.five_star_percentage_view)
+    PercentageCircleView mPercentageCircleView;
     @Bind(R.id.rated_jobs_view)
     JobRatingView mRatedJobsView;
     @Bind(R.id.total_jobs_view)
     JobRatingView mTotalJobsView;
-    @Bind(R.id.jobs_ratings_layout)
-    ViewGroup mJobRatingsLayout;
     @Bind(R.id.date_text)
     TextView mDateText;
 
@@ -61,9 +54,15 @@ public class RatingsProPerformanceView extends FrameLayout
 
     private void init()
     {
-        Utils.inject(getContext(), this);
         inflate(getContext(), R.layout.element_ratings_pro_performance, this);
         ButterKnife.bind(this);
+
+        mPercentageCircleView.setColor(ContextCompat.getColor(getContext(), R.color.white),
+                ContextCompat.getColor(getContext(), R.color.requested_green),
+                ContextCompat.getColor(getContext(), R.color.requested_green),
+                ContextCompat.getColor(getContext(), R.color.bg_inactive_grey));
+        mPercentageCircleView.setSign(getResources().getString(R.string.percentage));
+        mPercentageCircleView.setSubText(getResources().getString(R.string.five_star));
 
         mFiveStarRatingsView.setDescription(getResources().getString(R.string.five_star_ratings));
         mRatedJobsView.setDescription(getResources().getString(R.string.rated_jobs));

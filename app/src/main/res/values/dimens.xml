@@ -101,5 +101,6 @@
     <dimen name="dashboard_chevron_width_height">18dp</dimen>
     <dimen name="dashboard_option_top_margin">1dp</dimen>
     <dimen name="dashboard_option_height">60dp</dimen>
+    <dimen name="percentage_circle_diameter">120dp</dimen>
 
 </resources>
