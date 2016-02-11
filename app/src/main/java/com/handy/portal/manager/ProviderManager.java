@@ -10,6 +10,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
+import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
@@ -17,6 +18,9 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TypeSafeMap;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.dashboard.ProviderRatings;
 import com.handy.portal.model.payments.PaymentFlow;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -215,6 +219,74 @@ public class ProviderManager
                 mBus.post(new ProfileEvent.ReceiveSendResupplyKitError(error));
             }
         });
+    }
+
+    @Subscribe
+    public void onRequestProviderEvaluation(ProviderDashboardEvent.RequestProviderEvaluation event)
+    {
+        String providerId = "";
+        
+        mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
+        {
+            @Override
+            public void onSuccess(final ProviderEvaluation providerEvaluation)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(error));
+            }
+        });
+
+    }
+
+    @Subscribe
+    public void onRequestProviderFiveStarRatings(ProviderDashboardEvent.RequestProviderFiveStarRatings event)
+    {
+        String providerId = "";
+
+        mDataManager.getProviderFiveStarRatings(providerId, new DataManager.Callback<ProviderRatings>()
+        {
+
+            @Override
+            public void onSuccess(final ProviderRatings providerRatings)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(providerRatings));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError(error));
+            }
+        });
+
+    }
+
+    @Subscribe
+    public void onRequestProviderFeedback(ProviderDashboardEvent.RequestProviderFeedback event)
+    {
+        String providerId = "";
+
+        mDataManager.getProviderFeedback(providerId, new DataManager.Callback<ProviderFeedback>()
+        {
+            @Override
+            public void onSuccess(final ProviderFeedback providerFeedback)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackSuccess(providerFeedback));
+
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError(error));
+            }
+        });
+
     }
 
     private void requestProviderInfo()

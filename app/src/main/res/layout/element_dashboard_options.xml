@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/extra_margin_medium"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/tier_option"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dashboard_option_height"
+        android:layout_marginTop="@dimen/dashboard_option_top_margin"
+        android:background="@drawable/background_list_entry"
+        android:clickable="true"
+        android:padding="@dimen/default_padding"
+        >
+
+        <!-- TODO: Dynamic tiers after working API, remove hardoding -->
+        <TextView
+            style="@style/TextView.Medium.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Tier 1"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tier_chevron"
+            android:layout_toStartOf="@+id/tier_chevron"
+            android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/large_text_size"
+            tools:text="$15"
+            />
+
+        <ImageView
+            android:id="@+id/tier_chevron"
+            android:layout_width="@dimen/dashboard_chevron_width_height"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:src="@drawable/ic_chevron"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/feedback_option"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dashboard_option_height"
+        android:layout_marginTop="@dimen/dashboard_option_top_margin"
+        android:background="@drawable/background_list_entry"
+        android:clickable="true"
+        android:paddingBottom="@dimen/extra_padding_xlarge"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/extra_padding_xlarge"
+        >
+
+        <TextView
+            style="@style/TextView.Medium.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/feedback"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/feedback_chevron"
+            android:layout_toStartOf="@+id/feedback_chevron"
+            android:textColor="@color/error_red"
+            android:textSize="@dimen/large_text_size"
+            tools:text="Quality of Service"
+            />
+
+        <ImageView
+            android:id="@+id/feedback_chevron"
+            android:layout_width="@dimen/dashboard_chevron_width_height"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:src="@drawable/ic_chevron"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/reviews_option"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dashboard_option_height"
+        android:layout_marginTop="@dimen/dashboard_option_top_margin"
+        android:background="@drawable/background_list_entry"
+        android:clickable="true"
+        android:paddingBottom="@dimen/extra_padding_xlarge"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/extra_padding_xlarge"
+        >
+
+        <TextView
+            android:id="@+id/five_star_reviews_text"
+            style="@style/TextView.Medium.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/five_star_reviews"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/reviews_chevron"
+            android:layout_toStartOf="@+id/reviews_chevron"
+            android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/large_text_size"
+            tools:text="18"
+            />
+
+        <ImageView
+            android:id="@+id/reviews_chevron"
+            android:layout_width="@dimen/dashboard_chevron_width_height"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:src="@drawable/ic_chevron"
+            />
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/five_star_review_text"
+        layout="@layout/five_star_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>

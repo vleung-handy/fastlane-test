@@ -29,6 +29,7 @@
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_padding_medium">24dp</dimen>
     <dimen name="default_padding_large">32dp</dimen>
+    <dimen name="dashboard_header_padding">35dp</dimen>
     <dimen name="default_padding_xlarge">48dp</dimen>
     <dimen name="default_padding_xxlarge">60dp</dimen>
     <dimen name="options_wheel_padding">10dp</dimen>
@@ -49,6 +50,7 @@
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
     <dimen name="large_text_size">18sp</dimen>
+    <dimen name="dashboard_header_text_size">21sp</dimen>
     <dimen name="xlarge_text_size">22sp</dimen>
     <dimen name="hero_text_size">28sp</dimen>
     <dimen name="xxlarge_text_size">32sp</dimen>
@@ -88,5 +90,16 @@
     <dimen name="job_cell_min_height">128dp</dimen>
     <dimen name="job_cell_icon_size">40dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
+
+    <!-- Dividers -->
+    <dimen name="divider_height">1dp</dimen>
+
+    <!-- Dashboard -->
+    <dimen name="star_image_width_height">17dp</dimen>
+    <dimen name="job_ratings_top_padding">30dp</dimen>
+    <dimen name="job_ratings_bottom_padding">25dp</dimen>
+    <dimen name="dashboard_chevron_width_height">18dp</dimen>
+    <dimen name="dashboard_option_top_margin">1dp</dimen>
+    <dimen name="dashboard_option_height">60dp</dimen>
 
 </resources>

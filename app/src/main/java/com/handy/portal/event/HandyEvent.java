@@ -31,22 +31,27 @@ public abstract class HandyEvent
 {
     public abstract static class RequestEvent extends HandyEvent {}
 
+
     public abstract static class ReceiveSuccessEvent extends HandyEvent {}
+
 
     public abstract static class ReceiveErrorEvent extends HandyEvent
     {
         public DataManager.DataManagerError error;
     }
 
+
     public abstract static class RequestBookingActionEvent extends RequestEvent
     {
         public String bookingId;
     }
 
+
     public abstract static class ReceiveBookingSuccessEvent extends ReceiveSuccessEvent
     {
         public Booking booking;
     }
+
 
     public abstract static class ApplicationLifeCycleEvent extends HandyEvent
     {
@@ -54,6 +59,7 @@ public abstract class HandyEvent
     }
 
 //Activity lifecycle management
+
 
     public static class ActivityPaused extends ApplicationLifeCycleEvent
     {
@@ -63,6 +69,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ActivityResumed extends ApplicationLifeCycleEvent
     {
         public ActivityResumed(Activity sender)
@@ -70,6 +77,7 @@ public abstract class HandyEvent
             this.sender = sender;
         }
     }
+
 
     public static class ApplicationResumed extends ApplicationLifeCycleEvent
     {
@@ -80,6 +88,7 @@ public abstract class HandyEvent
     }
 
 //Navigation
+
 
     public static class NavigateToTab extends HandyEvent
     {
@@ -106,6 +115,7 @@ public abstract class HandyEvent
         }
     }
 
+
     //TODO: Come up with better name
     public static class RequestProcessNavigateToTab extends HandyEvent
     {
@@ -125,10 +135,12 @@ public abstract class HandyEvent
         }
     }
 
+
     //TODO: Come up with better name
     public static class SwapFragmentNavigation extends HandyEvent
     {
         public SwapFragmentArguments swapFragmentArguments;
+
         public SwapFragmentNavigation(SwapFragmentArguments swapFragmentArguments)
         {
             this.swapFragmentArguments = swapFragmentArguments;
@@ -136,6 +148,7 @@ public abstract class HandyEvent
     }
 
 //Login
+
 
     @Track("portal login submitted - phone number")
     public static class RequestPinCode extends HandyEvent
@@ -148,6 +161,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceivePinCodeSuccess extends ReceiveSuccessEvent
     {
         public PinRequestDetails pinRequestDetails;
@@ -157,6 +171,7 @@ public abstract class HandyEvent
             this.pinRequestDetails = pinRequestDetails;
         }
     }
+
 
     public static class ReceivePinCodeError extends ReceiveErrorEvent
     {
@@ -180,6 +195,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveLoginSuccess extends ReceiveSuccessEvent
     {
         public LoginDetails loginDetails;
@@ -190,6 +206,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveLoginError extends ReceiveErrorEvent
     {
         public ReceiveLoginError(DataManager.DataManagerError error)
@@ -198,7 +215,9 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class RequestProviderInfo extends RequestEvent {}
+
 
     public static class ReceiveProviderInfoSuccess extends ReceiveSuccessEvent
     {
@@ -210,6 +229,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveProviderInfoError extends ReceiveErrorEvent
     {
         public ReceiveProviderInfoError(DataManager.DataManagerError error)
@@ -218,11 +238,15 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class RequestSendIncomeVerification extends RequestEvent {}
+
 
     public static class ReceiveSendIncomeVerificationSuccess extends ReceiveSuccessEvent {}
 
+
     public static class ReceiveSendIncomeVerificationError extends ReceiveErrorEvent {}
+
 
     public static class ProviderIdUpdated extends HandyEvent
     {
@@ -236,6 +260,7 @@ public abstract class HandyEvent
 
 //Update and Version Management
 
+
     public static class RequestUpdateCheck extends RequestEvent
     {
         public Activity sender = null;
@@ -245,6 +270,7 @@ public abstract class HandyEvent
             this.sender = sender;
         }
     }
+
 
     public static class ReceiveUpdateAvailableSuccess extends ReceiveSuccessEvent
     {
@@ -256,6 +282,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveUpdateAvailableError extends ReceiveErrorEvent
     {
         public ReceiveUpdateAvailableError(DataManager.DataManagerError error)
@@ -263,6 +290,7 @@ public abstract class HandyEvent
             this.error = error;
         }
     }
+
 
     public static class RequestEnableApplication extends RequestEvent
     {
@@ -276,6 +304,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("google play services availability")
     public static class GooglePlayServicesAvailabilityCheck extends HandyEvent
     {
@@ -288,12 +317,16 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class DownloadUpdateSuccessful extends HandyEvent {}
+
 
     @Track("portal app update download failed")
     public static class DownloadUpdateFailed extends HandyEvent {}
 
+
     public static class RequestCheckTerms extends RequestEvent {}
+
 
     public static class ReceiveCheckTermsSuccess extends ReceiveSuccessEvent
     {
@@ -305,14 +338,17 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveCheckTermsError extends ReceiveErrorEvent {}
 
     //Booking Lists
+
 
     public static class RequestBookingsEvent extends RequestEvent
     {
         public boolean useCachedIfPresent;
     }
+
 
     public static class RequestAvailableBookings extends RequestBookingsEvent
     {
@@ -325,6 +361,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class RequestScheduledBookings extends RequestBookingsEvent
     {
         public final List<Date> dates;
@@ -336,11 +373,13 @@ public abstract class HandyEvent
         }
     }
 
+
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
         public List<Booking> bookings;
         public Date day;
     }
+
 
     public static class ReceiveAvailableBookingsSuccess extends ReceiveBookingsSuccess
     {
@@ -351,6 +390,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveScheduledBookingsSuccess extends ReceiveBookingsSuccess
     {
         public ReceiveScheduledBookingsSuccess(List<Booking> bookings, Date day)
@@ -360,10 +400,12 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveBookingsError extends ReceiveErrorEvent
     {
         public List<Date> days;
     }
+
 
     public static class ReceiveAvailableBookingsError extends ReceiveBookingsError
     {
@@ -373,6 +415,7 @@ public abstract class HandyEvent
             this.error = error;
         }
     }
+
 
     public static class ReceiveScheduledBookingsError extends ReceiveBookingsError
     {
@@ -384,6 +427,7 @@ public abstract class HandyEvent
     }
 
 //Booking Details
+
 
     public static class RequestBookingDetails extends HandyEvent
     {
@@ -399,6 +443,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveBookingDetailsSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveBookingDetailsSuccess(Booking booking)
@@ -406,6 +451,7 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
+
 
     public static class ReceiveBookingDetailsError extends ReceiveErrorEvent
     {
@@ -416,6 +462,7 @@ public abstract class HandyEvent
     }
 
 //Job Action Requests
+
 
     public static class RequestClaimJob extends RequestBookingActionEvent
     {
@@ -430,6 +477,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("cancel claim confirmation accepted")
     public static class RequestRemoveJob extends RequestBookingActionEvent
     {
@@ -442,6 +490,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("on my way submitted")
     public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
     {
@@ -453,6 +502,7 @@ public abstract class HandyEvent
             this.locationData = locationData;
         }
     }
+
 
     @Track("provider checkin submitted")
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
@@ -473,6 +523,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("provider checkout submitted")
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
@@ -492,6 +543,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("self reported late submitted")
     public static class RequestNotifyJobUpdateArrivalTime extends RequestBookingActionEvent
     {
@@ -507,6 +559,7 @@ public abstract class HandyEvent
 
 //Job Action Receive Successes
 
+
     @Track("eta")
     public static class ReceiveNotifyJobUpdateArrivalTimeSuccess extends ReceiveBookingSuccessEvent
     {
@@ -515,6 +568,7 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
+
 
     @Track("claim job")
     public static class ReceiveClaimJobSuccess extends ReceiveSuccessEvent
@@ -530,6 +584,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("remove job")
     public static class ReceiveRemoveJobSuccess extends ReceiveBookingSuccessEvent
     {
@@ -539,6 +594,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("on my way")
     public static class ReceiveNotifyJobOnMyWaySuccess extends ReceiveBookingSuccessEvent
     {
@@ -547,6 +603,7 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
+
 
     @Track("check in")
     public static class ReceiveNotifyJobCheckInSuccess extends ReceiveBookingSuccessEvent
@@ -560,6 +617,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("check out")
     public static class ReceiveNotifyJobCheckOutSuccess extends ReceiveBookingSuccessEvent
     {
@@ -572,8 +630,8 @@ public abstract class HandyEvent
         }
     }
 
-
 //Job Action Receive Errors
+
 
     public static class ReceiveClaimJobError extends ReceiveErrorEvent
     {
@@ -599,6 +657,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveRemoveJobError extends ReceiveErrorEvent
     {
         public ReceiveRemoveJobError(DataManager.DataManagerError error)
@@ -607,6 +666,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveNotifyJobOnMyWayError extends ReceiveErrorEvent
     {
         public ReceiveNotifyJobOnMyWayError(DataManager.DataManagerError error)
@@ -614,6 +674,7 @@ public abstract class HandyEvent
             this.error = error;
         }
     }
+
 
     public static class ReceiveNotifyJobCheckInError extends ReceiveErrorEvent
     {
@@ -626,6 +687,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveNotifyJobCheckOutError extends ReceiveErrorEvent
     {
         public boolean isAuto;
@@ -637,6 +699,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveNotifyJobUpdateArrivalTimeError extends ReceiveErrorEvent
     {
         public ReceiveNotifyJobUpdateArrivalTimeError(DataManager.DataManagerError error)
@@ -646,6 +709,7 @@ public abstract class HandyEvent
     }
 
     // Customer No Show Events
+
 
     @Track("report customer no show")
     public static class RequestReportNoShow extends RequestEvent
@@ -660,6 +724,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveReportNoShowSuccess extends ReceiveSuccessEvent
     {
         public final Booking booking;
@@ -669,6 +734,7 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
+
 
     public static class ReceiveReportNoShowError extends ReceiveErrorEvent
     {
@@ -692,6 +758,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveCancelNoShowSuccess extends ReceiveSuccessEvent
     {
         public final Booking booking;
@@ -701,6 +768,7 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
+
 
     public static class ReceiveCancelNoShowError extends ReceiveErrorEvent
     {
@@ -713,9 +781,11 @@ public abstract class HandyEvent
 //Pure analytics events,
 //TODO: when possible these should track the actual events instead of having duplicate unnecessary and get rid of duped analytics events
 
+
     public abstract static class AnalyticsEvent extends HandyEvent
     {
     }
+
 
     @Track("portal login error")
     public static class LoginError extends AnalyticsEvent
@@ -729,6 +799,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("portal navigation")
     public static class Navigation extends AnalyticsEvent
     {
@@ -740,6 +811,7 @@ public abstract class HandyEvent
             this.page = page;
         }
     }
+
 
     @Track("date scroller date selected")
     public static class DateClicked extends AnalyticsEvent
@@ -756,6 +828,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("booking detail selected")
     public static class BookingSelected extends AnalyticsEvent
     {
@@ -771,6 +844,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("claim job error")
     public static class ClaimJobError extends AnalyticsEvent
     {
@@ -782,6 +856,7 @@ public abstract class HandyEvent
             this.message = message;
         }
     }
+
 
     @Track("remove job error")
     public static class RemoveJobError extends AnalyticsEvent
@@ -795,6 +870,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("portal use terms displayed")
     public static class TermsDisplayed extends AnalyticsEvent
     {
@@ -806,6 +882,7 @@ public abstract class HandyEvent
             this.code = code;
         }
     }
+
 
     @Track("portal use terms accepted")
     public static class AcceptTerms extends AnalyticsEvent
@@ -822,6 +899,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("action triggered")
     public static class ActionTriggered extends AnalyticsEvent
     {
@@ -833,6 +911,7 @@ public abstract class HandyEvent
             this.actionName = actionType.getActionName();
         }
     }
+
 
     @Track("warning dialog accepted")
     public static class ActionWarningAccepted extends AnalyticsEvent
@@ -851,20 +930,24 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("portal use terms error")
     public static class AcceptTermsError extends AnalyticsEvent
     {
     }
+
 
     @Track("sms customer clicked")
     public static class TextCustomerClicked extends AnalyticsEvent
     {
     }
 
+
     @Track("call customer clicked")
     public static class CallCustomerClicked extends AnalyticsEvent
     {
     }
+
 
     @Track("cancel claim confirmation shown")
     public static class ShowConfirmationRemoveJob extends AnalyticsEvent
@@ -872,6 +955,7 @@ public abstract class HandyEvent
     }
 
 //Unclassified events - events should go below here by default unless they fit another category
+
 
     public static class SetLoadingOverlayVisibility extends HandyEvent
     {
@@ -882,6 +966,7 @@ public abstract class HandyEvent
             this.isVisible = isVisible;
         }
     }
+
 
     public static class AcceptTermsSuccess extends HandyEvent
     {
@@ -898,6 +983,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("support action triggered")
     public static class SupportActionTriggered
     {
@@ -912,6 +998,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class RequestComplementaryBookings extends RequestBookingActionEvent
     {
         public final BookingType type;
@@ -925,6 +1012,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveComplementaryBookingsSuccess
     {
         public final List<Booking> bookings;
@@ -935,6 +1023,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveComplementaryBookingsError extends ReceiveErrorEvent
     {
         public ReceiveComplementaryBookingsError(DataManager.DataManagerError error)
@@ -943,8 +1032,10 @@ public abstract class HandyEvent
         }
     }
 
+
     //Request that Urban Airship takes off
     public static class StartUrbanAirship extends HandyEvent {}
+
 
     public static class UpdateMainActivityFragmentActive extends HandyEvent
     {
@@ -955,6 +1046,7 @@ public abstract class HandyEvent
             this.active = active;
         }
     }
+
 
     // Pro should be logged out
     public static class LogOutProvider extends HandyEvent {}

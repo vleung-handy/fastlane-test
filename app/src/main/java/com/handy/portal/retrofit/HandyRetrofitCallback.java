@@ -41,7 +41,7 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
 
             String line;
             resp = new StringBuilder();
-            while ((line = br.readLine()) != null) resp.append(line);
+            while ((line = br.readLine()) != null) { resp.append(line); }
 
             if (resp.length() > 0)
             {
@@ -51,12 +51,14 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
             if (responseIsJSONArray)
             {
                 objArray = new JSONArray(resp.toString());
-            } else
+            }
+            else
             {
                 obj = new JSONObject(resp.toString());
             }
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException("Unable to parse API response body : " + e);
         }
@@ -73,7 +75,8 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
                     obj.put(Integer.toString(i), objArray.getJSONObject(i));
                 }
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new RuntimeException("Unable to convert JSONArray to JSONObject : " + e);
             }
@@ -88,7 +91,8 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
             {
                 err = new DataManagerError(DataManagerError.Type.CLIENT,
                         messages.isNull(0) ? null : messages.optString(0));
-            } else
+            }
+            else
             {
                 err = new DataManagerError(DataManagerError.Type.CLIENT);
             }
@@ -99,15 +103,16 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
             if (invalidInputs != null && invalidInputs.length() > 0)
             {
                 for (int i = 0; i < invalidInputs.length(); i++)
-                    inputs.add(invalidInputs.optString(i, ""));
+                { inputs.add(invalidInputs.optString(i, "")); }
 
                 err.setInvalidInputs(inputs.toArray(new String[inputs.size()]));
             }
-            if(callback != null)
+            if (callback != null)
             {
                 callback.onError(err);
             }
-        } else
+        }
+        else
         {
             success(obj);
         }

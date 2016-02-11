@@ -22,6 +22,9 @@ import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.TypedJsonString;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.dashboard.ProviderRatings;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -131,6 +134,14 @@ public abstract class DataManager
     public abstract void getNotifications(String providerId, Integer sinceId, Integer untilId, Integer count, Callback<NotificationMessages> callback);
 
     public abstract void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb);
+
+    // Pro Dashboard
+    public abstract void getProviderEvaluation(String providerId, Callback<ProviderEvaluation> cb);
+
+    public abstract void getProviderFiveStarRatings(String providerId, Callback<ProviderRatings> cb);
+
+    public abstract void getProviderFeedback(String providerId, Callback<ProviderFeedback> cb);
+
 
     //TODO: refactor. should this be here?
     public interface Callback<T>

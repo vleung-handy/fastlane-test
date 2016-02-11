@@ -325,3 +325,30 @@ class NotificationMessagesHandyRetroFitCallback extends TypedHandyRetrofitCallba
         super(callback);
     }
 }
+
+
+class GetProviderEvaluationRetrofitCallback extends TypedHandyRetrofitCallback<NotificationMessages>
+{
+    GetProviderEvaluationRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<NotificationMessages>
+{
+    GetProviderFiveStarRatingsRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<NotificationMessages>
+{
+    GetProviderFeedbackRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
