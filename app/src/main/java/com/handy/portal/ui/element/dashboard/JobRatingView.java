@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -16,12 +15,10 @@ import butterknife.ButterKnife;
 
 public class JobRatingView extends FrameLayout
 {
-    @Bind(R.id.main_layout)
-    LinearLayout mMainLayout;
-    @Bind(R.id.main_text)
-    TextView mMainText;
-    @Bind(R.id.subtitle_text)
-    TextView mSubtitleText;
+    @Bind(R.id.number_text)
+    TextView mNumberText;
+    @Bind(R.id.description_text)
+    TextView mDescriptionText;
 
     public JobRatingView(final Context context)
     {
@@ -54,9 +51,13 @@ public class JobRatingView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void setText(String mainText, String subtitleText)
+    public void setNumber(String number)
     {
-        mMainText.setText(mainText);
-        mSubtitleText.setText(subtitleText);
+        mNumberText.setText(number);
+    }
+
+    public void setDescription(String description)
+    {
+        mDescriptionText.setText(description);
     }
 }

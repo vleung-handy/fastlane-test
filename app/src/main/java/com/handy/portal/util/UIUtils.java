@@ -48,9 +48,6 @@ public final class UIUtils
     public static final ViewGroup.LayoutParams MATCH_PARENT_PARAMS = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-    public static final ViewGroup.LayoutParams EQUAL_WEIGHT_PARAMS = new LinearLayout.LayoutParams(
-            0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-
     public static boolean validateField(FormFieldTableRow field, FieldDefinition fieldDefinition)
     {
         CharSequence value = field.getValue().getText();

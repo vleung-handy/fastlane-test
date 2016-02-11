@@ -1,6 +1,7 @@
 package com.handy.portal.event;
 
 
+import com.handy.portal.data.DataManager;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRatings;
@@ -21,7 +22,13 @@ public abstract class ProviderDashboardEvent extends HandyEvent
     }
 
 
-    public static class ReceiveProviderEvaluationError extends ReceiveErrorEvent {}
+    public static class ReceiveProviderEvaluationError extends ReceiveErrorEvent
+    {
+        public ReceiveProviderEvaluationError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
 
     public static class RequestProviderFiveStarRatings extends RequestEvent {}
@@ -38,7 +45,13 @@ public abstract class ProviderDashboardEvent extends HandyEvent
     }
 
 
-    public static class ReceiveProviderFiveStarRatingsError extends ReceiveErrorEvent {}
+    public static class ReceiveProviderFiveStarRatingsError extends ReceiveErrorEvent
+    {
+        public ReceiveProviderFiveStarRatingsError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
 
     public static class RequestProviderFeedback extends RequestEvent {}
@@ -55,5 +68,11 @@ public abstract class ProviderDashboardEvent extends HandyEvent
     }
 
 
-    public static class ReceiveProviderFeedbackError extends ReceiveErrorEvent {}
+    public static class ReceiveProviderFeedbackError extends ReceiveErrorEvent
+    {
+        public ReceiveProviderFeedbackError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 }

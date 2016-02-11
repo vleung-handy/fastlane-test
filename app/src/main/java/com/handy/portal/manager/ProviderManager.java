@@ -225,7 +225,7 @@ public class ProviderManager
     public void onRequestProviderEvaluation(ProviderDashboardEvent.RequestProviderEvaluation event)
     {
         String providerId = "";
-
+        
         mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
         {
             @Override
@@ -237,7 +237,7 @@ public class ProviderManager
             @Override
             public void onError(final DataManager.DataManagerError error)
             {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError());
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(error));
             }
         });
 
@@ -260,7 +260,7 @@ public class ProviderManager
             @Override
             public void onError(final DataManager.DataManagerError error)
             {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError());
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError(error));
             }
         });
 
@@ -283,7 +283,7 @@ public class ProviderManager
             @Override
             public void onError(final DataManager.DataManagerError error)
             {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError());
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError(error));
             }
         });
 

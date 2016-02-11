@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
     >
 
@@ -10,34 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/extra_margin_medium"
-        android:orientation="vertical"
         android:background="@color/white"
+        android:orientation="vertical"
         >
 
         <TextView
-            style="@style/TextView.LargeMedium.Bold"
+            style="@style/CircularBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/default_padding_large_medium"
             android:gravity="center_horizontal"
-            android:text="Past 28 days"
+            android:paddingTop="@dimen/dashboard_header_padding"
+            android:textSize="@dimen/dashboard_header_text_size"
+            android:text="@string/past_28_days"
             />
 
         <TextView
             android:id="@+id/date_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/lineSpacing"
-            android:paddingBottom="@dimen/default_padding"
             android:gravity="center_horizontal"
-            style="@style/TextView.Medium.Book"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingTop="@dimen/lineSpacing"
+            android:textSize="@dimen/medium_text_size"
             android:textColor="@color/tertiary_grey"
             tools:text="January 5 - February 5, 2016"
             />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/divider_height"
             android:layout_marginTop="@dimen/default_margin_x2"
             />
 
@@ -45,10 +46,33 @@
             android:id="@+id/jobs_ratings_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="30dp"
-            android:paddingBottom="25dp"
             android:orientation="horizontal"
-            />
+            android:paddingBottom="@dimen/job_ratings_top_padding"
+            android:paddingTop="@dimen/job_ratings_bottom_padding"
+            >
+
+            <com.handy.portal.ui.element.dashboard.JobRatingView
+                android:id="@+id/five_star_ratings_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+
+            <com.handy.portal.ui.element.dashboard.JobRatingView
+                android:id="@+id/rated_jobs_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+
+            <com.handy.portal.ui.element.dashboard.JobRatingView
+                android:id="@+id/total_jobs_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 

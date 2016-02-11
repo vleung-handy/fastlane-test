@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -26,7 +27,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     Bus mBus;
 
     @Bind(R.id.five_star_review_text)
-    TextView fiveStarReviewText;
+    View fiveStarReviewText;
 
     public DashboardOptionsPerformanceView(final Context context)
     {

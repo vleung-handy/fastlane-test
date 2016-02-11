@@ -12,7 +12,6 @@ public class ProviderEvaluation implements Serializable
     private Rolling mRolling;
     @SerializedName("life_time")
     private LifeTime mLifeTime;
-
     @SerializedName("danger_rating_threshold")
     private double mDangerRatingThreshold;
     @SerializedName("five_star_rated_comment")
@@ -20,58 +19,78 @@ public class ProviderEvaluation implements Serializable
     @SerializedName("top_feedback")
     private String mTopFeedback;
 
-
-    public static class Rolling
+    public ProviderEvaluation(final Rolling rolling, final LifeTime lifeTime, final double dangerRatingThreshold, final String fiveStarRatedComment, final String topFeedback)
     {
-        @SerializedName("rated_booking_count")
-        private int mRatedBookingCount;
-        @SerializedName("total_booking_count")
-        private int mTotalBookingCount;
-        @SerializedName("five_star_rated_booking_count")
-        private int mFiveStarRatedBookingCount;
-        @SerializedName("pro_rating")
-        private double mProRating;
-        @SerializedName("rating_evaluation")
-        private String mRatingEvaluation;
+        mRolling = rolling;
+        mLifeTime = lifeTime;
+        mDangerRatingThreshold = dangerRatingThreshold;
+        mFiveStarRatedComment = fiveStarRatedComment;
+        mTopFeedback = topFeedback;
+    }
 
-        @SerializedName("start_date")
-        private Date mStartDate;
-        @SerializedName("end_date")
-        private Date mEndDate;
+    public Rolling getRolling()
+    {
+        return mRolling;
+    }
 
-        public int getRatedBookingCount()
+    public LifeTime getLifeTime()
+    {
+        return mLifeTime;
+    }
+
+    public double getDangerRatingThreshold()
+    {
+        return mDangerRatingThreshold;
+    }
+
+    public String getFiveStarRatedComment()
+    {
+        return mFiveStarRatedComment;
+    }
+
+    public String getTopFeedback()
+    {
+        return mTopFeedback;
+    }
+
+    public static class Rolling extends LifeTime
+    {
+        @SerializedName("tier")
+        private Tier mTier;
+
+        public Rolling(final int ratedBookingCount, final int totalBookingCount, final int fiveStarRatedBookingCount, final double proRating, final String ratingEvaluation, final Date startDate, final Date endDate, final Tier tier)
         {
-            return mRatedBookingCount;
+            super(ratedBookingCount, totalBookingCount, fiveStarRatedBookingCount, proRating, ratingEvaluation, startDate, endDate);
+            mTier = tier;
         }
 
-        public int getTotalBookingCount()
+        public Tier getTier()
         {
-            return mTotalBookingCount;
+            return mTier;
         }
 
-        public int getFiveStarRatedBookingCount()
+        public static class Tier
         {
-            return mFiveStarRatedBookingCount;
-        }
+            public Tier(final String name, final String hourlyRate)
+            {
+                mName = name;
+                mHourlyRate = hourlyRate;
+            }
 
-        public double getProRating()
-        {
-            return mProRating;
-        }
+            @SerializedName("name")
+            private String mName;
+            @SerializedName("hourly_rate")
+            private String mHourlyRate;
 
-        public String getRatingEvaluation()
-        {
-            return mRatingEvaluation;
-        }
+            public String getName()
+            {
+                return mName;
+            }
 
-        public Date getStartDate()
-        {
-            return mStartDate;
-        }
-
-        public Date getEndDate()
-        {
-            return mEndDate;
+            public String getHourlyRate()
+            {
+                return mHourlyRate;
+            }
         }
     }
 
@@ -93,6 +112,17 @@ public class ProviderEvaluation implements Serializable
         @SerializedName("end_date")
         private Date mEndDate;
 
+        public LifeTime(final int ratedBookingCount, final int totalBookingCount, final int fiveStarRatedBookingCount, final double proRating, final String ratingEvaluation, final Date startDate, final Date endDate)
+        {
+            mRatedBookingCount = ratedBookingCount;
+            mTotalBookingCount = totalBookingCount;
+            mFiveStarRatedBookingCount = fiveStarRatedBookingCount;
+            mProRating = proRating;
+            mRatingEvaluation = ratingEvaluation;
+            mStartDate = startDate;
+            mEndDate = endDate;
+        }
+
         public int getRatedBookingCount()
         {
             return mRatedBookingCount;
@@ -129,53 +159,4 @@ public class ProviderEvaluation implements Serializable
         }
     }
 
-    public Rolling getRolling()
-    {
-        return mRolling;
-    }
-
-    public void setRolling(final Rolling rolling)
-    {
-        mRolling = rolling;
-    }
-
-    public LifeTime getLifeTime()
-    {
-        return mLifeTime;
-    }
-
-    public void setLifeTime(final LifeTime lifeTime)
-    {
-        mLifeTime = lifeTime;
-    }
-
-    public double getDangerRatingThreshold()
-    {
-        return mDangerRatingThreshold;
-    }
-
-    public void setDangerRatingThreshold(final double dangerRatingThreshold)
-    {
-        mDangerRatingThreshold = dangerRatingThreshold;
-    }
-
-    public String getFiveStarRatedComment()
-    {
-        return mFiveStarRatedComment;
-    }
-
-    public void setFiveStarRatedComment(final String fiveStarRatedComment)
-    {
-        mFiveStarRatedComment = fiveStarRatedComment;
-    }
-
-    public String getTopFeedback()
-    {
-        return mTopFeedback;
-    }
-
-    public void setTopFeedback(final String topFeedback)
-    {
-        mTopFeedback = topFeedback;
-    }
 }

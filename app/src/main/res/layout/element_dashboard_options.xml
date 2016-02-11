@@ -11,13 +11,14 @@
     <RelativeLayout
         android:id="@+id/tier_option"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="1dp"
+        android:layout_height="@dimen/dashboard_option_height"
+        android:layout_marginTop="@dimen/dashboard_option_top_margin"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
         android:padding="@dimen/default_padding"
         >
 
+        <!-- TODO: Dynamic tiers after working API, remove hardoding -->
         <TextView
             style="@style/TextView.Medium.Bold"
             android:layout_width="wrap_content"
@@ -27,23 +28,25 @@
             />
 
         <TextView
-            style="@style/TextView.Large.Book"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/tier_chevron"
+            android:layout_toStartOf="@+id/tier_chevron"
             android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/large_text_size"
             tools:text="$15"
             />
 
         <ImageView
             android:id="@+id/tier_chevron"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="@dimen/dashboard_chevron_width_height"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
             android:src="@drawable/ic_chevron"
             />
 
@@ -52,8 +55,8 @@
     <RelativeLayout
         android:id="@+id/feedback_option"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="1dp"
+        android:layout_height="@dimen/dashboard_option_height"
+        android:layout_marginTop="@dimen/dashboard_option_top_margin"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
         android:paddingBottom="@dimen/extra_padding_xlarge"
@@ -67,27 +70,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="Feedback"
+            android:text="@string/feedback"
             />
 
         <TextView
-            style="@style/TextView.Large.Book"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/feedback_chevron"
+            android:layout_toStartOf="@+id/feedback_chevron"
             android:textColor="@color/error_red"
+            android:textSize="@dimen/large_text_size"
             tools:text="Quality of Service"
             />
 
         <ImageView
             android:id="@+id/feedback_chevron"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="@dimen/dashboard_chevron_width_height"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
             android:src="@drawable/ic_chevron"
             />
 
@@ -96,8 +101,8 @@
     <RelativeLayout
         android:id="@+id/reviews_option"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
+        android:layout_height="@dimen/dashboard_option_height"
+        android:layout_marginTop="@dimen/dashboard_option_top_margin"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
         android:paddingBottom="@dimen/extra_padding_xlarge"
@@ -112,27 +117,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="5 Star Reviews"
+            android:text="@string/five_star_reviews"
             />
 
         <TextView
-            style="@style/TextView.Large.Book"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/reviews_chevron"
+            android:layout_toStartOf="@+id/reviews_chevron"
             android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/large_text_size"
             tools:text="18"
             />
 
         <ImageView
             android:id="@+id/reviews_chevron"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="@dimen/dashboard_chevron_width_height"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
             android:src="@drawable/ic_chevron"
             />
 
@@ -143,7 +150,6 @@
         layout="@layout/five_star_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/five_star_reviews_text"
         />
 
 </LinearLayout>

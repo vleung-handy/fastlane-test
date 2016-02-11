@@ -12,6 +12,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
@@ -41,10 +42,6 @@ public class DashboardFragment extends ActionBarFragment
     DashboardOptionsPerformanceView mDashboardOptionsPerformanceView;
     @Bind(R.id.lifetime_rating_text)
     TextView mLifetimeRatingText;
-
-    private static final String FIVE_STAR_RATINGS = "5 star ratings";
-    private static final String RATED_JOBS = "Rated jobs";
-    private static final String TOTAL_JOBS = "Total jobs";
 
     @Override
     protected MainViewTab getTab()
@@ -81,20 +78,22 @@ public class DashboardFragment extends ActionBarFragment
     private void createDashboardView()
     {
         String welcomeString = null;
-        String providerFirstName = mProviderManager.getCachedActiveProvider().getFirstName();
-        if (providerFirstName != null)
-        { welcomeString = "Welcome back, " + providerFirstName; }
+        Provider provider = mProviderManager.getCachedActiveProvider();
+        if (provider != null && provider.getFirstName() != null)
+        {
+            welcomeString = getString(R.string.welcome_back_formatted, provider.getFirstName());
+        }
         else
-        { welcomeString = "Welcome back"; }
+        {
+            welcomeString = getString(R.string.welcome_back);
+        }
 
         // TODO: Everything below is placeholder stuff
         String status = "Things are lookin good!";
         mWelcomeProPerformanceView.setDisplay(welcomeString, status);
         mRatingsProPerformanceView.setDate("January 5 - February 5, 2016");
 
-        mRatingsProPerformanceView.addItem("8", FIVE_STAR_RATINGS);
-        mRatingsProPerformanceView.addItem("10", RATED_JOBS);
-        mRatingsProPerformanceView.addItem("15", TOTAL_JOBS);
+        mRatingsProPerformanceView.setJobRatings("8", "10", "15");
 
         mLifetimeRatingText.setText("4.8");
     }
@@ -110,9 +109,11 @@ public class DashboardFragment extends ActionBarFragment
 
         /*
         ProviderEvaluation.Rolling rollingProviderEvaluation = providerEvaluation.getRolling();
-        mRatingsProPerformanceView.addItem(Integer.toString(rollingProviderEvaluation.getFiveStarRatedBookingCount()), FIVE_STAR_RATINGS);
-        mRatingsProPerformanceView.addItem(Integer.toString(rollingProviderEvaluation.getRatedBookingCount()), RATED_JOBS);
-        mRatingsProPerformanceView.addItem(Integer.toString(rollingProviderEvaluation.getTotalBookingCount()), TOTAL_JOBS);
+        mRatingsProPerformanceView.setJobRatings(
+        Integer.toString(rollingProviderEvaluation.getFiveStarRatedBookingCount()),
+            Integer.toString(rollingProviderEvaluation.getRatedBookingCount()),
+             Integer.toString(rollingProviderEvaluation.getTotalBookingCount())
+            );
         */
 
         /*

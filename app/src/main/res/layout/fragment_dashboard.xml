@@ -40,10 +40,11 @@
             >
 
             <TextView
-                style="@style/TextView.Medium.Book"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
+                android:textSize="@dimen/medium_text_size"
+                android:textColor="@color/black"
                 android:text="Lifetime Rating "
                 />
 
@@ -58,11 +59,11 @@
         </LinearLayout>
 
         <TextView
-            style="@style/TextView.Small.Book.Light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/section_item_margin"
             android:gravity="center_horizontal"
+            android:textColor="@color/tertiary_grey"
             android:text="*must maintain at least a 4.2"
             android:textSize="@dimen/small_text_size"
             />

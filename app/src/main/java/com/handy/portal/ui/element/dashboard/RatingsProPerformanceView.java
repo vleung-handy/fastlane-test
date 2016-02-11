@@ -10,7 +10,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -24,6 +23,12 @@ public class RatingsProPerformanceView extends FrameLayout
     @Inject
     Bus mBus;
 
+    @Bind(R.id.five_star_ratings_view)
+    JobRatingView mFiveStarRatingsView;
+    @Bind(R.id.rated_jobs_view)
+    JobRatingView mRatedJobsView;
+    @Bind(R.id.total_jobs_view)
+    JobRatingView mTotalJobsView;
     @Bind(R.id.jobs_ratings_layout)
     ViewGroup mJobRatingsLayout;
     @Bind(R.id.date_text)
@@ -59,15 +64,21 @@ public class RatingsProPerformanceView extends FrameLayout
         Utils.inject(getContext(), this);
         inflate(getContext(), R.layout.element_ratings_pro_performance, this);
         ButterKnife.bind(this);
+
+        mFiveStarRatingsView.setDescription(getResources().getString(R.string.five_star_ratings));
+        mRatedJobsView.setDescription(getResources().getString(R.string.rated_jobs));
+        mTotalJobsView.setDescription(getResources().getString(R.string.total_jobs));
     }
 
-    public void addItem(String mainText, String subtitleText){
-        JobRatingView jobRatingView = new JobRatingView(getContext());
-        jobRatingView.setText(mainText, subtitleText);
-        mJobRatingsLayout.addView(jobRatingView, UIUtils.EQUAL_WEIGHT_PARAMS);
+    public void setJobRatings(String fiveStarRatings, String ratedJobs, String totalJobs)
+    {
+        mFiveStarRatingsView.setNumber(fiveStarRatings);
+        mRatedJobsView.setNumber(ratedJobs);
+        mTotalJobsView.setNumber(totalJobs);
     }
 
-    public void setDate(String date){
+    public void setDate(String date)
+    {
         mDateText.setText(date);
     }
 }
