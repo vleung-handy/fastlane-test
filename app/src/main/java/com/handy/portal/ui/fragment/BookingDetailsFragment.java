@@ -304,7 +304,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onPause()
     {
         super.onPause();
-        if (mAssociatedBooking.isCheckedIn())
+        if (mAssociatedBooking != null && mAssociatedBooking.isCheckedIn())
         {
             List<Booking.BookingInstructionUpdateRequest> checklist = mAssociatedBooking.getCustomerPreferences();
             if (checklist != null)
