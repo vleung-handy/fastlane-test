@@ -7,7 +7,7 @@ public abstract class EventLog
     @SerializedName("timestamp")
     private long mTimestampSecs;
     @SerializedName("provider_id")
-    private String mProviderId;
+    private int mProviderId;
     @SerializedName("version_track")
     private String mVersionTrack;
     @SerializedName("event_type")
@@ -18,7 +18,7 @@ public abstract class EventLog
     public EventLog(String providerId, String versionTrack, String eventType, String eventContext)
     {
         mTimestampSecs = System.currentTimeMillis() / 1000;
-        mProviderId = providerId;
+        mProviderId = providerId != null && !providerId.isEmpty() ? Integer.parseInt(providerId) : 0;
         mVersionTrack = versionTrack;
         mEventType = eventType;
         mEventContext = eventContext;
