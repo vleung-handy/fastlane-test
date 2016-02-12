@@ -57,8 +57,6 @@ import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
-import com.handy.portal.ui.element.dashboard.JobRatingView;
-import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
@@ -157,10 +155,8 @@ import retrofit.converter.GsonConverter;
         NotificationsFragment.class,
         NotificationsListView.class,
         NotificationsListEntryView.class,
-        WelcomeProPerformanceView.class,
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
-        JobRatingView.class,
         BookingDetailsJobInstructionsView.class,
 })
 public final class ApplicationModule
