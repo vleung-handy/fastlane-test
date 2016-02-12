@@ -1,5 +1,7 @@
 package com.handy.portal.ui.adapter;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,15 +10,18 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.dashboard.ProviderRating;
+import com.handy.portal.util.DateTimeUtils;
 
 import java.util.List;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder>
 {
+    private Context mContext;
     private List<ProviderRating> mRatings;
 
-    public ReviewListAdapter(List<ProviderRating> ratings)
+    public ReviewListAdapter(@NonNull final Context context, @NonNull final List<ProviderRating> ratings)
     {
+        mContext = context;
         mRatings = ratings;
     }
 
@@ -35,7 +40,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     {
         ProviderRating rating = mRatings.get(position);
         holder.mReviewTextView.setText(rating.getComment());
-        holder.mDateTextView.setText(rating.getSource() + ", " + rating.getDateRating());
+        String date = DateTimeUtils.getMonthAndYear(rating.getDateRating());
+        holder.mDateTextView.setText(mContext.getString(R.string.comma_formatted, rating.getSource(), date));
     }
 
     @Override

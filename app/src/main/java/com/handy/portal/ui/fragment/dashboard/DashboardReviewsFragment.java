@@ -72,7 +72,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
         mReviewRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mReviewRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ReviewListAdapter(mRatings);
+        mAdapter = new ReviewListAdapter(getContext(), mRatings);
 
         mReviewRecyclerView.setAdapter(mAdapter);
     }
