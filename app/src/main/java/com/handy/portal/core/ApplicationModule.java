@@ -57,7 +57,6 @@ import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.JobRatingView;
-import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
@@ -66,7 +65,6 @@ import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
@@ -77,6 +75,7 @@ import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -159,7 +158,6 @@ import retrofit.converter.GsonConverter;
         NotificationsListView.class,
         NotificationsListEntryView.class,
         WelcomeProPerformanceView.class,
-        RatingsProPerformanceView.class,
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
         JobRatingView.class,
