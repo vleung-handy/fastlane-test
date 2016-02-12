@@ -86,6 +86,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
+    protected abstract String getBookingSourceName();
+
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
 
@@ -345,6 +347,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
+        arguments.putString(BundleKeys.BOOKING_SOURCE, getBookingSourceName());
         HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
         bus.post(event);
     }

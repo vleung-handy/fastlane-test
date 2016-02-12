@@ -4,16 +4,16 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.Booking;
+import com.handy.portal.ui.widget.InstructionCheckItemView;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -28,52 +28,60 @@ public class CustomerRequestsView extends FrameLayout
     @Bind(R.id.booking_details_job_instructions_checklist_entries_layout)
     LinearLayout mEntriesLayout;
 
-    private List<CheckBox> mCheckBoxEntries = new ArrayList<>();
+    private List<InstructionCheckItemView> mCheckBoxEntries = new LinkedList<>();
 
-    public CustomerRequestsView(final Context context, final String sectionTitle,
-                                @Nullable final Integer sectionIconId, final List<String> entries)
+    public CustomerRequestsView(
+            final Context context, final String sectionTitle, @Nullable final Integer sectionIconId,
+            @NonNull final List<Booking.BookingInstructionUpdateRequest> entries)
     {
         super(context);
-        init(sectionTitle, sectionIconId, entries);
+        init();
+        setDisplay(sectionTitle, sectionIconId, entries);
     }
 
     public CustomerRequestsView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public CustomerRequestsView(final Context context, final AttributeSet attrs, final int defStyle)
     {
         super(context, attrs, defStyle);
+        init();
     }
 
-    public void init(String sectionTitle, @Nullable Integer sectionIconId, @NonNull List<String> entries)
+    public void setDisplay(String sectionTitle, @Nullable Integer sectionIconId,
+                           @NonNull List<Booking.BookingInstructionUpdateRequest> customerPreferences)
     {
-        inflate(getContext(), R.layout.element_booking_details_job_instructions_checklist, this);
-        ButterKnife.bind(this);
-
         mSectionTitleText.setText(sectionTitle);
         if (sectionIconId != null)
         {
             mSectionIcon.setImageResource(sectionIconId);
         }
 
-        for (String entry : entries)
+        for (Booking.BookingInstructionUpdateRequest instruction : customerPreferences)
         {
-            CheckBox blueCheckBox = (CheckBox) LayoutInflater.from(getContext())
-                    .inflate(R.layout.checkbox_blue_circle, mEntriesLayout, false);
-            blueCheckBox.setText(entry);
-            mEntriesLayout.addView(blueCheckBox);
-            mCheckBoxEntries.add(blueCheckBox);
+            InstructionCheckItemView checkItem = new InstructionCheckItemView(getContext());
+            checkItem.refreshDisplay(instruction);
+            mEntriesLayout.addView(checkItem);
+            mCheckBoxEntries.add(checkItem);
         }
     }
 
-    public boolean isChecked()
+    @Override
+    public void setEnabled(final boolean enabled)
     {
-        for (CheckBox checkBox : mCheckBoxEntries)
+        super.setEnabled(enabled);
+        for (InstructionCheckItemView entry : mCheckBoxEntries)
         {
-            if (checkBox.isChecked()) { return true; }
+            entry.setEnabled(enabled);
         }
-        return false;
+    }
+
+    private void init()
+    {
+        inflate(getContext(), R.layout.element_booking_details_job_instructions_checklist, this);
+        ButterKnife.bind(this);
     }
 }

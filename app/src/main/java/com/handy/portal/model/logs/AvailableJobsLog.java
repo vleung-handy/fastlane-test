@@ -82,7 +82,7 @@ public class AvailableJobsLog extends EventLog
         private Date mDateStart;
         @SerializedName("frequency")
         private int mFrequency;
-        @SerializedName("source")
+        @SerializedName("claim_source")
         private String mSource;
 
 
@@ -121,7 +121,7 @@ public class AvailableJobsLog extends EventLog
         private Date mDateStart;
         @SerializedName("frequency")
         private int mFrequency;
-        @SerializedName("source")
+        @SerializedName("claim_source")
         private String mSource;
 
 

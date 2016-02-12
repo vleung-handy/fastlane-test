@@ -55,6 +55,7 @@ import com.handy.portal.ui.constructor.ProfileContactView;
 import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.JobRatingView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
@@ -89,7 +90,6 @@ import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
-import com.securepreferences.SecurePreferences;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
@@ -161,6 +161,7 @@ import retrofit.converter.GsonConverter;
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
         JobRatingView.class,
+        BookingDetailsJobInstructionsView.class,
 })
 public final class ApplicationModule
 {
@@ -339,17 +340,11 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final SecurePreferences providePrefs()
-    {
-        return new SecurePreferences(context, configs.getProperty("secure_prefs_key"), "prefs.xml");
-    }
-
-    @Provides
-    @Singleton
     final BookingManager provideBookingManager(final Bus bus,
-                                               final DataManager dataManager)
+                                               final DataManager dataManager,
+                                               final EventLogFactory eventLogFactory)
     {
-        return new BookingManager(bus, dataManager);
+        return new BookingManager(bus, dataManager, eventLogFactory);
     }
 
     @Provides
@@ -393,9 +388,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final PrefsManager providePrefsManager(final SecurePreferences prefs)
+    final PrefsManager providePrefsManager()
     {
-        return new PrefsManager(prefs);
+        return new PrefsManager(context);
     }
 
     @Provides

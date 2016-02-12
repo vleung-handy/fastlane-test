@@ -1,18 +1,22 @@
 buildscript {
     repositories {
+        flatDir {
+            dirs 'libs'
+            dirs 'aars'
+        }
         mavenCentral()
-        maven { url 'http://download.crashlytics.com/maven' }
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'com.newrelic.agent.android:agent-gradle-plugin:5.1.2'
-        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.14.7'
+        classpath 'io.fabric.tools:gradle:1.19.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.2.1'
     }
 }
 repositories {
     mavenCentral()
-    maven { url 'http://download.crashlytics.com/maven' }
+    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "http://dl.bintray.com/urbanairship/android" }
     flatDir {
@@ -23,7 +27,7 @@ repositories {
 apply plugin: 'com.android.application'
 // This does not break the build when Android Studio is missing the JRebel for Android plugin.
 apply plugin: 'com.zeroturnaround.jrebel.android'
-apply plugin: 'crashlytics'
+apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
 apply plugin: 'jacoco'
 apply plugin: 'com.getkeepsafe.dexcount'
@@ -48,7 +52,7 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 806 //0.8.6
+        versionCode 807 //0.8.7
         versionName computeVersionName(versionCode)
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -156,8 +160,10 @@ dependencies {
     //Custom font display
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
-    //Crashyltics client crash reporting
-    compile 'com.crashlytics.android:crashlytics:1.1.13'
+    //Crashlytics
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true;
+    }
 
     //New relic crash reporting
     compile 'com.newrelic.agent.android:android-agent:5.1.2'

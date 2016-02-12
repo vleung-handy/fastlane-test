@@ -10,7 +10,7 @@
     android:orientation="vertical"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -30,19 +30,22 @@
             style="@style/TextView.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/booking_details_job_instructions_checklist_icon"
             android:paddingTop="@dimen/checklist_title_padding_top"
             android:textColor="@color/bg_inactive_grey"
             android:textSize="@dimen/default_text_size"
             tools:text="Customer Requests"
             />
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/booking_details_job_instructions_checklist_entries_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/row_margin"
-        android:orientation="vertical"
-        />
+        <LinearLayout
+            android:id="@+id/booking_details_job_instructions_checklist_entries_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/booking_details_job_instructions_checklist_title_text"
+            android:layout_marginTop="@dimen/row_margin"
+            android:layout_toRightOf="@id/booking_details_job_instructions_checklist_icon"
+            android:orientation="vertical"
+            />
 
+    </RelativeLayout>
 </LinearLayout>

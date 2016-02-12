@@ -7,6 +7,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.analytics.Mixpanel;
@@ -40,6 +41,7 @@ import com.squareup.otto.Bus;
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
+import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BaseApplication extends MultiDexApplication
@@ -180,10 +182,8 @@ public class BaseApplication extends MultiDexApplication
 
     protected void startCrashlytics()
     {
-        if (!BuildConfig.DEBUG)
-        {
-            Crashlytics.start(this);
-        }
+        Crashlytics crashlytics = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build();
+        Fabric.with(this, crashlytics);
     }
 
     protected void createObjectGraph()
