@@ -24,7 +24,7 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.dashboard.ProviderRatings;
+import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -36,6 +36,7 @@ import com.handy.portal.model.payments.StripeTokenResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.mime.TypedInput;
@@ -138,7 +139,7 @@ public abstract class DataManager
     // Pro Dashboard
     public abstract void getProviderEvaluation(String providerId, Callback<ProviderEvaluation> cb);
 
-    public abstract void getProviderFiveStarRatings(String providerId, Callback<ProviderRatings> cb);
+    public abstract void getProviderFiveStarRatings(String providerId, Callback<List<ProviderRating>> cb);
 
     public abstract void getProviderFeedback(String providerId, Callback<ProviderFeedback> cb);
 

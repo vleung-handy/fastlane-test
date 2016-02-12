@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class ProviderRatings
+public class ProviderRating
 {
     @SerializedName("id")
-    private int id;
+    private int mId;
     @SerializedName("user_id")
     private int mUserId;
     @SerializedName("rating")
@@ -22,9 +22,21 @@ public class ProviderRatings
     @SerializedName("comment")
     private String mComment;
 
+    public ProviderRating(final int id, final int userId, final int rating, final int bookingId,
+                          final Date dateRating, final String source, final String comment)
+    {
+        mId = id;
+        mUserId = userId;
+        mRating = rating;
+        mBookingId = bookingId;
+        mDateRating = dateRating;
+        mSource = source;
+        mComment = comment;
+    }
+
     public int getId()
     {
-        return id;
+        return mId;
     }
 
     public int getUserId()

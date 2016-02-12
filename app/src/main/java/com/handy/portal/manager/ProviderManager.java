@@ -20,11 +20,14 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.dashboard.ProviderRatings;
+import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.model.payments.PaymentFlow;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ProviderManager
@@ -225,7 +228,7 @@ public class ProviderManager
     public void onRequestProviderEvaluation(ProviderDashboardEvent.RequestProviderEvaluation event)
     {
         String providerId = "";
-        
+
         mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
         {
             @Override
@@ -248,21 +251,38 @@ public class ProviderManager
     {
         String providerId = "";
 
-        mDataManager.getProviderFiveStarRatings(providerId, new DataManager.Callback<ProviderRatings>()
-        {
+        // TODO: remove this fake data once the api is ready
+        final List<ProviderRating> ratings = new ArrayList<>();
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
 
-            @Override
-            public void onSuccess(final ProviderRatings providerRatings)
-            {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(providerRatings));
-            }
+        mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(ratings));
 
-            @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError(error));
-            }
-        });
+//        mDataManager.getProviderFiveStarRatings(providerId, new DataManager.Callback<List<ProviderRating>>()
+//        {
+//            @Override
+//            public void onSuccess(final List<ProviderRating> providerRatings)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(providerRatings));
+//            }
+//
+//            @Override
+//            public void onError(final DataManager.DataManagerError error)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError(error));
+//            }
+//        });
 
     }
 
