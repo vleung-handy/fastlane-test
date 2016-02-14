@@ -19,9 +19,9 @@ import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
-import com.handy.portal.model.TypedJsonString;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.logs.EventLogBundle;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -323,9 +323,9 @@ public final class BaseDataManager extends DataManager
 
     //Log Events
     @Override
-    public void postLogs(TypedJsonString params, final Callback<EventLogResponse> cb)
+    public void postLogs(final EventLogBundle eventLogBundle, final Callback<EventLogResponse> cb)
     {
-        mEventLogService.postLogs(params, new LogEventsRetroFitCallback(cb));
+        mEventLogService.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
     }
 
     // Notifications

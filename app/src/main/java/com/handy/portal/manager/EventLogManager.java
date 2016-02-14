@@ -6,10 +6,8 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.LogEvent;
-import com.handy.portal.model.TypedJsonString;
 import com.handy.portal.model.logs.EventLog;
 import com.handy.portal.model.logs.EventLogBundle;
 import com.handy.portal.model.logs.EventLogResponse;
@@ -56,22 +54,28 @@ public class EventLogManager
     @Subscribe
     public void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
     {
-        final List<String> bundles = loadSavedEventBundles();
-        if (bundles.size() == 0) { return; }
-        for (final String bundle : bundles)
+        final List<String> jsonBundleStrings = loadSavedEventBundles();
+        if (jsonBundleStrings.size() == 0) { return; }
+        for (final String bundleString : jsonBundleStrings)
         {
-            mDataManager.postLogs(new TypedJsonString(bundle), new DataManager.Callback<EventLogResponse>()
-            {
-                @Override
-                public void onSuccess(EventLogResponse response)
-                {
-                    bundles.remove(bundle);
-                    saveToPreference(bundles);
-                }
+            final EventLogBundle eventLogBundle =
+                    GSON.fromJson(bundleString, EventLogBundle.class);
+            eventLogBundle.prepareForSending();
+            mDataManager.postLogs(eventLogBundle,
+                    new DataManager.Callback<EventLogResponse>()
+                    {
+                        @Override
+                        public void onSuccess(EventLogResponse response)
+                        {
+                            jsonBundleStrings.remove(bundleString);
+                            saveToPreference(jsonBundleStrings);
+                        }
 
-                @Override
-                public void onError(DataManager.DataManagerError error) { }
-            });
+                        @Override
+                        public void onError(DataManager.DataManagerError error)
+                        {
+                        }
+                    });
         }
     }
 
@@ -81,16 +85,10 @@ public class EventLogManager
         if (sLogs.size() > 0)
         {
             List<String> eventLogBundles = loadSavedEventBundles();
-            String bundleId = createBundleId();
-            eventLogBundles.add(GSON.toJson(new EventLogBundle(bundleId, sLogs)));
+            eventLogBundles.add(GSON.toJson(new EventLogBundle(getProviderId(), sLogs)));
             saveToPreference(eventLogBundles);
             sLogs = new ArrayList<>();
         }
-    }
-
-    private String createBundleId()
-    {
-        return System.currentTimeMillis() + "+" + BaseApplication.getDeviceId();
     }
 
     private List<String> loadSavedEventBundles()
@@ -111,5 +109,10 @@ public class EventLogManager
     {
         String json = GSON.toJson(eventLogBundles);
         mPrefsManager.setString(PrefsKey.EVENT_LOG_BUNDLES, json);
+    }
+
+    private int getProviderId()
+    {
+        return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
     }
 }
