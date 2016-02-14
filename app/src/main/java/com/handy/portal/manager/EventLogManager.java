@@ -8,9 +8,9 @@ import com.google.gson.Gson;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.LogEvent;
-import com.handy.portal.model.logs.EventLog;
 import com.handy.portal.model.logs.EventLogBundle;
 import com.handy.portal.model.logs.EventLogResponse;
+import com.handy.portal.model.logs.Event;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -25,7 +25,7 @@ public class EventLogManager
     private static final int MAX_NUM_PER_BUNDLE = 100;
     private static final Gson GSON = new Gson();
 
-    private static List<EventLog> sLogs = new ArrayList<>();
+    private static List<Event> sLogs = new ArrayList<>();
     private final Bus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
@@ -41,9 +41,9 @@ public class EventLogManager
     }
 
     @Subscribe
-    public void addLog(@NonNull LogEvent.AddLogEvent event)
+    public synchronized void addLog(@NonNull LogEvent.AddLogEvent event)
     {
-        sLogs.add(event.getLog());
+        sLogs.add(new Event(getProviderId(), event.getLog()));
         if (sLogs.size() > MAX_NUM_PER_BUNDLE)
         {
             saveLogs(null);
@@ -52,7 +52,7 @@ public class EventLogManager
     }
 
     @Subscribe
-    public void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
+    public synchronized void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
     {
         final List<String> jsonBundleStrings = loadSavedEventBundles();
         if (jsonBundleStrings.size() == 0) { return; }
@@ -80,7 +80,7 @@ public class EventLogManager
     }
 
     @Subscribe
-    public void saveLogs(@Nullable LogEvent.SaveLogsEvent event)
+    public synchronized void saveLogs(@Nullable LogEvent.SaveLogsEvent event)
     {
         if (sLogs.size() > 0)
         {

@@ -10,22 +10,17 @@ public class EventLogBundle
     @SerializedName("event_bundle_id")
     private String mEventBundleId;
     @SerializedName("events")
-    private List<EventLog> mEventLogs;
+    private List<Event> mEvents;
     @SerializedName("event_bundle_sent_timestamp")
     private long mSentTimestampSecs;
     @SerializedName("super_properties")
     private EventSuperProperties mEventSuperProperties;
 
-    public EventLogBundle(final int providerId, final List<EventLog> eventLogs)
+    public EventLogBundle(final int providerId, final List<Event> events)
     {
         mEventBundleId = createBundleId();
-        mEventLogs = eventLogs;
+        mEvents = events;
         mEventSuperProperties = new EventSuperProperties(providerId);
-    }
-
-    public void add(EventLog eventLog)
-    {
-        mEventLogs.add(eventLog);
     }
 
     public void prepareForSending()
