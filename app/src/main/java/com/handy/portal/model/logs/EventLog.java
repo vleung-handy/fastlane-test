@@ -1,13 +1,9 @@
 package com.handy.portal.model.logs;
 
-import com.google.gson.annotations.SerializedName;
-
 public abstract class EventLog
 {
-    @SerializedName("event_type")
-    private String mEventType;
-    @SerializedName("event_context")
-    private String mEventContext;
+    private transient String mEventType;
+    private transient String mEventContext;
 
     public EventLog(String providerId, String versionTrack, String eventType, String eventContext)
     {
