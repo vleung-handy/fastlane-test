@@ -22,11 +22,11 @@ public class CheckInFlowLog extends EventLog
     private double mDistance;
 
     public CheckInFlowLog(
-            String providerId, String versionTrack, String eventType, String bookingId,
-            double proLatitude, double proLongitude, double bookingLatitude,
-            double bookingLongitude, double accuracy, double distance)
+            final String eventType, final String bookingId, final double proLatitude,
+            final double proLongitude, final double bookingLatitude, final double bookingLongitude,
+            final double accuracy, final double distance)
     {
-        super(providerId, versionTrack, eventType, EVENT_CONTEXT);
+        super(eventType, EVENT_CONTEXT);
         mBookingId = bookingId;
         mProLatitude = proLatitude;
         mProLongitude = proLongitude;
@@ -40,39 +40,43 @@ public class CheckInFlowLog extends EventLog
     {
         private static final String EVENT_TYPE = "on_my_way_submitted";
 
-        public OnMyWay(String providerId, String versionTrack, String bookingId, double proLatitude,
-                       double proLongitude, double bookingLatitude, double bookingLongitude,
-                       double accuracy, double distance)
+        public OnMyWay(
+                final String bookingId, final double proLatitude, final double proLongitude,
+                final double bookingLatitude, final double bookingLongitude, final double accuracy,
+                final double distance)
         {
-            super(providerId, versionTrack, EVENT_TYPE, bookingId, proLatitude, proLongitude,
-                    bookingLatitude, bookingLongitude, accuracy, distance);
+            super(EVENT_TYPE, bookingId, proLatitude, proLongitude, bookingLatitude,
+                    bookingLongitude, accuracy, distance);
         }
     }
+
 
     public static class CheckIn extends CheckInFlowLog
     {
         private static final String EVENT_TYPE = "manual_checkin_submitted";
 
-        public CheckIn(String providerId, String versionTrack, String bookingId, double proLatitude,
-                       double proLongitude, double bookingLatitude, double bookingLongitude,
-                       double accuracy, double distance)
+        public CheckIn(
+                final String bookingId, final double proLatitude, final double proLongitude,
+                final double bookingLatitude, final double bookingLongitude, final double accuracy,
+                double distance)
         {
-            super(providerId, versionTrack, EVENT_TYPE, bookingId, proLatitude, proLongitude,
-                    bookingLatitude, bookingLongitude, accuracy, distance);
-
+            super(EVENT_TYPE, bookingId, proLatitude, proLongitude, bookingLatitude,
+                    bookingLongitude, accuracy, distance);
         }
     }
+
 
     public static class CheckOut extends CheckInFlowLog
     {
         private static final String EVENT_TYPE = "manual_checkout_submitted";
 
-        public CheckOut(String providerId, String versionTrack, String bookingId, double proLatitude,
-                        double proLongitude, double bookingLatitude, double bookingLongitude,
-                        double accuracy, double distance)
+        public CheckOut(
+                final String bookingId, final double proLatitude, final double proLongitude,
+                final double bookingLatitude, final double bookingLongitude, final double accuracy,
+                final double distance)
         {
-            super(providerId, versionTrack, EVENT_TYPE, bookingId, proLatitude, proLongitude,
-                    bookingLatitude, bookingLongitude, accuracy, distance);
+            super(EVENT_TYPE, bookingId, proLatitude, proLongitude, bookingLatitude,
+                    bookingLongitude, accuracy, distance);
         }
     }
 }

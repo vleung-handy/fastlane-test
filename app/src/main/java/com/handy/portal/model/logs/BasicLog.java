@@ -9,21 +9,21 @@ public class BasicLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "app";
 
-    protected BasicLog(
-            String providerId, String versionTrack, String eventType)
+    protected BasicLog(final String eventType)
     {
-        super(providerId, versionTrack, eventType, EVENT_CONTEXT);
+        super(eventType, EVENT_CONTEXT);
     }
 
     public static class Open extends BasicLog
     {
         private static final String EVENT_TYPE = "open";
 
-        public Open(String providerId, String versionTrack)
+        public Open()
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
         }
     }
+
 
     public static class Navigation extends BasicLog
     {
@@ -32,9 +32,9 @@ public class BasicLog extends EventLog
         @SerializedName("tab_name")
         private String mTabName;
 
-        public Navigation(String providerId, String versionTrack, String tabName)
+        public Navigation(final String tabName)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mTabName = tabName;
         }
     }

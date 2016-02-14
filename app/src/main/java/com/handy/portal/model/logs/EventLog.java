@@ -5,7 +5,7 @@ public abstract class EventLog
     private transient String mEventType;
     private transient String mEventContext;
 
-    public EventLog(String providerId, String versionTrack, String eventType, String eventContext)
+    public EventLog(final String eventType, final String eventContext)
     {
         mEventType = eventType;
         mEventContext = eventContext;

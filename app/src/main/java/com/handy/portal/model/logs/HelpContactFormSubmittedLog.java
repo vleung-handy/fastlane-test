@@ -15,9 +15,9 @@ public class HelpContactFormSubmittedLog extends EventLog
     private String mHelpNodeTitle;
 
     public HelpContactFormSubmittedLog(
-            String providerId, String versionTrack, String path, int helpNodeId, String helpNodeTitle)
+            final String path, final int helpNodeId, final String helpNodeTitle)
     {
-        super(providerId, versionTrack, EVENT_TYPE, EVENT_CONTEXT);
+        super(EVENT_TYPE, EVENT_CONTEXT);
         mPath = path;
         mHelpNodeId = helpNodeId;
         mHelpNodeTitle = helpNodeTitle;
