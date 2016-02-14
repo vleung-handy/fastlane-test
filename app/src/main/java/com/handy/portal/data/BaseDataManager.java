@@ -1,5 +1,6 @@
 package com.handy.portal.data;
 
+import com.google.gson.JsonObject;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
@@ -21,7 +22,6 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
-import com.handy.portal.model.logs.EventLogBundle;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -323,7 +323,7 @@ public final class BaseDataManager extends DataManager
 
     //Log Events
     @Override
-    public void postLogs(final EventLogBundle eventLogBundle, final Callback<EventLogResponse> cb)
+    public void postLogs(final JsonObject eventLogBundle, final Callback<EventLogResponse> cb)
     {
         mEventLogService.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
     }

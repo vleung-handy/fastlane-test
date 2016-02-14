@@ -5,12 +5,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.LogEvent;
+import com.handy.portal.model.logs.Event;
 import com.handy.portal.model.logs.EventLogBundle;
 import com.handy.portal.model.logs.EventLogResponse;
-import com.handy.portal.model.logs.Event;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 
 public class EventLogManager
 {
+    private static final String SENT_TIMESTAMP_SECS_KEY = "event_bundle_sent_timestamp";
     private static final int MAX_NUM_PER_BUNDLE = 100;
     private static final Gson GSON = new Gson();
 
@@ -44,7 +46,7 @@ public class EventLogManager
     public synchronized void addLog(@NonNull LogEvent.AddLogEvent event)
     {
         sLogs.add(new Event(getProviderId(), event.getLog()));
-        if (sLogs.size() > MAX_NUM_PER_BUNDLE)
+        if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
         {
             saveLogs(null);
             sendLogs(null);
@@ -58,9 +60,8 @@ public class EventLogManager
         if (jsonBundleStrings.size() == 0) { return; }
         for (final String bundleString : jsonBundleStrings)
         {
-            final EventLogBundle eventLogBundle =
-                    GSON.fromJson(bundleString, EventLogBundle.class);
-            eventLogBundle.prepareForSending();
+            final JsonObject eventLogBundle = GSON.fromJson(bundleString, JsonObject.class);
+            eventLogBundle.addProperty(SENT_TIMESTAMP_SECS_KEY, System.currentTimeMillis() / 1000);
             mDataManager.postLogs(eventLogBundle,
                     new DataManager.Callback<EventLogResponse>()
                     {
