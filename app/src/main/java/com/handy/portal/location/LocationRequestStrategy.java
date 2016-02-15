@@ -12,6 +12,7 @@ import java.util.Queue;
 /**
  * this should be created for each location query strategy
  *
+ * manages when to post updates to the server
  * TODO: integrate
  */
 public class LocationRequestStrategy //TODO: rename this so it is more distinct from the location query strategy model

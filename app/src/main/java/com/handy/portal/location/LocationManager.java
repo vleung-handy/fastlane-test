@@ -6,8 +6,8 @@ import android.util.Log;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
-import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
@@ -73,7 +73,7 @@ public class LocationManager
 //        }
         mLastLocationSent = location;
         String eventName = "test";
-        LocationUpdate locationUpdate = new LocationUpdate(
+        LocationBatchUpdate.LocationUpdate locationUpdate = new LocationBatchUpdate.LocationUpdate(
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getAccuracy(),
@@ -98,6 +98,10 @@ public class LocationManager
                 e.printStackTrace();
             }
         }
+
+
+        //TODO: put this update in the request queue
+
         mDataManager.sendGeolocation(providerId, locationUpdate, new DataManager.Callback<SuccessWrapper>()
         {
             @Override

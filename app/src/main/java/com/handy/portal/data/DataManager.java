@@ -3,7 +3,7 @@ package com.handy.portal.data;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
-import com.handy.portal.location.model.LocationUpdate;
+import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -41,7 +41,7 @@ import retrofit.mime.TypedInput;
 public abstract class DataManager
 {
     //Portal
-    public abstract void sendGeolocation(int providerId, LocationUpdate locationUpdate, Callback<SuccessWrapper> cb);
+    public abstract void sendGeolocation(int providerId, LocationBatchUpdate.LocationUpdate locationUpdate, Callback<SuccessWrapper> cb);
 
     public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
 

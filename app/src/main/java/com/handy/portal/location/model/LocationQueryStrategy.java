@@ -36,35 +36,69 @@ public class LocationQueryStrategy implements Parcelable
     Date mStartDate;
     @SerializedName("date_end")
     Date mEndDate;
-
-    /**
-     * TODO: what exactly does the server send?
-     */
     @SerializedName("frequency")
-    int mPollingIntervalSeconds; //every N seconds
+    int mLocationPollingIntervalSeconds; //every N seconds
+    @SerializedName("frequency")
+    int mServerPollingIntervalSeconds; //every N seconds
+    @SerializedName("accuracy") //priority level
+    int mLocationAccuracyPriority;
+    @SerializedName("booking_id")
+    String mBookingId;
+
+    public LocationQueryStrategy()
+    {
+        //TODO: REMOVE, FOR TESTING ONLY
+        mStartDate = new Date();
+        mEndDate = new Date(mStartDate.getTime() + DateTimeUtils.MILLISECONDS_IN_HOUR);
+        mLocationPollingIntervalSeconds = 1;
+        mLocationAccuracyPriority = 2;
+    }
+
+    public String getBookingId()
+    {
+        return mBookingId;
+    }
 
     /**
-     * TODO: what exactly does the server send?
+     * TODO: REMOVE, FOR TESTING ONLY
+     *
+     * @param startDate
+     * @param durationMinutes
+     * @param locationPollingIntervalSeconds
+     * @param locationAccuracyPriority
      */
-    @SerializedName("accuracy")
-    int mLocationAccuracyPriority;
-
-    public LocationQueryStrategy setStartDate(final Date startDate)
+    public LocationQueryStrategy(
+            String tag,
+            Date startDate,
+                                 long durationMinutes,
+                                 int locationPollingIntervalSeconds,
+                                 int serverPollingIntervalSeconds,
+                                 int locationAccuracyPriority)
     {
+        mBookingId = tag;
         mStartDate = startDate;
-        return this;
+        mEndDate = new Date(startDate.getTime() + durationMinutes * DateTimeUtils.MILLISECONDS_IN_MINUTE);
+        mLocationPollingIntervalSeconds = locationPollingIntervalSeconds;
+        mServerPollingIntervalSeconds = serverPollingIntervalSeconds;
+        mLocationAccuracyPriority = locationAccuracyPriority;
     }
 
-    public LocationQueryStrategy setEndDate(final Date endDate)
+    protected LocationQueryStrategy(Parcel in)
     {
-        mEndDate = endDate;
-        return this;
+        mStartDate = new Date(in.readLong());
+        mEndDate = new Date(in.readLong());
+        mLocationPollingIntervalSeconds = in.readInt();
+        mLocationAccuracyPriority = in.readInt();
     }
 
-    public LocationQueryStrategy setPollingIntervalSeconds(final int pollingIntervalSeconds)
+    public int getServerPollingIntervalSeconds()
     {
-        mPollingIntervalSeconds = pollingIntervalSeconds;
-        return this;
+        return mServerPollingIntervalSeconds;
+    }
+
+    public int getLocationAccuracyPriority()
+    {
+        return mLocationAccuracyPriority;
     }
 
     public LocationQueryStrategy setLocationAccuracyPriority(final int locationAccuracyPriority)
@@ -73,48 +107,15 @@ public class LocationQueryStrategy implements Parcelable
         return this;
     }
 
-    public LocationQueryStrategy()
+    public int getLocationPollingIntervalSeconds()
     {
-        //TODO: REMOVE, FOR TESTING ONLY
-        mStartDate = new Date();
-        mEndDate = new Date(mStartDate.getTime() + DateTimeUtils.MILLISECONDS_IN_HOUR);
-        mPollingIntervalSeconds = 1;
-        mLocationAccuracyPriority = 2;
+        return mLocationPollingIntervalSeconds;
     }
 
-    /**
-     * TODO: REMOVE, FOR TESTING ONLY
-     *
-     * @param startDate
-     * @param durationMinutes
-     * @param pollingIntervalSeconds
-     * @param locationAccuracyPriority
-     */
-    public LocationQueryStrategy(Date startDate, long durationMinutes,
-                                 int pollingIntervalSeconds, int locationAccuracyPriority)
+    public LocationQueryStrategy setLocationPollingIntervalSeconds(final int locationPollingIntervalSeconds)
     {
-        mStartDate = startDate;
-        mEndDate = new Date(startDate.getTime() + durationMinutes * DateTimeUtils.MILLISECONDS_IN_MINUTE);
-        mPollingIntervalSeconds = pollingIntervalSeconds;
-        mLocationAccuracyPriority = locationAccuracyPriority;
-    }
-
-    protected LocationQueryStrategy(Parcel in)
-    {
-        mStartDate = new Date(in.readLong());
-        mEndDate = new Date(in.readLong());
-        mPollingIntervalSeconds = in.readInt();
-        mLocationAccuracyPriority = in.readInt();
-    }
-
-    public int getLocationAccuracyPriority()
-    {
-        return mLocationAccuracyPriority;
-    }
-
-    public int getPollingIntervalSeconds()
-    {
-        return mPollingIntervalSeconds;
+        mLocationPollingIntervalSeconds = locationPollingIntervalSeconds;
+        return this;
     }
 
     public Date getEndDate()
@@ -122,9 +123,21 @@ public class LocationQueryStrategy implements Parcelable
         return mEndDate;
     }
 
+    public LocationQueryStrategy setEndDate(final Date endDate)
+    {
+        mEndDate = endDate;
+        return this;
+    }
+
     public Date getStartDate()
     {
         return mStartDate;
+    }
+
+    public LocationQueryStrategy setStartDate(final Date startDate)
+    {
+        mStartDate = startDate;
+        return this;
     }
 
     @Override
@@ -138,7 +151,7 @@ public class LocationQueryStrategy implements Parcelable
     {
         dest.writeLong(mStartDate.getTime());
         dest.writeLong(mEndDate.getTime());
-        dest.writeInt(mPollingIntervalSeconds);
+        dest.writeInt(mLocationPollingIntervalSeconds);
         dest.writeInt(mLocationAccuracyPriority);
     }
 
@@ -152,7 +165,7 @@ public class LocationQueryStrategy implements Parcelable
     {
         return "start date: " + mStartDate.toString()
                 + "\nend date: " + mEndDate.toString()
-                + "\npolling frequency: " + mPollingIntervalSeconds
+                + "\npolling frequency: " + mLocationPollingIntervalSeconds
                 + "\nlocation accuracy: " + mLocationAccuracyPriority;
     }
 }

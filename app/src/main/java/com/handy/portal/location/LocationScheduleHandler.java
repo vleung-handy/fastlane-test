@@ -116,7 +116,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
      * TODO: if we just use one listener, does requestLocationUpdates override the previous location update request?
      * @param locationQueryStrategy
      */
-    public void startStrategy(@NonNull LocationQueryStrategy locationQueryStrategy)
+    public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy)
     {
         /*
         TODO: TEST ONLY. seriously refactor this. don't know how server is going to send accuracy codes yet
@@ -137,11 +137,12 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
                 break;
         }
-        long pollingIntervalMs = locationQueryStrategy.getPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
+        long pollingIntervalMs = locationQueryStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
         LocationRequest locationRequest = new LocationRequest()
 //                .setSmallestDisplacement(DEFAULT_SMALLEST_DISPLACEMENT_METERS) //disabled for local testing
                 .setPriority(priority)
                 .setExpirationDuration(locationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis())
+                .setMaxWaitTime(locationQueryStrategy.getServerPollingIntervalSeconds())
                 .setInterval(pollingIntervalMs)
                 .setFastestInterval(pollingIntervalMs) //TODO: change this, test only
                 ;
@@ -157,7 +158,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
             @Override
             public void onLocationChanged(final Location location)
             {
-                bus.post(new LocationEvent.LocationChanged(location));
+                bus.post(new LocationEvent.LocationChanged(location, locationQueryStrategy));
             }
         };
         mActiveLocationListeners.add(locationListener);

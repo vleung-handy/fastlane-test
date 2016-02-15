@@ -152,6 +152,8 @@ public class LocationService extends Service
     public void onConnected(final Bundle bundle)
     {
         startLocationQueryingIfReady();
+
+        //TODO: send the current batch of location updates to the server
     }
 
     @Override

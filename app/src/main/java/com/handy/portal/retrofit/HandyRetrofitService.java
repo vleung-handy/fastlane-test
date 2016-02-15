@@ -1,6 +1,6 @@
 package com.handy.portal.retrofit;
 
-import com.handy.portal.location.model.LocationUpdate;
+import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ProviderSettings;
 
@@ -35,7 +35,7 @@ public interface HandyRetrofitService
     @POST(PROVIDERS_PATH + "{id}/geolocation")
     void sendGeolocation(
             @Path("id") int providerId,
-            @Body LocationUpdate locationUpdate,
+            @Body LocationBatchUpdate.LocationUpdate locationUpdate,
                                 HandyRetrofitCallback cb);
 
     @GET("/check_for_update")

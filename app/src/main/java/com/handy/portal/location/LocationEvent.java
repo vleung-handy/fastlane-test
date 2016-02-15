@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.model.LocationQuerySchedule;
+import com.handy.portal.location.model.LocationQueryStrategy;
 
 /**
  * events used by the bus
@@ -15,10 +16,20 @@ public abstract class LocationEvent
     {
         private final Location mLocation;
 
-        public LocationChanged(Location location)
+        //TODO: may remove this later, might not be needed
+        private final LocationQueryStrategy mLocationQueryStrategy;
+
+        public LocationChanged(Location location, LocationQueryStrategy locationQueryStrategy)
         {
             mLocation = location;
+            mLocationQueryStrategy = locationQueryStrategy;
         }
+
+        public LocationQueryStrategy getLocationQueryStrategy()
+        {
+            return mLocationQueryStrategy;
+        }
+
         public Location getLocation()
         {
             return mLocation;
