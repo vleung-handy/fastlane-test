@@ -66,9 +66,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void sendGeolocation(int providerId, LocationBatchUpdate.LocationUpdate locationUpdate, Callback<SuccessWrapper> cb)
+    public void sendGeolocation(int providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb)
     {
-        service.sendGeolocation(providerId, locationUpdate, new SuccessWrapperRetroFitCallback(cb));
+        service.sendGeolocation(providerId, locationBatchUpdate, new SuccessWrapperRetroFitCallback(cb));
     }
 
     @Override

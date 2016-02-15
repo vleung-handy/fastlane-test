@@ -1,38 +1,29 @@
 package com.handy.portal.location;
 
-import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
-import com.handy.portal.location.model.LocationQueryStrategy;
 
 /**
  * events used by the bus
  */
 public abstract class LocationEvent
 {
-    public static class LocationChanged extends HandyEvent.RequestEvent
+    public static class SendLocationBatchUpdateRequest extends HandyEvent.RequestEvent
     {
-        private final Location mLocation;
+        //used internally right now
+        private final LocationBatchUpdate mLocationBatchUpdate;
 
-        //TODO: may remove this later, might not be needed
-        private final LocationQueryStrategy mLocationQueryStrategy;
-
-        public LocationChanged(Location location, LocationQueryStrategy locationQueryStrategy)
+        public SendLocationBatchUpdateRequest(LocationBatchUpdate locationBatchUpdate)
         {
-            mLocation = location;
-            mLocationQueryStrategy = locationQueryStrategy;
+            mLocationBatchUpdate = locationBatchUpdate;
         }
 
-        public LocationQueryStrategy getLocationQueryStrategy()
+        public LocationBatchUpdate getLocationBatchUpdate()
         {
-            return mLocationQueryStrategy;
-        }
-
-        public Location getLocation()
-        {
-            return mLocation;
+            return mLocationBatchUpdate;
         }
     }
 

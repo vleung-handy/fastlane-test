@@ -41,7 +41,7 @@ import retrofit.mime.TypedInput;
 public abstract class DataManager
 {
     //Portal
-    public abstract void sendGeolocation(int providerId, LocationBatchUpdate.LocationUpdate locationUpdate, Callback<SuccessWrapper> cb);
+    public abstract void sendGeolocation(int providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb);
 
     public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
 

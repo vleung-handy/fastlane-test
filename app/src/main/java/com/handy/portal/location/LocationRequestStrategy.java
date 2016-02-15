@@ -1,9 +1,11 @@
 package com.handy.portal.location;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQueryStrategy;
+import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.util.DateTimeUtils;
 
 import java.util.LinkedList;
@@ -11,13 +13,12 @@ import java.util.Queue;
 
 /**
  * this should be created for each location query strategy
- *
+ * <p/>
  * manages when to post updates to the server
- * TODO: integrate
  */
 public class LocationRequestStrategy //TODO: rename this so it is more distinct from the location query strategy model
 {
-    Queue<LocationBatchUpdate.LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
+    Queue<LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
     long mTimestampLastUpdatePostedMs = 0;
     LocationQueryStrategy mLocationQueryStrategy;
 
@@ -26,14 +27,20 @@ public class LocationRequestStrategy //TODO: rename this so it is more distinct 
         mLocationQueryStrategy = locationQueryStrategy;
     }
 
+    public LocationQueryStrategy getLocationQueryStrategy()
+    {
+        return mLocationQueryStrategy;
+    }
+
     /**
-     * builds the batch update request model from the queue, then purges the queue
+     * builds the batch update request model from the queue
+     *
      * @return
      */
     private LocationBatchUpdate buildLocationBatchUpdate()
     {
-        LocationBatchUpdate.LocationUpdate locationUpdates[] = mLocationUpdateQueue
-                .toArray(new LocationBatchUpdate.LocationUpdate[mLocationUpdateQueue.size()]);
+        LocationUpdate locationUpdates[] = mLocationUpdateQueue
+                .toArray(new LocationUpdate[mLocationUpdateQueue.size()]);
         //.size() is constant time for linked lists
 
         LocationBatchUpdate locationBatchUpdate = new LocationBatchUpdate(locationUpdates);
@@ -48,21 +55,24 @@ public class LocationRequestStrategy //TODO: rename this so it is more distinct 
 
     /**
      * notifies the ready listener if a batch update should be made
+     *
      * @param locationUpdate
      * @param locationBatchUpdateReadyListener
      */
-    public void onNewLocationUpdate(@NonNull LocationBatchUpdate.LocationUpdate locationUpdate,
+    public void onNewLocationUpdate(@NonNull LocationUpdate locationUpdate,
                                     OnLocationBatchUpdateReadyListener locationBatchUpdateReadyListener)
     {
+        Log.i(getClass().getName(), "new location update: " + locationUpdate.toString());
         mLocationUpdateQueue.add(locationUpdate);
-        if(shouldPostUpdate())
+        if (shouldPostUpdate())
         {
             buildUpdateAndNotifyReady(locationBatchUpdateReadyListener);
         }
     }
 
     /**
-     * might be good to call this when the query strategy expires
+     * TODO: call this when the query strategy expires
+     *
      * @param locationBatchUpdateReadyListener
      */
     public void buildUpdateAndNotifyReady(OnLocationBatchUpdateReadyListener locationBatchUpdateReadyListener)

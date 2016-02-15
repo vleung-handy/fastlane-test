@@ -15,8 +15,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
+import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
@@ -33,6 +35,7 @@ import javax.inject.Inject;
  * does whatever needs to be done given a location query schedule
  */
 public class LocationScheduleHandler extends BroadcastReceiver
+    implements OnLocationBatchUpdateReadyListener
 {
     @Inject
     Bus bus;
@@ -114,10 +117,10 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     /**
      * TODO: if we just use one listener, does requestLocationUpdates override the previous location update request?
-     * @param locationQueryStrategy
      */
     public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy)
     {
+        final LocationRequestStrategy locationRequestStrategy = new LocationRequestStrategy(locationQueryStrategy);
         /*
         TODO: TEST ONLY. seriously refactor this. don't know how server is going to send accuracy codes yet
          */
@@ -158,12 +161,12 @@ public class LocationScheduleHandler extends BroadcastReceiver
             @Override
             public void onLocationChanged(final Location location)
             {
-                bus.post(new LocationEvent.LocationChanged(location, locationQueryStrategy));
+                locationRequestStrategy.onNewLocationUpdate(LocationUpdate.from(location),
+                        LocationScheduleHandler.this);
             }
         };
         mActiveLocationListeners.add(locationListener);
 
-        //TODO: investigate using pending intent
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                 locationRequest,
                 locationListener);
@@ -242,6 +245,12 @@ public class LocationScheduleHandler extends BroadcastReceiver
             startStrategy(locationQueryStrategy);
             scanSchedule();
         }
+    }
+
+    @Override
+    public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate)
+    {
+        bus.post(new LocationEvent.SendLocationBatchUpdateRequest(locationBatchUpdate));
     }
 
 //    @Override

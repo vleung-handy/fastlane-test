@@ -15,8 +15,6 @@ import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 //TODO: clean this up
@@ -61,31 +59,13 @@ public class LocationManager
         return mLastLocationSent;
     }
 
-    @Subscribe
-    public void onReceiveLocationUpdate(final LocationEvent.LocationChanged event)
-    {
-        Location location = event.getLocation();
 
-//        if (mLastLocationSent != null && location.getTime() - mLastLocationSent.getTime() < LAST_UPDATE_TIME_INTERVAL_MILLISEC)
-//        {
-//            //don't do anything
-//            return;
-//        }
-        mLastLocationSent = location;
-        String eventName = "test";
-        LocationBatchUpdate.LocationUpdate locationUpdate = new LocationBatchUpdate.LocationUpdate(
-                location.getLatitude(),
-                location.getLongitude(),
-                location.getAccuracy(),
-                location.getAltitude(),
-                location.getSpeed(),
-                location.getBearing(),
-                eventName,//event name
-                new Date(location.getTime()),
-                0, //no battery level yet
-                0 //no booking id yet
-        );
-        Log.i(getClass().getName(), locationUpdate.toString());
+    //TODO: if this fails due to no network connection, then on network reconnect, need to determine what requests in the queue need to be sent
+    @Subscribe
+    public void onReceiveLocationBatchUpdate(final LocationEvent.SendLocationBatchUpdateRequest event)
+    {
+        LocationBatchUpdate locationBatchUpdate = event.getLocationBatchUpdate();
+        Log.i(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
         int providerId = 0;
         if (mProviderManager.getCachedActiveProvider() != null)
         {
@@ -99,19 +79,19 @@ public class LocationManager
             }
         }
 
-
         //TODO: put this update in the request queue
 
-        mDataManager.sendGeolocation(providerId, locationUpdate, new DataManager.Callback<SuccessWrapper>()
+        mDataManager.sendGeolocation(providerId, locationBatchUpdate, new DataManager.Callback<SuccessWrapper>()
         {
             @Override
             public void onSuccess(final SuccessWrapper response)
             {
-                if(response.getSuccess())
+                if (response.getSuccess())
                 {
                     Log.i(getClass().getName(), "Successfully sent location to server");
                 }
-                else{
+                else
+                {
                     Log.i(getClass().getName(), "Failed to send location to server but got Retrofit success callback");
                 }
             }

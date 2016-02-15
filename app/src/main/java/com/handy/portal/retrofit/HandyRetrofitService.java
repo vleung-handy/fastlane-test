@@ -35,7 +35,7 @@ public interface HandyRetrofitService
     @POST(PROVIDERS_PATH + "{id}/geolocation")
     void sendGeolocation(
             @Path("id") int providerId,
-            @Body LocationBatchUpdate.LocationUpdate locationUpdate,
+            @Body LocationBatchUpdate locationBatchUpdate,
                                 HandyRetrofitCallback cb);
 
     @GET("/check_for_update")
