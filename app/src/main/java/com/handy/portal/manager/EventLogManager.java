@@ -64,21 +64,18 @@ public class EventLogManager
         {
             final JsonObject eventLogBundle = GSON.fromJson(bundleString, JsonObject.class);
             eventLogBundle.addProperty(SENT_TIMESTAMP_SECS_KEY, System.currentTimeMillis() / 1000);
-            mDataManager.postLogs(eventLogBundle,
-                    new DataManager.Callback<EventLogResponse>()
-                    {
-                        @Override
-                        public void onSuccess(EventLogResponse response)
-                        {
-                            jsonBundleStrings.remove(bundleString);
-                            saveToPreference(jsonBundleStrings);
-                        }
+            mDataManager.postLogs(eventLogBundle, new DataManager.Callback<EventLogResponse>()
+            {
+                @Override
+                public void onSuccess(EventLogResponse response)
+                {
+                    jsonBundleStrings.remove(bundleString);
+                    saveToPreference(jsonBundleStrings);
+                }
 
-                        @Override
-                        public void onError(DataManager.DataManagerError error)
-                        {
-                        }
-                    });
+                @Override
+                public void onError(DataManager.DataManagerError error) {}
+            });
         }
     }
 
