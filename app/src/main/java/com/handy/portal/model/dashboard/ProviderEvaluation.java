@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class ProviderEvaluation implements Serializable
 {
@@ -16,16 +17,16 @@ public class ProviderEvaluation implements Serializable
     private double mDangerRatingThreshold;
     @SerializedName("five_star_rated_comment")
     private String mFiveStarRatedComment;
-    @SerializedName("top_feedback")
-    private String mTopFeedback;
+    @SerializedName("low_star_reasons")
+    private List<String> mLowStarReasons;
 
-    public ProviderEvaluation(final Rolling rolling, final LifeTime lifeTime, final double dangerRatingThreshold, final String fiveStarRatedComment, final String topFeedback)
+    public ProviderEvaluation(final Rolling rolling, final LifeTime lifeTime, final double dangerRatingThreshold, final String fiveStarRatedComment, final List<String> lowStarReasons)
     {
         mRolling = rolling;
         mLifeTime = lifeTime;
         mDangerRatingThreshold = dangerRatingThreshold;
         mFiveStarRatedComment = fiveStarRatedComment;
-        mTopFeedback = topFeedback;
+        mLowStarReasons = lowStarReasons;
     }
 
     public Rolling getRolling()
@@ -48,9 +49,9 @@ public class ProviderEvaluation implements Serializable
         return mFiveStarRatedComment;
     }
 
-    public String getTopFeedback()
+    public List<String> getLowStarReasons()
     {
-        return mTopFeedback;
+        return mLowStarReasons;
     }
 
     public static class Rolling extends LifeTime
