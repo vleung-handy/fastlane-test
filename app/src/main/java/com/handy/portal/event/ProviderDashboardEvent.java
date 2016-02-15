@@ -4,7 +4,9 @@ package com.handy.portal.event;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.dashboard.ProviderRatings;
+import com.handy.portal.model.dashboard.ProviderRating;
+
+import java.util.List;
 
 public abstract class ProviderDashboardEvent extends HandyEvent
 {
@@ -36,11 +38,16 @@ public abstract class ProviderDashboardEvent extends HandyEvent
 
     public static class ReceiveProviderFiveStarRatingsSuccess extends ReceiveSuccessEvent
     {
-        public ProviderRatings providerRatings;
+        private List<ProviderRating> mProviderRatings;
 
-        public ReceiveProviderFiveStarRatingsSuccess(ProviderRatings providerRatings)
+        public ReceiveProviderFiveStarRatingsSuccess(List<ProviderRating> providerRatings)
         {
-            this.providerRatings = providerRatings;
+            mProviderRatings = providerRatings;
+        }
+
+        public List<ProviderRating> getProviderRatings()
+        {
+            return mProviderRatings;
         }
     }
 

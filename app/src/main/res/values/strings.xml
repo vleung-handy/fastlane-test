@@ -489,6 +489,7 @@
     <string name="total_jobs">Total jobs</string>
     <string name="feedback">Feedback</string>
     <string name="percentage">%</string>
+    <string name="comma_formatted">%1$s, %2$s</string>
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>

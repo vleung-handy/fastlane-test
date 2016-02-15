@@ -24,7 +24,7 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.dashboard.ProviderRatings;
+import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -43,6 +43,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -351,7 +352,7 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getProviderFiveStarRatings(final String providerId, final Callback<ProviderRatings> cb)
+    public void getProviderFiveStarRatings(final String providerId, final Callback<List<ProviderRating>> cb)
     {
         service.getProviderFiveStarRatings(providerId, new GetProviderFiveStarRatingsRetrofitCallback(cb));
     }

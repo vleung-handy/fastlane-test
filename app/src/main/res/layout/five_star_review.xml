@@ -1,87 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/white"
-              android:orientation="vertical"
-              android:paddingBottom="@dimen/extra_padding_xlarge"
-              android:paddingLeft="@dimen/default_padding"
-              android:paddingRight="@dimen/default_padding"
-              android:paddingTop="@dimen/extra_padding_xlarge"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             xmlns:tools="http://schemas.android.com/tools"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/extra_margin"
-        android:orientation="horizontal"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/extra_padding_xlarge"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/extra_padding_xlarge"
         >
 
-        <ImageView
-            android:id="@+id/first_star_image"
-            android:layout_width="@dimen/star_image_width_height"
-            android:layout_height="@dimen/star_image_width_height"
-            android:layout_marginEnd="@dimen/extra_margin"
-            android:layout_marginRight="@dimen/extra_margin"
-            android:src="@drawable/ic_star"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/extra_margin"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:id="@+id/first_star_image"
+                android:layout_width="@dimen/star_image_width_height"
+                android:layout_height="@dimen/star_image_width_height"
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:src="@drawable/ic_star"
+                />
+
+            <ImageView
+                android:id="@+id/second_star_image"
+                android:layout_width="@dimen/star_image_width_height"
+                android:layout_height="@dimen/star_image_width_height"
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:src="@drawable/ic_star"
+                />
+
+            <ImageView
+                android:id="@+id/third_star_image"
+                android:layout_width="@dimen/star_image_width_height"
+                android:layout_height="@dimen/star_image_width_height"
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:src="@drawable/ic_star"
+                />
+
+            <ImageView
+                android:id="@+id/fourth_star_image"
+                android:layout_width="@dimen/star_image_width_height"
+                android:layout_height="@dimen/star_image_width_height"
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:src="@drawable/ic_star"
+                />
+
+            <ImageView
+                android:id="@+id/five_star_image"
+                android:layout_width="@dimen/star_image_width_height"
+                android:layout_height="@dimen/star_image_width_height"
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:src="@drawable/ic_star"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/review_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Jane is the best! Everything is spotless. We are happy with the cleaning."
+            android:textColor="@color/black"
+            android:textSize="@dimen/medium_text_size"
             />
 
-        <ImageView
-            android:id="@+id/second_star_image"
-            android:layout_width="@dimen/star_image_width_height"
-            android:layout_height="@dimen/star_image_width_height"
-            android:layout_marginEnd="@dimen/extra_margin"
-            android:layout_marginRight="@dimen/extra_margin"
-            android:src="@drawable/ic_star"
+        <TextView
+            android:id="@+id/review_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/extra_padding"
+            tools:text="Sam, May 2015"
+            android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/small_text_size"
             />
-
-        <ImageView
-            android:id="@+id/third_star_image"
-            android:layout_width="@dimen/star_image_width_height"
-            android:layout_height="@dimen/star_image_width_height"
-            android:layout_marginEnd="@dimen/extra_margin"
-            android:layout_marginRight="@dimen/extra_margin"
-            android:src="@drawable/ic_star"
-            />
-
-        <ImageView
-            android:id="@+id/fourth_star_image"
-            android:layout_width="@dimen/star_image_width_height"
-            android:layout_height="@dimen/star_image_width_height"
-            android:layout_marginEnd="@dimen/extra_margin"
-            android:layout_marginRight="@dimen/extra_margin"
-            android:src="@drawable/ic_star"
-            />
-
-        <ImageView
-            android:id="@+id/five_star_image"
-            android:layout_width="@dimen/star_image_width_height"
-            android:layout_height="@dimen/star_image_width_height"
-            android:layout_marginEnd="@dimen/extra_margin"
-            android:layout_marginRight="@dimen/extra_margin"
-            android:src="@drawable/ic_star"
-            />
-
     </LinearLayout>
 
-    <!-- TODO: remove hardcoded text -->
-    <TextView
-        android:id="@+id/review_text"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/medium_text_size"
-        android:textColor="@color/black"
-        android:text="Jane is the best! Everything is spotless. We are happy with the cleaning."
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/list_divider"
         />
 
-    <TextView
-        android:id="@+id/review_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/extra_padding"
-        android:textSize="@dimen/small_text_size"
-        android:textColor="@color/tertiary_grey"
-        android:text="Sam, May 2015"
-        />
-
-</LinearLayout>
+</FrameLayout>

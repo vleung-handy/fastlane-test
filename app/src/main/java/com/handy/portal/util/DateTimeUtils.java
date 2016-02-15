@@ -25,6 +25,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
+    public final static SimpleDateFormat MONTH_YEAR_FORMATTER = new SimpleDateFormat("MMM yyyy");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int DAYS_IN_WEEK = 7;
@@ -56,6 +57,11 @@ public final class DateTimeUtils
         return getYearFormatter().format(date);
     }
 
+    public static String getMonthAndYear(Date date)
+    {
+        if (date == null) { return null; }
+        return getMonthYearFormatter().format(date);
+    }
     public static Integer getYearInt(Date date)
     {
         if (date == null) { return null; }
@@ -285,6 +291,12 @@ public final class DateTimeUtils
     {
         YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return YEAR_FORMATTER;
+    }
+
+    private static SimpleDateFormat getMonthYearFormatter()
+    {
+        MONTH_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return MONTH_YEAR_FORMATTER;
     }
 
 }
