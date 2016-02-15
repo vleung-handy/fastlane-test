@@ -117,7 +117,7 @@ public class BaseApplication extends MultiDexApplication
         startNewRelic();
         startCrashlytics();
         sDeviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        sDeviceModel = Build.MODEL + " " + Build.MANUFACTURER;
+        sDeviceModel =  Build.MANUFACTURER + " " + Build.MODEL;
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
 
