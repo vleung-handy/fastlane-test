@@ -4,6 +4,7 @@ package com.handy.portal.manager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.handy.portal.constant.PrefsKey;
@@ -45,6 +46,7 @@ public class EventLogManager
     @Subscribe
     public synchronized void addLog(@NonNull LogEvent.AddLogEvent event)
     {
+        Crashlytics.log(event.getLog().getEventName());
         sLogs.add(new Event(getProviderId(), event.getLog()));
         if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
         {
