@@ -62,8 +62,15 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         ButterKnife.bind(this);
     }
 
+    @OnClick(R.id.tier_option)
+    public void switchToTiers()
+    {
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS));
+    }
+
     @OnClick(R.id.reviews_option)
-    public void switchToReviews(){
+    public void switchToReviews()
+    {
         mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS));
     }
 }

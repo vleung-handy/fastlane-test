@@ -137,7 +137,6 @@ public class ProfileFragment extends ActionBarFragment
         profileLayout.removeAllViews();
 
         profileLayout.addView(new ProfileHeaderView(getContext(), mProviderProfile));
-        profileLayout.addView(new ProfilePerformanceView(getActivity(), mProviderProfile.getPerformanceInfo()));
         profileLayout.addView(new ProfileReferralView(getActivity(), mProviderProfile.getReferralInfo()));
         profileLayout.addView(new ProfileContactView(getActivity(), mProviderProfile.getProviderPersonalInfo()));
         profileLayout.addView(new ManagementToolsView(getContext(), mProviderProfile));

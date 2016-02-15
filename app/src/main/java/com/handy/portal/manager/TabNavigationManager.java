@@ -156,6 +156,7 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.REQUEST_SUPPLIES;
             addToBackStack |= targetTab == MainViewTab.NEARBY_JOBS;
             addToBackStack |= targetTab == MainViewTab.CANCELLATION_REQUEST;
+            addToBackStack |= targetTab == MainViewTab.DASHBOARD_TIERS;
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_REVIEWS;
             addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
