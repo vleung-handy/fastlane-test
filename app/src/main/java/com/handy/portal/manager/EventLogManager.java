@@ -47,7 +47,7 @@ public class EventLogManager
     public synchronized void addLog(@NonNull LogEvent.AddLogEvent event)
     {
         Crashlytics.log(event.getLog().getEventName());
-        sLogs.add(new Event(getProviderId(), event.getLog()));
+        sLogs.add(new Event(event.getLog()));
         if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
         {
             saveLogs(null);

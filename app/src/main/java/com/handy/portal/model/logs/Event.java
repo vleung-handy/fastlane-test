@@ -2,7 +2,7 @@ package com.handy.portal.model.logs;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Event extends EventSuperProperties
+public class Event
 {
     @SerializedName("event_timestamp")
     private long mTimestampSecs;
@@ -13,12 +13,8 @@ public class Event extends EventSuperProperties
     @SerializedName("properties")
     private EventLog mEventLog;
 
-    public Event(
-            final int providerId,
-            final EventLog eventLog
-    )
+    public Event(final EventLog eventLog)
     {
-        super(providerId);
         mTimestampSecs = System.currentTimeMillis() / 1000;
         mEventType = eventLog.getEventType();
         mEventContext = eventLog.getEventContext();
