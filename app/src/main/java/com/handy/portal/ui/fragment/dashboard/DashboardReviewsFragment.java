@@ -28,7 +28,6 @@ public class DashboardReviewsFragment extends ActionBarFragment
     RecyclerView mReviewRecyclerView;
 
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private List<ProviderRating> mRatings = new ArrayList<>();
 
     @Override
@@ -70,8 +69,8 @@ public class DashboardReviewsFragment extends ActionBarFragment
         setActionBarTitle(R.string.five_star_reviews);
 
         mReviewRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mReviewRecyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mReviewRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new ReviewListAdapter(getContext(), mRatings);
 
         mReviewRecyclerView.setAdapter(mAdapter);
