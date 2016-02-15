@@ -90,6 +90,13 @@ public class LocationManager
         }
     }
 
+    @Subscribe
+    public void onNetworkReconnected(final LocationEvent.OnNetworkReconnected event) //TODO: will move this event to right class
+    {
+        Log.i(getClass().getName(), "on network reconnected");
+        resendFailedLocationBatchUpdates();
+    }
+
     private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
     {
         Log.i(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());

@@ -26,7 +26,8 @@ public abstract class LocationEvent
         }
     }
 
-    public static class SendGeolocationSuccess extends HandyEvent.ReceiveSuccessEvent
+    //TODO: move this, doesn't belong in here
+    public static class OnNetworkReconnected extends HandyEvent.RequestEvent
     {
     }
 

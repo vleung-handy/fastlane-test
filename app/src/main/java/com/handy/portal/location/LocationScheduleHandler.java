@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -274,11 +275,16 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
 
-                //TODO: the below line doesn't actually work as expected
-                boolean hasConnectivity = !args.getBoolean(ConnectivityManager.EXTRA_NO_CONNECTIVITY);
-                Log.i(getClass().getName(), "has connectivity: " + hasConnectivity);
+                //the below line doesn't actually work as expected
+//                boolean hasConnectivity = !args.getBoolean(ConnectivityManager.EXTRA_NO_CONNECTIVITY);
+
+                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                boolean hasConnectivity = networkInfo != null && networkInfo.isConnected();
+                Log.i(getClass().getName(), "has network connectivity: " + hasConnectivity);
                 if(hasConnectivity)
                 {
+                    bus.post(new LocationEvent.OnNetworkReconnected());
                     //TODO: post everything in the failed queue
                 }
 
