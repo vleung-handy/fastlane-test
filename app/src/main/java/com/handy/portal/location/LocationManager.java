@@ -15,6 +15,10 @@ import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.inject.Inject;
 
 //TODO: clean this up
@@ -35,9 +39,10 @@ public class LocationManager
     private final PrefsManager mPrefsManager;
     private Location mLastLocationSent;
 
-    //TODO: adjust this param
+    //TODO: adjust these params
     private final long LAST_UPDATE_TIME_INTERVAL_MILLISEC = 2 * DateTimeUtils.MILLISECONDS_IN_SECOND;
 
+    private static final int MAX_LOCATION_UPDATE_BATCHES_TO_RETRY_AT_ONCE = 5;
     //TODO: send location updates in batches
 
     @Inject
@@ -59,12 +64,34 @@ public class LocationManager
         return mLastLocationSent;
     }
 
+    Set<LocationBatchUpdate> mFailedLocationBatchUpdates = new HashSet<>();
 
     //TODO: if this fails due to no network connection, then on network reconnect, need to determine what requests in the queue need to be sent
     @Subscribe
-    public void onReceiveLocationBatchUpdate(final LocationEvent.SendLocationBatchUpdateRequest event)
+    public void onReceiveLocationBatchUpdate(final LocationEvent.SendGeolocationRequest event)
     {
-        LocationBatchUpdate locationBatchUpdate = event.getLocationBatchUpdate();
+        final LocationBatchUpdate locationBatchUpdate = event.getLocationBatchUpdate();
+        sendLocationBatchUpdate(locationBatchUpdate, true);
+    }
+
+    //TODO: call this on network reconnected. clean up, super crude
+    public void resendFailedLocationBatchUpdates() //need to test this
+    {
+        //TODO: can send this at every LENGTH/SAMPLE LENGTH intervals to get a sampling
+        Iterator<LocationBatchUpdate> setIterator = mFailedLocationBatchUpdates.iterator();
+        int maxBatchesToRetryAtOnce = MAX_LOCATION_UPDATE_BATCHES_TO_RETRY_AT_ONCE;
+        while (setIterator.hasNext() && maxBatchesToRetryAtOnce > 0)
+        {
+            LocationBatchUpdate failedLocationBatchUpdate = setIterator.next();
+            sendLocationBatchUpdate(failedLocationBatchUpdate, false);
+            Log.i(getClass().getName(), "resending failed location update: " + failedLocationBatchUpdate.toString());
+            setIterator.remove();
+            maxBatchesToRetryAtOnce--;
+        }
+    }
+
+    private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
+    {
         Log.i(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
         int providerId = 0;
         if (mProviderManager.getCachedActiveProvider() != null)
@@ -89,6 +116,8 @@ public class LocationManager
                 if (response.getSuccess())
                 {
                     Log.i(getClass().getName(), "Successfully sent location to server");
+//                    mBus.post(new LocationEvent.SendGeolocationSuccess());
+                    resendFailedLocationBatchUpdates(); //now is probably a good time to retry
                 }
                 else
                 {
@@ -100,9 +129,17 @@ public class LocationManager
             public void onError(final DataManager.DataManagerError error)
             {
                 Log.i(getClass().getName(), "Failed to send location to server");
+                if(retryUpdateIfFailed && error.getType().equals(DataManager.DataManagerError.Type.NETWORK))
+                {
+                    addToLocationBatchUpdateFailedList(locationBatchUpdate);
+                }
             }
         });
-        //TODO
+    }
+
+    private void addToLocationBatchUpdateFailedList(LocationBatchUpdate locationBatchUpdate)
+    {
+        mFailedLocationBatchUpdates.add(locationBatchUpdate);
     }
 
     @Subscribe

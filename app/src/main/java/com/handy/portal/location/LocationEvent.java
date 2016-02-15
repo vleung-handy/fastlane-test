@@ -11,12 +11,11 @@ import com.handy.portal.location.model.LocationQuerySchedule;
  */
 public abstract class LocationEvent
 {
-    public static class SendLocationBatchUpdateRequest extends HandyEvent.RequestEvent
+    public static class SendGeolocationRequest extends HandyEvent.RequestEvent
     {
-        //used internally right now
         private final LocationBatchUpdate mLocationBatchUpdate;
 
-        public SendLocationBatchUpdateRequest(LocationBatchUpdate locationBatchUpdate)
+        public SendGeolocationRequest(LocationBatchUpdate locationBatchUpdate)
         {
             mLocationBatchUpdate = locationBatchUpdate;
         }
@@ -25,6 +24,10 @@ public abstract class LocationEvent
         {
             return mLocationBatchUpdate;
         }
+    }
+
+    public static class SendGeolocationSuccess extends HandyEvent.ReceiveSuccessEvent
+    {
     }
 
     public static class ReceiveLocationSchedule extends HandyEvent.ReceiveSuccessEvent

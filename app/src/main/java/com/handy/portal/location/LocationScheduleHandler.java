@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -48,7 +49,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     Handler mHandler = new Handler();
 //    private static final int DEFAULT_SMALLEST_DISPLACEMENT_METERS = 25;
     private static final int ALARM_REQUEST_CODE = 1;
-    private static final String BROADCAST_RECEIVER_ID = "BROADCAST_RECEIVER_ID";
+    private static final String LOCATION_SCHEDULE_ALARM_BROADCAST_ID = "LOCATION_SCHEDULE_ALARM_BROADCAST_ID";
     private final static String BUNDLE_EXTRA_LOCATION_STRATEGY = "LOCATION_STRATEGY";
 
 
@@ -65,8 +66,10 @@ public class LocationScheduleHandler extends BroadcastReceiver
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         mContext = context;
 
-        mContext.registerReceiver(this,
-                new IntentFilter(LocationScheduleHandler.BROADCAST_RECEIVER_ID));
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LocationScheduleHandler.LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        mContext.registerReceiver(this, intentFilter);
     }
 
     public void start()
@@ -202,7 +205,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     public void destroy()
     {
         //cancel the alarm
-        Intent intent =  new Intent(BROADCAST_RECEIVER_ID);
+        Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mAlarmManager.cancel(pendingIntent);
 
@@ -226,7 +229,8 @@ public class LocationScheduleHandler extends BroadcastReceiver
     {
         Bundle args = new Bundle();
         args.putParcelable(BUNDLE_EXTRA_LOCATION_STRATEGY, strategy);
-        Intent intent =  new Intent(BROADCAST_RECEIVER_ID);
+        Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
+        intent.setAction(LOCATION_SCHEDULE_ALARM_BROADCAST_ID); //probably redundant, test this
         intent.setPackage(mContext.getPackageName());
         intent.putExtras(args);
         PendingIntent operation = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -243,7 +247,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
     @Override
     public void onReceive(final Context context, final Intent intent)
     {
-        Log.i(getClass().getName(), "Woke up");
         Bundle args = intent.getExtras();
         if(args == null)
         {
@@ -251,21 +254,44 @@ public class LocationScheduleHandler extends BroadcastReceiver
             Log.e(getClass().getName(), "Args is null");
             return;
         }
-
-        LocationQueryStrategy locationQueryStrategy = args.getParcelable(BUNDLE_EXTRA_LOCATION_STRATEGY);
-        if(locationQueryStrategy != null)
+        if(intent.getAction() == null)
         {
-            Log.i(getClass().getName(), "Got location strategy " + locationQueryStrategy.toString());
-            startStrategy(locationQueryStrategy);
-            scanSchedule();
+            return;
         }
+
+        switch (intent.getAction())
+        {
+            //TODO: refactor this
+            case LOCATION_SCHEDULE_ALARM_BROADCAST_ID:
+                Log.i(getClass().getName(), "Woke up");
+                LocationQueryStrategy locationQueryStrategy = args.getParcelable(BUNDLE_EXTRA_LOCATION_STRATEGY);
+                if(locationQueryStrategy != null)
+                {
+                    Log.i(getClass().getName(), "Got location strategy " + locationQueryStrategy.toString());
+                    startStrategy(locationQueryStrategy);
+                    scanSchedule();
+                }
+                break;
+            case ConnectivityManager.CONNECTIVITY_ACTION:
+
+                //TODO: the below line doesn't actually work as expected
+                boolean hasConnectivity = !args.getBoolean(ConnectivityManager.EXTRA_NO_CONNECTIVITY);
+                Log.i(getClass().getName(), "has connectivity: " + hasConnectivity);
+                if(hasConnectivity)
+                {
+                    //TODO: post everything in the failed queue
+                }
+
+                break;
+        }
+
     }
 
     @Override
     public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate)
     {
 //        Integer.parseInt("blah"); //TEST EXCEPTION ONLY
-        bus.post(new LocationEvent.SendLocationBatchUpdateRequest(locationBatchUpdate));
+        bus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
     }
 
 //    @Override

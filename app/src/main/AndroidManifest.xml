@@ -45,7 +45,6 @@
         android:theme="@style/AppTheme">
         <service
             android:name=".location.LocationService"
-
             android:exported="false"/>
         <receiver android:name=".location.BootBroadcastReceiver" >
             <intent-filter>
