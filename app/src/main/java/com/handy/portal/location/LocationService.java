@@ -31,7 +31,8 @@ import javax.inject.Inject;
 public class LocationService extends Service
         implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener
+        GoogleApiClient.OnConnectionFailedListener,
+        Thread.UncaughtExceptionHandler
 {
     @Inject
     Bus mBus;
@@ -42,6 +43,7 @@ public class LocationService extends Service
     @Override
     public void onCreate()
     {
+        Thread.currentThread().setUncaughtExceptionHandler(this);
         super.onCreate();
         Utils.inject(getApplicationContext(), this);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -54,6 +56,7 @@ public class LocationService extends Service
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
+        Log.i(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
         super.onStartCommand(intent, flags, startId);
         try
         {
@@ -132,6 +135,16 @@ public class LocationService extends Service
 
     //TODO: would i need this?
     private final IBinder mBinder = new LocalBinder();
+
+    @Override
+    public void uncaughtException(final Thread thread, final Throwable ex)
+    {
+        //overriding this only prevents the error message dialog that shows
+        Log.e(getClass().getName(), "got uncaught exception");
+
+
+        //TODO: make the service NOT start sticky!
+    }
 
     public class LocalBinder extends Binder
     {
