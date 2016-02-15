@@ -40,7 +40,7 @@ public class LocationQuerySchedule implements Parcelable
         date4.setTime(date4.getTime() + DateTimeUtils.MILLISECONDS_IN_30_MINS * 3);
         LocationQueryStrategy locationQueryStrategies[] =
                 new LocationQueryStrategy[]{
-                        new LocationQueryStrategy("1", date, 60, 1, 60, 1),
+                        new LocationQueryStrategy("1", date, 2, 1, 60, 1),
                         new LocationQueryStrategy("2", date2, 60, 30, 120, 2),
 //                        new LocationQueryStrategy(date3, 1, 1, 2),
 //                        new LocationQueryStrategy(date4, 30, 1, 2)

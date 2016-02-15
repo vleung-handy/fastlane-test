@@ -27,4 +27,9 @@ public class LocationBatchUpdate
         }
         return result;
     }
+
+    public boolean isEmpty()
+    {
+        return (mLocationUpdates == null || mLocationUpdates.length == 0);
+    }
 }

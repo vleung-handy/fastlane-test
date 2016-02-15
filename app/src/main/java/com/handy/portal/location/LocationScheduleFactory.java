@@ -55,8 +55,9 @@ public class LocationScheduleFactory
         calendar.add(Calendar.HOUR_OF_DAY, -1);
         Date oneHourBeforeBooking = calendar.getTime();
         locationQueryStrategy.setEndDate(oneHourBeforeBooking)
-                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 15)
-                .setLocationAccuracyPriority(LocationRequest.PRIORITY_LOW_POWER);
+                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE)
+                .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 15)
+                .setLocationAccuracyPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         locationQueryStrategies.add(locationQueryStrategy);
 
         /**
@@ -65,8 +66,9 @@ public class LocationScheduleFactory
         locationQueryStrategy = new LocationQueryStrategy()
                 .setStartDate(oneHourBeforeBooking)
                 .setEndDate(booking.getStartDate())
-                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE)
-                .setLocationAccuracyPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                .setLocationPollingIntervalSeconds(30)
+                .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
+                .setLocationAccuracyPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         locationQueryStrategies.add(locationQueryStrategy);
 
         /**
@@ -80,7 +82,8 @@ public class LocationScheduleFactory
         Date endDate = calendar.getTime();
 
         locationQueryStrategy.setEndDate(endDate)
-                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 10)
+                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
+                .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 10)
                 .setLocationAccuracyPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationQueryStrategies.add(locationQueryStrategy);
 
@@ -99,10 +102,29 @@ public class LocationScheduleFactory
         endDate = calendar.getTime();
 
         locationQueryStrategy.setEndDate(endDate)
-                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 10)
+                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 1)
+                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
                 .setLocationAccuracyPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationQueryStrategies.add(locationQueryStrategy);
 
+
+        //TODO: booking ended
+
+        locationQueryStrategy = new LocationQueryStrategy();
+        calendar.setTime(booking.getEndDate());
+        calendar.add(Calendar.MINUTE, 15);
+        startDate = calendar.getTime();
+
+        locationQueryStrategy.setStartDate(startDate);
+        calendar.setTime(startDate);
+        calendar.add(Calendar.MINUTE, 30);
+        endDate = calendar.getTime();
+
+        locationQueryStrategy.setEndDate(endDate)
+                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
+                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 15)
+                .setLocationAccuracyPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        locationQueryStrategies.add(locationQueryStrategy);
         return locationQueryStrategies;
     }
 

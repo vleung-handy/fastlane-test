@@ -83,6 +83,12 @@ public class LocationQueryStrategy implements Parcelable
         mLocationAccuracyPriority = locationAccuracyPriority;
     }
 
+    public LocationQueryStrategy setServerPollingIntervalSeconds(final int serverPollingIntervalSeconds)
+    {
+        mServerPollingIntervalSeconds = serverPollingIntervalSeconds;
+        return this;
+    }
+
     protected LocationQueryStrategy(Parcel in)
     {
         mStartDate = new Date(in.readLong());

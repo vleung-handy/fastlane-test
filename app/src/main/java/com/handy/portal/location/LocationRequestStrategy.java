@@ -66,7 +66,7 @@ public class LocationRequestStrategy //TODO: rename this so it is more distinct 
         mLocationUpdateQueue.add(locationUpdate);
         if (shouldPostUpdate())
         {
-            buildUpdateAndNotifyReady(locationBatchUpdateReadyListener);
+            buildBatchUpdateAndNotifyReady(locationBatchUpdateReadyListener);
         }
     }
 
@@ -75,12 +75,15 @@ public class LocationRequestStrategy //TODO: rename this so it is more distinct 
      *
      * @param locationBatchUpdateReadyListener
      */
-    public void buildUpdateAndNotifyReady(OnLocationBatchUpdateReadyListener locationBatchUpdateReadyListener)
+    public void buildBatchUpdateAndNotifyReady(OnLocationBatchUpdateReadyListener locationBatchUpdateReadyListener)
     {
         LocationBatchUpdate locationBatchUpdate = buildLocationBatchUpdate();
         mLocationUpdateQueue.clear();
         mTimestampLastUpdatePostedMs = System.currentTimeMillis();
-        locationBatchUpdateReadyListener.onLocationBatchUpdateReady(locationBatchUpdate);
+        if(!locationBatchUpdate.isEmpty())
+        {
+            locationBatchUpdateReadyListener.onLocationBatchUpdateReady(locationBatchUpdate);
+        }
     }
 
 }

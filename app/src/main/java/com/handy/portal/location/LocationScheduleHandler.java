@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -44,6 +45,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     GoogleApiClient mGoogleApiClient;
     AlarmManager mAlarmManager;
     Context mContext;
+    Handler mHandler = new Handler();
 //    private static final int DEFAULT_SMALLEST_DISPLACEMENT_METERS = 25;
     private static final int ALARM_REQUEST_CODE = 1;
     private static final String BROADCAST_RECEIVER_ID = "BROADCAST_RECEIVER_ID";
@@ -141,10 +143,11 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 break;
         }
         long pollingIntervalMs = locationQueryStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
+        long expirationDurationMs = locationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis();
         LocationRequest locationRequest = new LocationRequest()
 //                .setSmallestDisplacement(DEFAULT_SMALLEST_DISPLACEMENT_METERS) //disabled for local testing
                 .setPriority(priority)
-                .setExpirationDuration(locationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis())
+                .setExpirationDuration(expirationDurationMs)
                 .setMaxWaitTime(locationQueryStrategy.getServerPollingIntervalSeconds())
                 .setInterval(pollingIntervalMs)
                 .setFastestInterval(pollingIntervalMs) //TODO: change this, test only
@@ -170,6 +173,17 @@ public class LocationScheduleHandler extends BroadcastReceiver
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                 locationRequest,
                 locationListener);
+
+        //TODO: REFACTOR THIS. how else can i get a callback when the strategy expires?
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run()
+            {
+                Log.i(getClass().getName(), "strategy expired, posting remaining location update objects in queue...");
+                //strategy expired, we want to post any remaining update objects in the queue
+                locationRequestStrategy.buildBatchUpdateAndNotifyReady(LocationScheduleHandler.this);
+            }
+        }, expirationDurationMs);
     }
 
     public void stopLocationUpdates()
