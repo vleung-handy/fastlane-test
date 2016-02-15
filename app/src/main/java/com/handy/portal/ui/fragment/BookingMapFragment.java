@@ -67,7 +67,6 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
         mStatus = (Booking.BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
         mPolygons = (ZipClusterPolygons) getArguments().getSerializable(BundleKeys.ZIP_CLUSTER_POLYGONS);
-        getMapAsync(this);
     }
 
     @Override
@@ -90,6 +89,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     {
         super.onViewCreated(view, savedInstanceState);
         mScrollView = (ScrollView) getActivity().findViewById(R.id.booking_details_scroll_view);
+        getMapAsync(this);
     }
 
     @Override
