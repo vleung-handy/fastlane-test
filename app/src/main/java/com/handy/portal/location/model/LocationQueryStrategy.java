@@ -42,6 +42,8 @@ public class LocationQueryStrategy implements Parcelable
     int mServerPollingIntervalSeconds; //every N seconds
     @SerializedName("accuracy") //priority level
     int mLocationAccuracyPriority;
+    @SerializedName("distance_filter")
+    int mDistanceFilterMeters;
     @SerializedName("booking_id")
     String mBookingId;
 
@@ -50,8 +52,19 @@ public class LocationQueryStrategy implements Parcelable
         //TODO: REMOVE, FOR TESTING ONLY
         mStartDate = new Date();
         mEndDate = new Date(mStartDate.getTime() + DateTimeUtils.MILLISECONDS_IN_HOUR);
+        mDistanceFilterMeters = 0;
         mLocationPollingIntervalSeconds = 1;
         mLocationAccuracyPriority = 2;
+    }
+
+    public void setDistanceFilterMeters(final int distanceFilterMeters)
+    {
+        this.mDistanceFilterMeters = distanceFilterMeters;
+    }
+
+    public int getDistanceFilterMeters()
+    {
+        return mDistanceFilterMeters;
     }
 
     public String getBookingId()
@@ -93,7 +106,9 @@ public class LocationQueryStrategy implements Parcelable
     {
         mStartDate = new Date(in.readLong());
         mEndDate = new Date(in.readLong());
+        mServerPollingIntervalSeconds = in.readInt();
         mLocationPollingIntervalSeconds = in.readInt();
+        mDistanceFilterMeters = in.readInt();
         mLocationAccuracyPriority = in.readInt();
     }
 
@@ -157,7 +172,9 @@ public class LocationQueryStrategy implements Parcelable
     {
         dest.writeLong(mStartDate.getTime());
         dest.writeLong(mEndDate.getTime());
+        dest.writeInt(mServerPollingIntervalSeconds);
         dest.writeInt(mLocationPollingIntervalSeconds);
+        dest.writeInt(mDistanceFilterMeters);
         dest.writeInt(mLocationAccuracyPriority);
     }
 
@@ -171,7 +188,9 @@ public class LocationQueryStrategy implements Parcelable
     {
         return "start date: " + mStartDate.toString()
                 + "\nend date: " + mEndDate.toString()
-                + "\npolling frequency: " + mLocationPollingIntervalSeconds
+                + "\nserver posting frequency (s): " + mServerPollingIntervalSeconds
+                + "\npolling frequency (s): " + mLocationPollingIntervalSeconds
+                + "\ndistance filter (m): " + mDistanceFilterMeters
                 + "\nlocation accuracy: " + mLocationAccuracyPriority;
     }
 }

@@ -17,6 +17,8 @@ import java.util.LinkedList;
 public class LocationQuerySchedule implements Parcelable
 {
 
+    //TODO: move
+    public final static String EXTRA_LOCATION_SCHEDULE = "location_query_schedule";
     public LocationQuerySchedule(final LinkedList<LocationQueryStrategy> locationQueryStrategies)
     {
         mLocationQueryStrategies = locationQueryStrategies;
@@ -28,9 +30,9 @@ public class LocationQuerySchedule implements Parcelable
     @SerializedName("location_query_strategies")
     LinkedList<LocationQueryStrategy> mLocationQueryStrategies;
 
+    //TODO: remove this eventually, FOR TESTING ONLY
     public LocationQuerySchedule()
     {
-        //TODO: remove this eventually, FOR TESTING ONLY
         Date date = new Date();
         Date date2 = new Date();
         date2.setTime(date2.getTime() + DateTimeUtils.MILLISECONDS_IN_SECOND * 10);
@@ -48,7 +50,6 @@ public class LocationQuerySchedule implements Parcelable
         mLocationQueryStrategies = new LinkedList<>(Arrays.asList(locationQueryStrategies));
     }
 
-
     protected LocationQuerySchedule(Parcel in)
     {
         mLocationQueryStrategies = new LinkedList<>(Arrays.asList(in.createTypedArray(LocationQueryStrategy.CREATOR)));
@@ -65,10 +66,11 @@ public class LocationQuerySchedule implements Parcelable
         return 0;
     }
 
+    //TODO: something wrong with parcelling
     @Override
     public void writeToParcel(final Parcel dest, final int flags)
     {
-        dest.writeTypedArray(mLocationQueryStrategies.toArray(new LocationQueryStrategy[]{}), flags);
+        dest.writeTypedArray(mLocationQueryStrategies.toArray(new LocationQueryStrategy[mLocationQueryStrategies.size()]), flags);
     }
 
     public static final Creator<LocationQuerySchedule> CREATOR = new Creator<LocationQuerySchedule>()

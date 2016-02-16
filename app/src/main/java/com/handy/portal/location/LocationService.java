@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
@@ -57,12 +58,28 @@ public class LocationService extends Service
     public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
         Log.i(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
+        Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
+
         super.onStartCommand(intent, flags, startId);
         try
         {
             mBus.register(this);
             mGoogleApiClient.connect();
-            requestLocationQuerySchedule();
+//            requestLocationQuerySchedule();//uncomment this back
+
+
+            //TODO: remove, for toggle testing only
+            Bundle args = intent.getExtras();
+            if(args!= null && args.getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)!=null)
+            {
+                mBus.post(new LocationEvent.ReceiveLocationSchedule((LocationQuerySchedule)
+                        args.getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
+
+            }
+            else
+            {
+                requestLocationQuerySchedule();
+            }
         }
         catch (Exception e)
         {
@@ -142,8 +159,7 @@ public class LocationService extends Service
         //overriding this only prevents the error message dialog that shows
         Log.e(getClass().getName(), "got uncaught exception");
 
-
-        //TODO: make the service NOT start sticky!
+        stopSelf(); //TODO: test this. does it make it not restart even if sticky?
     }
 
     public class LocalBinder extends Binder
@@ -165,8 +181,6 @@ public class LocationService extends Service
     public void onConnected(final Bundle bundle)
     {
         startLocationQueryingIfReady();
-
-        //TODO: send the current batch of location updates to the server
     }
 
     @Override
@@ -174,7 +188,7 @@ public class LocationService extends Service
     {
         Log.i(LocationService.class.getName(), "GoogleApiClient connection has been suspended");
 
-        //TODO: do location updates continue or are they stopped? if stopped do they need to be restarted?
+        //the api client automatically reconnects itself. no need to call connect()
 
     }
 

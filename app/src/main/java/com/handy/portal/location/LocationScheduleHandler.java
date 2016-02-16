@@ -70,6 +70,8 @@ public class LocationScheduleHandler extends BroadcastReceiver
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LocationScheduleHandler.LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        //seems i have to register a receiver because the network listener is only available in 21/23
+
         mContext.registerReceiver(this, intentFilter);
     }
 
@@ -150,6 +152,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         long expirationDurationMs = locationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis();
         LocationRequest locationRequest = new LocationRequest()
 //                .setSmallestDisplacement(DEFAULT_SMALLEST_DISPLACEMENT_METERS) //disabled for local testing
+                .setSmallestDisplacement(locationQueryStrategy.getDistanceFilterMeters())
                 .setPriority(priority)
                 .setExpirationDuration(expirationDurationMs)
                 .setMaxWaitTime(locationQueryStrategy.getServerPollingIntervalSeconds())
