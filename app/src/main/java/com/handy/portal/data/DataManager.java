@@ -141,7 +141,7 @@ public abstract class DataManager
 
     public abstract void getProviderFiveStarRatings(String providerId, Callback<List<ProviderRating>> cb);
 
-    public abstract void getProviderFeedback(String providerId, Callback<ProviderFeedback> cb);
+    public abstract void getProviderFeedback(String providerId, Callback<List<ProviderFeedback>> cb);
 
 
     //TODO: refactor. should this be here?

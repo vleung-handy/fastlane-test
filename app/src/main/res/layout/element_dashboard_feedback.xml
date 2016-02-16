@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginBottom="@dimen/extra_margin_medium"
+              android:background="@color/white"
+              android:orientation="vertical"
+              android:padding="@dimen/default_padding"
+    >
+
+    <TextView
+        android:id="@+id/dashboard_feedback_title"
+        style="@style/CircularBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/extra_margin"
+        android:textColor="@color/black"
+        android:textSize="@dimen/large_text_size"
+        tools:text="Quality of service"
+        />
+
+    <TextView
+        android:id="@+id/dashboard_feedback_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:lineSpacingExtra="@dimen/lineSpacing"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        tools:text="2 customers have indicated that they were disappointed by the quality of your cleaning."
+        />
+
+    <LinearLayout
+        android:id="@+id/dashboard_feedback_highlights"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dashboard_feedback_padding"
+        />
+
+    <TextView
+        style="@style/CircularBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/extra_margin"
+        android:text="@string/tips_for_success"
+        android:textColor="@color/black"
+        android:textSize="@dimen/large_text_size"
+        />
+
+    <LinearLayout
+        android:id="@+id/dashboard_feedback_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        />
+
+</LinearLayout>

@@ -7,7 +7,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
@@ -73,4 +72,12 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS));
     }
+
+    @OnClick(R.id.feedback_option)
+    public void switchToFeedback()
+    {
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK));
+    }
+
+
 }

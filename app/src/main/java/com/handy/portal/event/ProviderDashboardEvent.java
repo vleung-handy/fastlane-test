@@ -66,9 +66,9 @@ public abstract class ProviderDashboardEvent extends HandyEvent
 
     public static class ReceiveProviderFeedbackSuccess extends ReceiveSuccessEvent
     {
-        public ProviderFeedback providerFeedback;
+        public List<ProviderFeedback> providerFeedback;
 
-        public ReceiveProviderFeedbackSuccess(ProviderFeedback providerFeedback)
+        public ReceiveProviderFeedbackSuccess(List<ProviderFeedback> providerFeedback)
         {
             this.providerFeedback = providerFeedback;
         }

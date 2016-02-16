@@ -17,6 +17,14 @@ public class ProviderFeedback implements Serializable
     @SerializedName("feedback_tips")
     private List<String> mFeedbackTips;
 
+    public ProviderFeedback(final String title, final String feedback, final List<String> feedbackHighlights, final List<String> feedbackTips)
+    {
+        mTitle = title;
+        mFeedback = feedback;
+        mFeedbackHighlights = feedbackHighlights;
+        mFeedbackTips = feedbackTips;
+    }
+
     public String getTitle()
     {
         return mTitle;

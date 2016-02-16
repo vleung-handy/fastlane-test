@@ -358,9 +358,8 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getProviderFeedback(final String providerId, final Callback<ProviderFeedback> cb)
+    public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)
     {
         service.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
     }
-
 }

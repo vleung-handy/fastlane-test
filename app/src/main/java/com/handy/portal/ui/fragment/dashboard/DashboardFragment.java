@@ -9,12 +9,9 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.dashboard.ProviderEvaluation;
-import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
@@ -77,7 +74,7 @@ public class DashboardFragment extends ActionBarFragment
 
     private void createDashboardView()
     {
-        String welcomeString = null;
+        String welcomeString;
         Provider provider = mProviderManager.getCachedActiveProvider();
         if (provider != null && provider.getFirstName() != null)
         {
@@ -130,13 +127,5 @@ public class DashboardFragment extends ActionBarFragment
 
     }
 
-    @Subscribe
-    public void onReceiveProviderFeedbackSuccess(ProviderDashboardEvent.ReceiveProviderFeedbackSuccess event)
-    {
-    }
 
-    @Subscribe
-    public void onReceiveProviderFeedbackFailure(ProviderDashboardEvent.ReceiveProviderFeedbackError event)
-    {
-    }
 }
