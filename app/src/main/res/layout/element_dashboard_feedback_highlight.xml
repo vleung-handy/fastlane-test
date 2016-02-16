@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/default_margin"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+    >
+
+    <ImageView
+        android:layout_width="@dimen/highlight_icon_size"
+        android:layout_height="@dimen/highlight_icon_size"
+        android:src="@drawable/ic_red_x"
+        />
+
+    <TextView
+        android:id="@+id/feedback_highlight_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/extra_padding_medium"
+        android:paddingStart="@dimen/extra_padding_medium"
+        android:textColor="@color/error_red"
+        android:textSize="@dimen/default_text_size"
+        tools:text="Floors weren't cleaned"
+        />
+
+</LinearLayout>

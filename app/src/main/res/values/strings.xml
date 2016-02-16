@@ -493,6 +493,8 @@
     <string name="current_28_days">Current 28 DAYS</string>
     <string name="payment_tier_info">Your payment tier is determined by the total number of jobs you have completed in the last 28 days, and your average rating over the last 28 days. This means that your job count only includes jobs that were completed in the previous 28 days.</string>
     <string name="comma_formatted">%1$s, %2$s</string>
+    <string name="tips_for_success">Tips for success</string>
+    <string name="error_dashboard_feedback">There was an error fetching feedback.</string>
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>

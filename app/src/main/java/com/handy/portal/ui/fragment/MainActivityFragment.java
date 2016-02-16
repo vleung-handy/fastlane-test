@@ -390,6 +390,7 @@ public class MainActivityFragment extends InjectedFragment
                 break;
                 case DASHBOARD:
                 case DASHBOARD_TIERS:
+                case DASHBOARD_FEEDBACK:
                 case DASHBOARD_REVIEWS:
                 {
                     mButtonMore.toggle();

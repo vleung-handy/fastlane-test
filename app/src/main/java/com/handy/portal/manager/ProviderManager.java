@@ -26,6 +26,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -290,23 +291,31 @@ public class ProviderManager
     public void onRequestProviderFeedback(ProviderDashboardEvent.RequestProviderFeedback event)
     {
         String providerId = "";
-
-        mDataManager.getProviderFeedback(providerId, new DataManager.Callback<ProviderFeedback>()
-        {
-            @Override
-            public void onSuccess(final ProviderFeedback providerFeedback)
-            {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackSuccess(providerFeedback));
-
-            }
-
-            @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError(error));
-            }
-        });
-
+        // TODO: replace with real api call before merge into develop
+        List<ProviderFeedback> providerFeedback = new ArrayList<>();
+        providerFeedback.add(new ProviderFeedback("Quality of service", "3 customers have indicated that they were disappointed by the quality of your cleaning.",
+                Arrays.asList("Floors weren't cleaned", "General Cleanliness"),
+                Arrays.asList("develop a cleaning plan and follow it", "use the customer checklist as a guide", "don't skip the basic, like the floors, kitchen, and bathroom")));
+        providerFeedback.add(new ProviderFeedback("Quality of service", "3 customers have indicated that they were disappointed by the quality of your cleaning.",
+                Arrays.asList("Floors weren't cleaned", "General Cleanliness"),
+                Arrays.asList("develop a cleaning plan and follow it", "use the customer checklist as a guide", "don't skip the basic, like the floors, kitchen, and bathroom")));
+        mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackSuccess(providerFeedback));
+//        mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError(null));
+//        mDataManager.getProviderFeedback(providerId, new DataManager.Callback<List<ProviderFeedback>>()
+//        {
+//            @Override
+//            public void onSuccess(final List<ProviderFeedback> providerFeedback)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackSuccess(providerFeedback));
+//
+//            }
+//
+//            @Override
+//            public void onError(final DataManager.DataManagerError error)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError(error));
+//            }
+//        });
     }
 
     private void requestProviderInfo()
