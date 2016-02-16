@@ -33,7 +33,6 @@ import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 
 import org.json.JSONObject;
@@ -52,16 +51,15 @@ public final class BaseDataManager extends DataManager
     private final HandyRetrofitEndpoint endpoint;
 
     private final StripeRetrofitService stripeService; //TODO: should refactor and move somewhere else?
-    private final EventLogService mEventLogService;
 
     @Inject
-    public BaseDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint,
-                           final StripeRetrofitService stripeService, final EventLogService eventLogService)
+    public BaseDataManager(final HandyRetrofitService service,
+                           final HandyRetrofitEndpoint endpoint,
+                           final StripeRetrofitService stripeService)
     {
         this.service = service;
         this.endpoint = endpoint;
         this.stripeService = stripeService;
-        mEventLogService = eventLogService;
     }
 
     @Override
@@ -325,7 +323,7 @@ public final class BaseDataManager extends DataManager
     @Override
     public void postLogs(final JsonObject eventLogBundle, final Callback<EventLogResponse> cb)
     {
-        mEventLogService.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
+        service.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
     }
 
     // Notifications
