@@ -317,7 +317,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 {
                     bus.post(new LocationEvent.OnNetworkReconnected());
                 }
-
                 break;
         }
 

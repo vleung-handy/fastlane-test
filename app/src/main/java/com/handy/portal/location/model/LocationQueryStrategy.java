@@ -36,9 +36,9 @@ public class LocationQueryStrategy implements Parcelable
     Date mStartDate;
     @SerializedName("date_end")
     Date mEndDate;
-    @SerializedName("frequency")
+    @SerializedName("polling_frequency")
     int mLocationPollingIntervalSeconds; //every N seconds
-    @SerializedName("frequency")
+    @SerializedName("posting_frequency")
     int mServerPollingIntervalSeconds; //every N seconds
     @SerializedName("accuracy") //priority level
     int mLocationAccuracyPriority;
