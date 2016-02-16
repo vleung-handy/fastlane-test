@@ -9,7 +9,6 @@ import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.squareup.otto.Bus;
 
@@ -37,8 +36,6 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     @Mock
     HandyRetrofitEndpoint endpoint;
     @Mock
-    EventLogService mEventLogService;
-    @Mock
     StripeRetrofitService stripeService;
     @Mock
     Bus bus;
@@ -58,7 +55,7 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        dataManager = new BaseDataManager(service, endpoint, stripeService, mEventLogService);
+        dataManager = new BaseDataManager(service, endpoint, stripeService);
     }
 
     @Test

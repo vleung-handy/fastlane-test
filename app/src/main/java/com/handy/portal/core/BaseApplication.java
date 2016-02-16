@@ -48,7 +48,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class BaseApplication extends MultiDexApplication
 {
     private static String sDeviceId = "";
-    private static String sDeviceModel = "";
     protected ObjectGraph mGraph;
     private int mStarted;
     private boolean mSavedInstance;
@@ -117,7 +116,6 @@ public class BaseApplication extends MultiDexApplication
         startNewRelic();
         startCrashlytics();
         sDeviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        sDeviceModel =  Build.MANUFACTURER + " " + Build.MODEL;
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
 
@@ -203,6 +201,16 @@ public class BaseApplication extends MultiDexApplication
 
     public static String getDeviceModel()
     {
-        return sDeviceModel;
+        final String manufacturer = Build.MANUFACTURER;
+        final String model = Build.MODEL;
+
+        if (model.startsWith(manufacturer))
+        {
+            return model;
+        }
+        else
+        {
+            return manufacturer + " " + model;
+        }
     }
 }
