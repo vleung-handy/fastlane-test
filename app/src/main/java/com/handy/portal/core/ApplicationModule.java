@@ -224,7 +224,7 @@ public final class ApplicationModule
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
                         request.addQueryParam("apiver", "1");
                         request.addQueryParam("app_device_id", getDeviceId());
-                        request.addQueryParam("app_device_model", getDeviceName());
+                        request.addQueryParam("app_device_model", BaseApplication.getDeviceModel());
                         request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
@@ -477,21 +477,6 @@ public final class ApplicationModule
     {
         return Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-    }
-
-    private String getDeviceName()
-    {
-        final String manufacturer = Build.MANUFACTURER;
-        final String model = Build.MODEL;
-
-        if (model.startsWith(manufacturer))
-        {
-            return model;
-        }
-        else
-        {
-            return manufacturer + " " + model;
-        }
     }
 
     @Provides
