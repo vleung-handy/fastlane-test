@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
@@ -22,6 +24,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class DashboardFragment extends ActionBarFragment
@@ -31,6 +34,10 @@ public class DashboardFragment extends ActionBarFragment
 
     @Bind(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
+    @Bind(R.id.fetch_error_view)
+    View mFetchErrorView;
+    @Bind(R.id.fetch_error_text)
+    TextView mFetchErrorTextView;
     @Bind(R.id.welcome_pro_performance_view)
     WelcomeProPerformanceView mWelcomeProPerformanceView;
     @Bind(R.id.ratings_performance_view)
@@ -70,6 +77,7 @@ public class DashboardFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.my_performance, false);
+        getProviderEvaluation();
     }
 
     private void createDashboardView()
@@ -98,6 +106,10 @@ public class DashboardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveProviderEvaluationSuccess(ProviderDashboardEvent.ReceiveProviderEvaluationSuccess event)
     {
+        mDashboardLayout.setVisibility(View.VISIBLE);
+        mFetchErrorView.setVisibility(View.GONE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
         /*
         ProviderEvaluation providerEvaluation = event.providerEvaluation;
         String lifetimeRating = Double.toString(providerEvaluation.getLifeTime().getProRating());
@@ -124,8 +136,24 @@ public class DashboardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveProviderEvaluationFailure(ProviderDashboardEvent.ReceiveProviderEvaluationError event)
     {
+        mDashboardLayout.setVisibility(View.GONE);
+        mFetchErrorView.setVisibility(View.VISIBLE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
+        if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        {
+            mFetchErrorTextView.setText(R.string.error_fetching_connectivity_issue);
+        }
+        else
+        {
+            mFetchErrorTextView.setText(R.string.error_dashboard);
+        }
     }
 
-
+    @OnClick(R.id.try_again_button)
+    public void getProviderEvaluation()
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new ProviderDashboardEvent.RequestProviderEvaluation());
+    }
 }

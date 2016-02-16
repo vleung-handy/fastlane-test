@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:lineSpacingMultiplier="1.3"
+        android:lineSpacingExtra="@dimen/lineSpacing"
         android:paddingBottom="@dimen/default_padding"
         android:paddingEnd="@dimen/default_padding"
         android:paddingLeft="@dimen/default_padding"
