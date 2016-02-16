@@ -118,12 +118,15 @@ public class MainActivity extends BaseActivity
             if (getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
                 //don't want to show this dialog if it's already showing
             {
-                //check whether high accuracy setting is enabled
-                boolean highAccuracySettingEnabled;
+                //check whether a block level (100m) accuracy setting or better is enabled
+                boolean blockLevelAccuracyOrBetterSettingEnabled;
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                 {
                     int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-                    highAccuracySettingEnabled = locationMode == Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
+                    blockLevelAccuracyOrBetterSettingEnabled =
+                            (locationMode == Settings.Secure.LOCATION_MODE_BATTERY_SAVING
+                                    || locationMode == Settings.Secure.LOCATION_MODE_HIGH_ACCURACY
+                                    || locationMode == Settings.Secure.LOCATION_MODE_SENSORS_ONLY);
                 }
                 else
                 {
@@ -131,10 +134,10 @@ public class MainActivity extends BaseActivity
                     String locationProviders =
                             Settings.Secure.getString(getContentResolver(),
                                     Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-                    highAccuracySettingEnabled = !TextUtils.isNullOrEmpty(locationProviders);
+                    blockLevelAccuracyOrBetterSettingEnabled = !TextUtils.isNullOrEmpty(locationProviders);
                 }
 
-                if (!highAccuracySettingEnabled)
+                if (!blockLevelAccuracyOrBetterSettingEnabled)
                 {
                     LocationSettingsBlockerDialogFragment locationSettingsBlockerDialogFragment
                             = new LocationSettingsBlockerDialogFragment();
