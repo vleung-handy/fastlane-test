@@ -69,8 +69,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
         setActionBarTitle(R.string.five_star_reviews);
 
         mReviewRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mReviewRecyclerView.setLayoutManager(layoutManager);
+        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new ReviewListAdapter(getContext(), mRatings);
 
         mReviewRecyclerView.setAdapter(mAdapter);
