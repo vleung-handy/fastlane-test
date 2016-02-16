@@ -3,7 +3,6 @@ package com.handy.portal.location;
 import android.location.Location;
 import android.util.Log;
 
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
@@ -185,15 +184,16 @@ public class LocationManager
     @Subscribe
     public void onReceiveUpdatedScheduledBookings(HandyEvent.ReceiveScheduledBookingsSuccess event)
     {
+        //do nothing for the test build
         //TODO: build the location schedule from these bookings and notify the background service
-        LocationQuerySchedule locationQuerySchedule = LocationScheduleFactory.getLocationScheduleFromBookings(event.bookings);
-
-        //TODO: remove the below, test only!
-        locationQuerySchedule = new LocationQuerySchedule();
-
-        //TODO: store this in shared prefs
-        mPrefsManager.setString(PrefsKey.LOCATION_QUERY_SCHEDULE, locationQuerySchedule.toJson());
-
-        mBus.post(new LocationEvent.ReceiveLocationSchedule(locationQuerySchedule));
+//        LocationQuerySchedule locationQuerySchedule = LocationScheduleFactory.getLocationScheduleFromBookings(event.bookings);
+//
+//        //TODO: remove the below, test only!
+//        locationQuerySchedule = new LocationQuerySchedule();
+//
+//        //TODO: store this in shared prefs
+//        mPrefsManager.setString(PrefsKey.LOCATION_QUERY_SCHEDULE, locationQuerySchedule.toJson());
+//
+//        mBus.post(new LocationEvent.ReceiveLocationSchedule(locationQuerySchedule));
     }
 }
