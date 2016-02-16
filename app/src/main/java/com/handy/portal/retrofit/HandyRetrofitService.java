@@ -1,5 +1,6 @@
 package com.handy.portal.retrofit;
 
+import com.google.gson.JsonObject;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ProviderSettings;
@@ -238,4 +239,7 @@ public interface HandyRetrofitService
     void postMarkNotificationsAsRead(@Path("id") String providerId,
                                      @Field("notification_ids[]") ArrayList<Integer> notificationIds,
                                      HandyRetrofitCallback cb);
+
+    @POST("/events")
+    void postLogs(@Body JsonObject eventLogBundle, HandyRetrofitCallback cb);
 }

@@ -6,9 +6,9 @@ public class NearbyJobsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "nearby_jobs_post_checkout";
 
-    protected NearbyJobsLog(String providerId, String versionTrack, String eventType)
+    protected NearbyJobsLog(final String eventType)
     {
-        super(providerId, versionTrack, eventType, EVENT_CONTEXT);
+        super(eventType, EVENT_CONTEXT);
     }
 
 
@@ -19,9 +19,9 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("number_of_jobs_shown")
         private int mNumberOfJobs;
 
-        public Shown(String providerId, String versionTrack, int numberOfJobs)
+        public Shown(final int numberOfJobs)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mNumberOfJobs = numberOfJobs;
         }
     }
@@ -31,9 +31,9 @@ public class NearbyJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "pin_selected";
 
-        public PinSelected(String providerId, String versionTrack)
+        public PinSelected()
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
         }
     }
 
@@ -49,10 +49,10 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("payment_to_provider")
         private float mPaymentAmount;
 
-        public ClaimJobSelected(String providerId, String versionTrack, String bookingId,
-                                final double distanceInKilometer, final float paymentAmount)
+        public ClaimJobSelected(
+                final String bookingId, final double distanceInKilometer, final float paymentAmount)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mDistanceInKilometer = distanceInKilometer;
             mPaymentAmount = paymentAmount;
@@ -71,10 +71,10 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("payment_to_provider")
         private float mPaymentAmount;
 
-        public ClaimJobSuccess(String providerId, String versionTrack, String bookingId,
-                               final double distanceInKilometer, final float paymentAmount)
+        public ClaimJobSuccess(
+                final String bookingId, final double distanceInKilometer, final float paymentAmount)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mDistanceInKilometer = distanceInKilometer;
             mPaymentAmount = paymentAmount;

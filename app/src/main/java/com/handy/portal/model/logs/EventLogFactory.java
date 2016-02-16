@@ -24,23 +24,23 @@ public class EventLogFactory
     // Basic Logs
     public EventLog createAppOpenLog()
     {
-        return new BasicLog.Open(getProviderId(), getVersionTrack());
+        return new BasicLog.Open();
     }
 
     public EventLog createNavigationLog(String tabName)
     {
-        return new BasicLog.Navigation(getProviderId(), getVersionTrack(), tabName);
+        return new BasicLog.Navigation(tabName);
     }
 
     // Nearby Bookings Logs
     public EventLog createNearbyJobsLaunchedLog(int numOfJobs)
     {
-        return new NearbyJobsLog.Shown(getProviderId(), getVersionTrack(), numOfJobs);
+        return new NearbyJobsLog.Shown(numOfJobs);
     }
 
     public EventLog createPinSelectedLog()
     {
-        return new NearbyJobsLog.PinSelected(getProviderId(), getVersionTrack());
+        return new NearbyJobsLog.PinSelected();
     }
 
     public EventLog createNearbyJobClaimSelectedLog(Booking booking, double distanceInKilometer)
@@ -48,8 +48,7 @@ public class EventLogFactory
         String bookingId = booking.getId();
         float paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
 
-        return new NearbyJobsLog.ClaimJobSelected(getProviderId(), getVersionTrack(), bookingId,
-                distanceInKilometer, paymentAmount);
+        return new NearbyJobsLog.ClaimJobSelected(bookingId, distanceInKilometer, paymentAmount);
     }
 
     public EventLog createNearbyJobClaimSuccessLog(Booking booking, double distanceInKilometer)
@@ -57,14 +56,14 @@ public class EventLogFactory
         String bookingId = booking.getId();
         float paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
 
-        return new NearbyJobsLog.ClaimJobSuccess(getProviderId(), getVersionTrack(), bookingId,
+        return new NearbyJobsLog.ClaimJobSuccess(bookingId,
                 distanceInKilometer, paymentAmount);
     }
 
     // Available Booking Logs
     public EventLog createAvailableJobDateClickedLog(Date date, int jobCount)
     {
-        return new AvailableJobsLog.DateClicked(getProviderId(), getVersionTrack(), date, jobCount);
+        return new AvailableJobsLog.DateClicked(date, jobCount);
     }
 
     public EventLog createAvailableJobClickedLog(@NonNull Booking booking, int listNumber)
@@ -76,7 +75,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new AvailableJobsLog.Clicked(getProviderId(), getVersionTrack(), bookingId,
+        return new AvailableJobsLog.Clicked(bookingId,
                 serviceId, regionId, zipCode, requested, dateStart, listNumber);
     }
 
@@ -90,7 +89,7 @@ public class EventLogFactory
         Date dateStart = booking.getStartDate();
         int frequency = booking.getFrequency();
 
-        return new AvailableJobsLog.ClaimSuccess(getProviderId(), getVersionTrack(), bookingId,
+        return new AvailableJobsLog.ClaimSuccess(bookingId,
                 serviceId, regionId, zipCode, requested, dateStart, frequency, source);
     }
 
@@ -104,14 +103,14 @@ public class EventLogFactory
         Date dateStart = booking.getStartDate();
         int frequency = booking.getFrequency();
 
-        return new AvailableJobsLog.ClaimError(getProviderId(), getVersionTrack(), bookingId,
+        return new AvailableJobsLog.ClaimError(bookingId,
                 serviceId, regionId, zipCode, requested, dateStart, frequency, source);
     }
 
     // Scheduled Booking Logs
     public EventLog createScheduledJobDateClickedLog(Date date, int jobCount)
     {
-        return new ScheduledJobsLog.DateClicked(getProviderId(), getVersionTrack(), date, jobCount);
+        return new ScheduledJobsLog.DateClicked(date, jobCount);
     }
 
     public EventLog createScheduledJobClickedLog(@NonNull Booking booking, int listNumber)
@@ -123,7 +122,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.Clicked(getProviderId(), getVersionTrack(), bookingId,
+        return new ScheduledJobsLog.Clicked(bookingId,
                 serviceId, regionId, zipCode, requested, dateStart, listNumber);
     }
 
@@ -136,8 +135,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.RemoveJobClicked(getProviderId(), getVersionTrack(),
-                bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
+        return new ScheduledJobsLog.RemoveJobClicked(                bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
     }
 
     public EventLog createRemoveJobConfirmedLog(Booking booking, String warning)
@@ -149,8 +147,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.RemoveJobConfirmed(getProviderId(), getVersionTrack(),
-                bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
+        return new ScheduledJobsLog.RemoveJobConfirmed(                bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
     }
 
     public EventLog createRemoveJobErrorLog(Booking booking)
@@ -162,8 +159,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.RemoveJobError(getProviderId(), getVersionTrack(),
-                bookingId, serviceId, regionId, zipCode, requested, dateStart);
+        return new ScheduledJobsLog.RemoveJobError(                bookingId, serviceId, regionId, zipCode, requested, dateStart);
     }
 
     public EventLog createOnMyWayLog(@NonNull Booking booking, LocationData location)
@@ -176,7 +172,7 @@ public class EventLogFactory
         double bookingLongitude = getLongitude(booking.getAddress());
         double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
-        return new CheckInFlowLog.OnMyWay(getProviderId(), getVersionTrack(), bookingId,
+        return new CheckInFlowLog.OnMyWay(bookingId,
                 proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
     }
 
@@ -190,7 +186,7 @@ public class EventLogFactory
         double bookingLongitude = getLongitude(booking.getAddress());
         double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
-        return new CheckInFlowLog.CheckIn(getProviderId(), getVersionTrack(), bookingId,
+        return new CheckInFlowLog.CheckIn(bookingId,
                 proLatitude, proLongitude, bookingLatitude,
                 bookingLongitude, accuracy, distance);
     }
@@ -205,107 +201,107 @@ public class EventLogFactory
         double bookingLongitude = getLongitude(booking.getAddress());
         double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
 
-        return new CheckInFlowLog.CheckOut(getProviderId(), getVersionTrack(), bookingId,
+        return new CheckInFlowLog.CheckOut(bookingId,
                 proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
     }
 
     public EventLog createCustomerRatingShownLog()
     {
-        return new ScheduledJobsLog.CustomerRatingShown(getProviderId(), getVersionTrack());
+        return new ScheduledJobsLog.CustomerRatingShown();
     }
 
     public EventLog createCustomerRatingSubmittedLog(int rating)
     {
-        return new ScheduledJobsLog.CustomerRatingSubmitted(getProviderId(), getVersionTrack(), rating);
+        return new ScheduledJobsLog.CustomerRatingSubmitted(rating);
     }
 
     public EventLog createBookingInstructionsSeenLog(@NonNull Booking booking)
     {
         String bookingId = booking.getId();
-        return new ScheduledJobsLog.BookingInstructionsSeen(getProviderId(), getVersionTrack(), bookingId);
+        return new ScheduledJobsLog.BookingInstructionsSeen(bookingId);
     }
 
     public EventLog createSupportSelectedLog(@NonNull Booking booking)
     {
         String bookingId = booking.getId();
-        return new ScheduledJobsLog.SupportSelected(getProviderId(), getVersionTrack(), bookingId);
+        return new ScheduledJobsLog.SupportSelected(bookingId);
     }
 
     public EventLog createHelpItemSelectedLog(@NonNull Booking booking, String helpItemLabel)
     {
         String bookingId = booking.getId();
-        return new ScheduledJobsLog.HelpItemSelected(getProviderId(), getVersionTrack(), bookingId, helpItemLabel);
+        return new ScheduledJobsLog.HelpItemSelected(bookingId, helpItemLabel);
     }
 
     public EventLog createRemoveConfirmationShownLog(@NonNull Booking booking, String removalType)
     {
         String bookingId = booking.getId();
-        return new ScheduledJobsLog.RemoveConfirmationShown(getProviderId(), getVersionTrack(), bookingId, removalType);
+        return new ScheduledJobsLog.RemoveConfirmationShown(bookingId, removalType);
     }
 
     public EventLog createRemoveConfirmationAcceptedLog(@NonNull Booking booking, String reason)
     {
         String bookingId = booking.getId();
-        return new ScheduledJobsLog.RemoveConfirmationAccepted(getProviderId(), getVersionTrack(), bookingId, reason);
+        return new ScheduledJobsLog.RemoveConfirmationAccepted(bookingId, reason);
     }
 
     public EventLog createFindJobsSelectedLog()
     {
-        return new ScheduledJobsLog.FindJobsSelected(getProviderId(), getVersionTrack());
+        return new ScheduledJobsLog.FindJobsSelected();
     }
 
 
     // Payments Logs
     public EventLog createPaymentBatchSelectedLog(boolean currentWeek, int listNumber)
     {
-        return new PaymentsLog.BatchSelected(getProviderId(), getVersionTrack(), currentWeek, listNumber);
+        return new PaymentsLog.BatchSelected(currentWeek, listNumber);
     }
 
     public EventLog createPaymentDetailSelectedLog(String paymentType)
     {
-        return new PaymentsLog.DetailSelected(getProviderId(), getVersionTrack(), paymentType);
+        return new PaymentsLog.DetailSelected(paymentType);
     }
 
     public EventLog createPaymentHelpSlideUpLog()
     {
-        return new PaymentsLog.HelpSlideUpSelected(getProviderId(), getVersionTrack());
+        return new PaymentsLog.HelpSlideUpSelected();
     }
 
     public EventLog createPaymentHelpItemSelectedLog(String helpItemLabel)
     {
-        return new PaymentsLog.HelpItemSelected(getProviderId(), getVersionTrack(), helpItemLabel);
+        return new PaymentsLog.HelpItemSelected(helpItemLabel);
     }
 
     // Profile Logs
     public EventLog createReferralSelectedLog()
     {
-        return new ProfileLog.ReferralSelectedLog(getProviderId(), getVersionTrack());
+        return new ProfileLog.ReferralSelectedLog();
     }
 
     public EventLog createResupplyKitSelectedLog()
     {
-        return new ProfileLog.ResupplyKitSelectedLog(getProviderId(), getVersionTrack());
+        return new ProfileLog.ResupplyKitSelectedLog();
     }
 
     public EventLog createResupplyKitConfirmedLog()
     {
-        return new ProfileLog.ResupplyKitConfirmedLog(getProviderId(), getVersionTrack());
+        return new ProfileLog.ResupplyKitConfirmedLog();
     }
 
     public EventLog createEditProfileSelectedLog()
     {
-        return new ProfileLog.EditProfileSelectedLog(getProviderId(), getVersionTrack());
+        return new ProfileLog.EditProfileSelectedLog();
     }
 
     public EventLog createEditProfileConfirmedLog()
     {
-        return new ProfileLog.EditProfileConfirmedLog(getProviderId(), getVersionTrack());
+        return new ProfileLog.EditProfileConfirmedLog();
     }
 
     // Help logs
     public EventLog createHelpContactFormSubmittedLog(String path, int helpNodeId, String helpNodeTitle)
     {
-        return new HelpContactFormSubmittedLog(getProviderId(), getVersionTrack(), path, helpNodeId, helpNodeTitle);
+        return new HelpContactFormSubmittedLog(path, helpNodeId, helpNodeTitle);
     }
 
     // private helpers

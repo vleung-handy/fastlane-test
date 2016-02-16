@@ -4,13 +4,13 @@ package com.handy.portal.manager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.LogEvent;
-import com.handy.portal.model.TypedJsonString;
-import com.handy.portal.model.logs.EventLog;
+import com.handy.portal.model.logs.Event;
 import com.handy.portal.model.logs.EventLogBundle;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.squareup.otto.Bus;
@@ -24,10 +24,11 @@ import javax.inject.Inject;
 
 public class EventLogManager
 {
-    private static final int MAX_NUM_PER_BUNDLE = 100;
+    private static final String SENT_TIMESTAMP_SECS_KEY = "event_bundle_sent_timestamp";
+    private static final int MAX_NUM_PER_BUNDLE = 50;
     private static final Gson GSON = new Gson();
 
-    private static List<EventLog> sLogs = new ArrayList<>();
+    private static List<Event> sLogs = new ArrayList<>();
     private final Bus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
@@ -43,10 +44,11 @@ public class EventLogManager
     }
 
     @Subscribe
-    public void addLog(@NonNull LogEvent.AddLogEvent event)
+    public synchronized void addLog(@NonNull LogEvent.AddLogEvent event)
     {
-        sLogs.add(event.getLog());
-        if (sLogs.size() > MAX_NUM_PER_BUNDLE)
+        Crashlytics.log(event.getLog().getEventName());
+        sLogs.add(new Event(event.getLog()));
+        if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
         {
             saveLogs(null);
             sendLogs(null);
@@ -54,43 +56,39 @@ public class EventLogManager
     }
 
     @Subscribe
-    public void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
+    public synchronized void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
     {
-        final List<String> bundles = loadSavedEventBundles();
-        if (bundles.size() == 0) { return; }
-        for (final String bundle : bundles)
+        final List<String> jsonBundleStrings = loadSavedEventBundles();
+        if (jsonBundleStrings.size() == 0) { return; }
+        for (final String bundleString : jsonBundleStrings)
         {
-            mDataManager.postLogs(new TypedJsonString(bundle), new DataManager.Callback<EventLogResponse>()
+            final JsonObject eventLogBundle = GSON.fromJson(bundleString, JsonObject.class);
+            eventLogBundle.addProperty(SENT_TIMESTAMP_SECS_KEY, System.currentTimeMillis() / 1000);
+            mDataManager.postLogs(eventLogBundle, new DataManager.Callback<EventLogResponse>()
             {
                 @Override
                 public void onSuccess(EventLogResponse response)
                 {
-                    bundles.remove(bundle);
-                    saveToPreference(bundles);
+                    jsonBundleStrings.remove(bundleString);
+                    saveToPreference(jsonBundleStrings);
                 }
 
                 @Override
-                public void onError(DataManager.DataManagerError error) { }
+                public void onError(DataManager.DataManagerError error) {}
             });
         }
     }
 
     @Subscribe
-    public void saveLogs(@Nullable LogEvent.SaveLogsEvent event)
+    public synchronized void saveLogs(@Nullable LogEvent.SaveLogsEvent event)
     {
         if (sLogs.size() > 0)
         {
             List<String> eventLogBundles = loadSavedEventBundles();
-            String bundleId = createBundleId();
-            eventLogBundles.add(GSON.toJson(new EventLogBundle(bundleId, sLogs)));
+            eventLogBundles.add(GSON.toJson(new EventLogBundle(getProviderId(), sLogs)));
             saveToPreference(eventLogBundles);
             sLogs = new ArrayList<>();
         }
-    }
-
-    private String createBundleId()
-    {
-        return System.currentTimeMillis() + "+" + BaseApplication.getDeviceId();
     }
 
     private List<String> loadSavedEventBundles()
@@ -111,5 +109,10 @@ public class EventLogManager
     {
         String json = GSON.toJson(eventLogBundles);
         mPrefsManager.setString(PrefsKey.EVENT_LOG_BUNDLES, json);
+    }
+
+    private int getProviderId()
+    {
+        return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
     }
 }
