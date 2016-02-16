@@ -30,10 +30,10 @@ import javax.inject.Inject;
  * listens to the location schedule updated event and starts the schedule handler accordingly
  * <p/>
  * responsible for handling google api client
- *
- * this is run in a separate process from the main application.
- *
+ **
  * TODO: what exactly is wakelock and do i need it?
+ *
+ * TODO: consider running this, or parts of this, in separate thread from main application to prevent lags
  */
 public class LocationService extends Service
         implements
