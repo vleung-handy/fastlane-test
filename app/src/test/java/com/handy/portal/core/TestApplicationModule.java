@@ -77,7 +77,6 @@ import static org.mockito.Mockito.when;
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
         ProfileReferralView.class,
-        ProfilePerformanceView.class,
         BookingDetailsJobInstructionsView.class,
 }, library = true)
 public class TestApplicationModule
