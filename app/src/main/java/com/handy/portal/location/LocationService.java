@@ -26,7 +26,7 @@ import javax.inject.Inject;
 
 /**
  * listens to the location schedule updated event and starts the schedule handler accordingly
- *
+ * <p/>
  * responsible for handling google api client
  */
 public class LocationService extends Service
@@ -67,13 +67,11 @@ public class LocationService extends Service
             mGoogleApiClient.connect();
 //            requestLocationQuerySchedule();//uncomment this back
 
-
             //TODO: remove, for toggle testing only
-            Bundle args = intent.getExtras();
-            if(args!= null && args.getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)!=null)
+            if (intent != null && intent.getExtras() != null && intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE) != null)
             {
                 mBus.post(new LocationEvent.ReceiveLocationSchedule((LocationQuerySchedule)
-                        args.getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
+                        intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
 
             }
             else
@@ -122,6 +120,7 @@ public class LocationService extends Service
 
     /**
      * got a new schedule, create a handler for it
+     *
      * @param locationQuerySchedule
      */
     private void handleNewLocationQuerySchedule(@NonNull LocationQuerySchedule locationQuerySchedule)

@@ -27,6 +27,8 @@ import butterknife.OnClick;
 
 /**
  * used only for testing the location service!
+ *
+ * TODO: detect if service is already running and populate these fields with the current schedule params
  */
 public class LocationTesterView extends LinearLayout
 {
