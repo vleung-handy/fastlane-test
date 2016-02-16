@@ -13,7 +13,6 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
-import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -29,6 +28,7 @@ import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
+    private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @Bind(R.id.scheduled_jobs_list_view)
     BookingListView mScheduledJobsListView;
     @Bind(R.id.scheduled_bookings_dates_scroll_view_layout)
@@ -109,6 +109,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
         return ScheduledBookingElementView.class;
+    }
+
+    @Override
+    protected String getBookingSourceName()
+    {
+        return SOURCE_SCHEDULED_JOBS_LIST;
     }
 
     @Override
@@ -214,30 +220,5 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
         handleBookingsRetrievalError(event, R.string.error_fetching_scheduled_jobs);
-    }
-
-    @Subscribe
-    public void onReceiveProviderSettingsSuccess(ProviderSettingsEvent.ReceiveProviderSettingsSuccess event)
-    {
-        super.onReceiveProviderSettingsSuccess(event);
-    }
-
-
-    @Subscribe
-    public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event)
-    {
-        super.onReceiveProviderSettingsError(event);
-    }
-
-    @Subscribe
-    public void onReceiveProviderSettingsUpdateSuccess(ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess event)
-    {
-        super.onReceiveProviderSettingsUpdateSuccess(event);
-    }
-
-    @Subscribe
-    public void onReceiveProviderSettingsUpdateError(ProviderSettingsEvent.ReceiveProviderSettingsUpdateError event)
-    {
-        super.onReceiveProviderSettingsUpdateError(event);
     }
 }

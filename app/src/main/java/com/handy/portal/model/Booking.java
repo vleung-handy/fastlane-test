@@ -57,6 +57,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private PaymentInfo mPaymentToProvider;
     @SerializedName("bonus")
     private PaymentInfo mBonusPayment;
+    @SerializedName("hourly_rate")
+    private PaymentInfo mHourlyRate;
     @SerializedName("frequency")
     private int mFrequency;
     @SerializedName("provider_id")
@@ -72,8 +74,6 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("booking_phone")
     private String mBookingPhone;
 
-    @SerializedName("booking_instructions")
-    private List<BookingInstruction> mBookingInstructions;
     @SerializedName("booking_instruction_groups")
     private List<BookingInstructionGroup> mBookingInstructionGroups;
     @SerializedName("booking_extras")
@@ -95,9 +95,15 @@ public class Booking implements Comparable<Booking>, Serializable
     private String mZipClusterId;
     @SerializedName("zipcluster")
     private ZipCluster mZipCluster;
+    @SerializedName("min_hrs")
+    private float mMinimumHours;
+    @SerializedName("hrs")
+    private float mHours;
 
     @SerializedName("region_id")
     private int mRegionId;
+
+    private List<BookingInstructionUpdateRequest> mCustomerPreferences;
 
     public int compareTo(@NonNull Booking other)
     {
@@ -132,14 +138,51 @@ public class Booking implements Comparable<Booking>, Serializable
         return mStatus;
     }
 
-    public List<BookingInstruction> getBookingInstructions()
-    {
-        return mBookingInstructions;
-    }
-
     public List<BookingInstructionGroup> getBookingInstructionGroups()
     {
         return mBookingInstructionGroups;
+    }
+
+    @Nullable
+    public List<BookingInstructionUpdateRequest> getCustomerPreferences()
+    {
+        if (mCustomerPreferences != null) { return mCustomerPreferences; }
+        if (mBookingInstructionGroups == null) { return null; }
+
+        for (BookingInstructionGroup group : mBookingInstructionGroups)
+        {
+            if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+            {
+                mCustomerPreferences = BookingInstruction.generateBookingInstructionUpdateRequests(group.getInstructions());
+                return mCustomerPreferences;
+            }
+        }
+        return null;
+    }
+
+    public void setCustomerPreferences(List<BookingInstructionUpdateRequest> customerPreferences)
+    {
+        mCustomerPreferences = customerPreferences;
+    }
+
+    public boolean isAnyPreferenceChecked()
+    {
+        List<BookingInstructionUpdateRequest> preferences = getCustomerPreferences();
+        if (preferences != null)
+        {
+            for (BookingInstruction preference : preferences)
+            {
+                if (preference.isInstructionCompleted())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else // if there isn't a list to check
+        {
+            return true;
+        }
     }
 
     public int getFrequency()
@@ -160,6 +203,11 @@ public class Booking implements Comparable<Booking>, Serializable
     public PaymentInfo getBonusPaymentToProvider()
     {
         return mBonusPayment;
+    }
+
+    public PaymentInfo getHourlyRate()
+    {
+        return mHourlyRate;
     }
 
     public boolean isRequested()
@@ -272,6 +320,11 @@ public class Booking implements Comparable<Booking>, Serializable
         return mCheckInSummary;
     }
 
+    public boolean isCheckedIn()
+    {
+        return mCheckInSummary != null && mCheckInSummary.isCheckedIn();
+    }
+
     public Integer getProviderMinutesLate()
     {
         return mProviderMinutesLate;
@@ -330,6 +383,21 @@ public class Booking implements Comparable<Booking>, Serializable
     public ZipCluster getZipCluster() { return mZipCluster; }
 
     public int getRegionId() { return mRegionId; }
+
+    public float getMinimumHours()
+    {
+        return mMinimumHours;
+    }
+
+    public float getHours()
+    {
+        return mHours;
+    }
+
+    public boolean hasFlexibleHours()
+    {
+        return mMinimumHours > 0 && mMinimumHours < mHours;
+    }
 
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus
@@ -575,19 +643,59 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public static class BookingInstruction implements Serializable
     {
+        @SerializedName("id")
+        protected String mId;
+        @SerializedName("instruction_type")
+        protected String mInstructionType;
         @SerializedName("description")
-        private String mDescription;
+        protected String mDescription;
         @SerializedName("machine_name")
-        private String mMachineName;
+        protected String mMachineName;
+        @SerializedName("title")
+        protected String mTitle;
+        @SerializedName("finished")
+        protected boolean mInstructionCompleted;
 
-        public String getDescription()
+        public static List<BookingInstructionUpdateRequest> generateBookingInstructionUpdateRequests(
+                List<BookingInstruction> input)
         {
-            return mDescription;
+            List<BookingInstructionUpdateRequest> copiedList = new ArrayList<>(input.size());
+            for (BookingInstruction entry : input)
+            {
+                copiedList.add(new BookingInstructionUpdateRequest(entry));
+            }
+            return copiedList;
         }
 
-        public String getMachineName()
+        public String getId() { return mId; }
+
+        public String getInstructionType() { return mInstructionType; }
+
+        public String getTitle() { return mTitle; }
+
+        public boolean isInstructionCompleted() { return mInstructionCompleted; }
+
+        public String getDescription() { return mDescription; }
+
+        public String getMachineName() { return mMachineName; }
+    }
+
+
+    public static class BookingInstructionUpdateRequest extends BookingInstruction
+    {
+        public BookingInstructionUpdateRequest(BookingInstruction bookingInstruction)
         {
-            return mMachineName;
+            mId = bookingInstruction.getId();
+            mInstructionType = bookingInstruction.getInstructionType();
+            mDescription = bookingInstruction.getDescription();
+            mMachineName = bookingInstruction.getMachineName();
+            mTitle = bookingInstruction.getTitle();
+            mInstructionCompleted = bookingInstruction.isInstructionCompleted();
+        }
+
+        public void setInstructionCompleted(boolean instructionCompleted)
+        {
+            mInstructionCompleted = instructionCompleted;
         }
     }
 
@@ -599,14 +707,15 @@ public class Booking implements Comparable<Booking>, Serializable
         public static String GROUP_REFRIGERATOR = "refrigerator";
         public static String GROUP_TRASH = "trash";
         public static String GROUP_NOTE_TO_PRO = "note_to_pro";
+        public static String GROUP_PREFERENCES = "preferences";
         public static String OTHER = "other";
 
         @SerializedName("group")
         private String mGroup;
         @SerializedName("label")
         private String mLabel;
-        @SerializedName("items")
-        private List<String> mItems;
+        @SerializedName("instructions")
+        private List<BookingInstruction> mInstructions;
 
         public String getGroup()
         {
@@ -618,9 +727,9 @@ public class Booking implements Comparable<Booking>, Serializable
             return mLabel;
         }
 
-        public List<String> getItems()
+        public List<BookingInstruction> getInstructions()
         {
-            return mItems;
+            return mInstructions;
         }
     }
 

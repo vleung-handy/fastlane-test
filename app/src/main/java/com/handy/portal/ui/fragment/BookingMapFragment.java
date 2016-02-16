@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
@@ -35,11 +36,11 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
 {
     private static final ViewGroup.LayoutParams LAYOUT_PARAMS =
             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    private static final int DEFAULT_ZOOM_LEVEL         = 15;
-    private static final int DEFAULT_BOUND_PADDING      = 15;
-    private static final float DEFAULT_RADIUS_METERS    = 500f;
+    private static final int DEFAULT_ZOOM_LEVEL = 15;
+    private static final int DEFAULT_BOUND_PADDING = 15;
+    private static final float DEFAULT_RADIUS_METERS = 500f;
 
-    private static final int MAP_POLYGON_STROKE_WIDTH   = 3;
+    private static final int MAP_POLYGON_STROKE_WIDTH = 3;
     private static final int MAP_POLYGON_STROKE_COLOR = 0XFFD1D1D1; //Can not store in colors.xml, colors.xml doesn't use alpha correctly
     private static final int MAP_POLYGON_FILL_COLOR = 0x80FF5C5C; //Can not store in colors.xml, colors.xml doesn't use alpha correctly
 
@@ -66,7 +67,6 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
         mStatus = (Booking.BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
         mPolygons = (ZipClusterPolygons) getArguments().getSerializable(BundleKeys.ZIP_CLUSTER_POLYGONS);
-        getMapAsync(this);
     }
 
     @Override
@@ -89,6 +89,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     {
         super.onViewCreated(view, savedInstanceState);
         mScrollView = (ScrollView) getActivity().findViewById(R.id.booking_details_scroll_view);
+        getMapAsync(this);
     }
 
     @Override
@@ -127,11 +128,48 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
      * In the case of normal bookings with a center point, the map zooms in too far.
      * To combat that, the camera zoom is checked after the bounding and forced to the default
      * zoom if the zoom is greater than the default.
-     *
      */
-    private void positionCamera(@NonNull GoogleMap map, @NonNull List<LatLng> points)
+    private void positionCamera(@NonNull final GoogleMap map, @NonNull List<LatLng> points)
     {
-        CameraUpdate cameraUpdate = buildCameraUpdate(points);
+        final CameraUpdate cameraUpdate = buildCameraUpdate(points);
+
+        // Sometimes the google map is ready but fragment it's placed in has not performed layout.
+        // In that case, attempting to moveCamera will raise an IllegalStateException because
+        // the map has no physical size.
+        //
+        // To get around this, catch the exception, add a listener to the fragments layout callback,
+        // and re-attempt to move once layout has occurred
+        try
+        {
+            moveCamera(map, cameraUpdate);
+        }
+        catch (IllegalStateException e)
+        {
+            final View mapView = getView();
+            if (mapView != null && mapView.getViewTreeObserver().isAlive())
+            {
+                mapView.getViewTreeObserver().addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener()
+                        {
+                            @Override
+                            public void onGlobalLayout()
+                            {
+                                mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                moveCamera(map, cameraUpdate);
+                            }
+                        }
+                );
+            }
+            else
+            {
+                Crashlytics.logException(
+                        new RuntimeException("Can't show map. Map view: " + mapView));
+            }
+        }
+    }
+
+    private void moveCamera(final @NonNull GoogleMap map, final CameraUpdate cameraUpdate)
+    {
         map.moveCamera(cameraUpdate);
         if (map.getCameraPosition().zoom > DEFAULT_ZOOM_LEVEL)
         {
@@ -167,7 +205,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         {
             return new LatLng(mPolygons.getCenter().latitude, mPolygons.getCenter().longitude);
         }
-        else if(mBooking.getMidpoint() != null)
+        else if (mBooking.getMidpoint() != null)
         {
             return new LatLng(mBooking.getMidpoint().getLatitude(), mBooking.getMidpoint().getLongitude());
         }

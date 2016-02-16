@@ -174,20 +174,6 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         assertNull(ShadowAlertDialog.getLatestAlertDialog());
     }
 
-    @Test
-    public void givenDialogForSwitchingEnvironmentsShown_whenItemClicked_thenSwitchEnvironment() throws Exception
-    {
-        when(buildConfigWrapper.isDebug()).thenReturn(true);
-        fragmentView.findViewById(R.id.logo).performClick();
-        reset(environmentModifier);
-
-        ShadowAlertDialog alertDialog = shadowOf(ShadowAlertDialog.getLatestAlertDialog());
-        alertDialog.clickOnItem(2);
-
-        String secondItem = (String) alertDialog.getItems()[2];
-        verify(environmentModifier).setEnvironmentPrefix(EnvironmentModifier.Environment.valueOf(secondItem).getPrefix(), null);
-    }
-
     private void makeLoginRequest(String pinCode)
     {
         makePinRequest(VALID_PHONE_NUMBER); // assumes valid pin request

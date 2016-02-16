@@ -27,6 +27,7 @@ import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -44,8 +45,6 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragmentTest;
 import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
-
-import org.robolectric.shadows.ShadowPreferenceManager;
 
 import javax.inject.Singleton;
 
@@ -80,6 +79,7 @@ import static org.mockito.Mockito.when;
         MainActivityFragmentTest.class,
         ProfileReferralView.class,
         ProfilePerformanceView.class,
+        BookingDetailsJobInstructionsView.class,
         LocationSettingsBlockerDialogFragment.class
 }, library = true)
 public class TestApplicationModule
@@ -186,7 +186,7 @@ public class TestApplicationModule
     @Singleton
     final PrefsManager providePrefsManager()
     {
-        return new PrefsManager(ShadowPreferenceManager.getDefaultSharedPreferences(mApplication));
+        return mock(PrefsManager.class);
     }
 
     @Provides

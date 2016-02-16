@@ -152,7 +152,7 @@
     <string name="most_popular">Most Popular</string>
     <string name="save">Save</string>
     <string name="available">Available</string>
-    <string name="extras">Extras</string>
+    <string name="extras">Paid Extras</string>
     <string name="description">Description</string>
     <string name="apply">Apply</string>
     <string name="promo_code_opt">Promo Code (optional)</string>
@@ -164,6 +164,7 @@
     <string name="yes">Yes</string>
     <string name="reschedule_all_bookings">Reschedule all subsequent bookings?</string>
     <string name="cancel_booking">Cancel Booking</string>
+    <string name="set">Set</string>
     <string name="cancel">Cancel</string>
     <string name="get_started">Get Started</string>
     <string name="onboard_msg">Book trusted cleaners\n &amp; handymen instantly</string>
@@ -215,9 +216,12 @@
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
+    <string name="automatic_update_failed">Automatic update failed</string>
     <string name="update_copy">Please install the update to continue using Portal.</string>
     <string name="update_button_label">Install Update</string>
     <string name="download_copy">Downloading update. Please wait…</string>
+    <string name="issues_manual_download">Having issues updating the app? \n<a href="https://www.handy.com/p">Click here</a> to download directly from Handy.</string>
+    <string name="download_update_manually">Please download update manually.</string>
     <string name="allow_external_storage_write_title">Important update</string>
     <string name="allow_external_storage_write_message">Select “Allow” on the next screen in order to download the latest version of the Handy Pro Portal.</string>
     <string name="allow_external_storage_write_button">OK</string>
@@ -246,6 +250,7 @@
     <string name="scheduled_job">Scheduled Job</string>
     <string name="block_jobs_schedule">Block Jobs Schedule</string>
     <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
+    <string name="time_window_formatted">\u22C5 %1$s\u2013%2$s hour job</string>
     <string name="payment_value">%s</string>
     <string name="payment_help">Payment Help</string>
     <string name="payments">Payments</string>
@@ -253,12 +258,13 @@
     <string name="bonus_payment_value">+ %s BONUS</string>
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
-    <string name="booking_frequency_non_recurring">One-time only</string>
+    <string name="booking_frequency_non_recurring">One-time</string>
     <string name="booking_frequency_recurring_generic">Recurring</string>
     <string name="supplies">Supplies</string>
     <string name="full_details_after_claim">Additional details will be displayed after claiming</string>
     <string name="full_details_available_on_date">Full details available on\n%1$s</string>
     <string name="full_details_and_more_available_on_date"><![CDATA[Full job details, including exact address, will be available on <b>%1$s</b>. We\u2019ll send you a reminder at that time.]]></string>
+    <string name="full_details_and_more_available_on_date_flex"><![CDATA[Depending on the specific customer details you receive, this job may be a minimum of <b>%1$s</b> hours up to a maximum of <b>%2$s</b> hours. The job will not start prior to <b>%3$s</b> and will not end after <b>%4$s</b>. Exact customer and booking details will be sent by 1 hour before job start.<br/><br/>Job payment depends on the number of hours of the booking you receive. It will be minimum <b>%5$s</b> for a <b>%6$s</b> hour booking and maximum <b>%7$s</b> for a <b>%8$s</b> hour booking.]]></string>
     <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs</string>
@@ -289,7 +295,7 @@
     <string name="update_arrival_time">Update Arrival Time</string>
     <string name="disclaimer_on_my_way">Button activates 1 hour before booking</string>
     <string name="remove_job">Remove Job</string>
-    <string name="booking_support">Booking Support</string>
+    <string name="job_support">Job Support</string>
     <string name="job_remove_error">Error Removing Job"</string>
     <string name="job_remove_error_generic">This job could not be removed</string>
     <string name="job_action_error">There was a problem taking that action, please try again</string>
@@ -341,7 +347,6 @@
     <string name="will_be_early">I\u2019ll be early</string>
     <string name="will_be_late">I\u2019m running late</string>
 
-    <string name="on_the_job_support">On The Job Support</string>
     <string name="report_customer_no_show">Report customer no show</string>
     <string name="report_no_show">Report No Show</string>
     <string name="customer_no_show_reported">Customer no show reported</string>
@@ -354,6 +359,7 @@
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
 
     <string name="bullet">⋅</string>
+    <string name="dash">\u2013</string>
     <string name="undo">Undo</string>
     <string name="ok">OK</string>
 
@@ -475,6 +481,9 @@
     <string name="nearby_transit">Nearby Transit</string>
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
+    <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
+    <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
+
 
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>

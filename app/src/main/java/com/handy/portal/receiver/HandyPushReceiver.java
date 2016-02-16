@@ -3,9 +3,11 @@ package com.handy.portal.receiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.service.AutoCheckInService;
+import com.handy.portal.ui.activity.SplashActivity;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 
@@ -14,22 +16,26 @@ public class HandyPushReceiver extends BaseIntentReceiver
     public static final String TYPE_AUTO_CHECK_IN = "P_AUTO_CHECKIN";
 
     @Override
-    protected void onChannelRegistrationSucceeded(Context context, String s)
+    protected void onChannelRegistrationSucceeded(@NonNull Context context,
+                                                  @NonNull String s)
     {
     }
 
     @Override
-    protected void onChannelRegistrationFailed(Context context)
+    protected void onChannelRegistrationFailed(@NonNull Context context)
     {
     }
 
     @Override
-    protected void onPushReceived(Context context, PushMessage pushMessage, int notificationId)
+    protected void onPushReceived(@NonNull Context context,
+                                  @NonNull PushMessage pushMessage,
+                                  int notificationId)
     {
     }
 
     @Override
-    protected void onBackgroundPushReceived(Context context, PushMessage pushMessage)
+    protected void onBackgroundPushReceived(@NonNull Context context,
+                                            @NonNull PushMessage pushMessage)
     {
         Bundle pushBundle = pushMessage.getPushBundle();
         String type = pushBundle.getString(BundleKeys.PUSH_TYPE, "");
@@ -46,14 +52,41 @@ public class HandyPushReceiver extends BaseIntentReceiver
     }
 
     @Override
-    protected boolean onNotificationOpened(Context context, PushMessage pushMessage, int notificationId)
+    protected boolean onNotificationOpened(@NonNull Context context,
+                                           @NonNull PushMessage pushMessage,
+                                           int notificationId)
+    {
+        final Bundle pushBundle = pushMessage.getPushBundle();
+        final String deeplink = pushBundle.getString(BundleKeys.DEEPLINK);
+        if (deeplink != null)
+        {
+            // BaseActivity will preserve the bundle through activity launches
+            launchSplashActivityWithDeeplinkData(context, pushBundle);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    @Override
+    protected boolean onNotificationActionOpened(@NonNull Context context,
+                                                 @NonNull PushMessage pushMessage,
+                                                 int notificationId,
+                                                 @NonNull String buttonId,
+                                                 boolean isForeground)
     {
         return false;
     }
 
-    @Override
-    protected boolean onNotificationActionOpened(Context context, PushMessage pushMessage, int notificationId, String buttonId, boolean isForeground)
+    private static void launchSplashActivityWithDeeplinkData(@NonNull final Context context,
+                                                             @NonNull final Bundle deeplinkData)
     {
-        return false;
+        final Intent intent = new Intent(context, SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkData);
+        context.startActivity(intent);
     }
 }

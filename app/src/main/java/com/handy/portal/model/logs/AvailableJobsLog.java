@@ -8,9 +8,9 @@ public class AvailableJobsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "available_jobs";
 
-    protected AvailableJobsLog(String providerId, String versionTrack, String eventType)
+    protected AvailableJobsLog(final String eventType)
     {
-        super(providerId, versionTrack, eventType, EVENT_CONTEXT);
+        super(eventType, EVENT_CONTEXT);
     }
 
     public static class DateClicked extends AvailableJobsLog
@@ -22,9 +22,9 @@ public class AvailableJobsLog extends EventLog
         @SerializedName("job_count")
         private int mJobCount;
 
-        public DateClicked(String providerId, String versionTrack, Date date, int jobCount)
+        public DateClicked(final Date date, final int jobCount)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mDate = date;
             mJobCount = jobCount;
         }
@@ -50,10 +50,11 @@ public class AvailableJobsLog extends EventLog
         private int mListNumber;
 
         public Clicked(
-                String providerId, String versionTrack, String bookingId, String serviceId, int regionId,
-                String zipCode, boolean requested, Date dateStart, int listNumber)
+                final String bookingId, final String serviceId, final int regionId,
+                final String zipCode, final boolean requested, final Date dateStart,
+                final int listNumber)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mServiceId = serviceId;
             mRegionId = regionId;
@@ -82,16 +83,16 @@ public class AvailableJobsLog extends EventLog
         private Date mDateStart;
         @SerializedName("frequency")
         private int mFrequency;
-        @SerializedName("source")
+        @SerializedName("claim_source")
         private String mSource;
 
 
         public ClaimSuccess(
-                String providerId, String versionTrack, String bookingId, String serviceId,
-                int regionId, String zipCode, boolean requested, Date dateStart,
-                int frequency, String source)
+                final String bookingId, final String serviceId, final int regionId,
+                final String zipCode, final boolean requested, final Date dateStart,
+                final int frequency, final String source)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mServiceId = serviceId;
             mRegionId = regionId;
@@ -121,16 +122,16 @@ public class AvailableJobsLog extends EventLog
         private Date mDateStart;
         @SerializedName("frequency")
         private int mFrequency;
-        @SerializedName("source")
+        @SerializedName("claim_source")
         private String mSource;
 
 
         public ClaimError(
-                String providerId, String versionTrack, String bookingId, String serviceId,
-                int regionId, String zipCode, boolean requested, Date dateStart,
-                int frequency, String source)
+                final String bookingId, final String serviceId, final int regionId,
+                final String zipCode, final boolean requested, final Date dateStart,
+                final int frequency, final String source)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mServiceId = serviceId;
             mRegionId = regionId;

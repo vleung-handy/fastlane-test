@@ -1,5 +1,6 @@
 package com.handy.portal.util;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class CurrencyUtils
@@ -10,7 +11,9 @@ public class CurrencyUtils
     {
         String currencySymbol = currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL;
         String sign = price < 0 ? "-" : "";
-        return sign + currencySymbol + new DecimalFormat("#,##0").format(Math.abs(price));
+        final DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+        decimalFormat.setRoundingMode(RoundingMode.DOWN);
+        return sign + currencySymbol + decimalFormat.format(Math.abs(price));
     }
 
     public static String formatPriceWithCents(final int priceCents, final String currencyChar)

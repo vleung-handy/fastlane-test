@@ -37,8 +37,6 @@
 
             <include layout="@layout/layout_fetch_error"/>
 
-            <include layout="@layout/element_same_day_notification_toggle"/>
-
             <include layout="@layout/layout_scheduled_bookings_empty"/>
 
             <android.support.v4.widget.SwipeRefreshLayout

@@ -5,16 +5,19 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +39,8 @@ import butterknife.OnClick;
 public class PleaseUpdateFragment extends InjectedFragment
 {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
+    private static final String ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME = "com.android.packageinstaller";
+    private static final String ANDROID_PACKAGE_INSTALLER_ACTIVITY_NAME = "com.android.packageinstaller.PackageInstallerActivity";
     @Inject
     VersionManager mVersionManager;
 
@@ -51,6 +56,8 @@ public class PleaseUpdateFragment extends InjectedFragment
     LinearLayout mGrantPermissionsSection;
     @Bind(R.id.install_update_section)
     LinearLayout mInstallUpdateSection;
+    @Bind(R.id.manual_download_text)
+    TextView manualDownloadText;
 
     private boolean mAlreadyAskedPermissions = false;
     private Uri mApkUri;
@@ -75,6 +82,9 @@ public class PleaseUpdateFragment extends InjectedFragment
             }
         });
         Crashlytics.log("Starting the update process");
+
+        // Make link in text clickable
+        manualDownloadText.setMovementMethod(LinkMovementMethod.getInstance());
 
         return view;
     }
@@ -108,6 +118,14 @@ public class PleaseUpdateFragment extends InjectedFragment
         mUpdateImage.setBackgroundResource(R.drawable.img_update_success);
         mUpdateButton.setEnabled(true);
         mUpdateText.setText(R.string.update_copy);
+        mUpdateButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                installApk();
+            }
+        });
         mApkUri = mVersionManager.getNewApkUri();
     }
 
@@ -121,16 +139,39 @@ public class PleaseUpdateFragment extends InjectedFragment
     @OnClick(R.id.update_button)
     protected void installApk()
     {
-        Intent installIntent = new Intent(Intent.ACTION_VIEW);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            ComponentName comp = new ComponentName("com.android.packageinstaller", "com.android.packageinstaller.PackageInstallerActivity");
-            installIntent.setComponent(comp);
-        }
+        final Intent installIntent = new Intent(Intent.ACTION_VIEW);
+        setPackageInstallerComponent(installIntent);
 
         installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
         Utils.safeLaunchIntent(installIntent, getActivity());
+    }
+
+    private void setPackageInstallerComponent(final Intent installIntent)
+    {
+        final ComponentName packageInstallerComponentName =
+                new ComponentName(ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME,
+                        ANDROID_PACKAGE_INSTALLER_ACTIVITY_NAME);
+        try
+        {
+            final PackageManager packageManager = getActivity().getPackageManager();
+            final ActivityInfo activityInfo =
+                    packageManager.getActivityInfo(packageInstallerComponentName, 0);
+            if (activityInfo != null)
+            {
+                installIntent.setComponent(packageInstallerComponentName);
+            }
+            else
+            {
+                Crashlytics.logException(
+                        new RuntimeException(
+                                "Unable to use " + ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME));
+            }
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
     private void checkPermissions()

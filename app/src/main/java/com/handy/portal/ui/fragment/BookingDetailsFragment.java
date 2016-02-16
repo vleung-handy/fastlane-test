@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
@@ -47,6 +49,7 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
+import com.handy.portal.model.Provider;
 import com.handy.portal.model.logs.ScheduledJobsLog;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
@@ -77,6 +80,7 @@ import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
+    private static final String SOURCE_DISPATCH_NOTIFICATION_TOGGLE = "dispatch_notification_toggle";
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout; // Maybe use fragment instead of view group?
     @Bind(R.id.booking_details_date_view)
@@ -115,6 +119,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
     private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
+    private static final Gson GSON = new Gson();
 
     private String mRequestedBookingId;
     private BookingType mRequestedBookingType;
@@ -124,6 +129,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private MainViewTab mCurrentTab;
     private boolean mHaveTrackedSeenBookingInstructions;
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
+    private String mSource;
 
     @Override
     protected MainViewTab getTab()
@@ -150,7 +156,11 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             Bundle arguments = getArguments();
             mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
-            mRequestedBookingType = BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
+            final String bookingType = arguments.getString(BundleKeys.BOOKING_TYPE);
+            if (bookingType != null)
+            {
+                mRequestedBookingType = BookingType.valueOf(bookingType.toUpperCase());
+            }
             mCurrentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
 
             mFromPaymentsTab = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
@@ -160,6 +170,8 @@ public class BookingDetailsFragment extends ActionBarFragment
                 long bookingDateLong = arguments.getLong(BundleKeys.BOOKING_DATE, 0L);
                 mAssociatedBookingDate = new Date(bookingDateLong);
             }
+
+            setSource();
         }
         else
         {
@@ -171,6 +183,18 @@ public class BookingDetailsFragment extends ActionBarFragment
         initScrollViewListener();
 
         return view;
+    }
+
+    private void setSource()
+    {
+        if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
+        {
+            mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
+        }
+        else if (getArguments().containsKey(BundleKeys.DEEPLINK))
+        {
+            mSource = SOURCE_DISPATCH_NOTIFICATION_TOGGLE;
+        }
     }
 
     //tracking for when user scrolls to various sections
@@ -277,6 +301,20 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     @Override
+    public void onPause()
+    {
+        super.onPause();
+        if (mAssociatedBooking != null && mAssociatedBooking.isCheckedIn())
+        {
+            List<Booking.BookingInstructionUpdateRequest> checklist = mAssociatedBooking.getCustomerPreferences();
+            if (checklist != null)
+            {
+                mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), GSON.toJson(checklist));
+            }
+        }
+    }
+
+    @Override
     protected List<String> requiredArguments()
     {
         return Lists.newArrayList(BundleKeys.BOOKING_ID, BundleKeys.BOOKING_TYPE);
@@ -348,8 +386,11 @@ public class BookingDetailsFragment extends ActionBarFragment
         mJobInstructionsView.refreshDisplay(booking, mFromPaymentsTab, bookingStatus);
         mProxyLocationView.refreshDisplay(booking);
 
-        if (mProviderManager.getCachedActiveProvider() != null &&
-                booking.getProviderId().equals(mProviderManager.getCachedActiveProvider().getId()))
+        final Provider cachedActiveProvider = mProviderManager.getCachedActiveProvider();
+        final String bookingProviderId = booking.getProviderId();
+        if (booking.isClaimedByMe() ||
+                (cachedActiveProvider != null &&
+                        bookingProviderId.equals(cachedActiveProvider.getId())))
         {
             mSupportButton.init(booking, this, BookingActionButtonType.HELP);
             mSupportButton.setVisibility(View.VISIBLE);
@@ -522,18 +563,23 @@ public class BookingDetailsFragment extends ActionBarFragment
                     showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
                 }
 
-                if (showCheckoutRatingFlow)
+                if (mAssociatedBooking.isAnyPreferenceChecked())
                 {
-                    RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-                    rateBookingDialogFragment.setArguments(arguments);
-                    rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+                    if (showCheckoutRatingFlow)
+                    {
+                        showCheckoutRatingFlow();
+                    }
+                    else
+                    {
+                        CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
+                                new ProBookingFeedback(-1, ""), mAssociatedBooking.getCustomerPreferences());
+                        requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
+                    }
                 }
                 else
                 {
-                    CheckoutRequest checkoutRequest = new CheckoutRequest(locationData, new ProBookingFeedback(-1, ""));
-                    requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
+                    mScrollView.fullScroll(View.FOCUS_DOWN);
+                    showToast(R.string.check_customer_preferences, Toast.LENGTH_LONG, Gravity.TOP);
                 }
             }
             break;
@@ -571,6 +617,23 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
     }
 
+    //TODO: check if the dialog is already shown
+    private void showCheckoutRatingFlow()
+    {
+        RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
+        rateBookingDialogFragment.setArguments(arguments);
+        try
+        {
+            rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+        }
+        catch (IllegalStateException e)
+        {
+            Crashlytics.logException(e);
+        }
+    }
+
     private LocationData getLocationData()
     {
         return Utils.getCurrentLocation((BaseActivity) getActivity());
@@ -587,7 +650,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     getContext(), SupportActionUtils.ETA_ACTION_NAMES, mAssociatedBooking));
             layout.addView(new SupportActionContainerView(
                     getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, mAssociatedBooking));
-            mSlideUpPanelLayout.showPanel(R.string.on_the_job_support, layout);
+            mSlideUpPanelLayout.showPanel(R.string.job_support, layout);
         }
     }
 
@@ -664,14 +727,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestClaimJob(Booking booking)
     {
-        String source = "";
-        if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
-        {
-            source = getArguments().getString(BundleKeys.BOOKING_SOURCE, "");
-        }
-
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(booking, source));
+        bus.post(new HandyEvent.RequestClaimJob(booking, mSource));
     }
 
     private void requestRemoveJob(@NonNull Booking booking)
@@ -843,9 +900,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
         {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAvailableJobClaimSuccessLog(
-                    bookingClaimDetails.getBooking(), event.source)));
-
             if (bookingClaimDetails.shouldShowClaimTarget())
             {
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
@@ -871,8 +925,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAvailableJobClaimErrorLog(
-                event.getBooking(), event.getSource())));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleBookingClaimError(event.error.getMessage());
     }
@@ -935,7 +987,15 @@ public class BookingDetailsFragment extends ActionBarFragment
             mAssociatedBooking = event.booking;
             updateDisplayForBooking(event.booking);
 
-            showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+            if (mAssociatedBooking.getCustomerPreferences() != null)
+            {
+                showToast(R.string.read_customer_preferences, Toast.LENGTH_LONG, Gravity.TOP);
+                mScrollView.fullScroll(View.FOCUS_DOWN);
+            }
+            else
+            {
+                showToast(R.string.check_in_success, Toast.LENGTH_LONG);
+            }
         }
     }
 
@@ -955,6 +1015,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (!event.isAutoCheckIn)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), null);
 
             //return to schedule page
             returnToTab(MainViewTab.SCHEDULED_JOBS, mAssociatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);

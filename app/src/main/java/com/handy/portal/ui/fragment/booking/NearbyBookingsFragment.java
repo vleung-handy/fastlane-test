@@ -45,7 +45,7 @@ import butterknife.ButterKnife;
 public class NearbyBookingsFragment extends ActionBarFragment
         implements NearbyBookingsMapFragment.MarkerClickedCallback
 {
-    private static final String SOURCE = "nearby job";
+    private static final String SOURCE = "nearby_jobs_view";
 
     @Inject
     ProviderManager mProviderManager;

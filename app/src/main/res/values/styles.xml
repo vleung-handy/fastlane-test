@@ -111,6 +111,8 @@
         <item name="android:textColor">@drawable/tab_button_text</item>
         <item name="android:paddingTop">@dimen/tab_top_padding</item>
         <item name="android:paddingBottom">@dimen/tab_bottom_padding</item>
+        <item name="android:paddingLeft">@dimen/tab_side_padding</item>
+        <item name="android:paddingRight">@dimen/tab_side_padding</item>
         <item name="android:textSize">@dimen/small_text_size</item>
     </style>
 
@@ -448,6 +450,10 @@
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
+    <style name="TextView.XXSmall">
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+    </style>
+
     <style name="TextView.Medium">
         <item name="android:textSize">@dimen/medium_text_size</item>
     </style>
@@ -482,6 +488,10 @@
 
     <style name="TextView.Large">
         <item name="android:textSize">@dimen/large_text_size</item>
+    </style>
+
+    <style name="TextView.Large.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 
     <style name="TextView.Large.Med">

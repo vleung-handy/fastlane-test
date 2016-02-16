@@ -1,15 +1,21 @@
 package com.handy.portal.ui.fragment;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.SwitchCompat;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -23,12 +29,17 @@ import butterknife.Bind;
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
+    private final static int DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS = 6;
+    private static final String SOURCE_AVAILABLE_JOBS_LIST = "available_jobs_list";
+
     @Bind(R.id.available_jobs_list_view)
     BookingListView mAvailableJobsListView;
     @Bind(R.id.available_bookings_dates_scroll_view_layout)
     LinearLayout mAvailableJobsDatesScrollViewLayout;
     @Bind(R.id.available_bookings_empty)
     ViewGroup mNoAvailableBookingsLayout;
+    @Bind(R.id.toggle_available_job_notification)
+    SwitchCompat mToggleAvailableJobNotification;
 
     @Override
     protected MainViewTab getTab()
@@ -41,6 +52,16 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.onResume();
         setActionBar(R.string.available_jobs, false);
+
+        if (!MainActivityFragment.clearingBackStack)
+        {
+            if (shouldShowAvailableBookingsToggle())
+            {
+                mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
+            }
+
+            setLateDispatchOptInToggleListener();
+        }
     }
 
     protected BookingListView getBookingListView()
@@ -94,7 +115,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected int numberOfDaysToDisplay()
     {
-        int daysSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
+        int daysSpanningAvailableBookings = DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS;
         if (configManager.getConfigurationResponse() != null)
         {
             daysSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings() / DateTimeUtils.HOURS_IN_DAY;
@@ -103,12 +124,28 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected void beforeRequestBookings() {}
+    protected void beforeRequestBookings()
+    {
+        if (shouldShowAvailableBookingsToggle())
+        {
+            mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mToggleAvailableJobNotification.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
         return AvailableBookingElementView.class;
+    }
+
+    @Override
+    protected String getBookingSourceName()
+    {
+        return SOURCE_AVAILABLE_JOBS_LIST;
     }
 
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
@@ -132,25 +169,87 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onReceiveProviderSettingsSuccess(ProviderSettingsEvent.ReceiveProviderSettingsSuccess event)
     {
-        super.onReceiveProviderSettingsSuccess(event);
+        mProviderSettings = event.getProviderSettings().clone();
+        mToggleAvailableJobNotification.setChecked(mProviderSettings.hasOptedInToLateDispatchNotifications());
+        if (shouldShowAvailableBookingsToggle())
+        {
+            mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
+        }
     }
 
 
     @Subscribe
     public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event)
     {
-        super.onReceiveProviderSettingsError(event);
     }
 
     @Subscribe
     public void onReceiveProviderSettingsUpdateSuccess(ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess event)
     {
-        super.onReceiveProviderSettingsUpdateSuccess(event);
+        mProviderSettings = event.getProviderSettings().clone();
+        if (!mPrefsManager.getBoolean(PrefsKey.SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED, false) &&
+                mProviderSettings.hasOptedInToLateDispatchNotifications())
+        {
+            mPrefsManager.setBoolean(PrefsKey.SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED, true);
+            Snackbar snackbar = Snackbar
+                    .make(mBookingsContent, R.string.notify_available_jobs_update_intro_success, Snackbar.LENGTH_LONG);
+
+            snackbar.show();
+        }
     }
 
     @Subscribe
     public void onReceiveProviderSettingsUpdateError(ProviderSettingsEvent.ReceiveProviderSettingsUpdateError event)
     {
-        super.onReceiveProviderSettingsUpdateError(event);
+        if (mProviderSettings != null)
+        {
+            boolean optedIn = !mProviderSettings.hasOptedInToLateDispatchNotifications();
+            mProviderSettings.setLateDispatchOptIn(optedIn);
+            mToggleAvailableJobNotification.setChecked(optedIn);
+        }
+        else
+        {
+            bus.post(new ProviderSettingsEvent.RequestProviderSettings());
+        }
+
+        Snackbar snackbar = Snackbar
+                .make(mBookingsContent, R.string.notify_available_jobs_update_error, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
+    }
+
+    private boolean shouldShowAvailableBookingsToggle()
+    {
+        return mSelectedDay != null &&
+                DateTimeUtils.isToday(mSelectedDay) &&
+                getConfigurationResponse() != null &&
+                getConfigurationResponse().shouldShowLateDispatchOptIn() &&
+                mProviderSettings != null;
+
+    }
+
+    private ConfigurationResponse getConfigurationResponse()
+    {
+        return mConfigManager.getConfigurationResponse();
+    }
+
+    private void setLateDispatchOptInToggleListener()
+    {
+        mToggleAvailableJobNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
+            {
+                if (mProviderSettings == null)
+                {
+                    bus.post(new ProviderSettingsEvent.RequestProviderSettings());
+                }
+                else if (mProviderSettings.hasOptedInToLateDispatchNotifications() != isChecked)
+                {
+                    mProviderSettings.setLateDispatchOptIn(isChecked);
+                    bus.post(new ProviderSettingsEvent.RequestProviderSettingsUpdate(mProviderSettings));
+                }
+            }
+        });
     }
 }

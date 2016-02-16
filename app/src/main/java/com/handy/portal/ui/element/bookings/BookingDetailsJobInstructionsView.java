@@ -12,29 +12,44 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.handy.portal.R;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
+import com.handy.portal.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class BookingDetailsJobInstructionsView extends FrameLayout
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
     @Bind(R.id.booking_details_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
     @Bind(R.id.job_instructions_reveal_notice)
     TextView mRevealNotice;
 
     private static final Map<String, Integer> GROUP_ICONS;
+    private static final Gson GSON = new Gson();
 
     static
     {
@@ -44,6 +59,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
         GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_REFRIGERATOR, R.drawable.ic_details_fridge);
         GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_TRASH, R.drawable.ic_details_trash);
         GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_NOTE_TO_PRO, R.drawable.ic_details_request);
+        GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_PREFERENCES, R.drawable.ic_details_request);
     }
 
 
@@ -75,6 +91,8 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
     public void refreshDisplay(@NonNull final Booking booking, boolean isFromPayments,
                                @NonNull Booking.BookingStatus bookingStatus)
     {
+        mInstructionsLayout.removeAllViews();
+
         boolean isHomeCleaning = booking.getServiceInfo().isHomeCleaning();
         boolean shouldShowFullDetails =
                 isFromPayments || !isHomeCleaning || (bookingStatus == Booking.BookingStatus.CLAIMED);
@@ -83,9 +101,35 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
 
         if (booking.getRevealDate() != null && booking.isClaimedByMe())
         {
-            Spanned noticeText = Html.fromHtml(
-                    getContext().getResources().getString(R.string.full_details_and_more_available_on_date,
-                            DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
+            Spanned noticeText;
+            final PaymentInfo hourlyRate = booking.getHourlyRate();
+            if (hourlyRate != null && booking.hasFlexibleHours())
+            {
+                final float minimumHours = booking.getMinimumHours();
+                final float maximumHours = booking.getHours();
+                final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
+                final String maximumHoursFormatted = TextUtils.formatHours(maximumHours);
+                final String currencySymbol = hourlyRate.getCurrencySymbol();
+                final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                        (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
+                final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                        (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
+                final String startDateFormatted = DateTimeUtils.formatDetailedDate(booking.getStartDate());
+                final String endDateFormatted = DateTimeUtils.formatDetailedDate(booking.getEndDate());
+                noticeText = Html.fromHtml(getResources()
+                        .getString(R.string.full_details_and_more_available_on_date_flex,
+                                minimumHoursFormatted, maximumHoursFormatted,
+                                startDateFormatted, endDateFormatted,
+                                minimumPaymentFormatted, minimumHoursFormatted,
+                                maximumPaymentFormatted, maximumHoursFormatted
+                        ));
+            }
+            else
+            {
+                noticeText = Html.fromHtml(getResources()
+                        .getString(R.string.full_details_and_more_available_on_date,
+                                DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
+            }
             mRevealNotice.setText(noticeText);
             mRevealNotice.setVisibility(View.VISIBLE);
             hasContent = true;
@@ -142,10 +186,50 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
             List<Booking.BookingInstructionGroup> bookingInstructionGroups = booking.getBookingInstructionGroups();
             if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
             {
+                Booking.BookingInstructionGroup preferencesGroup = null;
                 for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
                 {
-                    BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
-                    sectionView.init(group.getLabel(), GROUP_ICONS.get(group.getGroup()), group.getItems());
+                    if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+                    {
+                        preferencesGroup = group;
+                    }
+                    else
+                    {
+                        BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
+                        sectionView.init(group.getLabel(), GROUP_ICONS.get(group.getGroup()),
+                                group.getInstructions());
+                    }
+                }
+                if (preferencesGroup != null)
+                {
+                    List<Booking.BookingInstructionUpdateRequest> checklist = null;
+                    if (mPrefsManager.getBookingInstructions(booking.getId()).isEmpty())
+                    {
+                        checklist = booking.getCustomerPreferences();
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Booking.BookingInstructionUpdateRequest[] checklistArray = GSON.fromJson(
+                                    mPrefsManager.getBookingInstructions(booking.getId()),
+                                    Booking.BookingInstructionUpdateRequest[].class);
+                            checklist = Arrays.asList(checklistArray);
+                            booking.setCustomerPreferences(checklist);
+                        }
+                        catch (JsonSyntaxException e)
+                        {
+                            Crashlytics.logException(e);
+                        }
+                    }
+                    if (checklist != null)
+                    {
+                        CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
+                                preferencesGroup.getLabel(), GROUP_ICONS.get(preferencesGroup.getGroup()),
+                                checklist);
+                        customerRequestsView.setEnabled(booking.isCheckedIn());
+                        mInstructionsLayout.addView(customerRequestsView);
+                    }
                 }
 
                 hasContent = true;
@@ -157,6 +241,7 @@ public class BookingDetailsJobInstructionsView extends FrameLayout
 
     private void init()
     {
+        Utils.inject(getContext(), this);
         inflate(getContext(), R.layout.element_booking_details_job_instructions, this);
         ButterKnife.bind(this);
         setLayoutParams(UIUtils.MATCH_PARENT_PARAMS);

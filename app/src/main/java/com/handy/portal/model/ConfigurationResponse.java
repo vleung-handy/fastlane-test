@@ -10,9 +10,6 @@ public class ConfigurationResponse
     @SerializedName("complementary_jobs_enabled")
     private boolean mComplementaryJobsEnabled;
 
-    @SerializedName("onboarding_enabled")
-    private boolean mOnboardingEnabled;
-
     @SerializedName("block_cleaner")
     private boolean mIsBlockCleaner;
 
@@ -32,11 +29,6 @@ public class ConfigurationResponse
     public boolean isComplementaryJobsEnabled()
     {
         return mComplementaryJobsEnabled;
-    }
-
-    public boolean isOnboardingEnabled()
-    {
-        return mOnboardingEnabled;
     }
 
     public boolean isBlockCleaner()

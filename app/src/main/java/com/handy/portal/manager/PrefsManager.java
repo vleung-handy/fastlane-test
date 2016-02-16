@@ -1,19 +1,33 @@
 package com.handy.portal.manager;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.PropertiesReader;
+import com.securepreferences.SecurePreferences;
+
+import java.util.Properties;
 
 import javax.inject.Inject;
 
 public class PrefsManager
 {
-    private final SharedPreferences mPrefs;
+    private static final String SECURE_PREFS_KEY = "secure_prefs_key";
+    private static final String DEFAULT_PREFS = "prefs.xml";
+    private static final String BOOKING_INSTRUCTIONS_PREFS = "booking_instructions_preferences";
+
+    private final SharedPreferences mDefaultPrefs;
+    private final SharedPreferences mBookingInstructionsPrefs;
 
     @Inject
-    public PrefsManager(final SharedPreferences prefs)
+    public PrefsManager(final Context context)
     {
-        mPrefs = prefs;
+        Properties configs = PropertiesReader.getConfigProperties(context);
+        mDefaultPrefs = new SecurePreferences(
+                context, configs.getProperty(SECURE_PREFS_KEY), DEFAULT_PREFS);
+        mBookingInstructionsPrefs = new SecurePreferences(
+                context, configs.getProperty(SECURE_PREFS_KEY), BOOKING_INSTRUCTIONS_PREFS);
     }
 
     public String getString(@PrefsKey.Key String prefsKey)
@@ -23,41 +37,31 @@ public class PrefsManager
 
     public String getString(@PrefsKey.Key String prefsKey, String defaultValue)
     {
-        return mPrefs.getString(prefsKey, defaultValue);
+        return mDefaultPrefs.getString(prefsKey, defaultValue);
     }
 
     public void setString(@PrefsKey.Key String prefsKey, String value)
     {
-        mPrefs.edit().putString(prefsKey, value).apply();
+        mDefaultPrefs.edit().putString(prefsKey, value).apply();
     }
 
     public boolean getBoolean(@PrefsKey.Key String prefsKey, boolean defaultValue)
     {
-        return mPrefs.getBoolean(prefsKey, defaultValue);
+        return mDefaultPrefs.getBoolean(prefsKey, defaultValue);
     }
 
     public void setBoolean(@PrefsKey.Key String prefsKey, boolean value)
     {
-        mPrefs.edit().putBoolean(prefsKey, value).apply();
+        mDefaultPrefs.edit().putBoolean(prefsKey, value).apply();
     }
 
-    public int getInt(@PrefsKey.Key String prefsKey, int defaultValue)
+    public void setBookingInstructions(String bookingId, String value)
     {
-        return mPrefs.getInt(prefsKey, defaultValue);
+        mBookingInstructionsPrefs.edit().putString(bookingId, value).apply();
     }
 
-    public void setInt(@PrefsKey.Key String prefsKey, int value)
+    public String getBookingInstructions(String bookingId)
     {
-        mPrefs.edit().putInt(prefsKey, value).apply();
-    }
-
-    public long getLong(@PrefsKey.Key String prefsKey, long defaultValue)
-    {
-        return mPrefs.getLong(prefsKey, defaultValue);
-    }
-
-    public void setLong(@PrefsKey.Key String prefsKey, long value)
-    {
-        mPrefs.edit().putLong(prefsKey, value).apply();
+        return mBookingInstructionsPrefs.getString(bookingId, "");
     }
 }

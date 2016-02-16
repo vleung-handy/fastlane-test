@@ -61,7 +61,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     private BookingType bookingType;
     private Date bookingDate;
 
-    public static final String COMPLEMENTARY_JOBS_SOURCE_NAME = "matching jobs";
+    private static final String SOURCE_COMPLEMENTARY_JOBS_LIST = "matching_jobs_list";
 
     @Override
     protected MainViewTab getTab()
@@ -240,7 +240,6 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         View claimedBookingEntryView = createBookingEntryView(claimedBooking, claimedBookingsContainer, ScheduledBookingElementView.class);
         claimedBookingsContainer.addView(claimedBookingEntryView);
         claimedBookingEntryView.setOnClickListener(new ShowBookingDetailsClickListener(claimedBooking));
-        claimedBookingEntryView.findViewById(R.id.booking_entry_claimed_indicator).setVisibility(View.VISIBLE);
 
         Collections.sort(bookings);
         for (Booking booking : bookings)
@@ -296,7 +295,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
             arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
-            arguments.putString(BundleKeys.BOOKING_SOURCE, COMPLEMENTARY_JOBS_SOURCE_NAME);
+            arguments.putString(BundleKeys.BOOKING_SOURCE, SOURCE_COMPLEMENTARY_JOBS_LIST);
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
         }
     }

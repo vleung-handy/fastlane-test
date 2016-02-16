@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -209,6 +210,44 @@ public final class UIUtils
         }
     }
 
+    public static void setService(final TextView serviceTextView, final Booking booking)
+    {
+        Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
+        if (serviceInfo.isHomeCleaning())
+        {
+            final Context context = serviceTextView.getContext();
+            String frequencyInfo = UIUtils.getFrequencyInfo(booking, context);
+            if (booking.isUK() &&
+                    booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES)
+                            .size() > 0)
+            {
+                frequencyInfo += " \u22C5 " + context.getString(R.string.supplies);
+            }
+            serviceTextView.setText(frequencyInfo);
+        }
+        else
+        {
+            serviceTextView.setText(serviceInfo.getDisplayName());
+        }
+        appendTimeWindow(serviceTextView, booking.getMinimumHours(), booking.getHours());
+    }
+
+    private static void appendTimeWindow(
+            final TextView timeWindowTextView,
+            final float minimumHours,
+            final float hours
+    )
+    {
+        if (minimumHours > 0 && minimumHours < hours)
+        {
+            final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
+            final String hoursFormatted = TextUtils.formatHours(hours);
+            final Context context = timeWindowTextView.getContext();
+            timeWindowTextView.append(" " + context.getString(R.string.time_window_formatted,
+                    minimumHoursFormatted, hoursFormatted));
+        }
+    }
+
     public static String getFrequencyInfo(Booking booking, Context parentContext)
     {
         //Frequency
@@ -260,26 +299,22 @@ public final class UIUtils
 
     public static AlertDialog createEnvironmentModifierDialog(final EnvironmentModifier environmentModifier, final Context context, final EnvironmentModifier.OnEnvironmentChangedListener callback)
     {
-        final EnvironmentModifier.Environment[] environments = EnvironmentModifier.Environment.values();
-        String[] environmentNames = new String[environments.length];
         String currentEnvironmentPrefix = environmentModifier.getEnvironmentPrefix();
-        for (int i = 0; i < environments.length; i++)
-        {
-            EnvironmentModifier.Environment environment = environments[i];
-            boolean matchesCurrentEnvironment = currentEnvironmentPrefix != null && currentEnvironmentPrefix.equals(environment.getPrefix());
-            environmentNames[i] = environment + (matchesCurrentEnvironment ? " (selected)" : "");
-        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Pick an environment")
-                .setItems(environmentNames, new DialogInterface.OnClickListener()
+        final EditText input = new EditText(context);
+        input.setText(currentEnvironmentPrefix);
+        builder.setTitle("Set environment")
+                .setView(input)
+                .setPositiveButton(R.string.set, new DialogInterface.OnClickListener()
                 {
+                    @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        String selectedEnvironmentPrefix = environments[which].getPrefix();
-                        environmentModifier.setEnvironmentPrefix(selectedEnvironmentPrefix, callback);
+                        environmentModifier.setEnvironmentPrefix(input.getText().toString(), callback);
                     }
-                });
+                })
+                .setNegativeButton(R.string.cancel, null);
         return builder.create();
     }
 

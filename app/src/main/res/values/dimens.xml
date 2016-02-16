@@ -7,6 +7,8 @@
     <dimen name="row_margin">8dp</dimen>
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_margin_medium">24dp</dimen>
+    <dimen name="extra_margin_xxsmall">1dp</dimen>
+    <dimen name="extra_margin_xsmall">3dp</dimen>
     <dimen name="extra_margin">5dp</dimen>
     <dimen name="extra_margin_medium">10dp</dimen>
     <dimen name="extra_margin_large">15dp</dimen>
@@ -33,6 +35,7 @@
     <dimen name="inner_textfield_padding">12dp</dimen>
     <dimen name="tab_top_padding">8dp</dimen>
     <dimen name="tab_bottom_padding">8dp</dimen>
+    <dimen name="tab_side_padding">4dp</dimen>
     <dimen name="toolbar_top_padding">24dp</dimen>
 
     <!-- line spacing -->
@@ -41,6 +44,7 @@
 
     <!-- text sizes -->
     <dimen name="default_text_size">16sp</dimen>
+    <dimen name="xxsmall_text_size">10sp</dimen>
     <dimen name="xsmall_text_size">12sp</dimen>
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
@@ -79,5 +83,10 @@
     <dimen name="booking_details_map_height">280dp</dimen>
     <dimen name="booking_details_date_margin">2dp</dimen>
     <dimen name="booking_details_notice_text_margin">15dp</dimen>
+
+    <!--job list-->
+    <dimen name="job_cell_min_height">128dp</dimen>
+    <dimen name="job_cell_icon_size">40dp</dimen>
+    <dimen name="job_cell_dot_size">8dp</dimen>
 
 </resources>

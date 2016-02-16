@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 public final class TextUtils
 {
     private static final String URL_PATTERN = "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
+    private static final Format TIME_WINDOW_HOURS_FORMAT = new DecimalFormat("0.#");
 
     private static final Hashtable<String, Typeface> cache = new Hashtable<>();
 
@@ -37,6 +39,11 @@ public final class TextUtils
             }
             return cache.get(name);
         }
+    }
+
+    public static String formatHours(float hours)
+    {
+        return TIME_WINDOW_HOURS_FORMAT.format(hours);
     }
 
     public static String formatHtmlLinks(String text)
