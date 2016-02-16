@@ -142,7 +142,6 @@ import retrofit.converter.GsonConverter;
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
         ProfileContactView.class,
-        ProfilePerformanceView.class,
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
         ProfileReferralView.class,

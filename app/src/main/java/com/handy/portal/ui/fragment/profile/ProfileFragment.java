@@ -12,7 +12,6 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.constructor.ProfileContactView;
-import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.element.profile.ProfileHeaderView;
