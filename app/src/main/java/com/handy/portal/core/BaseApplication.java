@@ -2,6 +2,7 @@ package com.handy.portal.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
@@ -47,6 +48,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class BaseApplication extends MultiDexApplication
 {
     private static String sDeviceId = "";
+    private static String sDeviceModel = "";
     protected ObjectGraph mGraph;
     private int mStarted;
     private boolean mSavedInstance;
@@ -115,6 +117,7 @@ public class BaseApplication extends MultiDexApplication
         startNewRelic();
         startCrashlytics();
         sDeviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        sDeviceModel =  Build.MANUFACTURER + " " + Build.MODEL;
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
 
@@ -197,4 +200,9 @@ public class BaseApplication extends MultiDexApplication
     }
 
     public static String getDeviceId() { return sDeviceId; }
+
+    public static String getDeviceModel()
+    {
+        return sDeviceModel;
+    }
 }

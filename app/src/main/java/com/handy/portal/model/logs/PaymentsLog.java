@@ -6,9 +6,9 @@ public class PaymentsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "payments";
 
-    public PaymentsLog(String providerId, String versionTrack, String eventType)
+    public PaymentsLog(String eventType)
     {
-        super(providerId, versionTrack, eventType, EVENT_CONTEXT);
+        super(eventType, EVENT_CONTEXT);
     }
 
     public static class BatchSelected extends PaymentsLog
@@ -20,13 +20,14 @@ public class PaymentsLog extends EventLog
         @SerializedName("list_number")
         private int mListNumber;
 
-        public BatchSelected(String providerId, String versionTrack, boolean currentWeek, int listNumber)
+        public BatchSelected(boolean currentWeek, int listNumber)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mCurrentWeek = currentWeek;
             mListNumber = listNumber;
         }
     }
+
 
     public static class DetailSelected extends PaymentsLog
     {
@@ -35,22 +36,24 @@ public class PaymentsLog extends EventLog
         @SerializedName("payment_type")
         private String mPaymentType;
 
-        public DetailSelected(String providerId, String versionTrack, String paymentType)
+        public DetailSelected(String paymentType)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mPaymentType = paymentType;
         }
     }
+
 
     public static class HelpSlideUpSelected extends PaymentsLog
     {
         private static final String EVENT_TYPE = "help_slide_up_selected";
 
-        public HelpSlideUpSelected(String providerId, String versionTrack)
+        public HelpSlideUpSelected()
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
         }
     }
+
 
     public static class HelpItemSelected extends PaymentsLog
     {
@@ -59,9 +62,9 @@ public class PaymentsLog extends EventLog
         @SerializedName("help_item_label")
         private String mHelpItemLabel;
 
-        public HelpItemSelected(String providerId, String versionTrack, String helpLabelLabel)
+        public HelpItemSelected(String helpLabelLabel)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mHelpItemLabel = helpLabelLabel;
         }
     }
