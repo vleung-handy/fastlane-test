@@ -45,7 +45,9 @@
         android:theme="@style/AppTheme">
         <service
             android:name=".location.LocationService"
-            android:exported="false"/>
+            android:process=":remote"
+            android:exported="false">
+        </service>
         <receiver android:name=".location.BootBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

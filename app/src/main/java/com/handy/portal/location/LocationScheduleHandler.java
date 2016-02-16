@@ -299,7 +299,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     @Override
     public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate)
     {
-//        Integer.parseInt("blah"); //TEST EXCEPTION ONLY
+//        Integer.parseInt("blah"); //test exception only
         bus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
     }
 

@@ -28,6 +28,10 @@ import javax.inject.Inject;
  * listens to the location schedule updated event and starts the schedule handler accordingly
  * <p/>
  * responsible for handling google api client
+ *
+ * this is run in a separate process from the main application.
+ *
+ * TODO: what exactly is wakelock and do i need it?
  */
 public class LocationService extends Service
         implements
@@ -58,37 +62,26 @@ public class LocationService extends Service
     public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
         Log.i(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
+
         Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
 
         super.onStartCommand(intent, flags, startId);
-        try
-        {
-            mBus.register(this);
-            mGoogleApiClient.connect();
+
+        mBus.register(this);
+        mGoogleApiClient.connect();
 //            requestLocationQuerySchedule();//uncomment this back
 
-            //TODO: remove, for toggle testing only
-            if (intent != null && intent.getExtras() != null && intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE) != null)
-            {
-                mBus.post(new LocationEvent.ReceiveLocationSchedule((LocationQuerySchedule)
-                        intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
-
-            }
-            else
-            {
-                requestLocationQuerySchedule();
-            }
-        }
-        catch (Exception e)
+        //TODO: remove, for toggle testing only
+        if (intent != null && intent.getExtras() != null && intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE) != null)
         {
-            //TODO: shouldn't happen but if it does, don't restart the service
-            //TODO: investigate which parts of this service need to be exception handled
-            e.printStackTrace();
-            Crashlytics.logException(e);
-            return START_NOT_STICKY;
-        }
+            mBus.post(new LocationEvent.ReceiveLocationSchedule((LocationQuerySchedule)
+                    intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
 
-        //START_STICKY will keep this service running even if app is closed
+        }
+        else
+        {
+            requestLocationQuerySchedule();
+        }
         return START_STICKY;
     }
 
@@ -99,6 +92,7 @@ public class LocationService extends Service
         unregisterReceiver(mLocationScheduleHandler);
         mLocationScheduleHandler.destroy();
         mGoogleApiClient.disconnect();
+        Log.i(getClass().getName(), "service destroyed");
         super.onDestroy();
     }
 
@@ -156,9 +150,9 @@ public class LocationService extends Service
     public void uncaughtException(final Thread thread, final Throwable ex)
     {
         //overriding this only prevents the error message dialog that shows
-        Log.e(getClass().getName(), "got uncaught exception");
-
-        stopSelf(); //TODO: test this. does it make it not restart even if sticky?
+        Log.e(getClass().getName(), "got uncaught exception: " + ex.getMessage());
+        Crashlytics.logException(ex);
+        stopSelf(); //looks like this makes the service not restart even if sticky!
     }
 
     public class LocalBinder extends Binder
