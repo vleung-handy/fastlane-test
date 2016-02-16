@@ -230,20 +230,28 @@ public class ProviderManager
     {
         String providerId = "";
 
-        mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
-        {
-            @Override
-            public void onSuccess(final ProviderEvaluation providerEvaluation)
-            {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
-            }
-
-            @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(error));
-            }
-        });
+        // TODO: remove this fake data once the api is ready
+        ProviderEvaluation providerEvaluation = new ProviderEvaluation(
+                new ProviderEvaluation.Rolling(8, 15, 10, 4.8, "Things are lookin good!",
+                        new Date(1000), new Date(10000), new ProviderEvaluation.Rolling.Tier("Tier 1", "15")),
+                new ProviderEvaluation.LifeTime(8, 15, 10, 4.8, "Things are lookin good!",
+                        new Date(1000), new Date(10000)), 4.8, "Yo he's good", new ArrayList<String>());
+        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
+//        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(null));
+//        mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
+//        {
+//            @Override
+//            public void onSuccess(final ProviderEvaluation providerEvaluation)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
+//            }
+//
+//            @Override
+//            public void onError(final DataManager.DataManagerError error)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(error));
+//            }
+//        });
 
     }
 

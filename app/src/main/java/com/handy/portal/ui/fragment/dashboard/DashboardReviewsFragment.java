@@ -6,9 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.ui.adapter.ReviewListAdapter;
@@ -20,11 +23,16 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class DashboardReviewsFragment extends ActionBarFragment
 {
-    @Bind(R.id.review_list)
+    @Bind(R.id.fetch_error_view)
+    View mFetchErrorView;
+    @Bind(R.id.fetch_error_text)
+    TextView mFetchErrorTextView;
+    @Bind(R.id.reviews_list)
     RecyclerView mReviewRecyclerView;
 
     private RecyclerView.Adapter mAdapter;
@@ -48,7 +56,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        bus.post(new ProviderDashboardEvent.RequestProviderFiveStarRatings());
+        getProviderReviews();
     }
 
     @Override
@@ -78,6 +86,10 @@ public class DashboardReviewsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveProviderFiveStarRatingsSuccess(ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess event)
     {
+        mReviewRecyclerView.setVisibility(View.VISIBLE);
+        mFetchErrorView.setVisibility(View.GONE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
         mRatings.addAll(event.getProviderRatings());
         mAdapter.notifyDataSetChanged();
     }
@@ -85,5 +97,24 @@ public class DashboardReviewsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveProviderFiveStarRatingsFailure(ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError event)
     {
+        mReviewRecyclerView.setVisibility(View.GONE);
+        mFetchErrorView.setVisibility(View.VISIBLE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
+        if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        {
+            mFetchErrorTextView.setText(R.string.error_fetching_connectivity_issue);
+        }
+        else
+        {
+            mFetchErrorTextView.setText(R.string.error_dashboard_reviews);
+        }
+    }
+
+    @OnClick(R.id.try_again_button)
+    public void getProviderReviews()
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new ProviderDashboardEvent.RequestProviderFiveStarRatings());
     }
 }
