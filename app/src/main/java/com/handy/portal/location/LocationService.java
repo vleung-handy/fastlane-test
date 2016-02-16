@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.location.model.LocationQuerySchedule;
+import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -45,9 +47,27 @@ public class LocationService extends Service
     GoogleApiClient mGoogleApiClient;
     LocationScheduleHandler mLocationScheduleHandler;
 
+    @VisibleForTesting
+    static LocationService mInstance;
+
+    @VisibleForTesting
+    public static LocationService getInstance()
+    {
+        return mInstance;
+    }
+
+    @VisibleForTesting
+    public LocationQueryStrategy getLatestActiveLocationQueryStrategy()
+    {
+        if(mLocationScheduleHandler == null) return null;
+        return mLocationScheduleHandler.getLatestActiveLocationStrategy();
+    }
+
     @Override
     public void onCreate()
     {
+        mInstance = this; //for testing
+
         Thread.currentThread().setUncaughtExceptionHandler(this);
         super.onCreate();
         Utils.inject(getApplicationContext(), this);
@@ -82,7 +102,8 @@ public class LocationService extends Service
         {
             requestLocationQuerySchedule();
         }
-        return START_STICKY;
+
+        return START_REDELIVER_INTENT;
     }
 
     @Override

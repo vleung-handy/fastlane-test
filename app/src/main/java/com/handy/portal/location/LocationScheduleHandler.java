@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -123,11 +124,22 @@ public class LocationScheduleHandler extends BroadcastReceiver
         }
     }
 
+    //for testing
+    LocationQueryStrategy mLatestActiveLocationQueryStrategy;
+
+    @VisibleForTesting
+    public LocationQueryStrategy getLatestActiveLocationStrategy()
+    {
+        return mLatestActiveLocationQueryStrategy;
+    }
+
     /**
      * TODO: if we just use one listener, does requestLocationUpdates override the previous location update request?
      */
     public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy)
     {
+        mLatestActiveLocationQueryStrategy = locationQueryStrategy; //FOR TESTING
+
         final LocationRequestStrategy locationRequestStrategy = new LocationRequestStrategy(locationQueryStrategy);
         /*
         TODO: TEST ONLY. seriously refactor this. don't know how server is going to send accuracy codes yet
@@ -299,7 +311,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
     @Override
     public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate)
     {
-//        Integer.parseInt("blah"); //test exception only
         bus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
     }
 

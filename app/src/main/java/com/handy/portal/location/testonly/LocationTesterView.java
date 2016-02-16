@@ -1,10 +1,13 @@
 package com.handy.portal.location.testonly;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -22,7 +25,6 @@ import java.util.LinkedList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 /**
@@ -67,7 +69,71 @@ public class LocationTesterView extends LinearLayout
     {
         super(context, attrs, defStyleAttr);
         init(context);
+    }
 
+    public void setParametersFromCurrentlyRunningService()
+    {
+        //detect if service is alive
+        boolean serviceRunning = isServiceRunning(LocationService.class);
+        mLocationServicesToggle.setChecked(serviceRunning);
+
+        //TODO: set the params the service is using
+        boolean existingStrategyFound = false;
+        if(serviceRunning)
+        {
+            //TODO: can't do this, since it's in a separate process now
+            LocationService locationService = LocationService.getInstance();
+            if(locationService != null)
+            {
+                LocationQueryStrategy locationQueryStrategy = locationService.getLatestActiveLocationQueryStrategy();
+                if(locationQueryStrategy != null)
+                {
+                    Log.i(getClass().getName(), "found an existing strategy - setting view to its params");
+                    mLocationServicesAccuracyToggle.setChecked(locationQueryStrategy.getLocationAccuracyPriority()==LocationQueryStrategy.ACCURACY_HIGH_PRIORITY);
+                    mLocationServicesServerPostingIntervalText.setText("" + locationQueryStrategy.getServerPollingIntervalSeconds());
+                    mLocationServicesPollingIntervalText.setText("" + locationQueryStrategy.getLocationPollingIntervalSeconds());
+                    mDistanceFilterText.setText("" + locationQueryStrategy.getDistanceFilterMeters());
+                    existingStrategyFound = true;
+                }
+                else
+                {
+                    Log.i(getClass().getName(), "unable to get active location query strategy");
+                }
+            }
+            else
+            {
+                Log.i(getClass().getName(), "unable to get location service instance");
+            }
+        }
+
+        if(!existingStrategyFound)
+        {
+            mLocationServicesPollingIntervalText.setText("" + DEFAULT_POLLING_INTERVAL_SEC);
+            mLocationServicesServerPostingIntervalText.setText("" + DEFAULT_SERVER_POSTING_INTERVAL_SEC);
+            mDistanceFilterText.setText("" + DEFAULT_DISTANCE_FILTER_METERS);
+        }
+
+        mLocationServicesToggle.setOnCheckedChangeListener(mOnLocationToggleChangedListener);
+        //add listener afterwards as above triggers
+        mLocationServicesAccuracyToggle.setOnCheckedChangeListener(mOnLocationAccuracyToggleChangedListener);
+
+
+    }
+
+
+    /**
+     * TODO: MOVE
+     * @param serviceClass
+     * @return
+     */
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @TargetApi(21)
@@ -78,38 +144,42 @@ public class LocationTesterView extends LinearLayout
     }
 
 
-    @OnCheckedChanged(R.id.location_services_toggle_switch)
-    public void onLocationServicesToggle()
-    {
-        updateParams();
-        if(mLocationServicesToggle.isChecked())
-        {
-            startLocationService();
-        }
-        else
-        {
-            stopLocationService();
-        }
-    }
+    CompoundButton.OnCheckedChangeListener mOnLocationToggleChangedListener = new CompoundButton.OnCheckedChangeListener(){
 
-    @OnCheckedChanged(R.id.location_services_toggle_accuracy_switch)
-    public void onLocationServicesAccuracyToggle()
-    {
-        if(mLocationServicesAccuracyToggle.isChecked())
+        @Override
+        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
         {
-            //TODO: no magic numbers
-            mLocationQueryStrategy.setLocationAccuracyPriority(2);
+            updateParams();
+            if(mLocationServicesToggle.isChecked())
+            {
+                startLocationService();
+            }
+            else
+            {
+                stopLocationService();
+            }
         }
-        else
-        {
-            mLocationQueryStrategy.setLocationAccuracyPriority(1);
-        }
+    };
 
-        if(mLocationServicesToggle.isChecked())
+    CompoundButton.OnCheckedChangeListener mOnLocationAccuracyToggleChangedListener =  new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
         {
-            restartLocationService();
+            if(mLocationServicesAccuracyToggle.isChecked())
+            {
+                mLocationQueryStrategy.setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY);
+            }
+            else
+            {
+                mLocationQueryStrategy.setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY);
+            }
+
+            if(mLocationServicesToggle.isChecked())
+            {
+                restartLocationService();
+            }
         }
-    }
+    };
 
     private void updateParams()
     {
@@ -145,8 +215,9 @@ public class LocationTesterView extends LinearLayout
     private void restartLocationService()
     {
         stopLocationService();
-        stopLocationService();
+        startLocationService();
     }
+
     private void stopLocationService()
     {
         getContext().stopService(new Intent(getContext(), LocationService.class));
@@ -178,8 +249,6 @@ public class LocationTesterView extends LinearLayout
         inflate(context, R.layout.element_test_location_services, this);
         ButterKnife.bind(this);
 
-        mLocationServicesPollingIntervalText.setText("" + DEFAULT_POLLING_INTERVAL_SEC);
-        mLocationServicesServerPostingIntervalText.setText("" + DEFAULT_SERVER_POSTING_INTERVAL_SEC);
-        mDistanceFilterText.setText("" + DEFAULT_DISTANCE_FILTER_METERS);
+        setParametersFromCurrentlyRunningService();
     }
 }

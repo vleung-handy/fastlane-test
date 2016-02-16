@@ -45,7 +45,6 @@
         android:theme="@style/AppTheme">
         <service
             android:name=".location.LocationService"
-            android:process=":remote"
             android:exported="false">
         </service>
         <receiver android:name=".location.BootBroadcastReceiver" >

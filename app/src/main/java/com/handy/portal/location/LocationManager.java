@@ -75,6 +75,10 @@ public class LocationManager
     }
 
     //TODO: call this on network reconnected. clean up, super crude
+
+    /**
+     * only retrying once, but this is called when network is reconnected or got a success response from server
+     */
     public void resendFailedLocationBatchUpdates() //need to test this
     {
         //TODO: can send this at every LENGTH/SAMPLE LENGTH intervals to get a sampling
@@ -125,6 +129,7 @@ public class LocationManager
                     Log.i(getClass().getName(), "Successfully sent location to server");
 //                    mBus.post(new LocationEvent.SendGeolocationSuccess());
                     resendFailedLocationBatchUpdates(); //now is probably a good time to retry
+                    //calling here in addition to on network reconnected because we're retrying a limited number of batches at once
                 }
                 else
                 {
@@ -138,6 +143,7 @@ public class LocationManager
                 Log.i(getClass().getName(), "Failed to send location to server");
                 if(retryUpdateIfFailed && error.getType().equals(DataManager.DataManagerError.Type.NETWORK))
                 {
+                    //don't want to retry if it's a server problem or our problem
                     addToLocationBatchUpdateFailedList(locationBatchUpdate);
                 }
             }

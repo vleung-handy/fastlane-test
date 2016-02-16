@@ -47,6 +47,8 @@ public class LocationQueryStrategy implements Parcelable
     @SerializedName("booking_id")
     String mBookingId;
 
+    public static final int ACCURACY_BALANCED_POWER_PRIORITIY = 1;
+    public static final int ACCURACY_HIGH_PRIORITY = 2;
     public LocationQueryStrategy()
     {
         //TODO: REMOVE, FOR TESTING ONLY
@@ -54,7 +56,7 @@ public class LocationQueryStrategy implements Parcelable
         mEndDate = new Date(mStartDate.getTime() + DateTimeUtils.MILLISECONDS_IN_HOUR);
         mDistanceFilterMeters = 0;
         mLocationPollingIntervalSeconds = 1;
-        mLocationAccuracyPriority = 2;
+        mLocationAccuracyPriority = ACCURACY_HIGH_PRIORITY;
     }
 
     public void setDistanceFilterMeters(final int distanceFilterMeters)
