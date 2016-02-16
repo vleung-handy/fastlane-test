@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -150,10 +151,10 @@ public class LocationScheduleHandler extends BroadcastReceiver
             case 0:
                 priority = LocationRequest.PRIORITY_LOW_POWER;
                 break;
-            case 1:
+            case LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY:
                 priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
                 break;
-            case 2:
+            case LocationQueryStrategy.ACCURACY_HIGH_PRIORITY:
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
                 break;
             default:
@@ -183,7 +184,9 @@ public class LocationScheduleHandler extends BroadcastReceiver
             @Override
             public void onLocationChanged(final Location location)
             {
-                locationRequestStrategy.onNewLocationUpdate(LocationUpdate.from(location),
+                LocationUpdate locationUpdate = LocationUpdate.from(location);
+                locationUpdate.setBatteryLevelPercent(getBatteryLevel());
+                locationRequestStrategy.onNewLocationUpdate(locationUpdate,
                         LocationScheduleHandler.this);
             }
         };
@@ -203,6 +206,19 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 locationRequestStrategy.buildBatchUpdateAndNotifyReady(LocationScheduleHandler.this);
             }
         }, expirationDurationMs);
+    }
+
+    //TODO: move this
+    private float getBatteryLevel() {
+        Intent batteryIntent = mContext.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        if(level == -1 || scale == -1) {
+            return 0f;
+        }
+
+        return ((float)level / (float)scale) * 100.0f;
     }
 
     public void stopLocationUpdates()
@@ -300,7 +316,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 if(hasConnectivity)
                 {
                     bus.post(new LocationEvent.OnNetworkReconnected());
-                    //TODO: post everything in the failed queue
                 }
 
                 break;

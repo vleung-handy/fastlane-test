@@ -117,12 +117,17 @@ public class LocationUpdate
                 location.getAltitude(),
                 location.getSpeed(),
                 location.getBearing(),
-                "test",//event name
+                "persistent_background_service_test",//event name, test only
                 new Date(location.getTime()),
                 0, //no battery level yet
                 0 //no booking id yet
         );
         return locationUpdate;
+    }
+
+    public void setBatteryLevelPercent(final float batteryLevelPercent)
+    {
+        mBatteryLevelPercent = batteryLevelPercent;
     }
 
     /**
@@ -145,5 +150,4 @@ public class LocationUpdate
                 + "\nbooking id: " + mBookingId;
         return result;
     }
-
 }
