@@ -95,11 +95,17 @@ public class LocationTesterView extends LinearLayout
     {
         if(mLocationServicesAccuracyToggle.isChecked())
         {
+            //TODO: no magic numbers
             mLocationQueryStrategy.setLocationAccuracyPriority(2);
         }
         else
         {
             mLocationQueryStrategy.setLocationAccuracyPriority(1);
+        }
+
+        if(mLocationServicesToggle.isChecked())
+        {
+            restartLocationService();
         }
     }
 
@@ -130,11 +136,15 @@ public class LocationTesterView extends LinearLayout
 
         if(mLocationServicesToggle.isChecked())
         {
-            stopLocationService();
-            startLocationService();
+            restartLocationService();
         }
     }
 
+    private void restartLocationService()
+    {
+        stopLocationService();
+        stopLocationService();
+    }
     private void stopLocationService()
     {
         getContext().stopService(new Intent(getContext(), LocationService.class));
