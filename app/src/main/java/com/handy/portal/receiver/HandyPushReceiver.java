@@ -6,13 +6,32 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.event.LogEvent;
+import com.handy.portal.model.logs.EventLog;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.ui.activity.SplashActivity;
+import com.handy.portal.util.Utils;
+import com.squareup.otto.Bus;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 
+import javax.inject.Inject;
+
 public class HandyPushReceiver extends BaseIntentReceiver
 {
+    @Inject
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
+
+    @Override
+    public void onReceive(final Context context, final Intent intent)
+    {
+        Utils.inject(context, this);
+        super.onReceive(context, intent);
+    }
+
     public static final String TYPE_AUTO_CHECK_IN = "P_AUTO_CHECKIN";
 
     @Override
@@ -31,6 +50,8 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                   @NonNull PushMessage pushMessage,
                                   int notificationId)
     {
+        final EventLog eventLog = mEventLogFactory.createPushNotificationReceivedLog(pushMessage);
+        mBus.post(new LogEvent.AddLogEvent(eventLog));
     }
 
     @Override
@@ -56,6 +77,9 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                            @NonNull PushMessage pushMessage,
                                            int notificationId)
     {
+        final EventLog eventLog = mEventLogFactory.createPushNotificationOpenedLog(pushMessage);
+        mBus.post(new LogEvent.AddLogEvent(eventLog));
+
         final Bundle pushBundle = pushMessage.getPushBundle();
         final String deeplink = pushBundle.getString(BundleKeys.DEEPLINK);
         if (deeplink != null)
@@ -78,6 +102,16 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                                  boolean isForeground)
     {
         return false;
+    }
+
+    @Override
+    protected void onNotificationDismissed(
+            @NonNull final Context context,
+            @NonNull final PushMessage pushMessage,
+            final int notificationId)
+    {
+        final EventLog eventLog = mEventLogFactory.createPushNotificationDismissedLog(pushMessage);
+        mBus.post(new LogEvent.AddLogEvent(eventLog));
     }
 
     private static void launchSplashActivityWithDeeplinkData(@NonNull final Context context,
