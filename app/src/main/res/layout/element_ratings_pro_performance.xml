@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="match_parent"
               android:orientation="vertical"
     >
 
@@ -16,13 +16,14 @@
         >
 
         <TextView
+            android:id="@+id/five_star_title"
             style="@style/CircularBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:paddingTop="@dimen/dashboard_header_padding"
-            android:text="@string/past_28_days"
             android:textSize="@dimen/dashboard_header_text_size"
+            tools:text="@string/past_28_days"
             />
 
         <TextView
@@ -39,16 +40,16 @@
 
         <com.handy.portal.ui.element.dashboard.PercentageCircleView
             android:id="@+id/five_star_percentage_view"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin_x2"
             android:layout_width="@dimen/percentage_circle_diameter"
             android:layout_height="@dimen/percentage_circle_diameter"
+            android:layout_marginBottom="@dimen/default_margin_x2"
+            android:layout_marginTop="@dimen/default_margin"
             />
 
         <View
             android:layout_width="match_parent"
-            android:background="@color/tertiary_grey"
             android:layout_height="@dimen/divider_height"
+            android:background="@color/tertiary_grey"
             />
 
         <LinearLayout
