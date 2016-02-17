@@ -23,6 +23,7 @@ public class BundleKeys
     public static final String MAP_CENTER = "map_center";
 
     // UrbanAirship
+    public static final String PUSH_MESSAGE = "push_message";
     public static final String PUSH_TYPE = "type_id";
     public static final String CHECK_IN_ACTION_ID = "check_in";
 
