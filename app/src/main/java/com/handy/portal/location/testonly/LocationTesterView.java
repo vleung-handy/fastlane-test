@@ -1,7 +1,6 @@
 package com.handy.portal.location.testonly;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -74,7 +73,7 @@ public class LocationTesterView extends LinearLayout
     public void setParametersFromCurrentlyRunningService()
     {
         //detect if service is alive
-        boolean serviceRunning = isServiceRunning(LocationService.class);
+        boolean serviceRunning = LocationService.isRunning(getContext());
         mLocationServicesToggle.setChecked(serviceRunning);
 
         //TODO: set the params the service is using
@@ -118,22 +117,6 @@ public class LocationTesterView extends LinearLayout
         mLocationServicesAccuracyToggle.setOnCheckedChangeListener(mOnLocationAccuracyToggleChangedListener);
 
 
-    }
-
-
-    /**
-     * TODO: MOVE
-     * @param serviceClass
-     * @return
-     */
-    private boolean isServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @TargetApi(21)
@@ -232,7 +215,7 @@ public class LocationTesterView extends LinearLayout
         mLocationQueryStrategy.setStartDate(now);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
-        calendar.add(Calendar.DAY_OF_YEAR, 21);
+        calendar.add(Calendar.MINUTE, 1);//TEST ONLY
         Date end = calendar.getTime();
         mLocationQueryStrategy.setEndDate(end);
         LinkedList<LocationQueryStrategy> locationQueryStrategies = new LinkedList<>();

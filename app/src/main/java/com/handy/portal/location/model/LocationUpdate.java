@@ -58,7 +58,7 @@ public class LocationUpdate
         return mBatteryLevelPercent;
     }
 
-    public int getBookingId()
+    public String getBookingId()
     {
         return mBookingId;
     }
@@ -82,7 +82,7 @@ public class LocationUpdate
     @SerializedName("battery_level")
     float mBatteryLevelPercent; //0.95
     @SerializedName("booking_id")
-    int mBookingId;
+    String mBookingId;
 
     public LocationUpdate(double latitude,
                           double longitude,
@@ -93,7 +93,7 @@ public class LocationUpdate
                           String eventName,
                           Date capturedTimestamp,
                           float batteryLevelPercent,
-                          int bookingId)
+                          String bookingId)
     {
         mLatitude = latitude;
         mLongitude = longitude;
@@ -108,8 +108,11 @@ public class LocationUpdate
     }
 
     //TODO: move this?
-    public static LocationUpdate from(@NonNull Location location)
+    public static LocationUpdate from(@NonNull Location location,
+                                      @NonNull LocationQueryStrategy locationQueryStrategy)
     {
+        String eventName = locationQueryStrategy.getEventName();
+        String bookingId = locationQueryStrategy.getBookingId();
         LocationUpdate locationUpdate = new LocationUpdate(
                 location.getLatitude(),
                 location.getLongitude(),
@@ -117,14 +120,18 @@ public class LocationUpdate
                 location.getAltitude(),
                 location.getSpeed(),
                 location.getBearing(),
-                "persistent_background_service_test",//event name, test only
+                eventName,//event name, test only
                 new Date(location.getTime()),
                 0, //no battery level yet
-                0 //no booking id yet
+                bookingId //no booking id yet
         );
         return locationUpdate;
     }
 
+    /**
+     * TODO: move
+     * @param batteryLevelPercent
+     */
     public void setBatteryLevelPercent(final float batteryLevelPercent)
     {
         mBatteryLevelPercent = batteryLevelPercent;

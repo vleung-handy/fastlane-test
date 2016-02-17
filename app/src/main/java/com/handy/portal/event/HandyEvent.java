@@ -26,6 +26,7 @@ import com.handy.portal.model.UpdateDetails;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public abstract class HandyEvent
 {
@@ -336,6 +337,32 @@ public abstract class HandyEvent
         }
     }
 
+    public static class RequestScheduledBookingsBatch extends RequestBookingsEvent
+    {
+        public final List<Date> dates;
+
+        public RequestScheduledBookingsBatch(List<Date> dates, boolean useCachedIfPresent)
+        {
+            this.dates = dates;
+            this.useCachedIfPresent = useCachedIfPresent;
+        }
+    }
+
+    public static class ReceiveScheduledBookingsBatchSuccess extends RequestBookingsEvent
+    {
+        private final Map<Date, List<Booking>> mDateToBookingMap;
+
+        public ReceiveScheduledBookingsBatchSuccess(Map<Date, List<Booking>> dateToBookingMap)
+        {
+            mDateToBookingMap = dateToBookingMap;
+        }
+
+        public Map<Date, List<Booking>> getDateToBookingMap()
+        {
+            return mDateToBookingMap;
+        }
+    }
+
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
         public List<Booking> bookings;
@@ -415,6 +442,13 @@ public abstract class HandyEvent
         }
     }
 
+
+    /**
+     * dispatched when one or more bookings might have changed
+     */
+    public static class BookingChangedOrCreated
+    {
+    }
 //Job Action Requests
 
     public static class RequestClaimJob extends RequestBookingActionEvent

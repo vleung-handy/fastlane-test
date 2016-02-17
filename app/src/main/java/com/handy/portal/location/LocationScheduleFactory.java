@@ -2,7 +2,6 @@ package com.handy.portal.location;
 
 import android.support.annotation.NonNull;
 
-import com.google.android.gms.location.LocationRequest;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.model.Booking;
@@ -22,11 +21,7 @@ import java.util.List;
 public class LocationScheduleFactory
 {
     /*
-    4 - 1 hours before a booking, poll every 15 minutes
-    1 - 0 hours before a booking, poll every minute or as often as necessary based on their speed to draw a reasonable path of travel
-    Geofence around the booking to know once they've arrived (Geofence arrival event) Waiting on legal
-    During the first hour of booking, poll every 10 minutes
-    Starting 15 minutes before booking end, poll every 10 minutes for an hour
+    using the strategies defined in:
 
     https://handybook.atlassian.net/wiki/display/engineeringwiki/Polling+Provider+Geolocation
      */
@@ -38,16 +33,17 @@ public class LocationScheduleFactory
      */
     public static List<LocationQueryStrategy> getLocationStrategiesFromBooking(@NonNull Booking booking)
     {
+        //TODO: make sure the calendar.add(Calendar.HOUR_OF_DAY, 1) actually adds an hour. what's the difference between that and add(Calendar.HOUR, 1)?
         List<LocationQueryStrategy> locationQueryStrategies = new LinkedList<>();
         LocationQueryStrategy locationQueryStrategy = new LocationQueryStrategy();
 
         Calendar calendar = Calendar.getInstance();
 
         /**
-         * 4 - 1 hours before a booking, poll every 15 minutes
+         * 3 - 1 hours before a booking, poll every 15 minutes
          */
         calendar.setTime(booking.getStartDate());
-        calendar.add(Calendar.HOUR_OF_DAY, -4);
+        calendar.add(Calendar.HOUR_OF_DAY, -3);
         Date fourHoursBeforeBooking = calendar.getTime();
 
         locationQueryStrategy.setStartDate(fourHoursBeforeBooking);
@@ -55,20 +51,45 @@ public class LocationScheduleFactory
         calendar.add(Calendar.HOUR_OF_DAY, -1);
         Date oneHourBeforeBooking = calendar.getTime();
         locationQueryStrategy.setEndDate(oneHourBeforeBooking)
+                .setBookingId(booking.getId())
                 .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE)
                 .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 15)
-                .setLocationAccuracyPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY)
+                .setDistanceFilterMeters(100)
+                .setEventName("three_hours_out");  //TODO: remove magic strings
         locationQueryStrategies.add(locationQueryStrategy);
 
         /**
-         * 1 - 0 hours before a booking, poll every minute or as often as necessary based on their speed to draw a reasonable path of travel
+         * 60 - 15 minutes before a booking
          */
+        calendar.setTime(booking.getStartDate());
+        calendar.add(Calendar.MINUTE, -15);
+        Date fifteenMinutesBeforeBooking = calendar.getTime();
         locationQueryStrategy = new LocationQueryStrategy()
                 .setStartDate(oneHourBeforeBooking)
-                .setEndDate(booking.getStartDate())
+                .setBookingId(booking.getId())
+                .setEndDate(fifteenMinutesBeforeBooking)
                 .setLocationPollingIntervalSeconds(30)
                 .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
-                .setLocationAccuracyPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY)
+                .setDistanceFilterMeters(50)
+                .setEventName("one_hour_out");
+        locationQueryStrategies.add(locationQueryStrategy);
+
+        /**
+         * 15 minutes before
+         */
+
+        locationQueryStrategy = new LocationQueryStrategy();
+        locationQueryStrategy.setStartDate(fifteenMinutesBeforeBooking);
+
+        locationQueryStrategy.setEndDate(booking.getStartDate())
+                .setLocationPollingIntervalSeconds(30)
+                .setBookingId(booking.getId())
+                .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE)
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY)
+                .setDistanceFilterMeters(25)
+                .setEventName("fifteen_minutes_out");
         locationQueryStrategies.add(locationQueryStrategy);
 
         /**
@@ -79,51 +100,57 @@ public class LocationScheduleFactory
                 .setStartDate(booking.getStartDate());
         calendar.setTime(booking.getStartDate());
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Date endDate = calendar.getTime();
+        Date oneHourAfterBooking = calendar.getTime();
 
-        locationQueryStrategy.setEndDate(endDate)
+        locationQueryStrategy.setEndDate(oneHourAfterBooking)
+                .setBookingId(booking.getId())
                 .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
                 .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 10)
-                .setLocationAccuracyPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY)
+                .setDistanceFilterMeters(25)
+                .setEventName("started");
         locationQueryStrategies.add(locationQueryStrategy);
 
         /**
-         *     Starting 15 minutes before booking end, poll every 10 minutes for an hour
+         *     Starting 15 minutes before booking end, poll every 10 minutes for half an hour
          */
 
         locationQueryStrategy = new LocationQueryStrategy();
         calendar.setTime(booking.getEndDate());
         calendar.add(Calendar.MINUTE, -15);
-        Date startDate = calendar.getTime();
+        Date fifteenMinutesBeforeBookingEnd = calendar.getTime();
 
-        locationQueryStrategy.setStartDate(startDate);
-        calendar.setTime(startDate);
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        endDate = calendar.getTime();
+        locationQueryStrategy.setStartDate(fifteenMinutesBeforeBookingEnd);
+        calendar.setTime(fifteenMinutesBeforeBookingEnd);
+        calendar.add(Calendar.MINUTE, 30);
+        Date fifteenMinutesAfterBookingEnd = calendar.getTime();
 
-        locationQueryStrategy.setEndDate(endDate)
+        locationQueryStrategy.setEndDate(fifteenMinutesAfterBookingEnd)
+                .setBookingId(booking.getId())
                 .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 1)
-                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
-                .setLocationAccuracyPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY)
+                .setDistanceFilterMeters(25)
+                .setEventName("ending");
         locationQueryStrategies.add(locationQueryStrategy);
 
-
-        //TODO: booking ended
-
+        /**
+         * 15 - 45 minutes after booking end
+         */
         locationQueryStrategy = new LocationQueryStrategy();
-        calendar.setTime(booking.getEndDate());
-        calendar.add(Calendar.MINUTE, 15);
-        startDate = calendar.getTime();
 
-        locationQueryStrategy.setStartDate(startDate);
-        calendar.setTime(startDate);
+        locationQueryStrategy.setStartDate(fifteenMinutesAfterBookingEnd);
+        calendar.setTime(fifteenMinutesAfterBookingEnd);
         calendar.add(Calendar.MINUTE, 30);
-        endDate = calendar.getTime();
+        Date fortyFiveMinutesAfterBookingEnd = calendar.getTime();
 
-        locationQueryStrategy.setEndDate(endDate)
+        locationQueryStrategy.setEndDate(fortyFiveMinutesAfterBookingEnd)
+                .setBookingId(booking.getId())
                 .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
-                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 15)
-                .setLocationAccuracyPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 15)
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY)
+                .setDistanceFilterMeters(50)
+                .setEventName("ended");
         locationQueryStrategies.add(locationQueryStrategy);
         return locationQueryStrategies;
     }

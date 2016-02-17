@@ -46,7 +46,10 @@ public class LocationQueryStrategy implements Parcelable
     int mDistanceFilterMeters;
     @SerializedName("booking_id")
     String mBookingId;
+    @SerializedName("event_name")
+    String mEventName;
 
+    //TODO: find out what server will send
     public static final int ACCURACY_BALANCED_POWER_PRIORITIY = 1;
     public static final int ACCURACY_HIGH_PRIORITY = 2;
     public LocationQueryStrategy()
@@ -56,12 +59,27 @@ public class LocationQueryStrategy implements Parcelable
         mEndDate = new Date(mStartDate.getTime() + DateTimeUtils.MILLISECONDS_IN_HOUR);
         mDistanceFilterMeters = 0;
         mLocationPollingIntervalSeconds = 1;
+        mEventName = "test";
         mLocationAccuracyPriority = ACCURACY_HIGH_PRIORITY;
     }
 
-    public void setDistanceFilterMeters(final int distanceFilterMeters)
+
+    //TODO: remove the chaining when we get this object from the server instead of generating it locally
+    public LocationQueryStrategy setEventName(final String eventName)
     {
-        this.mDistanceFilterMeters = distanceFilterMeters;
+        mEventName = eventName;
+        return this;
+    }
+
+    public String getEventName()
+    {
+        return mEventName;
+    }
+
+    public LocationQueryStrategy setDistanceFilterMeters(final int distanceFilterMeters)
+    {
+        mDistanceFilterMeters = distanceFilterMeters;
+        return this;
     }
 
     public int getDistanceFilterMeters()
@@ -83,19 +101,25 @@ public class LocationQueryStrategy implements Parcelable
      * @param locationAccuracyPriority
      */
     public LocationQueryStrategy(
-            String tag,
+            String bookingId,
             Date startDate,
                                  long durationMinutes,
                                  int locationPollingIntervalSeconds,
                                  int serverPollingIntervalSeconds,
                                  int locationAccuracyPriority)
     {
-        mBookingId = tag;
+        mBookingId = bookingId;
         mStartDate = startDate;
         mEndDate = new Date(startDate.getTime() + durationMinutes * DateTimeUtils.MILLISECONDS_IN_MINUTE);
         mLocationPollingIntervalSeconds = locationPollingIntervalSeconds;
         mServerPollingIntervalSeconds = serverPollingIntervalSeconds;
         mLocationAccuracyPriority = locationAccuracyPriority;
+    }
+
+    public LocationQueryStrategy setBookingId(final String bookingId)
+    {
+        mBookingId = bookingId;
+        return this;
     }
 
     public LocationQueryStrategy setServerPollingIntervalSeconds(final int serverPollingIntervalSeconds)
@@ -106,6 +130,8 @@ public class LocationQueryStrategy implements Parcelable
 
     protected LocationQueryStrategy(Parcel in)
     {
+        mEventName = in.readString();
+        mBookingId = in.readString();
         mStartDate = new Date(in.readLong());
         mEndDate = new Date(in.readLong());
         mServerPollingIntervalSeconds = in.readInt();
@@ -172,6 +198,8 @@ public class LocationQueryStrategy implements Parcelable
     @Override
     public void writeToParcel(final Parcel dest, final int flags)
     {
+        dest.writeString(mEventName);
+        dest.writeString(mBookingId);
         dest.writeLong(mStartDate.getTime());
         dest.writeLong(mEndDate.getTime());
         dest.writeInt(mServerPollingIntervalSeconds);
@@ -188,7 +216,9 @@ public class LocationQueryStrategy implements Parcelable
     @Override
     public String toString()
     {
-        return "start date: " + mStartDate.toString()
+        return  "event name: " + mEventName
+                + "\nbooking id: " + mBookingId
+                + "\nstart date: " + mStartDate.toString()
                 + "\nend date: " + mEndDate.toString()
                 + "\nserver posting frequency (s): " + mServerPollingIntervalSeconds
                 + "\npolling frequency (s): " + mLocationPollingIntervalSeconds

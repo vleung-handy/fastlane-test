@@ -6,29 +6,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
-import com.handy.portal.location.model.LocationUpdate;
-import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Set;
 
@@ -40,7 +36,7 @@ import javax.inject.Inject;
  * does whatever needs to be done given a location query schedule
  */
 public class LocationScheduleHandler extends BroadcastReceiver
-    implements OnLocationBatchUpdateReadyListener
+    implements LocationStrategyHandler.LocationStrategyCallbacks
 {
     @Inject
     Bus bus;
@@ -50,14 +46,19 @@ public class LocationScheduleHandler extends BroadcastReceiver
     AlarmManager mAlarmManager;
     Context mContext;
     Handler mHandler = new Handler();
-//    private static final int DEFAULT_SMALLEST_DISPLACEMENT_METERS = 25;
     private static final int ALARM_REQUEST_CODE = 1;
     private static final String LOCATION_SCHEDULE_ALARM_BROADCAST_ID = "LOCATION_SCHEDULE_ALARM_BROADCAST_ID";
     private final static String BUNDLE_EXTRA_LOCATION_STRATEGY = "LOCATION_STRATEGY";
 
 
+    /**
+     * hack for preventing the network reconnected callback from being triggered
+     * multiple times (due to multiple network providers)
+     */
+    private boolean mPreviouslyHadNetworkConnectivity = true;
+
     //TODO: temporary, can remove once we don't have overlapping schedules
-    Set<LocationListener> mActiveLocationListeners = new HashSet<>();
+    Set<LocationStrategyHandler> mActiveLocationRequestStrategies = new HashSet<>();
     public LocationScheduleHandler(@NonNull LocationQuerySchedule locationQuerySchedule,
                                    @NonNull GoogleApiClient googleApiClient,
                                    @NonNull Context context)
@@ -79,7 +80,15 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     public void start()
     {
-        scanSchedule();
+        try
+        {
+            scanSchedule(); //can throw security exception, or maybe the client won't be connected
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
     /**
@@ -88,7 +97,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
      *
      * TODO: super crude, clean up
      */
-    private void scanSchedule() //TODO: rename this
+    private void scanSchedule() throws SecurityException
     {
         //look for any strategies within scope and starts them if not already started
         ListIterator<LocationQueryStrategy> locationQueryStrategyListIterator
@@ -97,7 +106,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
         {
             LocationQueryStrategy strategy = locationQueryStrategyListIterator.next();
 
-            //TODO: assuming listiterator.remove() is constant time for linked lists. need to verify
             locationQueryStrategyListIterator.remove(); //strategy is handled, don't need to handle again
 
             //TODO: use a util instead
@@ -123,112 +131,110 @@ public class LocationScheduleHandler extends BroadcastReceiver
             }
 
         }
+
+        //TODO: when the schedule is completely expired, we want to request a schedule for the next N days in case the user never opens the app
     }
 
     //for testing
-    LocationQueryStrategy mLatestActiveLocationQueryStrategy;
+    LocationStrategyHandler mLatestActiveLocationStrategyHandler;
 
     @VisibleForTesting
     public LocationQueryStrategy getLatestActiveLocationStrategy()
     {
-        return mLatestActiveLocationQueryStrategy;
+        return mLatestActiveLocationStrategyHandler.getLocationQueryStrategy();
     }
 
-    /**
-     * TODO: if we just use one listener, does requestLocationUpdates override the previous location update request?
-     */
-    public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy)
+    public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy) throws SecurityException
     {
-        mLatestActiveLocationQueryStrategy = locationQueryStrategy; //FOR TESTING
+        Log.i(getClass().getName(), "starting strategy...");
+        final LocationStrategyHandler locationStrategyHandler =
+                new LocationStrategyHandler(
+                        locationQueryStrategy,
+                        this,
+                        mHandler,
+                        mContext);
+        mLatestActiveLocationStrategyHandler = locationStrategyHandler; //for tests only
+        mActiveLocationRequestStrategies.add(locationStrategyHandler); //only needed for removing updates on destroy
 
-        final LocationRequestStrategy locationRequestStrategy = new LocationRequestStrategy(locationQueryStrategy);
-        /*
-        TODO: TEST ONLY. seriously refactor this. don't know how server is going to send accuracy codes yet
-         */
-        int priority = 0;
-        switch(locationQueryStrategy.getLocationAccuracyPriority())
-        {
-            case 0:
-                priority = LocationRequest.PRIORITY_LOW_POWER;
-                break;
-            case LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY:
-                priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
-                break;
-            case LocationQueryStrategy.ACCURACY_HIGH_PRIORITY:
-                priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
-                break;
-            default:
-                priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
-                break;
-        }
-        long pollingIntervalMs = locationQueryStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
-        long expirationDurationMs = locationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis();
-        LocationRequest locationRequest = new LocationRequest()
-//                .setSmallestDisplacement(DEFAULT_SMALLEST_DISPLACEMENT_METERS) //disabled for local testing
-                .setSmallestDisplacement(locationQueryStrategy.getDistanceFilterMeters())
-                .setPriority(priority)
-                .setExpirationDuration(expirationDurationMs)
-                .setMaxWaitTime(locationQueryStrategy.getServerPollingIntervalSeconds())
-                .setInterval(pollingIntervalMs)
-                .setFastestInterval(pollingIntervalMs) //TODO: change this, test only
-                ;
-
-
-        //TODO: can remove once we don't have overlapping schedules
-                        /*
-                            we are creating a new listener for each location request
-                            because according to the documentation, any previous location
-                            requests registered on the same listener are removed
-                         */
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(final Location location)
-            {
-                LocationUpdate locationUpdate = LocationUpdate.from(location);
-                locationUpdate.setBatteryLevelPercent(getBatteryLevel());
-                locationRequestStrategy.onNewLocationUpdate(locationUpdate,
-                        LocationScheduleHandler.this);
-            }
-        };
-        mActiveLocationListeners.add(locationListener);
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-                locationRequest,
-                locationListener);
-
-        //TODO: REFACTOR THIS. how else can i get a callback when the strategy expires?
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run()
-            {
-                Log.i(getClass().getName(), "strategy expired, posting remaining location update objects in queue...");
-                //strategy expired, we want to post any remaining update objects in the queue
-                locationRequestStrategy.buildBatchUpdateAndNotifyReady(LocationScheduleHandler.this);
-            }
-        }, expirationDurationMs);
+        locationStrategyHandler.requestLocationUpdates(mGoogleApiClient);
     }
 
-    //TODO: move this
-    private float getBatteryLevel() {
-        Intent batteryIntent = mContext.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-        if(level == -1 || scale == -1) {
-            return 0f;
+    //TODO: would rather not need this but need to remove the handler from the active strategies list for clean up purposes later
+    @Override
+    public void onLocationStrategyExpired(final LocationStrategyHandler locationStrategyHandler)
+    {
+        try{
+            Log.i(getClass().getName(), "strategy expired, posting remaining location update objects in queue...");
+            //strategy expired, we want to post any remaining update objects in the queue
+            locationStrategyHandler.buildBatchUpdateAndNotifyReady();
+            mActiveLocationRequestStrategies.remove(locationStrategyHandler);
         }
-
-        return ((float)level / (float)scale) * 100.0f;
+        catch (Exception e)
+        {
+            //not trusting post delayed
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
     public void stopLocationUpdates()
     {
-        for(LocationListener locationListener : mActiveLocationListeners)
+        for(LocationStrategyHandler locationStrategyHandler : mActiveLocationRequestStrategies)
         {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, locationListener);
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, locationStrategyHandler.getLocationListener());
         }
-        mActiveLocationListeners.clear();
+        mActiveLocationRequestStrategies.clear();
+    }
 
+    /**
+     * TODO: need to test
+     *
+     * called when this handler is destroyed
+     * sends out all queued location updates to the server
+     */
+    private void sendAllQueuedLocationUpdates()
+    {
+        Log.i(getClass().getName(), "sending out all queued location updates");
+        Iterator<LocationStrategyHandler> locationStrategyHandlerIterator = mActiveLocationRequestStrategies.iterator();
+        while(locationStrategyHandlerIterator.hasNext())
+        {
+            LocationStrategyHandler locationStrategyHandler = locationStrategyHandlerIterator.next();
+            if(locationStrategyHandler.isStrategyExpired())
+            {
+                //remove, just in case it wasn't properly removed before
+                locationStrategyHandlerIterator.remove();
+            }
+            else
+            {
+                locationStrategyHandler.buildBatchUpdateAndNotifyReady();
+            }
+        }
+    }
+
+    /**
+     * TODO: need to test. also consolidate with above function
+     *
+     * called when network reconnected
+     * triggers immediate requests for location updates for the active strategies
+     * (usually just 1, probably at most 3, until we don't have overlapping)
+     */
+    private void rerequestLocationUpdatesForActiveStrategies()
+    {
+        Log.i(getClass().getName(), "rerequesting location updates for the active strategies");
+        Iterator<LocationStrategyHandler> locationStrategyHandlerIterator = mActiveLocationRequestStrategies.iterator();
+        while(locationStrategyHandlerIterator.hasNext())
+        {
+            LocationStrategyHandler locationStrategyHandler = locationStrategyHandlerIterator.next();
+            if(locationStrategyHandler.isStrategyExpired())
+            {
+                //remove, just in case it wasn't properly removed before
+                locationStrategyHandlerIterator.remove();
+            }
+            else
+            {
+                locationStrategyHandler.requestLocationUpdates(mGoogleApiClient);
+            }
+        }
     }
 
     /**
@@ -236,11 +242,11 @@ public class LocationScheduleHandler extends BroadcastReceiver
      */
     public void destroy()
     {
-        //cancel the alarm
         Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mAlarmManager.cancel(pendingIntent);
 
+        sendAllQueuedLocationUpdates();
         stopLocationUpdates();
         try
         {
@@ -300,8 +306,17 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 if(locationQueryStrategy != null)
                 {
                     Log.i(getClass().getName(), "Got location strategy " + locationQueryStrategy.toString());
-                    startStrategy(locationQueryStrategy);
-                    scanSchedule();
+                    try
+                    {
+                        startStrategy(locationQueryStrategy);
+                        scanSchedule();
+                    }
+                    catch (Exception e)
+                    {
+                        //in case it throws security exception or google client not connected
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    }
                 }
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
@@ -311,15 +326,29 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
                 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                boolean hasConnectivity = networkInfo != null && networkInfo.isConnected();
+                boolean hasConnectivity = networkInfo != null
+                        && networkInfo.isConnected()
+                        && networkInfo.isAvailable();
+
+                /*
+                NOTE: if i have both data and wifi on, and then turn wifi off,
+                hasConnectivity will still be true
+                 */
                 Log.i(getClass().getName(), "has network connectivity: " + hasConnectivity);
-                if(hasConnectivity)
+                if(hasConnectivity && !mPreviouslyHadNetworkConnectivity)
+                    //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
                 {
                     bus.post(new LocationEvent.OnNetworkReconnected());
+                    rerequestLocationUpdatesForActiveStrategies();
+                    //immediately request location updates
+                    //this will be much easier when we only have one location listener
+                    //which will we do when we don't have overlapping strategies anymore
                 }
+
+                //this is a hack to prevent multiple network reconnected triggers, should think of a better solution
+                mPreviouslyHadNetworkConnectivity = hasConnectivity;
                 break;
         }
-
     }
 
     @Override
@@ -327,10 +356,4 @@ public class LocationScheduleHandler extends BroadcastReceiver
     {
         bus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
     }
-
-//    @Override
-//    public void onLocationChanged(final Location location)
-//    {
-//        bus.post(new LocationEvent.LocationChanged(location));
-//    }
 }

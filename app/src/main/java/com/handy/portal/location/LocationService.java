@@ -1,6 +1,8 @@
 package com.handy.portal.location;
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
@@ -34,6 +36,8 @@ import javax.inject.Inject;
  * TODO: what exactly is wakelock and do i need it?
  *
  * TODO: consider running this, or parts of this, in separate thread from main application to prevent lags
+ *
+ * TODO: make sure this isn't started if config manager says no
  */
 public class LocationService extends Service
         implements
@@ -78,6 +82,23 @@ public class LocationService extends Service
                 .build();
     }
 
+    //TODO: REMOVE this once we move isServiceRunning to a util
+    public static boolean isRunning(Context context)
+    {
+        return isServiceRunning(context, LocationService.class);
+    }
+
+    //TODO: move this to a util
+    private static boolean isServiceRunning(Context context, Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
@@ -89,29 +110,37 @@ public class LocationService extends Service
 
         mBus.register(this);
         mGoogleApiClient.connect();
-//            requestLocationQuerySchedule();//uncomment this back
 
-        //TODO: remove, for toggle testing only
-        if (intent != null && intent.getExtras() != null && intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE) != null)
-        {
-            mBus.post(new LocationEvent.ReceiveLocationSchedule((LocationQuerySchedule)
-                    intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
+//        //TODO: remove, for toggle testing only
+//        if (intent != null && intent.getExtras() != null && intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE) != null)
+//        {
+//            mBus.post(new LocationEvent.ReceiveLocationSchedule((LocationQuerySchedule)
+//                    intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
+//
+//        }
+//        else
+//        {
+//            requestLocationQuerySchedule();
+//        }
 
-        }
-        else
-        {
-            requestLocationQuerySchedule();
-        }
+        requestLocationQuerySchedule();
 
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy()
     {
         mBus.unregister(this);
-        unregisterReceiver(mLocationScheduleHandler);
-        mLocationScheduleHandler.destroy();
+        try
+        {
+            unregisterReceiver(mLocationScheduleHandler);
+            mLocationScheduleHandler.destroy();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         mGoogleApiClient.disconnect();
         Log.i(getClass().getName(), "service destroyed");
         super.onDestroy();

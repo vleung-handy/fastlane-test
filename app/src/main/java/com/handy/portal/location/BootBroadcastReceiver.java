@@ -16,6 +16,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver
     @Override
     public void onReceive(final Context context, final Intent intent)
     {
+        //TODO: make it not start the service if config param says not to
         if(ACTION_BOOT_COMPLETED.equals(intent.getAction()))
         {
             Log.i(getClass().getName(), "Boot completed. Starting location service...");

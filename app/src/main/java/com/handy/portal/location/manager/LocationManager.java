@@ -1,10 +1,11 @@
-package com.handy.portal.location;
+package com.handy.portal.location.manager;
 
 import android.location.Location;
 import android.util.Log;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.location.LocationEvent;
+import com.handy.portal.location.LocationScheduleFactory;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.manager.PrefsManager;
@@ -36,11 +37,10 @@ public class LocationManager
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
     private final PrefsManager mPrefsManager;
-    private Location mLastLocationSent;
+    private Location mLastLocationSent; //might use this later
 
     //TODO: adjust these params
     private final long LAST_UPDATE_TIME_INTERVAL_MILLISEC = 2 * DateTimeUtils.MILLISECONDS_IN_SECOND;
-
     private static final int MAX_LOCATION_UPDATE_BATCHES_TO_RETRY_AT_ONCE = 5;
     //TODO: send location updates in batches
 
@@ -55,6 +55,9 @@ public class LocationManager
         mDataManager = dataManager;
         mProviderManager = providerManager;
         mPrefsManager = prefsManager;
+        LocationScheduleBuilderManager mLocationScheduleBuilderManager =
+                new LocationScheduleBuilderManager(mBus); //TODO: this means we don't have to provide in app module. is that better?
+        //TODO: should disable the above if toggle-testing
     }
 
     //not used for now
@@ -64,6 +67,7 @@ public class LocationManager
     }
 
     Set<LocationBatchUpdate> mFailedLocationBatchUpdates = new HashSet<>();
+    private final static int MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE = 100;
 
     //TODO: if this fails due to no network connection, then on network reconnect, need to determine what requests in the queue need to be sent
     @Subscribe
@@ -98,6 +102,7 @@ public class LocationManager
     {
         Log.i(getClass().getName(), "on network reconnected");
         resendFailedLocationBatchUpdates();
+        //request immediate location updates?
     }
 
     private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
@@ -140,7 +145,7 @@ public class LocationManager
             public void onError(final DataManager.DataManagerError error)
             {
                 Log.i(getClass().getName(), "Failed to send location to server");
-                if(retryUpdateIfFailed && error.getType().equals(DataManager.DataManagerError.Type.NETWORK))
+                if (retryUpdateIfFailed && error.getType().equals(DataManager.DataManagerError.Type.NETWORK))
                 {
                     //don't want to retry if it's a server problem or our problem
                     addToLocationBatchUpdateFailedList(locationBatchUpdate);
@@ -151,49 +156,27 @@ public class LocationManager
 
     private void addToLocationBatchUpdateFailedList(LocationBatchUpdate locationBatchUpdate)
     {
+        if(mFailedLocationBatchUpdates.size() >= MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE)
+        {
+            //TODO: what is the price of this? should we remove more than one if costly? should we use a structure that doesn't require iterator?
+            Iterator<LocationBatchUpdate> iterator = mFailedLocationBatchUpdates.iterator();
+            if(iterator.hasNext())
+            {
+                iterator.next();
+                iterator.remove();
+            }
+        }
         mFailedLocationBatchUpdates.add(locationBatchUpdate);
     }
 
-    @Subscribe
-    public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
-    {
-        //TODO: do something, like get the cached scheduled bookings or request them, then store in prefs
 
-        //TODO: this is temporary. remove; for testing only
-        LocationQuerySchedule locationQuerySchedule = new LocationQuerySchedule();
+    //TODO: temporary, eventually just listen to server's schedule updated event
+    @Subscribe
+    public void onReceiveBookingsForLocationScheduleSuccess(LocationEvent.ReceiveBookingsForLocationScheduleSuccess event)
+    {
+        LocationQuerySchedule locationQuerySchedule = LocationScheduleFactory.getLocationScheduleFromBookings(event.getBookingList());
+
         mBus.post(new LocationEvent.ReceiveLocationSchedule(locationQuerySchedule));
-
-//        mPrefsManager.setString(PrefsKey.LOCATION_QUERY_SCHEDULE, locationQuerySchedule.toJson());
-
-
-//        //TODO: call this on the condition that the above fails
-//        //if request fails, use cached. we can still get location data even if we don't have connection to server
-//        LocationQuerySchedule locationQuerySchedule = LocationQuerySchedule.fromJson(mPrefsManager.getString(PrefsKey.LOCATION_QUERY_SCHEDULE));
-//        if(locationQuerySchedule != null)
-//        {
-//            mBus.post(new LocationEvent.ReceiveLocationSchedule(locationQuerySchedule));
-//        }
-
     }
 
-
-    /**
-     * TODO: TEMPORARY; EVENTUALLY JUST LISTEN TO SERVER'S SCHEDULE UPDATED EVENT
-     * @param event
-     */
-    @Subscribe
-    public void onReceiveUpdatedScheduledBookings(HandyEvent.ReceiveScheduledBookingsSuccess event)
-    {
-        //do nothing for the test build
-        //TODO: build the location schedule from these bookings and notify the background service
-//        LocationQuerySchedule locationQuerySchedule = LocationScheduleFactory.getLocationScheduleFromBookings(event.bookings);
-//
-//        //TODO: remove the below, test only!
-//        locationQuerySchedule = new LocationQuerySchedule();
-//
-//        //TODO: store this in shared prefs
-//        mPrefsManager.setString(PrefsKey.LOCATION_QUERY_SCHEDULE, locationQuerySchedule.toJson());
-//
-//        mBus.post(new LocationEvent.ReceiveLocationSchedule(locationQuerySchedule));
-    }
 }
