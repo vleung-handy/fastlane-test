@@ -13,7 +13,7 @@ import android.view.View;
 
 public class PercentageCircleView extends View
 {
-    private static final int STROKE_WIDTH_DP = 10;
+    private static final int STROKE_WIDTH_DP = 5;
     private static final float ONE_PERCENT = .01f;
 
     private Paint mPaintCircle = new Paint();
@@ -57,6 +57,12 @@ public class PercentageCircleView extends View
 
     private void init()
     {
+        mPaintCircle.setAntiAlias(true);
+        mPaintNumber.setAntiAlias(true);
+        mPaintSign.setAntiAlias(true);
+        mPaintBackground.setAntiAlias(true);
+        mPaintSubText.setAntiAlias(true);
+
         mPaintCircle.setColor(Color.GREEN);
         mPaintNumber.setColor(Color.GREEN);
         mPaintSign.setColor(Color.GREEN);
@@ -85,7 +91,7 @@ public class PercentageCircleView extends View
 
         canvas.drawText(Integer.toString((int) (mCurrentPercentage * 100)), xPos, yPos, mPaintNumber);
         canvas.drawText(mSign, xPos + mPaintSign.getTextSize() * digits, yPos - mPaintSign.getTextSize(), mPaintSign);
-        canvas.drawText(mSubText, xPos, yPos + mPaintSubText.getTextSize() * 1.5f, mPaintSubText);
+        canvas.drawText(mSubText, xPos, yPos + mPaintSubText.getTextSize() * 1.4f, mPaintSubText);
 
         if (mCurrentPercentage < mPercentage)
         {

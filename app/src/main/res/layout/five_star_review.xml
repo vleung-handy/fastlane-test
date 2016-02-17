@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
     >
 
     <LinearLayout
@@ -19,7 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/extra_margin"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             >
 
@@ -28,7 +29,7 @@
                 android:layout_width="@dimen/star_image_width_height"
                 android:layout_height="@dimen/star_image_width_height"
                 android:layout_marginEnd="@dimen/extra_margin"
-                android:layout_marginRight="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin_medium"
                 android:src="@drawable/ic_star"
                 />
 
@@ -37,7 +38,7 @@
                 android:layout_width="@dimen/star_image_width_height"
                 android:layout_height="@dimen/star_image_width_height"
                 android:layout_marginEnd="@dimen/extra_margin"
-                android:layout_marginRight="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin_medium"
                 android:src="@drawable/ic_star"
                 />
 
@@ -46,7 +47,7 @@
                 android:layout_width="@dimen/star_image_width_height"
                 android:layout_height="@dimen/star_image_width_height"
                 android:layout_marginEnd="@dimen/extra_margin"
-                android:layout_marginRight="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin_medium"
                 android:src="@drawable/ic_star"
                 />
 
@@ -55,7 +56,7 @@
                 android:layout_width="@dimen/star_image_width_height"
                 android:layout_height="@dimen/star_image_width_height"
                 android:layout_marginEnd="@dimen/extra_margin"
-                android:layout_marginRight="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin_medium"
                 android:src="@drawable/ic_star"
                 />
 
@@ -64,7 +65,7 @@
                 android:layout_width="@dimen/star_image_width_height"
                 android:layout_height="@dimen/star_image_width_height"
                 android:layout_marginEnd="@dimen/extra_margin"
-                android:layout_marginRight="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin_medium"
                 android:src="@drawable/ic_star"
                 />
 
@@ -74,7 +75,9 @@
             android:id="@+id/review_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/five_star_review_text_margin"
             tools:text="Jane is the best! Everything is spotless. We are happy with the cleaning."
+            android:lineSpacingExtra="@dimen/line_spacing_dashboard"
             android:textColor="@color/black"
             android:textSize="@dimen/medium_text_size"
             />
@@ -96,4 +99,4 @@
         android:background="@color/list_divider"
         />
 
-</FrameLayout>
+</LinearLayout>

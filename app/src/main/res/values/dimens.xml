@@ -101,8 +101,10 @@
     <dimen name="dashboard_chevron_width_height">18dp</dimen>
     <dimen name="dashboard_option_top_margin">1dp</dimen>
     <dimen name="dashboard_option_height">60dp</dimen>
-    <dimen name="percentage_circle_diameter">120dp</dimen>
+    <dimen name="percentage_circle_diameter">140dp</dimen>
     <dimen name="highlight_icon_size">16dp</dimen>
-    <dimen name="dashboard_feedback_padding">14dp</dimen>
+    <dimen name="dashboard_feedback_padding">16dp</dimen>
+    <dimen name="line_spacing_dashboard">3dp</dimen>
+    <dimen name="five_star_review_text_margin">5dp</dimen>
 
 </resources>

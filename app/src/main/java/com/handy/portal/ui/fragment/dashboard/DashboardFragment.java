@@ -18,6 +18,7 @@ import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -46,6 +47,11 @@ public class DashboardFragment extends ActionBarFragment
     DashboardOptionsPerformanceView mDashboardOptionsPerformanceView;
     @Bind(R.id.lifetime_rating_text)
     TextView mLifetimeRatingText;
+
+    @Bind(R.id.review_text)
+    TextView mReviewText;
+    @Bind(R.id.review_date)
+    TextView mReviewDate;
 
     @Override
     protected MainViewTab getTab()
@@ -99,6 +105,9 @@ public class DashboardFragment extends ActionBarFragment
         mRatingsProPerformanceView.setDate("January 5 - February 5, 2016");
 
         mRatingsProPerformanceView.setJobRatings("8", "10", "15");
+
+        mReviewText.setText("Jane is the best! We are happy with the cleaning.");
+        mReviewDate.setText("Sam, May 2015");
 
         mLifetimeRatingText.setText("4.8");
     }
