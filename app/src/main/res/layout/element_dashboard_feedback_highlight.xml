@@ -16,6 +16,7 @@
 
     <TextView
         android:id="@+id/feedback_highlight_text"
+        style="@style/CircularBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/extra_padding_medium"

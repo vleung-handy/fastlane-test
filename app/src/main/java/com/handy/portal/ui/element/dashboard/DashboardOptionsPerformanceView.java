@@ -25,9 +25,6 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     @Inject
     Bus mBus;
 
-    @Bind(R.id.five_star_review_text)
-    View fiveStarReviewText;
-
     public DashboardOptionsPerformanceView(final Context context)
     {
         super(context);

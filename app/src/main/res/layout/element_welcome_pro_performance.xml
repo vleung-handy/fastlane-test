@@ -5,7 +5,6 @@
               android:layout_height="wrap_content"
               android:background="@color/white"
               android:orientation="vertical"
-              android:paddingBottom="@dimen/extra_padding_xlarge"
               android:paddingTop="@dimen/extra_padding_xlarge"
     >
 
@@ -21,13 +20,17 @@
 
     <TextView
         android:id="@+id/pro_status_text"
-        style="@style/TextView"
+        style="@style/CircularBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="fonts/CircularStd-Medium.otf"
+        android:layout_marginBottom="@dimen/extra_margin_xlarge"
+        android:layout_marginTop="@dimen/lineSpacing"
         android:gravity="center_horizontal"
         android:textColor="@color/requested_green"
+        android:textSize="@dimen/large_text_size"
         tools:text="Things are lookin good!"
         />
+
+    <include layout="@layout/divider_dashboard"/>
 
 </LinearLayout>

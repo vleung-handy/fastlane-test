@@ -491,7 +491,7 @@
     <string name="feedback">Feedback</string>
     <string name="percentage">%</string>
     <string name="my_tier">My Tier</string>
-    <string name="current_28_days">Current 28 DAYS</string>
+    <string name="current_28_days">Current\n 28 DAYS</string>
     <string name="payment_tier_info">Your payment tier is determined by the total number of jobs you have completed in the last 28 days, and your average rating over the last 28 days. This means that your job count only includes jobs that were completed in the previous 28 days.</string>
     <string name="comma_formatted">%1$s, %2$s</string>
     <string name="tips_for_success">Tips for success</string>
