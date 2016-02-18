@@ -15,11 +15,11 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.adapter.RatingsPerformancePagerAdapter;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -80,20 +80,13 @@ public class DashboardFragment extends ActionBarFragment
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-        createDashboardView();
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
         getProviderEvaluation();
     }
 
-    private void createDashboardView()
+    private void createDashboardView(ProviderEvaluation providerEvaluation)
     {
         String welcomeString;
         Provider provider = mProviderManager.getCachedActiveProvider();
@@ -106,23 +99,29 @@ public class DashboardFragment extends ActionBarFragment
             welcomeString = getString(R.string.welcome_back);
         }
 
-        // TODO: Everything below is placeholder stuff
-        String status = "Things are lookin good!";
-        mWelcomeProPerformanceView.setDisplay(welcomeString, status);
-        mRatingsProPerformanceView.setAdapter(new RatingsPerformancePagerAdapter(getContext()));
+        mWelcomeProPerformanceView
+                .setDisplay(welcomeString, providerEvaluation.getRolling().getRatingEvaluation());
+        mRatingsProPerformanceView
+                .setAdapter(new RatingsPerformancePagerAdapter(getContext(), providerEvaluation));
 
         mReviewText.setText("Jane is the best! We are happy with the cleaning.");
         mReviewDate.setText("Sam, May 2015");
 
-        mLifetimeRatingText.setText("4.8");
+        mLifetimeRatingText.setText(Double.toString(providerEvaluation.getLifeTime().getProRating()));
     }
 
     @Subscribe
     public void onReceiveProviderEvaluationSuccess(ProviderDashboardEvent.ReceiveProviderEvaluationSuccess event)
     {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
         mDashboardLayout.setVisibility(View.VISIBLE);
         mFetchErrorView.setVisibility(View.GONE);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
+        if (event.providerEvaluation != null)
+        {
+            createDashboardView(event.providerEvaluation);
+        }
 
         /*
         ProviderEvaluation providerEvaluation = event.providerEvaluation;
@@ -150,9 +149,9 @@ public class DashboardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveProviderEvaluationFailure(ProviderDashboardEvent.ReceiveProviderEvaluationError event)
     {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mDashboardLayout.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.VISIBLE);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {

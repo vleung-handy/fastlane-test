@@ -60,9 +60,10 @@ public class RatingsProPerformanceView extends FrameLayout
         ButterKnife.bind(this);
 
         mPercentageCircleView.setColor(ContextCompat.getColor(getContext(), R.color.white),
+                ContextCompat.getColor(getContext(), R.color.bg_inactive_grey),
                 ContextCompat.getColor(getContext(), R.color.requested_green),
-                ContextCompat.getColor(getContext(), R.color.requested_green),
-                ContextCompat.getColor(getContext(), R.color.bg_inactive_grey));
+                ContextCompat.getColor(getContext(), R.color.handy_yellow),
+                ContextCompat.getColor(getContext(), R.color.error_red));
         mPercentageCircleView.setSign(getResources().getString(R.string.percentage));
         mPercentageCircleView.setSubText(getResources().getString(R.string.five_star));
 
@@ -71,11 +72,11 @@ public class RatingsProPerformanceView extends FrameLayout
         mTotalJobsView.setDescription(getResources().getString(R.string.total_jobs));
     }
 
-    public void setJobRatings(String fiveStarRatings, String ratedJobs, String totalJobs)
+    public void setJobRatings(int fiveStarRatings, int ratedJobs, int totalJobs)
     {
-        mFiveStarRatingsView.setNumber(fiveStarRatings);
-        mRatedJobsView.setNumber(ratedJobs);
-        mTotalJobsView.setNumber(totalJobs);
+        mFiveStarRatingsView.setNumber(Integer.toString(fiveStarRatings));
+        mRatedJobsView.setNumber(Integer.toString(ratedJobs));
+        mTotalJobsView.setNumber(Integer.toString(totalJobs));
     }
 
     public void setDate(String date)
@@ -86,5 +87,10 @@ public class RatingsProPerformanceView extends FrameLayout
     public void setTitle(final CharSequence text)
     {
         mTitle.setText(text);
+    }
+
+    public void setPercentage(float percentage)
+    {
+        mPercentageCircleView.setPercentage(percentage);
     }
 }

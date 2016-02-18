@@ -29,6 +29,9 @@ public class PercentageCircleView extends View
     private float mCurrentPercentage = 0;
     private float mPercentage = 1.0f;
     private int mSize = 0;
+    private int mGoodColor;
+    private int mAverageColor;
+    private int mBadColor;
 
     public PercentageCircleView(Context context)
     {
@@ -68,6 +71,10 @@ public class PercentageCircleView extends View
         mPaintSign.setColor(Color.GREEN);
         mPaintBackground.setColor(Color.WHITE);
         mPaintSubText.setColor(Color.GRAY);
+
+        mGoodColor = Color.GREEN;
+        mAverageColor = Color.YELLOW;
+        mBadColor = Color.RED;
     }
 
     @Override
@@ -103,15 +110,19 @@ public class PercentageCircleView extends View
     public void setPercentage(float percentage)
     {
         mPercentage = percentage;
+        resetColor();
     }
 
-    public void setColor(int backgroundColor, int circleColor, int numberColor, int subtitleColor)
+    public void setColor(int backgroundColor, int subtitleColor, int goodColor, int averageColor, int badColor)
     {
-        mPaintCircle.setColor(circleColor);
         mPaintBackground.setColor(backgroundColor);
-        mPaintNumber.setColor(numberColor);
-        mPaintSign.setColor(numberColor);
         mPaintSubText.setColor(subtitleColor);
+
+        mGoodColor = goodColor;
+        mAverageColor = averageColor;
+        mBadColor = badColor;
+
+        resetColor();
     }
 
     public void setSubText(String subText)
@@ -143,10 +154,32 @@ public class PercentageCircleView extends View
         mInnerBox = new RectF(stroke, stroke, mSize - stroke, mSize - stroke);
     }
 
+    private void resetColor()
+    {
+        if (mPercentage >= .8f)
+        {
+            mPaintCircle.setColor(mGoodColor);
+            mPaintNumber.setColor(mGoodColor);
+            mPaintSign.setColor(mGoodColor);
+        }
+        else if (mPercentage >= .6f)
+        {
+            mPaintCircle.setColor(mAverageColor);
+            mPaintNumber.setColor(mAverageColor);
+            mPaintSign.setColor(mAverageColor);
+        }
+        else
+        {
+            mPaintCircle.setColor(mBadColor);
+            mPaintNumber.setColor(mBadColor);
+            mPaintSign.setColor(mBadColor);
+        }
+    }
+
     private int getDigits(int num)
     {
         if (num == 0)
-            return 1;
+        { return 1; }
         else
         { return (int) (Math.log10(num) + 1); }
     }

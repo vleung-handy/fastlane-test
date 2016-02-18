@@ -232,10 +232,11 @@ public class ProviderManager
 
         // TODO: remove this fake data once the api is ready
         ProviderEvaluation providerEvaluation = new ProviderEvaluation(
-                new ProviderEvaluation.Rolling(8, 15, 10, 4.8, "Things are lookin good!",
+                new ProviderEvaluation.Rolling(10, 15, 5, 4.8, "Things are not lookin good!",
                         new Date(1000), new Date(10000), new ProviderEvaluation.Rolling.Tier("Tier 1", "15")),
-                new ProviderEvaluation.LifeTime(8, 15, 10, 4.8, "Things are lookin good!",
+                new ProviderEvaluation.LifeTime(8, 10, 7, 4.8, "Things are lookin good!",
                         new Date(1000), new Date(10000)), 4.8, "Yo he's good", new ArrayList<String>());
+
         mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
 //        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(null));
 //        mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
