@@ -11,25 +11,25 @@ import java.util.Map;
 
 public abstract class PushNotificationLog extends EventLog
 {
-    @SerializedName("push_id")
-    private String mPushId;
-    @SerializedName("push_type")
-    private String mPushType;
-    @SerializedName("push_bundle")
-    private Map<String, Object> mPushBundle;
+    @SerializedName("handy_push_uuid")
+    private String mHandyPushUuid;
+    @SerializedName("handy_push_type")
+    private String mHandyPushType;
+    @SerializedName("push_extras")
+    private Map<String, Object> mPushExtras;
 
     private static final String EVENT_CONTEXT = "push_notifications";
 
     public PushNotificationLog(final String eventType, final PushMessage pushMessage)
     {
         super(eventType, EVENT_CONTEXT);
-        mPushId = pushMessage.getCanonicalPushId();
         final Bundle pushBundle = pushMessage.getPushBundle();
-        mPushType = pushBundle.getString(BundleKeys.PUSH_TYPE);
-        mPushBundle = new HashMap<>(pushBundle.size());
+        mHandyPushUuid = pushBundle.getString(BundleKeys.HANDY_PUSH_UUID);
+        mHandyPushType = pushBundle.getString(BundleKeys.HANDY_PUSH_TYPE);
+        mPushExtras = new HashMap<>(pushBundle.size());
         for (final String key : pushBundle.keySet())
         {
-            mPushBundle.put(key, pushBundle.get(key));
+            mPushExtras.put(key, pushBundle.get(key));
         }
     }
 
