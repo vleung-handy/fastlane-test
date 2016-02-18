@@ -482,6 +482,7 @@
     <string name="welcome_back">Welcome back</string>
     <string name="welcome_back_formatted">Welcome back, %1$s</string>
     <string name="past_28_days">Past 28 days</string>
+    <string name="lifetime_rating">Lifetime Jobs Rated</string>
     <string name="five_star">5 stars</string>
     <string name="five_star_reviews">5 Star Reviews</string>
     <string name="five_star_ratings">5 star ratings</string>

@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment.dashboard;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,8 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
+import com.handy.portal.ui.adapter.RatingsPerformancePagerAdapter;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
-import com.handy.portal.ui.element.dashboard.RatingsProPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.DateTimeUtils;
@@ -41,8 +42,8 @@ public class DashboardFragment extends ActionBarFragment
     TextView mFetchErrorTextView;
     @Bind(R.id.welcome_pro_performance_view)
     WelcomeProPerformanceView mWelcomeProPerformanceView;
-    @Bind(R.id.ratings_performance_view)
-    RatingsProPerformanceView mRatingsProPerformanceView;
+    @Bind(R.id.ratings_performance_view_pager)
+    ViewPager mRatingsProPerformanceView;
     @Bind(R.id.dashboard_options_view)
     DashboardOptionsPerformanceView mDashboardOptionsPerformanceView;
     @Bind(R.id.lifetime_rating_text)
@@ -57,6 +58,13 @@ public class DashboardFragment extends ActionBarFragment
     protected MainViewTab getTab()
     {
         return MainViewTab.DASHBOARD;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setActionBar(R.string.my_performance, false);
     }
 
     @Nullable
@@ -82,7 +90,6 @@ public class DashboardFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.my_performance, false);
         getProviderEvaluation();
     }
 
@@ -102,9 +109,7 @@ public class DashboardFragment extends ActionBarFragment
         // TODO: Everything below is placeholder stuff
         String status = "Things are lookin good!";
         mWelcomeProPerformanceView.setDisplay(welcomeString, status);
-        mRatingsProPerformanceView.setDate("January 5 - February 5, 2016");
-
-        mRatingsProPerformanceView.setJobRatings("8", "10", "15");
+        mRatingsProPerformanceView.setAdapter(new RatingsPerformancePagerAdapter(getContext()));
 
         mReviewText.setText("Jane is the best! We are happy with the cleaning.");
         mReviewDate.setText("Sam, May 2015");

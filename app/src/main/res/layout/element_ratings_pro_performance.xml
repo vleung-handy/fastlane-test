@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginTop="@dimen/extra_margin_medium"
     android:background="@color/white"
     android:gravity="center"
@@ -17,14 +17,15 @@
         />
 
     <TextView
+        android:id="@+id/five_star_title"
         style="@style/CircularBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingTop="@dimen/dashboard_header_padding"
-        android:text="@string/past_28_days"
         android:textColor="@color/black"
         android:textSize="@dimen/dashboard_header_text_size"
+        tools:text="@string/past_28_days"
         />
 
     <TextView
