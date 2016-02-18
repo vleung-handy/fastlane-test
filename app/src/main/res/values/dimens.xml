@@ -104,5 +104,6 @@
     <dimen name="percentage_circle_diameter">120dp</dimen>
     <dimen name="highlight_icon_size">16dp</dimen>
     <dimen name="dashboard_feedback_padding">14dp</dimen>
+    <dimen name="dashboard_ratings_performance_height">380dp</dimen>
 
 </resources>

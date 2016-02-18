@@ -16,6 +16,8 @@ import butterknife.ButterKnife;
 
 public class RatingsProPerformanceView extends FrameLayout
 {
+    @Bind(R.id.five_star_title)
+    TextView mTitle;
     @Bind(R.id.five_star_ratings_view)
     JobRatingView mFiveStarRatingsView;
     @Bind(R.id.five_star_percentage_view)
@@ -79,5 +81,10 @@ public class RatingsProPerformanceView extends FrameLayout
     public void setDate(String date)
     {
         mDateText.setText(date);
+    }
+
+    public void setTitle(final CharSequence text)
+    {
+        mTitle.setText(text);
     }
 }
