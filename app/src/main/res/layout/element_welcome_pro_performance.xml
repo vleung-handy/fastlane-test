@@ -23,6 +23,7 @@
         style="@style/CircularBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/extra_margin_xlarge"
         android:layout_marginTop="@dimen/lineSpacing"
         android:gravity="center_horizontal"
         android:textColor="@color/requested_green"
@@ -30,11 +31,6 @@
         tools:text="Things are lookin good!"
         />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/extra_margin_xlarge"
-        android:background="@color/list_divider"
-        />
+    <include layout="@layout/divider_dashboard"/>
 
 </LinearLayout>

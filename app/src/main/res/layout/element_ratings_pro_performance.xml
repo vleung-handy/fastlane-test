@@ -3,18 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/extra_margin_medium"
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical"
     >
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/list_divider"
-        />
+    <include layout="@layout/divider_dashboard"/>
 
     <TextView
         android:id="@+id/five_star_title"
@@ -44,16 +40,11 @@
         android:id="@+id/five_star_percentage_view"
         android:layout_width="@dimen/percentage_circle_diameter"
         android:layout_height="@dimen/percentage_circle_diameter"
-        android:layout_marginBottom="@dimen/default_margin_x2"
+        android:layout_marginBottom="@dimen/percentage_circle_margin"
         android:layout_marginTop="@dimen/default_margin"
         />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/extra_margin_xlarge"
-        android:background="@color/list_divider"
-        />
+    <include layout="@layout/divider_dashboard"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,11 +77,6 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/extra_margin_xlarge"
-        android:background="@color/list_divider"
-        />
+    <include layout="@layout/divider_dashboard"/>
 
 </LinearLayout>
