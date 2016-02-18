@@ -59,7 +59,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                             @NonNull PushMessage pushMessage)
     {
         Bundle pushBundle = pushMessage.getPushBundle();
-        String type = pushBundle.getString(BundleKeys.PUSH_TYPE, "");
+        String type = pushBundle.getString(BundleKeys.HANDY_PUSH_TYPE, "");
         switch (type)
         {
             case TYPE_AUTO_CHECK_IN:
