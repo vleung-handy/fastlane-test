@@ -108,6 +108,7 @@
         android:id="@+id/reviews_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_list_entry"
         android:orientation="vertical"
         >
 
@@ -115,8 +116,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dashboard_option_height"
             android:layout_marginTop="@dimen/dashboard_option_top_margin"
-            android:background="@drawable/background_list_entry"
-            android:clickable="true"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             android:paddingTop="@dimen/extra_padding_xlarge"
@@ -159,7 +158,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical"
             android:paddingBottom="@dimen/extra_padding_xlarge"
             android:paddingLeft="@dimen/default_padding"
