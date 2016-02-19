@@ -108,6 +108,7 @@
         android:id="@+id/reviews_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_list_entry"
         android:orientation="vertical"
         >
 
@@ -115,8 +116,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dashboard_option_height"
             android:layout_marginTop="@dimen/dashboard_option_top_margin"
-            android:background="@drawable/background_list_entry"
-            android:clickable="true"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             android:paddingTop="@dimen/extra_padding_xlarge"
@@ -159,66 +158,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical"
             android:paddingBottom="@dimen/extra_padding_xlarge"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/extra_margin"
-                android:orientation="horizontal"
-                >
-
-                <ImageView
-                    android:id="@+id/first_star_image"
-                    android:layout_width="@dimen/star_image_width_height"
-                    android:layout_height="@dimen/star_image_width_height"
-                    android:layout_marginEnd="@dimen/extra_margin"
-                    android:layout_marginRight="@dimen/extra_margin_medium"
-                    android:src="@drawable/ic_star"
-                    />
-
-                <ImageView
-                    android:id="@+id/second_star_image"
-                    android:layout_width="@dimen/star_image_width_height"
-                    android:layout_height="@dimen/star_image_width_height"
-                    android:layout_marginEnd="@dimen/extra_margin"
-                    android:layout_marginRight="@dimen/extra_margin_medium"
-                    android:src="@drawable/ic_star"
-                    />
-
-                <ImageView
-                    android:id="@+id/third_star_image"
-                    android:layout_width="@dimen/star_image_width_height"
-                    android:layout_height="@dimen/star_image_width_height"
-                    android:layout_marginEnd="@dimen/extra_margin"
-                    android:layout_marginRight="@dimen/extra_margin_medium"
-                    android:src="@drawable/ic_star"
-                    />
-
-                <ImageView
-                    android:id="@+id/fourth_star_image"
-                    android:layout_width="@dimen/star_image_width_height"
-                    android:layout_height="@dimen/star_image_width_height"
-                    android:layout_marginEnd="@dimen/extra_margin"
-                    android:layout_marginRight="@dimen/extra_margin_medium"
-                    android:src="@drawable/ic_star"
-                    />
-
-                <ImageView
-                    android:id="@+id/five_star_image"
-                    android:layout_width="@dimen/star_image_width_height"
-                    android:layout_height="@dimen/star_image_width_height"
-                    android:layout_marginEnd="@dimen/extra_margin"
-                    android:layout_marginRight="@dimen/extra_margin_medium"
-                    android:src="@drawable/ic_star"
-                    />
-
-            </LinearLayout>
+            <include layout="@layout/element_five_stars"/>
 
             <TextView
                 android:id="@+id/review_text"
