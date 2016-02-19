@@ -33,6 +33,16 @@
                 android:layout_height="@dimen/dashboard_ratings_performance_height"
                 />
 
+            <!-- Negative margin hack hides the mysterious gray divider above this view-->
+            <com.handy.portal.ui.element.dashboard.CirclePageIndicatorView
+                android:id="@+id/circle_page_indicator_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/circle_page_indicator_height"
+                android:layout_marginTop="@dimen/circle_negative_margin"
+                />
+
+            <include layout="@layout/divider_dashboard"/>
+
             <com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView
                 android:id="@+id/dashboard_options_view"
                 android:layout_width="match_parent"
