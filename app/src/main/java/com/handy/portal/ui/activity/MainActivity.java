@@ -118,15 +118,12 @@ public class MainActivity extends BaseActivity
             if (getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
                 //don't want to show this dialog if it's already showing
             {
-                //check whether a block level (100m) accuracy setting or better is enabled
-                boolean blockLevelAccuracyOrBetterSettingEnabled;
+                //check whether location services setting is on
+                boolean locationServicesEnabled;
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                 {
                     int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-                    blockLevelAccuracyOrBetterSettingEnabled =
-                            (locationMode == Settings.Secure.LOCATION_MODE_BATTERY_SAVING
-                                    || locationMode == Settings.Secure.LOCATION_MODE_HIGH_ACCURACY
-                                    || locationMode == Settings.Secure.LOCATION_MODE_SENSORS_ONLY);
+                    locationServicesEnabled = locationMode != Settings.Secure.LOCATION_MODE_OFF;
                 }
                 else
                 {
@@ -134,10 +131,10 @@ public class MainActivity extends BaseActivity
                     String locationProviders =
                             Settings.Secure.getString(getContentResolver(),
                                     Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-                    blockLevelAccuracyOrBetterSettingEnabled = !TextUtils.isNullOrEmpty(locationProviders);
+                    locationServicesEnabled = !TextUtils.isNullOrEmpty(locationProviders);
                 }
 
-                if (!blockLevelAccuracyOrBetterSettingEnabled)
+                if (!locationServicesEnabled)
                 {
                     LocationSettingsBlockerDialogFragment locationSettingsBlockerDialogFragment
                             = new LocationSettingsBlockerDialogFragment();
