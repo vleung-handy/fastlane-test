@@ -352,11 +352,19 @@ public abstract class HandyEvent
     {
         private final Map<Date, List<Booking>> mDateToBookingMap;
 
+        /**
+         *
+         * @param dateToBookingMap should be without time
+         */
         public ReceiveScheduledBookingsBatchSuccess(Map<Date, List<Booking>> dateToBookingMap)
         {
             mDateToBookingMap = dateToBookingMap;
         }
 
+        /**
+         * these dates should be without time
+         * @return
+         */
         public Map<Date, List<Booking>> getDateToBookingMap()
         {
             return mDateToBookingMap;

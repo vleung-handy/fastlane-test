@@ -1,6 +1,5 @@
 package com.handy.portal.location;
 
-import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +18,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
+import com.handy.portal.util.SystemUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -85,18 +85,7 @@ public class LocationService extends Service
     //TODO: REMOVE this once we move isServiceRunning to a util
     public static boolean isRunning(Context context)
     {
-        return isServiceRunning(context, LocationService.class);
-    }
-
-    //TODO: move this to a util
-    private static boolean isServiceRunning(Context context, Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+        return SystemUtils.isServiceRunning(context, LocationService.class);
     }
 
     @Override

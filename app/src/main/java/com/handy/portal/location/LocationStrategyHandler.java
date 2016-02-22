@@ -1,10 +1,7 @@
 package com.handy.portal.location;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
-import android.os.BatteryManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -17,6 +14,7 @@ import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.SystemUtils;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -76,23 +74,10 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
                     return; //expired
                 }
                 LocationUpdate locationUpdate = LocationUpdate.from(location, mLocationQueryStrategy);
-                locationUpdate.setBatteryLevelPercent(getBatteryLevel());
+                locationUpdate.setBatteryLevelPercent(SystemUtils.getBatteryLevelPercent(mContext));
                 onNewLocationUpdate(locationUpdate);
             }
         };
-    }
-
-    //TODO: move this
-    private float getBatteryLevel() {
-        Intent batteryIntent = mContext.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-        if(level == -1 || scale == -1) {
-            return -1f; //unavailable
-        }
-
-        return ((float)level / (float)scale);
     }
 
     /**
