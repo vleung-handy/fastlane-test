@@ -102,8 +102,8 @@ public class MainActivity extends BaseActivity
      * called in onResume
      *
      * determines if,
-     * in kitkat and above: the user has the high accuracy setting enabled
-     * pre-kitkat: user has the gps setting on
+     * in kitkat and above: the user has the location setting on
+     * pre-kitkat: user has any location provider enabled
      *
      * if not, block them with a dialog until they do.
      */
