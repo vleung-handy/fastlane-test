@@ -29,7 +29,7 @@ public class RatingsPerformancePagerAdapter extends PagerAdapter
         // TODO: consider combine the code below once the final api is decided
         if (position == 0)
         {
-            ProviderEvaluation.Rolling rolling = mProviderEvaluation.getRolling();
+            ProviderEvaluation.Rating rolling = mProviderEvaluation.getRolling();
             view.setTitle(mContext.getString(R.string.past_28_days));
             view.setDate(mContext.getString(R.string.time_interval_formatted,
                     DateTimeUtils.formatDateMonthDay(rolling.getStartDate()),
@@ -42,7 +42,7 @@ public class RatingsPerformancePagerAdapter extends PagerAdapter
         }
         else if (position == 1)
         {
-            ProviderEvaluation.LifeTime lifeTime = mProviderEvaluation.getLifeTime();
+            ProviderEvaluation.Rating lifeTime = mProviderEvaluation.getLifeTime();
             view.setTitle(mContext.getString(R.string.lifetime_rating));
             view.setDate(mContext.getString(R.string.time_interval_formatted,
                     DateTimeUtils.formatDateMonthDay(lifeTime.getStartDate()),

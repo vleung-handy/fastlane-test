@@ -10,33 +10,44 @@ import java.util.List;
 public class ProviderEvaluation implements Serializable
 {
     @SerializedName("rolling")
-    private Rolling mRolling;
+    private Rating mRolling;
     @SerializedName("life_time")
-    private LifeTime mLifeTime;
+    private Rating mLifeTime;
+    @SerializedName("tier")
+    private Tier mTier;
     @SerializedName("danger_rating_threshold")
     private double mDangerRatingThreshold;
-    @SerializedName("five_star_rated_comment")
-    private String mFiveStarRatedComment;
-    @SerializedName("low_star_reasons")
-    private List<String> mLowStarReasons;
+    @SerializedName("five_star_ratings")
+    private List<ProviderRating> mFiveStarRatings;
+    @SerializedName("feedback")
+    private List<ProviderFeedback> mProviderFeedback;
 
-    public ProviderEvaluation(final Rolling rolling, final LifeTime lifeTime, final double dangerRatingThreshold, final String fiveStarRatedComment, final List<String> lowStarReasons)
+    public ProviderEvaluation(
+            final Rating rolling, final Rating lifeTime, final Tier tier,
+            final double dangerRatingThreshold, final List<ProviderRating> fiveStarRatings,
+            final List<ProviderFeedback> providerFeedback)
     {
         mRolling = rolling;
         mLifeTime = lifeTime;
+        mTier = tier;
         mDangerRatingThreshold = dangerRatingThreshold;
-        mFiveStarRatedComment = fiveStarRatedComment;
-        mLowStarReasons = lowStarReasons;
+        mFiveStarRatings = fiveStarRatings;
+        mProviderFeedback = providerFeedback;
     }
 
-    public Rolling getRolling()
+    public Rating getRolling()
     {
         return mRolling;
     }
 
-    public LifeTime getLifeTime()
+    public Rating getLifeTime()
     {
         return mLifeTime;
+    }
+
+    public Tier getTier()
+    {
+        return mTier;
     }
 
     public double getDangerRatingThreshold()
@@ -44,59 +55,17 @@ public class ProviderEvaluation implements Serializable
         return mDangerRatingThreshold;
     }
 
-    public String getFiveStarRatedComment()
+    public List<ProviderRating> getFiveStarRatings()
     {
-        return mFiveStarRatedComment;
+        return mFiveStarRatings;
     }
 
-    public List<String> getLowStarReasons()
+    public List<ProviderFeedback> getProviderFeedback()
     {
-        return mLowStarReasons;
+        return mProviderFeedback;
     }
 
-    public static class Rolling extends LifeTime
-    {
-        @SerializedName("tier")
-        private Tier mTier;
-
-        public Rolling(final int ratedBookingCount, final int totalBookingCount, final int fiveStarRatedBookingCount, final double proRating, final String ratingEvaluation, final Date startDate, final Date endDate, final Tier tier)
-        {
-            super(ratedBookingCount, totalBookingCount, fiveStarRatedBookingCount, proRating, ratingEvaluation, startDate, endDate);
-            mTier = tier;
-        }
-
-        public Tier getTier()
-        {
-            return mTier;
-        }
-
-        public static class Tier
-        {
-            public Tier(final String name, final String hourlyRate)
-            {
-                mName = name;
-                mHourlyRate = hourlyRate;
-            }
-
-            @SerializedName("name")
-            private String mName;
-            @SerializedName("hourly_rate")
-            private String mHourlyRate;
-
-            public String getName()
-            {
-                return mName;
-            }
-
-            public String getHourlyRate()
-            {
-                return mHourlyRate;
-            }
-        }
-    }
-
-
-    public static class LifeTime
+    public static class Rating
     {
         @SerializedName("rated_booking_count")
         private int mRatedBookingCount;
@@ -106,20 +75,26 @@ public class ProviderEvaluation implements Serializable
         private int mFiveStarRatedBookingCount;
         @SerializedName("pro_rating")
         private double mProRating;
-        @SerializedName("rating_evaluation")
-        private String mRatingEvaluation;
+        @SerializedName("status")
+        private String mStatus;
+        @SerializedName("feedback")
+        private String mFeedback;
         @SerializedName("start_date")
         private Date mStartDate;
         @SerializedName("end_date")
         private Date mEndDate;
 
-        public LifeTime(final int ratedBookingCount, final int totalBookingCount, final int fiveStarRatedBookingCount, final double proRating, final String ratingEvaluation, final Date startDate, final Date endDate)
+        public Rating(
+                final int ratedBookingCount, final int totalBookingCount,
+                final int fiveStarRatedBookingCount, final double proRating, final String status,
+                final String feedback, final Date startDate, final Date endDate)
         {
             mRatedBookingCount = ratedBookingCount;
             mTotalBookingCount = totalBookingCount;
             mFiveStarRatedBookingCount = fiveStarRatedBookingCount;
             mProRating = proRating;
-            mRatingEvaluation = ratingEvaluation;
+            mStatus = status;
+            mFeedback = feedback;
             mStartDate = startDate;
             mEndDate = endDate;
         }
@@ -144,9 +119,14 @@ public class ProviderEvaluation implements Serializable
             return mProRating;
         }
 
-        public String getRatingEvaluation()
+        public String getStatus()
         {
-            return mRatingEvaluation;
+            return mStatus;
+        }
+
+        public String getFeedback()
+        {
+            return mFeedback;
         }
 
         public Date getStartDate()
@@ -160,4 +140,28 @@ public class ProviderEvaluation implements Serializable
         }
     }
 
+
+    public static class Tier
+    {
+        @SerializedName("name")
+        private String mName;
+        @SerializedName("hourly_rate_in_cents")
+        private int mHourlyRate;
+
+        public Tier(final String name, final int hourlyRate)
+        {
+            mName = name;
+            mHourlyRate = hourlyRate;
+        }
+
+        public String getName()
+        {
+            return mName;
+        }
+
+        public int getHourlyRate()
+        {
+            return mHourlyRate;
+        }
+    }
 }

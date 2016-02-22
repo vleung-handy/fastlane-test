@@ -63,15 +63,12 @@ public class DashboardFeedbackView extends FrameLayout
     public void setDisplay(@NonNull final ProviderFeedback feedback)
     {
         mTitle.setText(feedback.getTitle());
-        mDescription.setText(feedback.getFeedback());
-        for (String highlight : feedback.getFeedbackHighlights())
-        {
-            mHighlights.addView(new DashboardFeedbackHighlightView(getContext(), highlight));
-        }
+        mDescription.setText(feedback.getSubtitle());
+        mHighlights.addView(new DashboardFeedbackHighlightView(getContext(), feedback.getSubtitle()));
 
-        for (String tip : feedback.getFeedbackTips())
+        for (ProviderFeedback.FeedbackTip tip : feedback.getFeedbackTips())
         {
-            mTips.addView(new BulletTextView(getContext(), tip));
+            mTips.addView(new BulletTextView(getContext(), tip.getData()));
         }
     }
 }
