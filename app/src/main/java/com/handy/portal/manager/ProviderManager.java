@@ -26,7 +26,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -231,11 +230,18 @@ public class ProviderManager
         String providerId = "";
 
         // TODO: remove this fake data once the api is ready
+        List<ProviderRating> providerRatingList = new ArrayList<>();
+        ProviderRating providerRating = new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job");
+        providerRatingList.add(providerRating);
+
+        List<ProviderFeedback> feedbackList = new ArrayList<>();
+        feedbackList.add(new ProviderFeedback("Good stuff!", "Good Stuff", new ArrayList<ProviderFeedback.FeedbackTip>()));
+
         ProviderEvaluation providerEvaluation = new ProviderEvaluation(
-                new ProviderEvaluation.Rolling(10, 15, 5, 4.8, "Things are not lookin good!",
-                        new Date(1000), new Date(10000), new ProviderEvaluation.Rolling.Tier("Tier 1", "15")),
-                new ProviderEvaluation.LifeTime(8, 10, 7, 4.8, "Things are lookin good!",
-                        new Date(1000), new Date(10000)), 4.8, "Yo he's good", new ArrayList<String>());
+                new ProviderEvaluation.Rating(10, 15, 5, 4.8, "Things are not lookin good!", "No feedback",
+                        new Date(1000), new Date(10000)),
+                new ProviderEvaluation.Rating(10, 15, 5, 4.8, "Things are not lookin good!", "No feedback",
+                        new Date(1000), new Date(10000)), new ProviderEvaluation.Tier("Tier 1", 15), 3.8, providerRatingList, feedbackList);
 
         mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
 //        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(null));
@@ -301,13 +307,13 @@ public class ProviderManager
     {
         String providerId = "";
         // TODO: replace with real api call before merge into develop
+        List<ProviderFeedback.FeedbackTip> feedbackTips = new ArrayList<>();
+        feedbackTips.add(new ProviderFeedback.FeedbackTip("Floors weren't cleaned", "General Cleanliness"));
+        feedbackTips.add(new ProviderFeedback.FeedbackTip("develop a cleaning plan and follow it", "use the customer checklist as a guide"));
+
         List<ProviderFeedback> providerFeedback = new ArrayList<>();
         providerFeedback.add(new ProviderFeedback("Quality of service", "3 customers have indicated that they were disappointed by the quality of your cleaning.",
-                Arrays.asList("Floors weren't cleaned", "General Cleanliness"),
-                Arrays.asList("develop a cleaning plan and follow it", "use the customer checklist as a guide", "don't skip the basic, like the floors, kitchen, and bathroom")));
-        providerFeedback.add(new ProviderFeedback("Quality of service", "3 customers have indicated that they were disappointed by the quality of your cleaning.",
-                Arrays.asList("Floors weren't cleaned", "General Cleanliness"),
-                Arrays.asList("develop a cleaning plan and follow it", "use the customer checklist as a guide", "don't skip the basic, like the floors, kitchen, and bathroom")));
+                feedbackTips));
         mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackSuccess(providerFeedback));
 //        mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError(null));
 //        mDataManager.getProviderFeedback(providerId, new DataManager.Callback<List<ProviderFeedback>>()

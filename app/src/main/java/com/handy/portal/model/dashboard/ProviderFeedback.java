@@ -10,18 +10,15 @@ public class ProviderFeedback implements Serializable
 {
     @SerializedName("title")
     private String mTitle;
-    @SerializedName("feedback")
-    private String mFeedback;
-    @SerializedName("feedback_highlights")
-    private List<String> mFeedbackHighlights;
+    @SerializedName("subtitle")
+    private String mSubtitle;
     @SerializedName("feedback_tips")
-    private List<String> mFeedbackTips;
+    private List<FeedbackTip> mFeedbackTips;
 
-    public ProviderFeedback(final String title, final String feedback, final List<String> feedbackHighlights, final List<String> feedbackTips)
+    public ProviderFeedback(final String title, final String subtitle, final List<FeedbackTip> feedbackTips)
     {
         mTitle = title;
-        mFeedback = feedback;
-        mFeedbackHighlights = feedbackHighlights;
+        mSubtitle = subtitle;
         mFeedbackTips = feedbackTips;
     }
 
@@ -30,18 +27,37 @@ public class ProviderFeedback implements Serializable
         return mTitle;
     }
 
-    public String getFeedback()
+    public String getSubtitle()
     {
-        return mFeedback;
+        return mSubtitle;
     }
 
-    public List<String> getFeedbackHighlights()
-    {
-        return mFeedbackHighlights;
-    }
-
-    public List<String> getFeedbackTips()
+    public List<FeedbackTip> getFeedbackTips()
     {
         return mFeedbackTips;
+    }
+
+    public static class FeedbackTip
+    {
+        @SerializedName("type")
+        private String mType;
+        @SerializedName("data")
+        private String mData;
+
+        public FeedbackTip(final String type, final String data)
+        {
+            mType = type;
+            mData = data;
+        }
+
+        public String getType()
+        {
+            return mType;
+        }
+
+        public String getData()
+        {
+            return mData;
+        }
     }
 }

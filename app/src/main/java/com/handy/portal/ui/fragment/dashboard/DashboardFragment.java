@@ -100,7 +100,7 @@ public class DashboardFragment extends ActionBarFragment
         }
 
         mWelcomeProPerformanceView
-                .setDisplay(welcomeString, providerEvaluation.getRolling().getRatingEvaluation());
+                .setDisplay(welcomeString, providerEvaluation.getRolling().getStatus());
         mRatingsProPerformanceView
                 .setAdapter(new RatingsPerformancePagerAdapter(getContext(), providerEvaluation));
 
