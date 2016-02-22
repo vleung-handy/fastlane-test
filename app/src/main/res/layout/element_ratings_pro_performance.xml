@@ -77,6 +77,4 @@
 
     </LinearLayout>
 
-    <include layout="@layout/divider_dashboard"/>
-
 </LinearLayout>

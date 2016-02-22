@@ -17,6 +17,7 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.adapter.RatingsPerformancePagerAdapter;
+import com.handy.portal.ui.element.dashboard.CirclePageIndicatorView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -44,6 +45,8 @@ public class DashboardFragment extends ActionBarFragment
     WelcomeProPerformanceView mWelcomeProPerformanceView;
     @Bind(R.id.ratings_performance_view_pager)
     ViewPager mRatingsProPerformanceView;
+    @Bind(R.id.circle_page_indicator_view)
+    CirclePageIndicatorView mCirclePageIndicatorView;
     @Bind(R.id.dashboard_options_view)
     DashboardOptionsPerformanceView mDashboardOptionsPerformanceView;
     @Bind(R.id.lifetime_rating_text)
@@ -104,6 +107,9 @@ public class DashboardFragment extends ActionBarFragment
         mRatingsProPerformanceView
                 .setAdapter(new RatingsPerformancePagerAdapter(getContext(), providerEvaluation));
 
+        mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceView);
+
+        //TODO: Remove hardcoding for the review
         mReviewText.setText("Jane is the best! We are happy with the cleaning.");
         mReviewDate.setText("Sam, May 2015");
 
