@@ -52,10 +52,10 @@ public class LocationScheduleFactory
         Date oneHourBeforeBooking = calendar.getTime();
         locationQueryStrategy.setEndDate(oneHourBeforeBooking)
                 .setBookingId(booking.getId())
-                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE)
-                .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 15)
-                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY)
-                .setDistanceFilterMeters(100)
+                .setLocationPollingIntervalSeconds(30)
+                .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY)
+                .setDistanceFilterMeters(50)
                 .setEventName("three_hours_out");  //TODO: remove magic strings
         locationQueryStrategies.add(locationQueryStrategy);
 
@@ -71,7 +71,7 @@ public class LocationScheduleFactory
                 .setEndDate(fifteenMinutesBeforeBooking)
                 .setLocationPollingIntervalSeconds(30)
                 .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
-                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY)
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY)
                 .setDistanceFilterMeters(50)
                 .setEventName("one_hour_out");
         locationQueryStrategies.add(locationQueryStrategy);

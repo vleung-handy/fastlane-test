@@ -97,7 +97,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
      *
      * TODO: super crude, clean up
      */
-    private void scanSchedule() throws SecurityException
+    private void scanSchedule()
     {
         //look for any strategies within scope and starts them if not already started
         ListIterator<LocationQueryStrategy> locationQueryStrategyListIterator
@@ -116,19 +116,14 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 //starts this strategy
                 startStrategy(strategy);
             }
-            else //outside of scope
+            else if(currentTimeMillis < strategy.getStartDate().getTime()) //current time is before start date
             {
-                if(currentTimeMillis < strategy.getStartDate().getTime()) //current time is before start date
-                {
-                    //start date is in the future
-                    scheduleAlarm(strategy);
-                    Log.i(getClass().getName(), "Scheduled an alarm for " + strategy.getStartDate().toString());
-                    break; //only want one alarm a time and don't need to look further into future
-                }
-                else //current time past end date
-                {
-                }
+                //start date is in the future
+                scheduleAlarm(strategy);
+                Log.i(getClass().getName(), "Scheduled an alarm for " + strategy.getStartDate().toString());
+                break; //only want one alarm a time and don't need to look further into future
             }
+
 
         }
 
@@ -144,7 +139,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         return mLatestActiveLocationStrategyHandler.getLocationQueryStrategy();
     }
 
-    public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy) throws SecurityException
+    public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy) throws SecurityException, IllegalStateException
     {
         Log.i(getClass().getName(), "starting strategy...");
         final LocationStrategyHandler locationStrategyHandler =
