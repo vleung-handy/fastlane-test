@@ -1,11 +1,14 @@
 package com.handy.portal.ui.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
@@ -14,9 +17,12 @@ import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
+import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
+import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.NotificationUtils;
+import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -50,6 +56,7 @@ public class MainActivity extends BaseActivity
         configManager.prefetch();
         providerManager.prefetch();
         checkForTerms();
+        checkRequiredLocationSettings();
         checkIfNotificationIsEnabled();
 
         bus.post(new LogEvent.SendLogsEvent());
@@ -89,6 +96,59 @@ public class MainActivity extends BaseActivity
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
+    /**
+     * called in onResume
+     *
+     * determines if,
+     * in kitkat and above: the user has the location setting on
+     * pre-kitkat: user has any location provider enabled
+     *
+     * if not, block them with a dialog until they do.
+     */
+    private void checkRequiredLocationSettings()
+    {
+        /*
+        because this is called each time this resumes,
+        putting it in a try/catch block to be super safe to prevent crashes
+         */
+        try
+        {
+            if (getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
+                //don't want to show this dialog if it's already showing
+            {
+                //check whether location services setting is on
+                boolean locationServicesEnabled;
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                {
+                    int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+                    locationServicesEnabled = locationMode != Settings.Secure.LOCATION_MODE_OFF;
+                }
+                else
+                {
+                    //in versions before KitKat, must check for a different settings key
+                    String locationProviders =
+                            Settings.Secure.getString(getContentResolver(),
+                                    Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                    locationServicesEnabled = !TextUtils.isNullOrEmpty(locationProviders);
+                }
+
+                if (!locationServicesEnabled)
+                {
+                    LocationSettingsBlockerDialogFragment locationSettingsBlockerDialogFragment
+                            = new LocationSettingsBlockerDialogFragment();
+                    FragmentUtils.safeLaunchDialogFragment(locationSettingsBlockerDialogFragment, this,
+                            LocationSettingsBlockerDialogFragment.FRAGMENT_TAG);
+                }
+            }
+
+        }
+        catch(Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+
     }
 
     @Subscribe
