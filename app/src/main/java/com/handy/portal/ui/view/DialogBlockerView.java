@@ -22,6 +22,7 @@ public class DialogBlockerView extends LinearLayout
     TextView mMessage;
     @Bind(R.id.dialog_blocker_action_button)
     Button mActionButton;
+
     public DialogBlockerView(final Context context)
     {
         super(context);
