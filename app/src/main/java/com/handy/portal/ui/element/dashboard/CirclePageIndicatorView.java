@@ -221,13 +221,14 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+    { }
+
+    @Override
+    public void onPageSelected(int position)
     {
         mCurrentPage = position;
         invalidate();
     }
-
-    @Override
-    public void onPageSelected(int position) { }
 
     public void setOrientation(int orientation)
     {
