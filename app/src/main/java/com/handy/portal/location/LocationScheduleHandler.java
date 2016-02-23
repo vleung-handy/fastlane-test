@@ -242,20 +242,23 @@ public class LocationScheduleHandler extends BroadcastReceiver
      */
     public void destroy()
     {
-        Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        mAlarmManager.cancel(pendingIntent);
-
-        sendAllQueuedLocationUpdates();
-        stopLocationUpdates();
         try
         {
+            Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            mAlarmManager.cancel(pendingIntent);
+
+            sendAllQueuedLocationUpdates();
+            stopLocationUpdates();
+
             //TODO: consider not putting this here
             mContext.unregisterReceiver(this);
+
         }
-        catch (IllegalArgumentException e)
+        catch (Exception e)
         {
-            //not registered
+            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 

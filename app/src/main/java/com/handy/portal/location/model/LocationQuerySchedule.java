@@ -5,10 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.util.DateTimeUtils;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedList;
 
 /**
@@ -30,26 +28,6 @@ public class LocationQuerySchedule implements Parcelable
     @SerializedName("location_query_strategies")
     LinkedList<LocationQueryStrategy> mLocationQueryStrategies;
 
-    //TODO: remove this eventually, FOR TESTING ONLY
-    public LocationQuerySchedule()
-    {
-        Date date = new Date();
-        Date date2 = new Date();
-        date2.setTime(date2.getTime() + DateTimeUtils.MILLISECONDS_IN_SECOND * 10);
-        Date date3 = new Date();
-        date3.setTime(date3.getTime() + DateTimeUtils.MILLISECONDS_IN_SECOND * 20);
-        Date date4 = new Date();
-        date4.setTime(date4.getTime() + DateTimeUtils.MILLISECONDS_IN_30_MINS * 3);
-        LocationQueryStrategy locationQueryStrategies[] =
-                new LocationQueryStrategy[]{
-                        new LocationQueryStrategy("1", date, 2, 1, 60, LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY),
-                        new LocationQueryStrategy("2", date2, 60, 30, 120, LocationQueryStrategy.ACCURACY_HIGH_PRIORITY),
-//                        new LocationQueryStrategy(date3, 1, 1, 2),
-//                        new LocationQueryStrategy(date4, 30, 1, 2)
-                };
-        mLocationQueryStrategies = new LinkedList<>(Arrays.asList(locationQueryStrategies));
-    }
-
     protected LocationQuerySchedule(Parcel in)
     {
         mLocationQueryStrategies = new LinkedList<>(Arrays.asList(in.createTypedArray(LocationQueryStrategy.CREATOR)));
@@ -66,7 +44,6 @@ public class LocationQuerySchedule implements Parcelable
         return 0;
     }
 
-    //TODO: something wrong with parcelling
     @Override
     public void writeToParcel(final Parcel dest, final int flags)
     {

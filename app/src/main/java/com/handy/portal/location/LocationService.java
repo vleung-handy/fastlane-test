@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
@@ -93,11 +92,15 @@ public class LocationService extends Service
     {
         Log.i(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
 
-        Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
+//        Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
 
         super.onStartCommand(intent, flags, startId);
 
         mBus.register(this);
+        if(mGoogleApiClient == null)
+        {
+            return START_NOT_STICKY;
+        }
         mGoogleApiClient.connect();
 
 //        //TODO: remove, for toggle testing only
