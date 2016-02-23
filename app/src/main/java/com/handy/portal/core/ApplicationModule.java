@@ -36,6 +36,7 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -152,6 +153,7 @@ import retrofit.converter.GsonConverter;
         NotificationsListView.class,
         NotificationsListEntryView.class,
         BookingDetailsJobInstructionsView.class,
+        HandyPushReceiver.class,
 })
 public final class ApplicationModule
 {
