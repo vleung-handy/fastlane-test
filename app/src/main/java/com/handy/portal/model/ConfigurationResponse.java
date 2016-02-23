@@ -30,8 +30,7 @@ public class ConfigurationResponse
 
     public boolean isLocationScheduleServiceEnabled()
     {
-        return true; //TODO: test only, remove
-//        return mLocationScheduleServiceEnabled;
+        return mLocationScheduleServiceEnabled;
     }
 
     public boolean isComplementaryJobsEnabled()

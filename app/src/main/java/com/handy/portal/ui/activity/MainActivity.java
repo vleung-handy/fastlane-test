@@ -49,14 +49,17 @@ public class MainActivity extends BaseActivity
     //TODO: move this somewhere else?
     private void startLocationService()
     {
-        if(mConfigManager.getConfigurationResponse() == null
-                || !mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
-        {
-            return;
-        }
-
         Intent i = new Intent(this, LocationService.class);
-        startService(i);
+        if(mConfigManager.getConfigurationResponse() != null
+                && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
+        {
+            startService(i);
+        }
+        else
+        {
+            //nothing will happen if it's not running
+            stopService(i);
+        }
         //at most one service instance will be running
 
     }
