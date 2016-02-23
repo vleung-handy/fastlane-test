@@ -341,9 +341,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager(final DataManager dataManager)
+    final ConfigManager provideConfigManager(final Bus bus, final DataManager dataManager)
     {
-        return new ConfigManager(dataManager);
+        return new ConfigManager(bus, dataManager);
     }
 
     @Provides

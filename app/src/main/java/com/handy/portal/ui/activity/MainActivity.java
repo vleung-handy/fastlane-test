@@ -19,6 +19,7 @@ import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.NotificationUtils;
+import com.handy.portal.util.SystemUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -43,17 +44,21 @@ public class MainActivity extends BaseActivity
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setFullScreen();
 
-        startLocationService();
+        startLocationServiceIfNecessary();
     }
 
     //TODO: move this somewhere else?
-    private void startLocationService()
+    private void startLocationServiceIfNecessary()
     {
         Intent i = new Intent(this, LocationService.class);
         if(mConfigManager.getConfigurationResponse() != null
                 && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
         {
-            startService(i);
+            //nothing will happen if it's already running
+            if(!SystemUtils.isServiceRunning(this, LocationService.class))
+            {
+                startService(i);
+            }
         }
         else
         {
@@ -157,6 +162,17 @@ public class MainActivity extends BaseActivity
             checkIfUserShouldUpdatePaymentInfo();
             //have to put this check here due to weird startup flow - after terms are accepted, app switches back to SplashActivity and this activity is relaunched and this function will be called again
         }
+    }
+
+    /**
+     * TODO: this is temporary to handle case in which config response comes back later
+     * ideally, we should probably block the app until the config response is received
+     * @param event
+     */
+    @Subscribe
+    public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
+    {
+        startLocationServiceIfNecessary();
     }
 
     @Subscribe

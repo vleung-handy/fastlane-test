@@ -15,6 +15,7 @@ import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.CheckoutRequest;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -80,6 +81,20 @@ public abstract class HandyEvent
         }
     }
 
+//Config
+    public static class ReceiveConfigurationSuccess extends HandyEvent
+    {
+        private final ConfigurationResponse mConfigurationResponse;
+        public ReceiveConfigurationSuccess(ConfigurationResponse configurationResponse)
+        {
+            mConfigurationResponse = configurationResponse;
+        }
+
+        public ConfigurationResponse getConfigurationResponse()
+        {
+            return mConfigurationResponse;
+        }
+    }
 //Navigation
 
     public static class NavigateToTab extends HandyEvent
