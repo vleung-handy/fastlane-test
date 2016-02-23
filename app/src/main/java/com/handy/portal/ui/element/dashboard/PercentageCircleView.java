@@ -6,21 +6,24 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
+
+import com.handy.portal.util.FontUtils;
 
 public class PercentageCircleView extends View
 {
     private static final int STROKE_WIDTH_DP = 5;
     private static final float ONE_PERCENT = .01f;
 
-    private Paint mPaintCircle = new Paint();
-    private Paint mPaintNumber = new Paint();
-    private Paint mPaintBackground = new Paint();
-    private Paint mPaintSubText = new Paint();
-    private Paint mPaintSign = new Paint();
+    private Paint mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mPaintNumber = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mPaintBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mPaintSubText = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mPaintSign = new Paint(Paint.ANTI_ALIAS_FLAG);
     private RectF mOuterBox = new RectF();
     private RectF mInnerBox = new RectF();
     private String mSubText = "";
@@ -60,12 +63,6 @@ public class PercentageCircleView extends View
 
     private void init()
     {
-        mPaintCircle.setAntiAlias(true);
-        mPaintNumber.setAntiAlias(true);
-        mPaintSign.setAntiAlias(true);
-        mPaintBackground.setAntiAlias(true);
-        mPaintSubText.setAntiAlias(true);
-
         mPaintCircle.setColor(Color.GREEN);
         mPaintNumber.setColor(Color.GREEN);
         mPaintSign.setColor(Color.GREEN);
@@ -75,6 +72,11 @@ public class PercentageCircleView extends View
         mGoodColor = Color.GREEN;
         mAverageColor = Color.YELLOW;
         mBadColor = Color.RED;
+
+        Typeface tf = Typeface.createFromAsset(getResources().getAssets(), FontUtils.CIRCULAR_BOOK);
+        mPaintNumber.setTypeface(tf);
+        mPaintSign.setTypeface(tf);
+        mPaintSubText.setTypeface(tf);
     }
 
     @Override
