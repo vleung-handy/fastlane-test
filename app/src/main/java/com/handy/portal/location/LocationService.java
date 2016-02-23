@@ -95,12 +95,11 @@ public class LocationService extends Service
 //        Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
 
         super.onStartCommand(intent, flags, startId);
-
-        mBus.register(this);
         if(mGoogleApiClient == null)
         {
             return START_NOT_STICKY;
         }
+        mBus.register(this);
         mGoogleApiClient.connect();
 
 //        //TODO: remove, for toggle testing only
