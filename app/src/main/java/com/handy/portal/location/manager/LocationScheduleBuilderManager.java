@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,14 +46,21 @@ public class LocationScheduleBuilderManager
     @Subscribe
     public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
     {
-        clearScheduleBuilderData();
+//        clearScheduleBuilderData(); //actually don't clear out everything, we might just want updates
+        mRequestedDatesForScheduleSet.clear();
         final List<Date> requestedDates = getDatesForSchedule();
 
+        Map<Date, List<Booking>> newBookingDateMapForSchedule = new HashMap<>();
         for(Date d : requestedDates)
         {
             mRequestedDatesForScheduleSet.add(d);
+            newBookingDateMapForSchedule.put(d, mBookingDateMapForSchedule.get(d));
             Log.i(getClass().getName(), "requested date: " + d);
         }
+        mBookingDateMapForSchedule = newBookingDateMapForSchedule;
+        //i want to easily get rid of the entries in the date booking map that aren't dates i requested here
+        //but keep the ones that are of dates, for memory purposes.
+        //probably not necessary. might remove this later.
 
         mBus.post(new HandyEvent.RequestScheduledBookingsBatch(requestedDates, true));
     }
@@ -80,21 +88,33 @@ public class LocationScheduleBuilderManager
         mBookingDateMapForSchedule.clear();
     }
 
-    //TODO: need to better handle refetching when force refresh
+    /**
+     * receives a list of all the bookings for the dates requested
+     *
+     * @param event
+     */
     @Subscribe
     public void onReceiveScheduledBookingsBatchSuccess(HandyEvent.ReceiveScheduledBookingsBatchSuccess event)
     {
-        boolean responseHasDateInScope = false;
-        for(Date date : event.getDateToBookingMap().keySet())
+        boolean responseHasUpdatedBookings = false;
+        for(Date date : mRequestedDatesForScheduleSet)
         {
-            if(mRequestedDatesForScheduleSet.contains(date))
+            List<Booking> bookingList = event.getDateToBookingMap().get(date);
+            List<Booking> currentBookingListForDate = mBookingDateMapForSchedule.get(date);
+            if (!bookingListStartEndDatesEqual(currentBookingListForDate, bookingList))
+                //dates are different
             {
-                List<Booking> bookingList = event.getDateToBookingMap().get(date);
+                Log.i(getClass().getName(), "got updated bookings! will need to update schedule");
                 mBookingDateMapForSchedule.put(date, bookingList);
-                responseHasDateInScope = true;
+                responseHasUpdatedBookings = true;
+            }
+            else //dates are equal, don't need to reschedule
+            {
+                Log.i(getClass().getName(), "booking dates haven't changed. not updating schedule");
             }
         }
-        if(responseHasDateInScope)
+
+        if(responseHasUpdatedBookings)
         {
             List<Booking> allBookings = new LinkedList<>();
             for(List<Booking> bookingList : mBookingDateMapForSchedule.values())
@@ -103,6 +123,29 @@ public class LocationScheduleBuilderManager
             }
             mBus.post(new LocationEvent.ReceiveBookingsForLocationScheduleSuccess(allBookings));
         }
+    }
+
+    private boolean bookingListStartEndDatesEqual(List<Booking> bookingList1,
+                                                  List<Booking> bookingList2)
+    {
+        if(bookingList1 == bookingList2) return true;
+        if(bookingList1 == null || bookingList2 == null || bookingList1.size() != bookingList2.size()) return false;
+
+        //they have the same size
+        ListIterator<Booking> iterator1 = bookingList1.listIterator();
+        ListIterator<Booking> iterator2 = bookingList2.listIterator();
+        while(iterator1.hasNext())
+        {
+            Booking booking1 = iterator1.next();
+            Booking booking2 = iterator2.next();
+            if(!booking1.getStartDate().equals(booking2.getStartDate())
+                    || !booking1.getEndDate().equals(booking2.getEndDate()))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
