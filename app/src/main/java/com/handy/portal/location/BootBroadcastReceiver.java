@@ -8,11 +8,11 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 /**
+ *  TODO: not tested enough, going dark for now
  * starts location service on device boot up
  */
 public class BootBroadcastReceiver extends BroadcastReceiver
 {
-    //TODO: not tested enough, going dark for now
     static final String ACTION_BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
     @Override
     public void onReceive(final Context context, final Intent intent)

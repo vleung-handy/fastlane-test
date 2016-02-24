@@ -48,26 +48,10 @@ public class LocationService extends Service
     GoogleApiClient mGoogleApiClient;
     LocationScheduleHandler mLocationScheduleHandler;
 
-    @VisibleForTesting
-    static LocationService mInstance; //for toggle testing only
-
-    @VisibleForTesting
-    public static LocationService getInstance() //for toggle testing only
-    {
-        return mInstance;
-    }
-
-    @VisibleForTesting
-    public LocationQueryStrategy getLatestActiveLocationQueryStrategy()
-    {
-        if(mLocationScheduleHandler == null) return null;
-        return mLocationScheduleHandler.getLatestActiveLocationStrategy();
-    }
-
     @Override
     public void onCreate()
     {
-        mInstance = this; //for testing
+        mInstance = this; //for testing only
 
         Thread.currentThread().setUncaughtExceptionHandler(this);
         super.onCreate();
@@ -115,15 +99,8 @@ public class LocationService extends Service
     public void onDestroy()
     {
         mBus.unregister(this);
-        try
-        {
-            unregisterReceiver(mLocationScheduleHandler);
-            mLocationScheduleHandler.destroy();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        mLocationScheduleHandler.destroy();
+
         mGoogleApiClient.disconnect();
         Log.i(getClass().getName(), "service destroyed");
         super.onDestroy();
@@ -232,5 +209,23 @@ public class LocationService extends Service
     {
         Log.i(LocationService.class.getName(), "GoogleApiClient connection has failed");
 
+    }
+
+    //EVERYTHING BELOW IS FOR TESTING ONLY!
+
+    @VisibleForTesting
+    private static LocationService mInstance; //for toggle testing only
+
+    @VisibleForTesting
+    public static LocationService getInstance() //for toggle testing only
+    {
+        return mInstance;
+    }
+
+    @VisibleForTesting
+    public LocationQueryStrategy getLatestActiveLocationQueryStrategy()
+    {
+        if(mLocationScheduleHandler == null) return null;
+        return mLocationScheduleHandler.getLatestActiveLocationStrategy();
     }
 }

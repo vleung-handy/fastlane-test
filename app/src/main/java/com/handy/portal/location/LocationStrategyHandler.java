@@ -88,9 +88,14 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
      */
     public boolean isStrategyExpired()
     {
+        //TODO use a util instead
         return System.currentTimeMillis() > mLocationQueryStrategy.getEndDate().getTime();
     }
 
+    /**
+     * builds a location request for the location api call
+     * @return
+     */
     private LocationRequest createLocationRequest()
     {
         int priority = 0;
@@ -125,6 +130,11 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
         return locationRequest;
     }
 
+    /**
+     * asks the location api for location updates
+     * @param googleApiClient
+     * @throws SecurityException
+     */
     public void requestLocationUpdates(GoogleApiClient googleApiClient) throws SecurityException
     {
         Log.i(getClass().getName(), "requesting location updates for " + mLocationQueryStrategy.toString());
@@ -151,7 +161,9 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     }
 
     /**
-     * builds the batch update request model from the queue
+     * builds the batch update request model from the queue of updates
+     *
+     * this is what will be posted to the server
      *
      * @return
      */
@@ -166,8 +178,13 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
         return locationBatchUpdate;
     }
 
+    /**
+     * check if it's time to post an update to the server
+     * @return
+     */
     private boolean shouldPostUpdate()
     {
+        //TODO use a util instead
         long serverPollingIntervalMs = mLocationQueryStrategy.getServerPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
         return (System.currentTimeMillis() - mTimestampLastUpdatePostedMs >= serverPollingIntervalMs);
     }
@@ -200,12 +217,13 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
         }
     }
 
-    //TODO: test only, will possibly remove
     public interface LocationStrategyCallbacks
     {
         void onLocationStrategyExpired(LocationStrategyHandler locationStrategyHandler);
         void onLocationBatchUpdateReady(LocationBatchUpdate locationBatchUpdate);
+
         void onLocationUpdate(Location locationUpdate);
-        //want to notify the manager of updates so it can keep track of last location. not sure if i want to keep this
+        //want to notify the manager of updates so it can keep track of last location, for backwards compatibility with current check-in flow.
+        //not sure if i want to keep this
     }
 }

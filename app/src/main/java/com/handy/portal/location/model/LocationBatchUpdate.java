@@ -17,6 +17,10 @@ public class LocationBatchUpdate
         mLocationUpdates = locationUpdates;
     }
 
+    /**
+     * TODO for testing/debugging purposes only
+     * @return
+     */
     @Override
     public String toString()
     {

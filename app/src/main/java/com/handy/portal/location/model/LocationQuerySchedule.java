@@ -3,7 +3,6 @@ package com.handy.portal.location.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Arrays;
@@ -66,19 +65,19 @@ public class LocationQuerySchedule implements Parcelable
         }
     };
 
-    public static LocationQuerySchedule fromJson(String jsonString)
-    {
-        if(jsonString == null) return null;
-        Gson gson = new Gson();
-        LocationQuerySchedule locationQuerySchedule = gson.fromJson(jsonString, LocationQuerySchedule.class);
-        return locationQuerySchedule;
-    }
-
-    public final String toJson()
-    {
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
+//    public static LocationQuerySchedule fromJson(String jsonString)
+//    {
+//        if(jsonString == null) return null;
+//        Gson gson = new Gson();
+//        LocationQuerySchedule locationQuerySchedule = gson.fromJson(jsonString, LocationQuerySchedule.class);
+//        return locationQuerySchedule;
+//    }
+//
+//    public final String toJson()
+//    {
+//        Gson gson = new Gson();
+//        return gson.toJson(this);
+//    }
 
     /**
      * for debugging purposes only

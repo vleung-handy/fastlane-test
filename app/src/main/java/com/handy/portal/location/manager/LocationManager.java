@@ -4,12 +4,12 @@ import android.location.Location;
 import android.util.Log;
 
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -38,7 +38,7 @@ public class LocationManager
     private Location mLastKnownLocation; //for backwards compatibility with check-in flow
 
     //TODO: adjust these params
-    private final long LAST_UPDATE_TIME_INTERVAL_MILLISEC = 2 * DateTimeUtils.MILLISECONDS_IN_SECOND;
+//    private final long LAST_UPDATE_TIME_INTERVAL_MILLISEC = 2 * DateTimeUtils.MILLISECONDS_IN_SECOND;
     private static final int MAX_LOCATION_UPDATE_BATCHES_TO_RETRY_AT_ONCE = 5;
 
     //don't care about order of batch update
@@ -58,7 +58,7 @@ public class LocationManager
         mPrefsManager = prefsManager;
         LocationScheduleBuilderManager mLocationScheduleBuilderManager =
                 new LocationScheduleBuilderManager(mBus); //TODO: this means we don't have to provide in app module. is that better?
-        //TODO: should disable the above if toggle-testing
+        //TODO: should comment out the above if toggle-testing
     }
 
     /**
@@ -81,7 +81,10 @@ public class LocationManager
         mLastKnownLocation = event.getLocationUpdate();
     }
 
-    //TODO: if this fails due to no network connection, then on network reconnect, need to determine what requests in the queue need to be sent
+    /**
+     * will send location batch updates to the server
+     * @param event
+     */
     @Subscribe
     public void onReceiveLocationBatchUpdate(final LocationEvent.SendGeolocationRequest event)
     {
@@ -94,9 +97,9 @@ public class LocationManager
     /**
      * only retrying once, but this is called when network is reconnected or got a success response from server
      */
-    public void resendFailedLocationBatchUpdates() //need to test this
+    public void resendFailedLocationBatchUpdates()
     {
-        //TODO: can send this at every LENGTH/SAMPLE LENGTH intervals to get a sampling
+        //TODO: if ordered, can send this at every LENGTH/SAMPLE LENGTH intervals to get a sampling
         Iterator<LocationBatchUpdate> setIterator = mFailedLocationBatchUpdates.iterator();
         int maxBatchesToRetryAtOnce = MAX_LOCATION_UPDATE_BATCHES_TO_RETRY_AT_ONCE;
         while (setIterator.hasNext() && maxBatchesToRetryAtOnce > 0)
@@ -109,14 +112,24 @@ public class LocationManager
         }
     }
 
+    /**
+     * network got re-established. resend the failed updates
+     * @param event
+     */
     @Subscribe
-    public void onNetworkReconnected(final LocationEvent.OnNetworkReconnected event) //TODO: will move this event to right class
+    public void onNetworkReconnected(final HandyEvent.OnNetworkReconnected event)
     {
         Log.i(getClass().getName(), "on network reconnected");
         resendFailedLocationBatchUpdates();
         //request immediate location updates?
     }
 
+    /**
+     * sends location batch updates to the server
+     *
+     * @param locationBatchUpdate
+     * @param retryUpdateIfFailed true if the request should be retried on network reconnect
+     */
     private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
     {
         Log.i(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
@@ -133,8 +146,6 @@ public class LocationManager
             }
         }
 
-        //TODO: put this update in the request queue
-
         mDataManager.sendGeolocation(providerId, locationBatchUpdate, new DataManager.Callback<SuccessWrapper>()
         {
             @Override
@@ -143,7 +154,6 @@ public class LocationManager
                 if (response.getSuccess())
                 {
                     Log.i(getClass().getName(), "Successfully sent location to server");
-//                    mBus.post(new LocationEvent.SendGeolocationSuccess());
                     resendFailedLocationBatchUpdates(); //now is probably a good time to retry
                     //calling here in addition to on network reconnected because we're retrying a limited number of batches at once
                 }
@@ -159,17 +169,24 @@ public class LocationManager
                 Log.i(getClass().getName(), "Failed to send location to server");
                 if (retryUpdateIfFailed && error.getType().equals(DataManager.DataManagerError.Type.NETWORK))
                 {
-                    //don't want to retry if it's a server problem or our problem
+                    //only retry when network issue. don't want to retry if it's a server problem or our problem
                     addToLocationBatchUpdateFailedList(locationBatchUpdate);
                 }
             }
         });
     }
 
+    /**
+     * adds the failed location batch update request to the failed set
+     * @param locationBatchUpdate
+     */
     private void addToLocationBatchUpdateFailedList(LocationBatchUpdate locationBatchUpdate)
     {
         if(mFailedLocationBatchUpdates.size() >= MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE)
         {
+            /**
+             * if the size of the failed list is greater than max, remove the first one before adding another
+             */
             //TODO: what is the price of this? should we remove more than one if costly? should we use a structure that doesn't require iterator?
             Iterator<LocationBatchUpdate> iterator = mFailedLocationBatchUpdates.iterator();
             if(iterator.hasNext())

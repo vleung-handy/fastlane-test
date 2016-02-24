@@ -304,7 +304,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
         //TODO: this seems to be contaminating location service data, need to test
 //        Location newLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        //Keeping old value in the event we have a failed location update
+////        Keeping old value in the event we have a failed location update
 //        if (newLocation != null)
 //        {
 //            lastLocation = newLocation;

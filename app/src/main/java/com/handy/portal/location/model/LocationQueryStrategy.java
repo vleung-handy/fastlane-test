@@ -2,6 +2,7 @@ package com.handy.portal.location.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.util.DateTimeUtils;
@@ -231,8 +232,14 @@ public class LocationQueryStrategy implements Parcelable
      * @param locationQueryStrategy
      * @return
      */
-    public boolean equals(LocationQueryStrategy locationQueryStrategy)
+    public boolean equals(@NonNull LocationQueryStrategy locationQueryStrategy)
     {
-        return this == locationQueryStrategy; //TODO: actually implement
+        return (mEndDate.equals(locationQueryStrategy.getEndDate())
+                && getStartDate().equals(locationQueryStrategy.getStartDate())
+                && mLocationPollingIntervalSeconds==locationQueryStrategy.getLocationPollingIntervalSeconds()
+                && mServerPollingIntervalSeconds==locationQueryStrategy.getServerPollingIntervalSeconds()
+                && mDistanceFilterMeters==locationQueryStrategy.getDistanceFilterMeters()
+                && (mBookingId != null && mBookingId.equals(locationQueryStrategy.getBookingId()))
+                && (mEventName != null && mEventName.equals(locationQueryStrategy.getEventName())));
     }
 }

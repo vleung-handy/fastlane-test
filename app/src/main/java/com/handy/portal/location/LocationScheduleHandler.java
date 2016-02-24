@@ -18,6 +18,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
@@ -127,15 +128,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
         }
 
         //TODO: when the schedule is completely expired, we want to request a schedule for the next N days in case the user never opens the app
-    }
-
-    //for testing
-    LocationStrategyHandler mLatestActiveLocationStrategyHandler;
-
-    @VisibleForTesting
-    public LocationQueryStrategy getLatestActiveLocationStrategy()
-    {
-        return mLatestActiveLocationStrategyHandler.getLocationQueryStrategy();
     }
 
     public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy) throws SecurityException, IllegalStateException
@@ -262,7 +254,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     }
 
     /**
-     * TODO: super crude, clean up
+     * TODO: clean
      * @param strategy
      */
     private void scheduleAlarm(@NonNull LocationQueryStrategy strategy)
@@ -291,11 +283,12 @@ public class LocationScheduleHandler extends BroadcastReceiver
         if(args == null)
         {
             //shouldn't happen
-            Log.e(getClass().getName(), "Args is null");
+            Log.e(getClass().getName(), "Args is null on receive alarm");
             return;
         }
         if(intent.getAction() == null)
         {
+            Log.e(getClass().getName(), "Intent action is null on receive alarm");
             return;
         }
 
@@ -305,52 +298,56 @@ public class LocationScheduleHandler extends BroadcastReceiver
             case LOCATION_SCHEDULE_ALARM_BROADCAST_ID:
                 Log.i(getClass().getName(), "Woke up");
                 LocationQueryStrategy locationQueryStrategy = args.getParcelable(BUNDLE_EXTRA_LOCATION_STRATEGY);
-                if(locationQueryStrategy != null)
-                {
-                    Log.i(getClass().getName(), "Got location strategy " + locationQueryStrategy.toString());
-                    try
-                    {
-                        startStrategy(locationQueryStrategy);
-                        scanSchedule();
-                    }
-                    catch (Exception e)
-                    {
-                        //in case it throws security exception or google client not connected
-                        e.printStackTrace();
-                        Crashlytics.logException(e);
-                    }
-                }
+                onLocationStrategyAlarmTriggered(locationQueryStrategy);
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
+                onConnectivityChanged(context);
+                break;
+        }
+    }
 
-                //the below line doesn't actually work as expected
-//                boolean hasConnectivity = !args.getBoolean(ConnectivityManager.EXTRA_NO_CONNECTIVITY);
+    private void onLocationStrategyAlarmTriggered(LocationQueryStrategy locationQueryStrategy)
+    {
+        if(locationQueryStrategy == null) return;
+        Log.i(getClass().getName(), "Got location strategy " + locationQueryStrategy.toString());
+        try
+        {
+            startStrategy(locationQueryStrategy);
+            scanSchedule();
+        }
+        catch (Exception e)
+        {
+            //in case it throws security exception or google client not connected
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
+    }
 
-                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                boolean hasConnectivity = networkInfo != null
-                        && networkInfo.isConnected()
-                        && networkInfo.isAvailable();
+    private void onConnectivityChanged(@NonNull Context context)
+    {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean hasConnectivity = networkInfo != null
+                && networkInfo.isConnected()
+                && networkInfo.isAvailable();
 
                 /*
                 NOTE: if i have both data and wifi on, and then turn wifi off,
                 hasConnectivity will still be true
                  */
-                Log.i(getClass().getName(), "has network connectivity: " + hasConnectivity);
-                if(hasConnectivity && !mPreviouslyHadNetworkConnectivity)
-                    //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
-                {
-                    bus.post(new LocationEvent.OnNetworkReconnected());
-                    rerequestLocationUpdatesForActiveStrategies();
-                    //immediately request location updates
-                    //this will be much easier when we only have one location listener
-                    //which will we do when we don't have overlapping strategies anymore
-                }
-
-                //this is a hack to prevent multiple network reconnected triggers, should think of a better solution
-                mPreviouslyHadNetworkConnectivity = hasConnectivity;
-                break;
+        Log.i(getClass().getName(), "has network connectivity: " + hasConnectivity);
+        if(hasConnectivity && !mPreviouslyHadNetworkConnectivity)
+        //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
+        {
+            bus.post(new HandyEvent.OnNetworkReconnected());
+            rerequestLocationUpdatesForActiveStrategies();
+            //immediately request location updates
+            //this will be much easier when we only have one location listener
+            //which will we do when we don't have overlapping strategies anymore
         }
+
+        //this is a hack to prevent multiple network reconnected triggers, should think of a better solution
+        mPreviouslyHadNetworkConnectivity = hasConnectivity;
     }
 
     @Override
@@ -363,5 +360,15 @@ public class LocationScheduleHandler extends BroadcastReceiver
     public void onLocationUpdate(final Location location)
     {
         bus.post(new LocationEvent.LocationUpdated(location));
+    }
+
+
+    //EVERYTHING BELOW THIS LINE IS FOR TESTING ONLY
+    LocationStrategyHandler mLatestActiveLocationStrategyHandler;
+
+    @VisibleForTesting
+    public LocationQueryStrategy getLatestActiveLocationStrategy()
+    {
+        return mLatestActiveLocationStrategyHandler.getLocationQueryStrategy();
     }
 }

@@ -13,12 +13,9 @@ import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,22 +32,10 @@ import java.util.Set;
  */
 public class LocationScheduleBuilderManager
 {
-    private final int NUM_DAYS_FOR_LOCATION_SCHEDULE = 3; //MUST be > 0
+    private final int NUM_DAYS_FOR_LOCATION_SCHEDULE = 2; //MUST be > 0
 
     //TODO: wrap these
     private final Set<Date> mRequestedDatesForScheduleSet = new HashSet<>(); //should never change
-
-    /**
-     * a map of dates (only ones we care about) to list of bookings
-     *
-     * this should be kept up to date. used to build a schedule
-     */
-    private Map<Date, List<Booking>> mBookingDateMapForSchedule = new HashMap<>();
-
-    /**
-     * this should be updated whenever the map above gets updated
-     */
-    private LocationQuerySchedule mCachedLocationQuerySchedule;
 
     private final Bus mBus;
     public LocationScheduleBuilderManager(Bus bus)
@@ -72,14 +57,11 @@ public class LocationScheduleBuilderManager
         mRequestedDatesForScheduleSet.clear();
         final List<Date> requestedDates = getDatesForSchedule();
 
-        Map<Date, List<Booking>> newBookingDateMapForSchedule = new HashMap<>();
         for(Date d : requestedDates)
         {
             mRequestedDatesForScheduleSet.add(d);
-            newBookingDateMapForSchedule.put(d, mBookingDateMapForSchedule.get(d));
             Log.i(getClass().getName(), "requested date: " + d);
         }
-        mBookingDateMapForSchedule = newBookingDateMapForSchedule;
         //i want to easily get rid of the entries in the date booking map that aren't dates i requested here
         //but keep the ones that are of dates, for memory purposes.
         //probably not necessary. TODO might remove this and related stuff later.
@@ -114,8 +96,6 @@ public class LocationScheduleBuilderManager
     private void clearScheduleBuilderData()
     {
         mRequestedDatesForScheduleSet.clear();
-        mBookingDateMapForSchedule.clear();
-        mCachedLocationQuerySchedule = null;
     }
 
     /**
@@ -130,62 +110,42 @@ public class LocationScheduleBuilderManager
     public void onReceiveScheduledBookingsBatchSuccess(HandyEvent.ReceiveScheduledBookingsBatchSuccess event)
     {
 
-        boolean responseHasUpdatedBookings = false;
+        List<Booking> bookingListForSchedule = new LinkedList<>();
         for(Date date : mRequestedDatesForScheduleSet)
         {
             List<Booking> bookingList = event.getDateToBookingMap().get(date);
-            List<Booking> currentBookingListForDate = mBookingDateMapForSchedule.get(date);
-
-            if (!bookingListStartEndDatesEqual(currentBookingListForDate, bookingList))
-                //dates are different
+            if(bookingList != null)
             {
-                Log.i(getClass().getName(), "got updated bookings! will need to update schedule");
-                mBookingDateMapForSchedule.put(date, bookingList);
-                responseHasUpdatedBookings = true;
-            }
-            else //dates are equal, don't need to reschedule
-            {
-                Log.i(getClass().getName(), "booking dates haven't changed. not updating schedule");
+                bookingListForSchedule.addAll(bookingList);
             }
         }
-
-        if(responseHasUpdatedBookings || mCachedLocationQuerySchedule == null)
-        {
-            List<Booking> allBookings = new LinkedList<>();
-            for(List<Booking> bookingList : mBookingDateMapForSchedule.values())
-            {
-                allBookings.addAll(bookingList);
-            }
-            //build a new schedule from these bookings
-            mCachedLocationQuerySchedule = LocationScheduleFactory.getLocationScheduleFromBookings(allBookings);
-        }
-
-        //TODO: refine this
-        mBus.post(new LocationEvent.ReceiveLocationSchedule(mCachedLocationQuerySchedule));
+        //TODO: no optimizations for now because not enough testing time, and we will be switching over to a new endpoint
+        LocationQuerySchedule locationQuerySchedule = LocationScheduleFactory.getLocationScheduleFromBookings(bookingListForSchedule);
+        mBus.post(new LocationEvent.ReceiveLocationSchedule(locationQuerySchedule));
     }
 
-    private boolean bookingListStartEndDatesEqual(List<Booking> bookingList1,
-                                                  List<Booking> bookingList2)
-    {
-        if(bookingList1 == bookingList2) return true;
-        if(bookingList1 == null || bookingList2 == null || bookingList1.size() != bookingList2.size()) return false;
-
-        //they have the same size
-        ListIterator<Booking> iterator1 = bookingList1.listIterator();
-        ListIterator<Booking> iterator2 = bookingList2.listIterator();
-        while(iterator1.hasNext())
-        {
-            Booking booking1 = iterator1.next();
-            Booking booking2 = iterator2.next();
-            if(!booking1.getStartDate().equals(booking2.getStartDate())
-                    || !booking1.getEndDate().equals(booking2.getEndDate()))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
+//    private boolean bookingListStartEndDatesEqual(List<Booking> bookingList1,
+//                                                  List<Booking> bookingList2)
+//    {
+//        if(bookingList1 == bookingList2) return true;
+//        if(bookingList1 == null || bookingList2 == null || bookingList1.size() != bookingList2.size()) return false;
+//
+//        //they have the same size
+//        ListIterator<Booking> iterator1 = bookingList1.listIterator();
+//        ListIterator<Booking> iterator2 = bookingList2.listIterator();
+//        while(iterator1.hasNext())
+//        {
+//            Booking booking1 = iterator1.next();
+//            Booking booking2 = iterator2.next();
+//            if(!booking1.getStartDate().equals(booking2.getStartDate())
+//                    || !booking1.getEndDate().equals(booking2.getEndDate()))
+//            {
+//                return false;
+//            }
+//        }
+//
+//        return true;
+//    }
 
     /**
      * this event is fired from booking manager when ANY booking is updated! on job claim, removed, etc

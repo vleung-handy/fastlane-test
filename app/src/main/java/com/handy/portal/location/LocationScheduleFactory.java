@@ -21,7 +21,7 @@ import java.util.List;
 public class LocationScheduleFactory
 {
     /*
-    using the strategies defined in:
+    using the strategies defined in the below as a guide:
 
     https://handybook.atlassian.net/wiki/display/engineeringwiki/Polling+Provider+Geolocation
      */
@@ -40,7 +40,7 @@ public class LocationScheduleFactory
         Calendar calendar = Calendar.getInstance();
 
         /**
-         * 3 - 1 hours before a booking, poll every 15 minutes
+         * 3 - 1 hours before a booking
          */
         calendar.setTime(booking.getStartDate());
         calendar.add(Calendar.HOUR_OF_DAY, -3);
@@ -93,7 +93,7 @@ public class LocationScheduleFactory
         locationQueryStrategies.add(locationQueryStrategy);
 
         /**
-         *     During the first hour of booking, poll every 10 minutes
+         *     During the first hour of booking
          */
 
         locationQueryStrategy = new LocationQueryStrategy()
@@ -112,7 +112,7 @@ public class LocationScheduleFactory
         locationQueryStrategies.add(locationQueryStrategy);
 
         /**
-         *     Starting 15 minutes before booking end, poll every 10 minutes for half an hour
+         *     Starting 15 minutes before booking end
          */
 
         locationQueryStrategy = new LocationQueryStrategy();
