@@ -36,11 +36,10 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogEndpoint;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.AutoCheckInService;
@@ -160,6 +159,7 @@ import retrofit.converter.GsonConverter;
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
         BookingDetailsJobInstructionsView.class,
+        HandyPushReceiver.class,
 })
 public final class ApplicationModule
 {
@@ -234,7 +234,7 @@ public final class ApplicationModule
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
                         request.addQueryParam("apiver", "1");
                         request.addQueryParam("app_device_id", getDeviceId());
-                        request.addQueryParam("app_device_model", getDeviceName());
+                        request.addQueryParam("app_device_model", BaseApplication.getDeviceModel());
                         request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
@@ -287,30 +287,6 @@ public final class ApplicationModule
         return restAdapter.create(StripeRetrofitService.class);
     }
 
-    //log events
-    @Provides
-    @Singleton
-    final EventLogEndpoint provideLogEventsEndpoint()
-    {
-        return new EventLogEndpoint(context);
-    }
-
-    @Provides
-    @Singleton
-    final EventLogService provideLogEventsService(final EventLogEndpoint endpoint)
-    {
-        final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
-
-        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor()
-                {
-                    @Override
-                    public void intercept(RequestFacade request) { }
-                }).setClient(new OkClient(okHttpClient)).build();
-        return restAdapter.create(EventLogService.class);
-    }
-
     @Provides
     @Singleton
     final Bus provideBus(final Mixpanel mixpanel)
@@ -329,11 +305,10 @@ public final class ApplicationModule
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
-                                         final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else?
-                                         final EventLogService eventLogService
+                                         final StripeRetrofitService stripeService //TODO: refactor and move somewhere else?
     )
     {
-        return new BaseDataManager(service, endpoint, stripeService, eventLogService);
+        return new BaseDataManager(service, endpoint, stripeService);
     }
 
     @Provides
@@ -512,21 +487,6 @@ public final class ApplicationModule
     {
         return Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-    }
-
-    private String getDeviceName()
-    {
-        final String manufacturer = Build.MANUFACTURER;
-        final String model = Build.MODEL;
-
-        if (model.startsWith(manufacturer))
-        {
-            return model;
-        }
-        else
-        {
-            return manufacturer + " " + model;
-        }
     }
 
     @Provides

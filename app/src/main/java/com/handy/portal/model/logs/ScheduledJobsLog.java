@@ -8,10 +8,9 @@ public class ScheduledJobsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "scheduled_jobs";
 
-    public ScheduledJobsLog(
-            String providerId, String versionTrack, String eventType)
+    public ScheduledJobsLog(String eventType)
     {
-        super(providerId, versionTrack, eventType, EVENT_CONTEXT);
+        super(eventType, EVENT_CONTEXT);
     }
 
     public static class DateClicked extends ScheduledJobsLog
@@ -23,10 +22,9 @@ public class ScheduledJobsLog extends EventLog
         @SerializedName("job_count")
         private int mJobCount;
 
-        public DateClicked(
-                String providerId, String versionTrack, Date date, int jobCount)
+        public DateClicked(Date date, int jobCount)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mDate = date;
             mJobCount = jobCount;
         }
@@ -53,10 +51,10 @@ public class ScheduledJobsLog extends EventLog
         private int mListNumber;
 
         public Clicked(
-                String providerId, String versionTrack, String bookingId, String serviceId,
-                int regionId, String zipCode, boolean requested, Date dateStart, int listNumber)
+                String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
+                Date dateStart, int listNumber)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mServiceId = serviceId;
             mRegionId = regionId;
@@ -89,10 +87,10 @@ public class ScheduledJobsLog extends EventLog
 
 
         public RemoveJobClicked(
-                String providerId, String versionTrack, String bookingId, String serviceId,
-                int regionId, String zipCode, boolean requested, Date dateStart, String warning)
+                String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
+                Date dateStart, String warning)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
 
             mBookingId = bookingId;
             mServiceId = serviceId;
@@ -126,10 +124,10 @@ public class ScheduledJobsLog extends EventLog
 
 
         public RemoveJobConfirmed(
-                String providerId, String versionTrack, String bookingId, String serviceId,
-                int regionId, String zipCode, boolean requested, Date dateStart, String warning)
+                String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
+                Date dateStart, String warning)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mServiceId = serviceId;
             mRegionId = regionId;
@@ -160,10 +158,10 @@ public class ScheduledJobsLog extends EventLog
 
 
         public RemoveJobError(
-                String providerId, String versionTrack, String bookingId, String serviceId,
-                int regionId, String zipCode, boolean requested, Date dateStart)
+                String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
+                Date dateStart)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mServiceId = serviceId;
             mRegionId = regionId;
@@ -178,9 +176,9 @@ public class ScheduledJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "customer_rating_shown";
 
-        public CustomerRatingShown(String providerId, String versionTrack)
+        public CustomerRatingShown()
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
         }
     }
 
@@ -192,9 +190,9 @@ public class ScheduledJobsLog extends EventLog
         @SerializedName("rating")
         private int mRating;
 
-        public CustomerRatingSubmitted(String providerId, String versionTrack, int rating)
+        public CustomerRatingSubmitted(int rating)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mRating = rating;
         }
     }
@@ -207,9 +205,9 @@ public class ScheduledJobsLog extends EventLog
         @SerializedName("booking_id")
         private String mBookingId;
 
-        public BookingInstructionsSeen(String providerId, String versionTrack, String bookingId)
+        public BookingInstructionsSeen(String bookingId)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
         }
     }
@@ -222,9 +220,9 @@ public class ScheduledJobsLog extends EventLog
         @SerializedName("booking_id")
         private String mBookingId;
 
-        public SupportSelected(String providerId, String versionTrack, String bookingId)
+        public SupportSelected(String bookingId)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
         }
     }
@@ -240,9 +238,9 @@ public class ScheduledJobsLog extends EventLog
         private String mHelpItemLabel;
 
 
-        public HelpItemSelected(String providerId, String versionTrack, String bookingId, String helpItemLabel)
+        public HelpItemSelected(String bookingId, String helpItemLabel)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mHelpItemLabel = helpItemLabel;
         }
@@ -262,9 +260,9 @@ public class ScheduledJobsLog extends EventLog
         private String mRemovalType;
 
 
-        public RemoveConfirmationShown(String providerId, String versionTrack, String bookingId, String removalType)
+        public RemoveConfirmationShown(String bookingId, String removalType)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mRemovalType = removalType;
         }
@@ -281,9 +279,9 @@ public class ScheduledJobsLog extends EventLog
         private String mReason;
 
 
-        public RemoveConfirmationAccepted(String providerId, String versionTrack, String bookingId, String reason)
+        public RemoveConfirmationAccepted(String bookingId, String reason)
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
             mBookingId = bookingId;
             mReason = reason;
         }
@@ -294,9 +292,9 @@ public class ScheduledJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "find_jobs_selected";
 
-        public FindJobsSelected(String providerId, String versionTrack)
+        public FindJobsSelected()
         {
-            super(providerId, versionTrack, EVENT_TYPE);
+            super(EVENT_TYPE);
         }
     }
 }

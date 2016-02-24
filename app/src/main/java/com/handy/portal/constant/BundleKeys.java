@@ -23,7 +23,8 @@ public class BundleKeys
     public static final String MAP_CENTER = "map_center";
 
     // UrbanAirship
-    public static final String PUSH_TYPE = "type_id";
+    public static final String HANDY_PUSH_TYPE = "type_id";
+    public static final String HANDY_PUSH_UUID = "handy_push_uuid";
     public static final String CHECK_IN_ACTION_ID = "check_in";
 
     //Webview

@@ -1,5 +1,6 @@
 package com.handy.portal.retrofit;
 
+import com.google.gson.JsonObject;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ProviderSettings;
 
@@ -240,4 +241,7 @@ public interface HandyRetrofitService
 
     @GET(PROVIDERS_PATH + "feedback/{id}")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @POST("/events")
+    void postLogs(@Body JsonObject eventLogBundle, HandyRetrofitCallback cb);
 }

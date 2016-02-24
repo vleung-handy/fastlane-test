@@ -2,6 +2,7 @@ package com.handy.portal.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
@@ -197,4 +198,19 @@ public class BaseApplication extends MultiDexApplication
     }
 
     public static String getDeviceId() { return sDeviceId; }
+
+    public static String getDeviceModel()
+    {
+        final String manufacturer = Build.MANUFACTURER;
+        final String model = Build.MODEL;
+
+        if (model.startsWith(manufacturer))
+        {
+            return model;
+        }
+        else
+        {
+            return manufacturer + " " + model;
+        }
+    }
 }
