@@ -337,7 +337,7 @@ public class LoginActivityFragment extends InjectedFragment
             case INPUTTING_PHONE_NUMBER:
             {
                 mixpanel.track("portal login shown - phone");
-                instructionsText.setText(R.string.login_instructions_1_a);
+                instructionsText.setText(R.string.login_instructions_1);
                 phoneInputLayout.setVisibility(View.VISIBLE);
                 pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.VISIBLE);
