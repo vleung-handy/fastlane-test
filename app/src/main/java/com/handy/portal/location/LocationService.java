@@ -1,7 +1,6 @@
 package com.handy.portal.location;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
-import com.handy.portal.util.SystemUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -49,13 +47,12 @@ public class LocationService extends Service
 
     GoogleApiClient mGoogleApiClient;
     LocationScheduleHandler mLocationScheduleHandler;
-    //TODO: NEED TO CONNECT THIS WITH SCHEDULE BUILDER MANAGER
 
     @VisibleForTesting
-    static LocationService mInstance;
+    static LocationService mInstance; //for toggle testing only
 
     @VisibleForTesting
-    public static LocationService getInstance()
+    public static LocationService getInstance() //for toggle testing only
     {
         return mInstance;
     }
@@ -80,12 +77,6 @@ public class LocationService extends Service
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-    }
-
-    //TODO: REMOVE this once we move isServiceRunning to a util
-    public static boolean isRunning(Context context)
-    {
-        return SystemUtils.isServiceRunning(context, LocationService.class);
     }
 
     @Override
@@ -115,7 +106,6 @@ public class LocationService extends Service
 //            requestLocationQuerySchedule();
 //        }
 
-        //TODO: need to purge manager's schedule cache before this
         requestLocationQuerySchedule();
 
         return START_STICKY;
@@ -191,12 +181,19 @@ public class LocationService extends Service
     //TODO: would i need this?
     private final IBinder mBinder = new LocalBinder();
 
+    /**
+     * doing this because i want to prevent this sticky service from restarting if a crash occurred
+     *
+     * however this is not elegant. would prefer a better way
+     * @param thread
+     * @param ex
+     */
     @Override
     public void uncaughtException(final Thread thread, final Throwable ex)
     {
         //overriding this only prevents the error message dialog that shows
         Log.e(getClass().getName(), "got uncaught exception: " + ex.getMessage());
-        Crashlytics.logException(ex);
+        Crashlytics.logException(ex); //this won't actually work
         stopSelf(); //looks like this makes the service not restart even if sticky!
     }
 

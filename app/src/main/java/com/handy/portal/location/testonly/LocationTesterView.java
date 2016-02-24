@@ -17,6 +17,7 @@ import com.handy.portal.location.LocationService;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.SystemUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -73,7 +74,7 @@ public class LocationTesterView extends LinearLayout
     public void setParametersFromCurrentlyRunningService()
     {
         //detect if service is alive
-        boolean serviceRunning = LocationService.isRunning(getContext());
+        boolean serviceRunning = SystemUtils.isServiceRunning(getContext(), LocationService.class);
         mLocationServicesToggle.setChecked(serviceRunning);
 
         //TODO: set the params the service is using
