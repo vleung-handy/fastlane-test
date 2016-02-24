@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.LocationEvent;
+import com.handy.portal.location.LocationScheduleFactory;
+import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.model.Booking;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
@@ -34,6 +36,7 @@ public class LocationScheduleBuilderManager
     //TODO: wrap these
     private final Set<Date> mRequestedDatesForScheduleSet = new HashSet<>(); //should never change
     private Map<Date, List<Booking>> mBookingDateMapForSchedule = new HashMap<>();
+    LocationQuerySchedule mCachedLocationQuerySchedule;
 
     private final Bus mBus;
     public LocationScheduleBuilderManager(Bus bus)
@@ -86,6 +89,7 @@ public class LocationScheduleBuilderManager
     {
         mRequestedDatesForScheduleSet.clear();
         mBookingDateMapForSchedule.clear();
+        mCachedLocationQuerySchedule = null;
     }
 
     /**
@@ -114,15 +118,19 @@ public class LocationScheduleBuilderManager
             }
         }
 
-        if(responseHasUpdatedBookings)
+        if(responseHasUpdatedBookings || mCachedLocationQuerySchedule == null)
         {
             List<Booking> allBookings = new LinkedList<>();
             for(List<Booking> bookingList : mBookingDateMapForSchedule.values())
             {
                 allBookings.addAll(bookingList);
             }
-            mBus.post(new LocationEvent.ReceiveBookingsForLocationScheduleSuccess(allBookings));
+            //build a new schedule from these bookings
+            mCachedLocationQuerySchedule = LocationScheduleFactory.getLocationScheduleFromBookings(allBookings);
         }
+
+        //TODO: refine this
+        mBus.post(new LocationEvent.ReceiveLocationSchedule(mCachedLocationQuerySchedule));
     }
 
     private boolean bookingListStartEndDatesEqual(List<Booking> bookingList1,

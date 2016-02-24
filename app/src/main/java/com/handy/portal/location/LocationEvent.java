@@ -6,9 +6,6 @@ import android.support.annotation.NonNull;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
-import com.handy.portal.model.Booking;
-
-import java.util.List;
 
 /**
  * events used by the bus
@@ -51,19 +48,19 @@ public abstract class LocationEvent
     {
     }
 
-    public static class ReceiveBookingsForLocationScheduleSuccess extends HandyEvent.ReceiveSuccessEvent
-    {
-        private List<Booking> mBookingList;
-        public ReceiveBookingsForLocationScheduleSuccess(List<Booking> bookingList)
-        {
-            mBookingList = bookingList;
-        }
-
-        public List<Booking> getBookingList()
-        {
-            return mBookingList;
-        }
-    }
+//    public static class ReceiveBookingsForLocationScheduleSuccess extends HandyEvent.ReceiveSuccessEvent
+//    {
+//        private List<Booking> mBookingList;
+//        public ReceiveBookingsForLocationScheduleSuccess(List<Booking> bookingList)
+//        {
+//            mBookingList = bookingList;
+//        }
+//
+//        public List<Booking> getBookingList()
+//        {
+//            return mBookingList;
+//        }
+//    }
 
     public static class ReceiveLocationSchedule extends HandyEvent.ReceiveSuccessEvent
     {

@@ -124,8 +124,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 Log.i(getClass().getName(), "Scheduled an alarm for " + strategy.getStartDate().toString());
                 break; //only want one alarm a time and don't need to look further into future
             }
-
-
         }
 
         //TODO: when the schedule is completely expired, we want to request a schedule for the next N days in case the user never opens the app
@@ -240,14 +238,19 @@ public class LocationScheduleHandler extends BroadcastReceiver
     {
         try
         {
+            //cancels scheduled alarms
             Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             mAlarmManager.cancel(pendingIntent);
 
+            //sends all location updates that are supposed to be sent to server
             sendAllQueuedLocationUpdates();
+
+            //stops all location updates
             stopLocationUpdates();
 
             //TODO: consider not putting this here
+            //unregister the alarm receiver
             mContext.unregisterReceiver(this);
 
         }

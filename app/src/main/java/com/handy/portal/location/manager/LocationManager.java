@@ -5,9 +5,7 @@ import android.util.Log;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.location.LocationEvent;
-import com.handy.portal.location.LocationScheduleFactory;
 import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
@@ -181,16 +179,6 @@ public class LocationManager
             }
         }
         mFailedLocationBatchUpdates.add(locationBatchUpdate);
-    }
-
-
-    //TODO: temporary, eventually just listen to server's schedule updated event
-    @Subscribe
-    public void onReceiveBookingsForLocationScheduleSuccess(LocationEvent.ReceiveBookingsForLocationScheduleSuccess event)
-    {
-        LocationQuerySchedule locationQuerySchedule = LocationScheduleFactory.getLocationScheduleFromBookings(event.getBookingList());
-
-        mBus.post(new LocationEvent.ReceiveLocationSchedule(locationQuerySchedule));
     }
 
 }

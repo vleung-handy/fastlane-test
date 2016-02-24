@@ -114,6 +114,7 @@ public class LocationService extends Service
 //            requestLocationQuerySchedule();
 //        }
 
+        //TODO: need to purge manager's schedule cache before this
         requestLocationQuerySchedule();
 
         return START_STICKY;
@@ -146,11 +147,12 @@ public class LocationService extends Service
     }
 
     @Subscribe
-    public void onNewLocationQueryScheduleReceived(LocationEvent.ReceiveLocationSchedule event)
+    public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationSchedule event)
     {
         Log.i(getClass().getName(), "got new location schedule event");
         LocationQuerySchedule locationQuerySchedule = event.getLocationQuerySchedule();
         handleNewLocationQuerySchedule(locationQuerySchedule);
+        //TODO: optimize if the schedule did NOT change!!!!!
     }
 
     /**
