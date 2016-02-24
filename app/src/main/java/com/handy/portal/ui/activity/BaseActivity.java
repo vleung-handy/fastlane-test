@@ -12,10 +12,13 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.location.LocationEvent;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
 import com.handy.portal.util.Utils;
@@ -28,7 +31,10 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public abstract class BaseActivity extends AppCompatActivity
+        implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener
 {
     private Object busEventListener;
     protected boolean allowCallbacks;
@@ -53,6 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     Bus bus;
     @Inject
     ConfigManager configManager;
+    @Inject
+    LocationManager mLocationManager;
 
     @Override
     public void startActivity(final Intent intent)
@@ -269,19 +277,51 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         }
     }
 
+    @Override
     public void onConnected(Bundle connectionHint)
-    {
-        Location newLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+        //TODO: handle
+//        try
+//        {
+//            /*
+//                this is a replacement for getLastLocation() because we think it is contaminating
+//                our location data by sending old location updates with newer timestamps
+//                http://stackoverflow.com/questions/17603527/android-locationclient-getlastlocation-returns-old-and-inaccurate-location-wit
+//
+//                this will only passively listen to location updates triggered by someone else
+//                which is equivalent to how getLastLocation() works.
+//                TODO remove this when we fully switch over to location services
+//            */
+//            LocationRequest locationRequest = new LocationRequest()
+//                    .setPriority(LocationRequest.PRIORITY_LOW_POWER);
+//            LocationServices.FusedLocationApi.requestLocationUpdates(
+//                    googleApiClient, locationRequest, this);
+//        }
+//        catch (SecurityException e)
+//        {
+//            Crashlytics.logException(e);
+//        }
+
+        //TODO: this seems to be contaminating location service data, need to test
+//        Location newLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         //Keeping old value in the event we have a failed location update
-        if (newLocation != null)
-        {
-            lastLocation = newLocation;
-        }
+//        if (newLocation != null)
+//        {
+//            lastLocation = newLocation;
+//        }
+    }
+
+    @Override
+    public void onLocationChanged(final Location location)
+    {
+        //the location manager will listen to this and update the last known location
+        bus.post(new LocationEvent.LocationUpdated(location));
+//        lastLocation = location;
     }
 
     public Location getLastLocation()
     {
-        return lastLocation;
+        return mLocationManager.getLastKnownLocation();
     }
 
     //For google apli client
