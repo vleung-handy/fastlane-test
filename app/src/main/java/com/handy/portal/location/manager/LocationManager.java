@@ -37,12 +37,15 @@ public class LocationManager
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
     private final PrefsManager mPrefsManager;
-    private Location mLastLocationSent; //might use this later
+    private Location mLastKnownLocation; //for backwards compatibility with check-in flow
 
     //TODO: adjust these params
     private final long LAST_UPDATE_TIME_INTERVAL_MILLISEC = 2 * DateTimeUtils.MILLISECONDS_IN_SECOND;
     private static final int MAX_LOCATION_UPDATE_BATCHES_TO_RETRY_AT_ONCE = 5;
-    //TODO: send location updates in batches
+
+    //don't care about order of batch update
+    private Set<LocationBatchUpdate> mFailedLocationBatchUpdates = new HashSet<>();
+    private final static int MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE = 100;
 
     @Inject
     public LocationManager(final Bus bus,
@@ -60,14 +63,25 @@ public class LocationManager
         //TODO: should disable the above if toggle-testing
     }
 
-    //not used for now
-    public Location getLastLocationSent()
+    /**
+     * for backwards compatibility with check-in flow which requires this
+     * TODO can remove this when everyone switches over to location service
+     * @return
+     */
+    public Location getLastKnownLocation()
     {
-        return mLastLocationSent;
+        return mLastKnownLocation;
     }
 
-    Set<LocationBatchUpdate> mFailedLocationBatchUpdates = new HashSet<>();
-    private final static int MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE = 100;
+    @Subscribe
+    public void onReceiveLocationUpdate(final LocationEvent.LocationUpdated event)
+    {
+        /*
+        basic way to keep track of last known location for backwards compatibility with
+        the check-in flow which requires it
+         */
+        mLastKnownLocation = event.getLocationUpdate();
+    }
 
     //TODO: if this fails due to no network connection, then on network reconnect, need to determine what requests in the queue need to be sent
     @Subscribe

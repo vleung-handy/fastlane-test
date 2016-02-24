@@ -1,5 +1,6 @@
 package com.handy.portal.location;
 
+import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.event.HandyEvent;
@@ -26,6 +27,22 @@ public abstract class LocationEvent
         public LocationBatchUpdate getLocationBatchUpdate()
         {
             return mLocationBatchUpdate;
+        }
+    }
+
+
+    public static class LocationUpdated extends HandyEvent
+    {
+        private final Location mLocationUpdate;
+
+        public LocationUpdated(final Location locationUpdate)
+        {
+            mLocationUpdate = locationUpdate;
+        }
+
+        public Location getLocationUpdate()
+        {
+            return mLocationUpdate;
         }
     }
 

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -353,5 +354,11 @@ public class LocationScheduleHandler extends BroadcastReceiver
     public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate)
     {
         bus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
+    }
+
+    @Override
+    public void onLocationUpdate(final Location location)
+    {
+        bus.post(new LocationEvent.LocationUpdated(location));
     }
 }

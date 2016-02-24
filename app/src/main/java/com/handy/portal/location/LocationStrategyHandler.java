@@ -66,6 +66,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
             @Override
             public void onLocationChanged(final Location location)
             {
+                //TODO: use a util instead
                 if(location.getTime() > mLocationQueryStrategy.getEndDate().getTime())
                 {
                     Log.i(getClass().getName(), "location request expired but got location changed callback, not doing anything");
@@ -73,6 +74,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
 
                     return; //expired
                 }
+                mLocationStrategyCallbacks.onLocationUpdate(location);
                 LocationUpdate locationUpdate = LocationUpdate.from(location, mLocationQueryStrategy);
                 locationUpdate.setBatteryLevelPercent(SystemUtils.getBatteryLevelPercent(mContext));
                 onNewLocationUpdate(locationUpdate);
@@ -88,6 +90,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     {
         return System.currentTimeMillis() > mLocationQueryStrategy.getEndDate().getTime();
     }
+
     private LocationRequest createLocationRequest()
     {
         int priority = 0;
@@ -114,9 +117,9 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
         LocationRequest locationRequest = new LocationRequest()
                 .setSmallestDisplacement(mLocationQueryStrategy.getDistanceFilterMeters())
                 .setPriority(priority)
-                .setExpirationDuration(expirationDurationMs) //we need to do things like flush the locations once the request expires
+                .setExpirationDuration(expirationDurationMs)
                 .setInterval(pollingIntervalMs)
-                .setFastestInterval(pollingIntervalMs) //TODO: change this, test only
+                .setFastestInterval(pollingIntervalMs) //TODO: consider changing this
                 ;
 
         return locationRequest;
@@ -130,7 +133,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
 
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
                 createLocationRequest(),
-                getLocationListener());
+                mLocationListener);
 
         mHandler.postAtTime(new Runnable() //callback for when strategy expires
         {
@@ -202,5 +205,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     {
         void onLocationStrategyExpired(LocationStrategyHandler locationStrategyHandler);
         void onLocationBatchUpdateReady(LocationBatchUpdate locationBatchUpdate);
+        void onLocationUpdate(Location locationUpdate);
+        //want to notify the manager of updates so it can keep track of last location. not sure if i want to keep this
     }
 }
