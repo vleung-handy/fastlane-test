@@ -28,6 +28,7 @@ import java.util.Set;
  * TODO: currently not provided in application module, but in location manager. not sure if i want to do this
  * TODO: clean up
  * TODO: can remove this manager when we switch over to using endpoint for building schedules!
+ * TODO: NEED TO CONNECT THIS WITH SCHEDULE HANDLER. THIS IS TOO FRAGMENTED
  */
 public class LocationScheduleBuilderManager
 {

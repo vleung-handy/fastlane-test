@@ -49,6 +49,7 @@ public class LocationService extends Service
 
     GoogleApiClient mGoogleApiClient;
     LocationScheduleHandler mLocationScheduleHandler;
+    //TODO: NEED TO CONNECT THIS WITH SCHEDULE BUILDER MANAGER
 
     @VisibleForTesting
     static LocationService mInstance;
@@ -147,7 +148,7 @@ public class LocationService extends Service
     }
 
     @Subscribe
-    public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationSchedule event)
+    public void onNewLocationQueryScheduleReceived(LocationEvent.ReceiveLocationSchedule event)
     {
         Log.i(getClass().getName(), "got new location schedule event");
         LocationQuerySchedule locationQuerySchedule = event.getLocationQuerySchedule();
@@ -165,7 +166,7 @@ public class LocationService extends Service
         Log.i(getClass().getName(), "handling new schedule: " + locationQuerySchedule.toString());
         if (mLocationScheduleHandler != null)
         {
-            mLocationScheduleHandler.destroy();
+            mLocationScheduleHandler.destroy(); //TODO: don't want to do this if the schedule didn't change!
         }
         mLocationScheduleHandler = new LocationScheduleHandler(locationQuerySchedule, mGoogleApiClient, this);
         startLocationQueryingIfReady();
