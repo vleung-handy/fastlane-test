@@ -26,9 +26,12 @@ import java.util.Set;
  *
  * micro manager for getting the location schedule from bookings
  * TODO: currently not provided in application module, but in location manager. not sure if i want to do this
- * TODO: clean up
+ * TODO: NEEDS MAJOR REFACTOR
  * TODO: can remove this manager when we switch over to using endpoint for building schedules!
- * TODO: NEED TO CONNECT THIS WITH SCHEDULE HANDLER. THIS IS TOO FRAGMENTED
+ *
+ * responsible for building the location schedule based on the current bookings
+ *
+ * there is only ONE location schedule!
  */
 public class LocationScheduleBuilderManager
 {
@@ -36,8 +39,18 @@ public class LocationScheduleBuilderManager
 
     //TODO: wrap these
     private final Set<Date> mRequestedDatesForScheduleSet = new HashSet<>(); //should never change
+
+    /**
+     * a map of dates (only ones we care about) to list of bookings
+     *
+     * this should be kept up to date. used to build a schedule
+     */
     private Map<Date, List<Booking>> mBookingDateMapForSchedule = new HashMap<>();
-    LocationQuerySchedule mCachedLocationQuerySchedule;
+
+    /**
+     * this should be updated whenever the map above gets updated
+     */
+    private LocationQuerySchedule mCachedLocationQuerySchedule;
 
     private final Bus mBus;
     public LocationScheduleBuilderManager(Bus bus)
@@ -47,6 +60,11 @@ public class LocationScheduleBuilderManager
     }
 
     //TODO: make sure no timing issues. make sure this isn't called while we're waiting for dates
+
+    /**
+     * asks for the bookings for the scope of the schedule so it can use them to build a schedule
+     * @param event
+     */
     @Subscribe
     public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
     {
@@ -64,11 +82,15 @@ public class LocationScheduleBuilderManager
         mBookingDateMapForSchedule = newBookingDateMapForSchedule;
         //i want to easily get rid of the entries in the date booking map that aren't dates i requested here
         //but keep the ones that are of dates, for memory purposes.
-        //probably not necessary. might remove this later.
+        //probably not necessary. TODO might remove this and related stuff later.
 
         mBus.post(new HandyEvent.RequestScheduledBookingsBatch(requestedDates, true));
     }
 
+    /**
+     * gets a list of dates without date that we should get bookings to build the schedule for
+     * @return
+     */
     private List<Date> getDatesForSchedule()
     {
         final List<Date> requestedDates = new LinkedList<>();
@@ -86,6 +108,9 @@ public class LocationScheduleBuilderManager
         return requestedDates;
     }
 
+    /**
+     * currently unused
+     */
     private void clearScheduleBuilderData()
     {
         mRequestedDatesForScheduleSet.clear();
@@ -94,18 +119,23 @@ public class LocationScheduleBuilderManager
     }
 
     /**
-     * receives a list of all the bookings for the dates requested
+     * receives a list of all the bookings for the dates in scope of the schedule. will use these to build a schedule
      *
+     * posts an event containing a schedule, which can be cached if the dates haven't changed
+     *
+     * TODO this is really messy, don't do this
      * @param event
      */
     @Subscribe
     public void onReceiveScheduledBookingsBatchSuccess(HandyEvent.ReceiveScheduledBookingsBatchSuccess event)
     {
+
         boolean responseHasUpdatedBookings = false;
         for(Date date : mRequestedDatesForScheduleSet)
         {
             List<Booking> bookingList = event.getDateToBookingMap().get(date);
             List<Booking> currentBookingListForDate = mBookingDateMapForSchedule.get(date);
+
             if (!bookingListStartEndDatesEqual(currentBookingListForDate, bookingList))
                 //dates are different
             {

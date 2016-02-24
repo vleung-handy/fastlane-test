@@ -148,7 +148,7 @@ public class LocationService extends Service
     }
 
     @Subscribe
-    public void onNewLocationQueryScheduleReceived(LocationEvent.ReceiveLocationSchedule event)
+    public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationSchedule event)
     {
         Log.i(getClass().getName(), "got new location schedule event");
         LocationQuerySchedule locationQuerySchedule = event.getLocationQuerySchedule();
@@ -169,8 +169,9 @@ public class LocationService extends Service
             mLocationScheduleHandler.destroy(); //TODO: don't want to do this if the schedule didn't change!
         }
         mLocationScheduleHandler = new LocationScheduleHandler(locationQuerySchedule, mGoogleApiClient, this);
+        //TODO: don't want to do this if the schedule didn't change!
+
         startLocationQueryingIfReady();
-        //TODO: do something useful
     }
 
     private void startLocationQueryingIfReady()

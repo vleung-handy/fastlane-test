@@ -225,4 +225,14 @@ public class LocationQueryStrategy implements Parcelable
                 + "\ndistance filter (m): " + mDistanceFilterMeters
                 + "\nlocation accuracy: " + mLocationAccuracyPriority;
     }
+
+    /**
+     * NOT USED
+     * @param locationQueryStrategy
+     * @return
+     */
+    public boolean equals(LocationQueryStrategy locationQueryStrategy)
+    {
+        return this == locationQueryStrategy; //TODO: actually implement
+    }
 }
