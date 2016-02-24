@@ -279,7 +279,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle connectionHint)
-
+    {
         //TODO: handle
 //        try
 //        {
