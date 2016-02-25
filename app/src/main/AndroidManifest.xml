@@ -37,7 +37,7 @@
     <application
         android:name=".core.BaseApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
@@ -47,6 +47,29 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- http scheme -->
+                <data android:scheme="http"
+                      android:host="handy.com"
+                      android:path="/pro"
+                      android:pathPrefix="/pro/" />
+                <data android:scheme="http"
+                      android:host="www.handy.com"
+                      android:path="/pro"
+                      android:pathPrefix="/pro/" />
+                <!-- https scheme -->
+                <data android:scheme="https"
+                      android:host="handy.com"
+                      android:path="/pro"
+                      android:pathPrefix="/pro/" />
+                <data android:scheme="https"
+                      android:host="www.handy.com"
+                      android:path="/pro"
+                      android:pathPrefix="/pro/" />
             </intent-filter>
         </activity>
         <activity
