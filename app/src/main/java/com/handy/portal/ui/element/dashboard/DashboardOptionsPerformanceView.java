@@ -4,6 +4,7 @@ package com.handy.portal.ui.element.dashboard;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
@@ -28,6 +31,10 @@ import butterknife.OnClick;
 
 public class DashboardOptionsPerformanceView extends FrameLayout
 {
+    @Bind(R.id.tier_title)
+    TextView mTierTitleText;
+    @Bind(R.id.tier_hourly_rate)
+    TextView mTierHourlyRateText;
     @Bind(R.id.dashboard_first_review)
     ViewGroup mFirstReview;
     @Bind(R.id.review_text)
@@ -37,6 +44,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
 
     @Inject
     Bus mBus;
+
+    private ProviderEvaluation mProviderEvaluation;
 
     public DashboardOptionsPerformanceView(final Context context)
     {
@@ -71,8 +80,15 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void setDisplay(List<ProviderRating> ratings)
+    public void setDisplay(ProviderEvaluation evaluation)
     {
+        mProviderEvaluation = evaluation;
+        ProviderEvaluation.Tier tier = mProviderEvaluation.getTier();
+        mTierTitleText.setText(tier.getName());
+        String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRate() / 100;
+        mTierHourlyRateText.setText(dollarAmount);
+
+        List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatings();
         if (ratings != null && ratings.size() > 0)
         {
             mFirstReview.setVisibility(View.VISIBLE);
@@ -88,7 +104,9 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     @OnClick(R.id.tier_option)
     public void switchToTiers()
     {
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS));
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments));
     }
 
     @OnClick(R.id.reviews_option)

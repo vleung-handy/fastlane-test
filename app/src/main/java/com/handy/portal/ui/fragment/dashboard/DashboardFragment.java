@@ -107,7 +107,7 @@ public class DashboardFragment extends ActionBarFragment
 
         mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceView);
 
-        mDashboardOptionsPerformanceView.setDisplay(providerEvaluation.getFiveStarRatings());
+        mDashboardOptionsPerformanceView.setDisplay(providerEvaluation);
 
         mLifetimeRatingText.setText(String.valueOf(providerEvaluation.getLifeTime().getProRating()));
     }

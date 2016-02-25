@@ -32,4 +32,8 @@ public class BundleKeys
 
     public static final String DEEPLINK = "deep_link";
     public static final String DEEPLINK_DATA = "deep_link_data";
+
+    // Dashboard
+    public static final String EVALUATION = "evaluation";
+
 }
