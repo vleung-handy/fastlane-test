@@ -30,7 +30,7 @@
         android:paddingBottom="@dimen/default_padding_medium"
         >
 
-        <!--TODO: below is test only. remove before releasing-->
+        <!--TODO: below is for toggle-testing only. make sure this is commented out before releasing-->
         <!--<com.handy.portal.location.testonly.LocationTesterView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
