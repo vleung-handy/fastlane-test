@@ -10,9 +10,9 @@ import com.google.gson.annotations.SerializedName;
 public class LocationBatchUpdate
 {
     @SerializedName("geolocations")
-    LocationUpdate mLocationUpdates[];
+    LocationUpdate[] mLocationUpdates;
 
-    public LocationBatchUpdate(@NonNull LocationUpdate locationUpdates[])
+    public LocationBatchUpdate(@NonNull LocationUpdate[] locationUpdates)
     {
         mLocationUpdates = locationUpdates;
     }
