@@ -1,7 +1,9 @@
 package com.handy.portal.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.NotificationUtils;
 import com.handy.portal.util.SystemUtils;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -35,6 +38,10 @@ public class MainActivity extends BaseActivity
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
+
+    //TODO: move somewhere else
+    private static final String[] REQUIRED_LOCATION_PERMISSIONS = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+    private static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,6 +64,11 @@ public class MainActivity extends BaseActivity
             //nothing will happen if it's already running
             if(!SystemUtils.isServiceRunning(this, LocationService.class))
             {
+                if (!Utils.areAllPermissionsGranted(this, REQUIRED_LOCATION_PERMISSIONS))
+                {
+                    ActivityCompat.requestPermissions(this, REQUIRED_LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
+                    return;
+                }
                 startService(i);
             }
         }
@@ -67,6 +79,29 @@ public class MainActivity extends BaseActivity
         }
         //at most one service instance will be running
 
+    }
+
+    /**
+     * don't want to simply call startLocationServiceIfNecessary because when permissions dialog disappears,
+     * onResume() is called and thus triggers onConfigSuccess which wants to start this service,
+     * and the startLocationServiceIfNecessary may launch the permissions dialog
+     * TODO see if we can clean this up
+     */
+    private void startLocationServiceIfNecessaryAndPermissionsGranted()
+    {
+        if(Utils.areAllPermissionsGranted(this, REQUIRED_LOCATION_PERMISSIONS))
+        {
+            startLocationServiceIfNecessary();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults)
+    {
+        if(requestCode == ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE)
+        {
+            startLocationServiceIfNecessaryAndPermissionsGranted();
+        }
     }
 
     @Override
@@ -172,7 +207,7 @@ public class MainActivity extends BaseActivity
     @Subscribe
     public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
     {
-        startLocationServiceIfNecessary();
+        startLocationServiceIfNecessaryAndPermissionsGranted();
     }
 
     @Subscribe

@@ -62,12 +62,13 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
         mContext = context;
         mHandler = handler;
         mTimestampLastUpdatePostedMs = System.currentTimeMillis(); //don't want to post immediately
-        mLocationListener = new LocationListener() {
+        mLocationListener = new LocationListener()
+        {
             @Override
             public void onLocationChanged(final Location location)
             {
                 //TODO: use a util instead
-                if(location.getTime() > mLocationQueryStrategy.getEndDate().getTime())
+                if (location.getTime() > mLocationQueryStrategy.getEndDate().getTime())
                 {
                     Log.i(getClass().getName(), "location request expired but got location changed callback, not doing anything");
                     //would be messy if i unregistered this here, because no reference to required arguments
@@ -99,7 +100,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     private LocationRequest createLocationRequest()
     {
         int priority = 0;
-        switch(mLocationQueryStrategy.getLocationAccuracyPriority())
+        switch (mLocationQueryStrategy.getLocationAccuracyPriority())
         {
             case 0:
                 priority = LocationRequest.PRIORITY_LOW_POWER;
@@ -118,7 +119,6 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
         long pollingIntervalMs = mLocationQueryStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
         long expirationDurationMs = mLocationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis();
 
-
         LocationRequest locationRequest = new LocationRequest()
                 .setSmallestDisplacement(mLocationQueryStrategy.getDistanceFilterMeters())
                 .setPriority(priority)
@@ -135,7 +135,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
      * @param googleApiClient
      * @throws SecurityException
      */
-    public void requestLocationUpdates(GoogleApiClient googleApiClient) throws SecurityException
+    public void requestLocationUpdates(GoogleApiClient googleApiClient)
     {
         Log.i(getClass().getName(), "requesting location updates for " + mLocationQueryStrategy.toString());
         LocationRequest locationRequest = createLocationRequest();
