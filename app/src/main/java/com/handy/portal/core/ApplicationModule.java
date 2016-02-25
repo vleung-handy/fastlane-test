@@ -59,6 +59,7 @@ import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.element.profile.ManagementToolsView;
+import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
@@ -67,6 +68,8 @@ import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
+import com.handy.portal.ui.fragment.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
@@ -152,6 +155,9 @@ import retrofit.converter.GsonConverter;
         NotificationsListEntryView.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
+        AccountSettingsFragment.class,
+        RatingsAndFeedbackFragment.class,
+        ReferAFriendFragment.class,
 })
 public final class ApplicationModule
 {

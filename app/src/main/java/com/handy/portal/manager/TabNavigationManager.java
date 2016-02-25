@@ -158,7 +158,12 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.CANCELLATION_REQUEST;
             addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
+//            addToBackStack |= currentTab == MainViewTab.ACCOUNT_SETTINGS;
             addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
+
+            // Account Settings
+            addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
+            addToBackStack |= targetTab == MainViewTab.PROFILE;
         }
 
         return addToBackStack;

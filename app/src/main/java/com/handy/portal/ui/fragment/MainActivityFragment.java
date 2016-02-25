@@ -59,12 +59,14 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mButtonMore;
     @Bind(R.id.loading_overlay)
     View mLoadingOverlayView;
-    @Bind(R.id.nav_link_my_profile)
-    RadioButton mNavLinkMyProfile;
     @Bind(R.id.nav_link_payments)
     RadioButton mNavLinkPayments;
-    @Bind(R.id.nav_link_edit_payment_method)
-    RadioButton mNavLinkEditPaymentMethod;
+    @Bind(R.id.nav_link_ratings_and_feedback)
+    RadioButton mNavLinkRatingsAndFeedback;
+    @Bind(R.id.nav_link_refer_a_friend)
+    RadioButton mNavLinkReferAFriend;
+    @Bind(R.id.nav_link_account_settings)
+    RadioButton mNavAccountSettings;
     @Bind(R.id.nav_link_help)
     RadioButton mNavLinkHelp;
     @Bind(R.id.drawer_layout)
@@ -223,9 +225,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerNavDrawerListeners()
     {
-        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
         mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
-        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
+        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.RATINGS_AND_FEEDBACK, null));
+        mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
+        mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
         mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
     }
 
@@ -379,22 +382,28 @@ public class MainActivityFragment extends InjectedFragment
                     mNavLinkPayments.toggle();
                 }
                 break;
-                case PROFILE:
+                case RATINGS_AND_FEEDBACK:
                 {
                     mButtonMore.toggle();
-                    mNavLinkMyProfile.toggle();
+                    mNavLinkRatingsAndFeedback.toggle();
+                }
+                break;
+                case REFER_A_FRIEND:
+                {
+                    mButtonMore.toggle();
+                    mNavLinkReferAFriend.toggle();
+                }
+                break;
+                case ACCOUNT_SETTINGS:
+                {
+                    mButtonMore.toggle();
+                    mNavAccountSettings.toggle();
                 }
                 break;
                 case HELP:
                 {
                     mButtonMore.toggle();
                     mNavLinkHelp.toggle();
-                }
-                break;
-                case SELECT_PAYMENT_METHOD:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkEditPaymentMethod.toggle();
                 }
                 break;
             }

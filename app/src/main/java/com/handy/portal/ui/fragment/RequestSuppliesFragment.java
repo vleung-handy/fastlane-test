@@ -60,6 +60,13 @@ public class RequestSuppliesFragment extends ActionBarFragment
     private ProviderProfile mProviderProfile;
 
     @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setOptionsMenuEnabled(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -74,30 +81,11 @@ public class RequestSuppliesFragment extends ActionBarFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.menu_x_back, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_exit:
-                onBackButtonPressed();
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
         setActionBar(R.string.request_supplies, false);
+        setBackButtonEnabled(true);
     }
 
     @OnClick(R.id.request_supplies_button)

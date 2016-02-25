@@ -89,4 +89,7 @@
     <dimen name="job_cell_icon_size">40dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
 
+    <!-- Referrals -->
+    <dimen name="default_button_height">48dp</dimen>
+
 </resources>

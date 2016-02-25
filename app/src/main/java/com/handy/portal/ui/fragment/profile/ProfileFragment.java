@@ -44,6 +44,13 @@ public class ProfileFragment extends ActionBarFragment
     }
 
     @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setOptionsMenuEnabled(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -64,10 +71,17 @@ public class ProfileFragment extends ActionBarFragment
     }
 
     @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setActionBar(R.string.profile, false);
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.profile, false);
+        setBackButtonEnabled(true);
 
         // Do we want to reload this on resume?
         if (mProviderProfile != null)

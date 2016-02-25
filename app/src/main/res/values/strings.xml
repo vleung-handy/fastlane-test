@@ -92,7 +92,8 @@
     <string name="update_pwd_error">To update password you need to enter old and new passwords.</string>
     <string name="pwd_length_error">Your password must be at least 8 characters.</string>
     <string name="info_updated">Your information has been updated.</string>
-    <string name="env_format" formatted="false">%s: v%s (%s)</string>
+    <string name="env_format"
+            formatted="false">%s: v%s (%s)</string>
     <string name="upcoming">Upcoming</string>
     <string name="past">Past</string>
     <string name="no_upcoming_bookings">You don’t have any upcoming bookings</string>
@@ -127,7 +128,8 @@
     <string name="credit_card">Credit Card</string>
     <string name="cvc">CVC</string>
     <string name="contact">Contact</string>
-    <string name="welcome_back" formatted="false">Welcome back, %s!</string>
+    <string name="welcome_back"
+            formatted="false">Welcome back, %s!</string>
     <string name="skip">Skip</string>
     <string name="peak_price_info">Due to high demand, peak pricing is in \neffect at this time. If you’d like, you can \npick a different time.</string>
     <string name="peak_price_info_recur">Due to high demand, \nwe don’t have availability at that time. \nPlease select a different time.</string>
@@ -540,4 +542,24 @@
     <string name="notify_available_jobs">Notify me of open jobs today</string>
     <string name="notify_available_jobs_update_intro_success">Great! We’ll send you a notification for any available jobs that arrive the rest of the day.</string>
     <string name="notify_available_jobs_update_error">Oops! There was an error turning on notifications. Please check your connection and try again.</string>
+
+    <!-- Dividers -->
+    <dimen name="divider_height">1dp</dimen>
+
+    <!-- Account settings layout -->
+    <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
+    <string name="refer_a_friend">Refer a Friend</string>
+    <string name="account_settings">Account Settings</string>
+
+    <string name="order_resupply_kit">Order a Resupply Kit</string>
+    <string name="income_verification">Income Verification</string>
+    <string name="send_email">Send Email</string>
+
+    <!-- Referrels -->
+    <string name="referral_invite_label">Invite Friends</string>
+    <string name="referral_code_label">Your code:</string>
+    <string name="share_using">Share using&#8230;</string>
+    <string name="referral_title_formatted">Give %1$s, Get %2$s</string>
+    <string name="referral_subtitle_formatted">Give your friends %1$s off their first Handy booking, and you get %2$s!</string>
+
 </resources>
