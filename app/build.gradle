@@ -54,7 +54,7 @@ android {
         targetSdkVersion 23
         versionCode 809 //0.8.9
         versionName computeVersionName(versionCode)
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
