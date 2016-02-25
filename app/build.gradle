@@ -81,8 +81,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            debuggable true
+            minifyEnabled true
         }
         debug {
             minifyEnabled false
@@ -94,7 +93,7 @@ android {
         hosted {
             applicationId "com.handy.portal"
             manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal"]
-            versionName defaultConfig.versionName + "b"
+            versionName defaultConfig.versionName
             signingConfig signingConfigs.prod
         }
         store {
@@ -137,9 +136,9 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
 
     //Google services
-    compile 'com.google.android.gms:play-services-location:8.1.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
     //Recommended for location services
-    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
     //Required for Android (GCM) push notifications
 
     //Guava

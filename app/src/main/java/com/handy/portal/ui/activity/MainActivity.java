@@ -1,6 +1,5 @@
 package com.handy.portal.ui.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +12,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
+import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.LocationService;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
@@ -40,7 +40,6 @@ public class MainActivity extends BaseActivity
             = new NotificationBlockerDialogFragment();
 
     //TODO: move somewhere else
-    private static final String[] REQUIRED_LOCATION_PERMISSIONS = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
     private static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE = 10;
 
     @Override
@@ -64,9 +63,9 @@ public class MainActivity extends BaseActivity
             //nothing will happen if it's already running
             if(!SystemUtils.isServiceRunning(this, LocationService.class))
             {
-                if (!Utils.areAllPermissionsGranted(this, REQUIRED_LOCATION_PERMISSIONS))
+                if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
                 {
-                    ActivityCompat.requestPermissions(this, REQUIRED_LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
+                    ActivityCompat.requestPermissions(this, LocationConstants.LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
                     return;
                 }
                 startService(i);
@@ -89,7 +88,7 @@ public class MainActivity extends BaseActivity
      */
     private void startLocationServiceIfNecessaryAndPermissionsGranted()
     {
-        if(Utils.areAllPermissionsGranted(this, REQUIRED_LOCATION_PERMISSIONS))
+        if(Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
         {
             startLocationServiceIfNecessary();
         }

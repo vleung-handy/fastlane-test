@@ -1,6 +1,5 @@
 package com.handy.portal.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -29,18 +28,18 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     public final static float XHDPI = 2.0f;
     public final static float XXHDPI = 3.0f;
 
-    //TODO: move somewhere else
-    public static boolean areAllPermissionsGranted(@NonNull Activity activity, @NonNull String[] requiredPermissions)
+    //TODO move somewhere else
+    public static boolean areAnyPermissionsGranted(@NonNull Context context, @NonNull String[] permissions)
     {
-        for(int i = 0; i<requiredPermissions.length; i++)
+        for(int i = 0; i<permissions.length; i++)
         {
-            if (ActivityCompat.checkSelfPermission(activity,
-                    requiredPermissions[i]) != PackageManager.PERMISSION_GRANTED)
+            if (ActivityCompat.checkSelfPermission(context,
+                    permissions[i]) == PackageManager.PERMISSION_GRANTED)
             {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public static int getObjectIdentifier(Object object)

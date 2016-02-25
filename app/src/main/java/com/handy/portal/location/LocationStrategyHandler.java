@@ -15,6 +15,7 @@ import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.SystemUtils;
+import com.handy.portal.util.Utils;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -137,6 +138,12 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
      */
     public void requestLocationUpdates(GoogleApiClient googleApiClient)
     {
+        //this handles the permission system in Android 6.0
+        if (!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
+        {
+            return;
+        }
+
         Log.i(getClass().getName(), "requesting location updates for " + mLocationQueryStrategy.toString());
         LocationRequest locationRequest = createLocationRequest();
         long expirationTimeMs = locationRequest.getExpirationTime();
