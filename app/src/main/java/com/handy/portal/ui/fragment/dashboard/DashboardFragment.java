@@ -16,10 +16,10 @@ import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
-import com.handy.portal.ui.adapter.RatingsPerformancePagerAdapter;
+import com.handy.portal.ui.adapter.DashboardRatingsPagerAdapter;
 import com.handy.portal.ui.element.dashboard.CirclePageIndicatorView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
-import com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView;
+import com.handy.portal.ui.element.dashboard.DashboardWelcomeView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.squareup.otto.Subscribe;
 
@@ -41,21 +41,17 @@ public class DashboardFragment extends ActionBarFragment
     View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
     TextView mFetchErrorTextView;
-    @Bind(R.id.welcome_pro_performance_view)
-    WelcomeProPerformanceView mWelcomeProPerformanceView;
-    @Bind(R.id.ratings_performance_view_pager)
+    @Bind(R.id.dashboard_welcome_view)
+    DashboardWelcomeView mDashboardWelcomeView;
+    @Bind(R.id.dashboard_ratings_view_pager)
     ViewPager mRatingsProPerformanceView;
-    @Bind(R.id.circle_page_indicator_view)
+    @Bind(R.id.dashboard_ratings_view_pager_indicator_view)
     CirclePageIndicatorView mCirclePageIndicatorView;
     @Bind(R.id.dashboard_options_view)
     DashboardOptionsPerformanceView mDashboardOptionsPerformanceView;
     @Bind(R.id.lifetime_rating_text)
     TextView mLifetimeRatingText;
 
-    @Bind(R.id.review_text)
-    TextView mReviewText;
-    @Bind(R.id.review_date)
-    TextView mReviewDate;
 
     @Override
     protected MainViewTab getTab()
@@ -102,18 +98,18 @@ public class DashboardFragment extends ActionBarFragment
             welcomeString = getString(R.string.welcome_back);
         }
 
-        mWelcomeProPerformanceView
-                .setDisplay(welcomeString, providerEvaluation.getRolling().getStatus());
+        mDashboardWelcomeView.setDisplay(welcomeString,
+                providerEvaluation.getRolling().getRatingEvaluation(),
+                providerEvaluation.getRolling().getStatusColorId());
+
         mRatingsProPerformanceView
-                .setAdapter(new RatingsPerformancePagerAdapter(getContext(), providerEvaluation));
+                .setAdapter(new DashboardRatingsPagerAdapter(getContext(), providerEvaluation));
 
         mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceView);
 
-        //TODO: Remove hardcoding for the review
-        mReviewText.setText("Jane is the best! We are happy with the cleaning.");
-        mReviewDate.setText("Sam, May 2015");
+        mDashboardOptionsPerformanceView.setDisplay(providerEvaluation.getFiveStarRatings());
 
-        mLifetimeRatingText.setText(Double.toString(providerEvaluation.getLifeTime().getProRating()));
+        mLifetimeRatingText.setText(String.valueOf(providerEvaluation.getLifeTime().getProRating()));
     }
 
     @Subscribe
@@ -128,34 +124,13 @@ public class DashboardFragment extends ActionBarFragment
         {
             createDashboardView(event.providerEvaluation);
         }
-
-        /*
-        ProviderEvaluation providerEvaluation = event.providerEvaluation;
-        String lifetimeRating = Double.toString(providerEvaluation.getLifeTime().getProRating());
-        mLifetimeRatingText.setText(lifetimeRating);
-        */
-
-        /*
-        ProviderEvaluation.Rolling rollingProviderEvaluation = providerEvaluation.getRolling();
-        mRatingsProPerformanceView.setJobRatings(
-        Integer.toString(rollingProviderEvaluation.getFiveStarRatedBookingCount()),
-            Integer.toString(rollingProviderEvaluation.getRatedBookingCount()),
-             Integer.toString(rollingProviderEvaluation.getTotalBookingCount())
-            );
-        */
-
-        /*
-        String startDate = rollingProviderEvaluation.getStartDate().toString();
-        String endDate = rollingProviderEvaluation.getEndDate().toString();
-        String dateString = startDate + endDate;
-        mRatingsProPerformanceView.setDate(dateString);
-        */
     }
 
     @Subscribe
     public void onReceiveProviderEvaluationFailure(ProviderDashboardEvent.ReceiveProviderEvaluationError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
         mDashboardLayout.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.VISIBLE);
 

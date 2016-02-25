@@ -31,7 +31,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.five_star_review, parent, false);
-        return new ViewHolder(v, (TextView) v.findViewById(R.id.review_text),
+        return new ViewHolder(v, (TextView) v.findViewById(R.id.five_star_review_text),
                 (TextView) v.findViewById(R.id.review_date));
     }
 

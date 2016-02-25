@@ -21,6 +21,9 @@ import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -327,7 +330,7 @@ class NotificationMessagesHandyRetroFitCallback extends TypedHandyRetrofitCallba
 }
 
 
-class GetProviderEvaluationRetrofitCallback extends TypedHandyRetrofitCallback<NotificationMessages>
+class GetProviderEvaluationRetrofitCallback extends TypedHandyRetrofitCallback<ProviderEvaluation>
 {
     GetProviderEvaluationRetrofitCallback(DataManager.Callback callback)
     {
@@ -336,7 +339,7 @@ class GetProviderEvaluationRetrofitCallback extends TypedHandyRetrofitCallback<N
 }
 
 
-class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<NotificationMessages>
+class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<ProviderRating>
 {
     GetProviderFiveStarRatingsRetrofitCallback(DataManager.Callback callback)
     {
@@ -345,7 +348,7 @@ class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallb
 }
 
 
-class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<NotificationMessages>
+class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<ProviderFeedback>
 {
     GetProviderFeedbackRetrofitCallback(DataManager.Callback callback)
     {

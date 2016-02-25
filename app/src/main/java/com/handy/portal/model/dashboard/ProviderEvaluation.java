@@ -2,6 +2,7 @@ package com.handy.portal.model.dashboard;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.R;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,7 +12,7 @@ public class ProviderEvaluation implements Serializable
 {
     @SerializedName("rolling")
     private Rating mRolling;
-    @SerializedName("life_time")
+    @SerializedName("lifetime")
     private Rating mLifeTime;
     @SerializedName("tier")
     private Tier mTier;
@@ -67,6 +68,11 @@ public class ProviderEvaluation implements Serializable
 
     public static class Rating
     {
+        private static final String POSITIVE = "positive";
+        private static final String NEUTRAL = "neutral";
+        private static final String NEGATIVE = "negative";
+        private static final String NA = "n_a";
+
         @SerializedName("rated_booking_count")
         private int mRatedBookingCount;
         @SerializedName("total_booking_count")
@@ -77,6 +83,8 @@ public class ProviderEvaluation implements Serializable
         private double mProRating;
         @SerializedName("status")
         private String mStatus;
+        @SerializedName("rating_evaluation")
+        private String mRatingEvaluation;
         @SerializedName("feedback")
         private String mFeedback;
         @SerializedName("start_date")
@@ -87,13 +95,15 @@ public class ProviderEvaluation implements Serializable
         public Rating(
                 final int ratedBookingCount, final int totalBookingCount,
                 final int fiveStarRatedBookingCount, final double proRating, final String status,
-                final String feedback, final Date startDate, final Date endDate)
+                final String ratingEvaluation, final String feedback, final Date startDate,
+                final Date endDate)
         {
             mRatedBookingCount = ratedBookingCount;
             mTotalBookingCount = totalBookingCount;
             mFiveStarRatedBookingCount = fiveStarRatedBookingCount;
             mProRating = proRating;
             mStatus = status;
+            mRatingEvaluation = ratingEvaluation;
             mFeedback = feedback;
             mStartDate = startDate;
             mEndDate = endDate;
@@ -122,6 +132,26 @@ public class ProviderEvaluation implements Serializable
         public String getStatus()
         {
             return mStatus;
+        }
+
+        public int getStatusColorId()
+        {
+            switch (mStatus)
+            {
+                case POSITIVE:
+                    return R.color.requested_green;
+                case NEUTRAL:
+                    return R.color.handy_yellow;
+                case NEGATIVE:
+                case NA:
+                default:
+                    return R.color.error_red;
+            }
+        }
+
+        public String getRatingEvaluation()
+        {
+            return mRatingEvaluation;
         }
 
         public String getFeedback()

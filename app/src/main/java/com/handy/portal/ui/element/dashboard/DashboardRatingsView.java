@@ -14,7 +14,7 @@ import com.handy.portal.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RatingsProPerformanceView extends FrameLayout
+public class DashboardRatingsView extends FrameLayout
 {
     @Bind(R.id.five_star_title)
     TextView mTitle;
@@ -29,26 +29,26 @@ public class RatingsProPerformanceView extends FrameLayout
     @Bind(R.id.date_text)
     TextView mDateText;
 
-    public RatingsProPerformanceView(final Context context)
+    public DashboardRatingsView(final Context context)
     {
         super(context);
         init();
     }
 
-    public RatingsProPerformanceView(final Context context, final AttributeSet attrs)
+    public DashboardRatingsView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public RatingsProPerformanceView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    public DashboardRatingsView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public RatingsProPerformanceView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
+    public DashboardRatingsView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
@@ -61,9 +61,7 @@ public class RatingsProPerformanceView extends FrameLayout
 
         mPercentageCircleView.setColor(ContextCompat.getColor(getContext(), R.color.white),
                 ContextCompat.getColor(getContext(), R.color.bg_inactive_grey),
-                ContextCompat.getColor(getContext(), R.color.requested_green),
-                ContextCompat.getColor(getContext(), R.color.handy_yellow),
-                ContextCompat.getColor(getContext(), R.color.error_red));
+                ContextCompat.getColor(getContext(), R.color.requested_green));
         mPercentageCircleView.setSign(getResources().getString(R.string.percentage));
         mPercentageCircleView.setSubText(getResources().getString(R.string.five_star));
 
@@ -92,5 +90,10 @@ public class RatingsProPerformanceView extends FrameLayout
     public void setPercentage(float percentage)
     {
         mPercentageCircleView.setPercentage(percentage);
+    }
+
+    public void setContentColor(int colorId)
+    {
+        mPercentageCircleView.setContentColor(colorId);
     }
 }
