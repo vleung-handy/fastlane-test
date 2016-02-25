@@ -20,7 +20,7 @@
         <include layout="@layout/element_five_stars"/>
 
         <TextView
-            android:id="@+id/review_text"
+            android:id="@+id/five_star_review_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/five_star_review_text_margin"

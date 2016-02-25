@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -32,9 +33,6 @@ public class PercentageCircleView extends View
     private float mCurrentPercentage = 0;
     private float mPercentage = 1.0f;
     private int mSize = 0;
-    private int mGoodColor;
-    private int mAverageColor;
-    private int mBadColor;
 
     public PercentageCircleView(Context context)
     {
@@ -68,10 +66,6 @@ public class PercentageCircleView extends View
         mPaintSign.setColor(Color.GREEN);
         mPaintBackground.setColor(Color.WHITE);
         mPaintSubText.setColor(Color.GRAY);
-
-        mGoodColor = Color.GREEN;
-        mAverageColor = Color.YELLOW;
-        mBadColor = Color.RED;
 
         Typeface tf = Typeface.createFromAsset(getResources().getAssets(), FontUtils.CIRCULAR_BOOK);
         mPaintNumber.setTypeface(tf);
@@ -112,19 +106,24 @@ public class PercentageCircleView extends View
     public void setPercentage(float percentage)
     {
         mPercentage = percentage;
-        resetColor();
     }
 
-    public void setColor(int backgroundColor, int subtitleColor, int goodColor, int averageColor, int badColor)
+    public void setColor(int backgroundColor, int subtitleColor, int contentColor)
     {
         mPaintBackground.setColor(backgroundColor);
         mPaintSubText.setColor(subtitleColor);
 
-        mGoodColor = goodColor;
-        mAverageColor = averageColor;
-        mBadColor = badColor;
+        mPaintCircle.setColor(contentColor);
+        mPaintNumber.setColor(contentColor);
+        mPaintSign.setColor(contentColor);
+    }
 
-        resetColor();
+    public void setContentColor(int colorId)
+    {
+        int color = ContextCompat.getColor(getContext(), colorId);
+        mPaintCircle.setColor(color);
+        mPaintNumber.setColor(color);
+        mPaintSign.setColor(color);
     }
 
     public void setSubText(String subText)
@@ -154,28 +153,6 @@ public class PercentageCircleView extends View
 
         mOuterBox = new RectF(0, 0, mSize, mSize);
         mInnerBox = new RectF(stroke, stroke, mSize - stroke, mSize - stroke);
-    }
-
-    private void resetColor()
-    {
-        if (mPercentage >= .8f)
-        {
-            mPaintCircle.setColor(mGoodColor);
-            mPaintNumber.setColor(mGoodColor);
-            mPaintSign.setColor(mGoodColor);
-        }
-        else if (mPercentage >= .6f)
-        {
-            mPaintCircle.setColor(mAverageColor);
-            mPaintNumber.setColor(mAverageColor);
-            mPaintSign.setColor(mAverageColor);
-        }
-        else
-        {
-            mPaintCircle.setColor(mBadColor);
-            mPaintNumber.setColor(mBadColor);
-            mPaintSign.setColor(mBadColor);
-        }
     }
 
     private int getDigits(int num)

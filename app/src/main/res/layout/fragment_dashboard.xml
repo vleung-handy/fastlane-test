@@ -21,21 +21,21 @@
             android:orientation="vertical"
             >
 
-            <com.handy.portal.ui.element.dashboard.WelcomeProPerformanceView
-                android:id="@+id/welcome_pro_performance_view"
+            <com.handy.portal.ui.element.dashboard.DashboardWelcomeView
+                android:id="@+id/dashboard_welcome_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
 
             <android.support.v4.view.ViewPager
-                android:id="@+id/ratings_performance_view_pager"
+                android:id="@+id/dashboard_ratings_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dashboard_ratings_performance_height"
                 />
 
             <!-- Negative margin hack hides the mysterious gray divider above this view-->
             <com.handy.portal.ui.element.dashboard.CirclePageIndicatorView
-                android:id="@+id/circle_page_indicator_view"
+                android:id="@+id/dashboard_ratings_view_pager_indicator_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/circle_page_indicator_height"
                 android:layout_marginTop="@dimen/circle_negative_margin"

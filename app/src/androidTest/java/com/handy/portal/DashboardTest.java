@@ -34,8 +34,8 @@ public class DashboardTest
         onView(withId(R.id.nav_link_dashboard)).perform(click());
 
         // See if all elements are there
-        onView(withId(R.id.welcome_pro_performance_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.ratings_performance_view_pager)).check(matches(isDisplayed()));
+        onView(withId(R.id.dashboard_welcome_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.dashboard_ratings_view_pager)).check(matches(isDisplayed()));
         onView(withId(R.id.dashboard_options_view)).perform(scrollTo());
         onView(withId(R.id.dashboard_options_view)).check(matches(isDisplayed()));
 
