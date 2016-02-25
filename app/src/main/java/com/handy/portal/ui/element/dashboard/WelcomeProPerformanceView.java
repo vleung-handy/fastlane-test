@@ -23,26 +23,26 @@ public class WelcomeProPerformanceView extends FrameLayout
     public WelcomeProPerformanceView(final Context context)
     {
         super(context);
-        init(context);
+        init();
     }
 
     public WelcomeProPerformanceView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public WelcomeProPerformanceView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public WelcomeProPerformanceView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
+        init();
     }
 
     public void setDisplay(String welcomeBackText, String proStatusText){
@@ -50,7 +50,7 @@ public class WelcomeProPerformanceView extends FrameLayout
         mProStatusText.setText(proStatusText);
     }
 
-    private void init(final Context context)
+    private void init()
     {
         inflate(getContext(), R.layout.element_welcome_pro_performance, this);
         ButterKnife.bind(this);

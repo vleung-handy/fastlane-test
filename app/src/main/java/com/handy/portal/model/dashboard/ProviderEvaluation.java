@@ -11,7 +11,7 @@ public class ProviderEvaluation implements Serializable
 {
     @SerializedName("rolling")
     private Rating mRolling;
-    @SerializedName("life_time")
+    @SerializedName("lifetime")
     private Rating mLifeTime;
     @SerializedName("tier")
     private Tier mTier;
@@ -77,6 +77,8 @@ public class ProviderEvaluation implements Serializable
         private double mProRating;
         @SerializedName("status")
         private String mStatus;
+        @SerializedName("rating_evaluation")
+        private String mRatingEvaluation;
         @SerializedName("feedback")
         private String mFeedback;
         @SerializedName("start_date")
@@ -87,13 +89,15 @@ public class ProviderEvaluation implements Serializable
         public Rating(
                 final int ratedBookingCount, final int totalBookingCount,
                 final int fiveStarRatedBookingCount, final double proRating, final String status,
-                final String feedback, final Date startDate, final Date endDate)
+                final String ratingEvaluation, final String feedback, final Date startDate,
+                final Date endDate)
         {
             mRatedBookingCount = ratedBookingCount;
             mTotalBookingCount = totalBookingCount;
             mFiveStarRatedBookingCount = fiveStarRatedBookingCount;
             mProRating = proRating;
             mStatus = status;
+            mRatingEvaluation = ratingEvaluation;
             mFeedback = feedback;
             mStartDate = startDate;
             mEndDate = endDate;
@@ -122,6 +126,11 @@ public class ProviderEvaluation implements Serializable
         public String getStatus()
         {
             return mStatus;
+        }
+
+        public String getRatingEvaluation()
+        {
+            return mRatingEvaluation;
         }
 
         public String getFeedback()

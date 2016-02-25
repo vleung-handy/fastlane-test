@@ -233,7 +233,7 @@ public interface HandyRetrofitService
                                      HandyRetrofitCallback cb);
 
     // Dashboard
-    @GET(PROVIDERS_PATH + "evaluation/{id}")
+    @GET(PROVIDERS_PATH + "{id}/evaluation")
     void getProviderEvaluation(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "rating/{id}?min_star=5")
