@@ -117,7 +117,7 @@ public class LocationManager
      * @param event
      */
     @Subscribe
-    public void onNetworkReconnected(final HandyEvent.OnNetworkReconnected event)
+    public void onNetworkReconnected(final HandyEvent.NetworkReconnected event)
     {
         Log.d(getClass().getName(), "on network reconnected");
         resendFailedLocationBatchUpdates();

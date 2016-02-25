@@ -339,7 +339,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         if(hasConnectivity && !mPreviouslyHadNetworkConnectivity)
         //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
         {
-            bus.post(new HandyEvent.OnNetworkReconnected());
+            bus.post(new HandyEvent.NetworkReconnected());
             rerequestLocationUpdatesForActiveStrategies();
             //immediately request location updates
             //this will be much easier when we only have one location listener

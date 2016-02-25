@@ -322,7 +322,7 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final LocationManager provideLocationManager(final Bus bus,
-                                               final DataManager dataManager,
+                                                 final DataManager dataManager,
                                                  final ProviderManager providerManager,
                                                  final PrefsManager prefsManager)
     {

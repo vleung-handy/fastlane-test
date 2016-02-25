@@ -56,7 +56,7 @@ public abstract class HandyEvent
     }
 
     //TODO: move? don't want everything in HandyEvent
-    public static class OnNetworkReconnected extends HandyEvent.RequestEvent
+    public static class NetworkReconnected extends HandyEvent.RequestEvent
     {
     }
 
