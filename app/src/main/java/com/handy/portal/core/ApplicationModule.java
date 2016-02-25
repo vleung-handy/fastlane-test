@@ -50,15 +50,11 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.handy.portal.ui.constructor.ProfileContactView;
-import com.handy.portal.ui.constructor.ProfilePerformanceView;
-import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
-import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
@@ -139,16 +135,12 @@ import retrofit.converter.GsonConverter;
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
-        ProfileContactView.class,
-        ProfilePerformanceView.class,
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
-        ProfileReferralView.class,
         PaymentsBatchListView.class,
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
         CancellationRequestFragment.class,
-        ManagementToolsView.class,
         SupportActionView.class,
         NotificationsFragment.class,
         NotificationsListView.class,

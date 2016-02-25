@@ -8,16 +8,19 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.ProfileEvent;
+import com.handy.portal.model.Address;
+import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.ui.constructor.ProfileContactView;
-import com.handy.portal.ui.constructor.ProfilePerformanceView;
-import com.handy.portal.ui.constructor.ProfileReferralView;
-import com.handy.portal.ui.element.profile.ManagementToolsView;
-import com.handy.portal.ui.element.profile.ProfileHeaderView;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,12 +29,28 @@ import butterknife.OnClick;
 
 public class ProfileFragment extends ActionBarFragment
 {
+    @Inject
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
+
+    @Bind(R.id.profile_section_header_title_text)
+    TextView mTitleText;
+    @Bind(R.id.profile_section_header_subtitle_text)
+    TextView mSubtitleText;
+    @Bind(R.id.profile_section_update)
+    TextView mUpdateButton;
+    @Bind(R.id.provider_email_text)
+    TextView mProviderEmailText;
+    @Bind(R.id.provider_phone_text)
+    TextView mProviderPhoneText;
+    @Bind(R.id.provider_address_text)
+    TextView mProviderAddressText;
+
     @Bind(R.id.fetch_error_view)
     ViewGroup fetchErrorLayout;
-
     @Bind(R.id.profile_layout)
     ViewGroup profileLayout;
-
     @Bind(R.id.fetch_error_text)
     TextView fetchErrorText;
 
@@ -94,13 +113,6 @@ public class ProfileFragment extends ActionBarFragment
         }
     }
 
-    @OnClick(R.id.try_again_button)
-    public void requestProviderProfile()
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new ProfileEvent.RequestProviderProfile());
-    }
-
     @Subscribe
     public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
     {
@@ -116,45 +128,39 @@ public class ProfileFragment extends ActionBarFragment
         fetchErrorLayout.setVisibility(View.VISIBLE);
     }
 
-    @Subscribe
-    public void onReceiveSendResupplyKitSuccess(ProfileEvent.ReceiveSendResupplyKitSuccess event)
+    @OnClick(R.id.try_again_button)
+    public void requestProviderProfile()
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-
-        //Do we really need to remove and recreate ManagementToolsView? Or is it handled on resume?
-        ViewGroup resupplyLayout = (ViewGroup) getActivity().findViewById(R.id.resupply_layout);
-        if (resupplyLayout != null)
-        {
-            profileLayout.removeView(resupplyLayout);
-        }
-
-        profileLayout.addView(new ManagementToolsView(getContext(), mProviderProfile));
-
-        showToast(R.string.resupply_kit_on_its_way);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new ProfileEvent.RequestProviderProfile());
     }
 
-    @Subscribe
-    public void onReceiveSendResupplyKitError(ProfileEvent.ReceiveSendResupplyKitError event)
+    @OnClick(R.id.profile_section_update)
+    public void setupUpdateButton()
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        String message = event.error.getMessage();
-        if (message == null)
-        {
-            message = getContext().getString(R.string.unable_to_process_request);
-        }
-
-        showToast(message);
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, null, TransitionStyle.SLIDE_UP));
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createEditProfileSelectedLog()));
     }
 
     private void createProfileView()
     {
-        profileLayout.removeAllViews();
+        ProviderPersonalInfo providerPersonalInfo = mProviderProfile.getProviderPersonalInfo();
 
-        profileLayout.addView(new ProfileHeaderView(getContext(), mProviderProfile));
-        profileLayout.addView(new ProfilePerformanceView(getActivity(), mProviderProfile.getPerformanceInfo()));
-        profileLayout.addView(new ProfileReferralView(getActivity(), mProviderProfile.getReferralInfo()));
-        profileLayout.addView(new ProfileContactView(getActivity(), mProviderProfile.getProviderPersonalInfo()));
-        profileLayout.addView(new ManagementToolsView(getContext(), mProviderProfile));
+        mTitleText.setText(R.string.your_contact_information);
+        mSubtitleText.setVisibility(View.GONE);
+
+        String noData = getContext().getString(R.string.no_data);
+
+        String email = providerPersonalInfo.getEmail();
+        mProviderEmailText.setText(email != null ? email : noData);
+
+        String phone = providerPersonalInfo.getPhone();
+        mProviderPhoneText.setText(phone != null ? phone : noData);
+
+        Address address = providerPersonalInfo.getAddress();
+        mProviderAddressText.setText(address != null ? (address.getStreetAddress() + "\n" + address.getCityStateZip()) : noData);
+
+        mUpdateButton.setVisibility(View.VISIBLE);
 
         fetchErrorLayout.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
