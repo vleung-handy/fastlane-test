@@ -58,7 +58,7 @@ public class LocationManager
         mPrefsManager = prefsManager;
         LocationScheduleBuilderManager mLocationScheduleBuilderManager =
                 new LocationScheduleBuilderManager(mBus); //TODO: this means we don't have to provide in app module. is that better?
-        //TODO: should comment out the above if toggle-testing
+        //should comment out the above if toggle-testing
     }
 
     /**
