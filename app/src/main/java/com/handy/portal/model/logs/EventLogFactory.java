@@ -9,6 +9,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.Provider;
 import com.handy.portal.util.MathUtils;
+import com.urbanairship.push.PushMessage;
 
 import java.util.Date;
 
@@ -135,7 +136,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.RemoveJobClicked(                bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
+        return new ScheduledJobsLog.RemoveJobClicked(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
     }
 
     public EventLog createRemoveJobConfirmedLog(Booking booking, String warning)
@@ -147,7 +148,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.RemoveJobConfirmed(                bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
+        return new ScheduledJobsLog.RemoveJobConfirmed(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
     }
 
     public EventLog createRemoveJobErrorLog(Booking booking)
@@ -159,7 +160,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.RemoveJobError(                bookingId, serviceId, regionId, zipCode, requested, dateStart);
+        return new ScheduledJobsLog.RemoveJobError(bookingId, serviceId, regionId, zipCode, requested, dateStart);
     }
 
     public EventLog createOnMyWayLog(@NonNull Booking booking, LocationData location)
@@ -302,6 +303,23 @@ public class EventLogFactory
     public EventLog createHelpContactFormSubmittedLog(String path, int helpNodeId, String helpNodeTitle)
     {
         return new HelpContactFormSubmittedLog(path, helpNodeId, helpNodeTitle);
+    }
+
+    // Push logs
+
+    public EventLog createPushNotificationReceivedLog(final PushMessage pushMessage)
+    {
+        return new PushNotificationLog.Received(pushMessage);
+    }
+
+    public EventLog createPushNotificationOpenedLog(final PushMessage pushMessage)
+    {
+        return new PushNotificationLog.Opened(pushMessage);
+    }
+
+    public EventLog createPushNotificationDismissedLog(final PushMessage pushMessage)
+    {
+        return new PushNotificationLog.Dismissed(pushMessage);
     }
 
     // private helpers

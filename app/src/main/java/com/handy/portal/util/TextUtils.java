@@ -23,6 +23,11 @@ public final class TextUtils
 
     private static final Hashtable<String, Typeface> cache = new Hashtable<>();
 
+    public static boolean isNullOrEmpty(String string)
+    {
+        return string == null || string.isEmpty();
+    }
+
     public static Typeface get(final Context c, final String name)
     {
         synchronized (cache)

@@ -39,6 +39,7 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -74,6 +75,7 @@ import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
@@ -131,6 +133,7 @@ import retrofit.converter.GsonConverter;
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
         NotificationBlockerDialogFragment.class,
+        LocationSettingsBlockerDialogFragment.class,
         PaymentsUpdateBankAccountFragment.class,
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
@@ -155,6 +158,7 @@ import retrofit.converter.GsonConverter;
         LocationScheduleHandler.class,
         LocationService.class,
         BookingDetailsJobInstructionsView.class,
+        HandyPushReceiver.class,
 })
 public final class ApplicationModule
 {

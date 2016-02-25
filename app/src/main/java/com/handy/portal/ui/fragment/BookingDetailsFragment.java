@@ -562,8 +562,8 @@ public class BookingDetailsFragment extends ActionBarFragment
                 {
                     showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
                 }
-
-                if (mAssociatedBooking.isAnyPreferenceChecked())
+                final boolean proReportedNoShow = mAssociatedBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
+                if (proReportedNoShow || mAssociatedBooking.isAnyPreferenceChecked())
                 {
                     if (showCheckoutRatingFlow)
                     {

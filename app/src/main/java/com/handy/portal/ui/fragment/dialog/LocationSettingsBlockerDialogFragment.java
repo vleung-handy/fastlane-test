@@ -1,7 +1,6 @@
 package com.handy.portal.ui.fragment.dialog;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -10,14 +9,11 @@ import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.ui.view.DialogBlockerView;
+import com.handy.portal.util.Utils;
 
-import butterknife.ButterKnife;
-
-public class NotificationBlockerDialogFragment extends InjectedDialogFragment
+public class LocationSettingsBlockerDialogFragment extends InjectedDialogFragment
 {
-    private static final String PACKAGE_PREFIX = "package:";
-
-    public static final String FRAGMENT_TAG = "fragment_dialog_notification_blocker";
+    public static final String FRAGMENT_TAG = LocationSettingsBlockerDialogFragment.class.getName();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -30,21 +26,18 @@ public class NotificationBlockerDialogFragment extends InjectedDialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = new DialogBlockerView(getContext())
-                .setTitle(R.string.notification_blocker_title)
-                .setMessage(R.string.notification_blocker_body)
-                .setActionButton(R.string.enable_now, new View.OnClickListener()
+                .setTitle(R.string.change_location_settings_dialog_title)
+                .setMessage(R.string.change_location_settings_dialog_message)
+                .setActionButton(R.string.change_location_settings_dialog_action_button, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(final View v)
                     {
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse(PACKAGE_PREFIX + getContext().getPackageName()));
-                        startActivity(intent);
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        Utils.safeLaunchIntent(intent, getContext());
                         dismiss();
                     }
                 });
-        ButterKnife.bind(this, view);
         return view;
     }
 }
