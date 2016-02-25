@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.util.DateTimeUtils;
 
 import java.util.Date;
 
@@ -55,13 +54,6 @@ public class LocationQueryStrategy implements Parcelable
     public static final int ACCURACY_HIGH_PRIORITY = 2;
     public LocationQueryStrategy()
     {
-        //TODO: REMOVE, FOR TESTING ONLY
-        mStartDate = new Date();
-        mEndDate = new Date(mStartDate.getTime() + DateTimeUtils.MILLISECONDS_IN_HOUR);
-        mDistanceFilterMeters = 0;
-        mLocationPollingIntervalSeconds = 1;
-        mEventName = "test";
-        mLocationAccuracyPriority = ACCURACY_HIGH_PRIORITY;
     }
 
 
@@ -91,30 +83,6 @@ public class LocationQueryStrategy implements Parcelable
     public String getBookingId()
     {
         return mBookingId;
-    }
-
-    /**
-     * TODO: REMOVE, FOR TESTING ONLY
-     *
-     * @param startDate
-     * @param durationMinutes
-     * @param locationPollingIntervalSeconds
-     * @param locationAccuracyPriority
-     */
-    public LocationQueryStrategy(
-            String bookingId,
-            Date startDate,
-                                 long durationMinutes,
-                                 int locationPollingIntervalSeconds,
-                                 int serverPollingIntervalSeconds,
-                                 int locationAccuracyPriority)
-    {
-        mBookingId = bookingId;
-        mStartDate = startDate;
-        mEndDate = new Date(startDate.getTime() + durationMinutes * DateTimeUtils.MILLISECONDS_IN_MINUTE);
-        mLocationPollingIntervalSeconds = locationPollingIntervalSeconds;
-        mServerPollingIntervalSeconds = serverPollingIntervalSeconds;
-        mLocationAccuracyPriority = locationAccuracyPriority;
     }
 
     public LocationQueryStrategy setBookingId(final String bookingId)

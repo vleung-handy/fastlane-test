@@ -1,8 +1,11 @@
 package com.handy.portal.ui.fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,8 +29,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.location.LocationConstants;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.util.Utils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -97,6 +102,10 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     {
         if (mBooking == null) { return; }
 
+        if (!Utils.areAnyPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
+        {
+            return;
+        }
         map.setMyLocationEnabled(true);
 
         // Default points

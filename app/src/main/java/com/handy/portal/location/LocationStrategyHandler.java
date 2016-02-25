@@ -71,7 +71,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
                 //TODO: use a util instead
                 if (location.getTime() > mLocationQueryStrategy.getEndDate().getTime())
                 {
-                    Log.i(getClass().getName(), "location request expired but got location changed callback, not doing anything");
+                    Log.d(getClass().getName(), "location request expired but got location changed callback, not doing anything");
                     //would be messy if i unregistered this here, because no reference to required arguments
 
                     return; //expired
@@ -100,12 +100,9 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
      */
     private LocationRequest createLocationRequest()
     {
-        int priority = 0;
+        int priority;
         switch (mLocationQueryStrategy.getLocationAccuracyPriority())
         {
-            case 0:
-                priority = LocationRequest.PRIORITY_LOW_POWER;
-                break;
             case LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY:
                 priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
                 break;
@@ -144,7 +141,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
             return;
         }
 
-        Log.i(getClass().getName(), "requesting location updates for " + mLocationQueryStrategy.toString());
+        Log.d(getClass().getName(), "requesting location updates for " + mLocationQueryStrategy.toString());
         LocationRequest locationRequest = createLocationRequest();
         long expirationTimeMs = locationRequest.getExpirationTime();
 
@@ -203,7 +200,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
      */
     private void onNewLocationUpdate(@NonNull LocationUpdate locationUpdate)
     {
-        Log.i(getClass().getName(), "new location update: " + locationUpdate.toString());
+        Log.d(getClass().getName(), "new location update: " + locationUpdate.toString());
         mLocationUpdateQueue.add(locationUpdate);
         if (shouldPostUpdate())
         {

@@ -87,7 +87,7 @@ public class LocationTesterView extends LinearLayout
                 LocationQueryStrategy locationQueryStrategy = locationService.getLatestActiveLocationQueryStrategy();
                 if(locationQueryStrategy != null)
                 {
-                    Log.i(getClass().getName(), "found an existing strategy - setting view to its params");
+                    Log.d(getClass().getName(), "found an existing strategy - setting view to its params");
                     mLocationServicesAccuracyToggle.setChecked(locationQueryStrategy.getLocationAccuracyPriority()==LocationQueryStrategy.ACCURACY_HIGH_PRIORITY);
                     mLocationServicesServerPostingIntervalText.setText("" + locationQueryStrategy.getServerPollingIntervalSeconds());
                     mLocationServicesPollingIntervalText.setText("" + locationQueryStrategy.getLocationPollingIntervalSeconds());
@@ -96,12 +96,12 @@ public class LocationTesterView extends LinearLayout
                 }
                 else
                 {
-                    Log.i(getClass().getName(), "unable to get active location query strategy");
+                    Log.d(getClass().getName(), "unable to get active location query strategy");
                 }
             }
             else
             {
-                Log.i(getClass().getName(), "unable to get location service instance");
+                Log.d(getClass().getName(), "unable to get location service instance");
             }
         }
 

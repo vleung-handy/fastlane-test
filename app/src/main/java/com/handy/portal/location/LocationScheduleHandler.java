@@ -122,7 +122,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
             {
                 //start date is in the future
                 scheduleAlarm(strategy);
-                Log.i(getClass().getName(), "Scheduled an alarm for " + strategy.getStartDate().toString());
+                Log.d(getClass().getName(), "Scheduled an alarm for " + strategy.getStartDate().toString());
                 break; //only want one alarm a time and don't need to look further into future
             }
         }
@@ -132,7 +132,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     public void startStrategy(@NonNull final LocationQueryStrategy locationQueryStrategy) throws SecurityException, IllegalStateException
     {
-        Log.i(getClass().getName(), "starting strategy...");
+        Log.d(getClass().getName(), "starting strategy...");
         final LocationStrategyHandler locationStrategyHandler =
                 new LocationStrategyHandler(
                         locationQueryStrategy,
@@ -150,7 +150,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     public void onLocationStrategyExpired(final LocationStrategyHandler locationStrategyHandler)
     {
         try{
-            Log.i(getClass().getName(), "strategy expired, posting remaining location update objects in queue...");
+            Log.d(getClass().getName(), "strategy expired, posting remaining location update objects in queue...");
             //strategy expired, we want to post any remaining update objects in the queue
             locationStrategyHandler.buildBatchUpdateAndNotifyReady();
             mActiveLocationRequestStrategies.remove(locationStrategyHandler);
@@ -180,7 +180,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
      */
     private void sendAllQueuedLocationUpdates()
     {
-        Log.i(getClass().getName(), "sending out all queued location updates");
+        Log.d(getClass().getName(), "sending out all queued location updates");
         Iterator<LocationStrategyHandler> locationStrategyHandlerIterator = mActiveLocationRequestStrategies.iterator();
         while(locationStrategyHandlerIterator.hasNext())
         {
@@ -206,7 +206,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
      */
     private void rerequestLocationUpdatesForActiveStrategies()
     {
-        Log.i(getClass().getName(), "rerequesting location updates for the active strategies");
+        Log.d(getClass().getName(), "rerequesting location updates for the active strategies");
         Iterator<LocationStrategyHandler> locationStrategyHandlerIterator = mActiveLocationRequestStrategies.iterator();
         while(locationStrategyHandlerIterator.hasNext())
         {
@@ -296,7 +296,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         {
             //TODO: refactor this
             case LOCATION_SCHEDULE_ALARM_BROADCAST_ID:
-                Log.i(getClass().getName(), "Woke up");
+                Log.d(getClass().getName(), "Woke up");
                 LocationQueryStrategy locationQueryStrategy = args.getParcelable(BUNDLE_EXTRA_LOCATION_STRATEGY);
                 onLocationStrategyAlarmTriggered(locationQueryStrategy);
                 break;
@@ -309,7 +309,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     private void onLocationStrategyAlarmTriggered(LocationQueryStrategy locationQueryStrategy)
     {
         if(locationQueryStrategy == null) return;
-        Log.i(getClass().getName(), "Got location strategy " + locationQueryStrategy.toString());
+        Log.d(getClass().getName(), "Got location strategy " + locationQueryStrategy.toString());
         try
         {
             startStrategy(locationQueryStrategy);
@@ -335,7 +335,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 NOTE: if i have both data and wifi on, and then turn wifi off,
                 hasConnectivity will still be true
                  */
-        Log.i(getClass().getName(), "has network connectivity: " + hasConnectivity);
+        Log.d(getClass().getName(), "has network connectivity: " + hasConnectivity);
         if(hasConnectivity && !mPreviouslyHadNetworkConnectivity)
         //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
         {

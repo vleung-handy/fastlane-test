@@ -106,7 +106,7 @@ public class LocationManager
         {
             LocationBatchUpdate failedLocationBatchUpdate = setIterator.next();
             sendLocationBatchUpdate(failedLocationBatchUpdate, false);
-            Log.i(getClass().getName(), "resending failed location update: " + failedLocationBatchUpdate.toString());
+            Log.d(getClass().getName(), "resending failed location update: " + failedLocationBatchUpdate.toString());
             setIterator.remove();
             maxBatchesToRetryAtOnce--;
         }
@@ -119,7 +119,7 @@ public class LocationManager
     @Subscribe
     public void onNetworkReconnected(final HandyEvent.OnNetworkReconnected event)
     {
-        Log.i(getClass().getName(), "on network reconnected");
+        Log.d(getClass().getName(), "on network reconnected");
         resendFailedLocationBatchUpdates();
         //request immediate location updates?
     }
@@ -132,7 +132,7 @@ public class LocationManager
      */
     private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
     {
-        Log.i(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
+        Log.d(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
         int providerId = 0;
         if (mProviderManager.getCachedActiveProvider() != null)
         {
@@ -153,20 +153,20 @@ public class LocationManager
             {
                 if (response.getSuccess())
                 {
-                    Log.i(getClass().getName(), "Successfully sent location to server");
+                    Log.d(getClass().getName(), "Successfully sent location to server");
                     resendFailedLocationBatchUpdates(); //now is probably a good time to retry
                     //calling here in addition to on network reconnected because we're retrying a limited number of batches at once
                 }
                 else
                 {
-                    Log.i(getClass().getName(), "Failed to send location to server but got Retrofit success callback");
+                    Log.d(getClass().getName(), "Failed to send location to server but got Retrofit success callback");
                 }
             }
 
             @Override
             public void onError(final DataManager.DataManagerError error)
             {
-                Log.i(getClass().getName(), "Failed to send location to server");
+                Log.d(getClass().getName(), "Failed to send location to server");
                 if (retryUpdateIfFailed && error.getType().equals(DataManager.DataManagerError.Type.NETWORK))
                 {
                     //only retry when network issue. don't want to retry if it's a server problem or our problem

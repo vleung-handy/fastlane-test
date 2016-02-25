@@ -60,7 +60,7 @@ public class LocationScheduleBuilderManager
         for(Date d : requestedDates)
         {
             mRequestedDatesForScheduleSet.add(d);
-            Log.i(getClass().getName(), "requested date: " + d);
+            Log.d(getClass().getName(), "requested date: " + d);
         }
         //i want to easily get rid of the entries in the date booking map that aren't dates i requested here
         //but keep the ones that are of dates, for memory purposes.

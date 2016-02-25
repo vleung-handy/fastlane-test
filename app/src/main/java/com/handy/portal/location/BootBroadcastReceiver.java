@@ -20,7 +20,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver
         //TODO: make it not start the service if config param says not to
         if(ACTION_BOOT_COMPLETED.equals(intent.getAction()))
         {
-            Log.i(getClass().getName(), "Boot completed. Starting location service...");
+            Log.d(getClass().getName(), "Boot completed. Starting location service...");
             try
             {
                 Intent serviceIntent = new Intent(context, LocationService.class);

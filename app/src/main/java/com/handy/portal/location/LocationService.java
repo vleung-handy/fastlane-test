@@ -66,7 +66,7 @@ public class LocationService extends Service
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
-        Log.i(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
+        Log.d(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
 
 //        Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
 
@@ -102,7 +102,7 @@ public class LocationService extends Service
         mLocationScheduleHandler.destroy();
 
         mGoogleApiClient.disconnect();
-        Log.i(getClass().getName(), "service destroyed");
+        Log.d(getClass().getName(), "service destroyed");
         super.onDestroy();
     }
 
@@ -117,7 +117,7 @@ public class LocationService extends Service
     @Subscribe
     public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationSchedule event)
     {
-        Log.i(getClass().getName(), "got new location schedule event");
+        Log.d(getClass().getName(), "got new location schedule event");
         LocationQuerySchedule locationQuerySchedule = event.getLocationQuerySchedule();
         handleNewLocationQuerySchedule(locationQuerySchedule);
         //TODO: optimize if the schedule did NOT change!!!!!
@@ -130,7 +130,7 @@ public class LocationService extends Service
      */
     private void handleNewLocationQuerySchedule(@NonNull LocationQuerySchedule locationQuerySchedule)
     {
-        Log.i(getClass().getName(), "handling new schedule: " + locationQuerySchedule.toString());
+        Log.d(getClass().getName(), "handling new schedule: " + locationQuerySchedule.toString());
         if (mLocationScheduleHandler != null)
         {
             mLocationScheduleHandler.destroy(); //TODO: don't want to do this if the schedule didn't change!
@@ -198,7 +198,7 @@ public class LocationService extends Service
     @Override
     public void onConnectionSuspended(final int i)
     {
-        Log.i(LocationService.class.getName(), "GoogleApiClient connection has been suspended");
+        Log.d(LocationService.class.getName(), "GoogleApiClient connection has been suspended");
 
         //the api client automatically reconnects itself. no need to call connect()
 
@@ -207,7 +207,7 @@ public class LocationService extends Service
     @Override
     public void onConnectionFailed(final ConnectionResult connectionResult)
     {
-        Log.i(LocationService.class.getName(), "GoogleApiClient connection has failed");
+        Log.d(LocationService.class.getName(), "GoogleApiClient connection has failed");
 
     }
 

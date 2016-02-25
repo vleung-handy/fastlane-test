@@ -172,7 +172,7 @@ public class BookingManager
                 final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
-                    Log.i(getClass().getName(), "received scheduled bookings: " + day.toString());
+                    Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                     resultMap.put(day, cachedBookings);
                 }
                 else
@@ -197,7 +197,7 @@ public class BookingManager
                             for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
                             {
                                 Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-                                Log.i(getClass().getName(), "batch received scheduled bookings: " + day.toString());
+                                Log.d(getClass().getName(), "batch received scheduled bookings: " + day.toString());
                                 Crashlytics.log("Received scheduled bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
                                 scheduledBookingsCache.put(day, bookings);
@@ -232,7 +232,7 @@ public class BookingManager
                 final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
-                    Log.i(getClass().getName(), "received scheduled bookings: " + day.toString());
+                    Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                     mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
                 }
                 else
@@ -257,7 +257,7 @@ public class BookingManager
                             for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
                             {
                                 Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-                                Log.i(getClass().getName(), "received scheduled bookings: " + day.toString());
+                                Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                                 Crashlytics.log("Received scheduled bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
                                 scheduledBookingsCache.put(day, bookings);
