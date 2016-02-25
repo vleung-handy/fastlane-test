@@ -173,7 +173,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     }
 
     /**
-     * TODO: need to test
+     * TODO: need to consolidate with below function
      *
      * called when this handler is destroyed
      * sends out all queued location updates to the server
@@ -198,7 +198,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     }
 
     /**
-     * TODO: need to test. also consolidate with above function
+     * TODO: also consolidate with above function
      *
      * called when network reconnected
      * triggers immediate requests for location updates for the active strategies
@@ -341,6 +341,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         {
             bus.post(new HandyEvent.NetworkReconnected());
             rerequestLocationUpdatesForActiveStrategies();
+            //TODO don't like this decoupled from the network event handler, but not sure i want to register a bus to subscribe to events here either
             //immediately request location updates
             //this will be much easier when we only have one location listener
             //which will we do when we don't have overlapping strategies anymore

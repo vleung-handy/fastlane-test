@@ -240,18 +240,6 @@ public final class DateTimeUtils
         return (int)( (d2.getTime() - d1.getTime()) / (MILLISECONDS_IN_HOUR * HOURS_IN_DAY));
     }
 
-    /**
-     *
-     * @param timeMs
-     * @param startDate inclusive
-     * @param endDate exclusive
-     * @return
-     */
-    public static boolean isTimeBetweenDates(long timeMs, Date startDate, Date endDate)
-    {
-        return timeMs >= startDate.getTime()  && timeMs <endDate.getTime();
-    }
-
     private static SimpleDateFormat getClockFormatter12hr()
     {
         CLOCK_FORMATTER_12HR.setTimeZone(TimeZone.getDefault());

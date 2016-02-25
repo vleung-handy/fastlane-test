@@ -124,29 +124,6 @@ public class LocationScheduleBuilderManager
         mBus.post(new LocationEvent.ReceiveLocationSchedule(locationQuerySchedule));
     }
 
-//    private boolean bookingListStartEndDatesEqual(List<Booking> bookingList1,
-//                                                  List<Booking> bookingList2)
-//    {
-//        if(bookingList1 == bookingList2) return true;
-//        if(bookingList1 == null || bookingList2 == null || bookingList1.size() != bookingList2.size()) return false;
-//
-//        //they have the same size
-//        ListIterator<Booking> iterator1 = bookingList1.listIterator();
-//        ListIterator<Booking> iterator2 = bookingList2.listIterator();
-//        while(iterator1.hasNext())
-//        {
-//            Booking booking1 = iterator1.next();
-//            Booking booking2 = iterator2.next();
-//            if(!booking1.getStartDate().equals(booking2.getStartDate())
-//                    || !booking1.getEndDate().equals(booking2.getEndDate()))
-//            {
-//                return false;
-//            }
-//        }
-//
-//        return true;
-//    }
-
     /**
      * this event is fired from booking manager when ANY booking is updated! on job claim, removed, etc
      * @param event
