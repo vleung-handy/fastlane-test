@@ -65,20 +65,6 @@ public class LocationQuerySchedule implements Parcelable
         }
     };
 
-//    public static LocationQuerySchedule fromJson(String jsonString)
-//    {
-//        if(jsonString == null) return null;
-//        Gson gson = new Gson();
-//        LocationQuerySchedule locationQuerySchedule = gson.fromJson(jsonString, LocationQuerySchedule.class);
-//        return locationQuerySchedule;
-//    }
-//
-//    public final String toJson()
-//    {
-//        Gson gson = new Gson();
-//        return gson.toJson(this);
-//    }
-
     /**
      * for debugging purposes only
      *
