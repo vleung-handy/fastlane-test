@@ -10,6 +10,7 @@
     <include layout="@layout/element_profile_section_header"/>
 
     <LinearLayout
+        android:id="@+id/profile_contact_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"

@@ -71,7 +71,7 @@ public class TabNavigationManager
         mBus.post(new HandyEvent.SwapFragmentNavigation(swapFragmentArguments));
     }
 
-    private  boolean isCachedProviderBlockPro()
+    private boolean isCachedProviderBlockPro()
     {
         return mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().isBlockCleaner();
     }
@@ -130,7 +130,7 @@ public class TabNavigationManager
         }
 
         //The new web view page URL style requires some processing since it is structured in a RESTful way
-        if(targetTab.getWebViewTarget() != null)
+        if (targetTab.getWebViewTarget() != null)
         {
             String constructedUrl = mWebUrlManager.constructUrlForTargetTab(targetTab);
             inputArgumentsBundle.putString(BundleKeys.TARGET_URL, constructedUrl);
@@ -158,7 +158,6 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.CANCELLATION_REQUEST;
             addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
-//            addToBackStack |= currentTab == MainViewTab.ACCOUNT_SETTINGS;
             addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
 
             // Account Settings
@@ -168,7 +167,6 @@ public class TabNavigationManager
 
         return addToBackStack;
     }
-
 
 
 }

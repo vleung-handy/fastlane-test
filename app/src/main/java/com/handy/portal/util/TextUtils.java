@@ -101,14 +101,6 @@ public final class TextUtils
         return decimalFormat.format(value);
     }
 
-    public static String formatPrice(final float price, final String currencyChar,
-                                     final String currencySuffix) {
-        final DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return (currencyChar != null ? currencyChar : "$")
-                + decimalFormat.format(price)
-                + (currencySuffix != null ? currencySuffix : "");
-    }
-
     public static String toTitleCase(final String str)
     {
         if (str == null) { return null; }

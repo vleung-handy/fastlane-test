@@ -41,6 +41,13 @@ public class AccountSettingsFragment extends ActionBarFragment
     @Bind(R.id.verification_status_text)
     TextView mVerificationStatusText;
 
+    @Bind(R.id.account_settings_layout)
+    ViewGroup mAccountSettingsLayout;
+    @Bind(R.id.fetch_error_view)
+    ViewGroup mFetchErrorView;
+    @Bind(R.id.fetch_error_text)
+    TextView mFetchErrorText;
+
     private ProviderProfile mProviderProfile;
     private View fragmentView;
 
@@ -74,28 +81,6 @@ public class AccountSettingsFragment extends ActionBarFragment
         populateInfo();
     }
 
-    private void populateInfo()
-    {
-        mBus.post(new PaymentEvent.RequestPaymentFlow());
-
-        Provider provider = mProviderManager.getCachedActiveProvider();
-        mProviderProfile = mProviderManager.getCachedProviderProfile();
-        if (provider != null)
-        {
-            mProviderNameText.setText(provider.getFullName());
-        }
-        if (mProviderProfile == null)
-        {
-            requestProviderProfile();
-        }
-    }
-
-    private void requestProviderProfile()
-    {
-        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        mBus.post(new ProfileEvent.RequestProviderProfile());
-    }
-
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile()
     {
@@ -113,6 +98,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mBus.post(new LogEvent.AddLogEvent(
                 mEventLogFactory.createResupplyKitSelectedLog()));
+
         final Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_PROFILE, mProviderProfile);
         mBus.post(new HandyEvent.NavigateToTab(
@@ -127,10 +113,19 @@ public class AccountSettingsFragment extends ActionBarFragment
         mBus.post(new HandyEvent.RequestSendIncomeVerification());
     }
 
+    @OnClick(R.id.try_again_button)
+    public void retryProfileFetch()
+    {
+        requestProviderProfile();
+    }
+
     @Subscribe
     public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        mAccountSettingsLayout.setVisibility(View.VISIBLE);
+        mFetchErrorView.setVisibility(View.GONE);
+
         mProviderProfile = event.providerProfile;
     }
 
@@ -138,7 +133,9 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onReceiveProviderProfileError(ProfileEvent.ReceiveProviderProfileError event)
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-
+        mAccountSettingsLayout.setVisibility(View.GONE);
+        mFetchErrorView.setVisibility(View.VISIBLE);
+        mFetchErrorText.setText(getString(R.string.error_loading_profile));
     }
 
     @Subscribe
@@ -157,7 +154,6 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onGetPaymentFlowError(PaymentEvent.ReceivePaymentFlowError event)
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-//        showToast(R.string.payment_flow_error);
     }
 
     @Subscribe
@@ -172,5 +168,28 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Toast.makeText(getContext(), R.string.send_verification_failed, Toast.LENGTH_SHORT).show();
+    }
+
+    private void populateInfo()
+    {
+        mBus.post(new PaymentEvent.RequestPaymentFlow());
+
+        Provider provider = mProviderManager.getCachedActiveProvider();
+        if (provider != null)
+        {
+            mProviderNameText.setText(provider.getFullName());
+        }
+
+        mProviderProfile = mProviderManager.getCachedProviderProfile();
+        if (mProviderProfile == null)
+        {
+            requestProviderProfile();
+        }
+    }
+
+    private void requestProviderProfile()
+    {
+        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        mBus.post(new ProfileEvent.RequestProviderProfile());
     }
 }
