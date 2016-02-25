@@ -99,9 +99,15 @@ public class LocationService extends Service
     public void onDestroy()
     {
         mBus.unregister(this);
-        mLocationScheduleHandler.destroy();
+        if(mLocationScheduleHandler != null)
+        {
+            mLocationScheduleHandler.destroy();
+        }
 
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient != null)
+        {
+            mGoogleApiClient.disconnect();
+        }
         Log.d(getClass().getName(), "service destroyed");
         super.onDestroy();
     }
