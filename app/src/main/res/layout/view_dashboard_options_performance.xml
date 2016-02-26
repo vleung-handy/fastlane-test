@@ -20,16 +20,17 @@
         android:padding="@dimen/default_padding"
         >
 
-        <!-- TODO: Dynamic tiers after working API, remove hardoding -->
         <TextView
+            android:id="@+id/tier_title"
             style="@style/TextView.Medium.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="Tier 1"
+            tools:text="Tier 1"
             />
 
         <TextView
+            android:id="@+id/tier_hourly_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -78,6 +79,7 @@
             />
 
         <TextView
+            android:id="@+id/first_feedback_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -131,6 +133,7 @@
                 />
 
             <TextView
+                android:id="@+id/five_star_reviews_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

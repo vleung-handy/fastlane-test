@@ -62,4 +62,10 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
     {
         return view == object;
     }
+
+    @Override
+    public void destroyItem(final ViewGroup container, final int position, final Object object)
+    {
+        container.removeView((View) object);
+    }
 }

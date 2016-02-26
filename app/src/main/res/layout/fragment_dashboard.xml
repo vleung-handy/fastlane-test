@@ -49,41 +49,26 @@
                 android:layout_height="wrap_content"
                 />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/lifetime_rating_text"
+                style="@style/TextView.Medium.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/section_item_margin"
-                android:orientation="horizontal"
-                >
+                tools:text="Lifetime Rating 4.8"
+                />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="Lifetime Rating "
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text_size"
-                    />
-
-                <TextView
-                    android:id="@+id/lifetime_rating_text"
-                    style="@style/TextView.Medium.Bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="4.8"
-                    />
-
-            </LinearLayout>
 
             <TextView
+                android:id="@+id/dashboard_rating_threshold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/section_item_margin"
                 android:gravity="center_horizontal"
-                android:text="*must maintain at least a 4.2"
                 android:textColor="@color/tertiary_grey"
                 android:textSize="@dimen/small_text_size"
+                tools:text="*must maintain at least a 4.2"
                 />
 
         </LinearLayout>

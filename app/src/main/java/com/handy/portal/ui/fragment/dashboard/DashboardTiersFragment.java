@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment.dashboard;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,28 +8,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.PerformanceInfo;
-import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DashboardTiersFragment extends ActionBarFragment
 {
-    @Inject
-    ProviderManager mProviderManager;
-
     @Bind(R.id.trailing_rating_text)
     TextView mTrailingRatingText;
     @Bind(R.id.trailing_jobs_text)
     TextView mTrailingJobsText;
     @Bind(R.id.trailing_rate_text)
     TextView mTrailingRateText;
+
+    private ProviderEvaluation mEvaluation;
 
     @Override
     protected MainViewTab getTab()
@@ -43,6 +38,8 @@ public class DashboardTiersFragment extends ActionBarFragment
     {
         super.onCreate(savedInstanceState);
         setOptionsMenuEnabled(true);
+
+        mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
     }
 
     @Nullable
@@ -62,21 +59,22 @@ public class DashboardTiersFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.my_tier);
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
         setBackButtonEnabled(true);
 
-        ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-        if (providerProfile != null)
+        if (mEvaluation == null) { return; }
+
+        ProviderEvaluation.Rating rolling = mEvaluation.getRolling();
+        if (rolling != null)
         {
-            PerformanceInfo performanceInfo = providerProfile.getPerformanceInfo();
-            mTrailingRatingText.setText(Float.toString(performanceInfo.getTrailing28DayRating()));
-            mTrailingJobsText.setText(Integer.toString(performanceInfo.getTrailing28DayJobsCount()));
-            mTrailingRateText.setText(performanceInfo.getRate());
+            mTrailingRatingText.setText(String.valueOf(rolling.getProRating()));
+            mTrailingJobsText.setText(String.valueOf(rolling.getTotalBookingCount()));
+        }
+
+        ProviderEvaluation.Tier tier = mEvaluation.getTier();
+        if (tier != null)
+        {
+            String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRate() / 100;
+            mTrailingRateText.setText(dollarAmount);
         }
     }
 }

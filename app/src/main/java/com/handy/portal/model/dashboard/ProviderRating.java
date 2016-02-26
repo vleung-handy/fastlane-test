@@ -3,9 +3,10 @@ package com.handy.portal.model.dashboard;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ProviderRating
+public class ProviderRating implements Serializable
 {
     @SerializedName("id")
     private int mId;

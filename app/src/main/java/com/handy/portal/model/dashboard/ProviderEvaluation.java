@@ -66,7 +66,7 @@ public class ProviderEvaluation implements Serializable
         return mProviderFeedback;
     }
 
-    public static class Rating
+    public static class Rating implements Serializable
     {
         private static final String POSITIVE = "positive";
         private static final String NEUTRAL = "neutral";
@@ -171,17 +171,21 @@ public class ProviderEvaluation implements Serializable
     }
 
 
-    public static class Tier
+    public static class Tier implements Serializable
     {
         @SerializedName("name")
         private String mName;
         @SerializedName("hourly_rate_in_cents")
         private int mHourlyRate;
+        @SerializedName("currency_symbol")
+        private String mCurrencySymbol;
 
-        public Tier(final String name, final int hourlyRate)
+
+        public Tier(final String name, final int hourlyRate, final String currencySymbol)
         {
             mName = name;
             mHourlyRate = hourlyRate;
+            mCurrencySymbol = currencySymbol;
         }
 
         public String getName()
@@ -192,6 +196,11 @@ public class ProviderEvaluation implements Serializable
         public int getHourlyRate()
         {
             return mHourlyRate;
+        }
+
+        public String getCurrencySymbol()
+        {
+            return mCurrencySymbol;
         }
     }
 }

@@ -44,26 +44,21 @@ public class DashboardFragment extends ActionBarFragment
     @Bind(R.id.dashboard_welcome_view)
     DashboardWelcomeView mDashboardWelcomeView;
     @Bind(R.id.dashboard_ratings_view_pager)
-    ViewPager mRatingsProPerformanceView;
+    ViewPager mRatingsProPerformanceViewPager;
     @Bind(R.id.dashboard_ratings_view_pager_indicator_view)
     CirclePageIndicatorView mCirclePageIndicatorView;
     @Bind(R.id.dashboard_options_view)
     DashboardOptionsPerformanceView mDashboardOptionsPerformanceView;
     @Bind(R.id.lifetime_rating_text)
     TextView mLifetimeRatingText;
+    @Bind(R.id.dashboard_rating_threshold)
+    TextView mRatingThresholdText;
 
 
     @Override
     protected MainViewTab getTab()
     {
         return MainViewTab.DASHBOARD;
-    }
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setActionBar(R.string.my_performance, false);
     }
 
     @Nullable
@@ -82,10 +77,11 @@ public class DashboardFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        setActionBar(R.string.my_performance, false);
         getProviderEvaluation();
     }
 
-    private void createDashboardView(ProviderEvaluation providerEvaluation)
+    private void createDashboardView(ProviderEvaluation evaluation)
     {
         String welcomeString;
         Provider provider = mProviderManager.getCachedActiveProvider();
@@ -99,17 +95,19 @@ public class DashboardFragment extends ActionBarFragment
         }
 
         mDashboardWelcomeView.setDisplay(welcomeString,
-                providerEvaluation.getRolling().getRatingEvaluation(),
-                providerEvaluation.getRolling().getStatusColorId());
+                evaluation.getRolling().getRatingEvaluation(),
+                evaluation.getRolling().getStatusColorId());
 
-        mRatingsProPerformanceView
-                .setAdapter(new DashboardRatingsPagerAdapter(getContext(), providerEvaluation));
+        mRatingsProPerformanceViewPager
+                .setAdapter(new DashboardRatingsPagerAdapter(getContext(), evaluation));
+        mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceViewPager);
 
-        mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceView);
+        mDashboardOptionsPerformanceView.setDisplay(evaluation);
 
-        mDashboardOptionsPerformanceView.setDisplay(providerEvaluation.getFiveStarRatings());
-
-        mLifetimeRatingText.setText(String.valueOf(providerEvaluation.getLifeTime().getProRating()));
+        mLifetimeRatingText.setText(getString(R.string.rating_lifetime_formatted,
+                evaluation.getLifeTime().getProRating()));
+        mRatingThresholdText.setText(getString(R.string.rating_threshold_formatted,
+                evaluation.getDangerRatingThreshold()));
     }
 
     @Subscribe

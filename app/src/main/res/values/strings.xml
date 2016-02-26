@@ -497,6 +497,9 @@
     <string name="error_dashboard">There was an error fetching dashboard info.</string>
     <string name="error_dashboard_feedback">There was an error fetching feedback.</string>
     <string name="error_dashboard_reviews">There was an error fetching reviews.</string>
+    <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
+    <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
+
 
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
