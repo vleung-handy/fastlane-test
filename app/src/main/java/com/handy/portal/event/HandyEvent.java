@@ -15,6 +15,7 @@ import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.CheckoutRequest;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -26,6 +27,7 @@ import com.handy.portal.model.UpdateDetails;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public abstract class HandyEvent
 {
@@ -51,6 +53,11 @@ public abstract class HandyEvent
     public abstract static class ApplicationLifeCycleEvent extends HandyEvent
     {
         public Activity sender;
+    }
+
+    //TODO: move? don't want everything in HandyEvent
+    public static class NetworkReconnected extends HandyEvent.RequestEvent
+    {
     }
 
 //Activity lifecycle management
@@ -79,6 +86,20 @@ public abstract class HandyEvent
         }
     }
 
+//Config
+    public static class ReceiveConfigurationSuccess extends HandyEvent
+    {
+        private final ConfigurationResponse mConfigurationResponse;
+        public ReceiveConfigurationSuccess(ConfigurationResponse configurationResponse)
+        {
+            mConfigurationResponse = configurationResponse;
+        }
+
+        public ConfigurationResponse getConfigurationResponse()
+        {
+            return mConfigurationResponse;
+        }
+    }
 //Navigation
 
     public static class NavigateToTab extends HandyEvent
@@ -336,6 +357,40 @@ public abstract class HandyEvent
         }
     }
 
+    public static class RequestScheduledBookingsBatch extends RequestBookingsEvent
+    {
+        public final List<Date> dates;
+
+        public RequestScheduledBookingsBatch(List<Date> dates, boolean useCachedIfPresent)
+        {
+            this.dates = dates;
+            this.useCachedIfPresent = useCachedIfPresent;
+        }
+    }
+
+    public static class ReceiveScheduledBookingsBatchSuccess extends RequestBookingsEvent
+    {
+        private final Map<Date, List<Booking>> mDateToBookingMap;
+
+        /**
+         *
+         * @param dateToBookingMap should be without time
+         */
+        public ReceiveScheduledBookingsBatchSuccess(Map<Date, List<Booking>> dateToBookingMap)
+        {
+            mDateToBookingMap = dateToBookingMap;
+        }
+
+        /**
+         * these dates should be without time
+         * @return
+         */
+        public Map<Date, List<Booking>> getDateToBookingMap()
+        {
+            return mDateToBookingMap;
+        }
+    }
+
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
         public List<Booking> bookings;
@@ -415,6 +470,13 @@ public abstract class HandyEvent
         }
     }
 
+
+    /**
+     * dispatched when one or more bookings might have changed
+     */
+    public static class BookingChangedOrCreated
+    {
+    }
 //Job Action Requests
 
     public static class RequestClaimJob extends RequestBookingActionEvent

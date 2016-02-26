@@ -1,5 +1,7 @@
 package com.handy.portal.manager;
 
+import android.util.Log;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -23,7 +25,9 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -149,8 +153,75 @@ public class BookingManager
         }
     }
 
+    /**
+     * TODO: need to detect when pull to fresh happens, and make sure this is called again
+     * unlike onRequestScheduledBookings, this will not fire events containing bookings for a specific date,
+     * but rather for a batch of dates, not in any particular order. currently used by location scheduler manager
+     * @param event
+     */
     @Subscribe
-    public void onRequestScheduledBookings(HandyEvent.RequestScheduledBookings event)
+    public void onRequestScheduledBookingsBatch(final HandyEvent.RequestScheduledBookingsBatch event)
+    {
+        final Map<Date, List<Booking>> resultMap = new HashMap<>();
+        final List<Date> datesToRequest = new ArrayList<>();
+        for (Date date : event.dates)
+        {
+            final Date day = DateTimeUtils.getDateWithoutTime(date);
+            if (event.useCachedIfPresent)
+            {
+                final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
+                if (cachedBookings != null)
+                {
+                    Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
+                    resultMap.put(day, cachedBookings);
+                }
+                else
+                {
+                    datesToRequest.add(day);
+                }
+            }
+            else
+            {
+                datesToRequest.add(day);
+            }
+        }
+
+        if (!datesToRequest.isEmpty())
+        {
+            mDataManager.getScheduledBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
+                    new DataManager.Callback<BookingsListWrapper>()
+                    {
+                        @Override
+                        public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+                        {
+                            for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                            {
+                                Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                Log.d(getClass().getName(), "batch received scheduled bookings: " + day.toString());
+                                Crashlytics.log("Received scheduled bookings for " + day);
+                                List<Booking> bookings = bookingsWrapper.getBookings();
+                                scheduledBookingsCache.put(day, bookings);
+                                resultMap.put(day, bookings);
+                            }
+                            mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess(resultMap));
+                        }
+
+                        @Override
+                        public void onError(final DataManager.DataManagerError error)
+                        {
+                            mBus.post(new HandyEvent.ReceiveScheduledBookingsError(error, datesToRequest));
+                        }
+                    }
+            );
+        }
+        else if(!resultMap.isEmpty())
+        {
+            mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess(resultMap));
+        }
+    }
+
+    @Subscribe
+    public void onRequestScheduledBookings(final HandyEvent.RequestScheduledBookings event)
     {
         final List<Date> datesToRequest = new ArrayList<>();
         for (Date date : event.dates)
@@ -161,6 +232,7 @@ public class BookingManager
                 final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
+                    Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                     mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
                 }
                 else
@@ -185,10 +257,22 @@ public class BookingManager
                             for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
                             {
                                 Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                                 Crashlytics.log("Received scheduled bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
                                 scheduledBookingsCache.put(day, bookings);
                                 mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
+                            }
+
+                            /*
+                            this will be true when the user pulls to refresh
+
+                            BUT it is also true onResume()! need to compensate by not firing this event on claim/cancel
+                            TODO
+                             */
+                            if(!event.useCachedIfPresent)
+                            {
+                                mBus.post(new HandyEvent.BookingChangedOrCreated());
                             }
                         }
 
@@ -271,6 +355,12 @@ public class BookingManager
                                 event.source)));
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
 
+                /*
+                NOTE: not firing BookingChangedOrCreated event because immediately after this,
+                the booking fragment's onResume() is called and retrieves new schedules!
+                TODO: i feel uncomfortable relying on onResume() to retrieve new schedules when a booking is updated
+                 */
+
             }
 
             @Override
@@ -300,6 +390,12 @@ public class BookingManager
             {
                 invalidateCachesForDay(day);
                 mBus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
+
+                /*
+                NOTE: not firing BookingChangedOrCreated event because immediately after this,
+                the booking fragment's onResume() is called and retrieves new schedules!
+                TODO: i feel uncomfortable relying on onResume() to retrieve new schedules when a booking is updated
+                 */
             }
 
             @Override

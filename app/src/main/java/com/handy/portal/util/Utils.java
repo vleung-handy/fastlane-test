@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.TouchDelegate;
@@ -25,6 +27,20 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     public final static float HDPI = 1.5f;
     public final static float XHDPI = 2.0f;
     public final static float XXHDPI = 3.0f;
+
+    //TODO move somewhere else
+    public static boolean areAnyPermissionsGranted(@NonNull Context context, @NonNull String[] permissions)
+    {
+        for(int i = 0; i<permissions.length; i++)
+        {
+            if (ActivityCompat.checkSelfPermission(context,
+                    permissions[i]) == PackageManager.PERMISSION_GRANTED)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static int getObjectIdentifier(Object object)
     {

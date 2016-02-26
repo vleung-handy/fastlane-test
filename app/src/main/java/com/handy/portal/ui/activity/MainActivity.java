@@ -3,6 +3,7 @@ package com.handy.portal.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,9 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.PaymentEvent;
+import com.handy.portal.location.LocationConstants;
+import com.handy.portal.location.LocationService;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
@@ -22,6 +26,8 @@ import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.NotificationUtils;
+import com.handy.portal.util.SystemUtils;
+import com.handy.portal.util.Utils;
 import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
@@ -32,10 +38,15 @@ public class MainActivity extends BaseActivity
     @Inject
     ProviderManager providerManager;
     @Inject
+    ConfigManager mConfigManager;
+    @Inject
     EventLogFactory mEventLogFactory;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
+
+    //TODO: move somewhere else
+    private static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,6 +55,58 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setFullScreen();
+
+        startLocationServiceIfNecessary();
+    }
+
+    //TODO: move this somewhere else?
+    private void startLocationServiceIfNecessary()
+    {
+        Intent i = new Intent(this, LocationService.class);
+        if(mConfigManager.getConfigurationResponse() != null
+                && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
+        {
+            //nothing will happen if it's already running
+            if(!SystemUtils.isServiceRunning(this, LocationService.class))
+            {
+                if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+                {
+                    ActivityCompat.requestPermissions(this, LocationConstants.LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
+                    return;
+                }
+                startService(i);
+            }
+        }
+        else
+        {
+            //nothing will happen if it's not running
+            stopService(i);
+        }
+        //at most one service instance will be running
+
+    }
+
+    /**
+     * don't want to simply call startLocationServiceIfNecessary because when permissions dialog disappears,
+     * onResume() is called and thus triggers onConfigSuccess which wants to start this service,
+     * and the startLocationServiceIfNecessary may launch the permissions dialog
+     * TODO see if we can clean this up
+     */
+    private void startLocationServiceIfNecessaryAndPermissionsGranted()
+    {
+        if(Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        {
+            startLocationServiceIfNecessary();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults)
+    {
+        if(requestCode == ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE)
+        {
+            startLocationServiceIfNecessaryAndPermissionsGranted();
+        }
     }
 
     @Override
@@ -193,6 +256,17 @@ public class MainActivity extends BaseActivity
             checkIfUserShouldUpdatePaymentInfo();
             //have to put this check here due to weird startup flow - after terms are accepted, app switches back to SplashActivity and this activity is relaunched and this function will be called again
         }
+    }
+
+    /**
+     * TODO: this is temporary to handle case in which config response comes back later
+     * ideally, we should probably block the app until the config response is received
+     * @param event
+     */
+    @Subscribe
+    public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
+    {
+        startLocationServiceIfNecessaryAndPermissionsGranted();
     }
 
     @Subscribe
