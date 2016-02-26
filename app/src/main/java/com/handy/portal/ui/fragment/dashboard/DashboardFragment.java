@@ -61,13 +61,6 @@ public class DashboardFragment extends ActionBarFragment
         return MainViewTab.DASHBOARD;
     }
 
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setActionBar(R.string.my_performance, false);
-    }
-
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
@@ -84,6 +77,7 @@ public class DashboardFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        setActionBar(R.string.my_performance, false);
         getProviderEvaluation();
     }
 

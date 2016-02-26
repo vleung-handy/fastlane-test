@@ -37,7 +37,7 @@ public class ProviderFeedback implements Serializable
         return mFeedbackTips;
     }
 
-    public static class FeedbackTip
+    public static class FeedbackTip implements Serializable
     {
         @SerializedName("type")
         private String mType;
