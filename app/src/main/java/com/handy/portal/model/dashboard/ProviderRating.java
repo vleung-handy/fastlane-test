@@ -16,7 +16,7 @@ public class ProviderRating implements Serializable
     private int mRating;
     @SerializedName("booking_id")
     private int mBookingId;
-    @SerializedName("date_rating")
+    @SerializedName("rating_date")
     private Date mDateRating;
     @SerializedName("source")
     private String mSource;

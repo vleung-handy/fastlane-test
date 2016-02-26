@@ -29,7 +29,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
 public class DashboardFragment extends ActionBarFragment
 {
     @Inject

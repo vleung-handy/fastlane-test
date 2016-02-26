@@ -14,7 +14,6 @@
         android:id="@+id/tier_option"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dashboard_option_height"
-        android:layout_marginTop="@dimen/dashboard_option_top_margin"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
         android:padding="@dimen/default_padding"
@@ -61,7 +60,6 @@
         android:id="@+id/feedback_option"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dashboard_option_height"
-        android:layout_marginTop="@dimen/dashboard_option_top_margin"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
         android:paddingBottom="@dimen/extra_padding_xlarge"
@@ -78,15 +76,25 @@
             android:text="@string/feedback"
             />
 
+        <ImageView
+            android:layout_width="@dimen/highlight_icon_size"
+            android:layout_height="@dimen/highlight_icon_size"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/extra_margin"
+            android:layout_toLeftOf="@+id/first_feedback_title"
+            android:src="@drawable/ic_red_x"
+            />
+
         <TextView
             android:id="@+id/first_feedback_title"
+            style="@style/CircularBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/feedback_chevron"
             android:layout_toStartOf="@+id/feedback_chevron"
             android:textColor="@color/error_red"
-            android:textSize="@dimen/large_text_size"
+            android:textSize="@dimen/default_text_size"
             tools:text="Quality of Service"
             />
 
@@ -117,7 +125,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dashboard_option_height"
-            android:layout_marginTop="@dimen/dashboard_option_top_margin"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             android:paddingTop="@dimen/extra_padding_xlarge"
