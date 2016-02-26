@@ -26,8 +26,8 @@ public class DashboardReviewsFragment extends ActionBarFragment
     @Bind(R.id.reviews_list)
     RecyclerView mReviewRecyclerView;
 
-    private ReviewListAdapter mAdapter;
     private List<ProviderRating> mRatings = new ArrayList<>();
+    private ProviderEvaluation mEvaluation;
 
     @Override
     protected MainViewTab getTab()
@@ -41,6 +41,8 @@ public class DashboardReviewsFragment extends ActionBarFragment
         super.onCreate(savedInstanceState);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
+
+        mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
     }
 
     @Override
@@ -62,12 +64,11 @@ public class DashboardReviewsFragment extends ActionBarFragment
 
         mReviewRecyclerView.setHasFixedSize(true);
         mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ReviewListAdapter(getContext(), mRatings);
-        mReviewRecyclerView.setAdapter(mAdapter);
+        ReviewListAdapter adapter = new ReviewListAdapter(getContext(), mRatings);
+        mReviewRecyclerView.setAdapter(adapter);
 
-        ProviderEvaluation evaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
-        if (evaluation == null || evaluation.getFiveStarRatings() == null) { return; }
-        mRatings.addAll(evaluation.getFiveStarRatings());
-        mAdapter.notifyDataSetChanged();
+        if (mEvaluation == null || mEvaluation.getFiveStarRatings() == null) { return; }
+        mRatings.addAll(mEvaluation.getFiveStarRatings());
+        adapter.notifyDataSetChanged();
     }
 }

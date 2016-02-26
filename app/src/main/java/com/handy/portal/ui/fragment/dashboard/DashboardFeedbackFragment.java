@@ -17,11 +17,12 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-
 public class DashboardFeedbackFragment extends ActionBarFragment
 {
     @Bind(R.id.layout_dashboard_feedback)
     LinearLayout mFeedbackLayout;
+
+    private ProviderEvaluation mEvaluation;
 
     @Override
     protected MainViewTab getTab()
@@ -37,6 +38,7 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
 
+        mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
     }
 
     @Override
@@ -52,11 +54,9 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        ProviderEvaluation evaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
+        if (mEvaluation == null || mEvaluation.getProviderFeedback() == null) { return; }
 
-        if (evaluation == null || evaluation.getProviderFeedback() == null) { return; }
-
-        for (ProviderFeedback feedback : evaluation.getProviderFeedback())
+        for (ProviderFeedback feedback : mEvaluation.getProviderFeedback())
         {
             mFeedbackLayout.addView(new DashboardFeedbackView(getContext(), feedback));
         }

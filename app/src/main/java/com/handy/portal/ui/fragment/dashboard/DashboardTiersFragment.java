@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment.dashboard;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -26,6 +25,8 @@ public class DashboardTiersFragment extends ActionBarFragment
     @Bind(R.id.trailing_rate_text)
     TextView mTrailingRateText;
 
+    private ProviderEvaluation mEvaluation;
+
     @Override
     protected MainViewTab getTab()
     {
@@ -37,6 +38,8 @@ public class DashboardTiersFragment extends ActionBarFragment
     {
         super.onCreate(savedInstanceState);
         setOptionsMenuEnabled(true);
+
+        mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
     }
 
     @Nullable
@@ -58,17 +61,16 @@ public class DashboardTiersFragment extends ActionBarFragment
         setActionBarTitle(R.string.my_tier);
         setBackButtonEnabled(true);
 
-        Object object =
-                getArguments().getSerializable(BundleKeys.EVALUATION);
+        if (mEvaluation == null) { return; }
 
-        ProviderEvaluation evaluation = (ProviderEvaluation) object;
-        ProviderEvaluation.Rating rolling = evaluation.getRolling();
+        ProviderEvaluation.Rating rolling = mEvaluation.getRolling();
         if (rolling != null)
         {
             mTrailingRatingText.setText(String.valueOf(rolling.getProRating()));
             mTrailingJobsText.setText(String.valueOf(rolling.getTotalBookingCount()));
         }
-        ProviderEvaluation.Tier tier = evaluation.getTier();
+
+        ProviderEvaluation.Tier tier = mEvaluation.getTier();
         if (tier != null)
         {
             String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRate() / 100;
