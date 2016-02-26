@@ -16,6 +16,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
@@ -35,6 +36,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     TextView mTierTitleText;
     @Bind(R.id.tier_hourly_rate)
     TextView mTierHourlyRateText;
+    @Bind(R.id.first_feedback_title)
+    TextView mFirstFeedbackTitleText;
     @Bind(R.id.dashboard_first_review)
     ViewGroup mFirstReview;
     @Bind(R.id.review_text)
@@ -88,6 +91,12 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRate() / 100;
         mTierHourlyRateText.setText(dollarAmount);
 
+        List<ProviderFeedback> feedbacks = mProviderEvaluation.getProviderFeedback();
+        if (feedbacks != null && feedbacks.size() > 0)
+        {
+            mFirstFeedbackTitleText.setText(feedbacks.get(0).getTitle());
+        }
+
         List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatings();
         if (ratings != null && ratings.size() > 0)
         {
@@ -109,15 +118,20 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments));
     }
 
-    @OnClick(R.id.reviews_option)
-    public void switchToReviews()
-    {
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS));
-    }
-
     @OnClick(R.id.feedback_option)
     public void switchToFeedback()
     {
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK));
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+    }
+
+
+    @OnClick(R.id.reviews_option)
+    public void switchToReviews()
+    {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS, arguments));
     }
 }

@@ -5,36 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.ProviderDashboardEvent;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class DashboardFeedbackFragment extends ActionBarFragment
 {
     @Bind(R.id.layout_dashboard_feedback)
     LinearLayout mFeedbackLayout;
-    @Bind(R.id.fetch_error_view)
-    View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
-    TextView mFetchErrorTextView;
-
-    private List<ProviderFeedback> mProviderFeedback = new ArrayList<>();
 
     @Override
     protected MainViewTab getTab()
@@ -49,13 +36,7 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         setActionBarTitle(R.string.feedback);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
-    }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        getProviderFeedback();
     }
 
     @Override
@@ -70,39 +51,14 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-    }
 
-    @Subscribe
-    public void onReceiveProviderFeedbackSuccess(ProviderDashboardEvent.ReceiveProviderFeedbackSuccess event)
-    {
-        mFetchErrorView.setVisibility(View.GONE);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        ProviderEvaluation evaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
 
-        mProviderFeedback = event.providerFeedback;
-        for (ProviderFeedback feedback : mProviderFeedback)
+        if (evaluation == null || evaluation.getProviderFeedback() == null) { return; }
+
+        for (ProviderFeedback feedback : evaluation.getProviderFeedback())
         {
             mFeedbackLayout.addView(new DashboardFeedbackView(getContext(), feedback));
         }
-    }
-
-    @Subscribe
-    public void onReceiveProviderFeedbackFailure(ProviderDashboardEvent.ReceiveProviderFeedbackError event)
-    {
-        if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
-            mFetchErrorTextView.setText(R.string.error_fetching_connectivity_issue);
-        }
-        else
-        {
-            mFetchErrorTextView.setText(R.string.error_dashboard_feedback);
-        }
-        mFetchErrorView.setVisibility(View.VISIBLE);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-    }
-
-    @OnClick(R.id.try_again_button)
-    public void getProviderFeedback(){
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new ProviderDashboardEvent.RequestProviderFeedback());
     }
 }
