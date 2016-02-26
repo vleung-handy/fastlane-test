@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 
 import com.google.gson.GsonBuilder;
@@ -224,10 +225,10 @@ public final class ApplicationModule
                         request.addHeader("Accept", "application/json");
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
-                        request.addQueryParam("apiver", "1");
-                        request.addQueryParam("app_device_id", getDeviceId());
-                        request.addQueryParam("app_device_model", BaseApplication.getDeviceModel());
-                        request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
+                        request.addQueryParam("device_id", getDeviceId());
+                        request.addQueryParam("device_model", BaseApplication.getDeviceModel());
+                        request.addQueryParam("os_version", Build.VERSION.RELEASE);
+                        request.addQueryParam("device_carrier", getDeviceCarrier());
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
                 }).setErrorHandler(new ErrorHandler()
@@ -479,6 +480,13 @@ public final class ApplicationModule
     {
         return Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
+    }
+
+    private String getDeviceCarrier()
+    {
+        final TelephonyManager telephonyManager =
+                ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+        return telephonyManager.getNetworkOperatorName();
     }
 
     @Provides
