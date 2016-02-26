@@ -236,8 +236,8 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/evaluation")
     void getProviderEvaluation(@Path("id") String providerId, HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "rating/{id}?min_star=5")
-    void getProviderFiveStarRatings(@Path("id") String providerId, HandyRetrofitCallback cb);
+    @GET(PROVIDERS_PATH + "rating/{id}?min_star={min_star}")
+    void getProviderFiveStarRatings(@Path("id") String providerId, @Path("min_star") String minStar, HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "feedback/{id}")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);

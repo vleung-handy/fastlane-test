@@ -350,9 +350,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getProviderFiveStarRatings(final String providerId, final Callback<List<ProviderRating>> cb)
+    public void getProviderFiveStarRatings(final String providerId, final String minStar, final Callback<List<ProviderRating>> cb)
     {
-        service.getProviderFiveStarRatings(providerId, new GetProviderFiveStarRatingsRetrofitCallback(cb));
+        service.getProviderFiveStarRatings(providerId, minStar, new GetProviderFiveStarRatingsRetrofitCallback(cb));
     }
 
     @Override

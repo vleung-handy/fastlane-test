@@ -139,7 +139,7 @@ public abstract class DataManager
     // Pro Dashboard
     public abstract void getProviderEvaluation(String providerId, Callback<ProviderEvaluation> cb);
 
-    public abstract void getProviderFiveStarRatings(String providerId, Callback<List<ProviderRating>> cb);
+    public abstract void getProviderFiveStarRatings(String providerId, String minStar, Callback<List<ProviderRating>> cb);
 
     public abstract void getProviderFeedback(String providerId, Callback<List<ProviderFeedback>> cb);
 

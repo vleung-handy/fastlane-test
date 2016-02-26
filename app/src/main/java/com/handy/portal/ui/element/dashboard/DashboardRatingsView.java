@@ -62,7 +62,7 @@ public class DashboardRatingsView extends FrameLayout
         mPercentageCircleView.setColor(ContextCompat.getColor(getContext(), R.color.white),
                 ContextCompat.getColor(getContext(), R.color.bg_inactive_grey),
                 ContextCompat.getColor(getContext(), R.color.requested_green));
-        mPercentageCircleView.setSign(getResources().getString(R.string.percentage));
+        mPercentageCircleView.setPercentageSign(getResources().getString(R.string.percentage));
         mPercentageCircleView.setSubText(getResources().getString(R.string.five_star));
 
         mFiveStarRatingsView.setDescription(getResources().getString(R.string.five_star_ratings));

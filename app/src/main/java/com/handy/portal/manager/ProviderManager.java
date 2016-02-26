@@ -285,7 +285,7 @@ public class ProviderManager
 
         mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(ratings));
 
-//        mDataManager.getProviderFiveStarRatings(providerId, new DataManager.Callback<List<ProviderRating>>()
+//        mDataManager.getProviderFiveStarRatings(providerId, "5", new DataManager.Callback<List<ProviderRating>>()
 //        {
 //            @Override
 //            public void onSuccess(final List<ProviderRating> providerRatings)

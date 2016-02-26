@@ -28,7 +28,7 @@ public class PercentageCircleView extends View
     private RectF mOuterBox = new RectF();
     private RectF mInnerBox = new RectF();
     private String mSubText = "";
-    private String mSign = "";
+    private String mPercentageSign = "";
     private boolean mInitialized = false;
     private float mCurrentPercentage = 0;
     private float mPercentage = 1.0f;
@@ -94,9 +94,9 @@ public class PercentageCircleView extends View
 
         canvas.drawText(Integer.toString((int) (mCurrentPercentage * 100)), xPos, yPos, mPaintNumber);
         if (digits == 1) // needed because the sign is too close to the digit
-        { canvas.drawText(mSign, xPos + mPaintSign.getTextSize() * (digits + 1), yPos - mPaintSign.getTextSize(), mPaintSign); }
+        { canvas.drawText(mPercentageSign, xPos + mPaintSign.getTextSize() * (digits + 1), yPos - mPaintSign.getTextSize(), mPaintSign); }
         else
-        { canvas.drawText(mSign, xPos + ((mPaintSign.getTextSize() + 1) * digits), yPos - mPaintSign.getTextSize(), mPaintSign); }
+        { canvas.drawText(mPercentageSign, xPos + ((mPaintSign.getTextSize() + 1) * digits), yPos - mPaintSign.getTextSize(), mPaintSign); }
         canvas.drawText(mSubText, xPos, yPos + mPaintSubText.getTextSize() * 1.4f, mPaintSubText);
 
         if (mCurrentPercentage < mPercentage)
@@ -134,9 +134,9 @@ public class PercentageCircleView extends View
         mSubText = subText;
     }
 
-    public void setSign(String sign)
+    public void setPercentageSign(String percentageSign)
     {
-        mSign = sign;
+        mPercentageSign = percentageSign;
     }
 
     private void initialize()
