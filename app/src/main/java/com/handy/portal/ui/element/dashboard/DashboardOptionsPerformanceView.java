@@ -14,9 +14,11 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
@@ -31,6 +33,11 @@ import butterknife.OnClick;
 
 public class DashboardOptionsPerformanceView extends FrameLayout
 {
+    @Inject
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
+
     @Bind(R.id.tier_title)
     TextView mTierTitleText;
     @Bind(R.id.tier_hourly_rate)
@@ -45,9 +52,6 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     TextView mReivewsCountText;
     @Bind(R.id.review_date)
     TextView mReviewDate;
-
-    @Inject
-    Bus mBus;
 
     private ProviderEvaluation mProviderEvaluation;
 
@@ -120,6 +124,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
         mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments));
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createTierTappedLog()));
     }
 
     @OnClick(R.id.feedback_option)
@@ -128,6 +133,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
         mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
     }
 
 
@@ -137,5 +143,6 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
         mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS, arguments));
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFiveStarReviewsTappedLog()));
     }
 }
