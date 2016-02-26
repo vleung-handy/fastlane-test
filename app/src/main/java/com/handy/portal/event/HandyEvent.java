@@ -55,12 +55,7 @@ public abstract class HandyEvent
         public Activity sender;
     }
 
-    //TODO: move? don't want everything in HandyEvent
-    public static class NetworkReconnected extends HandyEvent.RequestEvent
-    {
-    }
-
-//Activity lifecycle management
+    //Activity lifecycle management
 
     public static class ActivityPaused extends ApplicationLifeCycleEvent
     {

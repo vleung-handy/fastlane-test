@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -18,7 +19,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
@@ -259,8 +260,18 @@ public class LocationScheduleHandler extends BroadcastReceiver
      */
     private void scheduleAlarm(@NonNull LocationQueryStrategy strategy)
     {
+        /**
+         * passing byte array to avoid exception
+         *
+         * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
+         */
+        Parcel strategyParcel = Parcel.obtain();
+        strategy.writeToParcel(strategyParcel, 0);
+        strategyParcel.setDataPosition(0);
+
         Bundle args = new Bundle();
-        args.putParcelable(BUNDLE_EXTRA_LOCATION_STRATEGY, strategy);
+        args.putByteArray(BUNDLE_EXTRA_LOCATION_STRATEGY, strategyParcel.marshall());
+
         Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
         intent.setAction(LOCATION_SCHEDULE_ALARM_BROADCAST_ID); //probably redundant, test this
         intent.setPackage(mContext.getPackageName());
@@ -297,7 +308,19 @@ public class LocationScheduleHandler extends BroadcastReceiver
             //TODO: refactor this
             case LOCATION_SCHEDULE_ALARM_BROADCAST_ID:
                 Log.d(getClass().getName(), "Woke up");
-                LocationQueryStrategy locationQueryStrategy = args.getParcelable(BUNDLE_EXTRA_LOCATION_STRATEGY);
+
+                /**
+                 * using byte array to avoid exception
+                 *
+                 * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
+                 */
+                byte[] strategyByteArray = args.getByteArray(BUNDLE_EXTRA_LOCATION_STRATEGY);
+                if(strategyByteArray == null) break;
+                Parcel strategyParcel = Parcel.obtain();
+                strategyParcel.unmarshall(strategyByteArray, 0, strategyByteArray.length);
+                strategyParcel.setDataPosition(0);
+
+                LocationQueryStrategy locationQueryStrategy = LocationQueryStrategy.CREATOR.createFromParcel(strategyParcel);
                 onLocationStrategyAlarmTriggered(locationQueryStrategy);
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
@@ -339,7 +362,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         if(hasConnectivity && !mPreviouslyHadNetworkConnectivity)
         //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
         {
-            bus.post(new HandyEvent.NetworkReconnected());
+            bus.post(new SystemEvent.NetworkReconnected());
             rerequestLocationUpdatesForActiveStrategies();
             //TODO don't like this decoupled from the network event handler, but not sure i want to register a bus to subscribe to events here either
             //immediately request location updates

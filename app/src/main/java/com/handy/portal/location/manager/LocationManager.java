@@ -4,7 +4,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.manager.PrefsManager;
@@ -117,7 +117,7 @@ public class LocationManager
      * @param event
      */
     @Subscribe
-    public void onNetworkReconnected(final HandyEvent.NetworkReconnected event)
+    public void onNetworkReconnected(final SystemEvent.NetworkReconnected event)
     {
         Log.d(getClass().getName(), "on network reconnected");
         resendFailedLocationBatchUpdates();

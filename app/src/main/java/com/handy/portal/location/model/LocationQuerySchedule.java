@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -23,14 +22,15 @@ public class LocationQuerySchedule implements Parcelable
     }
 
     /**
-     * TODO: ensure this is sorted by start date
+     * this should be already sorted by start date
      */
     @SerializedName("location_query_strategies")
     LinkedList<LocationQueryStrategy> mLocationQueryStrategies;
 
     protected LocationQuerySchedule(Parcel in)
     {
-        mLocationQueryStrategies = new LinkedList<>(Arrays.asList(in.createTypedArray(LocationQueryStrategy.CREATOR)));
+        mLocationQueryStrategies = new LinkedList<>();
+        in.readTypedList(mLocationQueryStrategies, LocationQueryStrategy.CREATOR);
     }
 
     public LinkedList<LocationQueryStrategy> getLocationQueryStrategies()
@@ -47,7 +47,7 @@ public class LocationQuerySchedule implements Parcelable
     @Override
     public void writeToParcel(final Parcel dest, final int flags)
     {
-        dest.writeTypedArray(mLocationQueryStrategies.toArray(new LocationQueryStrategy[mLocationQueryStrategies.size()]), flags);
+        dest.writeTypedList(mLocationQueryStrategies);
     }
 
     public static final Creator<LocationQuerySchedule> CREATOR = new Creator<LocationQuerySchedule>()
