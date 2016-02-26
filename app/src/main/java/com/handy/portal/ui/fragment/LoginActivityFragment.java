@@ -41,7 +41,7 @@ import butterknife.OnClick;
 public class LoginActivityFragment extends InjectedFragment
 {
     @VisibleForTesting
-    static final String HELP_CENTER_URL = "https://www.handy.com/help#/6311ae/e15ed1/76a73e";
+    static final String HELP_CENTER_URL = "https://help.handy.com/hc/en-us/articles/215593648";
 
     @Bind(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
@@ -337,7 +337,7 @@ public class LoginActivityFragment extends InjectedFragment
             case INPUTTING_PHONE_NUMBER:
             {
                 mixpanel.track("portal login shown - phone");
-                instructionsText.setText(R.string.login_instructions_1_a);
+                instructionsText.setText(R.string.login_instructions_1);
                 phoneInputLayout.setVisibility(View.VISIBLE);
                 pinCodeInputLayout.setVisibility(View.GONE);
                 loginButton.setVisibility(View.VISIBLE);
