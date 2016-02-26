@@ -93,7 +93,10 @@ public class PercentageCircleView extends View
         //((mPaintNumber.descent() + mPaintNumber.ascent()) / 2) is the distance from the baseline to the center.
 
         canvas.drawText(Integer.toString((int) (mCurrentPercentage * 100)), xPos, yPos, mPaintNumber);
-        canvas.drawText(mSign, xPos + mPaintSign.getTextSize() * digits, yPos - mPaintSign.getTextSize(), mPaintSign);
+        if (digits == 1) // needed because the sign is too close to the digit
+        { canvas.drawText(mSign, xPos + mPaintSign.getTextSize() * (digits + 1), yPos - mPaintSign.getTextSize(), mPaintSign); }
+        else
+        { canvas.drawText(mSign, xPos + ((mPaintSign.getTextSize() + 1) * digits), yPos - mPaintSign.getTextSize(), mPaintSign); }
         canvas.drawText(mSubText, xPos, yPos + mPaintSubText.getTextSize() * 1.4f, mPaintSubText);
 
         if (mCurrentPercentage < mPercentage)
