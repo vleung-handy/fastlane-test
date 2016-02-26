@@ -176,15 +176,15 @@ public class ProviderEvaluation implements Serializable
         @SerializedName("name")
         private String mName;
         @SerializedName("hourly_rate_in_cents")
-        private int mHourlyRate;
+        private int mHourlyRateInCents;
         @SerializedName("currency_symbol")
         private String mCurrencySymbol;
 
 
-        public Tier(final String name, final int hourlyRate, final String currencySymbol)
+        public Tier(final String name, final int hourlyRateInCents, final String currencySymbol)
         {
             mName = name;
-            mHourlyRate = hourlyRate;
+            mHourlyRateInCents = hourlyRateInCents;
             mCurrencySymbol = currencySymbol;
         }
 
@@ -193,9 +193,9 @@ public class ProviderEvaluation implements Serializable
             return mName;
         }
 
-        public int getHourlyRate()
+        public int getHourlyRateInCents()
         {
-            return mHourlyRate;
+            return mHourlyRateInCents;
         }
 
         public String getCurrencySymbol()

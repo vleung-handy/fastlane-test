@@ -43,8 +43,13 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
                 DateTimeUtils.formatMonthDateYear(rating.getEndDate())));
         view.setJobRatings(rating.getFiveStarRatedBookingCount(),
                 rating.getRatedBookingCount(), rating.getTotalBookingCount());
-        view.setPercentage(
-                ((float) rating.getFiveStarRatedBookingCount()) / rating.getTotalBookingCount());
+        if (rating.getTotalBookingCount() == 0)
+        { view.setPercentage(0.0f); }
+        else
+        {
+            view.setPercentage(
+                    ((float) rating.getFiveStarRatedBookingCount()) / rating.getTotalBookingCount());
+        }
         view.setContentColor(rating.getStatusColorId());
         container.addView(view);
 
