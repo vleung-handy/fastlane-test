@@ -76,15 +76,25 @@
             android:text="@string/feedback"
             />
 
+        <ImageView
+            android:layout_width="@dimen/highlight_icon_size"
+            android:layout_height="@dimen/highlight_icon_size"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/extra_margin"
+            android:layout_toLeftOf="@id/first_feedback_title"
+            android:src="@drawable/ic_red_x"
+            />
+
         <TextView
             android:id="@+id/first_feedback_title"
+            style="@style/CircularBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/feedback_chevron"
             android:layout_toStartOf="@+id/feedback_chevron"
             android:textColor="@color/error_red"
-            android:textSize="@dimen/large_text_size"
+            android:textSize="@dimen/default_text_size"
             tools:text="Quality of Service"
             />
 
