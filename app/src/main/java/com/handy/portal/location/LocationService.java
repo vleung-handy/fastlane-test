@@ -51,7 +51,7 @@ public class LocationService extends Service
     @Override
     public void onCreate()
     {
-        mInstance = this; //for testing only
+        sInstance = this; //for testing only
 
         Thread.currentThread().setUncaughtExceptionHandler(this);
         super.onCreate();
@@ -220,12 +220,12 @@ public class LocationService extends Service
     //EVERYTHING BELOW IS FOR TESTING ONLY!
 
     @VisibleForTesting
-    private static LocationService mInstance; //for toggle testing only
+    private static LocationService sInstance; //for toggle testing only
 
     @VisibleForTesting
     public static LocationService getInstance() //for toggle testing only
     {
-        return mInstance;
+        return sInstance;
     }
 
     @VisibleForTesting
