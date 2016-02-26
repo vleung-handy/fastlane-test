@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 /**
  * utilities to access information about the system
  */
-public class SystemUtils
+public final class SystemUtils
 {
     public static boolean isServiceRunning(@NonNull Context context, @NonNull Class<?> serviceClass)
     {
@@ -28,6 +28,7 @@ public class SystemUtils
     public static float getBatteryLevelPercent(@NonNull Context context)
     {
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if(batteryIntent == null) return -1f;
         int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
