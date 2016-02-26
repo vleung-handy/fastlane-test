@@ -1,6 +1,5 @@
 package com.handy.portal.ui.element.dashboard;
 
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -42,6 +41,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     ViewGroup mFirstReview;
     @Bind(R.id.review_text)
     TextView mReviewText;
+    @Bind(R.id.five_star_reviews_count)
+    TextView mReivewsCountText;
     @Bind(R.id.review_date)
     TextView mReviewDate;
 
@@ -101,8 +102,11 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         if (ratings != null && ratings.size() > 0)
         {
             mFirstReview.setVisibility(View.VISIBLE);
+            ProviderRating rating = ratings.get(0);
             mReviewText.setText(ratings.get(0).getComment());
-            mReviewDate.setText(DateTimeUtils.getMonthAndYear(ratings.get(0).getDateRating()));
+            String date = DateTimeUtils.getMonthAndYear(rating.getDateRating());
+            mReivewsCountText.setText(String.valueOf(ratings.size()));
+            mReviewDate.setText(getContext().getString(R.string.comma_formatted, rating.getSource(), date));
         }
         else
         {

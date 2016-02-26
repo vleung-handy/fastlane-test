@@ -26,12 +26,11 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     }
 
     @Override
-    public ReviewListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                           int viewType)
+    public ReviewListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.five_star_review, parent, false);
-        return new ViewHolder(v, (TextView) v.findViewById(R.id.five_star_review_text),
+        return new ViewHolder(mContext, v, (TextView) v.findViewById(R.id.five_star_review_text),
                 (TextView) v.findViewById(R.id.review_date));
     }
 
@@ -39,9 +38,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         ProviderRating rating = mRatings.get(position);
-        holder.mReviewTextView.setText(rating.getComment());
-        String date = DateTimeUtils.getMonthAndYear(rating.getDateRating());
-        holder.mDateTextView.setText(mContext.getString(R.string.comma_formatted, rating.getSource(), date));
+        holder.bind(rating);
     }
 
     @Override
@@ -52,14 +49,23 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView mReviewTextView;
-        public TextView mDateTextView;
+        private Context mContext;
+        private TextView mReviewTextView;
+        private TextView mDateTextView;
 
-        public ViewHolder(View parent, TextView review, TextView date)
+        public ViewHolder(Context context, View parent, TextView review, TextView date)
         {
             super(parent);
+            mContext = context;
             mReviewTextView = review;
             mDateTextView = date;
+        }
+
+        public void bind(ProviderRating rating)
+        {
+            mReviewTextView.setText(rating.getComment());
+            String date = DateTimeUtils.getMonthAndYear(rating.getDateRating());
+            mDateTextView.setText(mContext.getString(R.string.comma_formatted, rating.getSource(), date));
         }
     }
 }
