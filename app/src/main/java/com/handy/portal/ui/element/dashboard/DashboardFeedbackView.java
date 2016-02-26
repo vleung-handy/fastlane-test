@@ -22,8 +22,6 @@ public class DashboardFeedbackView extends FrameLayout
     TextView mTitle;
     @Bind(R.id.dashboard_feedback_description)
     TextView mDescription;
-    @Bind(R.id.dashboard_feedback_highlights)
-    LinearLayout mHighlights;
     @Bind(R.id.dashboard_feedback_tips)
     LinearLayout mTips;
 
@@ -64,7 +62,6 @@ public class DashboardFeedbackView extends FrameLayout
     {
         mTitle.setText(feedback.getTitle());
         mDescription.setText(feedback.getSubtitle());
-        mHighlights.addView(new DashboardFeedbackHighlightView(getContext(), feedback.getSubtitle()));
 
         for (ProviderFeedback.FeedbackTip tip : feedback.getFeedbackTips())
         {

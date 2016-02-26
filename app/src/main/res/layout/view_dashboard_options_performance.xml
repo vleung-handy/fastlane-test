@@ -81,7 +81,7 @@
             android:layout_height="@dimen/highlight_icon_size"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/extra_margin"
-            android:layout_toLeftOf="@id/first_feedback_title"
+            android:layout_toLeftOf="@+id/first_feedback_title"
             android:src="@drawable/ic_red_x"
             />
 

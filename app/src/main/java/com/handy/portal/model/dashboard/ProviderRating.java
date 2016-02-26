@@ -17,20 +17,20 @@ public class ProviderRating implements Serializable
     @SerializedName("booking_id")
     private int mBookingId;
     @SerializedName("rating_date")
-    private Date mRatingDate;
+    private Date mDateRating;
     @SerializedName("source")
     private String mSource;
     @SerializedName("comment")
     private String mComment;
 
     public ProviderRating(final int id, final int userId, final int rating, final int bookingId,
-                          final Date ratingDate, final String source, final String comment)
+                          final Date dateRating, final String source, final String comment)
     {
         mId = id;
         mUserId = userId;
         mRating = rating;
         mBookingId = bookingId;
-        mRatingDate = ratingDate;
+        mDateRating = dateRating;
         mSource = source;
         mComment = comment;
     }
@@ -55,9 +55,9 @@ public class ProviderRating implements Serializable
         return mBookingId;
     }
 
-    public Date getRatingDate()
+    public Date getDateRating()
     {
-        return mRatingDate;
+        return mDateRating;
     }
 
     public String getSource()

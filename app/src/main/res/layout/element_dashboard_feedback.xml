@@ -9,16 +9,32 @@
               android:padding="@dimen/default_padding"
     >
 
-    <TextView
-        android:id="@+id/dashboard_feedback_title"
-        style="@style/CircularBold"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/extra_margin"
-        android:textColor="@color/black"
-        android:textSize="@dimen/large_text_size"
-        tools:text="Quality of service"
-        />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/highlight_icon_size"
+            android:layout_height="@dimen/highlight_icon_size"
+            android:layout_marginRight="@dimen/extra_margin"
+            android:src="@drawable/ic_red_x"
+            />
+
+        <TextView
+            android:id="@+id/dashboard_feedback_title"
+            style="@style/CircularBold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/error_red"
+            android:textSize="@dimen/default_text_size"
+            tools:text="Quality of service"
+            />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/dashboard_feedback_description"
@@ -29,13 +45,6 @@
         android:textColor="@color/black"
         android:textSize="@dimen/default_text_size"
         tools:text="2 customers have indicated that they were disappointed by the quality of your cleaning."
-        />
-
-    <LinearLayout
-        android:id="@+id/dashboard_feedback_highlights"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
         />
 
     <TextView

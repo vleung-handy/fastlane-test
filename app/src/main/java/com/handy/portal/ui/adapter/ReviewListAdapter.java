@@ -64,7 +64,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         public void bind(ProviderRating rating)
         {
             mReviewTextView.setText(rating.getComment());
-            String date = DateTimeUtils.getMonthAndYear(rating.getRatingDate());
+            String date = DateTimeUtils.getMonthAndYear(rating.getDateRating());
             mDateTextView.setText(mContext.getString(R.string.comma_formatted, rating.getSource(), date));
         }
     }
