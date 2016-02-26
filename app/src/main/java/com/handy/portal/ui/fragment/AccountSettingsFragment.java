@@ -3,9 +3,13 @@ package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +24,8 @@ import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ResupplyInfo;
+import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -40,6 +46,15 @@ public class AccountSettingsFragment extends ActionBarFragment
     TextView mProviderNameText;
     @Bind(R.id.verification_status_text)
     TextView mVerificationStatusText;
+
+    @Bind(R.id.order_resupply_layout)
+    ViewGroup mOrderResupplyLayout;
+    @Bind(R.id.order_resupply_text)
+    TextView mOrderResupplyText;
+    @Bind(R.id.order_resupply_helper_text)
+    TextView mOrderResupplyHelperText;
+    @Bind(R.id.payment_tier_chevron)
+    ImageView mPaymentTierChevron;
 
     @Bind(R.id.account_settings_layout)
     ViewGroup mAccountSettingsLayout;
@@ -185,11 +200,46 @@ public class AccountSettingsFragment extends ActionBarFragment
         {
             requestProviderProfile();
         }
+        else
+        {
+            final ResupplyInfo resupplyInfo = mProviderProfile.getResupplyInfo();
+            if (resupplyInfo != null && resupplyInfo.providerCanRequestSupplies())
+            {
+                if (!resupplyInfo.providerCanRequestSuppliesNow())
+                {
+                    disableResupplyOptionWithHelperText(resupplyInfo.getHelperText());
+                }
+            }
+            else
+            {
+                disableResupplyOption();
+            }
+        }
     }
 
     private void requestProviderProfile()
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mBus.post(new ProfileEvent.RequestProviderProfile());
+    }
+
+    private void disableResupplyOption()
+    {
+        mOrderResupplyLayout.setVisibility(View.GONE);
+    }
+
+    private void disableResupplyOptionWithHelperText(String resupplyHelperText)
+    {
+        mOrderResupplyLayout.setClickable(false);
+        mPaymentTierChevron.setVisibility(View.GONE);
+
+        mOrderResupplyText.setTextColor(
+                ContextCompat.getColor(getContext(), R.color.subtitle_grey));
+        if (resupplyHelperText != null && !resupplyHelperText.isEmpty())
+        {
+            mOrderResupplyLayout.setLayoutParams(UIUtils.MATCH_WIDTH_WRAP_HEIGHT_PARAMS);
+            mOrderResupplyHelperText.setVisibility(View.VISIBLE);
+            mOrderResupplyHelperText.setText(resupplyHelperText);
+        }
     }
 }

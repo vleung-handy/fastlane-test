@@ -27,7 +27,7 @@ public class AccountSettingsFragmentTest
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void testDashboardIsWorking() throws InterruptedException
+    public void testAccountSettingsIsWorking() throws InterruptedException
     {
         // Go to dashboard.
         onView(withId(R.id.button_more)).perform(click());
