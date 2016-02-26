@@ -486,7 +486,15 @@ public final class ApplicationModule
     {
         final TelephonyManager telephonyManager =
                 ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-        return telephonyManager.getNetworkOperatorName();
+        if (telephonyManager != null)
+        {
+            final String networkOperatorName = telephonyManager.getNetworkOperatorName();
+            if (networkOperatorName != null)
+            {
+                return networkOperatorName;
+            }
+        }
+        return "";
     }
 
     @Provides
