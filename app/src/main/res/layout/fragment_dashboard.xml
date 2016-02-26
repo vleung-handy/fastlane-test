@@ -39,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/circle_page_indicator_height"
                 android:layout_marginTop="@dimen/circle_negative_margin"
+                android:paddingTop="@dimen/circle_indicator_padding"
                 />
 
             <include layout="@layout/divider_dashboard"/>
