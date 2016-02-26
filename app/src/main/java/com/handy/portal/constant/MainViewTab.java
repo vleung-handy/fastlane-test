@@ -3,6 +3,7 @@ package com.handy.portal.constant;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.WebUrlManager;
+import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
@@ -19,8 +20,6 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.fragment.AccountSettingsFragment;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 
@@ -37,7 +36,6 @@ public enum MainViewTab implements Serializable
     UPDATE_DEBIT_CARD(PaymentsUpdateDebitCardFragment.class),
     PAYMENTS(PaymentsFragment.class),
     PAYMENTS_DETAIL(PaymentsDetailFragment.class),
-    PROFILE(ProfileFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
     HELP(HelpFragment.class),

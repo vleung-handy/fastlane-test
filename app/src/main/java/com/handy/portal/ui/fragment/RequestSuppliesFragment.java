@@ -51,7 +51,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @Override
     protected MainViewTab getTab()
     {
-        return MainViewTab.PROFILE;
+        return MainViewTab.REQUEST_SUPPLIES;
     }
 
     private ProviderProfile mProviderProfile;
@@ -109,7 +109,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         // Verify with Kenny that this transition is ok; may need to refactor later
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
     }
 
     @Subscribe

@@ -25,7 +25,10 @@
     <RadioButton
         style="@style/TrayButton"
         android:layout_height="1dp"
-        android:layout_margin="@dimen/row_margin"
+        android:layout_marginEnd="@dimen/default_margin_medium"
+        android:layout_marginLeft="@dimen/default_margin_medium"
+        android:layout_marginRight="@dimen/default_margin_medium"
+        android:layout_marginStart="@dimen/default_margin_medium"
         android:background="@drawable/divider_grey"
         />
 
@@ -39,7 +42,10 @@
     <RadioButton
         style="@style/TrayButton"
         android:layout_height="1dp"
-        android:layout_margin="@dimen/row_margin"
+        android:layout_marginEnd="@dimen/default_margin_medium"
+        android:layout_marginLeft="@dimen/default_margin_medium"
+        android:layout_marginRight="@dimen/default_margin_medium"
+        android:layout_marginStart="@dimen/default_margin_medium"
         android:background="@drawable/divider_grey"
         />
 

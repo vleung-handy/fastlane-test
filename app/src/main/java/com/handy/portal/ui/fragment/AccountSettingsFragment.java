@@ -84,7 +84,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile()
     {
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
     @OnClick(R.id.edit_payment_option)

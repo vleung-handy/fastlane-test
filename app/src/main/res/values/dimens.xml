@@ -89,6 +89,9 @@
     <dimen name="job_cell_icon_size">40dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
 
+    <!-- Account Settings -->
+    <dimen name="account_settings_cell_height">70dp</dimen>
+
     <!-- Referrals -->
     <dimen name="default_button_height">48dp</dimen>
 

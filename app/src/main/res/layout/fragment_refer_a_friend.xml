@@ -67,22 +67,46 @@
                     />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/title"
+                style="@style/TextView.XXLarge.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/row_margin"
+                tools:text="Give $35, Get $35"
+                />
+
+            <TextView
+                android:id="@+id/subtitle"
+                style="@style/TextView.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:gravity="center"
+                tools:text="Give your friends $35 off their first Handy booking, and you get $35!"
+                />
+
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/referral_description_layout"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/img_point"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/referral_description_layout"
-            android:layout_marginBottom="@dimen/section_margin"
+            android:layout_marginTop="@dimen/default_margin_xxlarge"
             android:orientation="vertical"
             >
-
-            <include layout="@layout/element_profile_section_header"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:orientation="vertical"
                 android:padding="@dimen/default_padding"
                 >
@@ -91,7 +115,7 @@
                     android:id="@+id/referral_code_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/grey_round"
+                    android:background="@color/white"
                     android:padding="@dimen/default_padding"
                     >
 

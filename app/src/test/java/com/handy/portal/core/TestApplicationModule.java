@@ -38,7 +38,7 @@ import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragmentTest;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
+import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
@@ -56,7 +56,7 @@ import static org.mockito.Mockito.when;
         LoginActivity.class,
         MainActivityFragment.class,
         MainActivity.class,
-        ProfileFragment.class,
+        ProfileUpdateFragment.class,
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
         ScheduledBookingsFragment.class,

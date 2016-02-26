@@ -162,7 +162,7 @@ public class TabNavigationManager
 
             // Account Settings
             addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
-            addToBackStack |= targetTab == MainViewTab.PROFILE;
+            addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
         }
 
         return addToBackStack;

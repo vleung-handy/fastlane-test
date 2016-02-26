@@ -79,7 +79,6 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -107,7 +106,6 @@ import retrofit.converter.GsonConverter;
         LoginActivityFragment.class,
         LoginActivity.class,
         ScheduledBookingsFragment.class,
-        ProfileFragment.class,
         AvailableBookingsFragment.class,
         MainActivityFragment.class,
         BaseApplication.class,

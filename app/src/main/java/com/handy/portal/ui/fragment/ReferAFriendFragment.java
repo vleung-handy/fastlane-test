@@ -42,9 +42,9 @@ public class ReferAFriendFragment extends ActionBarFragment
     @Bind(R.id.bling)
     View mBling;
 
-    @Bind(R.id.profile_section_header_title_text)
+    @Bind(R.id.title)
     TextView mTitleText;
-    @Bind(R.id.profile_section_header_subtitle_text)
+    @Bind(R.id.subtitle)
     TextView mSubtitleText;
     @Bind(R.id.referral_code_text)
     TextView mReferralCodeText;

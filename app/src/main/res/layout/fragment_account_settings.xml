@@ -19,7 +19,7 @@
         <RelativeLayout
             android:id="@+id/contact_info_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/account_settings_cell_height"
             android:background="@drawable/background_list_entry"
             android:clickable="true"
             android:padding="@dimen/default_padding"
@@ -66,7 +66,7 @@
         <RelativeLayout
             android:id="@+id/edit_payment_option"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/account_settings_cell_height"
             android:background="@drawable/background_list_entry"
             android:clickable="true"
             android:padding="@dimen/default_padding"
@@ -113,7 +113,7 @@
         <RelativeLayout
             android:id="@+id/order_resupply_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/account_settings_cell_height"
             android:background="@drawable/background_list_entry"
             android:clickable="true"
             android:padding="@dimen/default_padding"
@@ -148,7 +148,7 @@
         <RelativeLayout
             android:id="@+id/income_verification_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/account_settings_cell_height"
             android:background="@drawable/background_list_entry"
             android:clickable="true"
             android:padding="@dimen/default_padding"
