@@ -14,7 +14,6 @@
         android:id="@+id/tier_option"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dashboard_option_height"
-        android:layout_marginTop="@dimen/dashboard_option_top_margin"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
         android:padding="@dimen/default_padding"
@@ -61,7 +60,6 @@
         android:id="@+id/feedback_option"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dashboard_option_height"
-        android:layout_marginTop="@dimen/dashboard_option_top_margin"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
         android:paddingBottom="@dimen/extra_padding_xlarge"
@@ -117,7 +115,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dashboard_option_height"
-            android:layout_marginTop="@dimen/dashboard_option_top_margin"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             android:paddingTop="@dimen/extra_padding_xlarge"
