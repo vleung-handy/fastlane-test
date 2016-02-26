@@ -18,6 +18,9 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.location.LocationScheduleHandler;
+import com.handy.portal.location.LocationService;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
@@ -73,6 +76,7 @@ import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
@@ -130,6 +134,7 @@ import retrofit.converter.GsonConverter;
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
         NotificationBlockerDialogFragment.class,
+        LocationSettingsBlockerDialogFragment.class,
         PaymentsUpdateBankAccountFragment.class,
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
@@ -151,6 +156,8 @@ import retrofit.converter.GsonConverter;
         NotificationsFragment.class,
         NotificationsListView.class,
         NotificationsListEntryView.class,
+        LocationScheduleHandler.class,
+        LocationService.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
 })
@@ -315,6 +322,16 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final LocationManager provideLocationManager(final Bus bus,
+                                                 final DataManager dataManager,
+                                                 final ProviderManager providerManager,
+                                                 final PrefsManager prefsManager)
+    {
+        return new LocationManager(bus, dataManager, providerManager, prefsManager);
+    }
+
+    @Provides
+    @Singleton
     final LoginManager provideLoginManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
     {
         return new LoginManager(bus, dataManager, prefsManager, mixpanel);
@@ -329,9 +346,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager(final DataManager dataManager)
+    final ConfigManager provideConfigManager(final Bus bus, final DataManager dataManager)
     {
-        return new ConfigManager(dataManager);
+        return new ConfigManager(bus, dataManager);
     }
 
     @Provides
