@@ -81,6 +81,8 @@ public class LocationUpdate
     Date mCapturedTimestamp;
     @SerializedName("battery_level")
     float mBatteryLevelPercent; //0.95
+    @SerializedName("connection_type")
+    String mActiveNetworkType;
     @SerializedName("booking_id")
     String mBookingId;
 
@@ -137,6 +139,11 @@ public class LocationUpdate
         mBatteryLevelPercent = batteryLevelPercent;
     }
 
+    public void setActiveNetworkType(final String activeNetworkType)
+    {
+        mActiveNetworkType = activeNetworkType;
+    }
+
     /**
      * TODO: for testing/debugging purposes only
      *
@@ -154,6 +161,7 @@ public class LocationUpdate
                 + "\nevent name: " + mEventName
                 + "\ntimestamp: " + mCapturedTimestamp.toString()
                 + "\nbattery level: " + mBatteryLevelPercent
+                + "\nconnection type: " + mActiveNetworkType
                 + "\nbooking id: " + mBookingId;
         return result;
     }
