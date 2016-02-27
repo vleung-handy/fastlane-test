@@ -38,8 +38,9 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
             view.setTitle(mContext.getString(R.string.lifetime_rating));
         }
 
+        view.setContentColor(rating.getStatusColorId());
         view.setDate(mContext.getString(R.string.time_interval_formatted,
-                DateTimeUtils.formatDateMonthDay(rating.getStartDate()),
+                DateTimeUtils.formatMonthDateYear(rating.getStartDate()),
                 DateTimeUtils.formatMonthDateYear(rating.getEndDate())));
         view.setJobRatings(rating.getFiveStarRatedBookingCount(),
                 rating.getRatedBookingCount(), rating.getTotalBookingCount());
@@ -57,7 +58,6 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
                 view.setPercentage(0);
             }
         }
-        view.setContentColor(rating.getStatusColorId());
         container.addView(view);
 
         return view;

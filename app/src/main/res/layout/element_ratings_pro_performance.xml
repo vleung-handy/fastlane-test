@@ -36,12 +36,12 @@
         tools:text="January 5 - February 5, 2016"
         />
 
-    <com.handy.portal.ui.element.dashboard.PercentageCircleView
-        android:id="@+id/five_star_percentage_view"
+    <com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView
+        android:id="@+id/five_star_progress_percentage_view"
         android:layout_width="@dimen/percentage_circle_diameter"
         android:layout_height="@dimen/percentage_circle_diameter"
-        android:layout_marginBottom="@dimen/percentage_circle_margin"
         android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/percentage_circle_margin"
         />
 
     <include layout="@layout/divider_dashboard"/>

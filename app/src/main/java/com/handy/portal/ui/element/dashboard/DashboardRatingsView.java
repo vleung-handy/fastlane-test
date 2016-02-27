@@ -4,7 +4,6 @@ package com.handy.portal.ui.element.dashboard;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -20,14 +19,14 @@ public class DashboardRatingsView extends FrameLayout
     TextView mTitle;
     @Bind(R.id.five_star_ratings_view)
     JobRatingView mFiveStarRatingsView;
-    @Bind(R.id.five_star_percentage_view)
-    PercentageCircleView mPercentageCircleView;
     @Bind(R.id.rated_jobs_view)
     JobRatingView mRatedJobsView;
     @Bind(R.id.total_jobs_view)
     JobRatingView mTotalJobsView;
     @Bind(R.id.date_text)
     TextView mDateText;
+    @Bind(R.id.five_star_progress_percentage_view)
+    FiveStarRatingPercentageView mFiveStarProgressPercentageRatingView;
 
     public DashboardRatingsView(final Context context)
     {
@@ -59,12 +58,6 @@ public class DashboardRatingsView extends FrameLayout
         inflate(getContext(), R.layout.element_ratings_pro_performance, this);
         ButterKnife.bind(this);
 
-        mPercentageCircleView.setColor(ContextCompat.getColor(getContext(), R.color.white),
-                ContextCompat.getColor(getContext(), R.color.bg_inactive_grey),
-                ContextCompat.getColor(getContext(), R.color.requested_green));
-        mPercentageCircleView.setPercentageSign(getResources().getString(R.string.percentage));
-        mPercentageCircleView.setSubText(getResources().getString(R.string.five_star));
-
         mFiveStarRatingsView.setDescription(getResources().getString(R.string.five_star_ratings));
         mRatedJobsView.setDescription(getResources().getString(R.string.rated_jobs));
         mTotalJobsView.setDescription(getResources().getString(R.string.total_jobs));
@@ -89,11 +82,16 @@ public class DashboardRatingsView extends FrameLayout
 
     public void setPercentage(float percentage)
     {
-        mPercentageCircleView.setPercentage(percentage);
+        mFiveStarProgressPercentageRatingView.setAnimator(Math.round(percentage * 100));
     }
 
     public void setContentColor(int colorId)
     {
-        mPercentageCircleView.setContentColor(colorId);
+        mFiveStarProgressPercentageRatingView.setContentColor(colorId);
+    }
+
+    public void animateProgressBar()
+    {
+        mFiveStarProgressPercentageRatingView.animateProgressBar();
     }
 }

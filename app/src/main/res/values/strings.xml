@@ -546,7 +546,7 @@
     <string name="kilometers_away_formatted">%1$s kilometers away</string>
     <string name="withholding_charge">Canceling this job will result in a withholding</string>
     <string name="please_confirm">Please confirm:</string>
-    <string name="time_interval_formatted">%1$s - %2$s</string>
+    <string name="time_interval_formatted">%1$s – %2$s</string>
 
     <!-- Tutorial Overlay -->
     <string name="got_it">Got it!</string>

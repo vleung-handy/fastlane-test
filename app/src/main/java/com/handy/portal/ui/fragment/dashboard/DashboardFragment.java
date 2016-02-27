@@ -53,7 +53,6 @@ public class DashboardFragment extends ActionBarFragment
     @Bind(R.id.dashboard_rating_threshold)
     TextView mRatingThresholdText;
 
-
     @Override
     protected MainViewTab getTab()
     {
