@@ -82,4 +82,7 @@ public abstract class ProviderDashboardEvent extends HandyEvent
             this.error = error;
         }
     }
+
+
+    public static class AnimateFiveStarPercentageGraph extends HandyEvent {}
 }

@@ -15,16 +15,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.event.ProviderDashboardEvent;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class FiveStarRatingPercentageView extends FrameLayout
 {
+    @Inject
+    Bus mBus;
+
     @Bind(R.id.five_star_percentage_number)
     TextView mFiveStarPercentageNumber;
     @Bind(R.id.five_star_percentage_sign)
@@ -38,6 +45,8 @@ public class FiveStarRatingPercentageView extends FrameLayout
     private int mPercentage;
     private int mBackIndex;
     private int mSeries1Index;
+    private boolean mAnimatedView = false;
+    private boolean mInitialAnimationDone = false;
 
     public FiveStarRatingPercentageView(final Context context)
     {
@@ -85,17 +94,22 @@ public class FiveStarRatingPercentageView extends FrameLayout
 
     public void animateProgressBar()
     {
-        mDynamicArcView.addEvent(new DecoEvent.Builder(0)
-            .setIndex(mSeries1Index)
-            .setDelay(0)
-            .setDuration(1)
-            .build());
+        if (mInitialAnimationDone && !mAnimatedView)
+        {
+            mAnimatedView = true;
 
-        mDynamicArcView.addEvent(new DecoEvent.Builder(mPercentage)
-            .setIndex(mSeries1Index)
-            .setDelay(1)
-            .setDuration(1000)
-            .build());
+            mDynamicArcView.addEvent(new DecoEvent.Builder(0)
+                    .setIndex(mSeries1Index)
+                    .setDelay(0)
+                    .setDuration(1)
+                    .build());
+
+            mDynamicArcView.addEvent(new DecoEvent.Builder(mPercentage)
+                    .setIndex(mSeries1Index)
+                    .setDelay(1)
+                    .setDuration(1000)
+                    .build());
+        }
     }
 
     private void init()
@@ -111,22 +125,22 @@ public class FiveStarRatingPercentageView extends FrameLayout
         mDynamicArcView.configureAngles(360, 0);
 
         SeriesItem arcBackTrack = new SeriesItem.Builder(ContextCompat.getColor(getContext(), R.color.border_grey))
-            .setRange(0, seriesMax, seriesMax)
-            .setInitialVisibility(false)
-            .setLineWidth(getDimension(trackWidth))
-            .setChartStyle(SeriesItem.ChartStyle.STYLE_DONUT)
-            .build();
+                .setRange(0, seriesMax, seriesMax)
+                .setInitialVisibility(false)
+                .setLineWidth(getDimension(trackWidth))
+                .setChartStyle(SeriesItem.ChartStyle.STYLE_DONUT)
+                .build();
 
         mBackIndex = mDynamicArcView.addSeries(arcBackTrack);
 
         float inset = 0;
         SeriesItem seriesItem1 = new SeriesItem.Builder(mColor)
-            .setRange(0, seriesMax, 0)
-            .setInitialVisibility(false)
-            .setCapRounded(true)
-            .setLineWidth(getDimension(trackWidth))
-            .setInset(new PointF(inset, inset))
-            .build();
+                .setRange(0, seriesMax, 0)
+                .setInitialVisibility(false)
+                .setCapRounded(true)
+                .setLineWidth(getDimension(trackWidth))
+                .setInset(new PointF(inset, inset))
+                .build();
 
         seriesItem1.addArcSeriesItemListener(new SeriesItem.SeriesItemListener()
         {
@@ -151,9 +165,9 @@ public class FiveStarRatingPercentageView extends FrameLayout
         final int fadeDuration = 2000;
 
         mDynamicArcView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT_FILL)
-            .setIndex(mBackIndex)
-            .setDuration(3000)
-            .build());
+                .setIndex(mBackIndex)
+                .setDuration(3000)
+                .build());
 
         mDynamicArcView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
                 .setIndex(mSeries1Index)
@@ -183,8 +197,10 @@ public class FiveStarRatingPercentageView extends FrameLayout
                             @Override
                             public void onAnimationEnd(final Animation animation)
                             {
+                                mInitialAnimationDone = true;
                                 mFiveStarPercentageInfoWrapper.setVisibility(View.VISIBLE);
                                 animateProgressBar();
+//                                mBus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
                             }
 
                             @Override
