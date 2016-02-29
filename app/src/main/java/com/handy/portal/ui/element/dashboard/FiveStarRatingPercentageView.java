@@ -50,6 +50,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
 
     private static int CIRCULAR_GRAPH_ANIMATION_DURATION_MILLIS = 1000;
     private static int PERCENTAGE_TEXT_DELAY_DURATION_MILLIS = 500;
+    private static float MAX_GRAPH_VALUE = 100f;
     private static float CIRCULAR_TRACK_WIDTH = 8f;
 
     public FiveStarRatingPercentageView(final Context context)
@@ -98,7 +99,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
 
     private void animateTrack()
     {
-        mDynamicArcView.addEvent(new DecoEvent.Builder(100)
+        mDynamicArcView.addEvent(new DecoEvent.Builder(MAX_GRAPH_VALUE)
                 .setIndex(mBackIndex)
                 .setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION_MILLIS)
                 .build());
@@ -160,11 +161,10 @@ public class FiveStarRatingPercentageView extends FrameLayout
     */
     private void createTracks()
     {
-        final float seriesMax = 100f;
         mDynamicArcView.configureAngles(360, 0);
 
         SeriesItem arcBackTrack = new SeriesItem.Builder(ContextCompat.getColor(getContext(), R.color.border_grey))
-                .setRange(0, seriesMax, 0)
+                .setRange(0, MAX_GRAPH_VALUE, 0)
                 .setInitialVisibility(false)
                 .setLineWidth(getDimension(CIRCULAR_TRACK_WIDTH))
                 .setChartStyle(SeriesItem.ChartStyle.STYLE_DONUT)
@@ -174,7 +174,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
 
         float inset = 0;
         SeriesItem seriesItem1 = new SeriesItem.Builder(mColor)
-                .setRange(0, seriesMax, 0)
+                .setRange(0, MAX_GRAPH_VALUE, 0)
                 .setInitialVisibility(false)
                 .setCapRounded(true)
                 .setLineWidth(getDimension(CIRCULAR_TRACK_WIDTH))
