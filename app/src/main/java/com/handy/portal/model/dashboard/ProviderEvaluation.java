@@ -3,6 +3,7 @@ package com.handy.portal.model.dashboard;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
+import com.handy.portal.util.TextUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class ProviderEvaluation implements Serializable
             mFiveStarRatingsWithComments = new ArrayList<>();
             for (ProviderRating rating : mFiveStarRatings)
             {
-                if (rating.getComment() != null && !rating.getComment().isEmpty())
+                if (!TextUtils.isNullOrEmpty(rating.getComment()))
                 {
                     mFiveStarRatingsWithComments.add(rating);
                 }
