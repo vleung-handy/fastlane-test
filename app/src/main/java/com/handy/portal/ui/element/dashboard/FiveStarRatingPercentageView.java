@@ -78,9 +78,9 @@ public class FiveStarRatingPercentageView extends FrameLayout
         init();
     }
 
-    public void setContentColor(int colorId)
+    public void setContentColor(int colorResourceId)
     {
-        mColor = ContextCompat.getColor(getContext(), colorId);
+        mColor = ContextCompat.getColor(getContext(), colorResourceId);
         mFiveStarPercentageNumber.setTextColor(mColor);
         mFiveStarPercentageSign.setTextColor(mColor);
     }
