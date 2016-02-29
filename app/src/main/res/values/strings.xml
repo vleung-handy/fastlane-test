@@ -241,7 +241,7 @@
     <string name="tab_notifications">Notifications</string>
     <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
-    <string name="dashboard">Dashboard</string>
+    <string name="dashboard">Ratings &amp; Feedback</string>
     <string name="tab_help">Help</string>
     <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
