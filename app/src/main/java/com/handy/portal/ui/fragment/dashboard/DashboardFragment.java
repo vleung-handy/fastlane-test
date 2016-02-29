@@ -54,6 +54,8 @@ public class DashboardFragment extends ActionBarFragment
     @Bind(R.id.dashboard_rating_threshold)
     TextView mRatingThresholdText;
 
+    ProviderEvaluation mProviderEvaluation;
+
     @Override
     protected MainViewTab getTab()
     {
@@ -139,7 +141,8 @@ public class DashboardFragment extends ActionBarFragment
 
         if (event.providerEvaluation != null)
         {
-            createDashboardView(event.providerEvaluation);
+            mProviderEvaluation = event.providerEvaluation;
+            createDashboardView(mProviderEvaluation);
         }
     }
 
@@ -176,7 +179,10 @@ public class DashboardFragment extends ActionBarFragment
     @OnClick(R.id.try_again_button)
     public void getProviderEvaluation()
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new ProviderDashboardEvent.RequestProviderEvaluation());
+        if (mProviderEvaluation == null)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            bus.post(new ProviderDashboardEvent.RequestProviderEvaluation());
+        }
     }
 }

@@ -26,8 +26,7 @@ repositories {
 }
 
 apply plugin: 'com.android.application'
-// This does not break the build when Android Studio is missing the JRebel for Android plugin.
-apply plugin: 'com.zeroturnaround.jrebel.android'
+
 
 apply plugin: 'io.fabric'
 apply plugin: 'newrelic'

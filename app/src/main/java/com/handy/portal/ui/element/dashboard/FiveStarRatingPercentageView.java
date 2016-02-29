@@ -89,7 +89,52 @@ public class FiveStarRatingPercentageView extends FrameLayout
     {
         mPercentage = percentage;
         createTracks();
-        setupEvents();
+
+        if (!mInitialAnimationDone)
+        {
+            animateTrack();
+            fadeInPercentageText();
+        }
+    }
+
+    private void animateTrack()
+    {
+        mDynamicArcView.addEvent(new DecoEvent.Builder(100)
+                .setIndex(mBackIndex)
+                .setDuration(1000)
+                .build());
+    }
+
+    private void fadeInPercentageText()
+    {
+        Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setDuration(500);
+        fadeIn.setStartOffset(500);
+        fadeIn.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(final Animation animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(final Animation animation)
+            {
+                mInitialAnimationDone = true;
+                mFiveStarPercentageInfoWrapper.setVisibility(View.VISIBLE);
+                animateProgressBar();
+//                                mBus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
+            }
+
+            @Override
+            public void onAnimationRepeat(final Animation animation)
+            {
+
+            }
+        });
+
+        mFiveStarPercentageInfoWrapper.startAnimation(fadeIn);
     }
 
     public void animateProgressBar()
@@ -125,7 +170,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
         mDynamicArcView.configureAngles(360, 0);
 
         SeriesItem arcBackTrack = new SeriesItem.Builder(ContextCompat.getColor(getContext(), R.color.border_grey))
-                .setRange(0, seriesMax, seriesMax)
+                .setRange(0, seriesMax, 0)
                 .setInitialVisibility(false)
                 .setLineWidth(getDimension(trackWidth))
                 .setChartStyle(SeriesItem.ChartStyle.STYLE_DONUT)
@@ -158,62 +203,6 @@ public class FiveStarRatingPercentageView extends FrameLayout
         });
 
         mSeries1Index = mDynamicArcView.addSeries(seriesItem1);
-    }
-
-    private void setupEvents()
-    {
-        final int fadeDuration = 2000;
-
-        mDynamicArcView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT_FILL)
-                .setIndex(mBackIndex)
-                .setDuration(3000)
-                .build());
-
-        mDynamicArcView.addEvent(new DecoEvent.Builder(DecoDrawEffect.EffectType.EFFECT_SPIRAL_OUT)
-                .setIndex(mSeries1Index)
-                .setFadeDuration(fadeDuration)
-                .setDuration(2000)
-                .setDelay(1000)
-                .setListener(new DecoEvent.ExecuteEventListener()
-                {
-                    @Override
-                    public void onEventStart(DecoEvent event)
-                    {
-                    }
-
-                    @Override
-                    public void onEventEnd(DecoEvent event)
-                    {
-                        Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
-                        fadeIn.setDuration(300);
-                        fadeIn.setAnimationListener(new Animation.AnimationListener()
-                        {
-                            @Override
-                            public void onAnimationStart(final Animation animation)
-                            {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(final Animation animation)
-                            {
-                                mInitialAnimationDone = true;
-                                mFiveStarPercentageInfoWrapper.setVisibility(View.VISIBLE);
-                                animateProgressBar();
-//                                mBus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(final Animation animation)
-                            {
-
-                            }
-                        });
-
-                        mFiveStarPercentageInfoWrapper.startAnimation(fadeIn);
-                    }
-                })
-                .build());
     }
 
     private float getDimension(float base)
