@@ -16,6 +16,7 @@ import com.google.android.gms.location.LocationServices;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.location.LocationConstants;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
 import com.handy.portal.util.Utils;
@@ -28,7 +29,9 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public abstract class BaseActivity extends AppCompatActivity
+        implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener
 {
     private Object busEventListener;
     protected boolean allowCallbacks;
@@ -269,8 +272,13 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         }
     }
 
+    @Override
     public void onConnected(Bundle connectionHint)
     {
+        if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        {
+            return;
+        }
         Location newLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         //Keeping old value in the event we have a failed location update
         if (newLocation != null)

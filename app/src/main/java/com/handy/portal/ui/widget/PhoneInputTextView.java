@@ -23,7 +23,17 @@ public final class PhoneInputTextView extends InputTextField
     @Override
     public boolean validate()
     {
-        return true;
+        final String phoneNumber = getPhoneNumber();
+        if (phoneNumber.isEmpty())
+        {
+            highlight();
+            return false;
+        }
+        else
+        {
+            unHighlight();
+            return true;
+        }
     }
 
     public final String getPhoneNumber()

@@ -565,4 +565,7 @@
     <string name="notify_available_jobs">Notify me of open jobs today</string>
     <string name="notify_available_jobs_update_intro_success">Great! We’ll send you a notification for any available jobs that arrive the rest of the day.</string>
     <string name="notify_available_jobs_update_error">Oops! There was an error turning on notifications. Please check your connection and try again.</string>
+    <string name="change_location_settings_dialog_title">Location services required</string>
+    <string name="change_location_settings_dialog_message">Please enable location services so your customers are aware of your arrival time.</string>
+    <string name="change_location_settings_dialog_action_button">Go to Settings</string>
 </resources>

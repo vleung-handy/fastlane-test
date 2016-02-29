@@ -25,6 +25,13 @@ public class ConfigurationResponse
     @SerializedName("show_late_dispatch_opt_in")
     private boolean mShowLateDispatchOptIn;
 
+    @SerializedName("location_schedule_service_enabled")
+    private boolean mLocationScheduleServiceEnabled; //false by default
+
+    public boolean isLocationScheduleServiceEnabled()
+    {
+        return mLocationScheduleServiceEnabled;
+    }
 
     public boolean isComplementaryJobsEnabled()
     {
