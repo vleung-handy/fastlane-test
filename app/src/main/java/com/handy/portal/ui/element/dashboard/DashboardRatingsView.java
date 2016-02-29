@@ -80,6 +80,10 @@ public class DashboardRatingsView extends FrameLayout
         mTitle.setText(text);
     }
 
+    /**
+     *
+     * @param percentage percentage of five star reviews as a float between 0 and 1
+     */
     public void setFiveStarRatingPercentage(float percentage)
     {
         mFiveStarProgressPercentageRatingView.setAnimator(Math.round(percentage * 100));
