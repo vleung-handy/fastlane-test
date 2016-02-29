@@ -1,6 +1,5 @@
 package com.handy.portal.ui.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,12 +15,10 @@ import java.util.List;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder>
 {
-    private Context mContext;
     private List<ProviderRating> mRatings;
 
-    public ReviewListAdapter(@NonNull final Context context, @NonNull final List<ProviderRating> ratings)
+    public ReviewListAdapter(@NonNull final List<ProviderRating> ratings)
     {
-        mContext = context;
         mRatings = ratings;
     }
 
@@ -30,7 +27,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.five_star_review, parent, false);
-        return new ViewHolder(mContext, v, (TextView) v.findViewById(R.id.five_star_review_text),
+        return new ViewHolder(v, (TextView) v.findViewById(R.id.five_star_review_text),
                 (TextView) v.findViewById(R.id.review_date));
     }
 
@@ -49,14 +46,12 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        private Context mContext;
         private TextView mReviewTextView;
         private TextView mDateTextView;
 
-        public ViewHolder(Context context, View parent, TextView review, TextView date)
+        public ViewHolder(View parent, TextView review, TextView date)
         {
             super(parent);
-            mContext = context;
             mReviewTextView = review;
             mDateTextView = date;
         }
@@ -64,8 +59,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         public void bind(ProviderRating rating)
         {
             mReviewTextView.setText(rating.getComment());
-            String date = DateTimeUtils.getMonthAndYear(rating.getDateRating());
-            mDateTextView.setText(mContext.getString(R.string.comma_formatted, rating.getSource(), date));
+            mDateTextView.setText(DateTimeUtils.getMonthAndYear(rating.getDateRating()));
         }
     }
 }

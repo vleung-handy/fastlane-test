@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -21,6 +22,10 @@ public class DashboardFeedbackFragment extends ActionBarFragment
 {
     @Bind(R.id.layout_dashboard_feedback)
     LinearLayout mFeedbackLayout;
+    @Bind(R.id.no_result_view)
+    ViewGroup mNoResultView;
+    @Bind(R.id.no_result_text)
+    TextView mNoResultText;
 
     private ProviderEvaluation mEvaluation;
 
@@ -56,9 +61,18 @@ public class DashboardFeedbackFragment extends ActionBarFragment
 
         if (mEvaluation == null || mEvaluation.getProviderFeedback() == null) { return; }
 
-        for (ProviderFeedback feedback : mEvaluation.getProviderFeedback())
+        if (mEvaluation.getProviderFeedback().size() > 0)
         {
-            mFeedbackLayout.addView(new DashboardFeedbackView(getContext(), feedback));
+            mNoResultView.setVisibility(View.GONE);
+            for (ProviderFeedback feedback : mEvaluation.getProviderFeedback())
+            {
+                mFeedbackLayout.addView(new DashboardFeedbackView(getContext(), feedback));
+            }
+        }
+        else
+        {
+            mNoResultView.setVisibility(View.VISIBLE);
+            mNoResultText.setText(R.string.no_feedback);
         }
     }
 }

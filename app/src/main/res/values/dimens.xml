@@ -110,4 +110,11 @@
     <dimen name="circle_page_indicator_height">21dp</dimen>
     <dimen name="circle_negative_margin">-4dp</dimen>
     <dimen name="circle_indicator_padding">4dp</dimen>
+
+    <!-- warning or error screen -->
+    <dimen name="error_margin_top">10dp</dimen>
+    <dimen name="error_margin_side">40dp</dimen>
+    <dimen name="error_margin_bottom">50dp</dimen>
+    <dimen name="error_text">20sp</dimen>
+
 </resources>
