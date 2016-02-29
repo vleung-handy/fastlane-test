@@ -48,8 +48,8 @@ public class FiveStarRatingPercentageView extends FrameLayout
     private boolean mAnimatedView = false;
     private boolean mInitialAnimationDone = false;
 
-    private static int CIRCULAR_GRAPH_ANIMATION_DURATION = 1000;
-    private static int PERCENTAGE_TEXT_DELAY_DURATION = 500;
+    private static int CIRCULAR_GRAPH_ANIMATION_DURATION_MILLIS = 1000;
+    private static int PERCENTAGE_TEXT_DELAY_DURATION_MILLIS = 500;
     private static float CIRCULAR_TRACK_WIDTH = 8f;
 
     public FiveStarRatingPercentageView(final Context context)
@@ -100,15 +100,15 @@ public class FiveStarRatingPercentageView extends FrameLayout
     {
         mDynamicArcView.addEvent(new DecoEvent.Builder(100)
                 .setIndex(mBackIndex)
-                .setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION)
+                .setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION_MILLIS)
                 .build());
     }
 
     private void fadeInPercentageText()
     {
         Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
-        fadeIn.setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION - PERCENTAGE_TEXT_DELAY_DURATION);
-        fadeIn.setStartOffset(PERCENTAGE_TEXT_DELAY_DURATION);
+        fadeIn.setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION_MILLIS - PERCENTAGE_TEXT_DELAY_DURATION_MILLIS);
+        fadeIn.setStartOffset(PERCENTAGE_TEXT_DELAY_DURATION_MILLIS);
         fadeIn.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
@@ -143,7 +143,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
 
             mDynamicArcView.addEvent(new DecoEvent.Builder(mPercentage)
                     .setIndex(mSeries1Index)
-                    .setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION)
+                    .setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION_MILLIS)
                     .build());
         }
     }
