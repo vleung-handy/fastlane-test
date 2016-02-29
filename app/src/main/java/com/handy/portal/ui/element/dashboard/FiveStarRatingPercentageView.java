@@ -18,7 +18,6 @@ import com.handy.portal.R;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.util.Utils;
 import com.hookedonplay.decoviewlib.DecoView;
-import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.squareup.otto.Bus;
