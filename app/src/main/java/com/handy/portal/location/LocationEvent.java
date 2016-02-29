@@ -43,9 +43,11 @@ public abstract class LocationEvent
         }
     }
 
+
     public static class ReceiveLocationSchedule extends HandyEvent.ReceiveSuccessEvent
     {
         private final LocationQuerySchedule mLocationQuerySchedule;
+
         public ReceiveLocationSchedule(@NonNull LocationQuerySchedule locationQuerySchedule)
         {
             mLocationQuerySchedule = locationQuerySchedule;
@@ -56,6 +58,7 @@ public abstract class LocationEvent
             return mLocationQuerySchedule;
         }
     }
+
 
     public static class RequestLocationSchedule extends HandyEvent.RequestEvent
     {

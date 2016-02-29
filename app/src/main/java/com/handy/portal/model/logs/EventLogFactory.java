@@ -299,6 +299,22 @@ public class EventLogFactory
         return new ProfileLog.EditProfileConfirmedLog();
     }
 
+    // Performance Dashboard Logs
+    public EventLog createFeedbackTappedLog()
+    {
+        return new PerformanceLog.FeedbackTappedLog();
+    }
+
+    public EventLog createFiveStarReviewsTappedLog()
+    {
+        return new PerformanceLog.FiveStarReviewsTappedLog();
+    }
+
+    public EventLog createTierTappedLog()
+    {
+        return new PerformanceLog.TierTappedLog();
+    }
+
     // Help logs
     public EventLog createHelpContactFormSubmittedLog(String path, int helpNodeId, String helpNodeTitle)
     {

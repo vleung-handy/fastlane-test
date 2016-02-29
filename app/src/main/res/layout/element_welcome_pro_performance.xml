@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical"
+              android:paddingTop="@dimen/extra_padding_xlarge"
+    >
+
+    <TextView
+        android:id="@+id/welcome_back_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        tools:text="Welcome back, [Name]"
+        />
+
+    <TextView
+        android:id="@+id/pro_status_text"
+        style="@style/CircularBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/extra_margin_xlarge"
+        android:layout_marginTop="@dimen/lineSpacing"
+        android:gravity="center_horizontal"
+        android:textColor="@color/requested_green"
+        android:textSize="@dimen/large_text_size"
+        tools:text="Things are lookin good!"
+        />
+
+    <include layout="@layout/divider_dashboard"/>
+
+</LinearLayout>

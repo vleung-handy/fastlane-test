@@ -78,7 +78,6 @@ import static org.mockito.Mockito.when;
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
         ProfileReferralView.class,
-        ProfilePerformanceView.class,
         BookingDetailsJobInstructionsView.class,
         LocationSettingsBlockerDialogFragment.class
 }, library = true)

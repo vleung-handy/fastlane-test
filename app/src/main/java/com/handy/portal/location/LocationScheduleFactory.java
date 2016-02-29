@@ -28,6 +28,7 @@ public class LocationScheduleFactory
 
     /**
      * TODO: crude, clean up
+     *
      * @param booking
      * @return
      */

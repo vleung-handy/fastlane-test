@@ -31,7 +31,7 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     //TODO move somewhere else
     public static boolean areAnyPermissionsGranted(@NonNull Context context, @NonNull String[] permissions)
     {
-        for(int i = 0; i<permissions.length; i++)
+        for (int i = 0; i < permissions.length; i++)
         {
             if (ActivityCompat.checkSelfPermission(context,
                     permissions[i]) == PackageManager.PERMISSION_GRANTED)

@@ -10,6 +10,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
+import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
@@ -17,10 +18,16 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TypeSafeMap;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.model.payments.PaymentFlow;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ProviderManager
@@ -215,6 +222,115 @@ public class ProviderManager
                 mBus.post(new ProfileEvent.ReceiveSendResupplyKitError(error));
             }
         });
+    }
+
+    @Subscribe
+    public void onRequestProviderEvaluation(ProviderDashboardEvent.RequestProviderEvaluation event)
+    {
+        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+
+        // TODO: remove this fake data once the api is ready
+//        List<ProviderRating> providerRatingList = new ArrayList<>();
+//        ProviderRating providerRating = new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job");
+//        providerRatingList.add(providerRating);
+
+//        List<ProviderFeedback> feedbackList = new ArrayList<>();
+//        feedbackList.add(new ProviderFeedback("Good stuff!", "Good Stuff", new ArrayList<ProviderFeedback.FeedbackTip>()));
+//
+//        ProviderEvaluation providerEvaluation = new ProviderEvaluation(
+//                new ProviderEvaluation.Rating(10, 15, 5, 4.8, "Things are not lookin good!", "No feedback",
+//                        new Date(1000), new Date(10000)),
+//                new ProviderEvaluation.Rating(10, 15, 5, 4.8, "Things are not lookin good!", "No feedback",
+//                        new Date(1000), new Date(10000)), new ProviderEvaluation.Tier("Tier 1", 15), 3.8, providerRatingList, feedbackList);
+
+//        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
+//        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(null));
+        mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
+        {
+            @Override
+            public void onSuccess(final ProviderEvaluation providerEvaluation)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(error));
+            }
+        });
+
+    }
+
+    @Subscribe
+    public void onRequestProviderFiveStarRatings(ProviderDashboardEvent.RequestProviderFiveStarRatings event)
+    {
+        String providerId = "";
+
+        // TODO: remove this fake data once the api is ready
+        final List<ProviderRating> ratings = new ArrayList<>();
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+
+        mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(ratings));
+
+//        mDataManager.getProviderFiveStarRatings(providerId, "5", new DataManager.Callback<List<ProviderRating>>()
+//        {
+//            @Override
+//            public void onSuccess(final List<ProviderRating> providerRatings)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(providerRatings));
+//            }
+//
+//            @Override
+//            public void onError(final DataManager.DataManagerError error)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError(error));
+//            }
+//        });
+
+    }
+
+    @Subscribe
+    public void onRequestProviderFeedback(ProviderDashboardEvent.RequestProviderFeedback event)
+    {
+        String providerId = "";
+        // TODO: replace with real api call before merge into develop
+        List<ProviderFeedback.FeedbackTip> feedbackTips = new ArrayList<>();
+        feedbackTips.add(new ProviderFeedback.FeedbackTip("Floors weren't cleaned", "General Cleanliness"));
+        feedbackTips.add(new ProviderFeedback.FeedbackTip("develop a cleaning plan and follow it", "use the customer checklist as a guide"));
+
+        List<ProviderFeedback> providerFeedback = new ArrayList<>();
+        providerFeedback.add(new ProviderFeedback("Quality of service", "3 customers have indicated that they were disappointed by the quality of your cleaning.",
+                feedbackTips));
+        mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackSuccess(providerFeedback));
+//        mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError(null));
+//        mDataManager.getProviderFeedback(providerId, new DataManager.Callback<List<ProviderFeedback>>()
+//        {
+//            @Override
+//            public void onSuccess(final List<ProviderFeedback> providerFeedback)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackSuccess(providerFeedback));
+//
+//            }
+//
+//            @Override
+//            public void onError(final DataManager.DataManagerError error)
+//            {
+//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFeedbackError(error));
+//            }
+//        });
     }
 
     private void requestProviderInfo()

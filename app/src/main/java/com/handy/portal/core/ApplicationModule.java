@@ -55,10 +55,11 @@ import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.ProfileContactView;
-import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
+import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
+import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
@@ -76,6 +77,10 @@ import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -143,11 +148,11 @@ import retrofit.converter.GsonConverter;
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
         ProfileContactView.class,
-        ProfilePerformanceView.class,
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
         ProfileReferralView.class,
         PaymentsBatchListView.class,
+        DashboardFragment.class,
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
         CancellationRequestFragment.class,
@@ -156,10 +161,15 @@ import retrofit.converter.GsonConverter;
         NotificationsFragment.class,
         NotificationsListView.class,
         NotificationsListEntryView.class,
+        DashboardTiersFragment.class,
+        DashboardFeedbackFragment.class,
+        DashboardReviewsFragment.class,
+        DashboardOptionsPerformanceView.class,
         LocationScheduleHandler.class,
         LocationService.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
+        FiveStarRatingPercentageView.class,
 })
 public final class ApplicationModule
 {

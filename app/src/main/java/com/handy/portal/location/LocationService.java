@@ -29,11 +29,11 @@ import javax.inject.Inject;
  * listens to the location schedule updated event and starts the schedule handler accordingly
  * <p/>
  * responsible for handling google api client
- **
+ * *
  * TODO: what exactly is wakelock and do i need it?
- *
+ * <p/>
  * TODO: consider running this, or parts of this, in separate thread from main application to prevent lags
- *
+ * <p/>
  * TODO: make sure this isn't started if config manager says no
  */
 public class LocationService extends Service
@@ -71,7 +71,7 @@ public class LocationService extends Service
 //        Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
 
         super.onStartCommand(intent, flags, startId);
-        if(mGoogleApiClient == null)
+        if (mGoogleApiClient == null)
         {
             return START_NOT_STICKY;
         }
@@ -99,12 +99,12 @@ public class LocationService extends Service
     public void onDestroy()
     {
         mBus.unregister(this);
-        if(mLocationScheduleHandler != null)
+        if (mLocationScheduleHandler != null)
         {
             mLocationScheduleHandler.destroy();
         }
 
-        if(mGoogleApiClient != null)
+        if (mGoogleApiClient != null)
         {
             mGoogleApiClient.disconnect();
         }
@@ -166,8 +166,9 @@ public class LocationService extends Service
 
     /**
      * doing this because i want to prevent this sticky service from restarting if a crash occurred
-     *
+     * <p/>
      * however this is not elegant. would prefer a better way
+     *
      * @param thread
      * @param ex
      */
@@ -231,7 +232,7 @@ public class LocationService extends Service
     @VisibleForTesting
     public LocationQueryStrategy getLatestActiveLocationQueryStrategy()
     {
-        if(mLocationScheduleHandler == null) return null;
+        if (mLocationScheduleHandler == null) { return null; }
         return mLocationScheduleHandler.getLatestActiveLocationStrategy();
     }
 }

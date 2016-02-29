@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/extra_margin_medium"
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/divider_dashboard"/>
+
+    <RelativeLayout
+        android:id="@+id/tier_option"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dashboard_option_height"
+        android:background="@drawable/background_list_entry"
+        android:clickable="true"
+        android:padding="@dimen/default_padding"
+        >
+
+        <TextView
+            android:id="@+id/tier_title"
+            style="@style/TextView.Medium.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            tools:text="Tier 1"
+            />
+
+        <TextView
+            android:id="@+id/tier_hourly_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tier_chevron"
+            android:layout_toStartOf="@+id/tier_chevron"
+            android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/large_text_size"
+            tools:text="$15"
+            />
+
+        <ImageView
+            android:id="@+id/tier_chevron"
+            android:layout_width="@dimen/dashboard_chevron_width_height"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:src="@drawable/ic_chevron_dashboard_grey"
+            />
+
+    </RelativeLayout>
+
+    <include layout="@layout/divider_dashboard"/>
+
+    <RelativeLayout
+        android:id="@+id/feedback_option"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dashboard_option_height"
+        android:background="@drawable/background_list_entry"
+        android:clickable="true"
+        android:paddingBottom="@dimen/extra_padding_xlarge"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/extra_padding_xlarge"
+        >
+
+        <TextView
+            style="@style/TextView.Medium.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/feedback"
+            />
+
+        <ImageView
+            android:id="@+id/feedback_icon"
+            android:layout_width="@dimen/highlight_icon_size"
+            android:layout_height="@dimen/highlight_icon_size"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/extra_margin"
+            android:layout_toLeftOf="@+id/first_feedback_title"
+            android:src="@drawable/ic_red_x"
+            />
+
+        <TextView
+            android:id="@+id/first_feedback_title"
+            style="@style/CircularBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/feedback_chevron"
+            android:layout_toStartOf="@+id/feedback_chevron"
+            android:textColor="@color/error_red"
+            android:textSize="@dimen/default_text_size"
+            tools:text="Quality of Service"
+            />
+
+        <ImageView
+            android:id="@+id/feedback_chevron"
+            android:layout_width="@dimen/dashboard_chevron_width_height"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:src="@drawable/ic_chevron_dashboard_grey"
+            />
+
+    </RelativeLayout>
+
+    <include layout="@layout/divider_dashboard"/>
+
+    <LinearLayout
+        android:id="@+id/reviews_option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_list_entry"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dashboard_option_height"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingTop="@dimen/extra_padding_xlarge"
+            >
+
+            <TextView
+                android:id="@+id/five_star_reviews_text"
+                style="@style/TextView.Medium.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/five_star_reviews"
+                />
+
+            <TextView
+                android:id="@+id/five_star_reviews_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/reviews_chevron"
+                android:layout_toStartOf="@+id/reviews_chevron"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/large_text_size"
+                tools:text="18"
+                />
+
+            <ImageView
+                android:id="@+id/reviews_chevron"
+                android:layout_width="@dimen/dashboard_chevron_width_height"
+                android:layout_height="@dimen/dashboard_chevron_width_height"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:src="@drawable/ic_chevron_dashboard_grey"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/dashboard_first_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/extra_padding_xlarge"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            >
+
+            <include layout="@layout/element_five_stars"/>
+
+            <TextView
+                android:id="@+id/review_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/five_star_review_text_margin"
+                android:lineSpacingExtra="@dimen/line_spacing_dashboard"
+                android:textColor="@color/black"
+                android:textSize="@dimen/medium_text_size"
+                tools:text="Jane is the best! Everything is spotless. We are happy with the cleaning."
+                />
+
+            <TextView
+                android:id="@+id/review_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/extra_padding"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/small_text_size"
+                tools:text="Sam, May 2015"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/divider_dashboard"/>
+
+</LinearLayout>

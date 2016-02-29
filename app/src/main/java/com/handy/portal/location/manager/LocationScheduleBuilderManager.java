@@ -20,14 +20,14 @@ import java.util.Set;
 
 /**
  * experimental
- *
+ * <p/>
  * micro manager for getting the location schedule from bookings
  * TODO: currently not provided in application module, but in location manager. not sure if i want to do this
  * TODO: NEEDS MAJOR REFACTOR
  * TODO: can remove this manager when we switch over to using endpoint for building schedules!
- *
+ * <p/>
  * responsible for building the location schedule based on the current bookings
- *
+ * <p/>
  * there is only ONE location schedule!
  */
 public class LocationScheduleBuilderManager
@@ -38,6 +38,7 @@ public class LocationScheduleBuilderManager
     private final Set<Date> mRequestedDatesForScheduleSet = new HashSet<>(); //should never change
 
     private final Bus mBus;
+
     public LocationScheduleBuilderManager(Bus bus)
     {
         mBus = bus;
@@ -48,6 +49,7 @@ public class LocationScheduleBuilderManager
 
     /**
      * asks for the bookings for the scope of the schedule so it can use them to build a schedule
+     *
      * @param event
      */
     @Subscribe
@@ -57,7 +59,7 @@ public class LocationScheduleBuilderManager
         mRequestedDatesForScheduleSet.clear();
         final List<Date> requestedDates = getDatesForSchedule();
 
-        for(Date d : requestedDates)
+        for (Date d : requestedDates)
         {
             mRequestedDatesForScheduleSet.add(d);
             Log.d(getClass().getName(), "requested date: " + d);
@@ -71,6 +73,7 @@ public class LocationScheduleBuilderManager
 
     /**
      * gets a list of dates without date that we should get bookings to build the schedule for
+     *
      * @return
      */
     private List<Date> getDatesForSchedule()
@@ -79,7 +82,7 @@ public class LocationScheduleBuilderManager
         Date date = DateTimeUtils.getDateWithoutTime(new Date());
         requestedDates.add(date);
         Calendar calendar = Calendar.getInstance();
-        for(int i = 1; i<NUM_DAYS_FOR_LOCATION_SCHEDULE; i++)
+        for (int i = 1; i < NUM_DAYS_FOR_LOCATION_SCHEDULE; i++)
         {
             calendar.setTime(date);
             calendar.add(Calendar.DATE, 1);
@@ -100,10 +103,11 @@ public class LocationScheduleBuilderManager
 
     /**
      * receives a list of all the bookings for the dates in scope of the schedule. will use these to build a schedule
-     *
+     * <p/>
      * posts an event containing a schedule, which can be cached if the dates haven't changed
-     *
+     * <p/>
      * TODO this is really messy, don't do this
+     *
      * @param event
      */
     @Subscribe
@@ -111,10 +115,10 @@ public class LocationScheduleBuilderManager
     {
 
         List<Booking> bookingListForSchedule = new LinkedList<>();
-        for(Date date : mRequestedDatesForScheduleSet)
+        for (Date date : mRequestedDatesForScheduleSet)
         {
             List<Booking> bookingList = event.getDateToBookingMap().get(date);
-            if(bookingList != null)
+            if (bookingList != null)
             {
                 bookingListForSchedule.addAll(bookingList);
             }
@@ -126,6 +130,7 @@ public class LocationScheduleBuilderManager
 
     /**
      * this event is fired from booking manager when ANY booking is updated! on job claim, removed, etc
+     *
      * @param event
      */
     @Subscribe

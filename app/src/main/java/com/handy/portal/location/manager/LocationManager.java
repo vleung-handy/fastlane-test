@@ -20,9 +20,11 @@ import java.util.Set;
 import javax.inject.Inject;
 
 //TODO: clean this up
+
+
 /**
  * listens to location schedule updated event
- *
+ * <p/>
  * listens to location update events from the location service
  * <p/>
  * posts location updates to the server
@@ -64,6 +66,7 @@ public class LocationManager
     /**
      * for backwards compatibility with check-in flow which requires this
      * TODO can remove this when everyone switches over to location service
+     *
      * @return
      */
     public Location getLastKnownLocation()
@@ -83,6 +86,7 @@ public class LocationManager
 
     /**
      * will send location batch updates to the server
+     *
      * @param event
      */
     @Subscribe
@@ -114,6 +118,7 @@ public class LocationManager
 
     /**
      * network got re-established. resend the failed updates
+     *
      * @param event
      */
     @Subscribe
@@ -178,18 +183,19 @@ public class LocationManager
 
     /**
      * adds the failed location batch update request to the failed set
+     *
      * @param locationBatchUpdate
      */
     private void addToLocationBatchUpdateFailedList(LocationBatchUpdate locationBatchUpdate)
     {
-        if(mFailedLocationBatchUpdates.size() >= MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE)
+        if (mFailedLocationBatchUpdates.size() >= MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE)
         {
             /**
              * if the size of the failed list is greater than max, remove the first one before adding another
              */
             //TODO: what is the price of this? should we remove more than one if costly? should we use a structure that doesn't require iterator?
             Iterator<LocationBatchUpdate> iterator = mFailedLocationBatchUpdates.iterator();
-            if(iterator.hasNext())
+            if (iterator.hasNext())
             {
                 iterator.next();
                 iterator.remove();

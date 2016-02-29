@@ -132,6 +132,7 @@ public class LocationUpdate
 
     /**
      * TODO: move
+     *
      * @param batteryLevelPercent
      */
     public void setBatteryLevelPercent(final float batteryLevelPercent)

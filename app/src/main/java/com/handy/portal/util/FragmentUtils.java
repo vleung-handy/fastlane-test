@@ -16,6 +16,7 @@ public class FragmentUtils
      * to prevent crash due to IllegalStateException
      * due to this fragment transaction being performed in an asynchronous
      * callback that might be called after onSaveInstanceState()
+     *
      * @param dialogFragment
      * @param activity
      * @param tag

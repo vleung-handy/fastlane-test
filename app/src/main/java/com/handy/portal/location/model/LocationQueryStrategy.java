@@ -41,7 +41,7 @@ public class LocationQueryStrategy implements Parcelable
     @SerializedName("posting_frequency")
     int mServerPollingIntervalSeconds; //every N seconds
     @SerializedName("accuracy") //priority level
-    int mLocationAccuracyPriority;
+            int mLocationAccuracyPriority;
     @SerializedName("distance_filter")
     int mDistanceFilterMeters;
     @SerializedName("booking_id")
@@ -52,6 +52,7 @@ public class LocationQueryStrategy implements Parcelable
     //TODO: find out what server will send
     public static final int ACCURACY_BALANCED_POWER_PRIORITIY = 1;
     public static final int ACCURACY_HIGH_PRIORITY = 2;
+
     public LocationQueryStrategy()
     {
     }
@@ -185,7 +186,7 @@ public class LocationQueryStrategy implements Parcelable
     @Override
     public String toString()
     {
-        return  "event name: " + mEventName
+        return "event name: " + mEventName
                 + "\nbooking id: " + mBookingId
                 + "\nstart date: " + mStartDate.toString()
                 + "\nend date: " + mEndDate.toString()
@@ -197,6 +198,7 @@ public class LocationQueryStrategy implements Parcelable
 
     /**
      * NOT USED
+     *
      * @param locationQueryStrategy
      * @return
      */
@@ -204,9 +206,9 @@ public class LocationQueryStrategy implements Parcelable
     {
         return (mEndDate.equals(locationQueryStrategy.getEndDate())
                 && getStartDate().equals(locationQueryStrategy.getStartDate())
-                && mLocationPollingIntervalSeconds==locationQueryStrategy.getLocationPollingIntervalSeconds()
-                && mServerPollingIntervalSeconds==locationQueryStrategy.getServerPollingIntervalSeconds()
-                && mDistanceFilterMeters==locationQueryStrategy.getDistanceFilterMeters()
+                && mLocationPollingIntervalSeconds == locationQueryStrategy.getLocationPollingIntervalSeconds()
+                && mServerPollingIntervalSeconds == locationQueryStrategy.getServerPollingIntervalSeconds()
+                && mDistanceFilterMeters == locationQueryStrategy.getDistanceFilterMeters()
                 && (mBookingId != null && mBookingId.equals(locationQueryStrategy.getBookingId()))
                 && (mEventName != null && mEventName.equals(locationQueryStrategy.getEventName())));
     }

@@ -22,15 +22,15 @@ import java.util.Queue;
 
 /**
  * does whatever needs to be done given a location strategy
- *
+ * <p/>
  * wrapper for objects that are tied to a location query strategy
  * like the location updated listener
  * (but eventually we'll just have one for whole schedule when no overlapping strategies)
  * and the location updates queue
- *
+ * <p/>
  * <p/>
  * manages when to post updates to the server
- *
+ * <p/>
  * TODO needs major cleanup
  */
 public class LocationStrategyHandler //TODO: rename this so it is more distinct from the location query strategy model
@@ -46,6 +46,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
      */
     LocationListener mLocationListener;
     Handler mHandler;
+
     public LocationListener getLocationListener()
     {
         return mLocationListener;
@@ -87,6 +88,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
 
     /**
      * convenience method for determining if strategy is expired
+     *
      * @return
      */
     public boolean isStrategyExpired()
@@ -97,6 +99,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
 
     /**
      * builds a location request for the location api call
+     *
      * @return
      */
     private LocationRequest createLocationRequest()
@@ -131,6 +134,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
 
     /**
      * asks the location api for location updates
+     *
      * @param googleApiClient
      * @throws SecurityException
      */
@@ -167,7 +171,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
 
     /**
      * builds the batch update request model from the queue of updates
-     *
+     * <p/>
      * this is what will be posted to the server
      *
      * @return
@@ -185,6 +189,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
 
     /**
      * check if it's time to post an update to the server
+     *
      * @return
      */
     private boolean shouldPostUpdate()
@@ -216,7 +221,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     {
         LocationBatchUpdate locationBatchUpdate = buildLocationBatchUpdateAndClearQueue();
         mTimestampLastUpdatePostedMs = System.currentTimeMillis();
-        if(!locationBatchUpdate.isEmpty())
+        if (!locationBatchUpdate.isEmpty())
         {
             mLocationStrategyCallbacks.onLocationBatchUpdateReady(locationBatchUpdate);
         }
@@ -225,6 +230,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     public interface LocationStrategyCallbacks
     {
         void onLocationStrategyExpired(LocationStrategyHandler locationStrategyHandler);
+
         void onLocationBatchUpdateReady(LocationBatchUpdate locationBatchUpdate);
 
         void onLocationUpdate(Location locationUpdate);

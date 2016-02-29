@@ -157,6 +157,7 @@ public class BookingManager
      * TODO: need to detect when pull to fresh happens, and make sure this is called again
      * unlike onRequestScheduledBookings, this will not fire events containing bookings for a specific date,
      * but rather for a batch of dates, not in any particular order. currently used by location scheduler manager
+     *
      * @param event
      */
     @Subscribe
@@ -214,7 +215,7 @@ public class BookingManager
                     }
             );
         }
-        else if(!resultMap.isEmpty())
+        else if (!resultMap.isEmpty())
         {
             mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess(resultMap));
         }
@@ -270,7 +271,7 @@ public class BookingManager
                             BUT it is also true onResume()! need to compensate by not firing this event on claim/cancel
                             TODO
                              */
-                            if(!event.useCachedIfPresent)
+                            if (!event.useCachedIfPresent)
                             {
                                 mBus.post(new HandyEvent.BookingChangedOrCreated());
                             }

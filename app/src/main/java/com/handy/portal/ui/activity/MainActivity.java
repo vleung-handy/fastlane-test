@@ -3,8 +3,8 @@ package com.handy.portal.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -27,8 +27,8 @@ import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.NotificationUtils;
 import com.handy.portal.util.SystemUtils;
-import com.handy.portal.util.Utils;
 import com.handy.portal.util.TextUtils;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -63,11 +63,11 @@ public class MainActivity extends BaseActivity
     private void startLocationServiceIfNecessary()
     {
         Intent i = new Intent(this, LocationService.class);
-        if(mConfigManager.getConfigurationResponse() != null
+        if (mConfigManager.getConfigurationResponse() != null
                 && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
         {
             //nothing will happen if it's already running
-            if(!SystemUtils.isServiceRunning(this, LocationService.class))
+            if (!SystemUtils.isServiceRunning(this, LocationService.class))
             {
                 if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
                 {
@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity
      */
     private void startLocationServiceIfNecessaryAndPermissionsGranted()
     {
-        if(Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        if (Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
         {
             startLocationServiceIfNecessary();
         }
@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults)
     {
-        if(requestCode == ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE)
+        if (requestCode == ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE)
         {
             startLocationServiceIfNecessaryAndPermissionsGranted();
         }
@@ -163,11 +163,11 @@ public class MainActivity extends BaseActivity
 
     /**
      * called in onResume
-     *
+     * <p/>
      * determines if,
      * in kitkat and above: the user has the location setting on
      * pre-kitkat: user has any location provider enabled
-     *
+     * <p/>
      * if not, block them with a dialog until they do.
      */
     private void checkRequiredLocationSettings()
@@ -179,11 +179,11 @@ public class MainActivity extends BaseActivity
         try
         {
             if (getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
-                //don't want to show this dialog if it's already showing
+            //don't want to show this dialog if it's already showing
             {
                 //check whether location services setting is on
                 boolean locationServicesEnabled;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                 {
                     int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
                     locationServicesEnabled = locationMode != Settings.Secure.LOCATION_MODE_OFF;
@@ -207,7 +207,7 @@ public class MainActivity extends BaseActivity
             }
 
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Crashlytics.logException(e);
         }
@@ -261,6 +261,7 @@ public class MainActivity extends BaseActivity
     /**
      * TODO: this is temporary to handle case in which config response comes back later
      * ideally, we should probably block the app until the config response is received
+     *
      * @param event
      */
     @Subscribe

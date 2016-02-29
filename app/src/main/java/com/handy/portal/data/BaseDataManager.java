@@ -23,6 +23,9 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -40,6 +43,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -344,5 +348,23 @@ public final class BaseDataManager extends DataManager
     public void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb)
     {
         service.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
+    }
+
+    @Override
+    public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)
+    {
+        service.getProviderEvaluation(providerId, new GetProviderEvaluationRetrofitCallback(cb));
+    }
+
+    @Override
+    public void getProviderFiveStarRatings(final String providerId, final String minStar, final Callback<List<ProviderRating>> cb)
+    {
+        service.getProviderFiveStarRatings(providerId, minStar, new GetProviderFiveStarRatingsRetrofitCallback(cb));
+    }
+
+    @Override
+    public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)
+    {
+        service.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
     }
 }

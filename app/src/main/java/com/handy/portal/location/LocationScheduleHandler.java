@@ -35,11 +35,11 @@ import javax.inject.Inject;
 
 /**
  * TODO: at testing stage. totally needs refactoring
- *
+ * <p/>
  * does whatever needs to be done given a location query schedule
  */
 public class LocationScheduleHandler extends BroadcastReceiver
-    implements LocationStrategyHandler.LocationStrategyCallbacks
+        implements LocationStrategyHandler.LocationStrategyCallbacks
 {
     @Inject
     Bus bus;
@@ -62,6 +62,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     //TODO: temporary, can remove once we don't have overlapping schedules
     Set<LocationStrategyHandler> mActiveLocationRequestStrategies = new HashSet<>();
+
     public LocationScheduleHandler(@NonNull LocationQuerySchedule locationQuerySchedule,
                                    @NonNull GoogleApiClient googleApiClient,
                                    @NonNull Context context)
@@ -95,9 +96,8 @@ public class LocationScheduleHandler extends BroadcastReceiver
     }
 
     /**
-     *
      * assume schedule sorted by date asc
-     *
+     * <p/>
      * TODO: super crude, clean up
      */
     private void scanSchedule()
@@ -105,7 +105,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         //look for any strategies within scope and starts them if not already started
         ListIterator<LocationQueryStrategy> locationQueryStrategyListIterator
                 = mLocationQuerySchedule.getLocationQueryStrategies().listIterator();
-        while(locationQueryStrategyListIterator.hasNext())
+        while (locationQueryStrategyListIterator.hasNext())
         {
             LocationQueryStrategy strategy = locationQueryStrategyListIterator.next();
 
@@ -113,13 +113,13 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
             //TODO: use a util instead
             long currentTimeMillis = System.currentTimeMillis();
-            if(currentTimeMillis >= strategy.getStartDate().getTime()
+            if (currentTimeMillis >= strategy.getStartDate().getTime()
                     && currentTimeMillis < strategy.getEndDate().getTime()) //current time is within start/end date bounds
             {
                 //starts this strategy
                 startStrategy(strategy);
             }
-            else if(currentTimeMillis < strategy.getStartDate().getTime()) //current time is before start date
+            else if (currentTimeMillis < strategy.getStartDate().getTime()) //current time is before start date
             {
                 //start date is in the future
                 scheduleAlarm(strategy);
@@ -150,7 +150,8 @@ public class LocationScheduleHandler extends BroadcastReceiver
     @Override
     public void onLocationStrategyExpired(final LocationStrategyHandler locationStrategyHandler)
     {
-        try{
+        try
+        {
             Log.d(getClass().getName(), "strategy expired, posting remaining location update objects in queue...");
             //strategy expired, we want to post any remaining update objects in the queue
             locationStrategyHandler.buildBatchUpdateAndNotifyReady();
@@ -166,7 +167,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     public void stopLocationUpdates()
     {
-        for(LocationStrategyHandler locationStrategyHandler : mActiveLocationRequestStrategies)
+        for (LocationStrategyHandler locationStrategyHandler : mActiveLocationRequestStrategies)
         {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, locationStrategyHandler.getLocationListener());
         }
@@ -175,7 +176,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     /**
      * TODO: need to consolidate with below function
-     *
+     * <p/>
      * called when this handler is destroyed
      * sends out all queued location updates to the server
      */
@@ -183,10 +184,10 @@ public class LocationScheduleHandler extends BroadcastReceiver
     {
         Log.d(getClass().getName(), "sending out all queued location updates");
         Iterator<LocationStrategyHandler> locationStrategyHandlerIterator = mActiveLocationRequestStrategies.iterator();
-        while(locationStrategyHandlerIterator.hasNext())
+        while (locationStrategyHandlerIterator.hasNext())
         {
             LocationStrategyHandler locationStrategyHandler = locationStrategyHandlerIterator.next();
-            if(locationStrategyHandler.isStrategyExpired())
+            if (locationStrategyHandler.isStrategyExpired())
             {
                 //remove, just in case it wasn't properly removed before
                 locationStrategyHandlerIterator.remove();
@@ -200,7 +201,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     /**
      * TODO: also consolidate with above function
-     *
+     * <p/>
      * called when network reconnected
      * triggers immediate requests for location updates for the active strategies
      * (usually just 1, probably at most 3, until we don't have overlapping)
@@ -209,10 +210,10 @@ public class LocationScheduleHandler extends BroadcastReceiver
     {
         Log.d(getClass().getName(), "rerequesting location updates for the active strategies");
         Iterator<LocationStrategyHandler> locationStrategyHandlerIterator = mActiveLocationRequestStrategies.iterator();
-        while(locationStrategyHandlerIterator.hasNext())
+        while (locationStrategyHandlerIterator.hasNext())
         {
             LocationStrategyHandler locationStrategyHandler = locationStrategyHandlerIterator.next();
-            if(locationStrategyHandler.isStrategyExpired())
+            if (locationStrategyHandler.isStrategyExpired())
             {
                 //remove, just in case it wasn't properly removed before
                 locationStrategyHandlerIterator.remove();
@@ -232,7 +233,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         try
         {
             //cancels scheduled alarms
-            Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
+            Intent intent = new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             mAlarmManager.cancel(pendingIntent);
 
@@ -256,6 +257,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     /**
      * TODO: clean
+     *
      * @param strategy
      */
     private void scheduleAlarm(@NonNull LocationQueryStrategy strategy)
@@ -272,7 +274,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         Bundle args = new Bundle();
         args.putByteArray(BUNDLE_EXTRA_LOCATION_STRATEGY, strategyParcel.marshall());
 
-        Intent intent =  new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
+        Intent intent = new Intent(LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
         intent.setAction(LOCATION_SCHEDULE_ALARM_BROADCAST_ID); //probably redundant, test this
         intent.setPackage(mContext.getPackageName());
         intent.putExtras(args);
@@ -284,6 +286,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
     /**
      * receives wake ups from alarm manager
      * TODO: clean up
+     *
      * @param context
      * @param intent
      */
@@ -291,13 +294,13 @@ public class LocationScheduleHandler extends BroadcastReceiver
     public void onReceive(final Context context, final Intent intent)
     {
         Bundle args = intent.getExtras();
-        if(args == null)
+        if (args == null)
         {
             //shouldn't happen
             Log.e(getClass().getName(), "Args is null on receive alarm");
             return;
         }
-        if(intent.getAction() == null)
+        if (intent.getAction() == null)
         {
             Log.e(getClass().getName(), "Intent action is null on receive alarm");
             return;
@@ -315,7 +318,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
                  * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
                  */
                 byte[] strategyByteArray = args.getByteArray(BUNDLE_EXTRA_LOCATION_STRATEGY);
-                if(strategyByteArray == null) break;
+                if (strategyByteArray == null) { break; }
                 Parcel strategyParcel = Parcel.obtain();
                 strategyParcel.unmarshall(strategyByteArray, 0, strategyByteArray.length);
                 strategyParcel.setDataPosition(0);
@@ -331,7 +334,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
     private void onLocationStrategyAlarmTriggered(LocationQueryStrategy locationQueryStrategy)
     {
-        if(locationQueryStrategy == null) return;
+        if (locationQueryStrategy == null) { return; }
         Log.d(getClass().getName(), "Got location strategy " + locationQueryStrategy.toString());
         try
         {
@@ -359,7 +362,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 hasConnectivity will still be true
                  */
         Log.d(getClass().getName(), "has network connectivity: " + hasConnectivity);
-        if(hasConnectivity && !mPreviouslyHadNetworkConnectivity)
+        if (hasConnectivity && !mPreviouslyHadNetworkConnectivity)
         //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
         {
             bus.post(new SystemEvent.NetworkReconnected());

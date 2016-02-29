@@ -19,13 +19,14 @@ public class LocationBatchUpdate
 
     /**
      * TODO for testing/debugging purposes only
+     *
      * @return
      */
     @Override
     public String toString()
     {
         String result = "";
-        for(LocationUpdate locationUpdate : mLocationUpdates)
+        for (LocationUpdate locationUpdate : mLocationUpdates)
         {
             result = result + "\n" + locationUpdate.toString();
         }

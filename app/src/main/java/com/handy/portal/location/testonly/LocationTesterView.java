@@ -29,7 +29,6 @@ import butterknife.OnClick;
 
 /**
  * used only for testing the location service! should not be present in production builds.
- *
  */
 public class LocationTesterView extends LinearLayout
 {
@@ -78,17 +77,17 @@ public class LocationTesterView extends LinearLayout
 
         //TODO: set the params the service is using
         boolean existingStrategyFound = false;
-        if(serviceRunning)
+        if (serviceRunning)
         {
             //TODO: can't do this, since it's in a separate process now
             LocationService locationService = LocationService.getInstance();
-            if(locationService != null)
+            if (locationService != null)
             {
                 LocationQueryStrategy locationQueryStrategy = locationService.getLatestActiveLocationQueryStrategy();
-                if(locationQueryStrategy != null)
+                if (locationQueryStrategy != null)
                 {
                     Log.d(getClass().getName(), "found an existing strategy - setting view to its params");
-                    mLocationServicesAccuracyToggle.setChecked(locationQueryStrategy.getLocationAccuracyPriority()==LocationQueryStrategy.ACCURACY_HIGH_PRIORITY);
+                    mLocationServicesAccuracyToggle.setChecked(locationQueryStrategy.getLocationAccuracyPriority() == LocationQueryStrategy.ACCURACY_HIGH_PRIORITY);
                     mLocationServicesServerPostingIntervalText.setText("" + locationQueryStrategy.getServerPollingIntervalSeconds());
                     mLocationServicesPollingIntervalText.setText("" + locationQueryStrategy.getLocationPollingIntervalSeconds());
                     mDistanceFilterText.setText("" + locationQueryStrategy.getDistanceFilterMeters());
@@ -105,7 +104,7 @@ public class LocationTesterView extends LinearLayout
             }
         }
 
-        if(!existingStrategyFound)
+        if (!existingStrategyFound)
         {
             mLocationServicesPollingIntervalText.setText("" + DEFAULT_POLLING_INTERVAL_SEC);
             mLocationServicesServerPostingIntervalText.setText("" + DEFAULT_SERVER_POSTING_INTERVAL_SEC);
@@ -127,13 +126,14 @@ public class LocationTesterView extends LinearLayout
     }
 
 
-    CompoundButton.OnCheckedChangeListener mOnLocationToggleChangedListener = new CompoundButton.OnCheckedChangeListener(){
+    CompoundButton.OnCheckedChangeListener mOnLocationToggleChangedListener = new CompoundButton.OnCheckedChangeListener()
+    {
 
         @Override
         public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
         {
             updateParams();
-            if(mLocationServicesToggle.isChecked())
+            if (mLocationServicesToggle.isChecked())
             {
                 startLocationService();
             }
@@ -144,11 +144,12 @@ public class LocationTesterView extends LinearLayout
         }
     };
 
-    CompoundButton.OnCheckedChangeListener mOnLocationAccuracyToggleChangedListener =  new CompoundButton.OnCheckedChangeListener() {
+    CompoundButton.OnCheckedChangeListener mOnLocationAccuracyToggleChangedListener = new CompoundButton.OnCheckedChangeListener()
+    {
         @Override
         public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
         {
-            if(mLocationServicesAccuracyToggle.isChecked())
+            if (mLocationServicesAccuracyToggle.isChecked())
             {
                 mLocationQueryStrategy.setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY);
             }
@@ -157,7 +158,7 @@ public class LocationTesterView extends LinearLayout
                 mLocationQueryStrategy.setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY);
             }
 
-            if(mLocationServicesToggle.isChecked())
+            if (mLocationServicesToggle.isChecked())
             {
                 restartLocationService();
             }
@@ -189,7 +190,7 @@ public class LocationTesterView extends LinearLayout
     {
         updateParams();
 
-        if(mLocationServicesToggle.isChecked())
+        if (mLocationServicesToggle.isChecked())
         {
             restartLocationService();
         }

@@ -30,7 +30,7 @@ public final class SystemUtils
     public static float getBatteryLevelPercent(@NonNull Context context)
     {
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        if(batteryIntent == null) return -1f;
+        if (batteryIntent == null) { return -1f; }
         int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
