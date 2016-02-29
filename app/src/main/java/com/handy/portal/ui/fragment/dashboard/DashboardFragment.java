@@ -184,5 +184,9 @@ public class DashboardFragment extends ActionBarFragment
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new ProviderDashboardEvent.RequestProviderEvaluation());
         }
+        else
+        {
+            createDashboardView(mProviderEvaluation);
+        }
     }
 }

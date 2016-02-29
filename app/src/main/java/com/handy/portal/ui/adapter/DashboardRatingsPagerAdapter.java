@@ -40,7 +40,7 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
 
         view.setContentColor(rating.getStatusColorId());
         view.setDate(mContext.getString(R.string.time_interval_formatted,
-                DateTimeUtils.formatMonthDateYear(rating.getStartDate()),
+                DateTimeUtils.formatMonthDate(rating.getStartDate()),
                 DateTimeUtils.formatMonthDateYear(rating.getEndDate())));
         view.setJobRatings(rating.getFiveStarRatedBookingCount(),
                 rating.getRatedBookingCount(), rating.getTotalBookingCount());
