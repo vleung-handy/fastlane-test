@@ -199,6 +199,12 @@ public class FiveStarRatingPercentageView extends FrameLayout
         mSeries1Index = mDynamicArcView.addSeries(seriesItem1);
     }
 
+    /**
+     * Convert base dip into pixels based on the display metrics of the current device
+     *
+     * @param base dip value
+     * @return pixels from base dip
+     */
     private float getDimension(float base)
     {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, base, getResources().getDisplayMetrics());
