@@ -141,15 +141,8 @@ public class FiveStarRatingPercentageView extends FrameLayout
         {
             mAnimatedView = true;
 
-            mDynamicArcView.addEvent(new DecoEvent.Builder(0)
-                    .setIndex(mSeries1Index)
-                    .setDelay(0)
-                    .setDuration(1)
-                    .build());
-
             mDynamicArcView.addEvent(new DecoEvent.Builder(mPercentage)
                     .setIndex(mSeries1Index)
-                    .setDelay(1)
                     .setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION)
                     .build());
         }
