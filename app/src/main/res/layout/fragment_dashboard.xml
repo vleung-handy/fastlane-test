@@ -60,7 +60,6 @@
                 tools:text="Lifetime Rating 4.8"
                 />
 
-
             <TextView
                 android:id="@+id/dashboard_rating_threshold"
                 android:layout_width="match_parent"

@@ -52,7 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/extra_margin"
-        android:paddingTop="@dimen/dashboard_feedback_padding"
         android:text="@string/tips_for_success"
         android:textColor="@color/black"
         android:textSize="@dimen/default_text_size"
@@ -62,7 +61,9 @@
         android:id="@+id/dashboard_feedback_tips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="@drawable/divider"
         android:orientation="vertical"
+        android:showDividers="middle"
         />
 
 </LinearLayout>
