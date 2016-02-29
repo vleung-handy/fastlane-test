@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity
         if (NotificationUtils.isNotificationEnabled(this) == NotificationUtils.NOTIFICATION_DISABLED
                 && !mNotificationBlockerDialogFragment.isAdded())
         {
-            mNotificationBlockerDialogFragment.show(getSupportFragmentManager(),
+            FragmentUtils.safeLaunchDialogFragment(mNotificationBlockerDialogFragment, this,
                     NotificationBlockerDialogFragment.FRAGMENT_TAG);
         }
     }
@@ -236,7 +236,7 @@ public class MainActivity extends BaseActivity
                 if (fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
                 {
                     PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
-                    paymentBillBlockerDialogFragment.show(fragmentManager, PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
+                    FragmentUtils.safeLaunchDialogFragment(paymentBillBlockerDialogFragment, this, PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
                 }
             }
         }
