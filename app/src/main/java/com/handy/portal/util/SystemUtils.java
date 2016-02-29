@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.BatteryManager;
 import android.support.annotation.NonNull;
 
@@ -38,5 +40,22 @@ public final class SystemUtils
         }
 
         return ((float) level / (float) scale);
+    }
+
+    public static String getActiveNetworkType(final Context context)
+    {
+        final ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null)
+        {
+            final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null)
+            {
+                final String type = activeNetworkInfo.getTypeName();
+                final String subtype = activeNetworkInfo.getSubtypeName();
+                return (type + " " + subtype).trim(); // this yields "MOBILE LTE" or "WIFI"
+            }
+        }
+        return "";
     }
 }
