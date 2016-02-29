@@ -1013,6 +1013,8 @@ public abstract class HandyEvent
         }
     }
 
-    // Pro should be logged out
+    // Pro should be logged out. Error won't be shown but this will allow us to sync our mixpanel
+    // tracking with iOS.
+    @Track("portal authentication error shown")
     public static class LogOutProvider extends HandyEvent {}
 }
