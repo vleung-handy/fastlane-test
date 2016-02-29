@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.event.ProviderDashboardEvent;
+import com.handy.portal.util.Utils;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.DecoDrawEffect;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
@@ -123,8 +124,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
             {
                 mInitialAnimationDone = true;
                 mFiveStarPercentageInfoWrapper.setVisibility(View.VISIBLE);
-                animateProgressBar();
-//                                mBus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
+                mBus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
             }
 
             @Override
@@ -159,6 +159,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
 
     private void init()
     {
+        Utils.inject(getContext(), this);
         inflate(getContext(), R.layout.element_five_star_rating_percentage, this);
         ButterKnife.bind(this);
     }
