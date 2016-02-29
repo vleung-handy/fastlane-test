@@ -18,7 +18,7 @@ import com.handy.portal.util.FontUtils;
 public class PercentageCircleView extends View
 {
     private static final int STROKE_WIDTH_DP = 5;
-    private static final float ONE_PERCENT = .01f;
+    private static final float ONE_PERCENT = .01f; // Must be less than .01 to avoid percentage overflow
 
     private Paint mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mPaintNumber = new Paint(Paint.ANTI_ALIAS_FLAG);
