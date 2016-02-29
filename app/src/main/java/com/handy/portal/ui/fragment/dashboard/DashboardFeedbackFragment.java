@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -59,7 +60,11 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        if (mEvaluation == null || mEvaluation.getProviderFeedback() == null) { return; }
+        if (mEvaluation == null || mEvaluation.getProviderFeedback() == null)
+        {
+            Crashlytics.log("feedback not found in: " + getClass().getSimpleName());
+            return;
+        }
 
         if (mEvaluation.getProviderFeedback().size() > 0)
         {

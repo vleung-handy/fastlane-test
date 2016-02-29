@@ -45,7 +45,9 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
         view.setJobRatings(rating.getFiveStarRatedBookingCount(),
                 rating.getRatedBookingCount(), rating.getTotalBookingCount());
         if (rating.getTotalBookingCount() == 0)
-        { view.setFiveStarRatingPercentage(0.0f); }
+        {
+            view.setFiveStarRatingPercentage(0.0f);
+        }
         else
         {
             if (rating.getRatedBookingCount() > 0)

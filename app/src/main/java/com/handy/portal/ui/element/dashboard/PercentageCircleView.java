@@ -162,8 +162,12 @@ public class PercentageCircleView extends View
     private int getDigits(int num)
     {
         if (num == 0)
-        { return 1; }
+        {
+            return 1;
+        }
         else
-        { return (int) (Math.log10(num) + 1); }
+        {
+            return (int) (Math.log10(num) + 1);
+        }
     }
 }

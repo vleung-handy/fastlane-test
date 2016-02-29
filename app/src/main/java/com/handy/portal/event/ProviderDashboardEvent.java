@@ -15,9 +15,9 @@ public abstract class ProviderDashboardEvent extends HandyEvent
 
     public static class ReceiveProviderEvaluationSuccess extends ReceiveSuccessEvent
     {
-        public ProviderEvaluation providerEvaluation;
+        public final ProviderEvaluation providerEvaluation;
 
-        public ReceiveProviderEvaluationSuccess(ProviderEvaluation providerEvaluation)
+        public ReceiveProviderEvaluationSuccess(final ProviderEvaluation providerEvaluation)
         {
             this.providerEvaluation = providerEvaluation;
         }
@@ -26,7 +26,7 @@ public abstract class ProviderDashboardEvent extends HandyEvent
 
     public static class ReceiveProviderEvaluationError extends ReceiveErrorEvent
     {
-        public ReceiveProviderEvaluationError(DataManager.DataManagerError error)
+        public ReceiveProviderEvaluationError(final DataManager.DataManagerError error)
         {
             this.error = error;
         }
@@ -54,7 +54,7 @@ public abstract class ProviderDashboardEvent extends HandyEvent
 
     public static class ReceiveProviderFiveStarRatingsError extends ReceiveErrorEvent
     {
-        public ReceiveProviderFiveStarRatingsError(DataManager.DataManagerError error)
+        public ReceiveProviderFiveStarRatingsError(final DataManager.DataManagerError error)
         {
             this.error = error;
         }
@@ -66,9 +66,9 @@ public abstract class ProviderDashboardEvent extends HandyEvent
 
     public static class ReceiveProviderFeedbackSuccess extends ReceiveSuccessEvent
     {
-        public List<ProviderFeedback> providerFeedback;
+        final public List<ProviderFeedback> providerFeedback;
 
-        public ReceiveProviderFeedbackSuccess(List<ProviderFeedback> providerFeedback)
+        public ReceiveProviderFeedbackSuccess(final List<ProviderFeedback> providerFeedback)
         {
             this.providerFeedback = providerFeedback;
         }
@@ -77,7 +77,7 @@ public abstract class ProviderDashboardEvent extends HandyEvent
 
     public static class ReceiveProviderFeedbackError extends ReceiveErrorEvent
     {
-        public ReceiveProviderFeedbackError(DataManager.DataManagerError error)
+        public ReceiveProviderFeedbackError(final DataManager.DataManagerError error)
         {
             this.error = error;
         }
