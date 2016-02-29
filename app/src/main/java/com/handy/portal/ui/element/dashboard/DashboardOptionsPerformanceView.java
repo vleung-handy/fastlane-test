@@ -102,7 +102,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
             mFirstFeedbackTitleText.setText(feedbacks.get(0).getTitle());
         }
 
-        List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatings();
+        List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatingsWithComments();
         if (ratings != null && ratings.size() > 0)
         {
             mFirstReview.setVisibility(View.VISIBLE);
