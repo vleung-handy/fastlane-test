@@ -19,6 +19,7 @@ import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.adapter.DashboardRatingsPagerAdapter;
 import com.handy.portal.ui.element.dashboard.CirclePageIndicatorView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
+import com.handy.portal.ui.element.dashboard.DashboardRatingsView;
 import com.handy.portal.ui.element.dashboard.DashboardWelcomeView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.squareup.otto.Subscribe;
@@ -53,6 +54,7 @@ public class DashboardFragment extends ActionBarFragment
     @Bind(R.id.dashboard_rating_threshold)
     TextView mRatingThresholdText;
 
+    ProviderEvaluation mProviderEvaluation;
 
     @Override
     protected MainViewTab getTab()
@@ -99,6 +101,26 @@ public class DashboardFragment extends ActionBarFragment
 
         mRatingsProPerformanceViewPager
                 .setAdapter(new DashboardRatingsPagerAdapter(getContext(), evaluation));
+        mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels)
+            {
+
+            }
+
+            @Override
+            public void onPageSelected(final int position)
+            {
+                bus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state)
+            {
+
+            }
+        });
         mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceViewPager);
 
         mDashboardOptionsPerformanceView.setDisplay(evaluation);
@@ -119,7 +141,8 @@ public class DashboardFragment extends ActionBarFragment
 
         if (event.providerEvaluation != null)
         {
-            createDashboardView(event.providerEvaluation);
+            mProviderEvaluation = event.providerEvaluation;
+            createDashboardView(mProviderEvaluation);
         }
     }
 
@@ -141,10 +164,29 @@ public class DashboardFragment extends ActionBarFragment
         }
     }
 
+    @Subscribe
+    public void onAnimateFiveStarPercentageGraph(ProviderDashboardEvent.AnimateFiveStarPercentageGraph event)
+    {
+        int currentPageIndex = mRatingsProPerformanceViewPager.getCurrentItem();
+        DashboardRatingsView dashboardRatingsView = (DashboardRatingsView) mRatingsProPerformanceViewPager.getChildAt(currentPageIndex);
+
+        if (dashboardRatingsView != null)
+        {
+            dashboardRatingsView.animateProgressBar();
+        }
+    }
+
     @OnClick(R.id.try_again_button)
     public void getProviderEvaluation()
     {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new ProviderDashboardEvent.RequestProviderEvaluation());
+        if (mProviderEvaluation == null)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            bus.post(new ProviderDashboardEvent.RequestProviderEvaluation());
+        }
+        else
+        {
+            createDashboardView(mProviderEvaluation);
+        }
     }
 }

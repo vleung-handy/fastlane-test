@@ -38,26 +38,26 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
             view.setTitle(mContext.getString(R.string.lifetime_rating));
         }
 
+        view.setContentColor(rating.getStatusColorId());
         view.setDate(mContext.getString(R.string.time_interval_formatted,
-                DateTimeUtils.formatDateMonthDay(rating.getStartDate()),
+                DateTimeUtils.formatMonthDate(rating.getStartDate()),
                 DateTimeUtils.formatMonthDateYear(rating.getEndDate())));
         view.setJobRatings(rating.getFiveStarRatedBookingCount(),
                 rating.getRatedBookingCount(), rating.getTotalBookingCount());
         if (rating.getTotalBookingCount() == 0)
-        { view.setPercentage(0.0f); }
+        { view.setFiveStarRatingPercentage(0.0f); }
         else
         {
             if (rating.getRatedBookingCount() > 0)
             {
-                view.setPercentage(
+                view.setFiveStarRatingPercentage(
                         ((float) rating.getFiveStarRatedBookingCount()) / rating.getRatedBookingCount());
             }
             else
             {
-                view.setPercentage(0);
+                view.setFiveStarRatingPercentage(0);
             }
         }
-        view.setContentColor(rating.getStatusColorId());
         container.addView(view);
 
         return view;

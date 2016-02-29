@@ -59,6 +59,7 @@ import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
+import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
@@ -168,6 +169,7 @@ import retrofit.converter.GsonConverter;
         LocationService.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
+        FiveStarRatingPercentageView.class,
 })
 public final class ApplicationModule
 {

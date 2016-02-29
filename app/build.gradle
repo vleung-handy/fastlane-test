@@ -19,12 +19,14 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "http://dl.bintray.com/urbanairship/android" }
+    maven { url "https://jitpack.io" }
     flatDir {
         dirs 'libs'
     }
 }
 
 apply plugin: 'com.android.application'
+
 
 apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
@@ -153,6 +155,9 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
+
+    // For better visualizing circular graphs
+    compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.5'
 
     //Mixpanel analytics
     compile 'com.mixpanel.android:mixpanel-android:4.6.4@aar'
