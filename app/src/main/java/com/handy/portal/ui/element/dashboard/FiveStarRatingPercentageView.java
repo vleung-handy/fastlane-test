@@ -48,6 +48,10 @@ public class FiveStarRatingPercentageView extends FrameLayout
     private boolean mAnimatedView = false;
     private boolean mInitialAnimationDone = false;
 
+    private static int CIRCULAR_GRAPH_ANIMATION_DURATION = 1000;
+    private static int PERCENTAGE_TEXT_DELAY_DURATION = 500;
+    private static float CIRCULAR_TRACK_WIDTH = 8f;
+
     public FiveStarRatingPercentageView(final Context context)
     {
         super(context);
@@ -101,15 +105,15 @@ public class FiveStarRatingPercentageView extends FrameLayout
     {
         mDynamicArcView.addEvent(new DecoEvent.Builder(100)
                 .setIndex(mBackIndex)
-                .setDuration(1000)
+                .setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION)
                 .build());
     }
 
     private void fadeInPercentageText()
     {
         Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
-        fadeIn.setDuration(500);
-        fadeIn.setStartOffset(500);
+        fadeIn.setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION - PERCENTAGE_TEXT_DELAY_DURATION);
+        fadeIn.setStartOffset(PERCENTAGE_TEXT_DELAY_DURATION);
         fadeIn.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
@@ -151,7 +155,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
             mDynamicArcView.addEvent(new DecoEvent.Builder(mPercentage)
                     .setIndex(mSeries1Index)
                     .setDelay(1)
-                    .setDuration(1000)
+                    .setDuration(CIRCULAR_GRAPH_ANIMATION_DURATION)
                     .build());
         }
     }
@@ -163,16 +167,18 @@ public class FiveStarRatingPercentageView extends FrameLayout
         ButterKnife.bind(this);
     }
 
+    /*
+     Create the tracks for the circular graphs to animate along
+    */
     private void createTracks()
     {
         final float seriesMax = 100f;
-        final float trackWidth = 8f;
         mDynamicArcView.configureAngles(360, 0);
 
         SeriesItem arcBackTrack = new SeriesItem.Builder(ContextCompat.getColor(getContext(), R.color.border_grey))
                 .setRange(0, seriesMax, 0)
                 .setInitialVisibility(false)
-                .setLineWidth(getDimension(trackWidth))
+                .setLineWidth(getDimension(CIRCULAR_TRACK_WIDTH))
                 .setChartStyle(SeriesItem.ChartStyle.STYLE_DONUT)
                 .build();
 
@@ -183,7 +189,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
                 .setRange(0, seriesMax, 0)
                 .setInitialVisibility(false)
                 .setCapRounded(true)
-                .setLineWidth(getDimension(trackWidth))
+                .setLineWidth(getDimension(CIRCULAR_TRACK_WIDTH))
                 .setInset(new PointF(inset, inset))
                 .build();
 
