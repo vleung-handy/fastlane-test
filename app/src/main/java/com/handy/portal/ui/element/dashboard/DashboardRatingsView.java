@@ -80,7 +80,7 @@ public class DashboardRatingsView extends FrameLayout
         mTitle.setText(text);
     }
 
-    public void setPercentage(float percentage)
+    public void setFiveStarRatingPercentage(float percentage)
     {
         mFiveStarProgressPercentageRatingView.setAnimator(Math.round(percentage * 100));
     }
