@@ -69,10 +69,11 @@ public class DashboardReviewsFragment extends ActionBarFragment
 
         mReviewRecyclerView.setHasFixedSize(true);
         mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        ReviewListAdapter adapter = new ReviewListAdapter(getContext(), mRatings);
+        ReviewListAdapter adapter = new ReviewListAdapter(mRatings);
         mReviewRecyclerView.setAdapter(adapter);
 
-        if (mEvaluation == null || mEvaluation.getFiveStarRatingsWithComments() == null || mEvaluation.getFiveStarRatingsWithComments().size() == 0)
+        if (mEvaluation == null || mEvaluation.getFiveStarRatingsWithComments() == null
+                || mEvaluation.getFiveStarRatingsWithComments().size() == 0)
         {
             mNoResultView.setVisibility(View.VISIBLE);
             mNoResultText.setText(R.string.no_reviews);

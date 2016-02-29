@@ -116,9 +116,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
             mFirstReview.setVisibility(View.VISIBLE);
             ProviderRating rating = ratings.get(0);
             mReviewText.setText(ratings.get(0).getComment());
-            String date = DateTimeUtils.getMonthAndYear(rating.getDateRating());
             mReivewsCountText.setText(String.valueOf(ratings.size()));
-            mReviewDate.setText(getContext().getString(R.string.comma_formatted, rating.getSource(), date));
+            mReviewDate.setText(DateTimeUtils.getMonthAndYear(rating.getDateRating()));
         }
         else
         {
