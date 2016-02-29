@@ -47,8 +47,15 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
         { view.setPercentage(0.0f); }
         else
         {
-            view.setPercentage(
-                    ((float) rating.getFiveStarRatedBookingCount()) / rating.getTotalBookingCount());
+            if (rating.getRatedBookingCount() > 0)
+            {
+                view.setPercentage(
+                        ((float) rating.getFiveStarRatedBookingCount()) / rating.getRatedBookingCount());
+            }
+            else
+            {
+                view.setPercentage(0);
+            }
         }
         view.setContentColor(rating.getStatusColorId());
         container.addView(view);

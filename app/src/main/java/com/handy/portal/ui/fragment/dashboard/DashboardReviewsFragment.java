@@ -67,8 +67,8 @@ public class DashboardReviewsFragment extends ActionBarFragment
         ReviewListAdapter adapter = new ReviewListAdapter(getContext(), mRatings);
         mReviewRecyclerView.setAdapter(adapter);
 
-        if (mEvaluation == null || mEvaluation.getFiveStarRatings() == null) { return; }
-        mRatings.addAll(mEvaluation.getFiveStarRatings());
+        if (mEvaluation == null || mEvaluation.getFiveStarRatingsWithComments() == null) { return; }
+        mRatings.addAll(mEvaluation.getFiveStarRatingsWithComments());
         adapter.notifyDataSetChanged();
     }
 }

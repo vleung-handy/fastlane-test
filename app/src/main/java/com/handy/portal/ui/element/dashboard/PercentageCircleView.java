@@ -18,7 +18,7 @@ import com.handy.portal.util.FontUtils;
 public class PercentageCircleView extends View
 {
     private static final int STROKE_WIDTH_DP = 5;
-    private static final float ONE_PERCENT = .01f; // Must be less than .01 to avoid percentage overflow
+    private static final float ONE_PERCENT = .01f;
 
     private Paint mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mPaintNumber = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -92,6 +92,7 @@ public class PercentageCircleView extends View
         int yPos = (int) ((mSize / 2) - ((mPaintNumber.descent() + mPaintNumber.ascent()) / 2));
         //((mPaintNumber.descent() + mPaintNumber.ascent()) / 2) is the distance from the baseline to the center.
 
+        if (mCurrentPercentage > 1) { mCurrentPercentage = 1; }
         canvas.drawText(Integer.toString((int) (mCurrentPercentage * 100)), xPos, yPos, mPaintNumber);
         if (digits == 1) // needed because the sign is too close to the digit
         { canvas.drawText(mPercentageSign, xPos + mPaintSign.getTextSize() * (digits + 1), yPos - mPaintSign.getTextSize(), mPaintSign); }

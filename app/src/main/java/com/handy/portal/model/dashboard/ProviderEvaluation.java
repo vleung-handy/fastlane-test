@@ -3,8 +3,10 @@ package com.handy.portal.model.dashboard;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
+import com.handy.portal.util.TextUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class ProviderEvaluation implements Serializable
     private List<ProviderRating> mFiveStarRatings;
     @SerializedName("feedback")
     private List<ProviderFeedback> mProviderFeedback;
+
+    private List<ProviderRating> mFiveStarRatingsWithComments;
 
     public ProviderEvaluation(
             final Rating rolling, final Rating lifeTime, final Tier tier,
@@ -59,6 +63,22 @@ public class ProviderEvaluation implements Serializable
     public List<ProviderRating> getFiveStarRatings()
     {
         return mFiveStarRatings;
+    }
+
+    public List<ProviderRating> getFiveStarRatingsWithComments()
+    {
+        if (mFiveStarRatingsWithComments == null)
+        {
+            mFiveStarRatingsWithComments = new ArrayList<>();
+            for (ProviderRating rating : mFiveStarRatings)
+            {
+                if (!TextUtils.isNullOrEmpty(rating.getComment()))
+                {
+                    mFiveStarRatingsWithComments.add(rating);
+                }
+            }
+        }
+        return mFiveStarRatingsWithComments;
     }
 
     public List<ProviderFeedback> getProviderFeedback()
