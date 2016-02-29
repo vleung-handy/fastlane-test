@@ -84,12 +84,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
         mFiveStarPercentageSign.setTextColor(mColor);
     }
 
-    public void setAnimator(int percentage)
-    {
-        setupDecoView(percentage);
-    }
-
-    private void setupDecoView(int percentage)
+    public void setupDecoView(int percentage)
     {
         mPercentage = percentage;
         createTracks();

@@ -86,7 +86,7 @@ public class DashboardRatingsView extends FrameLayout
      */
     public void setFiveStarRatingPercentage(float percentage)
     {
-        mFiveStarProgressPercentageRatingView.setAnimator(Math.round(percentage * 100));
+        mFiveStarProgressPercentageRatingView.setupDecoView(Math.round(percentage * 100));
     }
 
     public void setContentColor(int colorId)
