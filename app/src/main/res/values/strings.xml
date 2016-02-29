@@ -497,6 +497,8 @@
     <string name="error_dashboard">There was an error fetching dashboard info.</string>
     <string name="error_dashboard_feedback">There was an error fetching feedback.</string>
     <string name="error_dashboard_reviews">There was an error fetching reviews.</string>
+    <string name="no_feedback">We don\u2019t have any specific feedback for you yet.</string>
+    <string name="no_reviews">There are no 5 star reviews for you yet.</string>
     <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
 

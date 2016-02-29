@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -25,6 +26,10 @@ public class DashboardReviewsFragment extends ActionBarFragment
 {
     @Bind(R.id.reviews_list)
     RecyclerView mReviewRecyclerView;
+    @Bind(R.id.no_result_view)
+    ViewGroup mNoResultView;
+    @Bind(R.id.no_result_text)
+    TextView mNoResultText;
 
     private List<ProviderRating> mRatings = new ArrayList<>();
     private ProviderEvaluation mEvaluation;
@@ -67,8 +72,16 @@ public class DashboardReviewsFragment extends ActionBarFragment
         ReviewListAdapter adapter = new ReviewListAdapter(getContext(), mRatings);
         mReviewRecyclerView.setAdapter(adapter);
 
-        if (mEvaluation == null || mEvaluation.getFiveStarRatingsWithComments() == null) { return; }
-        mRatings.addAll(mEvaluation.getFiveStarRatingsWithComments());
-        adapter.notifyDataSetChanged();
+        if (mEvaluation == null || mEvaluation.getFiveStarRatingsWithComments() == null || mEvaluation.getFiveStarRatingsWithComments().size() == 0)
+        {
+            mNoResultView.setVisibility(View.VISIBLE);
+            mNoResultText.setText(R.string.no_reviews);
+        }
+        else
+        {
+            mNoResultView.setVisibility(View.GONE);
+            mRatings.addAll(mEvaluation.getFiveStarRatingsWithComments());
+            adapter.notifyDataSetChanged();
+        }
     }
 }
