@@ -87,14 +87,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     {
         return MainViewTab.NEARBY_JOBS;
     }
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setActionBar(R.string.available_jobs, false);
-    }
-
+    
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -121,6 +114,13 @@ public class NearbyBookingsFragment extends ActionBarFragment
             mDescriptionText.setText(getString(R.string.nearby_booking_one));
         }
         return view;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setActionBar(R.string.available_jobs, false);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 
 import com.google.gson.GsonBuilder;
@@ -17,6 +18,9 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.location.LocationScheduleHandler;
+import com.handy.portal.location.LocationService;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.EventLogManager;
@@ -36,11 +40,10 @@ import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogEndpoint;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.AutoCheckInService;
@@ -52,10 +55,11 @@ import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.constructor.ProfileContactView;
-import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
+import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
+import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
@@ -73,6 +77,11 @@ import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
+import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
@@ -130,6 +139,7 @@ import retrofit.converter.GsonConverter;
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
         NotificationBlockerDialogFragment.class,
+        LocationSettingsBlockerDialogFragment.class,
         PaymentsUpdateBankAccountFragment.class,
         PaymentsUpdateDebitCardFragment.class,
         AutoCheckInService.class,
@@ -138,11 +148,11 @@ import retrofit.converter.GsonConverter;
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
         ProfileContactView.class,
-        ProfilePerformanceView.class,
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
         ProfileReferralView.class,
         PaymentsBatchListView.class,
+        DashboardFragment.class,
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
         CancellationRequestFragment.class,
@@ -151,7 +161,15 @@ import retrofit.converter.GsonConverter;
         NotificationsFragment.class,
         NotificationsListView.class,
         NotificationsListEntryView.class,
+        DashboardTiersFragment.class,
+        DashboardFeedbackFragment.class,
+        DashboardReviewsFragment.class,
+        DashboardOptionsPerformanceView.class,
+        LocationScheduleHandler.class,
+        LocationService.class,
         BookingDetailsJobInstructionsView.class,
+        HandyPushReceiver.class,
+        FiveStarRatingPercentageView.class,
 })
 public final class ApplicationModule
 {
@@ -224,10 +242,10 @@ public final class ApplicationModule
                         request.addHeader("Accept", "application/json");
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
-                        request.addQueryParam("apiver", "1");
-                        request.addQueryParam("app_device_id", getDeviceId());
-                        request.addQueryParam("app_device_model", getDeviceName());
-                        request.addQueryParam("app_device_os", Build.VERSION.RELEASE);
+                        request.addQueryParam("device_id", getDeviceId());
+                        request.addQueryParam("device_model", BaseApplication.getDeviceModel());
+                        request.addQueryParam("os_version", Build.VERSION.RELEASE);
+                        request.addQueryParam("device_carrier", getDeviceCarrier());
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
                 }).setErrorHandler(new ErrorHandler()
@@ -279,30 +297,6 @@ public final class ApplicationModule
         return restAdapter.create(StripeRetrofitService.class);
     }
 
-    //log events
-    @Provides
-    @Singleton
-    final EventLogEndpoint provideLogEventsEndpoint()
-    {
-        return new EventLogEndpoint(context);
-    }
-
-    @Provides
-    @Singleton
-    final EventLogService provideLogEventsService(final EventLogEndpoint endpoint)
-    {
-        final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
-
-        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor()
-                {
-                    @Override
-                    public void intercept(RequestFacade request) { }
-                }).setClient(new OkClient(okHttpClient)).build();
-        return restAdapter.create(EventLogService.class);
-    }
-
     @Provides
     @Singleton
     final Bus provideBus(final Mixpanel mixpanel)
@@ -321,11 +315,10 @@ public final class ApplicationModule
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
-                                         final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else?
-                                         final EventLogService eventLogService
+                                         final StripeRetrofitService stripeService //TODO: refactor and move somewhere else?
     )
     {
-        return new BaseDataManager(service, endpoint, stripeService, eventLogService);
+        return new BaseDataManager(service, endpoint, stripeService);
     }
 
     @Provides
@@ -335,6 +328,16 @@ public final class ApplicationModule
                                                final EventLogFactory eventLogFactory)
     {
         return new BookingManager(bus, dataManager, eventLogFactory);
+    }
+
+    @Provides
+    @Singleton
+    final LocationManager provideLocationManager(final Bus bus,
+                                                 final DataManager dataManager,
+                                                 final ProviderManager providerManager,
+                                                 final PrefsManager prefsManager)
+    {
+        return new LocationManager(bus, dataManager, providerManager, prefsManager);
     }
 
     @Provides
@@ -353,9 +356,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager(final DataManager dataManager)
+    final ConfigManager provideConfigManager(final Bus bus, final DataManager dataManager)
     {
-        return new ConfigManager(dataManager);
+        return new ConfigManager(bus, dataManager);
     }
 
     @Provides
@@ -506,19 +509,19 @@ public final class ApplicationModule
                 Settings.Secure.ANDROID_ID);
     }
 
-    private String getDeviceName()
+    private String getDeviceCarrier()
     {
-        final String manufacturer = Build.MANUFACTURER;
-        final String model = Build.MODEL;
-
-        if (model.startsWith(manufacturer))
+        final TelephonyManager telephonyManager =
+                ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+        if (telephonyManager != null)
         {
-            return model;
+            final String networkOperatorName = telephonyManager.getNetworkOperatorName();
+            if (networkOperatorName != null)
+            {
+                return networkOperatorName;
+            }
         }
-        else
-        {
-            return manufacturer + " " + model;
-        }
+        return "";
     }
 
     @Provides

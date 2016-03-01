@@ -2,7 +2,9 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProBookingFeedback
+import java.io.Serializable;
+
+public class ProBookingFeedback implements Serializable
 {
     @SerializedName("rating")
     private int mBookingRating;

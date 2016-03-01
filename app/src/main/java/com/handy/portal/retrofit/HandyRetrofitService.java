@@ -1,5 +1,7 @@
 package com.handy.portal.retrofit;
 
+import com.google.gson.JsonObject;
+import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ProviderSettings;
 
@@ -29,6 +31,13 @@ public interface HandyRetrofitService
     String PAYMENTS_PATH = "/payments/";
     String STRIPE_PATH = "/stripe/";
     String ZIP_CLUSTER_POLYGONS_PATH = "/zipcluster_polygons/";
+
+
+    @POST(PROVIDERS_PATH + "{id}/geolocation")
+    void sendGeolocation(
+            @Path("id") int providerId,
+            @Body LocationBatchUpdate locationBatchUpdate,
+            HandyRetrofitCallback cb);
 
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor,
@@ -230,4 +239,17 @@ public interface HandyRetrofitService
     void postMarkNotificationsAsRead(@Path("id") String providerId,
                                      @Field("notification_ids[]") ArrayList<Integer> notificationIds,
                                      HandyRetrofitCallback cb);
+
+    // Dashboard
+    @GET(PROVIDERS_PATH + "{id}/evaluation")
+    void getProviderEvaluation(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "rating/{id}?min_star={min_star}")
+    void getProviderFiveStarRatings(@Path("id") String providerId, @Path("min_star") String minStar, HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "feedback/{id}")
+    void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @POST("/events")
+    void postLogs(@Body JsonObject eventLogBundle, HandyRetrofitCallback cb);
 }

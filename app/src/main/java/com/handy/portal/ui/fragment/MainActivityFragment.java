@@ -61,6 +61,8 @@ public class MainActivityFragment extends InjectedFragment
     View mLoadingOverlayView;
     @Bind(R.id.nav_link_my_profile)
     RadioButton mNavLinkMyProfile;
+    @Bind(R.id.nav_link_dashboard)
+    RadioButton mNavLinkDashboard;
     @Bind(R.id.nav_link_payments)
     RadioButton mNavLinkPayments;
     @Bind(R.id.nav_link_edit_payment_method)
@@ -224,6 +226,7 @@ public class MainActivityFragment extends InjectedFragment
     private void registerNavDrawerListeners()
     {
         mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
+        mNavLinkDashboard.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
         mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
         mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
         mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
@@ -383,6 +386,15 @@ public class MainActivityFragment extends InjectedFragment
                 {
                     mButtonMore.toggle();
                     mNavLinkMyProfile.toggle();
+                }
+                break;
+                case DASHBOARD:
+                case DASHBOARD_TIERS:
+                case DASHBOARD_FEEDBACK:
+                case DASHBOARD_REVIEWS:
+                {
+                    mButtonMore.toggle();
+                    mNavLinkDashboard.toggle();
                 }
                 break;
                 case HELP:

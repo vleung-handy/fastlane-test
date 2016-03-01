@@ -19,14 +19,15 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "http://dl.bintray.com/urbanairship/android" }
+    maven { url "https://jitpack.io" }
     flatDir {
         dirs 'libs'
     }
 }
 
 apply plugin: 'com.android.application'
-// This does not break the build when Android Studio is missing the JRebel for Android plugin.
-apply plugin: 'com.zeroturnaround.jrebel.android'
+
+
 apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
 apply plugin: 'jacoco'
@@ -52,9 +53,9 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 809 //0.8.9
+        versionCode 900 //0.9.0
         versionName computeVersionName(versionCode)
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -132,13 +133,14 @@ dependencies {
 
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:cardview-v7:23.0.1' //Recommended for in-app messaging
     compile 'com.android.support:design:23.0.1'
 
     //Google services
-    compile 'com.google.android.gms:play-services-location:8.1.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
     //Recommended for location services
-    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
     //Required for Android (GCM) push notifications
 
     //Guava
@@ -153,6 +155,9 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
+
+    // For better visualizing circular graphs
+    compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.5'
 
     //Mixpanel analytics
     compile 'com.mixpanel.android:mixpanel-android:4.6.4@aar'
@@ -174,6 +179,9 @@ dependencies {
     //Urban Airship SDK
     compile 'com.urbanairship.android:urbanairship-sdk:6.3.0'
 
+    // Sticky list header
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
+
     //Testing
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.robolectric:shadows-support-v4:3.0'
@@ -183,8 +191,4 @@ dependencies {
     //Espresso libraries for automation testing
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-
-    // Sticky list header
-    compile 'se.emilsjolander:stickylistheaders:2.7.0'
-
 }
