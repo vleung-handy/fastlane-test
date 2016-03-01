@@ -27,9 +27,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class BaseDataManagerTest extends RobolectricGradleTestWrapper
+public class DataManagerTest extends RobolectricGradleTestWrapper
 {
-    // TODO: Refactor BaseDataManager. The tests are way too redundant.
+    // TODO: Refactor DataManager. The tests are way too redundant.
 
     @Mock
     HandyRetrofitService service;
@@ -45,7 +45,7 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     LoginManager loginManager;
 
 
-    private BaseDataManager dataManager;
+    private DataManager dataManager;
 
     @Captor
     ArgumentCaptor<HandyRetrofitCallback> callbackCaptor;
@@ -55,7 +55,7 @@ public class BaseDataManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        dataManager = new BaseDataManager(service, endpoint, stripeService);
+        dataManager = new DataManager(service, endpoint, stripeService);
     }
 
     @Test

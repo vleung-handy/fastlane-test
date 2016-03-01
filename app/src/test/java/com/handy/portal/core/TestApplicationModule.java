@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
@@ -24,7 +25,6 @@ import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
-import com.handy.portal.ui.constructor.ProfilePerformanceView;
 import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
@@ -117,9 +117,10 @@ public class TestApplicationModule
     }
 
     @Provides
+    @Singleton
     final DataManager provideDataManager()
     {
-        return mock(DataManager.class);
+        return mock(TestDataManager.class);
     }
 
     @Provides
