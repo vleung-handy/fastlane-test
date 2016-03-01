@@ -46,7 +46,6 @@ public class FiveStarRatingPercentageView extends FrameLayout
     private int mBackIndex;
     private int mSeries1Index;
     private boolean mAnimatedView = false;
-    private boolean mInitialAnimationDone = false;
 
     private static int CIRCULAR_GRAPH_ANIMATION_DURATION_MILLIS = 1000;
     private static int PERCENTAGE_TEXT_DELAY_DURATION_MILLIS = 500;
@@ -89,12 +88,29 @@ public class FiveStarRatingPercentageView extends FrameLayout
     {
         mPercentage = percentage;
         createTracks();
+    }
 
-        if (!mInitialAnimationDone)
-        {
-            animateTrack();
-            fadeInPercentageText();
-        }
+    public void startAnimation()
+    {
+        animateTrack();
+        fadeInPercentageText();
+    }
+
+    public void setOnResumeState()
+    {
+        mAnimatedView = true;
+
+        mFiveStarPercentageInfoWrapper.setVisibility(View.VISIBLE);
+
+        mDynamicArcView.addEvent(new DecoEvent.Builder(MAX_GRAPH_VALUE)
+                .setIndex(mBackIndex)
+                .setDuration(0)
+                .build());
+
+        mDynamicArcView.addEvent(new DecoEvent.Builder(mPercentage)
+                .setIndex(mSeries1Index)
+                .setDuration(0)
+                .build());
     }
 
     private void animateTrack()
@@ -121,7 +137,6 @@ public class FiveStarRatingPercentageView extends FrameLayout
             @Override
             public void onAnimationEnd(final Animation animation)
             {
-                mInitialAnimationDone = true;
                 mFiveStarPercentageInfoWrapper.setVisibility(View.VISIBLE);
                 mBus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
             }
@@ -138,7 +153,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
 
     public void animateProgressBar()
     {
-        if (mInitialAnimationDone && !mAnimatedView)
+        if (!mAnimatedView)
         {
             mAnimatedView = true;
 
