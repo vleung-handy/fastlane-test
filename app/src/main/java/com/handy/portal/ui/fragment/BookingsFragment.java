@@ -223,15 +223,18 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
         }
 
-        DateButtonView dateButtonView = mDateDateButtonViewMap.get(event.day);
-        if (dateButtonView != null)
+        if (mDateDateButtonViewMap != null)
         {
-            dateButtonView.showRequestedIndicator(shouldShowRequestedIndicator(bookings));
-            dateButtonView.showClaimedIndicator(shouldShowClaimedIndicator(bookings));
-        }
-        else
-        {
-            Crashlytics.logException(new RuntimeException("Date button for " + event.day + " not found"));
+            DateButtonView dateButtonView = mDateDateButtonViewMap.get(event.day);
+            if (dateButtonView != null)
+            {
+                dateButtonView.showRequestedIndicator(shouldShowRequestedIndicator(bookings));
+                dateButtonView.showClaimedIndicator(shouldShowClaimedIndicator(bookings));
+            }
+            else
+            {
+                Crashlytics.logException(new RuntimeException("Date button for " + event.day + " not found"));
+            }
         }
 
         if (mSelectedDay.equals(event.day))
