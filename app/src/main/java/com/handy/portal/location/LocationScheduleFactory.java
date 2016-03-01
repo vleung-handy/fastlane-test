@@ -53,10 +53,10 @@ public class LocationScheduleFactory
         Date oneHourBeforeBooking = calendar.getTime();
         locationQueryStrategy.setEndDate(oneHourBeforeBooking)
                 .setBookingId(booking.getId())
-                .setLocationPollingIntervalSeconds(30)
+                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE)
                 .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
-                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY)
-                .setDistanceFilterMeters(50)
+                .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY)
+                .setDistanceFilterMeters(100)
                 .setEventName("three_hours_out");  //TODO: remove magic strings
         locationQueryStrategies.add(locationQueryStrategy);
 
