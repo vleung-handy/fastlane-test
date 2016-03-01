@@ -377,9 +377,9 @@ public class BookingDetailsFragment extends ActionBarFragment
         mDateView.refreshDisplay(booking);
         mTitleView.refreshDisplay(booking, mFromPaymentsTab, bookingStatus);
 
+        mActionPanelView.refreshDisplay(booking);
         if (!mFromPaymentsTab)
         {
-            mActionPanelView.refreshDisplay(booking);
             mContactPanelView.refreshDisplay(booking);
         }
 
