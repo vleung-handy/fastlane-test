@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ProviderFeedback implements Serializable
 {
+    public static final String TYPE_TEXT = "text";
+
     @SerializedName("title")
     private String mTitle;
     @SerializedName("subtitle")

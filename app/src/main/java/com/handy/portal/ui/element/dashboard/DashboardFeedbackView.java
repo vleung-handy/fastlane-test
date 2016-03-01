@@ -65,7 +65,10 @@ public class DashboardFeedbackView extends FrameLayout
 
         for (ProviderFeedback.FeedbackTip tip : feedback.getFeedbackTips())
         {
-            mTips.addView(new BulletTextView(getContext(), tip.getData()));
+            if (ProviderFeedback.TYPE_TEXT.equalsIgnoreCase(tip.getType()))
+            {
+                mTips.addView(new BulletTextView(getContext(), tip.getData()));
+            }
         }
     }
 }
