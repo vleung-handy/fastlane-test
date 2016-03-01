@@ -15,11 +15,13 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
     private static final int PAGE_COUNT = 2;
     private Context mContext;
     private ProviderEvaluation mProviderEvaluation;
+    private boolean mShouldAnimate;
 
-    public DashboardRatingsPagerAdapter(final Context context, ProviderEvaluation providerEvaluation)
+    public DashboardRatingsPagerAdapter(final Context context, ProviderEvaluation providerEvaluation, boolean shouldAnimate)
     {
         mContext = context;
         mProviderEvaluation = providerEvaluation;
+        mShouldAnimate = shouldAnimate;
     }
 
     @Override
@@ -60,6 +62,16 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
                 view.setFiveStarRatingPercentage(0);
             }
         }
+
+        if (mShouldAnimate)
+        {
+            view.startAnimation();
+        }
+        else
+        {
+            view.setOnResumeState();
+        }
+
         container.addView(view);
 
         return view;

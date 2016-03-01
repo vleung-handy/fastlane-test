@@ -55,6 +55,7 @@ public class DashboardFragment extends ActionBarFragment
     TextView mRatingThresholdText;
 
     ProviderEvaluation mProviderEvaluation;
+    private int mNumberOfGraphsAnimated = 0;
 
     @Override
     protected MainViewTab getTab()
@@ -100,7 +101,8 @@ public class DashboardFragment extends ActionBarFragment
                 evaluation.getRolling().getStatusColorId());
 
         mRatingsProPerformanceViewPager
-                .setAdapter(new DashboardRatingsPagerAdapter(getContext(), evaluation));
+                .setAdapter(new DashboardRatingsPagerAdapter(getContext(), evaluation, shouldAnimateFiveStarPercentageGraphs()));
+
         mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
@@ -170,10 +172,16 @@ public class DashboardFragment extends ActionBarFragment
         int currentPageIndex = mRatingsProPerformanceViewPager.getCurrentItem();
         DashboardRatingsView dashboardRatingsView = (DashboardRatingsView) mRatingsProPerformanceViewPager.getChildAt(currentPageIndex);
 
-        if (dashboardRatingsView != null)
+        if (dashboardRatingsView != null && !dashboardRatingsView.hasBeenAnimated())
         {
+            mNumberOfGraphsAnimated++;
             dashboardRatingsView.animateProgressBar();
         }
+    }
+
+    private boolean shouldAnimateFiveStarPercentageGraphs()
+    {
+        return mNumberOfGraphsAnimated == 0;
     }
 
     @OnClick(R.id.try_again_button)

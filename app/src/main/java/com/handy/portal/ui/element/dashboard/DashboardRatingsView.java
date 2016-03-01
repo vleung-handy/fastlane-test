@@ -28,6 +28,8 @@ public class DashboardRatingsView extends FrameLayout
     @Bind(R.id.five_star_progress_percentage_view)
     FiveStarRatingPercentageView mFiveStarProgressPercentageRatingView;
 
+    private boolean mAnimated = false;
+
     public DashboardRatingsView(final Context context)
     {
         super(context);
@@ -94,8 +96,25 @@ public class DashboardRatingsView extends FrameLayout
         mFiveStarProgressPercentageRatingView.setContentColor(colorResourceId);
     }
 
+    public void startAnimation()
+    {
+        mFiveStarProgressPercentageRatingView.startAnimation();
+    }
+
     public void animateProgressBar()
     {
+        mAnimated = true;
         mFiveStarProgressPercentageRatingView.animateProgressBar();
+    }
+
+    public void setOnResumeState()
+    {
+        mAnimated = true;
+        mFiveStarProgressPercentageRatingView.setOnResumeState();
+    }
+
+    public boolean hasBeenAnimated()
+    {
+        return mAnimated;
     }
 }
