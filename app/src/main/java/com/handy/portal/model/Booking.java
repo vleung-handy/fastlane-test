@@ -544,6 +544,7 @@ public class Booking implements Comparable<Booking>, Serializable
         public static final String ACTION_CUSTOMER_RESCHEDULE = "customer_reschedule";
         public static final String ACTION_CANCELLATION_POLICY = "cancellation_policy";
         public static final String ACTION_REMOVE = "remove";
+        public static final String ACTION_UNASSIGN_FLOW = "unassign_flow";
         public static final String ACTION_ISSUE_OTHER = "other_issue";
 
         public static final String ACTION_RETRACT_NO_SHOW = "retract_no_show";

@@ -9,12 +9,15 @@ import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
-import com.handy.portal.ui.fragment.RatingsAndFeedbackFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
+import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
@@ -36,6 +39,9 @@ public enum MainViewTab implements Serializable
     UPDATE_DEBIT_CARD(PaymentsUpdateDebitCardFragment.class),
     PAYMENTS(PaymentsFragment.class),
     PAYMENTS_DETAIL(PaymentsDetailFragment.class),
+    DASHBOARD_TIERS(DashboardTiersFragment.class),
+    DASHBOARD_REVIEWS(DashboardReviewsFragment.class),
+    DASHBOARD_FEEDBACK(DashboardFeedbackFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
     HELP(HelpFragment.class),
@@ -47,7 +53,8 @@ public enum MainViewTab implements Serializable
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
     RATINGS_AND_FEEDBACK(RatingsAndFeedbackFragment.class),
     REFER_A_FRIEND(ReferAFriendFragment.class),
-    ACCOUNT_SETTINGS(AccountSettingsFragment.class),;
+    ACCOUNT_SETTINGS(AccountSettingsFragment.class),
+    ;
 
     private Class mClassType;
     private

@@ -90,19 +90,6 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item)
-//    {
-//        switch (item.getItemId())
-//        {
-//            case R.id.action_exit:
-//                onBackButtonPressed();
-//                return true;
-//            default:
-//                return false;
-//        }
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

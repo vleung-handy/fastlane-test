@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <include layout="@layout/layout_fetch_error"/>
+
+    <ScrollView
+        android:id="@+id/dashboard_layout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <com.handy.portal.ui.element.dashboard.DashboardWelcomeView
+                android:id="@+id/dashboard_welcome_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/dashboard_ratings_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dashboard_ratings_performance_height"
+                />
+
+            <!-- Negative margin hack hides the mysterious gray divider above this view-->
+            <com.handy.portal.ui.element.dashboard.CirclePageIndicatorView
+                android:id="@+id/dashboard_ratings_view_pager_indicator_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/circle_page_indicator_height"
+                android:layout_marginTop="@dimen/circle_negative_margin"
+                android:paddingTop="@dimen/circle_indicator_padding"
+                />
+
+            <include layout="@layout/divider_dashboard"/>
+
+            <com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView
+                android:id="@+id/dashboard_options_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/lifetime_rating_text"
+                style="@style/TextView.Medium.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/section_item_margin"
+                tools:text="Lifetime Rating 4.8"
+                />
+
+            <TextView
+                android:id="@+id/dashboard_rating_threshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/section_item_margin"
+                android:gravity="center_horizontal"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/small_text_size"
+                tools:text="*must maintain at least a 4.2"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

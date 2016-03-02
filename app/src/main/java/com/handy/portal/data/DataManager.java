@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
+import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -22,6 +23,9 @@ import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
@@ -33,6 +37,7 @@ import com.handy.portal.model.payments.StripeTokenResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.mime.TypedInput;
@@ -40,6 +45,8 @@ import retrofit.mime.TypedInput;
 public abstract class DataManager
 {
     //Portal
+    public abstract void sendGeolocation(int providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb);
+
     public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
 
     public abstract void checkForAllPendingTerms(Callback<TermsDetailsGroup> cb);
@@ -131,6 +138,14 @@ public abstract class DataManager
     public abstract void getNotifications(String providerId, Integer sinceId, Integer untilId, Integer count, Callback<NotificationMessages> callback);
 
     public abstract void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb);
+
+    // Pro Dashboard
+    public abstract void getProviderEvaluation(String providerId, Callback<ProviderEvaluation> cb);
+
+    public abstract void getProviderFiveStarRatings(String providerId, String minStar, Callback<List<ProviderRating>> cb);
+
+    public abstract void getProviderFeedback(String providerId, Callback<List<ProviderFeedback>> cb);
+
 
     //TODO: refactor. should this be here?
     public interface Callback<T>

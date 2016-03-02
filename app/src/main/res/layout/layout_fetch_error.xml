@@ -17,13 +17,14 @@
         android:id="@+id/fetch_error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="@dimen/error_margin_bottom"
+        android:layout_marginLeft="@dimen/error_margin_side"
+        android:layout_marginRight="@dimen/error_margin_side"
+        android:layout_marginTop="@dimen/error_margin_top"
         android:gravity="center_horizontal"
         android:textColor="@color/subtitle_grey"
-        android:textSize="20sp"/>
+        android:textSize="@dimen/error_text"
+        />
 
     <Button
         android:id="@+id/try_again_button"
@@ -32,5 +33,6 @@
         android:layout_height="wrap_content"
         android:text="@string/try_again"
         android:textAllCaps="false"
-        android:textSize="20sp"/>
+        android:textSize="@dimen/error_text"
+        />
 </LinearLayout>

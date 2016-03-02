@@ -113,9 +113,12 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     case INPUTTING_PHONE_NUMBER:
                     {
-                        sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
+                        if (phoneNumberEditText.validate())
+                        {
+                            sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
+                        }
                     }
                     break;
                     case INPUTTING_PIN:

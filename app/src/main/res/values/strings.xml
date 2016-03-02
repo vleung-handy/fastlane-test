@@ -81,6 +81,7 @@
     <string name="my_bookings">My Bookings</string>
     <string name="profile">Profile</string>
     <string name="my_profile">My Profile</string>
+    <string name="my_performance">My Performance</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="want_to_log_out">Are you sure you want to log out?</string>
     <string name="update">Update</string>
@@ -127,8 +128,6 @@
     <string name="credit_card">Credit Card</string>
     <string name="cvc">CVC</string>
     <string name="contact">Contact</string>
-    <string name="welcome_back"
-            formatted="false">Welcome back, %s!</string>
     <string name="skip">Skip</string>
     <string name="peak_price_info">Due to high demand, peak pricing is in \neffect at this time. If you’d like, you can \npick a different time.</string>
     <string name="peak_price_info_recur">Due to high demand, \nwe don’t have availability at that time. \nPlease select a different time.</string>
@@ -242,6 +241,7 @@
     <string name="tab_notifications">Notifications</string>
     <string name="tab_payments">Payments</string>
     <string name="tab_profile">Profile</string>
+    <string name="dashboard">Ratings &amp; Feedback</string>
     <string name="tab_help">Help</string>
     <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
@@ -477,6 +477,31 @@
     <string name="email_income_verification">Email income verification</string>
     <string name="get_resupply_kit">Get a resupply kit</string>
 
+    <!-- Dashboard -->
+    <string name="welcome_back">Welcome back</string>
+    <string name="welcome_back_formatted">Welcome back, %1$s</string>
+    <string name="past_28_days">Past 28 days</string>
+    <string name="lifetime_rating">Lifetime Jobs Rated</string>
+    <string name="five_star">5 stars</string>
+    <string name="five_star_reviews">5 Star Reviews</string>
+    <string name="five_star_ratings">5 star ratings</string>
+    <string name="rated_jobs">Rated jobs</string>
+    <string name="total_jobs">Total jobs</string>
+    <string name="feedback">Feedback</string>
+    <string name="percentage">%</string>
+    <string name="my_tier">My Tier</string>
+    <string name="current_28_days">Current\n 28 DAYS</string>
+    <string name="payment_tier_info">Your payment tier is determined by the total number of jobs you have completed in the last 28 days, and your average rating over the last 28 days. This means that your job count only includes jobs that were completed in the previous 28 days.</string>
+    <string name="tips_for_success">Tips for success</string>
+    <string name="error_dashboard">There was an error fetching dashboard info.</string>
+    <string name="error_dashboard_feedback">There was an error fetching feedback.</string>
+    <string name="error_dashboard_reviews">There was an error fetching reviews.</string>
+    <string name="no_feedback">We don\u2019t have any specific feedback for you yet.</string>
+    <string name="no_reviews">There are no 5 star reviews for you yet.</string>
+    <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
+    <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
+
+
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
     <string name="nearby_transit">Nearby Transit</string>
@@ -522,7 +547,7 @@
     <string name="kilometers_away_formatted">%1$s kilometers away</string>
     <string name="withholding_charge">Canceling this job will result in a withholding</string>
     <string name="please_confirm">Please confirm:</string>
-    <string name="time_interval_formatted">%1$s - %2$s</string>
+    <string name="time_interval_formatted">%1$s – %2$s</string>
 
     <!-- Tutorial Overlay -->
     <string name="got_it">Got it!</string>
@@ -542,9 +567,6 @@
     <string name="notify_available_jobs_update_intro_success">Great! We’ll send you a notification for any available jobs that arrive the rest of the day.</string>
     <string name="notify_available_jobs_update_error">Oops! There was an error turning on notifications. Please check your connection and try again.</string>
 
-    <!-- Dividers -->
-    <dimen name="divider_height">1dp</dimen>
-
     <!-- Account settings layout -->
     <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
     <string name="refer_a_friend">Refer a Friend</string>
@@ -563,4 +585,8 @@
     <string name="referral_subtitle_formatted">Give your friends %1$s off their first Handy booking, and you get %2$s!</string>
     <string name="chevron_description">Chevron</string>
 
+    <!-- Location -->
+    <string name="change_location_settings_dialog_title">Location services required</string>
+    <string name="change_location_settings_dialog_message">Please enable location services so your customers are aware of your arrival time.</string>
+    <string name="change_location_settings_dialog_action_button">Go to Settings</string>
 </resources>
