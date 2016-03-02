@@ -102,6 +102,7 @@ public class ProxyLocationView extends FrameLayout
         }
         else
         {
+            nearbyTransits.removeAllViews();
             List<String> transitsMarkers = zipCluster.getTransitDescription();
             for (String transitMarker : transitsMarkers)
             {
