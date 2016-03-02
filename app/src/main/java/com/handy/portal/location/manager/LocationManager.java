@@ -7,6 +7,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
+import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
@@ -58,9 +59,6 @@ public class LocationManager
         mDataManager = dataManager;
         mProviderManager = providerManager;
         mPrefsManager = prefsManager;
-        LocationScheduleBuilderManager mLocationScheduleBuilderManager =
-                new LocationScheduleBuilderManager(mBus); //TODO: this means we don't have to provide in app module. is that better?
-        //should comment out the above if toggle-testing
     }
 
     /**
@@ -72,6 +70,26 @@ public class LocationManager
     public Location getLastKnownLocation()
     {
         return mLastKnownLocation;
+    }
+
+    @Subscribe
+    public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
+    {
+        if(mProviderManager.getCachedActiveProvider() == null) return;
+        mDataManager.getLocationSchedule(mProviderManager.getCachedActiveProvider().getId(), new DataManager.Callback<LocationQuerySchedule>()
+        {
+            @Override
+            public void onSuccess(final LocationQuerySchedule response)
+            {
+                mBus.post(new LocationEvent.ReceiveLocationScheduleSuccess(response));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new LocationEvent.ReceiveLocationScheduleError(error));
+            }
+        });
     }
 
     @Subscribe
@@ -138,20 +156,8 @@ public class LocationManager
     private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
     {
         Log.d(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
-        int providerId = 0;
-        if (mProviderManager.getCachedActiveProvider() != null)
-        {
-            try
-            {
-                providerId = Integer.parseInt(mProviderManager.getCachedActiveProvider().getId());
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        mDataManager.sendGeolocation(providerId, locationBatchUpdate, new DataManager.Callback<SuccessWrapper>()
+        if(mProviderManager.getCachedActiveProvider() == null) return;
+        mDataManager.sendGeolocation(mProviderManager.getCachedActiveProvider().getId(), locationBatchUpdate, new DataManager.Callback<SuccessWrapper>()
         {
             @Override
             public void onSuccess(final SuccessWrapper response)

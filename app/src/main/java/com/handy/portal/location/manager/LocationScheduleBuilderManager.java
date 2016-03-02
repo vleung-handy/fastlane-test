@@ -55,7 +55,6 @@ public class LocationScheduleBuilderManager
     @Subscribe
     public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
     {
-//        clearScheduleBuilderData(); //actually don't clear out everything, we might just want updates
         mRequestedDatesForScheduleSet.clear();
         final List<Date> requestedDates = getDatesForSchedule();
 
