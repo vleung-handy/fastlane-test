@@ -98,7 +98,15 @@ public class LocationService extends Service
     @Override
     public void onDestroy()
     {
-        mBus.unregister(this);
+        try
+        {
+            mBus.unregister(this);
+        }
+        catch (Exception e)
+        {
+            //this happens when this isn't registered to the bus. one case is when stopService() is called twice
+        }
+
         if (mLocationScheduleHandler != null)
         {
             mLocationScheduleHandler.destroy();
