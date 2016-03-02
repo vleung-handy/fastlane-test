@@ -5,6 +5,7 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.location.model.LocationBatchUpdate;
+import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -68,7 +69,13 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void sendGeolocation(int providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb)
+    public void getLocationSchedule(String providerId, Callback<LocationQuerySchedule> cb)
+    {
+        service.getLocationSchedule(providerId, new GetLocationScheduleRetrofitCallback(cb));
+    }
+
+    @Override
+    public void sendGeolocation(String providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb)
     {
         service.sendGeolocation(providerId, locationBatchUpdate, new SuccessWrapperRetroFitCallback(cb));
     }
