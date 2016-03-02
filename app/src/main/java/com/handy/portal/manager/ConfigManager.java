@@ -53,10 +53,6 @@ public class ConfigManager
     @Nullable
     public ConfigurationResponse getConfigurationResponse()
     {
-        if (mConfigurationResponse == null)
-        {
-            Crashlytics.logException(new Exception("Tried to access configuration data before it was available"));
-        }
         return mConfigurationResponse;
     }
 }
