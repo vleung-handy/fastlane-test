@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
@@ -362,7 +362,8 @@ public class BookingDetailsFragment extends ActionBarFragment
         else
         {
             //show either the real map or a placeholder image depending on if we have google play services
-            if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
+            if (ConnectionResult.SUCCESS ==
+                    GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()))
             {
                 BookingMapFragment fragment = BookingMapFragment.newInstance(mAssociatedBooking,
                         bookingStatus, mZipClusterManager.getCachedPolygons(mAssociatedBooking.getZipClusterId()));
@@ -651,6 +652,10 @@ public class BookingDetailsFragment extends ActionBarFragment
             layout.addView(new SupportActionContainerView(
                     getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, mAssociatedBooking));
             mSlideUpPanelLayout.showPanel(R.string.job_support, layout);
+        }
+        else
+        {
+            Crashlytics.log("SlideUpPanelLayout is null in: " + getClass().getSimpleName());
         }
     }
 
@@ -1118,6 +1123,9 @@ public class BookingDetailsFragment extends ActionBarFragment
             case REMOVE:
                 removeJob(event.action);
                 break;
+            case UNASSIGN_FLOW:
+                unassignJob(event.action);
+                break;
         }
     }
 
@@ -1126,26 +1134,23 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
                 mAssociatedBooking, removeAction.getWarningText())));
 
-        if (!useNewUnassignFlow())
-        {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                    mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
-            takeAction(BookingActionButtonType.REMOVE, false);
-        }
-        else
-        {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                    mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
-            Bundle arguments = new Bundle();
-            arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-            arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
-        }
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
+        takeAction(BookingActionButtonType.REMOVE, false);
+
     }
 
-    private boolean useNewUnassignFlow()
+    private void unassignJob(@NonNull Booking.Action removeAction)
     {
-        return false;
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
+                mAssociatedBooking, removeAction.getWarningText())));
+
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
+        arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
