@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity
         }
         catch (Exception e)
         {
-            Crashlytics.logException(e);
+            Crashlytics.logException(e); //want more info for now
         }
         super.onPause();
     }
