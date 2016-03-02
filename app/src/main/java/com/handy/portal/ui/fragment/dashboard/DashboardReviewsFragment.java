@@ -44,9 +44,6 @@ public class DashboardReviewsFragment extends ActionBarFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setOptionsMenuEnabled(true);
-        setBackButtonEnabled(true);
-
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
     }
 
@@ -66,6 +63,9 @@ public class DashboardReviewsFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.five_star_reviews);
+        
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
 
         mReviewRecyclerView.setHasFixedSize(true);
         mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
