@@ -4,6 +4,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
@@ -208,6 +209,14 @@ public class LocationManager
             }
         }
         mFailedLocationBatchUpdates.add(locationBatchUpdate);
+    }
+
+    @Subscribe
+    public void onBookingChangedOrCreated(HandyEvent.BookingChangedOrCreated event)
+    {
+        //when this happens, we should rebuild the schedule
+        //TODO: see if building schedule is costly. if so, note which bookings were invalidated and rebuild the schedule only for those bookings
+        mBus.post(new LocationEvent.RequestLocationSchedule());
     }
 
 }
