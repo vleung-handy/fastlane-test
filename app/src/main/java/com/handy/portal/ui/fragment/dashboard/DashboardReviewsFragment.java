@@ -92,7 +92,6 @@ public class DashboardReviewsFragment extends ActionBarFragment
 
                     Date toBookingDate = ((ReviewListAdapter) mReviewRecyclerView.getAdapter()).getToBookingDate();
                     String toBookingDateString = DateTimeUtils.formatIso8601(toBookingDate);
-                    Log.d("to_booking_date", toBookingDateString);
                     bus.post(new ProviderDashboardEvent.RequestProviderFiveStarRatings(MIN_STAR, toBookingDateString));
                 }
             }
