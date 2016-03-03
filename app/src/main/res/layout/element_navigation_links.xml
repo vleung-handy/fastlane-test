@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioGroup android:id="@+id/nav_tray_links"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+<RadioGroup
+    android:id="@+id/nav_tray_links"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     >
+
+    <RadioButton
+        android:id="@+id/nav_link_dashboard"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/ic_cup_gray"
+        android:text="@string/dashboard"
+        />
 
     <RadioButton
         android:id="@+id/nav_link_my_profile"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/tray_button_profile"
         android:text="@string/my_profile"
-        />
-
-    <RadioButton
-        android:id="@+id/nav_link_dashboard"
-        style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_button_profile"
-        android:text="@string/dashboard"
         />
 
     <RadioButton
