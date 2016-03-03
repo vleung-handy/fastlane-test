@@ -11,6 +11,7 @@ import com.handy.portal.R;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.util.DateTimeUtils;
 
+import java.util.Date;
 import java.util.List;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder>
@@ -61,5 +62,10 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             mReviewTextView.setText(rating.getComment());
             mDateTextView.setText(DateTimeUtils.getMonthAndYear(rating.getDateRating()));
         }
+    }
+
+    public Date getToBookingDate()
+    {
+        return mRatings.get(mRatings.size() - 1).getBookingDate();
     }
 }

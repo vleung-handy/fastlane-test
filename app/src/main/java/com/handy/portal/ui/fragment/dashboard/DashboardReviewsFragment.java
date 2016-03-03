@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment.dashboard;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,18 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.ui.adapter.ReviewListAdapter;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.listener.EndlessRecyclerViewScrollListener;
+import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.Utils;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -31,6 +38,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
     @Bind(R.id.no_result_text)
     TextView mNoResultText;
 
+    private static int MIN_STAR = 5;
     private List<ProviderRating> mRatings = new ArrayList<>();
     private ProviderEvaluation mEvaluation;
 
@@ -68,12 +76,30 @@ public class DashboardReviewsFragment extends ActionBarFragment
         setBackButtonEnabled(true);
 
         mReviewRecyclerView.setHasFixedSize(true);
-        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mReviewRecyclerView.setLayoutManager(linearLayoutManager);
         ReviewListAdapter adapter = new ReviewListAdapter(mRatings);
         mReviewRecyclerView.setAdapter(adapter);
+        mReviewRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager)
+        {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount)
+            {
+                if (mEvaluation != null &&
+                        mEvaluation.getFiveStarRatingsWithComments() != null &&
+                        !mEvaluation.getFiveStarRatingsWithComments().isEmpty())
+                {
+
+                    Date toBookingDate = ((ReviewListAdapter) mReviewRecyclerView.getAdapter()).getToBookingDate();
+                    String toBookingDateString = DateTimeUtils.formatIso8601(toBookingDate);
+                    Log.d("to_booking_date", toBookingDateString);
+                    bus.post(new ProviderDashboardEvent.RequestProviderFiveStarRatings(MIN_STAR, toBookingDateString));
+                }
+            }
+        });
 
         if (mEvaluation == null || mEvaluation.getFiveStarRatingsWithComments() == null
-                || mEvaluation.getFiveStarRatingsWithComments().size() == 0)
+                || mEvaluation.getFiveStarRatingsWithComments().isEmpty())
         {
             mNoResultView.setVisibility(View.VISIBLE);
             mNoResultText.setText(R.string.no_reviews);
@@ -84,5 +110,16 @@ public class DashboardReviewsFragment extends ActionBarFragment
             mRatings.addAll(mEvaluation.getFiveStarRatingsWithComments());
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Subscribe
+    public void onReceiveProviderFiveStarRatingsSuccess(ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess event)
+    {
+        for (ProviderRating providerRating : event.getProviderRatings())
+        {
+            mRatings.add(providerRating);
+        }
+
+        mReviewRecyclerView.getAdapter().notifyDataSetChanged();
     }
 }

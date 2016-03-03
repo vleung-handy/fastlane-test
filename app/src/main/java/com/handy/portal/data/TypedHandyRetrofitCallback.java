@@ -36,6 +36,9 @@ import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.List;
+
 public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback
 {
     protected static final Gson gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
@@ -339,7 +342,7 @@ class GetProviderEvaluationRetrofitCallback extends TypedHandyRetrofitCallback<P
 }
 
 
-class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<ProviderRating>
+class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<HashMap<String, List<ProviderRating>>>
 {
     GetProviderFiveStarRatingsRetrofitCallback(DataManager.Callback callback)
     {

@@ -43,6 +43,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -357,9 +358,9 @@ public final class BaseDataManager extends DataManager
     }
 
     @Override
-    public void getProviderFiveStarRatings(final String providerId, final String minStar, final Callback<List<ProviderRating>> cb)
+    public void getProviderFiveStarRatings(final String providerId, final Integer minStar, final String toBookingDate, final String fromBookingDate, final Callback<HashMap<String, List<ProviderRating>>> cb)
     {
-        service.getProviderFiveStarRatings(providerId, minStar, new GetProviderFiveStarRatingsRetrofitCallback(cb));
+        service.getProviderFiveStarRatings(providerId, minStar, toBookingDate, fromBookingDate, new GetProviderFiveStarRatingsRetrofitCallback(cb));
     }
 
     @Override

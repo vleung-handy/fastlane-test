@@ -27,6 +27,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
     public final static SimpleDateFormat MONTH_YEAR_FORMATTER = new SimpleDateFormat("MMM yyyy");
+    public final static SimpleDateFormat ISO8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int DAYS_IN_WEEK = 7;
@@ -119,6 +120,12 @@ public final class DateTimeUtils
     {
         if (date == null) { return null; }
         return getDayOfWeekMonthDateYearFormatter().format(date);
+    }
+
+    public static String formatIso8601(Date date)
+    {
+        if (date == null) { return null; }
+        return getIso8601Formatter().format(date);
     }
 
     public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
@@ -311,6 +318,12 @@ public final class DateTimeUtils
     {
         MONTH_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return MONTH_YEAR_FORMATTER;
+    }
+
+    private static SimpleDateFormat getIso8601Formatter()
+    {
+        ISO8601_FORMATTER.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return ISO8601_FORMATTER;
     }
 
 }
