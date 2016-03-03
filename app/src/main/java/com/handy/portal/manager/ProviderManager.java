@@ -42,6 +42,7 @@ public class ProviderManager
     private static final String PROVIDER_PROFILE_CACHE_KEY = "provider_profile";
     private Cache<String, ProviderSettings> mProviderSettingsCache;
     private static final String PROVIDER_SETTINGS_CACHE_KEY = "provider_settings";
+    private static final String RATINGS_KEY = "ratings";
 
     public ProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
@@ -273,7 +274,7 @@ public class ProviderManager
             @Override
             public void onSuccess(final HashMap<String, List<ProviderRating>> responseHash)
             {
-                List<ProviderRating> providerRatings = responseHash.get("ratings");
+                List<ProviderRating> providerRatings = responseHash.get(RATINGS_KEY);
                 if (providerRatings != null)
                 {
                     mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(providerRatings));
