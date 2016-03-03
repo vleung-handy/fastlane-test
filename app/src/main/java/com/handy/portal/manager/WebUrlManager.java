@@ -22,7 +22,7 @@ public class WebUrlManager
     public static final String BLOCK_JOBS_PAGE = "providers/"+WEB_URL_PROVIDER_ID_TOKEN+"/provider_schedules";
 
     //If we end up doing more of this we can come up with a cleaner system using enums
-    public static final String USES_CONFIG_PARAM_ONBOARDING_PAGE = "";
+    public static final String USES_CONFIG_PARAM_ONBOARDING_PAGE = "useconfigparam_onboarding";
 
     private final ProviderManager mProviderManager;
     private final HandyRetrofitEndpoint mEndpoint;
