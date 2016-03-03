@@ -1,6 +1,7 @@
 package com.handy.portal.ui.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,8 +65,15 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         }
     }
 
+    @Nullable
     public Date getToBookingDate()
     {
-        return mRatings.get(mRatings.size() - 1).getBookingDate();
+        if (mRatings.isEmpty()) {
+            return null;
+        }
+        else
+        {
+            return mRatings.get(mRatings.size() - 1).getBookingDate();
+        }
     }
 }

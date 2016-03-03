@@ -1,6 +1,7 @@
 package com.handy.portal.util;
 
 import android.os.CountDownTimer;
+import android.support.annotation.Nullable;
 import android.text.format.Time;
 import android.widget.TextView;
 
@@ -80,54 +81,63 @@ public final class DateTimeUtils
         return c.get(Calendar.DAY_OF_MONTH);
     }
 
+    @Nullable
     public static String formatDateTo12HourClock(Date date)
     {
         if (date == null) { return null; }
         return getClockFormatter12hr().format(date);
     }
 
+    @Nullable
     public static String formatDateDayOfWeekMonthDay(Date date)
     {
         if (date == null) { return null; }
         return getDayOfWeekMonthDayFormatter().format(date);
     }
 
+    @Nullable
     public static String formatDateMonthDay(Date date)
     {
         if (date == null) { return null; }
         return getSummaryDateFormatter().format(date);
     }
 
+    @Nullable
     public static String formatDetailedDate(Date date)
     {
         if (date == null) { return null; }
         return getDetailedDateFormatter().format(date);
     }
 
+    @Nullable
     public static String formatMonthDate(Date date)
     {
         if (date == null) { return null; }
         return getMonthDateFormatter().format(date);
     }
 
+    @Nullable
     public static String formatMonthDateYear(Date date)
     {
         if (date == null) { return null; }
         return getMonthDateYearFormatter().format(date);
     }
 
+    @Nullable
     public static String formatDayOfWeekMonthDateYear(Date date)
     {
         if (date == null) { return null; }
         return getDayOfWeekMonthDateYearFormatter().format(date);
     }
 
+    @Nullable
     public static String formatIso8601(Date date)
     {
         if (date == null) { return null; }
         return getIso8601Formatter().format(date);
     }
 
+    @Nullable
     public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
     {
         if (start == null || end == null) { return null; }
