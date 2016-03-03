@@ -119,7 +119,8 @@ public abstract class BaseActivity extends AppCompatActivity
                 {
                     intent.setData(Uri.parse("package:" + packageName));
                     context.startActivity(intent);//activity may not be found, may throw exception
-                } catch (ActivityNotFoundException e)
+                }
+                catch (ActivityNotFoundException e)
                 {
                     intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
                     Utils.safeLaunchIntent(intent, context);

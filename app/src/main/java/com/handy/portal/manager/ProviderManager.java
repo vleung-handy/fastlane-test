@@ -265,7 +265,7 @@ public class ProviderManager
     @Subscribe
     public void onRequestProviderFiveStarRatings(ProviderDashboardEvent.RequestProviderFiveStarRatings event)
     {
-        String providerId = "";
+//        String providerId = "";
 
         // TODO: remove this fake data once the api is ready
         final List<ProviderRating> ratings = new ArrayList<>();
@@ -305,7 +305,8 @@ public class ProviderManager
     @Subscribe
     public void onRequestProviderFeedback(ProviderDashboardEvent.RequestProviderFeedback event)
     {
-        String providerId = "";
+//        String providerId = "";
+
         // TODO: replace with real api call before merge into develop
         List<ProviderFeedback.FeedbackTip> feedbackTips = new ArrayList<>();
         feedbackTips.add(new ProviderFeedback.FeedbackTip("Floors weren't cleaned", "General Cleanliness"));

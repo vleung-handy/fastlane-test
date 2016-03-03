@@ -128,7 +128,7 @@ public class LocationScheduleFactory
 
         locationQueryStrategy.setEndDate(fifteenMinutesAfterBookingEnd)
                 .setBookingId(booking.getId())
-                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 1)
+                .setLocationPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE)
                 .setServerPollingIntervalSeconds(DateTimeUtils.SECONDS_IN_MINUTE * 5)
                 .setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY)
                 .setDistanceFilterMeters(25)

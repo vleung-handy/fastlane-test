@@ -103,11 +103,9 @@ public class PaymentsManager
                             paymentGroupList.add(paymentGroups[j]);
                         }
                     }
-                    neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[]{}));
-
+                    neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[paymentGroupList.size()]));
                 }
                 mBus.post(new PaymentEvent.ReceivePaymentBatchesSuccess(paymentBatches, event.startDate, event.endDate, event.isInitialBatchRequest, event.callerIdentifier));
-
             }
 
             @Override
@@ -203,6 +201,7 @@ public class PaymentsManager
         static final String EXP_YEAR = "exp_year";
         static final String ACCOUNT_TYPE = "account_type";
     }
+
 
     private final class PaymentMethodAccountType
     {

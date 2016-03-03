@@ -18,7 +18,8 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ProfileHeaderView extends FrameLayout {
+public class ProfileHeaderView extends FrameLayout
+{
 
     private static final DecimalFormat RATING_FORMAT = new DecimalFormat("0.00");
 
@@ -33,7 +34,8 @@ public class ProfileHeaderView extends FrameLayout {
 
     private ProviderProfile mProfileProfile;
 
-    public ProfileHeaderView(Context context, ProviderProfile profile) {
+    public ProfileHeaderView(Context context, ProviderProfile profile)
+    {
         super(context);
 
         // Inflate view using ButterKnife
@@ -43,22 +45,33 @@ public class ProfileHeaderView extends FrameLayout {
         // Fetch provider info to populate into ProfileHeaderView
         ProviderPersonalInfo providerPersonalInfo = profile.getProviderPersonalInfo();
         PerformanceInfo performanceInfo = profile.getPerformanceInfo();
-        String formattedTotalRating = RATING_FORMAT.format(performanceInfo.getTotalRating());
+
+        if (performanceInfo != null)
+        {
+            String formattedTotalRating = RATING_FORMAT.format(performanceInfo.getTotalRating());
+            jobsRatingText.setText(Html.fromHtml(getContext().getString(R.string.jobs_and_rating,
+                    performanceInfo.getTotalJobsCount(), formattedTotalRating)));
+        }
 
         // Set text of view elements
-        providerFirstNameText.setText(providerPersonalInfo.getFirstName());
-        providerLastNameText.setText(providerPersonalInfo.getLastName());
-        jobsRatingText.setText(Html.fromHtml(getContext().getString(R.string.jobs_and_rating, performanceInfo.getTotalJobsCount(), formattedTotalRating)));
+        if (providerPersonalInfo != null)
+        {
+            final String firstName = providerPersonalInfo.getFirstName();
+            if (firstName != null)
+            { providerFirstNameText.setText(providerPersonalInfo.getFirstName()); }
+            providerLastNameText.setText(providerPersonalInfo.getLastName());
 
-        // Bind activation date if applicable
-        Date activationDate = providerPersonalInfo.getActivationDate();
-        if (activationDate != null)
-        {
-            joinedHandyText.setText(Html.fromHtml(getContext().getString(R.string.joined_handy, DateTimeUtils.formatMonthDateYear(activationDate))));
-        }
-        else
-        {
-            joinedHandyText.setVisibility(View.GONE);
+            // Bind activation date if applicable
+            Date activationDate = providerPersonalInfo.getActivationDate();
+            if (activationDate != null)
+            {
+                joinedHandyText.setText(Html.fromHtml(getContext().getString(R.string.joined_handy,
+                        DateTimeUtils.formatMonthDateYear(activationDate))));
+            }
+            else
+            {
+                joinedHandyText.setVisibility(View.GONE);
+            }
         }
     }
 }

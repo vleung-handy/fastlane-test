@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Handy Pro</string>
     <string name="app_update">Handy Pro Update</string>
-    <string name="action_settings">Settings</string>
 
     <string name="phone_number_hint">Cell Phone Number</string>
     <string name="pin_code_hint">PIN Code</string>
@@ -13,8 +12,6 @@
     <string name="logging_in">Logging in…</string>
     <string name="login_need_help"><u>I need help logging in</u></string>
 
-    <string name="no_pin_cta">Not receiving a PIN code?</string>
-
     <string name="instructions">Instructions</string>
     <string name="login_help">Phone number entered must match the number registered to your account. If you are experiencing difficulty, please visit our <a href="#">Help Center</a>.</string>
 
@@ -22,32 +19,17 @@
     <string name="login_error_bad_login">Login failed. Please make sure your phone and PIN code are correct.</string>
     <string name="login_error_connectivity">The login server could not be reached, please try again</string>
 
-    <string name="login_help_email_address">help@handy.com</string>
-    <string name="login_help_email_subject">Change Pro Phone Number</string>
-    <string name="login_help_choose_email_client">Choose an Email Client</string>
-
     <string name="error_no_intent_handler_found">No application found to handle the requested action</string>
     <string name="error_update_failed_download_manager_disabled">Update failed. Please enable Download Manager.</string>
     <string name="error_update_failed_unwritable">Update failed. Your external storage is not writable. Please make sure USB storage mode is off.</string>
     <string name="error_connectivity">The server could not be reached, please ensure you have a data connection and try again</string>
 
-    <string name="job">Job</string>
     <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
-    <string name="claimed_job">Claimed Job</string>
     <string name="claim_job">Claim Job</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
-    <string name="disclaimer_series">Claiming will add all instances to your schedule.</string>
-    <string name="disclaimer_cancel">You can remove jobs or series with 24 hour notice.</string>
-
-    <string name="booking_action_error_server">The server could not be reached, please try again</string>
-    <string name="claim_action_error_not_available">That job was not available to claim, please select another job</string>
-    <string name="remove_action_error_not_available">That job could not be removed</string>
-
-    <string name="customer_details">Customer Details</string>
-    <string name="customer_request">Customer Request</string>
 
     <string name="job_claim_success">Success! Job claimed!</string>
     <string name="series_claim_success">Success! Series claimed!</string>
@@ -60,152 +42,39 @@
 
     <string name="request_payments_batches_failed">Oops! There was an error loading your payments.</string>
 
-    <string name="home">Home</string>
     <string name="help">Help</string>
-    <string name="promotions">Promotions</string>
     <string name="log_in">Log In</string>
     <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="full_name">Full Name</string>
     <string name="phone">Phone</string>
     <string name="password">Password</string>
-    <string name="default_error_string">"Sorry, something went wrong. Please try again."</string>
     <string name="loading_more_payments">Loading more payments…</string>
-    <string name="no_more_entries">No more entries.</string>
     <string name="no_data">--</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="facebook_app_id">381615805205781</string>
-    <string name="or">or</string>
-    <string name="log_out">Log Out</string>
-    <string name="share">Share</string>
-    <string name="my_bookings">My Bookings</string>
     <string name="profile">Profile</string>
     <string name="my_profile">My Profile</string>
     <string name="my_performance">My Performance</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="want_to_log_out">Are you sure you want to log out?</string>
     <string name="update">Update</string>
-    <string name="you_have_credits">YOU HAVE&#160;&#160;#&#160;&#160;CREDITS</string>
-    <string name="change_password">CHANGE PASSWORD</string>
-    <string name="old_password">Old Password</string>
-    <string name="new_password">New Password</string>
-    <string name="update_pwd_error">To update password you need to enter old and new passwords.</string>
-    <string name="pwd_length_error">Your password must be at least 8 characters.</string>
-    <string name="info_updated">Your information has been updated.</string>
-    <string name="env_format"
-            formatted="false">%s: v%s (%s)</string>
-    <string name="upcoming">Upcoming</string>
-    <string name="past">Past</string>
-    <string name="no_upcoming_bookings">You don’t have any upcoming bookings</string>
-    <string name="hours">Hours</string>
-    <string name="booking">Booking</string>
-    <string name="service">Service</string>
     <string name="job_num">Job #</string>
     <string name="address">Address</string>
-    <string name="date">Date</string>
-    <string name="duration">Duration</string>
-    <string name="price">Price</string>
-    <string name="professional">Professional</string>
-    <string name="next">Next</string>
-    <string name="location">Location</string>
     <string name="airbnb">AIRBNB</string>
-    <string name="where_located">Okay, where are you located?</string>
     <string name="zip_code">ZIP Code</string>
-    <string name="details">Details</string>
-    <string name="tell_us_job">Got it! Tell us about the job</string>
-    <string name="tell_us_place">Tell us about your place</string>
-    <string name="comments">Comments</string>
     <string name="time">Time</string>
-    <string name="when_come">When would you like us to come?</string>
-    <string name="request_pro">Request Pro</string>
     <string name="street_addr">Street Address</string>
     <string name="apt_num">Apt #</string>
-    <string name="complete_booking">Complete Booking</string>
-    <string name="payment">Payment</string>
     <string name="credit_card_num">Credit Card Number</string>
-    <string name="change">Change</string>
     <string name="mm_yy">MM/YY</string>
-    <string name="credit_card">Credit Card</string>
     <string name="cvc">CVC</string>
-    <string name="contact">Contact</string>
-    <string name="skip">Skip</string>
-    <string name="peak_price_info">Due to high demand, peak pricing is in \neffect at this time. If you’d like, you can \npick a different time.</string>
-    <string name="peak_price_info_recur">Due to high demand, \nwe don’t have availability at that time. \nPlease select a different time.</string>
-    <string name="unavailable">Unavailable</string>
     <string name="unavailable_job">Unavailable Job</string>
-    <string name="confirmation">Confirmation</string>
     <string name="confirm">Confirm</string>
-    <string name="payment_confirmed">Your payment has been confirmed.\nHow will your professional get in?</string>
-    <string name="will_be_home">I’ll be home</string>
-    <string name="doorman">Doorman</string>
-    <string name="will_hide_key">I’ll hide the key</string>
-    <string name="pro_to_know">Anything you’d like your \nprofessional to know?</string>
-    <string name="finish">Finish</string>
-    <string name="additional_pro_info">e.g, Focus on or skip specific rooms or surfaces, or other special requests.</string>
-    <string name="where_hide_key">Where will you hide the key?</string>
-    <string name="use_your_pwd">Use your password to log in and \nmanage your bookings.</string>
-    <string name="how_often">How Often?</string>
-    <string name="every_week">Every week</string>
-    <string name="every_four_weeks">Every 4 weeks</string>
-    <string name="every_two_weeks">Every 2 weeks</string>
-    <string name="once">Once</string>
-    <string name="most_popular">Most Popular</string>
     <string name="save">Save</string>
-    <string name="available">Available</string>
     <string name="extras">Paid Extras</string>
     <string name="description">Description</string>
-    <string name="apply">Apply</string>
     <string name="promo_code_opt">Promo Code (optional)</string>
-    <string name="remove">Remove</string>
     <string name="promo_code">Promo Code</string>
-    <string name="coupon_on_payment_screen">Please enter your coupon code on the Payment screen after making your booking.</string>
-    <string name="reschedule">Reschedule</string>
-    <string name="no">No</string>
-    <string name="yes">Yes</string>
-    <string name="reschedule_all_bookings">Reschedule all subsequent bookings?</string>
-    <string name="cancel_booking">Cancel Booking</string>
     <string name="set">Set</string>
     <string name="cancel">Cancel</string>
-    <string name="get_started">Get Started</string>
-    <string name="onboard_msg">Book trusted cleaners\n &amp; handymen instantly</string>
-    <string name="onboard_msg_pro">We’ll match you with\n a highly rated professional</string>
-    <string name="onboard_msg_manage">Manage your bookings\n on the go</string>
-    <string name="onboard_msg_rate">Rate to help us\n maintain quality service</string>
-    <string name="always_here_help">We’re always here to help!</string>
-    <string name="web_help">help.handy.com</string>
-    <string name="phone_help">1-888-847-6036</string>
-    <string name="using_promo">USING PROMO CODE %s</string>
-    <string name="how_was_last_service">How was your last service?</string>
-    <string name="please_rate_pro">Please rate your professional.</string>
-    <string name="awful">Awful</string>
-    <string name="amazing">Amazing!</string>
-    <string name="submit">Submit</string>
-    <string name="thanks_for_feedback">Thanks for your feedback!</string>
-    <string name="were_sorry_feedback">We’re sorry to hear that you had a less than perfect experience. Your feedback will help us improve the service for next time.</string>
-    <string name="close">Close</string>
-    <string name="glad_you_enjoy">Glad you enjoyed it!</string>
-    <string name="good_vibes">We love to pass on the good vibes.</string>
-    <string name="send">Send</string>
-    <string name="feedback_hint">\"Great work! Loved the kitchen.\"</string>
-    <string name="laundry">Laundry</string>
-    <string name="dry_cleaning_laundry"><![CDATA[Dry Cleaning & Laundry]]></string>
-    <string name="pickup_occur">Pick-up will occur during your cleaning.</string>
-    <string name="get_started_laundry">Get Started with Laundry</string>
-    <string name="laundry_info"><![CDATA[Take care of home cleaning and laundry at the same time! Turn on dry cleaning & laundry pick-up service for your future home cleanings.]]></string>
-    <string name="see_pricing">See Pricing</string>
-    <string name="pickup_title">YOUR FIRST PICK-UP</string>
-    <string name="dropoff_title">DELIVERY</string>
-    <string name="dropoff_info">When laundry is ready in 48 hours, we’ll ask for a delivery time.</string>
-    <string name="addtional_laundry_info">Adding dry cleaning &amp; laundry is free. You will only be charged if you give us laundry. Skip anytime.</string>
-    <string name="add_laundry">Add to Future Cleanings</string>
-    <string name="frequency">Frequency</string>
-    <string name="entry_info">Entry Information</string>
-    <string name="preferences">Preferences</string>
-    <string name="total">Total</string>
-    <string name="pro_note">Note to Professional</string>
-    <string name="what_need_help_with">What do you need \nhelp with?</string>
-    <string name="what_can_help_with">What can we help with?</string>
-    <string name="related_faq">Related FAQs</string>
     <string name="i_still_need_help">I Still Need Help</string>
     <string name="contact_us">Contact Us</string>
     <string name="send_message">Send Message</string>
@@ -216,12 +85,10 @@
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
-    <string name="automatic_update_failed">Automatic update failed</string>
     <string name="update_copy">Please install the update to continue using Portal.</string>
     <string name="update_button_label">Install Update</string>
     <string name="download_copy">Downloading update. Please wait…</string>
     <string name="issues_manual_download">Having issues updating the app? \n<a href="https://www.handy.com/p">Click here</a> to download directly from Handy.</string>
-    <string name="download_update_manually">Please download update manually.</string>
     <string name="allow_external_storage_write_title">Important update</string>
     <string name="allow_external_storage_write_message">Select “Allow” on the next screen in order to download the latest version of the Handy Pro Portal.</string>
     <string name="allow_external_storage_write_button">OK</string>
@@ -234,15 +101,10 @@
     </plurals>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="tab_jobs">Jobs</string>
     <string name="tab_claim">Claim</string>
     <string name="tab_schedule">Schedule</string>
     <string name="tab_notifications">Notifications</string>
-    <string name="tab_payments">Payments</string>
-    <string name="tab_profile">Profile</string>
     <string name="dashboard">Ratings &amp; Feedback</string>
-    <string name="tab_help">Help</string>
     <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
@@ -260,10 +122,8 @@
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
     <string name="booking_frequency_non_recurring">One-time</string>
-    <string name="booking_frequency_recurring_generic">Recurring</string>
     <string name="supplies">Supplies</string>
     <string name="full_details_after_claim">Additional details will be displayed after claiming</string>
-    <string name="full_details_available_on_date">Full details available on\n%1$s</string>
     <string name="full_details_and_more_available_on_date"><![CDATA[Full job details, including exact address, will be available on <b>%1$s</b>. We\u2019ll send you a reminder at that time.]]></string>
     <string name="full_details_and_more_available_on_date_flex"><![CDATA[Depending on the specific customer details you receive, this job may be a minimum of <b>%1$s</b> hours up to a maximum of <b>%2$s</b> hours. The job will not start prior to <b>%3$s</b> and will not end after <b>%4$s</b>. Exact customer and booking details will be sent by 1 hour before job start.<br/><br/>Job payment depends on the number of hours of the booking you receive. It will be minimum <b>%5$s</b> for a <b>%6$s</b> hour booking and maximum <b>%7$s</b> for a <b>%8$s</b> hour booking.]]></string>
     <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
@@ -292,14 +152,10 @@
     <string name="text">Text</string>
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
-    <string name="i_need_help">I Need Help</string>
-    <string name="update_arrival_time">Update Arrival Time</string>
-    <string name="disclaimer_on_my_way">Button activates 1 hour before booking</string>
     <string name="remove_job">Remove Job</string>
     <string name="job_support">Job Support</string>
     <string name="job_remove_error">Error Removing Job"</string>
     <string name="job_remove_error_generic">This job could not be removed</string>
-    <string name="job_action_error">There was a problem taking that action, please try again</string>
     <string name="error">Error</string>
 
     <string name="notify_customer_of_lateness">Notify customer of your late arrival</string>
@@ -317,15 +173,10 @@
     <string name="booking_details_claim_target_reached_title">Congratulations!</string>
     <string name="booking_details_claim_target_expected_pay_label">Expected pay in next %1$d days</string>
 
-    <string name="booking_details_check_in_time_msg">\u2713 Checked in at %1$s</string>
-    <string name="booking_details_eta_msg">Estimated arrival time: %1$s</string>
-
     <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d withholdings</string>
-    <string name="payment_annual_summary">YTD  \u22C5  %1$d jobs  \u22C5  %2$s</string>
     <string name="payment_detail_list_group_header">%1$s (%2$d)</string>
 
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
-    <string name="omw_failure">There was a problem updating your status. Please try again.</string>
     <string name="check_in_success">Thanks for checking in!</string>
     <string name="eta_success">Thanks for updating your arrival time</string>
     <string name="check_out_success">Thanks for checking out!</string>
@@ -335,7 +186,6 @@
 
     <string name="install">Install</string>
     <string name="need_google_play">To view maps, please install Google Play Services</string>
-    <string name="exact_location_shown_claimed">Exact location shown after job is claimed</string>
     <string name="customer_prefix">CUSTOMER: </string>
 
     <string name="customer_not_home">My customer is not home</string>
@@ -370,27 +220,6 @@
 
     <string name="ensure_fields_valid">Please ensure all fields are filled out correctly</string>
 
-    <string name="step_1"><![CDATA[This is what an <b>available job</b> looks like. View more job details by tapping it.]]></string>
-    <string name="step_2"><![CDATA[Tap <b>Claim Job</b> to add a job to your schedule \u2014 don\u2019t worry, this is just practice!]]></string>
-    <string name="step_3"><![CDATA[Once you\u2019ve claimed a job, it goes into the <b>Schedule tab</b> and the full address is unlocked. Tap the job to view its details.]]></string>
-    <string name="step_4"><![CDATA[When you are ready to head to a job, tap <b>On My Way</b> so customers know to expect you.]]></string>
-    <string name="step_5"><![CDATA[When you arrive at the job, tap the <b>Check In</b> button.]]></string>
-    <string name="step_6"><![CDATA[If you ever need help, just use the <b>I Need Help</b> button.]]></string>
-    <string name="step_7"><![CDATA[Here\u2019s where you can address any issues you may have during a job. Tap anywhere to get back to job details.]]></string>
-    <string name="step_8"><![CDATA[Great work! When you\u2019ve finished the job and are ready to leave, just <b>Check Out</b>.]]></string>
-    <string name="step_final"><![CDATA[That\u2019s it! Thanks for following along. Now we\u2019ll take you to your <b>Available Jobs</b> to claim your first job. Good luck!]]></string>
-    <string name="welcome">Welcome to Handy, %s!</string>
-    <string name="lets_walk_through_the_app">Before you claim your first job, let\u2019s walk through the app.</string>
-    <string name="start_claiming_jobs">Start Claiming Jobs</string>
-    <string name="step_1_of_9">1 of 9</string>
-    <string name="step_2_of_9">2 of 9</string>
-    <string name="step_3_of_9">3 of 9</string>
-    <string name="step_4_of_9">4 of 9</string>
-    <string name="step_5_of_9">5 of 9</string>
-    <string name="step_6_of_9">6 of 9</string>
-    <string name="step_7_of_9">7 of 9</string>
-    <string name="step_8_of_9">8 of 9</string>
-
     <string name="find_jobs_close_to_your_claimed_job">Find jobs close to your claimed job</string>
     <string name="find_matching_jobs">Find Matching Jobs</string>
     <string name="matching_jobs">Matching Jobs</string>
@@ -399,9 +228,6 @@
     <string name="one_matching_job">1 Matching Job</string>
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
-
-    <!-- Payments Menu Items -->
-    <string name="update_banking_information">Update banking information</string>
 
     <!-- Payments -->
     <string name="previous_job">Previous Job</string>
@@ -414,18 +240,14 @@
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments to load.</string>
     <string name="expected_deposit">Expect deposit by</string>
-    <string name="update_payment_method">Update Payment Method</string>
     <string name="edit_payment_method">Edit Payment Method</string>
     <string name="select_payment_method">Select Payment Method</string>
     <string name="payment_flow_error">Failed to get payment flow</string>
-    <string name="payment_account">Payment Account</string>
     <string name="update_payment_method_note">Note:\nPlease allow an additional 1&#8211;3 days after Handy sends payment for your bank to process it.</string>
     <string name="update_debit_card_failed">Failed to update debit card info</string>
     <string name="update_debit_card_success">Successfully updated debit card</string>
-    <string name="payment_account_number">Account Number</string>
     <string name="update_bank_account_failed">Failed to update bank account</string>
     <string name="update_bank_account_success">Successfully updated bank account</string>
-    <string name="no_payment_method">No Payment Method</string>
     <string name="add_debit_card">Add Debit Card</string>
     <string name="add_bank_account">Add Bank Account</string>
     <string name="your_bank_check">Your bank check:</string>
@@ -440,10 +262,8 @@
     <string name="payments_bill_blocker_content">Head to the Profile tab to set up your payment method.</string>
     <string name="payments_bill_blocker_update_now_button">Update Now</string>
     <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
-    <string name="select_method">Select Method</string>
     <string name="bank_account">Bank Account</string>
     <string name="debit_card">Debit Card</string>
-    <string name="update_bank_info">Update Bank Info</string>
 
     <string name="payments_need_updates_jobs_title">Set up direct deposit to claim a job</string>
     <string name="add_direct_deposit">Add Direct Deposit</string>
@@ -494,8 +314,6 @@
     <string name="payment_tier_info">Your payment tier is determined by the total number of jobs you have completed in the last 28 days, and your average rating over the last 28 days. This means that your job count only includes jobs that were completed in the previous 28 days.</string>
     <string name="tips_for_success">Tips for success</string>
     <string name="error_dashboard">There was an error fetching dashboard info.</string>
-    <string name="error_dashboard_feedback">There was an error fetching feedback.</string>
-    <string name="error_dashboard_reviews">There was an error fetching reviews.</string>
     <string name="no_feedback">We don\u2019t have any specific feedback for you yet.</string>
     <string name="no_reviews">There are no 5 star reviews for you yet.</string>
     <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
@@ -530,7 +348,6 @@
     <string name="shipping_address">Shipping Address</string>
     <string name="withholding_amount">Withholding Amount</string>
     <string name="complete_purchase">Complete Purchase</string>
-    <string name="complete_purchase_disclaimer">* completing purchase will withhold %1$s from your next pay period.</string>
     <string name="no_address_on_file">No Address On File</string>
 
     <!-- Rate Booking -->
@@ -549,11 +366,6 @@
     <string name="withholding_charge">Canceling this job will result in a withholding</string>
     <string name="please_confirm">Please confirm:</string>
     <string name="time_interval_formatted">%1$s – %2$s</string>
-
-    <!-- Tutorial Overlay -->
-    <string name="got_it">Got it!</string>
-    <string name="new_update">New Update!</string>
-    <string name="we_moved">We moved payments,\nhelp, and profile over here.</string>
 
     <!-- Logging out a deactivated pro -->
     <string name="handy_account_no_longer_active">Your Handy account is no longer active.</string>

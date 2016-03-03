@@ -132,12 +132,9 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
             {
                 Crashlytics.logException(new HandyRetrofitCallbackError(callback, error));//only log if not network error
                 int resp = 0;
-                if (error != null)
+                if (error != null && error.getResponse() != null)
                 {
-                    if (error.getResponse() != null)
-                    {
-                        resp = error.getResponse().getStatus();
-                    }
+                    resp = error.getResponse().getStatus();
                 }
 
                 if (resp >= 400 && resp <= 500)
