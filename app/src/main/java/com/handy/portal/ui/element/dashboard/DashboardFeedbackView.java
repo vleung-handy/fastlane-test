@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.widget.BulletTextView;
+import com.handy.portal.util.TextUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -63,11 +65,23 @@ public class DashboardFeedbackView extends FrameLayout
         mTitle.setText(feedback.getTitle());
         mDescription.setText(feedback.getSubtitle());
 
-        for (ProviderFeedback.FeedbackTip tip : feedback.getFeedbackTips())
+        if (feedback.getFeedbackTips() == null) { return; }
+
+        for (final ProviderFeedback.FeedbackTip tip : feedback.getFeedbackTips())
         {
-            if (ProviderFeedback.TYPE_TEXT.equalsIgnoreCase(tip.getType()))
+            if (ProviderFeedback.FeedbackTip.DATA_TYPE_TEXT.equalsIgnoreCase(tip.getDataType()))
             {
                 mTips.addView(new BulletTextView(getContext(), tip.getData()));
+            }
+            else if (ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_LINK.equalsIgnoreCase(tip.getDataType()))
+            {
+                if (!TextUtils.isNullOrEmpty(tip.getData()))
+                {
+                    String videoText = getResources().getString(R.string.watch_video, tip.getData());
+                    BulletTextView bulletTextView = new BulletTextView(getContext());
+                    bulletTextView.setText(Html.fromHtml(videoText));
+                    mTips.addView(bulletTextView);
+                }
             }
         }
     }
