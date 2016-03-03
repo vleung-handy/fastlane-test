@@ -49,23 +49,28 @@ public final class DateTimeUtils
         return dateDifference <= DateTimeUtils.MILLISECONDS_IN_HOUR * hours;
     }
 
+    @Nullable
     public static String getMonthShortName(Date date)
     {
         if (date == null) { return null; }
         return getMonthShortNameFormatter().format(date);
     }
 
+    @Nullable
     public static String getYear(Date date)
     {
         if (date == null) { return null; }
         return getYearFormatter().format(date);
     }
 
+    @Nullable
     public static String getMonthAndYear(Date date)
     {
         if (date == null) { return null; }
         return getMonthYearFormatter().format(date);
     }
+
+    @Nullable
     public static Integer getYearInt(Date date)
     {
         if (date == null) { return null; }
