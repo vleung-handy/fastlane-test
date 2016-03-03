@@ -194,7 +194,7 @@ public interface HandyRetrofitService
                            HandyRetrofitCallback cb);
 
     @Multipart
-    @POST(SESSIONS_PATH + "request_user_pin")
+    @POST(SESSIONS_PATH + "request_pin")
     void requestPinCode(@Part("phone") String phoneNumber,
                         HandyRetrofitCallback cb);
 

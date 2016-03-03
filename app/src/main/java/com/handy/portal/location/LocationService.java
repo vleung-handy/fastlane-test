@@ -133,7 +133,10 @@ public class LocationService extends Service
     {
         Log.d(getClass().getName(), "got new location schedule event");
         LocationQuerySchedule locationQuerySchedule = event.getLocationQuerySchedule();
-        handleNewLocationQuerySchedule(locationQuerySchedule);
+        if(!locationQuerySchedule.isEmpty())
+        {
+            handleNewLocationQuerySchedule(locationQuerySchedule);
+        }
         //TODO: optimize if the schedule did NOT change!!!!!
     }
 

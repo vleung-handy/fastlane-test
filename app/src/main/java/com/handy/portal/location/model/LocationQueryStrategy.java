@@ -32,16 +32,16 @@ public class LocationQueryStrategy implements Parcelable
             return new LocationQueryStrategy[size];
         }
     };
-    @SerializedName("date_start")
+    @SerializedName("start_date")
     Date mStartDate;
-    @SerializedName("date_end")
+    @SerializedName("end_date")
     Date mEndDate;
-    @SerializedName("polling_frequency")
+    @SerializedName("poll_frequency")
     int mLocationPollingIntervalSeconds; //every N seconds
-    @SerializedName("posting_frequency")
+    @SerializedName("post_frequency")
     int mServerPollingIntervalSeconds; //every N seconds
     @SerializedName("accuracy") //priority level
-            int mLocationAccuracyPriority;
+    int mAccuracy;
     @SerializedName("distance_filter")
     int mDistanceFilterMeters;
     @SerializedName("booking_id")
@@ -49,14 +49,9 @@ public class LocationQueryStrategy implements Parcelable
     @SerializedName("event_name")
     String mEventName;
 
-    //TODO: find out what server will send
-    public static final int ACCURACY_BALANCED_POWER_PRIORITIY = 1;
-    public static final int ACCURACY_HIGH_PRIORITY = 2;
-
     public LocationQueryStrategy()
     {
     }
-
 
     //TODO: remove the chaining when we get this object from the server instead of generating it locally
     public LocationQueryStrategy setEventName(final String eventName)
@@ -107,7 +102,7 @@ public class LocationQueryStrategy implements Parcelable
         mServerPollingIntervalSeconds = in.readInt();
         mLocationPollingIntervalSeconds = in.readInt();
         mDistanceFilterMeters = in.readInt();
-        mLocationAccuracyPriority = in.readInt();
+        mAccuracy = in.readInt();
     }
 
     public int getServerPollingIntervalSeconds()
@@ -115,14 +110,14 @@ public class LocationQueryStrategy implements Parcelable
         return mServerPollingIntervalSeconds;
     }
 
-    public int getLocationAccuracyPriority()
+    public int getAccuracy()
     {
-        return mLocationAccuracyPriority;
+        return mAccuracy;
     }
 
-    public LocationQueryStrategy setLocationAccuracyPriority(final int locationAccuracyPriority)
+    public LocationQueryStrategy setAccuracy(final int accuracy)
     {
-        mLocationAccuracyPriority = locationAccuracyPriority;
+        mAccuracy = accuracy;
         return this;
     }
 
@@ -175,7 +170,7 @@ public class LocationQueryStrategy implements Parcelable
         dest.writeInt(mServerPollingIntervalSeconds);
         dest.writeInt(mLocationPollingIntervalSeconds);
         dest.writeInt(mDistanceFilterMeters);
-        dest.writeInt(mLocationAccuracyPriority);
+        dest.writeInt(mAccuracy);
     }
 
     /**
@@ -193,7 +188,7 @@ public class LocationQueryStrategy implements Parcelable
                 + "\nserver posting frequency (s): " + mServerPollingIntervalSeconds
                 + "\npolling frequency (s): " + mLocationPollingIntervalSeconds
                 + "\ndistance filter (m): " + mDistanceFilterMeters
-                + "\nlocation accuracy: " + mLocationAccuracyPriority;
+                + "\nlocation accuracy: " + mAccuracy;
     }
 
     /**

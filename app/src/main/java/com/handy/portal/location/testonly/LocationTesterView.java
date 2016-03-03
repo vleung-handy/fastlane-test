@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.location.LocationService;
+import com.handy.portal.location.LocationStrategyHandler;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.util.DateTimeUtils;
@@ -28,6 +29,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * keeping just in case we want to test our standalone location service
+ *
  * used only for testing the location service! should not be present in production builds.
  */
 public class LocationTesterView extends LinearLayout
@@ -87,7 +90,7 @@ public class LocationTesterView extends LinearLayout
                 if (locationQueryStrategy != null)
                 {
                     Log.d(getClass().getName(), "found an existing strategy - setting view to its params");
-                    mLocationServicesAccuracyToggle.setChecked(locationQueryStrategy.getLocationAccuracyPriority() == LocationQueryStrategy.ACCURACY_HIGH_PRIORITY);
+                    mLocationServicesAccuracyToggle.setChecked(locationQueryStrategy.getAccuracy() <= LocationStrategyHandler.HIGH_ACCURACY_THRESHOLD_METERS);
                     mLocationServicesServerPostingIntervalText.setText("" + locationQueryStrategy.getServerPollingIntervalSeconds());
                     mLocationServicesPollingIntervalText.setText("" + locationQueryStrategy.getLocationPollingIntervalSeconds());
                     mDistanceFilterText.setText("" + locationQueryStrategy.getDistanceFilterMeters());
@@ -151,11 +154,11 @@ public class LocationTesterView extends LinearLayout
         {
             if (mLocationServicesAccuracyToggle.isChecked())
             {
-                mLocationQueryStrategy.setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_HIGH_PRIORITY);
+                mLocationQueryStrategy.setAccuracy(0);
             }
             else
             {
-                mLocationQueryStrategy.setLocationAccuracyPriority(LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY);
+                mLocationQueryStrategy.setAccuracy(Integer.MAX_VALUE);
             }
 
             if (mLocationServicesToggle.isChecked())

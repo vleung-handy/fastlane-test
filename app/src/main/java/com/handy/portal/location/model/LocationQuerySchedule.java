@@ -13,7 +13,6 @@ import java.util.ListIterator;
  */
 public class LocationQuerySchedule implements Parcelable
 {
-
     //TODO: move
     public final static String EXTRA_LOCATION_SCHEDULE = "location_query_schedule";
 
@@ -25,8 +24,11 @@ public class LocationQuerySchedule implements Parcelable
     /**
      * this should be already sorted by start date
      */
-    @SerializedName("location_query_strategies")
-    LinkedList<LocationQueryStrategy> mLocationQueryStrategies;
+    @SerializedName("location_schedules")
+    private LinkedList<LocationQueryStrategy> mLocationQueryStrategies;
+
+    @SerializedName("success")
+    private boolean mSuccess;
 
     protected LocationQuerySchedule(Parcel in)
     {
@@ -65,6 +67,16 @@ public class LocationQuerySchedule implements Parcelable
             return new LocationQuerySchedule[size];
         }
     };
+
+    public boolean getSuccess()
+    {
+        return mSuccess;
+    }
+
+    public boolean isEmpty()
+    {
+        return mLocationQueryStrategies == null || mLocationQueryStrategies.isEmpty();
+    }
 
     /**
      * for debugging purposes only
