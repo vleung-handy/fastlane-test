@@ -15,13 +15,6 @@
         />
 
     <RadioButton
-        android:id="@+id/nav_link_my_profile"
-        style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_button_profile"
-        android:text="@string/my_profile"
-        />
-
-    <RadioButton
         android:id="@+id/nav_link_payments"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/tray_button_payments"
@@ -33,6 +26,13 @@
         style="@style/TrayButton"
         android:drawableLeft="@drawable/tray_button_edit_payment_method"
         android:text="@string/edit_payment_method"
+        />
+
+    <RadioButton
+        android:id="@+id/nav_link_my_profile"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/tray_button_profile"
+        android:text="@string/my_profile"
         />
 
     <RadioButton
