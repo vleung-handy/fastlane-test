@@ -40,6 +40,7 @@ public final class DateTimeUtils
     public final static long MILLISECONDS_IN_30_MINS = MILLISECONDS_IN_MINUTE * 30;
     public final static long MILLISECONDS_IN_52_MINS = MILLISECONDS_IN_MINUTE * 52;
     public final static int SECONDS_IN_MINUTE = 60;
+    public final static String UTC_TIMEZONE = "UTC";
 
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)
     {
@@ -337,7 +338,7 @@ public final class DateTimeUtils
 
     private static SimpleDateFormat getIso8601Formatter()
     {
-        ISO8601_FORMATTER.setTimeZone(TimeZone.getTimeZone("UTC"));
+        ISO8601_FORMATTER.setTimeZone(TimeZone.getTimeZone(UTC_TIMEZONE));
         return ISO8601_FORMATTER;
     }
 
