@@ -164,6 +164,7 @@ public class ProviderEvaluation implements Serializable
                     return R.color.handy_yellow;
                 case NEGATIVE:
                 case NA:
+                    return R.color.requested_green;
                 default:
                     return R.color.error_red;
             }
