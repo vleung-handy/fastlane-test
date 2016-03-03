@@ -1,5 +1,6 @@
 package com.handy.portal.model.logs;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.LocationKey;
@@ -336,6 +337,22 @@ public class EventLogFactory
     public EventLog createPushNotificationDismissedLog(final PushMessage pushMessage)
     {
         return new PushNotificationLog.Dismissed(pushMessage);
+    }
+
+    // Deeplink logs
+    public EventLog createDeeplinkOpenedLog(final Uri data)
+    {
+        return new DeeplinkLog.Opened(data);
+    }
+
+    public EventLog createDeeplinkProcessedLog(final Uri data)
+    {
+        return new DeeplinkLog.Processed(data);
+    }
+
+    public EventLog createDeeplinkIgnoredLog(final Uri data)
+    {
+        return new DeeplinkLog.Ignored(data);
     }
 
     // private helpers
