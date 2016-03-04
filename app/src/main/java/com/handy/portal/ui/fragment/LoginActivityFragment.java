@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.widget.PhoneInputTextView;
 import com.handy.portal.ui.widget.PinCodeInputTextView;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -245,7 +247,19 @@ public class LoginActivityFragment extends InjectedFragment
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
             postLoginErrorEvent("server");
-            showToast(R.string.login_error_connectivity);
+            if (event.error != null && !TextUtils.isNullOrEmpty(event.error.getMessage()))
+            {
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(event.error.getMessage())
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.ok, null)
+                        .create()
+                        .show();
+            }
+            else
+            {
+                showToast(R.string.login_error_connectivity);
+            }
             changeState(LoginState.INPUTTING_PHONE_NUMBER);
             phoneNumberEditText.highlight();
         }
