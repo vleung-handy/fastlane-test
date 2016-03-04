@@ -3,7 +3,6 @@ package com.handy.portal.ui.fragment.dashboard;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,12 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.ui.adapter.ReviewListAdapter;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.listener.EndlessRecyclerViewScrollListener;
 import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -28,6 +25,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static com.handy.portal.event.ProviderDashboardEvent.*;
 
 public class DashboardReviewsFragment extends ActionBarFragment
 {
@@ -94,7 +93,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
                     if (toBookingDate != null)
                     {
                         String toBookingDateString = DateTimeUtils.formatIso8601(toBookingDate);
-                        bus.post(new ProviderDashboardEvent.RequestProviderFiveStarRatings(MIN_STAR, toBookingDateString));
+                        bus.post(new RequestProviderFiveStarRatings(MIN_STAR, toBookingDateString));
                     }
                 }
             }
@@ -115,13 +114,22 @@ public class DashboardReviewsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveProviderFiveStarRatingsSuccess(ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess event)
+    public void onReceiveProviderFiveStarRatingsSuccess(ReceiveProviderFiveStarRatingsSuccess event)
     {
-        for (ProviderRating providerRating : event.getProviderRatings())
+        ReviewListAdapter adapter = (ReviewListAdapter) mReviewRecyclerView.getAdapter();
+
+        if (event.getProviderRatings().isEmpty())
         {
-            mRatings.add(providerRating);
+            adapter.setDoneLoading(true);
+        }
+        else
+        {
+            for (ProviderRating providerRating : event.getProviderRatings())
+            {
+                mRatings.add(providerRating);
+            }
         }
 
-        mReviewRecyclerView.getAdapter().notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 }

@@ -18,6 +18,10 @@ import java.util.List;
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder>
 {
     private List<ProviderRating> mRatings;
+    private boolean mDoneLoading = false;
+
+    public static final int VIEW_TYPE_LOADING = 0;
+    public static final int VIEW_TYPE_ACTIVITY = 1;
 
     public ReviewListAdapter(@NonNull final List<ProviderRating> ratings)
     {
@@ -27,23 +31,36 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     @Override
     public ReviewListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.five_star_review, parent, false);
-        return new ViewHolder(v, (TextView) v.findViewById(R.id.five_star_review_text),
-                (TextView) v.findViewById(R.id.review_date));
+        if (viewType == VIEW_TYPE_ACTIVITY)
+        {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.five_star_review, parent, false);
+            return new ViewHolder(v, (TextView) v.findViewById(R.id.five_star_review_text),
+                    (TextView) v.findViewById(R.id.review_date));
+        }
+        else
+        {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.element_progress_bar, parent, false);
+            return new ViewHolder(v, null, null);
+        }
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-        ProviderRating rating = mRatings.get(position);
-        holder.bind(rating);
+        if (position < mRatings.size())
+        {
+            ProviderRating rating = mRatings.get(position);
+            holder.bind(rating);
+        }
     }
 
     @Override
     public int getItemCount()
     {
-        return mRatings.size();
+        int addedProgressBar = shouldAddProgressBar() ? 1 : 0;
+        return mRatings.size() + addedProgressBar;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder
@@ -65,6 +82,19 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         }
     }
 
+    @Override
+    public int getItemViewType(int position)
+    {
+        if (position < mRatings.size())
+        {
+            return VIEW_TYPE_ACTIVITY;
+        }
+        else
+        {
+            return VIEW_TYPE_LOADING;
+        }
+    }
+
     @Nullable
     public Date getToBookingDate()
     {
@@ -75,5 +105,15 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         {
             return mRatings.get(mRatings.size() - 1).getBookingDate();
         }
+    }
+
+    public void setDoneLoading(boolean doneLoading)
+    {
+        mDoneLoading = doneLoading;
+    }
+
+    private boolean shouldAddProgressBar()
+    {
+        return !mRatings.isEmpty() && !mDoneLoading;
     }
 }
