@@ -50,7 +50,8 @@ public class WebUrlManager
         {
             if (mConfigManager.getConfigurationResponse() != null)
             {
-                targetUrl += mConfigManager.getConfigurationResponse().getOnboardingWebUrl();
+                //may not be off the handy domain, is a full url
+                targetUrl = mConfigManager.getConfigurationResponse().getOnboardingFullWebUrl();
             }
         }
         else

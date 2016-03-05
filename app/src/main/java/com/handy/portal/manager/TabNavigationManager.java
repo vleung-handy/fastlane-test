@@ -40,10 +40,15 @@ public class TabNavigationManager
     //catch this , add extra data/process needed data, pass along to fragment for final usage/swap
     public void onRequestProcessNavigateToTab(HandyEvent.RequestProcessNavigateToTab event)
     {
-//Ordering is important, first check if they should ever see anything
+        //Ordering is important for these checks, they have different priorities
 
+        //HACK : Magical hack to direct new pros to a webview for their onboarding
+        if (doesCachedProviderNeedOnboarding())
+        {
+            event.targetTab = MainViewTab.ONBOARDING;
+        }
         //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
-        if (doesCachedProviderNeedPaymentInformation() &&
+        else if (doesCachedProviderNeedPaymentInformation() &&
                 configBlockingForPayment() &&
                 (
                     event.targetTab == MainViewTab.AVAILABLE_JOBS ||
@@ -54,21 +59,8 @@ public class TabNavigationManager
         {
             event.targetTab = MainViewTab.PAYMENT_BLOCKING;
         }
-
-        //HACK : Magical hack to direct new pros to a webview for their onboarding
-        if (doesCachedProviderNeedOnboarding() &&
-                (
-                    event.targetTab == MainViewTab.AVAILABLE_JOBS ||
-                    event.targetTab == MainViewTab.SCHEDULED_JOBS ||
-                    event.targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW
-                )
-            )
-        {
-            event.targetTab = MainViewTab.ONBOARDING;
-        }
-
         //HACK : Magical hack to turn block pros available jobs into the webview block jobs
-        if (isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
+        else if (isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
         {
             event.targetTab = MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW;
         }
@@ -91,8 +83,8 @@ public class TabNavigationManager
 
     private boolean doesCachedProviderNeedOnboarding()
     {
-        return (mConfigManager.getConfigurationResponse() != null && mConfigManager.getConfigurationResponse().isOnboardingEnabled()) &&
-                mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().doesRequireOnboarding();
+        return (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().shouldShowOnboarding());
     }
 
     private boolean doesCachedProviderNeedPaymentInformation()

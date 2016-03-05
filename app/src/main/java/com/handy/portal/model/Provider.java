@@ -28,17 +28,10 @@ public class Provider
     private String recommendedPaymentFlow;
     @SerializedName("version_track")
     private String mVersionTrack;
-    @SerializedName("requires_onboarding")
-    private boolean mRequiresOnboarding;
 
     public boolean isBlockCleaner()
     {
         return isBlockCleaner;
-    }
-
-    public boolean doesRequireOnboarding()
-    {
-        return mRequiresOnboarding;
     }
 
     public enum RecommendedPaymentFlow{

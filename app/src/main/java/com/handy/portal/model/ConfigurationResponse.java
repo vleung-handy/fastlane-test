@@ -1,9 +1,13 @@
 package com.handy.portal.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 public class ConfigurationResponse
 {
+    //public static int QUICKHACK = 0;
+
     @SerializedName("hours_to_start_sending_messages")
     private int mHoursSpanningAvailableBookings; //we use this value for amount of time forward to display available bookings
 
@@ -30,6 +34,9 @@ public class ConfigurationResponse
 
     @SerializedName("onboarding_enabled")
     private boolean mOnboardingEnabled;
+
+    @SerializedName("onboarding_blocking")
+    private boolean mOnboardingBlocking;
 
     @SerializedName("onboarding_web_url")
     private String mOnboardingWebUrl;
@@ -79,9 +86,39 @@ public class ConfigurationResponse
         return mOnboardingEnabled;
     }
 
-    public String getOnboardingWebUrl()
+    //may not be off handy domain, is full url
+    @Nullable
+    public String getOnboardingFullWebUrl()
     {
+//        if(QUICKHACK < 10)
+//        {
+//            mOnboardingWebUrl = "http://www.google.com";
+//        }
+//        else
+//        {
+//            mOnboardingWebUrl = null;
+//        }
+
+
         return mOnboardingWebUrl;
     }
 
+    public boolean isOnboardingBlocking()
+    {
+//        if(QUICKHACK < 5)
+//        {
+//            mOnboardingBlocking = true;
+//        }
+//        else
+//        {
+//            mOnboardingBlocking = false;
+//        }
+
+        return mOnboardingBlocking;
+    }
+
+    public boolean shouldShowOnboarding()
+    {
+        return isOnboardingEnabled() && getOnboardingFullWebUrl() != null && !getOnboardingFullWebUrl().isEmpty();
+    }
 }

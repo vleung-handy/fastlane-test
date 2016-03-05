@@ -47,15 +47,16 @@ public class TabbedLayout extends RelativeLayout
         final View tabs = findViewById(R.id.tabs);
         if (tabs != null)
         {
-
-            if (proposedHeight / actualHeight < .7)
-            {
-                tabs.setVisibility(GONE);
-            }
-            else
-            {
-                tabs.setVisibility(VISIBLE);
-            }
+            //CSD - turn this back on before commit, need to turn off to test webview onboarding
+            System.out.println("CSD Dont forget to turn this back on");
+//            if (proposedHeight / actualHeight < .7)
+//            {
+//                tabs.setVisibility(GONE);
+//            }
+//            else
+//            {
+//                tabs.setVisibility(VISIBLE);
+//            }
         }
     }
 }

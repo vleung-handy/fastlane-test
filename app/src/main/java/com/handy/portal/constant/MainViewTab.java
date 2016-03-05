@@ -1,5 +1,7 @@
 package com.handy.portal.constant;
 
+import android.support.annotation.Nullable;
+
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.WebUrlManager;
@@ -24,6 +26,7 @@ import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
 import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
+import com.handy.portal.webview.OnboardingFragment;
 
 import java.io.Serializable;
 
@@ -52,7 +55,7 @@ public enum MainViewTab implements Serializable
     NEARBY_JOBS(NearbyBookingsFragment.class),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
-    ONBOARDING(BlockScheduleFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),;
+    ONBOARDING(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),;
 
     private Class mClassType;
     private
@@ -75,6 +78,7 @@ public enum MainViewTab implements Serializable
         return mClassType;
     }
 
+    @Nullable
     public
     @WebUrlManager.TargetPage
     String getWebViewTarget()
