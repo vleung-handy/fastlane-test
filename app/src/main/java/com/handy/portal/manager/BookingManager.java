@@ -353,7 +353,8 @@ public class BookingManager
                 mBus.post(new LogEvent.AddLogEvent(
                         mEventLogFactory.createAvailableJobClaimSuccessLog(
                                 bookingClaimDetails.getBooking(),
-                                event.source)));
+                                event.source,
+                                event.sourceExtras)));
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
 
                 /*
