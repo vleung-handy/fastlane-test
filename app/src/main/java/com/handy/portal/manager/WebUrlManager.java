@@ -48,18 +48,21 @@ public class WebUrlManager
 
         if(targetTab == null) { return targetUrl; }
 
-        if (targetTab.getWebViewTarget() != null && targetTab.getWebViewTarget().equals(USES_CONFIG_PARAM_ONBOARDING_PAGE))
+        if (targetTab.getWebViewTarget() != null)
         {
-            if (mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().getOnboardingParams() != null)
+            if (targetTab.getWebViewTarget().equals(USES_CONFIG_PARAM_ONBOARDING_PAGE))
             {
-                //may not be off the handy domain, is a full url
-                targetUrl = mConfigManager.getConfigurationResponse().getOnboardingParams().getOnboardingFullWebUrl();
+                if (mConfigManager.getConfigurationResponse() != null &&
+                        mConfigManager.getConfigurationResponse().getOnboardingParams() != null)
+                {
+                    //may not be off the handy domain, is a full url
+                    targetUrl = mConfigManager.getConfigurationResponse().getOnboardingParams().getOnboardingFullWebUrl();
+                }
             }
-        }
-        else if(targetTab.getWebViewTarget() != null)
-        {
-            targetUrl += targetTab.getWebViewTarget();
+            else
+            {
+                targetUrl += targetTab.getWebViewTarget();
+            }
         }
 
         return replaceVariablesInUrl(targetUrl);
