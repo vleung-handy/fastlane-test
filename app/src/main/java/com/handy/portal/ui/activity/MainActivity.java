@@ -132,8 +132,8 @@ public class MainActivity extends BaseActivity
     {
         super.onResume();
         mEventLogFactory.createAppOpenLog();
-
         bus.register(this);
+        //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
         configManager.prefetch();
         providerManager.prefetch();
         checkForTerms();

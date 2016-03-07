@@ -16,26 +16,55 @@ public class WebUrlManager
 {
     private static final String WEB_URL_PROVIDER_ID_TOKEN = ":id";
 
-    @StringDef({BLOCK_JOBS_PAGE})
+    @StringDef({BLOCK_JOBS_PAGE, USES_CONFIG_PARAM_ONBOARDING_PAGE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TargetPage {}
     public static final String BLOCK_JOBS_PAGE = "providers/"+WEB_URL_PROVIDER_ID_TOKEN+"/provider_schedules";
 
+    //If we end up doing more of this we can come up with a cleaner system using enums
+    public static final String USES_CONFIG_PARAM_ONBOARDING_PAGE = "useconfigparam_onboarding";
+
     private final ProviderManager mProviderManager;
     private final HandyRetrofitEndpoint mEndpoint;
     private final PrefsManager mPrefsManager;
+    private final ConfigManager mConfigManager;
 
     @Inject
-    public WebUrlManager(final ProviderManager providerManager, final PrefsManager prefsManager, final HandyRetrofitEndpoint endpoint)
+    public WebUrlManager(final ProviderManager providerManager,
+                         final PrefsManager prefsManager,
+                         final ConfigManager configManager,
+                         final HandyRetrofitEndpoint endpoint
+    )
     {
         mProviderManager = providerManager;
         mEndpoint = endpoint;
         mPrefsManager = prefsManager;
+        mConfigManager = configManager;
     }
 
     public String constructUrlForTargetTab(MainViewTab targetTab)
     {
-        String targetUrl = mEndpoint.getBaseUrl() + targetTab.getWebViewTarget();
+        String targetUrl = mEndpoint.getBaseUrl();
+
+        if(targetTab == null) { return targetUrl; }
+
+        if (targetTab.getWebViewTarget() != null)
+        {
+            if (targetTab.getWebViewTarget().equals(USES_CONFIG_PARAM_ONBOARDING_PAGE))
+            {
+                if (mConfigManager.getConfigurationResponse() != null &&
+                        mConfigManager.getConfigurationResponse().getOnboardingParams() != null)
+                {
+                    //may not be off the handy domain, is a full url
+                    targetUrl = mConfigManager.getConfigurationResponse().getOnboardingParams().getOnboardingCompleteWebUrl();
+                }
+            }
+            else
+            {
+                targetUrl += targetTab.getWebViewTarget();
+            }
+        }
+
         return replaceVariablesInUrl(targetUrl);
     }
 

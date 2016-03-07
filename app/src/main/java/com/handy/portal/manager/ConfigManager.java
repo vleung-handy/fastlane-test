@@ -18,9 +18,10 @@ public class ConfigManager
     private final Bus mBus;
     private final DataManager mDataManager;
     private ConfigurationResponse mConfigurationResponse;
+    private boolean mRequestIsPending = false; //this is getting requested more because of onboarding, prevent dupe requests
 
     @Inject
-    public ConfigManager(final Bus bus, final DataManager dataManager)
+    public ConfigManager(final DataManager dataManager, final Bus bus)
     {
         mDataManager = dataManager;
         mConfigurationResponse = null;
@@ -30,23 +31,28 @@ public class ConfigManager
 
     public void prefetch()
     {
-        mDataManager.getConfiguration(new DataManager.Callback<ConfigurationResponse>()
+        //stop dupe requests in short time frame
+        if (!mRequestIsPending)
         {
-            @Override
-            public void onSuccess(ConfigurationResponse configurationResponse)
+            mRequestIsPending = true;
+            mDataManager.getConfiguration(new DataManager.Callback<ConfigurationResponse>()
             {
-                ConfigManager.this.mConfigurationResponse = configurationResponse;
-                mBus.post(new HandyEvent.ReceiveConfigurationSuccess(configurationResponse));
-                //TODO: we should make this request blocking
-            }
+                @Override
+                public void onSuccess(ConfigurationResponse configurationResponse)
+                {
+                    mRequestIsPending = false;
+                    ConfigManager.this.mConfigurationResponse = configurationResponse;
+                    mBus.post(new HandyEvent.ReceiveConfigurationSuccess(configurationResponse));
+                }
 
-            @Override
-            public void onError(DataManager.DataManagerError error)
-            {
-                Crashlytics.log("Unable to get configuration response");
-            }
-        });
-
+                @Override
+                public void onError(DataManager.DataManagerError error)
+                {
+                    mRequestIsPending = false;
+                    Crashlytics.log("Unable to get configuration response");
+                }
+            });
+        }
     }
 
     //TODO: should we break this down into methods to get specific fields or just give them the object?

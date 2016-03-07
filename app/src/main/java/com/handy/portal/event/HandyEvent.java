@@ -165,6 +165,30 @@ public abstract class HandyEvent
         }
     }
 
+
+    //show hide the tabs restrict navigation, also need to block the drawer?
+    public static class SetNavigationTabVisibility extends HandyEvent
+    {
+        public final boolean isVisible;
+
+        public SetNavigationTabVisibility(boolean isVisible)
+        {
+            this.isVisible = isVisible;
+        }
+    }
+
+
+    //Disable the drawer to block navigation
+    public static class SetNavigationDrawerActive extends HandyEvent
+    {
+        public final boolean isActive;
+
+        public SetNavigationDrawerActive(boolean isActive)
+        {
+            this.isActive = isActive;
+        }
+    }
+
 //Login
 
 
