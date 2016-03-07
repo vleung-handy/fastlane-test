@@ -231,7 +231,11 @@ public class MainActivityFragment extends InjectedFragment
         trackSwitchToTab(swapFragmentArguments.targetTab);
         //Turn navigation tabs and drawer on by default, some fragments may lock these afterwards
         setTabVisibility(true);
-        setDrawerActive(true);
+
+ //Turning the drawer locked and off until we get redesigns on some pages where it interferes
+        setDrawerActive(false);
+        //setDrawerActive(true);
+
         //Swap the fragments
         swapFragment(swapFragmentArguments);
         //Update the tab button display
