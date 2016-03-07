@@ -116,7 +116,7 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onConfigurationResponseRetrieved(HandyEvent.ConfigurationResponseRetrieved event)
+    public void onConfigurationResponseRetrieved(HandyEvent.ReceiveConfigurationSuccess event)
     {
         //If the config response came back for the first time may need to navigate away
         //Normally the fragment would take care of itself, but this would launch the fragment if needed
@@ -372,6 +372,15 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
+        //If the user navved away from a non-blocking onboarding log it
+        if(currentTab == MainViewTab.ONBOARDING &&
+            targetTab != MainViewTab.ONBOARDING &&
+            userTriggered)
+        {
+            bus.post(new LogEvent.AddLogEvent(
+                    mEventLogFactory.createWebOnboardingDismissedLog()));
+        }
+
         requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
     }
 

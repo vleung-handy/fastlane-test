@@ -132,9 +132,6 @@ public class MainActivity extends BaseActivity
     {
         super.onResume();
         mEventLogFactory.createAppOpenLog();
-
-        System.out.println("CSD - activity resume");
-
         bus.register(this);
         //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
         configManager.prefetch();

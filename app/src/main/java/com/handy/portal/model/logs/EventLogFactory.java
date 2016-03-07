@@ -7,6 +7,7 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.model.OnboardingParams;
 import com.handy.portal.model.Provider;
 import com.handy.portal.util.MathUtils;
 import com.urbanairship.push.PushMessage;
@@ -336,6 +337,24 @@ public class EventLogFactory
     public EventLog createPushNotificationDismissedLog(final PushMessage pushMessage)
     {
         return new PushNotificationLog.Dismissed(pushMessage);
+    }
+
+    //Web onboarding logs
+    public EventLog createWebOnboardingShownLog(final OnboardingParams onboardingParams)
+    {
+        return new WebOnboardingLog.Shown(onboardingParams);
+    }
+
+    //user dismissed or navved away from
+    public EventLog createWebOnboardingDismissedLog()
+    {
+        return new WebOnboardingLog.Dismissed();
+    }
+
+    //system closed it
+    public EventLog createWebOnboardingClosedLog()
+    {
+        return new WebOnboardingLog.Closed();
     }
 
     // private helpers

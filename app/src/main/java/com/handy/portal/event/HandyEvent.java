@@ -189,13 +189,6 @@ public abstract class HandyEvent
         }
     }
 
-
-    public static class ConfigurationResponseRetrieved extends HandyEvent
-    {
-
-    }
-
-
 //Login
 
 
