@@ -1,5 +1,7 @@
 package com.handy.portal.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 public class ConfigurationResponse
@@ -71,16 +73,9 @@ public class ConfigurationResponse
         return mShowLateDispatchOptIn;
     }
 
+    @Nullable
     public OnboardingParams getOnboardingParams()
     {
-
-        //HACK FOR TESTING
-        if(mOnboardingParams == null)
-        {
-            mOnboardingParams = new OnboardingParams();
-            mOnboardingParams.HACK_SET(true, true, "http://www.google.com");
-        }
-
         return mOnboardingParams;
     }
 

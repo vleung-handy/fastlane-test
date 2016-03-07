@@ -46,6 +46,8 @@ public class WebUrlManager
     {
         String targetUrl = mEndpoint.getBaseUrl();
 
+        if(targetTab == null) { return targetUrl; }
+
         if (targetTab.getWebViewTarget() != null && targetTab.getWebViewTarget().equals(USES_CONFIG_PARAM_ONBOARDING_PAGE))
         {
             if (mConfigManager.getConfigurationResponse() != null &&
@@ -55,7 +57,7 @@ public class WebUrlManager
                 targetUrl = mConfigManager.getConfigurationResponse().getOnboardingParams().getOnboardingFullWebUrl();
             }
         }
-        else
+        else if(targetTab.getWebViewTarget() != null)
         {
             targetUrl += targetTab.getWebViewTarget();
         }
