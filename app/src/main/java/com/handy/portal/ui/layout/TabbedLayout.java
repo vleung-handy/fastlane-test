@@ -11,6 +11,9 @@ import com.handy.portal.R;
 
 public class TabbedLayout extends RelativeLayout
 {
+    //This is a hack to help the other hack
+    private boolean mAutoHideShowTabs = true;
+
     public TabbedLayout(Context context)
     {
         super(context);
@@ -24,6 +27,11 @@ public class TabbedLayout extends RelativeLayout
     public TabbedLayout(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setAutoHideShowTabs(boolean autoHideShowTabs)
+    {
+        mAutoHideShowTabs = autoHideShowTabs;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -45,18 +53,17 @@ public class TabbedLayout extends RelativeLayout
         final double actualHeight = getRootView().getHeight();
 
         final View tabs = findViewById(R.id.tabs);
-        if (tabs != null)
+        if (tabs != null && mAutoHideShowTabs)
         {
-            //CSD - turn this back on before commit, need to turn off to test webview onboarding
-            System.out.println("CSD Dont forget to turn this back on");
-//            if (proposedHeight / actualHeight < .7)
-//            {
-//                tabs.setVisibility(GONE);
-//            }
-//            else
-//            {
-//                tabs.setVisibility(VISIBLE);
-//            }
+            //HACK : If we lost 30% of the screen to something, likely the keyboard, hide the tabs for extra space
+            if (proposedHeight / actualHeight < .7)
+            {
+                tabs.setVisibility(GONE);
+            }
+            else
+            {
+                tabs.setVisibility(VISIBLE);
+            }
         }
     }
 }

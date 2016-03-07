@@ -42,6 +42,7 @@ public class OnboardingFragment extends PortalWebViewFragment
         //We got into a bad state, leave
         if (mLastOnboardingParams == null)
         {
+            System.out.println("CSD - BAD STATE LEAVE");
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
         }
         else
@@ -72,7 +73,8 @@ public class OnboardingFragment extends PortalWebViewFragment
             if (mLastOnboardingParams != null &&
                 !mLastOnboardingParams.equals(response.getOnboardingParams()))
             {
-                //just nav back to main, can lazily reload and tab navigation will handle the rest
+                //just nav back to main, can lazily reload and tab navigation will handle the rest if we need to go to a different onboarding
+                System.out.println("CSD - going to leave onboarding");
                 bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
             }
         }

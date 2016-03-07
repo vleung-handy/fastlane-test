@@ -31,6 +31,7 @@ import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
+import com.handy.portal.ui.layout.TabbedLayout;
 import com.handy.portal.util.DeeplinkMapper;
 import com.squareup.otto.Subscribe;
 
@@ -77,6 +78,8 @@ public class MainActivityFragment extends InjectedFragment
     RadioGroup mNavTrayLinks;
     @Bind(R.id.navigation_header)
     TextView mNavigationHeader;
+    @Bind(R.id.content_frame)
+    TabbedLayout mContentFrame;
 
     //What tab are we currently displaying
     private MainViewTab currentTab = null;
@@ -173,7 +176,15 @@ public class MainActivityFragment extends InjectedFragment
 
     private void setTabVisibility(boolean isVisible)
     {
-        tabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        if(mContentFrame != null)
+        {
+            mContentFrame.setAutoHideShowTabs(isVisible);
+        }
+
+        if(tabs != null)
+        {
+            tabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Subscribe
@@ -184,7 +195,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void setDrawerActive(boolean isActive)
     {
-        mDrawerLayout.setDrawerLockMode(isActive ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        if(mDrawerLayout != null)
+        {
+            mDrawerLayout.setDrawerLockMode(isActive ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
     }
 
     @Subscribe
