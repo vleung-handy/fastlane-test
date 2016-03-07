@@ -71,10 +71,14 @@ public class DashboardTiersFragment extends ActionBarFragment
         }
 
         ProviderEvaluation.Tier tier = mEvaluation.getTier();
-        if (tier != null)
+        if (tier != null && tier.getHourlyRateInCents() > 0)
         {
             String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRateInCents() / 100;
             mTrailingRateText.setText(dollarAmount);
+        }
+        else
+        {
+            mTrailingRateText.setText(getResources().getString(R.string.no_data));
         }
     }
 }
