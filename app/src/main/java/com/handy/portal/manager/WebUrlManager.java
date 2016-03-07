@@ -48,10 +48,11 @@ public class WebUrlManager
 
         if (targetTab.getWebViewTarget() != null && targetTab.getWebViewTarget().equals(USES_CONFIG_PARAM_ONBOARDING_PAGE))
         {
-            if (mConfigManager.getConfigurationResponse() != null)
+            if (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().getOnboardingParams() != null)
             {
                 //may not be off the handy domain, is a full url
-                targetUrl = mConfigManager.getConfigurationResponse().getOnboardingFullWebUrl();
+                targetUrl = mConfigManager.getConfigurationResponse().getOnboardingParams().getOnboardingFullWebUrl();
             }
         }
         else

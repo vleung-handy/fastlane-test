@@ -40,7 +40,7 @@ public class ConfigManager
                 @Override
                 public void onSuccess(ConfigurationResponse configurationResponse)
                 {
-                    //REMOVEM //ConfigurationResponse.QUICKHACK++;
+                    //REMOVEME //OnboardingParams.QUICKHACK++;
                     mRequestIsPending = false;
                     ConfigManager.this.mConfigurationResponse = configurationResponse;
                     mBus.post(new HandyEvent.ConfigurationResponseRetrieved());

@@ -570,4 +570,9 @@
     <string name="change_location_settings_dialog_title">Location services required</string>
     <string name="change_location_settings_dialog_message">Please enable location services so your customers are aware of your arrival time.</string>
     <string name="change_location_settings_dialog_action_button">Go to Settings</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_tab_title">Welcome to Handy</string>
+
+
 </resources>

@@ -4,6 +4,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.OnboardingParams;
 import com.squareup.otto.Subscribe;
 
 public class OnboardingFragment extends PortalWebViewFragment
@@ -12,6 +13,8 @@ public class OnboardingFragment extends PortalWebViewFragment
     private boolean mIsBlocking = false;
     private String mTargetUrl = "";
     private boolean mShouldShowOnboarding = false;
+
+    private OnboardingParams mLastOnboardingParams;
 
     @Override
     protected MainViewTab getTab()
@@ -27,12 +30,11 @@ public class OnboardingFragment extends PortalWebViewFragment
 
         //Make sure we should still be showing onboarding, and this version of it, otherwise nav away
         //Store current values of config response to compare to the next one
-        if (configManager != null && configManager.getConfigurationResponse() != null)
+        if (configManager != null &&
+            configManager.getConfigurationResponse() != null &&
+            configManager.getConfigurationResponse().getOnboardingParams() != null)
         {
-            ConfigurationResponse response = configManager.getConfigurationResponse();
-            mIsBlocking = response.isOnboardingBlocking();
-            mTargetUrl = response.getOnboardingFullWebUrl();
-            mShouldShowOnboarding = response.shouldShowOnboarding();
+            mLastOnboardingParams = configManager.getConfigurationResponse().getOnboardingParams();
         }
         else
         {
@@ -67,18 +69,11 @@ public class OnboardingFragment extends PortalWebViewFragment
         if (configManager != null && configManager.getConfigurationResponse() != null)
         {
             ConfigurationResponse response = configManager.getConfigurationResponse();
-            if (!onboardingValuesMatch(response))
+            if (!mLastOnboardingParams.equals(response.getOnboardingParams()))
             {
                 //just nav back to main, can lazily reload and tab navigation will handle the rest
                 bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
             }
         }
-    }
-
-    private boolean onboardingValuesMatch(ConfigurationResponse response)
-    {
-        return (mIsBlocking == response.isOnboardingBlocking() &&
-                mTargetUrl.equals(response.getOnboardingFullWebUrl()) &&
-                mShouldShowOnboarding == response.shouldShowOnboarding());
     }
 }
