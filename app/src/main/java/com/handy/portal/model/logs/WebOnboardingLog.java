@@ -18,7 +18,7 @@ public abstract class WebOnboardingLog extends EventLog
         if(onboardingParams != null)
         {
             mBlocking = onboardingParams.isOnboardingBlocking();
-            mUrl = onboardingParams.getOnboardingFullWebUrl();
+            mUrl = onboardingParams.getOnboardingCompleteWebUrl();
         }
         else
         {

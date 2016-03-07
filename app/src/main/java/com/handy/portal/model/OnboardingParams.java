@@ -10,11 +10,11 @@ public class OnboardingParams
     @SerializedName("onboarding_enabled")
     private boolean mOnboardingEnabled;
 
-    @SerializedName("onboarding_blocking")
+    @SerializedName("onboarding_is_blocking")
     private boolean mOnboardingBlocking;
 
-    @SerializedName("onboarding_web_url")
-    private String mOnboardingWebUrl;
+    @SerializedName("onboarding_complete_web_url")
+    private String mOnboardingCompleteWebUrl;
 
     @Override
     public boolean equals(Object obj)
@@ -31,14 +31,14 @@ public class OnboardingParams
 
         OnboardingParams other = (OnboardingParams) obj;
 
-        if(mOnboardingWebUrl == null && other.getOnboardingFullWebUrl() != null)
+        if(mOnboardingCompleteWebUrl == null && other.getOnboardingCompleteWebUrl() != null)
         {
             return false;
         }
 
         return (mOnboardingEnabled == other.isOnboardingEnabled() &&
                 mOnboardingBlocking == other.isOnboardingBlocking() &&
-                (mOnboardingWebUrl != null && mOnboardingWebUrl.equals(other.getOnboardingFullWebUrl()))
+                (mOnboardingCompleteWebUrl != null && mOnboardingCompleteWebUrl.equals(other.getOnboardingCompleteWebUrl()))
         );
     }
 
@@ -49,9 +49,9 @@ public class OnboardingParams
 
     //may not be off handy domain, is full url
     @Nullable
-    public String getOnboardingFullWebUrl()
+    public String getOnboardingCompleteWebUrl()
     {
-       return mOnboardingWebUrl;
+       return mOnboardingCompleteWebUrl;
     }
 
     public boolean isOnboardingBlocking()
@@ -61,6 +61,6 @@ public class OnboardingParams
 
     public boolean shouldShowOnboarding()
     {
-        return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingFullWebUrl());
+        return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
     }
 }

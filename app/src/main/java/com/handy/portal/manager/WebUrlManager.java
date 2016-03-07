@@ -56,7 +56,7 @@ public class WebUrlManager
                         mConfigManager.getConfigurationResponse().getOnboardingParams() != null)
                 {
                     //may not be off the handy domain, is a full url
-                    targetUrl = mConfigManager.getConfigurationResponse().getOnboardingParams().getOnboardingFullWebUrl();
+                    targetUrl = mConfigManager.getConfigurationResponse().getOnboardingParams().getOnboardingCompleteWebUrl();
                 }
             }
             else
