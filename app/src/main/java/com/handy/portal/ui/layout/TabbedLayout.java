@@ -14,6 +14,8 @@ public class TabbedLayout extends RelativeLayout
     //This is a hack to help the other hack
     private boolean mAutoHideShowTabs = true;
 
+    private final double HIDE_TABS_SCREEN_HEIGHT_PERCENT = .7;
+
     public TabbedLayout(Context context)
     {
         super(context);
@@ -52,11 +54,14 @@ public class TabbedLayout extends RelativeLayout
         final double proposedHeight = MeasureSpec.getSize(heightMeasureSpec);
         final double actualHeight = getRootView().getHeight();
 
+        //quick check empties and avoid divide by zero
+        if(proposedHeight == 0 || actualHeight == 0) { return; }
+
         final View tabs = findViewById(R.id.tabs);
         if (tabs != null && mAutoHideShowTabs)
         {
             //HACK : If we lost 30% of the screen to something, likely the keyboard, hide the tabs for extra space
-            if (proposedHeight / actualHeight < .7)
+            if ((proposedHeight / actualHeight) < HIDE_TABS_SCREEN_HEIGHT_PERCENT)
             {
                 tabs.setVisibility(GONE);
             }
