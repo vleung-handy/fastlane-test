@@ -28,7 +28,7 @@ public class ConfigurationResponse
     @SerializedName("location_schedule_service_enabled")
     private boolean mLocationScheduleServiceEnabled; //false by default
 
-    @SerializedName("onboarding_web_url")
+    @SerializedName("onboarding_info")
     private OnboardingParams mOnboardingParams;
 
     public boolean isLocationScheduleServiceEnabled()
@@ -73,11 +73,19 @@ public class ConfigurationResponse
 
     public OnboardingParams getOnboardingParams()
     {
+
+        //HACK FOR TESTING
+        if(mOnboardingParams == null)
+        {
+            mOnboardingParams = new OnboardingParams();
+            mOnboardingParams.HACK_SET(true, true, "http://www.google.com");
+        }
+
         return mOnboardingParams;
     }
 
     public boolean shouldShowOnboarding()
     {
-        return mOnboardingParams != null && mOnboardingParams.shouldShowOnboarding();
+        return getOnboardingParams() != null && mOnboardingParams.shouldShowOnboarding();
     }
 }

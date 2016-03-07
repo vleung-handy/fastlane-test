@@ -10,10 +10,6 @@ import com.squareup.otto.Subscribe;
 public class OnboardingFragment extends PortalWebViewFragment
 {
     //retain these to compare with latest version from config response, to determine if we need to change
-    private boolean mIsBlocking = false;
-    private String mTargetUrl = "";
-    private boolean mShouldShowOnboarding = false;
-
     private OnboardingParams mLastOnboardingParams;
 
     @Override
@@ -25,6 +21,8 @@ public class OnboardingFragment extends PortalWebViewFragment
     @Override
     public void onResume()
     {
+        System.out.println("CSD - Onboarding fragment resume");
+
         super.onResume();
         setActionBar(R.string.onboarding_tab_title, false);
 
@@ -38,38 +36,41 @@ public class OnboardingFragment extends PortalWebViewFragment
         }
         else
         {
-            mShouldShowOnboarding = false;
+            mLastOnboardingParams = null;
         }
 
-        if (!mShouldShowOnboarding)
+        //We got into a bad state, leave
+        if (mLastOnboardingParams == null)
         {
             bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
         }
         else
         {
             //Lock nav drawers and hide tabs if this is a blocking onboarding fragment
-            if (mIsBlocking)
+            if (mLastOnboardingParams.isOnboardingBlocking())
             {
                 bus.post(new HandyEvent.SetNavigationDrawerActive(false));
                 bus.post(new HandyEvent.SetNavigationTabVisibility(false));
             }
-            //Request new values to see if they have changed
-            configManager.prefetch();
         }
     }
 
     @Subscribe
     public void onConfigurationResponseRetrieved(HandyEvent.ConfigurationResponseRetrieved event)
     {
+        System.out.println("CSD - Check to leave onboarding");
         checkToLeaveOnboarding();
     }
 
+    //if we get a new config and the onboarding params differ from the old one get out of onboarding
     private void checkToLeaveOnboarding()
     {
-        if (configManager != null && configManager.getConfigurationResponse() != null)
+        if (configManager != null &&
+            configManager.getConfigurationResponse() != null)
         {
             ConfigurationResponse response = configManager.getConfigurationResponse();
-            if (!mLastOnboardingParams.equals(response.getOnboardingParams()))
+            if (mLastOnboardingParams != null &&
+                !mLastOnboardingParams.equals(response.getOnboardingParams()))
             {
                 //just nav back to main, can lazily reload and tab navigation will handle the rest
                 bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));

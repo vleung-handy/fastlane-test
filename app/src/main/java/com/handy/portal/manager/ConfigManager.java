@@ -6,6 +6,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.OnboardingParams;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -40,7 +41,7 @@ public class ConfigManager
                 @Override
                 public void onSuccess(ConfigurationResponse configurationResponse)
                 {
-                    //REMOVEME //OnboardingParams.QUICKHACK++;
+                    OnboardingParams.QUICKHACK++; //REMOVEME
                     mRequestIsPending = false;
                     ConfigManager.this.mConfigurationResponse = configurationResponse;
                     mBus.post(new HandyEvent.ConfigurationResponseRetrieved());

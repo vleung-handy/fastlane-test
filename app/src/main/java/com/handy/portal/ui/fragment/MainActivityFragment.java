@@ -127,13 +127,13 @@ public class MainActivityFragment extends InjectedFragment
     private void handleOnboardingFlow()
     {
         if (currentTab != null &&
-                currentTab != MainViewTab.ONBOARDING &&
-                configManager.getConfigurationResponse() != null &&
-                configManager.getConfigurationResponse().shouldShowOnboarding()
-                )
+            currentTab != MainViewTab.ONBOARDING &&
+            configManager.getConfigurationResponse() != null &&
+            configManager.getConfigurationResponse().shouldShowOnboarding()
+            )
         {
-            //We can be lazy here, TabNavigationManager will do all the work for us, we are just firing it up
-            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
+            switchToTab(MainViewTab.ONBOARDING, false);
         }
     }
 

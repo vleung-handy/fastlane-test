@@ -20,6 +20,8 @@ public class TabNavigationManager
     private final WebUrlManager mWebUrlManager;
     private final ConfigManager mConfigManager;
 
+    private boolean mHaveShownNonBlockingOnboarding = false; //Now storing this for session client side so non-blocking will not be shown multiple times
+
     @Inject
     public TabNavigationManager(final Bus bus,
                                 final ProviderManager providerManager,
@@ -43,8 +45,13 @@ public class TabNavigationManager
         //Ordering is important for these checks, they have different priorities
 
         //HACK : Magical hack to direct new pros to a webview for their onboarding
-        if (doesCachedProviderNeedOnboarding())
+        if (doesCachedProviderNeedOnboarding() &&
+            (isOnboardingBlocking() || !mHaveShownNonBlockingOnboarding))
         {
+            if(!isOnboardingBlocking())
+            {
+                mHaveShownNonBlockingOnboarding = true;
+            }
             event.targetTab = MainViewTab.ONBOARDING;
         }
         //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
@@ -85,6 +92,13 @@ public class TabNavigationManager
     {
         return (mConfigManager.getConfigurationResponse() != null &&
                 mConfigManager.getConfigurationResponse().shouldShowOnboarding());
+    }
+
+    private boolean isOnboardingBlocking()
+    {
+        return (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().getOnboardingParams() != null &&
+                mConfigManager.getConfigurationResponse().getOnboardingParams().isOnboardingBlocking());
     }
 
     private boolean doesCachedProviderNeedPaymentInformation()
