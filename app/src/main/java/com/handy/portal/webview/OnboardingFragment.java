@@ -69,12 +69,10 @@ public class OnboardingFragment extends PortalWebViewFragment
     {
         boolean leaveOnboarding = false;
 
-        if(onboardingParams == null)
-        {
-            leaveOnboarding = true;
-        }
-        else if (mLastOnboardingParams != null &&
-            !mLastOnboardingParams.equals(onboardingParams))
+        if (onboardingParams == null ||
+            (mLastOnboardingParams != null &&
+                !mLastOnboardingParams.equals(onboardingParams))
+        )
         {
             leaveOnboarding = true;
         }
