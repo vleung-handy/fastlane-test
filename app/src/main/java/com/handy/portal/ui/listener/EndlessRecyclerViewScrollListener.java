@@ -7,7 +7,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener
 {
+    // Default minimum amount of items to have below your current scroll position
     private static final int VISIBLE_THRESHOLD_PER_SPAN_COUNT = 5;
+    // Sets the starting page index
+    private static final int STARTING_PAGE_INDEX = 0;
 
     // The minimum amount of items to have below your current scroll position
     // before loading more.
@@ -18,8 +21,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     private int mPreviousTotalItemCount = 0;
     // True if we are still waiting for the last set of data to load.
     private boolean mLoading = true;
-    // Sets the starting page index
-    private int mStartingPageIndex = 0;
 
     RecyclerView.LayoutManager mLayoutManager;
 
@@ -86,7 +87,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         // list is invalidated and should be reset back to initial state
         if (totalItemCount < mPreviousTotalItemCount)
         {
-            mCurrentPage = mStartingPageIndex;
+            mCurrentPage = STARTING_PAGE_INDEX;
             mPreviousTotalItemCount = totalItemCount;
             if (totalItemCount == 0)
             {
