@@ -8,8 +8,6 @@ import java.util.List;
 
 public class ProviderFeedback implements Serializable
 {
-    public static final String TYPE_TEXT = "text";
-
     @SerializedName("title")
     private String mTitle;
     @SerializedName("subtitle")
@@ -41,20 +39,23 @@ public class ProviderFeedback implements Serializable
 
     public static class FeedbackTip implements Serializable
     {
+        public static final String DATA_TYPE_TEXT = "text";
+        public static final String DATA_TYPE_VIDEO_LINK = "video_link";
+
         @SerializedName("type")
-        private String mType;
+        private String mDataType;
         @SerializedName("data")
         private String mData;
 
-        public FeedbackTip(final String type, final String data)
+        public FeedbackTip(final String dataType, final String data)
         {
-            mType = type;
+            mDataType = dataType;
             mData = data;
         }
 
-        public String getType()
+        public String getDataType()
         {
-            return mType;
+            return mDataType;
         }
 
         public String getData()

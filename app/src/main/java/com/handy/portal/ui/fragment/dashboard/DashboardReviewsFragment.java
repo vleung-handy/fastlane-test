@@ -63,6 +63,9 @@ public class DashboardReviewsFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.five_star_reviews);
+        
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
 
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
