@@ -33,6 +33,7 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
@@ -326,6 +327,13 @@ public final class ApplicationModule
                                                final EventLogFactory eventLogFactory)
     {
         return new BookingManager(bus, dataManager, eventLogFactory);
+    }
+
+    @Provides
+    @Singleton
+    final SystemManager provideSystemManager(final Bus bus)
+    {
+        return new SystemManager(context, bus);
     }
 
     @Provides

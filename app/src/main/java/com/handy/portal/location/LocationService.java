@@ -14,6 +14,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.util.Utils;
@@ -140,6 +141,19 @@ public class LocationService extends Service
         //TODO: optimize if the schedule did NOT change!!!!!
     }
 
+    /**
+     * delegating bus event here because don't want the handler to subscribe to bus
+     * because it does not have a strict lifecycle
+     * @param event
+     */
+    @Subscribe
+    public void onNetworkReconnected(SystemEvent.NetworkReconnected event)
+    {
+        if(mLocationScheduleHandler != null)
+        {
+            mLocationScheduleHandler.onNetworkReconnected();
+        }
+    }
     /**
      * got a new schedule, create a handler for it
      *
