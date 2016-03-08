@@ -78,8 +78,7 @@ public class LocationUpdate
                           double altitudeMeters,
                           float speed,
                           float bearingDegrees,
-                          Date capturedTimestamp,
-                          float batteryLevelPercent)
+                          Date capturedTimestamp)
     {
         mLatitude = latitude;
         mLongitude = longitude;
@@ -88,12 +87,10 @@ public class LocationUpdate
         mSpeed = speed;
         mBearingDegrees = bearingDegrees;
         mCapturedTimestamp = capturedTimestamp;
-        mBatteryLevelPercent = batteryLevelPercent;
     }
 
     //TODO: move this?
-    public static LocationUpdate from(@NonNull Location location,
-                                      @NonNull LocationQueryStrategy locationQueryStrategy)
+    public static LocationUpdate from(@NonNull Location location)
     {
         LocationUpdate locationUpdate = new LocationUpdate(
                 location.getLatitude(),
@@ -102,8 +99,7 @@ public class LocationUpdate
                 location.getAltitude(),
                 location.getSpeed(),
                 location.getBearing(),
-                new Date(location.getTime()),
-                0 //no battery level yet
+                new Date(location.getTime())
         );
         return locationUpdate;
     }

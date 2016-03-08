@@ -86,7 +86,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
                     return; //expired
                 }
                 mLocationStrategyCallbacks.onLocationUpdate(location);
-                LocationUpdate locationUpdate = LocationUpdate.from(location, mLocationQueryStrategy);
+                LocationUpdate locationUpdate = LocationUpdate.from(location);
                 locationUpdate.setBatteryLevelPercent(SystemUtils.getBatteryLevelPercent(mContext));
                 locationUpdate.setActiveNetworkType(SystemUtils.getActiveNetworkType(mContext));
                 onNewLocationUpdate(locationUpdate);
