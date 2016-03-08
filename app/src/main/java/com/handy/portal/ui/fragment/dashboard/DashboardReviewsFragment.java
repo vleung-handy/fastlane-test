@@ -124,10 +124,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
         }
         else
         {
-            for (ProviderRating providerRating : event.getProviderRatings())
-            {
-                mRatings.add(providerRating);
-            }
+            mRatings.addAll(event.getProviderRatings());
         }
 
         adapter.notifyDataSetChanged();
