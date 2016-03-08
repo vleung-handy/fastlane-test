@@ -6,7 +6,6 @@ import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 
-import java.util.Date;
 import java.util.List;
 
 public abstract class ProviderDashboardEvent extends HandyEvent

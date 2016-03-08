@@ -1,5 +1,6 @@
 package com.handy.portal;
 
+
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -13,45 +14,44 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class DashboardTest
+public class AccountSettingsFragmentTest
 {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void testDashboardIsWorking() throws InterruptedException
+    public void testAccountSettingsIsWorking() throws InterruptedException
     {
         // Go to dashboard.
         onView(withId(R.id.button_more)).perform(click());
         onView(withId(R.id.button_more)).perform(click()); // prevent flakiness
-        onView(withId(R.id.nav_link_ratings_and_feedback)).perform(click());
+        onView(withId(R.id.nav_link_account_settings)).perform(click());
 
         // See if all elements are there
-        onView(withId(R.id.dashboard_welcome_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.dashboard_ratings_view_pager)).check(matches(isDisplayed()));
-        onView(withId(R.id.dashboard_options_view)).perform(scrollTo());
-        onView(withId(R.id.dashboard_options_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.account_settings_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.contact_info_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.edit_payment_option)).check(matches(isDisplayed()));
+        onView(withId(R.id.order_resupply_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.income_verification_layout)).check(matches(isDisplayed()));
 
-        // Go to to tier page
-        onView(withId(R.id.tier_option)).perform(click());
-        onView(withId(R.id.tier_label)).check(matches(isDisplayed()));
+        // Go to contact info
+        onView(withId(R.id.contact_info_layout)).perform(click());
+        onView(withId(R.id.provider_email_edit_text)).check(matches(isDisplayed()));
         pressBack();
 
-        // Go to to feedback page
-        onView(withId(R.id.feedback_option)).perform(click());
-        onView(withId(R.id.layout_dashboard_feedback)).check(matches(isDisplayed()));
+        // Go to edit payment
+        onView(withId(R.id.edit_payment_option)).perform(click());
+        onView(withId(R.id.bank_account_option)).check(matches(isDisplayed()));
         pressBack();
 
-        // Go to to review page
-        onView(withId(R.id.reviews_option)).perform(click());
-        onView(withId(R.id.reviews_list)).check(matches(isDisplayed()));
+        // Go to order resupply, this won't always be clickable
+        onView(withId(R.id.order_resupply_layout)).check(matches(isDisplayed()));
         pressBack();
     }
 }

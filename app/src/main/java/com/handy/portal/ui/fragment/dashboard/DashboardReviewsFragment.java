@@ -26,7 +26,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.handy.portal.event.ProviderDashboardEvent.*;
+import static com.handy.portal.event.ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess;
+import static com.handy.portal.event.ProviderDashboardEvent.RequestProviderFiveStarRatings;
 
 public class DashboardReviewsFragment extends ActionBarFragment
 {
@@ -70,7 +71,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.five_star_reviews);
-        
+
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
 

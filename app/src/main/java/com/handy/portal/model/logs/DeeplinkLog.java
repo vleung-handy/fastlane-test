@@ -47,6 +47,7 @@ public class DeeplinkLog extends EventLog
         }
     }
 
+
     public static class Processed extends DeeplinkLog
     {
         private static final String EVENT_TYPE = "processed";
@@ -56,6 +57,7 @@ public class DeeplinkLog extends EventLog
             super(EVENT_TYPE, data);
         }
     }
+
 
     public static class Ignored extends DeeplinkLog
     {

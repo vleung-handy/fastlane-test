@@ -98,7 +98,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     @Nullable
     public Date getToBookingDate()
     {
-        if (mRatings.isEmpty()) {
+        if (mRatings.isEmpty())
+        {
             return null;
         }
         else

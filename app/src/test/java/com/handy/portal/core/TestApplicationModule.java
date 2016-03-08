@@ -24,12 +24,9 @@ import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
-import com.handy.portal.ui.constructor.ProfilePerformanceView;
-import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
-import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragmentTest;
@@ -42,7 +39,7 @@ import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragmentTest;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
+import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
@@ -60,7 +57,7 @@ import static org.mockito.Mockito.when;
         LoginActivity.class,
         MainActivityFragment.class,
         MainActivity.class,
-        ProfileFragment.class,
+        ProfileUpdateFragment.class,
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
         ScheduledBookingsFragment.class,
@@ -72,12 +69,10 @@ import static org.mockito.Mockito.when;
         PaymentsDetailFragment.class,
         TestActivity.class,
         PaymentsBatchListView.class,
-        ManagementToolsView.class,
         SupportActionView.class,
         BookingDetailsFragmentTest.class,
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
-        ProfileReferralView.class,
         BookingDetailsJobInstructionsView.class,
         LocationSettingsBlockerDialogFragment.class
 }, library = true)

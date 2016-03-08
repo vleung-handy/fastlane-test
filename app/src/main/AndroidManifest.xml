@@ -62,36 +62,49 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
                 <!-- http scheme -->
-                <data android:scheme="http"
-                      android:host="handy.com"
-                      android:path="/hp"
-                      android:pathPrefix="/hp/" />
-                <data android:scheme="http"
-                      android:host="www.handy.com"
-                      android:path="/hp"
-                      android:pathPrefix="/hp/" />
+                <data
+                    android:scheme="http"
+                    android:host="handy.com"
+                    android:path="/hp"
+                    android:pathPrefix="/hp/"
+                    />
+                <data
+                    android:scheme="http"
+                    android:host="www.handy.com"
+                    android:path="/hp"
+                    android:pathPrefix="/hp/"
+                    />
                 <!-- https scheme -->
-                <data android:scheme="https"
-                      android:host="handy.com"
-                      android:path="/hp"
-                      android:pathPrefix="/hp/" />
-                <data android:scheme="https"
-                      android:host="www.handy.com"
-                      android:path="/hp"
-                      android:pathPrefix="/hp/" />
+                <data
+                    android:scheme="https"
+                    android:host="handy.com"
+                    android:path="/hp"
+                    android:pathPrefix="/hp/"
+                    />
+                <data
+                    android:scheme="https"
+                    android:host="www.handy.com"
+                    android:path="/hp"
+                    android:pathPrefix="/hp/"
+                    />
                 <!-- handypro scheme -->
-                <data android:scheme="handypro"
-                      android:host="handy.com"
-                      android:path="/hp"
-                      android:pathPrefix="/hp/" />
-                <data android:scheme="handypro"
-                      android:host="www.handy.com"
-                      android:path="/hp"
-                      android:pathPrefix="/hp/" />
+                <data
+                    android:scheme="handypro"
+                    android:host="handy.com"
+                    android:path="/hp"
+                    android:pathPrefix="/hp/"
+                    />
+                <data
+                    android:scheme="handypro"
+                    android:host="www.handy.com"
+                    android:path="/hp"
+                    android:pathPrefix="/hp/"
+                    />
             </intent-filter>
         </activity>
         <activity

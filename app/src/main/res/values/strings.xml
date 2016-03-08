@@ -567,6 +567,26 @@
     <string name="notify_available_jobs">Notify me of open jobs today</string>
     <string name="notify_available_jobs_update_intro_success">Great! We’ll send you a notification for any available jobs that arrive the rest of the day.</string>
     <string name="notify_available_jobs_update_error">Oops! There was an error turning on notifications. Please check your connection and try again.</string>
+
+    <!-- Account settings layout -->
+    <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
+    <string name="refer_a_friend">Refer a Friend</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="edit_payment_methods">Edit Payment Methods</string>
+
+    <string name="order_resupply_kit">Order a Resupply Kit</string>
+    <string name="income_verification">Income Verification</string>
+    <string name="send_email">Send Email</string>
+
+    <!-- Referrals -->
+    <string name="referral_invite_label">Invite Friends</string>
+    <string name="referral_code_label">Your code:</string>
+    <string name="share_using">Share using&#8230;</string>
+    <string name="referral_title_formatted">Give %1$s, Get %2$s</string>
+    <string name="referral_subtitle_formatted">Give your friends %1$s off their first Handy booking, and you get %2$s!</string>
+    <string name="chevron_description">Chevron</string>
+
+    <!-- Location -->
     <string name="change_location_settings_dialog_title">Location services required</string>
     <string name="change_location_settings_dialog_message">Please enable location services so your customers are aware of your arrival time.</string>
     <string name="change_location_settings_dialog_action_button">Go to Settings</string>
