@@ -96,9 +96,15 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         mProviderEvaluation = evaluation;
         ProviderEvaluation.Tier tier = mProviderEvaluation.getTier();
         mTierTitleText.setText(tier.getName());
-        String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRateInCents() / 100;
-        mTierHourlyRateText.setText(dollarAmount);
-
+        if (tier.getHourlyRateInCents() > 0)
+        {
+            String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRateInCents() / 100;
+            mTierHourlyRateText.setText(dollarAmount);
+        }
+        else
+        {
+            mTierHourlyRateText.setText(getResources().getString(R.string.no_data));
+        }
         List<ProviderFeedback> feedbacks = mProviderEvaluation.getProviderFeedback();
         if (feedbacks != null && feedbacks.size() > 0)
         {
