@@ -74,6 +74,7 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
     }
 
     @Override
+    @SuppressWarnings({"ResourceType", "MissingPermission"})
     public void onMapReady(GoogleMap map)
     {
         if (!Utils.areAnyPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
@@ -100,6 +101,7 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
         });
     }
 
+    @SuppressWarnings({"ResourceType", "MissingPermission"})
     private void addCustomMarkers(GoogleMap map)
     {
         if (!Utils.areAnyPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
