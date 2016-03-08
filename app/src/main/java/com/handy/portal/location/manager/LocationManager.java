@@ -76,8 +76,9 @@ public class LocationManager
     @Subscribe
     public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
     {
-        if(mProviderManager.getCachedActiveProvider() == null) return;
-        mDataManager.getLocationSchedule(mProviderManager.getCachedActiveProvider().getId(), new DataManager.Callback<LocationQuerySchedule>()
+        String providerId = mProviderManager.getLastProviderId();
+        if (providerId == null) { return; }
+        mDataManager.getLocationSchedule(providerId, new DataManager.Callback<LocationQuerySchedule>()
         {
             @Override
             public void onSuccess(final LocationQuerySchedule response)
@@ -157,8 +158,9 @@ public class LocationManager
     private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
     {
         Log.d(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
-        if(mProviderManager.getCachedActiveProvider() == null) return;
-        mDataManager.sendGeolocation(mProviderManager.getCachedActiveProvider().getId(), locationBatchUpdate, new DataManager.Callback<SuccessWrapper>()
+        String providerId = mProviderManager.getLastProviderId();
+        if (providerId == null) { return; }
+        mDataManager.sendGeolocation(providerId, locationBatchUpdate, new DataManager.Callback<SuccessWrapper>()
         {
             @Override
             public void onSuccess(final SuccessWrapper response)

@@ -396,6 +396,12 @@ public class ProviderManager
     }
 
     @Nullable
+    public String getLastProviderId()
+    {
+        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+    }
+
+    @Nullable
     public Provider getCachedActiveProvider()
     {
         return mProviderCache.getIfPresent(PROVIDER_CACHE_KEY);
