@@ -12,7 +12,6 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
@@ -316,7 +315,7 @@ public final class ApplicationModule
                                          final StripeRetrofitService stripeService //TODO: refactor and move somewhere else?
     )
     {
-        return new BaseDataManager(service, endpoint, stripeService);
+        return new DataManager(service, endpoint, stripeService);
     }
 
     @Provides

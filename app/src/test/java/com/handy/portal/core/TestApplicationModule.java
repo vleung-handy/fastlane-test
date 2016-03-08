@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.BookingManager;
@@ -112,9 +113,10 @@ public class TestApplicationModule
     }
 
     @Provides
+    @Singleton
     final DataManager provideDataManager()
     {
-        return mock(DataManager.class);
+        return mock(TestDataManager.class);
     }
 
     @Provides

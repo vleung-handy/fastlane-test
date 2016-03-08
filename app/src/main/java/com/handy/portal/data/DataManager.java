@@ -35,6 +35,12 @@ import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentFlow;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
+import com.handy.portal.retrofit.HandyRetrofitCallback;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.stripe.StripeRetrofitService;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,114 +48,290 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import retrofit.mime.TypedInput;
 
-public abstract class DataManager
+public class DataManager
 {
-    //Portal
-    public abstract void getLocationSchedule(String providerId, Callback<LocationQuerySchedule> cb);
+    private final HandyRetrofitService service;
+    private final HandyRetrofitEndpoint endpoint;
 
-    public abstract void sendGeolocation(String providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb);
+    private final StripeRetrofitService stripeService; //TODO: should refactor and move somewhere else?
 
-    public abstract void checkForUpdates(String appFlavor, int versionCode, Callback<UpdateDetails> cb);
+    @Inject
+    public DataManager(final HandyRetrofitService service,
+                       final HandyRetrofitEndpoint endpoint,
+                       final StripeRetrofitService stripeService)
+    {
+        this.service = service;
+        this.endpoint = endpoint;
+        this.stripeService = stripeService;
+    }
 
-    public abstract void checkForAllPendingTerms(Callback<TermsDetailsGroup> cb);
+    public void getLocationSchedule(String providerId, Callback<LocationQuerySchedule> cb)
+    {
+        service.getLocationSchedule(providerId, new GetLocationScheduleRetrofitCallback(cb));
+    }
 
-    public abstract void acceptTerms(String termsCode, Callback<Void> cb);
+    public void sendGeolocation(String providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb)
+    {
+        service.sendGeolocation(providerId, locationBatchUpdate, new SuccessWrapperRetroFitCallback(cb));
+    }
 
-    public abstract void sendVersionInformation(Map<String, String> info);
+    public String getBaseUrl()
+    {
+        return endpoint.getBaseUrl();
+    }
 
-    public abstract void getAvailableBookings(Date[] date, Callback<BookingsListWrapper> cb);
+    public void getAvailableBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
+    {
+        service.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getScheduledBookings(Date[] date, Callback<BookingsListWrapper> cb);
+    public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
+    {
+        service.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getNearbyBookings(int regionId, double latitude, double longitude,
-                                           final Callback<BookingsWrapper> cb);
+    public void getNearbyBookings(
+            int regionId, double latitude, double longitude, final Callback<BookingsWrapper> cb)
+    {
+        service.getNearbyBookings(
+                regionId, latitude, longitude, new BookingsWrapperRetroFitCallback(cb));
+    }
 
-    public abstract void claimBooking(String bookingId, BookingType type, Callback<BookingClaimDetails> cb);
+    public void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> cb)
+    {
+        service.getComplementaryBookings(bookingId, type.toString().toLowerCase(), new BookingsWrapperRetroFitCallback(cb));
+    }
 
-    public abstract void removeBooking(String bookingId, BookingType type, Callback<Booking> cb);
+    public void claimBooking(String bookingId, BookingType type, final Callback<BookingClaimDetails> cb)
+    {
+        service.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
+    }
 
-    public abstract void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb);
+    public void removeBooking(String bookingId, BookingType type, final Callback<Booking> cb)
+    {
+        service.removeBooking(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getProviderProfile(String providerId, Callback<ProviderProfile> cb);
+    public void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb)
+    {
+        service.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
+    }
 
-    public abstract void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb);
+    public void getProviderProfile(String providerId, Callback<ProviderProfile> cb)
+    {
+        service.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
+    }
 
-    public abstract void getProviderSettings(final String providerId, final Callback<ProviderSettings> callback);
+    public void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb)
+    {
+        service.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
+    }
 
-    public abstract void putUpdateProviderSettings(String providerId, ProviderSettings providerSettings, Callback<ProviderSettings> cb);
+    public void getProviderSettings(String providerId, Callback<ProviderSettings> cb)
+    {
+        service.getProviderSettings(providerId, new GetProviderSettingsRetrofitCallback(cb));
+    }
 
-    public abstract void getResupplyKit(String providerId, Callback<ProviderProfile> callback);
+    public void putUpdateProviderSettings(String providerId, ProviderSettings providerSettings, Callback<ProviderSettings> cb)
+    {
+        service.putUpdateProviderSettings(providerId, providerSettings, new UpdateProviderSettingsRetroFitCallback(cb));
+    }
 
-    public abstract void getBookingDetails(String bookingId, BookingType type, Callback<Booking> cb);
+    public void getResupplyKit(String providerId, Callback<ProviderProfile> cb)
+    {
+        service.getResupplyKit(providerId, new ResupplyInfoRetrofitCallback(cb));
+    }
 
-    public abstract void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
+    public void getBookingDetails(String bookingId, BookingType type, final Callback<Booking> cb)
+    {
+        service.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
+    }
 
-    public abstract void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, Callback<Booking> cb);
+    public void getPaymentBatches(Date startDate, Date endDate, final Callback<PaymentBatches> cb)
+    {
+        service.getPaymentBatches(startDate, endDate, new PaymentBatchesRetroFitCallback(cb));
+    }
 
-    public abstract void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, Callback<Booking> cb);
+    public void getAnnualPaymentSummaries(final Callback<AnnualPaymentSummaries> cb)
+    {
+        service.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
+    }
 
-    public abstract void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, Callback<Booking> cb);
+    public void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> cb)
+    {
+        service.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
+    }
 
-    public abstract void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb);
+    public void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    {
+        service.notifyOnMyWay(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+    }
 
-    //Login
-    public abstract void requestPinCode(String phoneNumber, Callback<PinRequestDetails> cb);
+    public void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    {
+        service.checkIn(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+    }
 
-    public abstract void requestLogin(String phoneNumber, String pinCode, Callback<LoginDetails> cb);
+    public void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, final Callback<Booking> cb)
+    {
+        service.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getHelpInfo(String nodeId,
-                                     String bookingId,
-                                     final DataManager.Callback<HelpNodeWrapper> cb);
+    public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)
+    {
+        service.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getHelpBookingsInfo(String nodeId,
-                                             String bookingId,
-                                             final DataManager.Callback<HelpNodeWrapper> cb);
+    public void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb)
+    {
+        service.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getHelpPaymentsInfo(final DataManager.Callback<HelpNodeWrapper> cb);
+    public void requestPinCode(String phoneNumber, final Callback<PinRequestDetails> cb)
+    {
+        service.requestPinCode(phoneNumber, new PinRequestDetailsResponseHandyRetroFitCallback(cb));
+    }
 
-    public abstract void createHelpCase(TypedInput body, final Callback<Void> cb);
+    public void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
+    {
+        service.requestLogin(phoneNumber, pinCode, new LoginDetailsResponseHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getProviderInfo(Callback<Provider> cb);
+    public void getProviderInfo(Callback<Provider> cb)
+    {
+        service.getProviderInfo(new ProviderResponseHandyRetroFitCallback(cb));
+    }
 
-    public abstract String getBaseUrl();
+    public void checkForUpdates(String appFlavor, int versionCode, final Callback<UpdateDetails> cb)
+    {
+        service.checkUpdates(appFlavor, versionCode, new UpdateDetailsResponseHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> callback);
+    public void checkForAllPendingTerms(final Callback<TermsDetailsGroup> cb)
+    {
+        service.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getPaymentBatches(Date startDate, Date endDate, Callback<PaymentBatches> callback);
+    public void acceptTerms(String termsCode, final Callback<Void> cb)
+    {
+        service.acceptTerms(termsCode, new HandyRetrofitCallback(cb)
+        {
 
-    public abstract void getAnnualPaymentSummaries(Callback<AnnualPaymentSummaries> callback);
+            public void success(JSONObject response)
+            {
+                cb.onSuccess(null);
+            }
+        });
+    }
 
-    public abstract void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> callback);
+    public void sendVersionInformation(Map<String, String> versionInfo)
+    {
+        service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback(null));
+    }
 
-    public abstract void createBankAccount(Map<String, String> params, Callback<SuccessWrapper> callback);
+    //********Help Center********
 
-    public abstract void createDebitCardRecipient(Map<String, String> params, Callback<SuccessWrapper> callback);
+    public void getHelpInfo(String nodeId,
+                            String bookingId,
+                            final Callback<HelpNodeWrapper> cb)
+    {
+        service.getHelpInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
+    }
 
-    public abstract void createDebitCardForCharge(String stripeToken, Callback<CreateDebitCardResponse> callback);
+    public void getHelpBookingsInfo(String nodeId,
+                                    String bookingId,
+                                    final Callback<HelpNodeWrapper> cb)
+    {
+        service.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getPaymentFlow(String providerId, Callback<PaymentFlow> callback);
+    public void getHelpPaymentsInfo(final Callback<HelpNodeWrapper> cb)
+    {
+        service.getHelpPayments(new HelpNodeResponseHandyRetroFitCallback(cb));
+    }
 
-    public abstract void getZipClusterPolygons(String providerId, final Callback<ZipClusterPolygons> cb);
+    public void createHelpCase(TypedInput body, final Callback<Void> cb)
+    {
+        service.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
+    }
+    //********End Help Center********
 
-    public abstract void getStripeToken(Map<String, String> params, Callback<StripeTokenResponse> callback);
+    public void createBankAccount(Map<String, String> params, final Callback<SuccessWrapper> cb)
+    {
+        service.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));
+    }
 
-    public abstract void postLogs(JsonObject eventLogBundle, Callback<EventLogResponse> cb);
+    public void createDebitCardRecipient(Map<String, String> params, final Callback<SuccessWrapper> cb)
+    {
+        service.createDebitCardRecipient(params, new CreateDebitCardRecipientRetroFitCallback(cb));
+    }
 
-    public abstract void getConfiguration(Callback<ConfigurationResponse> callback);
+    public void createDebitCardForCharge(String stripeToken, final Callback<CreateDebitCardResponse> cb)
+    {
+        service.createDebitCardForCharge(stripeToken, new CreateDebitCardRetroFitCallback(cb));
+    }
 
-    public abstract void getNotifications(String providerId, Integer sinceId, Integer untilId, Integer count, Callback<NotificationMessages> callback);
+    public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb)
+    {
+        service.getPaymentFlow(providerId, new GetPaymentFlowRetroFitCallback(cb));
+    }
 
-    public abstract void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb);
+    public void getZipClusterPolygons(String providerId, final Callback<ZipClusterPolygons> cb)
+    {
+        service.getZipClusterPolygon(providerId, new GetZipClusterPolygonRetroFitCallback(cb));
+    }
 
-    // Pro Dashboard
-    public abstract void getProviderEvaluation(String providerId, Callback<ProviderEvaluation> cb);
+    //Stripe
 
-    public abstract void getProviderFiveStarRatings(String providerId, Integer minStar, String toBookingDate, String fromBookingDate, Callback<HashMap<String, List<ProviderRating>>> cb);
+    public void getStripeToken(Map<String, String> params, final Callback<StripeTokenResponse> cb)
+    {
+        stripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
+    }
 
-    public abstract void getProviderFeedback(String providerId, Callback<List<ProviderFeedback>> cb);
+    //Eventual replacement for direct access to config params
 
+    public void getConfiguration(final Callback<ConfigurationResponse> cb)
+    {
+        service.getConfiguration(new ConfigurationResponseHandyRetroFitCallback(cb));
+    }
+
+    //Log Events
+
+    public void postLogs(final JsonObject eventLogBundle, final Callback<EventLogResponse> cb)
+    {
+        service.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
+    }
+
+    // Notifications
+
+    public void getNotifications(String providerId, Integer sinceId, Integer untilId, Integer count, Callback<NotificationMessages> cb)
+    {
+        service.getNotifications(providerId, sinceId, untilId, count, new NotificationMessagesHandyRetroFitCallback(cb));
+    }
+
+    public void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb)
+    {
+        service.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
+    }
+
+    public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)
+    {
+        service.getProviderEvaluation(providerId, new GetProviderEvaluationRetrofitCallback(cb));
+    }
+
+    public void getProviderFiveStarRatings(final String providerId, final Integer minStar, final String toBookingDate, final String fromBookingDate, final Callback<HashMap<String, List<ProviderRating>>> cb)
+    {
+        service.getProviderFiveStarRatings(providerId, minStar, toBookingDate, fromBookingDate, new GetProviderFiveStarRatingsRetrofitCallback(cb));
+    }
+
+    public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)
+    {
+        service.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
+    }
 
     //TODO: refactor. should this be here?
     public interface Callback<T>
@@ -195,7 +377,7 @@ public abstract class DataManager
             return invalidInputs;
         }
 
-        public final void setInvalidInputs(final String[] inputs)
+        public void setInvalidInputs(final String[] inputs)
         {
             this.invalidInputs = inputs;
         }
