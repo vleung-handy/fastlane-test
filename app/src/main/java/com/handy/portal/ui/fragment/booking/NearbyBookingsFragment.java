@@ -174,7 +174,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
             bus.post(new LogEvent.AddLogEvent(
                     mEventLogFactory.createNearbyJobClaimSelectedLog(booking, mKilometer)));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestClaimJob(booking, SOURCE));
+            bus.post(new HandyEvent.RequestClaimJob(booking, SOURCE, null));
         }
     }
 

@@ -56,10 +56,15 @@ public class MainActivity extends BaseActivity
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setFullScreen();
 
-        startLocationServiceIfNecessary();
+        checkLocationPermissions();
+        startLocationServiceIfNecessaryAndPermissionsGranted();
     }
 
     //TODO: move this somewhere else?
+
+    /**
+     * assumes permissions already granted
+     */
     private void startLocationServiceIfNecessary()
     {
         Intent i = new Intent(this, LocationService.class);
@@ -69,11 +74,6 @@ public class MainActivity extends BaseActivity
             //nothing will happen if it's already running
             if (!SystemUtils.isServiceRunning(this, LocationService.class))
             {
-                if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
-                {
-                    ActivityCompat.requestPermissions(this, LocationConstants.LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
-                    return;
-                }
                 startService(i);
             }
         }
@@ -84,6 +84,24 @@ public class MainActivity extends BaseActivity
         }
         //at most one service instance will be running
 
+    }
+
+    /**
+     * checks if location permissions are granted
+     * if not, show a popup dialog
+     * <p/>
+     * currently non-blocking
+     *
+     * @return true if permissions already granted, false otherwise
+     */
+    private boolean checkLocationPermissions()
+    {
+        if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        {
+            ActivityCompat.requestPermissions(this, LocationConstants.LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
+            return false; //permissions not granted yet
+        }
+        return true; //permissions already granted
     }
 
     /**
@@ -114,8 +132,8 @@ public class MainActivity extends BaseActivity
     {
         super.onResume();
         mEventLogFactory.createAppOpenLog();
-
         bus.register(this);
+        //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
         configManager.prefetch();
         providerManager.prefetch();
         checkForTerms();
@@ -130,7 +148,19 @@ public class MainActivity extends BaseActivity
     public void onPause()
     {
         bus.post(new LogEvent.SaveLogsEvent());
-        bus.unregister(this);
+        try
+        {
+             /*
+                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
+                 Activity.onPause() can be called without Activity.onResume()
+                 so unregistering the bus here can cause an exception
+              */
+            bus.unregister(this);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e); //want more info for now
+        }
         super.onPause();
     }
 

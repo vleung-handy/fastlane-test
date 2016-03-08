@@ -1,6 +1,7 @@
 package com.handy.portal.util;
 
 import android.os.CountDownTimer;
+import android.support.annotation.Nullable;
 import android.text.format.Time;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
     public final static SimpleDateFormat MONTH_YEAR_FORMATTER = new SimpleDateFormat("MMM yyyy");
+    public final static SimpleDateFormat ISO8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int DAYS_IN_WEEK = 7;
@@ -38,6 +40,7 @@ public final class DateTimeUtils
     public final static long MILLISECONDS_IN_30_MINS = MILLISECONDS_IN_MINUTE * 30;
     public final static long MILLISECONDS_IN_52_MINS = MILLISECONDS_IN_MINUTE * 52;
     public final static int SECONDS_IN_MINUTE = 60;
+    public final static String UTC_TIMEZONE = "UTC";
 
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)
     {
@@ -47,23 +50,28 @@ public final class DateTimeUtils
         return dateDifference <= DateTimeUtils.MILLISECONDS_IN_HOUR * hours;
     }
 
+    @Nullable
     public static String getMonthShortName(Date date)
     {
         if (date == null) { return null; }
         return getMonthShortNameFormatter().format(date);
     }
 
+    @Nullable
     public static String getYear(Date date)
     {
         if (date == null) { return null; }
         return getYearFormatter().format(date);
     }
 
+    @Nullable
     public static String getMonthAndYear(Date date)
     {
         if (date == null) { return null; }
         return getMonthYearFormatter().format(date);
     }
+
+    @Nullable
     public static Integer getYearInt(Date date)
     {
         if (date == null) { return null; }
@@ -79,48 +87,63 @@ public final class DateTimeUtils
         return c.get(Calendar.DAY_OF_MONTH);
     }
 
+    @Nullable
     public static String formatDateTo12HourClock(Date date)
     {
         if (date == null) { return null; }
         return getClockFormatter12hr().format(date);
     }
 
+    @Nullable
     public static String formatDateDayOfWeekMonthDay(Date date)
     {
         if (date == null) { return null; }
         return getDayOfWeekMonthDayFormatter().format(date);
     }
 
+    @Nullable
     public static String formatDateMonthDay(Date date)
     {
         if (date == null) { return null; }
         return getSummaryDateFormatter().format(date);
     }
 
+    @Nullable
     public static String formatDetailedDate(Date date)
     {
         if (date == null) { return null; }
         return getDetailedDateFormatter().format(date);
     }
 
+    @Nullable
     public static String formatMonthDate(Date date)
     {
         if (date == null) { return null; }
         return getMonthDateFormatter().format(date);
     }
 
+    @Nullable
     public static String formatMonthDateYear(Date date)
     {
         if (date == null) { return null; }
         return getMonthDateYearFormatter().format(date);
     }
 
+    @Nullable
     public static String formatDayOfWeekMonthDateYear(Date date)
     {
         if (date == null) { return null; }
         return getDayOfWeekMonthDateYearFormatter().format(date);
     }
 
+    @Nullable
+    public static String formatIso8601(Date date)
+    {
+        if (date == null) { return null; }
+        return getIso8601Formatter().format(date);
+    }
+
+    @Nullable
     public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
     {
         if (start == null || end == null) { return null; }
@@ -311,6 +334,12 @@ public final class DateTimeUtils
     {
         MONTH_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return MONTH_YEAR_FORMATTER;
+    }
+
+    private static SimpleDateFormat getIso8601Formatter()
+    {
+        ISO8601_FORMATTER.setTimeZone(TimeZone.getTimeZone(UTC_TIMEZONE));
+        return ISO8601_FORMATTER;
     }
 
 }

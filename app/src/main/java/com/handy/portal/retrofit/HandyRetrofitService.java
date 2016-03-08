@@ -244,10 +244,14 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/evaluation")
     void getProviderEvaluation(@Path("id") String providerId, HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "rating/{id}?min_star={min_star}")
-    void getProviderFiveStarRatings(@Path("id") String providerId, @Path("min_star") String minStar, HandyRetrofitCallback cb);
+    @GET(PROVIDERS_PATH + "{id}/ratings?commented_only=true")
+    void getProviderFiveStarRatings(@Path("id") String providerId,
+                                    @Query("min_star") Integer minStar,
+                                    @Query("to_booking_date") String toBookingDate,
+                                    @Query("from_booking_date") String fromBookingDate,
+                                    HandyRetrofitCallback cb);
 
-    @GET(PROVIDERS_PATH + "feedback/{id}")
+    @GET(PROVIDERS_PATH + "{id}/feedback")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @POST("/events")

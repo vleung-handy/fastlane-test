@@ -3,6 +3,7 @@ package com.handy.portal.ui.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -22,6 +23,12 @@ public class BulletTextView extends FrameLayout
         super(context);
         init();
         setText(text);
+    }
+
+    public BulletTextView(final Context context)
+    {
+        super(context);
+        init();
     }
 
     public BulletTextView(final Context context, final AttributeSet attrs)
@@ -47,6 +54,7 @@ public class BulletTextView extends FrameLayout
     {
         inflate(getContext(), R.layout.text_view_bullet, this);
         ButterKnife.bind(this);
+        mTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public void setText(CharSequence text)

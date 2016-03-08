@@ -91,6 +91,7 @@ import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
+import com.handy.portal.webview.OnboardingFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -166,6 +167,7 @@ import retrofit.converter.GsonConverter;
         RatingsAndFeedbackFragment.class,
         ReferAFriendFragment.class,
         FiveStarRatingPercentageView.class,
+        OnboardingFragment.class,
 })
 public final class ApplicationModule
 {
@@ -352,9 +354,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager(final Bus bus, final DataManager dataManager)
+    final ConfigManager provideConfigManager(final DataManager dataManager, final Bus bus)
     {
-        return new ConfigManager(bus, dataManager);
+        return new ConfigManager(dataManager, bus);
     }
 
     @Provides
@@ -475,9 +477,12 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager, final PrefsManager prefsManager, final HandyRetrofitEndpoint endpoint)
+    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager,
+                                             final PrefsManager prefsManager,
+                                             final ConfigManager configManager,
+                                             final HandyRetrofitEndpoint baseUrlEndpoint)
     {
-        return new WebUrlManager(providerManager, prefsManager, endpoint);
+        return new WebUrlManager(providerManager, prefsManager, configManager, baseUrlEndpoint);
     }
 
     @Provides
