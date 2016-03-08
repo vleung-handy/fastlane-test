@@ -6,6 +6,7 @@ import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 
+import java.util.Date;
 import java.util.List;
 
 public abstract class ProviderDashboardEvent extends HandyEvent
@@ -33,7 +34,45 @@ public abstract class ProviderDashboardEvent extends HandyEvent
     }
 
 
-    public static class RequestProviderFiveStarRatings extends RequestEvent {}
+    public static class RequestProviderFiveStarRatings extends RequestEvent
+    {
+        private Integer mMinStar;
+        private String mToBookingDate;
+        private String mFromBookingDate;
+
+        public RequestProviderFiveStarRatings(Integer minStar)
+        {
+            mMinStar = minStar;
+        }
+
+        public RequestProviderFiveStarRatings(Integer minStar, String toBookingDate)
+        {
+            mMinStar = minStar;
+            mToBookingDate = toBookingDate;
+        }
+
+        public RequestProviderFiveStarRatings(Integer minStar, String toBookingDate, String fromBookingDate)
+        {
+            mMinStar = minStar;
+            mToBookingDate = toBookingDate;
+            mFromBookingDate = fromBookingDate;
+        }
+
+        public Integer getMinStar()
+        {
+            return mMinStar;
+        }
+
+        public String getFromBookingDate()
+        {
+            return mFromBookingDate;
+        }
+
+        public String getToBookingDate()
+        {
+            return mToBookingDate;
+        }
+    }
 
 
     public static class ReceiveProviderFiveStarRatingsSuccess extends ReceiveSuccessEvent
