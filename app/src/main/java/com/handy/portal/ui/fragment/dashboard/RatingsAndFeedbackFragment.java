@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment.dashboard;
 
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -30,8 +31,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DashboardFragment extends ActionBarFragment
+public class RatingsAndFeedbackFragment extends ActionBarFragment
 {
+
     @Inject
     ProviderManager mProviderManager;
 
@@ -60,7 +62,7 @@ public class DashboardFragment extends ActionBarFragment
     @Override
     protected MainViewTab getTab()
     {
-        return MainViewTab.DASHBOARD;
+        return MainViewTab.RATINGS_AND_FEEDBACK;
     }
 
     @Nullable
@@ -79,7 +81,7 @@ public class DashboardFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.my_performance, false);
+        setActionBar(R.string.ratings_and_feedback, false);
         getProviderEvaluation();
     }
 

@@ -22,9 +22,9 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     protected Toast toast;
 
     @Inject
-    DataManager dataManager;
+    protected DataManager dataManager;
     @Inject
-    ConfigManager configManager;
+    protected ConfigManager configManager;
 
     @Inject
     protected GoogleManager googleManager;

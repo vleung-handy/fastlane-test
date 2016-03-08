@@ -81,9 +81,7 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
             animation.setAnimationListener(new Animation.AnimationListener()
             {
                 @Override
-                public void onAnimationStart(Animation animation)
-                {
-                }
+                public void onAnimationStart(Animation animation) { }
 
                 @Override
                 public void onAnimationEnd(Animation animation)
@@ -92,9 +90,7 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation)
-                {
-                }
+                public void onAnimationRepeat(Animation animation) { }
             });
         }
     }

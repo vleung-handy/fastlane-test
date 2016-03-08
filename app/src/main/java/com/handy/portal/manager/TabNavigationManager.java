@@ -20,6 +20,8 @@ public class TabNavigationManager
     private final WebUrlManager mWebUrlManager;
     private final ConfigManager mConfigManager;
 
+    private boolean mHaveShownNonBlockingOnboarding = false; //Now storing this for session client side so non-blocking will not be shown multiple times
+
     @Inject
     public TabNavigationManager(final Bus bus,
                                 final ProviderManager providerManager,
@@ -40,9 +42,20 @@ public class TabNavigationManager
     //catch this , add extra data/process needed data, pass along to fragment for final usage/swap
     public void onRequestProcessNavigateToTab(HandyEvent.RequestProcessNavigateToTab event)
     {
-//Ordering is important, first check if they should ever see anything
+        //Ordering is important for these checks, they have different priorities
+
+        //HACK : Magical hack to direct new pros to a webview for their onboarding
+        if (doesCachedProviderNeedOnboarding() &&
+                (isOnboardingBlocking() || !mHaveShownNonBlockingOnboarding))
+        {
+            if (!isOnboardingBlocking())
+            {
+                mHaveShownNonBlockingOnboarding = true;
+            }
+            event.targetTab = MainViewTab.ONBOARDING;
+        }
         //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
-        if (doesCachedProviderNeedPaymentInformation() &&
+        else if (doesCachedProviderNeedPaymentInformation() &&
                 configBlockingForPayment() &&
                 (
                         event.targetTab == MainViewTab.AVAILABLE_JOBS ||
@@ -53,9 +66,8 @@ public class TabNavigationManager
         {
             event.targetTab = MainViewTab.PAYMENT_BLOCKING;
         }
-
         //HACK : Magical hack to turn block pros available jobs into the webview block jobs
-        if (isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
+        else if (isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
         {
             event.targetTab = MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW;
         }
@@ -71,9 +83,22 @@ public class TabNavigationManager
         mBus.post(new HandyEvent.SwapFragmentNavigation(swapFragmentArguments));
     }
 
-    private  boolean isCachedProviderBlockPro()
+    private boolean isCachedProviderBlockPro()
     {
         return mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().isBlockCleaner();
+    }
+
+    private boolean doesCachedProviderNeedOnboarding()
+    {
+        return (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().shouldShowOnboarding());
+    }
+
+    private boolean isOnboardingBlocking()
+    {
+        return (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().getOnboardingParams() != null &&
+                mConfigManager.getConfigurationResponse().getOnboardingParams().isOnboardingBlocking());
     }
 
     private boolean doesCachedProviderNeedPaymentInformation()
@@ -130,7 +155,7 @@ public class TabNavigationManager
         }
 
         //The new web view page URL style requires some processing since it is structured in a RESTful way
-        if(targetTab.getWebViewTarget() != null)
+        if (targetTab.getWebViewTarget() != null)
         {
             String constructedUrl = mWebUrlManager.constructUrlForTargetTab(targetTab);
             inputArgumentsBundle.putString(BundleKeys.TARGET_URL, constructedUrl);
@@ -162,11 +187,14 @@ public class TabNavigationManager
             addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
+
+            // Account Settings
+            addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
+            addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
         }
 
         return addToBackStack;
     }
-
 
 
 }

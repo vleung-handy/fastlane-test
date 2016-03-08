@@ -14,11 +14,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.location.LocationConstants;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.view.PriceMarker;
 import com.handy.portal.util.UIUtils;
+import com.handy.portal.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,6 +76,10 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
     @Override
     public void onMapReady(GoogleMap map)
     {
+        if (!Utils.areAnyPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
+        {
+            return;
+        }
         map.setMyLocationEnabled(true);
 
         addCustomMarkers(map);
@@ -96,6 +102,10 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
 
     private void addCustomMarkers(GoogleMap map)
     {
+        if (!Utils.areAnyPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
+        {
+            return;
+        }
         map.setMyLocationEnabled(false);
         for (int i = 0; i < mBookings.size(); ++i)
         {

@@ -130,6 +130,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private boolean mHaveTrackedSeenBookingInstructions;
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
     private String mSource;
+    private Bundle mSourceExtras;
 
     @Override
     protected MainViewTab getTab()
@@ -171,7 +172,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 mAssociatedBookingDate = new Date(bookingDateLong);
             }
 
-            setSource();
+            setSourceInfo();
         }
         else
         {
@@ -185,7 +186,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         return view;
     }
 
-    private void setSource()
+    private void setSourceInfo()
     {
         if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
         {
@@ -194,6 +195,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         else if (getArguments().containsKey(BundleKeys.DEEPLINK))
         {
             mSource = SOURCE_DISPATCH_NOTIFICATION_TOGGLE;
+            mSourceExtras = getArguments();
         }
     }
 
@@ -733,7 +735,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestClaimJob(Booking booking)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(booking, mSource));
+        bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
     }
 
     private void requestRemoveJob(@NonNull Booking booking)
@@ -1210,7 +1212,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
     }
 
-    private void showErrorDialogReturnToAvailable(String title, String errorMessage, String option1, final long returnDateEpochTime)
+    private void showErrorDialogReturnToAvailable(String errorMessage, String title, String option1, final long returnDateEpochTime)
     {
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());

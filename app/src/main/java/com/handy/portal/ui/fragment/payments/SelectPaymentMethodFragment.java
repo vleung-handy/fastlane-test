@@ -2,7 +2,6 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -68,23 +67,24 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public void onCreate(final Bundle savedInstanceState)
     {
-        switch (item.getItemId())
-        {
-            case R.id.action_exit:
-                onBackButtonPressed();
-                return true;
-            default:
-                return false;
-        }
+        super.onCreate(savedInstanceState);
+        setOptionsMenuEnabled(true);
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setActionBar(R.string.select_payment_method, false);
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.select_payment_method, false);
+        setBackButtonEnabled(true);
         paymentMethodContainer.setVisibility(View.GONE);
         bus.post(new PaymentEvent.RequestPaymentFlow());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));

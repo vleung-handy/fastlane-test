@@ -26,7 +26,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +41,7 @@ public class ProviderManager
     private static final String PROVIDER_PROFILE_CACHE_KEY = "provider_profile";
     private Cache<String, ProviderSettings> mProviderSettingsCache;
     private static final String PROVIDER_SETTINGS_CACHE_KEY = "provider_settings";
+    private static final String RATINGS_KEY = "ratings";
 
     public ProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
@@ -265,40 +266,26 @@ public class ProviderManager
     @Subscribe
     public void onRequestProviderFiveStarRatings(ProviderDashboardEvent.RequestProviderFiveStarRatings event)
     {
-//        String providerId = "";
+        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        // TODO: remove this fake data once the api is ready
-        final List<ProviderRating> ratings = new ArrayList<>();
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
-        ratings.add(new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job"));
+        mDataManager.getProviderFiveStarRatings(providerId, event.getMinStar(), event.getToBookingDate(), event.getFromBookingDate(), new DataManager.Callback<HashMap<String, List<ProviderRating>>>()
+        {
+            @Override
+            public void onSuccess(final HashMap<String, List<ProviderRating>> responseHash)
+            {
+                List<ProviderRating> providerRatings = responseHash.get(RATINGS_KEY);
+                if (providerRatings != null)
+                {
+                    mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(providerRatings));
+                }
+            }
 
-        mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(ratings));
-
-//        mDataManager.getProviderFiveStarRatings(providerId, "5", new DataManager.Callback<List<ProviderRating>>()
-//        {
-//            @Override
-//            public void onSuccess(final List<ProviderRating> providerRatings)
-//            {
-//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(providerRatings));
-//            }
-//
-//            @Override
-//            public void onError(final DataManager.DataManagerError error)
-//            {
-//                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError(error));
-//            }
-//        });
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError(error));
+            }
+        });
 
     }
 

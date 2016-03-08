@@ -54,8 +54,6 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.handy.portal.ui.constructor.ProfileContactView;
-import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
@@ -63,7 +61,7 @@ import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
-import com.handy.portal.ui.element.profile.ManagementToolsView;
+import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
@@ -72,15 +70,16 @@ import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.PleaseUpdateFragment;
+import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
+import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -90,9 +89,9 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
+import com.handy.portal.webview.OnboardingFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -118,7 +117,6 @@ import retrofit.converter.GsonConverter;
         LoginActivityFragment.class,
         LoginActivity.class,
         ScheduledBookingsFragment.class,
-        ProfileFragment.class,
         AvailableBookingsFragment.class,
         MainActivityFragment.class,
         BaseApplication.class,
@@ -147,16 +145,12 @@ import retrofit.converter.GsonConverter;
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
-        ProfileContactView.class,
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
-        ProfileReferralView.class,
         PaymentsBatchListView.class,
-        DashboardFragment.class,
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
         CancellationRequestFragment.class,
-        ManagementToolsView.class,
         SupportActionView.class,
         NotificationsFragment.class,
         NotificationsListView.class,
@@ -169,7 +163,11 @@ import retrofit.converter.GsonConverter;
         LocationService.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
+        AccountSettingsFragment.class,
+        RatingsAndFeedbackFragment.class,
+        ReferAFriendFragment.class,
         FiveStarRatingPercentageView.class,
+        OnboardingFragment.class,
 })
 public final class ApplicationModule
 {
@@ -356,9 +354,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager(final Bus bus, final DataManager dataManager)
+    final ConfigManager provideConfigManager(final DataManager dataManager, final Bus bus)
     {
-        return new ConfigManager(bus, dataManager);
+        return new ConfigManager(dataManager, bus);
     }
 
     @Provides
@@ -479,9 +477,12 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager, final PrefsManager prefsManager, final HandyRetrofitEndpoint endpoint)
+    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager,
+                                             final PrefsManager prefsManager,
+                                             final ConfigManager configManager,
+                                             final HandyRetrofitEndpoint baseUrlEndpoint)
     {
-        return new WebUrlManager(providerManager, prefsManager, endpoint);
+        return new WebUrlManager(providerManager, prefsManager, configManager, baseUrlEndpoint);
     }
 
     @Provides

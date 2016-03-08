@@ -31,6 +31,7 @@ import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
+import com.handy.portal.ui.layout.TabbedLayout;
 import com.handy.portal.util.DeeplinkMapper;
 import com.squareup.otto.Subscribe;
 
@@ -59,14 +60,14 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mButtonMore;
     @Bind(R.id.loading_overlay)
     View mLoadingOverlayView;
-    @Bind(R.id.nav_link_my_profile)
-    RadioButton mNavLinkMyProfile;
-    @Bind(R.id.nav_link_dashboard)
-    RadioButton mNavLinkDashboard;
     @Bind(R.id.nav_link_payments)
     RadioButton mNavLinkPayments;
-    @Bind(R.id.nav_link_edit_payment_method)
-    RadioButton mNavLinkEditPaymentMethod;
+    @Bind(R.id.nav_link_ratings_and_feedback)
+    RadioButton mNavLinkRatingsAndFeedback;
+    @Bind(R.id.nav_link_refer_a_friend)
+    RadioButton mNavLinkReferAFriend;
+    @Bind(R.id.nav_link_account_settings)
+    RadioButton mNavAccountSettings;
     @Bind(R.id.nav_link_help)
     RadioButton mNavLinkHelp;
     @Bind(R.id.drawer_layout)
@@ -77,6 +78,8 @@ public class MainActivityFragment extends InjectedFragment
     RadioGroup mNavTrayLinks;
     @Bind(R.id.navigation_header)
     TextView mNavigationHeader;
+    @Bind(R.id.content_frame)
+    TabbedLayout mContentFrame;
 
     //What tab are we currently displaying
     private MainViewTab currentTab = null;
@@ -86,6 +89,8 @@ public class MainActivityFragment extends InjectedFragment
     public static boolean clearingBackStack = false;
 
     private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
+
+    private boolean mFirstTimeConfigReturned = true; //the first time we get config response back we may need to navigate away
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,12 +104,6 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
@@ -114,6 +113,31 @@ public class MainActivityFragment extends InjectedFragment
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
         handleDeeplink();
+    }
+
+    @Subscribe
+    public void onConfigurationResponseRetrieved(HandyEvent.ReceiveConfigurationSuccess event)
+    {
+        //If the config response came back for the first time may need to navigate away
+        //Normally the fragment would take care of itself, but this would launch the fragment if needed
+        if (mFirstTimeConfigReturned)
+        {
+            mFirstTimeConfigReturned = false;
+            handleOnboardingFlow();
+        }
+    }
+
+    private void handleOnboardingFlow()
+    {
+        if (currentTab != null &&
+                currentTab != MainViewTab.ONBOARDING &&
+                configManager.getConfigurationResponse() != null &&
+                configManager.getConfigurationResponse().shouldShowOnboarding()
+                )
+        {
+            //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
+            switchToTab(MainViewTab.ONBOARDING, false);
+        }
     }
 
     private void handleDeeplink()
@@ -145,6 +169,39 @@ public class MainActivityFragment extends InjectedFragment
 //Event Listeners
 
     @Subscribe
+    public void onSetNavigationTabVisibility(HandyEvent.SetNavigationTabVisibility event)
+    {
+        setTabVisibility(event.isVisible);
+    }
+
+    private void setTabVisibility(boolean isVisible)
+    {
+        if (mContentFrame != null)
+        {
+            mContentFrame.setAutoHideShowTabs(isVisible);
+        }
+
+        if (tabs != null)
+        {
+            tabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    @Subscribe
+    public void onSetNavigationDrawerActive(HandyEvent.SetNavigationDrawerActive event)
+    {
+        setDrawerActive(event.isActive);
+    }
+
+    private void setDrawerActive(boolean isActive)
+    {
+        if (mDrawerLayout != null)
+        {
+            mDrawerLayout.setDrawerLockMode(isActive ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+    }
+
+    @Subscribe
     public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
     {
         //Catch this event then throw one to have the manager do the processing
@@ -172,6 +229,9 @@ public class MainActivityFragment extends InjectedFragment
         addUpdateTabCallback(swapFragmentArguments);
         //Track in analytics
         trackSwitchToTab(swapFragmentArguments.targetTab);
+        //Turn navigation tabs and drawer on by default, some fragments may lock these afterwards
+        setTabVisibility(true);
+        setDrawerActive(true);
         //Swap the fragments
         swapFragment(swapFragmentArguments);
         //Update the tab button display
@@ -225,10 +285,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerNavDrawerListeners()
     {
-        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
-        mNavLinkDashboard.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
         mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
-        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
+        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.RATINGS_AND_FEEDBACK, null));
+        mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
+        mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
         mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
     }
 
@@ -312,6 +372,15 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
+        //If the user navved away from a non-blocking onboarding log it
+        if (currentTab == MainViewTab.ONBOARDING &&
+                targetTab != MainViewTab.ONBOARDING &&
+                userTriggered)
+        {
+            bus.post(new LogEvent.AddLogEvent(
+                    mEventLogFactory.createWebOnboardingDismissedLog()));
+        }
+
         requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
     }
 
@@ -382,31 +451,28 @@ public class MainActivityFragment extends InjectedFragment
                     mNavLinkPayments.toggle();
                 }
                 break;
-                case PROFILE:
+                case RATINGS_AND_FEEDBACK:
                 {
                     mButtonMore.toggle();
-                    mNavLinkMyProfile.toggle();
+                    mNavLinkRatingsAndFeedback.toggle();
                 }
                 break;
-                case DASHBOARD:
-                case DASHBOARD_TIERS:
-                case DASHBOARD_FEEDBACK:
-                case DASHBOARD_REVIEWS:
+                case REFER_A_FRIEND:
                 {
                     mButtonMore.toggle();
-                    mNavLinkDashboard.toggle();
+                    mNavLinkReferAFriend.toggle();
+                }
+                break;
+                case ACCOUNT_SETTINGS:
+                {
+                    mButtonMore.toggle();
+                    mNavAccountSettings.toggle();
                 }
                 break;
                 case HELP:
                 {
                     mButtonMore.toggle();
                     mNavLinkHelp.toggle();
-                }
-                break;
-                case SELECT_PAYMENT_METHOD:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkEditPaymentMethod.toggle();
                 }
                 break;
             }
