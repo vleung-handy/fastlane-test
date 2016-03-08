@@ -33,8 +33,7 @@ public interface HandyRetrofitService
     String ZIP_CLUSTER_POLYGONS_PATH = "/zipcluster_polygons/";
 
 
-    //TODO: replace with actual endpoint path
-    @POST(PROVIDERS_PATH + "{id}/geolocation_schedule")
+    @GET(PROVIDERS_PATH + "{id}/location_schedules")
     void getLocationSchedule(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @POST(PROVIDERS_PATH + "{id}/geolocation")

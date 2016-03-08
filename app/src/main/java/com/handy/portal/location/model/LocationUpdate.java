@@ -43,11 +43,6 @@ public class LocationUpdate
         return mBearingDegrees;
     }
 
-    public String getEventName()
-    {
-        return mEventName;
-    }
-
     public Date getCapturedTimestamp()
     {
         return mCapturedTimestamp;
@@ -56,11 +51,6 @@ public class LocationUpdate
     public float getBatteryLevelPercent()
     {
         return mBatteryLevelPercent;
-    }
-
-    public String getBookingId()
-    {
-        return mBookingId;
     }
 
     @SerializedName("latitude")
@@ -75,16 +65,12 @@ public class LocationUpdate
     float mSpeed;
     @SerializedName("bearing")
     float mBearingDegrees;
-    @SerializedName("event_name")
-    String mEventName;
     @SerializedName("captured_at")
     Date mCapturedTimestamp;
     @SerializedName("battery_level")
     float mBatteryLevelPercent; //0.95
     @SerializedName("connection_type")
     String mActiveNetworkType;
-    @SerializedName("booking_id")
-    String mBookingId;
 
     public LocationUpdate(double latitude,
                           double longitude,
@@ -92,10 +78,8 @@ public class LocationUpdate
                           double altitudeMeters,
                           float speed,
                           float bearingDegrees,
-                          String eventName,
                           Date capturedTimestamp,
-                          float batteryLevelPercent,
-                          String bookingId)
+                          float batteryLevelPercent)
     {
         mLatitude = latitude;
         mLongitude = longitude;
@@ -103,18 +87,14 @@ public class LocationUpdate
         mAltitudeMeters = altitudeMeters;
         mSpeed = speed;
         mBearingDegrees = bearingDegrees;
-        mEventName = eventName;
         mCapturedTimestamp = capturedTimestamp;
         mBatteryLevelPercent = batteryLevelPercent;
-        mBookingId = bookingId;
     }
 
     //TODO: move this?
     public static LocationUpdate from(@NonNull Location location,
                                       @NonNull LocationQueryStrategy locationQueryStrategy)
     {
-        String eventName = locationQueryStrategy.getEventName();
-        String bookingId = locationQueryStrategy.getBookingId();
         LocationUpdate locationUpdate = new LocationUpdate(
                 location.getLatitude(),
                 location.getLongitude(),
@@ -122,10 +102,8 @@ public class LocationUpdate
                 location.getAltitude(),
                 location.getSpeed(),
                 location.getBearing(),
-                eventName,//event name, test only
                 new Date(location.getTime()),
-                0, //no battery level yet
-                bookingId //no booking id yet
+                0 //no battery level yet
         );
         return locationUpdate;
     }
@@ -159,11 +137,9 @@ public class LocationUpdate
                 + "\nalt: " + mAltitudeMeters
                 + "\nspeed: " + mSpeed
                 + "\nbearing: " + mBearingDegrees
-                + "\nevent name: " + mEventName
                 + "\ntimestamp: " + mCapturedTimestamp.toString()
                 + "\nbattery level: " + mBatteryLevelPercent
-                + "\nconnection type: " + mActiveNetworkType
-                + "\nbooking id: " + mBookingId;
+                + "\nconnection type: " + mActiveNetworkType;
         return result;
     }
 }
