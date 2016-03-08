@@ -38,6 +38,7 @@ import com.handy.portal.model.payments.StripeTokenResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -145,7 +146,7 @@ public abstract class DataManager
     // Pro Dashboard
     public abstract void getProviderEvaluation(String providerId, Callback<ProviderEvaluation> cb);
 
-    public abstract void getProviderFiveStarRatings(String providerId, String minStar, Callback<List<ProviderRating>> cb);
+    public abstract void getProviderFiveStarRatings(String providerId, Integer minStar, String toBookingDate, String fromBookingDate, Callback<HashMap<String, List<ProviderRating>>> cb);
 
     public abstract void getProviderFeedback(String providerId, Callback<List<ProviderFeedback>> cb);
 

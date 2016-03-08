@@ -56,28 +56,31 @@ public final class HelpNodeView extends InjectedRelativeLayout
             return;
         }
 
-        switch (helpNode.getType())
+        if (helpNode.getType() != null)
         {
-            case HelpNode.HelpNodeType.ROOT:
-            case HelpNode.HelpNodeType.NAVIGATION:
-            case HelpNode.HelpNodeType.BOOKINGS_NAV:
-            case HelpNode.HelpNodeType.BOOKING:
+            switch (helpNode.getType())
             {
-                layoutNavList(helpNode);
-            }
-            break;
+                case HelpNode.HelpNodeType.ROOT:
+                case HelpNode.HelpNodeType.NAVIGATION:
+                case HelpNode.HelpNodeType.BOOKINGS_NAV:
+                case HelpNode.HelpNodeType.BOOKING:
+                {
+                    layoutNavList(helpNode);
+                }
+                break;
 
-            case HelpNode.HelpNodeType.ARTICLE:
-            {
-                layoutForArticle(helpNode);
-            }
-            break;
+                case HelpNode.HelpNodeType.ARTICLE:
+                {
+                    layoutForArticle(helpNode);
+                }
+                break;
 
-            default:
-            {
-                Crashlytics.log("Unrecognized node type : " + helpNode.getType());
+                default:
+                {
+                    Crashlytics.log("Unrecognized node type : " + helpNode.getType());
+                }
+                break;
             }
-            break;
         }
     }
 
@@ -107,7 +110,7 @@ public final class HelpNodeView extends InjectedRelativeLayout
                 continue;
             }
 
-            if (childNode.getType().equals(HelpNode.HelpNodeType.CONTACT))
+            if (childNode.getType() != null && childNode.getType().equals(HelpNode.HelpNodeType.CONTACT))
             {
                 contactButton.setVisibility(VISIBLE);
             }
@@ -129,7 +132,7 @@ public final class HelpNodeView extends InjectedRelativeLayout
                 continue;
             }
 
-            if (childNode.getType().equals(HelpNode.HelpNodeType.BOOKING))
+            if (childNode.getType() != null && childNode.getType().equals(HelpNode.HelpNodeType.BOOKING))
             {
                 navView = inflate(R.layout.list_item_help_booking_nav, navOptionsLayout);
 

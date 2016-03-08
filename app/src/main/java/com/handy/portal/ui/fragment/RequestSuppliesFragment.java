@@ -3,9 +3,6 @@ package com.handy.portal.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -54,10 +51,17 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @Override
     protected MainViewTab getTab()
     {
-        return MainViewTab.PROFILE;
+        return MainViewTab.REQUEST_SUPPLIES;
     }
 
     private ProviderProfile mProviderProfile;
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setOptionsMenuEnabled(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -74,30 +78,11 @@ public class RequestSuppliesFragment extends ActionBarFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.menu_x_back, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_exit:
-                onBackButtonPressed();
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
         setActionBar(R.string.request_supplies, false);
+        setBackButtonEnabled(true);
     }
 
     @OnClick(R.id.request_supplies_button)
@@ -124,7 +109,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         // Verify with Kenny that this transition is ok; may need to refactor later
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
+        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
     }
 
     @Subscribe

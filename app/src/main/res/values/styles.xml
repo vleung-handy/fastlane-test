@@ -160,7 +160,7 @@
     </style>
 
     <style name="Button.Grey">
-        <item name="android:background">@drawable/button_grey</item>
+        <item name="android:background">@drawable/button_gray</item>
         <item name="android:textColor">@drawable/button_text_white</item>
     </style>
 

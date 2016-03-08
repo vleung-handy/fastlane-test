@@ -1,7 +1,9 @@
 package com.handy.portal.model.logs;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.manager.ProviderManager;
@@ -82,7 +84,11 @@ public class EventLogFactory
                 serviceId, regionId, zipCode, requested, dateStart, listNumber);
     }
 
-    public EventLog createAvailableJobClaimSuccessLog(Booking booking, String source)
+    public EventLog createAvailableJobClaimSuccessLog(
+            Booking booking,
+            String source,
+            @Nullable Bundle sourceExtras
+    )
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
@@ -92,8 +98,10 @@ public class EventLogFactory
         Date dateStart = booking.getStartDate();
         int frequency = booking.getFrequency();
 
-        return new AvailableJobsLog.ClaimSuccess(bookingId,
-                serviceId, regionId, zipCode, requested, dateStart, frequency, source);
+        return new AvailableJobsLog.ClaimSuccess(
+                bookingId, serviceId, regionId, zipCode, requested, dateStart, frequency, source,
+                sourceExtras
+        );
     }
 
     public EventLog createAvailableJobClaimErrorLog(Booking booking, String source)

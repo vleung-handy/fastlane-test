@@ -73,27 +73,26 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
     protected void showThenDismiss()
     {
         View view = getView();
-        view.setVisibility(View.VISIBLE);
-        Animation animation = AnimationUtils.loadAnimation(view.getContext(), animationId);
-        view.startAnimation(animation);
-        animation.setAnimationListener(new Animation.AnimationListener()
+        if (view != null)
         {
-            @Override
-            public void onAnimationStart(Animation animation)
+            view.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(view.getContext(), animationId);
+            view.startAnimation(animation);
+            animation.setAnimationListener(new Animation.AnimationListener()
             {
-            }
+                @Override
+                public void onAnimationStart(Animation animation) { }
 
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                TransientOverlayDialogFragment.this.dismiss();
-            }
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    TransientOverlayDialogFragment.this.dismiss();
+                }
 
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-            }
-        });
+                @Override
+                public void onAnimationRepeat(Animation animation) { }
+            });
+        }
     }
 
     public void onStart()//dialog becomes visible

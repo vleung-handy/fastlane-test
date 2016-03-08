@@ -25,7 +25,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/extra_margin_large"
         android:layout_marginTop="@dimen/extra_margin_large"
-        android:src="@drawable/rectangle_grey"
+        android:src="@drawable/rectangle_gray"
         />
 
     <TextView

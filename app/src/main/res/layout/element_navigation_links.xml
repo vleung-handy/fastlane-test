@@ -8,37 +8,57 @@
     >
 
     <RadioButton
-        android:id="@+id/nav_link_dashboard"
-        style="@style/TrayButton"
-        android:drawableLeft="@drawable/ic_cup_gray"
-        android:text="@string/dashboard"
-        />
-
-    <RadioButton
         android:id="@+id/nav_link_payments"
         style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_button_payments"
+        android:drawableLeft="@drawable/ic_cup_gray"
         android:text="@string/payments"
         />
 
     <RadioButton
-        android:id="@+id/nav_link_edit_payment_method"
+        android:id="@+id/nav_link_ratings_and_feedback"
         style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_button_edit_payment_method"
-        android:text="@string/edit_payment_method"
+        android:drawableLeft="@drawable/ic_tray_wallet"
+        android:text="@string/ratings_and_feedback"
         />
 
     <RadioButton
-        android:id="@+id/nav_link_my_profile"
         style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_button_profile"
-        android:text="@string/my_profile"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/default_margin_medium"
+        android:layout_marginLeft="@dimen/default_margin_medium"
+        android:layout_marginRight="@dimen/default_margin_medium"
+        android:layout_marginStart="@dimen/default_margin_medium"
+        android:background="@drawable/divider_grey"
+        />
+
+    <RadioButton
+        android:id="@+id/nav_link_refer_a_friend"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/tray_refer_a_friend"
+        android:text="@string/refer_a_friend"
+        />
+
+    <RadioButton
+        style="@style/TrayButton"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/default_margin_medium"
+        android:layout_marginLeft="@dimen/default_margin_medium"
+        android:layout_marginRight="@dimen/default_margin_medium"
+        android:layout_marginStart="@dimen/default_margin_medium"
+        android:background="@drawable/divider_grey"
+        />
+
+    <RadioButton
+        android:id="@+id/nav_link_account_settings"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/tray_account_settings"
+        android:text="@string/account_settings"
         />
 
     <RadioButton
         android:id="@+id/nav_link_help"
         style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_button_help"
+        android:drawableLeft="@drawable/ic_lifesaver"
         android:text="@string/help"
         />
 
