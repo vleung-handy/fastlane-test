@@ -6,14 +6,12 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 /**
  * model received from the server. contains a list of location strategies
  */
 public class LocationQuerySchedule implements Parcelable
 {
-
     //TODO: move
     public final static String EXTRA_LOCATION_SCHEDULE = "location_query_schedule";
 
@@ -25,8 +23,11 @@ public class LocationQuerySchedule implements Parcelable
     /**
      * this should be already sorted by start date
      */
-    @SerializedName("location_query_strategies")
-    LinkedList<LocationQueryStrategy> mLocationQueryStrategies;
+    @SerializedName("location_schedules")
+    private LinkedList<LocationQueryStrategy> mLocationQueryStrategies;
+
+    @SerializedName("success")
+    private boolean mSuccess;
 
     protected LocationQuerySchedule(Parcel in)
     {
@@ -66,6 +67,16 @@ public class LocationQuerySchedule implements Parcelable
         }
     };
 
+    public boolean getSuccess()
+    {
+        return mSuccess;
+    }
+
+    public boolean isEmpty()
+    {
+        return mLocationQueryStrategies == null || mLocationQueryStrategies.isEmpty();
+    }
+
     /**
      * for debugging purposes only
      *
@@ -80,39 +91,5 @@ public class LocationQuerySchedule implements Parcelable
             result = result + locationQueryStrategy.toString() + "\n";
         }
         return result;
-    }
-
-    /**
-     * DARK. NOT USED RIGHT NOW
-     * <p/>
-     * just in case the schedule returned from the server is actually the same, don't want to rebuild all the alarms
-     * TODO we won't need this anymore when the app is better at detecting when bookings are updated
-     *
-     * @param locationQuerySchedule
-     * @return
-     */
-    public boolean equals(LocationQuerySchedule locationQuerySchedule)
-    {
-        if (mLocationQueryStrategies == locationQuerySchedule.getLocationQueryStrategies())
-        { return true; }
-        if (mLocationQueryStrategies == null || locationQuerySchedule.getLocationQueryStrategies() == null
-                || mLocationQueryStrategies.size() != locationQuerySchedule.getLocationQueryStrategies().size())
-        {
-            return false;
-        }
-
-        ListIterator<LocationQueryStrategy> listIterator1 = mLocationQueryStrategies.listIterator();
-        ListIterator<LocationQueryStrategy> listIterator2 = locationQuerySchedule.getLocationQueryStrategies().listIterator();
-        while (listIterator1.hasNext())
-        {
-            LocationQueryStrategy locationQueryStrategy1 = listIterator1.next();
-            LocationQueryStrategy locationQueryStrategy2 = listIterator2.next();
-            if (!locationQueryStrategy1.equals(locationQueryStrategy2))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

@@ -35,6 +35,14 @@ import java.util.Queue;
  */
 public class LocationStrategyHandler //TODO: rename this so it is more distinct from the location query strategy model
 {
+    /**
+     * any strategy that wants accuracy equal to or below this amount
+     * will use the high accuracy mode in LocationApi
+     *
+     * otherwise it will use balanced power mode
+     */
+    public static final int HIGH_ACCURACY_THRESHOLD_METERS = 100;
+
     Queue<LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
     long mTimestampLastUpdatePostedMs;
     LocationQueryStrategy mLocationQueryStrategy;
@@ -78,7 +86,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
                     return; //expired
                 }
                 mLocationStrategyCallbacks.onLocationUpdate(location);
-                LocationUpdate locationUpdate = LocationUpdate.from(location, mLocationQueryStrategy);
+                LocationUpdate locationUpdate = LocationUpdate.from(location);
                 locationUpdate.setBatteryLevelPercent(SystemUtils.getBatteryLevelPercent(mContext));
                 locationUpdate.setActiveNetworkType(SystemUtils.getActiveNetworkType(mContext));
                 onNewLocationUpdate(locationUpdate);
@@ -105,17 +113,13 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     private LocationRequest createLocationRequest()
     {
         int priority;
-        switch (mLocationQueryStrategy.getLocationAccuracyPriority())
+        if(mLocationQueryStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS)
         {
-            case LocationQueryStrategy.ACCURACY_BALANCED_POWER_PRIORITIY:
-                priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
-                break;
-            case LocationQueryStrategy.ACCURACY_HIGH_PRIORITY:
-                priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
-                break;
-            default:
-                priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
-                break;
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
+        }
+        else
+        {
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
         }
 
         long pollingIntervalMs = mLocationQueryStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
