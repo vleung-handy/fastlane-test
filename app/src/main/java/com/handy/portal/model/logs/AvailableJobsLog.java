@@ -1,8 +1,13 @@
 package com.handy.portal.model.logs;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AvailableJobsLog extends EventLog
 {
@@ -85,12 +90,14 @@ public class AvailableJobsLog extends EventLog
         private int mFrequency;
         @SerializedName("claim_source")
         private String mSource;
+        @SerializedName("claim_source_extras")
+        private Map<String, Object> mSourceExtras;
 
 
         public ClaimSuccess(
                 final String bookingId, final String serviceId, final int regionId,
                 final String zipCode, final boolean requested, final Date dateStart,
-                final int frequency, final String source)
+                final int frequency, final String source, @Nullable final Bundle sourceExtras)
         {
             super(EVENT_TYPE);
             mBookingId = bookingId;
@@ -101,6 +108,14 @@ public class AvailableJobsLog extends EventLog
             mDateStart = dateStart;
             mFrequency = frequency;
             mSource = source;
+            if (sourceExtras != null)
+            {
+                mSourceExtras = new HashMap<>(sourceExtras.size());
+                for (final String key : sourceExtras.keySet())
+                {
+                    mSourceExtras.put(key, sourceExtras.get(key));
+                }
+            }
         }
     }
 
