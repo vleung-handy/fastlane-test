@@ -95,6 +95,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     }
 
     @Override
+    @SuppressWarnings({"ResourceType", "MissingPermission"})
     public void onMapReady(GoogleMap map)
     {
         if (mBooking == null) { return; }
