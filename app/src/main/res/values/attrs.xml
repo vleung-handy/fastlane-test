@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="fontPath" format="string" />
+    <attr name="fontPath"
+          format="string"/>
 
     <declare-styleable name="BasicInputTextView">
-        <attr name="minLength" format="integer"/>
+        <attr name="minLength"
+              format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="notification">
-        <attr name="state_read" format="boolean"></attr>
+        <attr name="state_read"
+              format="boolean"/>
     </declare-styleable>
 </resources>

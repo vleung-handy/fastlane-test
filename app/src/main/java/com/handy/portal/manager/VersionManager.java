@@ -40,7 +40,7 @@ public class VersionManager
     // This backoff duration is used to prevent the app from executing download repeatedly when
     // download fails. It is used to check whether there was a download attempt recently and if so,
     // doesn't execute the update process.
-    private static final int UPDATE_CHECK_BACKOFF_DURATION_MILLIS = DateTimeUtils.MILLISECONDS_IN_MINUTE*5; // 5 minutes
+    private static final int UPDATE_CHECK_BACKOFF_DURATION_MILLIS = DateTimeUtils.MILLISECONDS_IN_MINUTE * 5; // 5 minutes
     private long lastUpdateCheckTimeMillis = 0;
 
     private final Context context;
@@ -233,7 +233,8 @@ public class VersionManager
         try
         {
             pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e)
+        }
+        catch (PackageManager.NameNotFoundException e)
         {
             throw new RuntimeException();
         }

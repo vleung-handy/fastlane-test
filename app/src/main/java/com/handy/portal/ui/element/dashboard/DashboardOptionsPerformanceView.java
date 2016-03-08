@@ -52,7 +52,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     @Bind(R.id.review_text)
     TextView mReviewText;
     @Bind(R.id.five_star_reviews_count)
-    TextView mReivewsCountText;
+    TextView mReviewsCountText;
     @Bind(R.id.review_date)
     TextView mReviewDate;
 
@@ -105,10 +105,10 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         {
             mTierHourlyRateText.setText(getResources().getString(R.string.no_data));
         }
-        List<ProviderFeedback> feedbacks = mProviderEvaluation.getProviderFeedback();
-        if (feedbacks != null && feedbacks.size() > 0)
+        List<ProviderFeedback> feedbackList = mProviderEvaluation.getProviderFeedback();
+        if (feedbackList != null && feedbackList.size() > 0)
         {
-            mFirstFeedbackTitleText.setText(feedbacks.get(0).getTitle());
+            mFirstFeedbackTitleText.setText(feedbackList.get(0).getTitle());
             mFeedbackIcon.setVisibility(VISIBLE);
         }
         else
@@ -122,7 +122,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
             mFirstReview.setVisibility(View.VISIBLE);
             ProviderRating rating = ratings.get(0);
             mReviewText.setText(ratings.get(0).getComment());
-            mReivewsCountText.setText(String.valueOf(ratings.size()));
+            mReviewsCountText.setText(String.valueOf(ratings.size()));
             mReviewDate.setText(DateTimeUtils.getMonthAndYear(rating.getDateRating()));
         }
         else

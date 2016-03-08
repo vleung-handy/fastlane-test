@@ -1,6 +1,5 @@
 package com.handy.portal.helpcenter.helpcontact.ui.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,8 +123,6 @@ public final class HelpContactFragment extends ActionBarFragment
                 onSendMessageButtonClick();
             }
         });
-
-        final Activity activity = this.getActivity();
     }
 
     private void onSendMessageButtonClick()

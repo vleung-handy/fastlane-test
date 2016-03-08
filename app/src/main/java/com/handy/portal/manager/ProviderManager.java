@@ -292,7 +292,8 @@ public class ProviderManager
     @Subscribe
     public void onRequestProviderFeedback(ProviderDashboardEvent.RequestProviderFeedback event)
     {
-        String providerId = "";
+//        String providerId = "";
+
         // TODO: replace with real api call before merge into develop
         List<ProviderFeedback.FeedbackTip> feedbackTips = new ArrayList<>();
         feedbackTips.add(new ProviderFeedback.FeedbackTip("Floors weren't cleaned", "General Cleanliness"));

@@ -4,21 +4,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical"
     >
 
     <RadioButton
         android:id="@+id/nav_link_payments"
         style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_button_payments"
+        android:drawableLeft="@drawable/ic_cup_gray"
         android:text="@string/payments"
         />
 
     <RadioButton
         android:id="@+id/nav_link_ratings_and_feedback"
         style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_ratings_and_feedback"
+        android:drawableLeft="@drawable/ic_tray_wallet"
         android:text="@string/ratings_and_feedback"
         />
 
@@ -59,7 +58,7 @@
     <RadioButton
         android:id="@+id/nav_link_help"
         style="@style/TrayButton"
-        android:drawableLeft="@drawable/tray_button_help"
+        android:drawableLeft="@drawable/ic_lifesaver"
         android:text="@string/help"
         />
 

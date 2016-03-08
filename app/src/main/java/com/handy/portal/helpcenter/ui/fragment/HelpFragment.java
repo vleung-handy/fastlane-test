@@ -109,7 +109,7 @@ public final class HelpFragment extends ActionBarFragment
     private void trackPath(HelpNode helpNode)
     {
         //Don't add the root node to the path as per CX spec
-        if (HelpNode.isValid(helpNode) &&
+        if (HelpNode.isValid(helpNode) && helpNode.getType() != null &&
                 !helpNode.getType().equals(HelpNode.HelpNodeType.ROOT))
         {
             if (currentPathNodeLabels == null)
@@ -133,29 +133,33 @@ public final class HelpFragment extends ActionBarFragment
             return;
         }
 
-        switch (helpNode.getType())
+        if (helpNode.getType() != null)
         {
-            case HelpNode.HelpNodeType.ROOT:
-            case HelpNode.HelpNodeType.BOOKING:
+            switch (helpNode.getType())
             {
-                title = getResources().getString(R.string.help);
-            }
-            break;
+                case HelpNode.HelpNodeType.ROOT:
+                case HelpNode.HelpNodeType.BOOKING:
+                {
+                    title = getResources().getString(R.string.help);
+                }
+                break;
 
-            case HelpNode.HelpNodeType.NAVIGATION:
-            case HelpNode.HelpNodeType.BOOKINGS_NAV:
-            case HelpNode.HelpNodeType.ARTICLE:
-            {
-                title = helpNode.getLabel();
-            }
-            break;
+                case HelpNode.HelpNodeType.NAVIGATION:
+                case HelpNode.HelpNodeType.BOOKINGS_NAV:
+                case HelpNode.HelpNodeType.ARTICLE:
+                {
+                    title = helpNode.getLabel();
+                }
+                break;
 
-            default:
-            {
-                Crashlytics.log("Unrecognized node type : " + helpNode.getType());
+                default:
+                {
+                    Crashlytics.log("Unrecognized node type : " + helpNode.getType());
+                }
+                break;
             }
-            break;
         }
+
         boolean enabled = !HelpNode.HelpNodeType.ROOT.equals(helpNode.getType());
         setActionBar(title, enabled);
     }
@@ -174,22 +178,25 @@ public final class HelpFragment extends ActionBarFragment
             return;
         }
 
-        switch (helpNode.getType())
+        if (helpNode.getType() != null)
         {
-            case HelpNode.HelpNodeType.ROOT:
-            case HelpNode.HelpNodeType.NAVIGATION:
-            case HelpNode.HelpNodeType.BOOKINGS_NAV:
-            case HelpNode.HelpNodeType.BOOKING:
+            switch (helpNode.getType())
             {
-                setupNavigationListClickListeners(helpNode);
-            }
-            break;
+                case HelpNode.HelpNodeType.ROOT:
+                case HelpNode.HelpNodeType.NAVIGATION:
+                case HelpNode.HelpNodeType.BOOKINGS_NAV:
+                case HelpNode.HelpNodeType.BOOKING:
+                {
+                    setupNavigationListClickListeners(helpNode);
+                }
+                break;
 
-            case HelpNode.HelpNodeType.ARTICLE:
-            {
-                setupArticleClickListeners(helpNode);
+                case HelpNode.HelpNodeType.ARTICLE:
+                {
+                    setupArticleClickListeners(helpNode);
+                }
+                break;
             }
-            break;
         }
     }
 
@@ -257,7 +264,7 @@ public final class HelpFragment extends ActionBarFragment
                     continue;
                 }
 
-                if (childNode.getType().equals(HelpNode.HelpNodeType.CONTACT))
+                if (childNode.getType() != null && childNode.getType().equals(HelpNode.HelpNodeType.CONTACT))
                 {
                     helpNodeView.contactButton.setOnClickListener(new View.OnClickListener()
                     {
@@ -275,7 +282,6 @@ public final class HelpFragment extends ActionBarFragment
             }
         }
     }
-
 
 //Event Listeners
 

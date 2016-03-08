@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioGroup android:id="@+id/tabs"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/light_grey"
-            android:orientation="horizontal"
+<RadioGroup
+    android:id="@+id/tabs"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/light_grey"
+    android:orientation="horizontal"
     >
 
     <com.handy.portal.ui.widget.DimRadioButton
@@ -38,11 +39,11 @@
         android:visibility="invisible"
         />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="0dp"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_weight="5"
-        ></LinearLayout>
+        />
 
     <com.handy.portal.ui.widget.DimRadioButton
         android:id="@+id/button_more"
