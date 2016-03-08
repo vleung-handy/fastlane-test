@@ -2,23 +2,26 @@ package com.handy.portal.ui.element.dashboard;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.text.Html;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.ui.widget.BulletTextView;
 import com.handy.portal.util.TextUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class DashboardFeedbackView extends FrameLayout
+public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener
 {
     @Bind(R.id.dashboard_feedback_title)
     TextView mTitle;
@@ -26,7 +29,6 @@ public class DashboardFeedbackView extends FrameLayout
     TextView mDescription;
     @Bind(R.id.dashboard_feedback_tips)
     LinearLayout mTips;
-
 
     public DashboardFeedbackView(final Context context, @NonNull final ProviderFeedback providerFeedback)
     {
@@ -73,16 +75,27 @@ public class DashboardFeedbackView extends FrameLayout
             {
                 mTips.addView(new BulletTextView(getContext(), tip.getData()));
             }
-            else if (ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_LINK.equalsIgnoreCase(tip.getDataType()))
+            else if (ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_ID.equalsIgnoreCase(tip.getDataType()))
             {
                 if (!TextUtils.isNullOrEmpty(tip.getData()))
                 {
-                    String videoText = getResources().getString(R.string.watch_video, tip.getData());
-                    BulletTextView bulletTextView = new BulletTextView(getContext());
-                    bulletTextView.setText(Html.fromHtml(videoText));
-                    mTips.addView(bulletTextView);
+                    YoutubeImagePlaceholderView youtubeImagePlaceholderView =
+                            new YoutubeImagePlaceholderView(getContext());
+                    youtubeImagePlaceholderView.setID(tip.getData());
+
+                    youtubeImagePlaceholderView.setOnClickListener(this);
+
+                    mTips.addView(youtubeImagePlaceholderView);
                 }
             }
         }
+    }
+
+    @Override
+    public void onClick(final View v)
+    {
+        YoutubeImagePlaceholderView youtubeImagePlaceholderView = (YoutubeImagePlaceholderView) v;
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(youtubeImagePlaceholderView.getURL()));
+        getContext().startActivity(intent);
     }
 }

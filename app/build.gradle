@@ -45,7 +45,7 @@ def computeVersionName(versionCode) {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
@@ -126,26 +126,22 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     //Multidexing support
     compile 'com.android.support:multidex:1.0.0'
-
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.1'
-    compile 'com.android.support:cardview-v7:23.0.1' //Recommended for in-app messaging
+    compile 'com.android.support:cardview-v7:23.0.1'
+    //Recommended for in-app messaging
     compile 'com.android.support:design:23.0.1'
-
     //Google services
     compile 'com.google.android.gms:play-services-location:8.4.0'
     //Recommended for location services
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     //Required for Android (GCM) push notifications
-
     //Guava
     compile 'com.google.guava:guava:18.0'
-
     //Square libraries, butterknife, dagger, retrofit
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.dagger:dagger:1.2.2'
@@ -156,38 +152,31 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
     // For better visualizing circular graphs
     compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.5'
-
     //Mixpanel analytics
     compile 'com.mixpanel.android:mixpanel-android:4.6.4@aar'
-
     //Custom font display
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-
     //Crashlytics
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
-
     //New relic crash reporting
     compile 'com.newrelic.agent.android:android-agent:5.1.2'
-
     //SecurePrefs storage
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
-
     //Urban Airship SDK
     compile 'com.urbanairship.android:urbanairship-sdk:6.3.0'
-
     // Sticky list header
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
-
     //Testing
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.robolectric:shadows-support-v4:3.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'
-
     //Espresso libraries for automation testing
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
