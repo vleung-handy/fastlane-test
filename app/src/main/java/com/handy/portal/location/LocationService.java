@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -48,12 +47,15 @@ public class LocationService extends Service
 
     GoogleApiClient mGoogleApiClient;
     LocationScheduleHandler mLocationScheduleHandler;
+    Thread.UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;
 
     @Override
     public void onCreate()
     {
         sInstance = this; //for testing only
 
+        mDefaultUncaughtExceptionHandler =
+                Thread.getDefaultUncaughtExceptionHandler();
         Thread.currentThread().setUncaughtExceptionHandler(this);
         super.onCreate();
         Utils.inject(getApplicationContext(), this);
@@ -68,8 +70,6 @@ public class LocationService extends Service
     public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
         Log.d(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
-
-//        Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
 
         super.onStartCommand(intent, flags, startId);
         if (mGoogleApiClient == null)
@@ -202,8 +202,12 @@ public class LocationService extends Service
     {
         //overriding this only prevents the error message dialog that shows
         Log.e(getClass().getName(), "got uncaught exception: " + ex.getMessage());
-        Crashlytics.logException(ex); //this won't actually work
         stopSelf(); //looks like this makes the service not restart even if sticky!
+        if (mDefaultUncaughtExceptionHandler != null)
+        {
+            mDefaultUncaughtExceptionHandler.uncaughtException(thread, ex);
+            //default handler should log the exception to crashlytics
+        }
     }
 
     public class LocalBinder extends Binder
