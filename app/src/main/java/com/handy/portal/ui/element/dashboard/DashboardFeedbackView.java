@@ -13,16 +13,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.event.LogEvent;
 import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.ui.widget.BulletTextView;
 import com.handy.portal.util.TextUtils;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener
 {
+    @Inject
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
+
     @Bind(R.id.dashboard_feedback_title)
     TextView mTitle;
     @Bind(R.id.dashboard_feedback_description)
@@ -81,6 +91,7 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
                 {
                     YoutubeImagePlaceholderView youtubeImagePlaceholderView =
                             new YoutubeImagePlaceholderView(getContext());
+                    youtubeImagePlaceholderView.setVideoTitle(feedback.getTitle());
                     youtubeImagePlaceholderView.setID(tip.getData());
 
                     youtubeImagePlaceholderView.setOnClickListener(this);
@@ -95,6 +106,8 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
     public void onClick(final View v)
     {
         YoutubeImagePlaceholderView youtubeImagePlaceholderView = (YoutubeImagePlaceholderView) v;
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createVideoClickedLog(youtubeImagePlaceholderView.getVideoTitle())));
+
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(youtubeImagePlaceholderView.getURL()));
         getContext().startActivity(intent);
     }

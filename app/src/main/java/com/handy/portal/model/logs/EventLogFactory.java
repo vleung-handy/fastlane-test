@@ -370,6 +370,12 @@ public class EventLogFactory
         return new WebOnboardingLog.Shown(onboardingParams);
     }
 
+    // Video Logs
+    public EventLog createVideoClickedLog(String eventContext)
+    {
+        return new VideoLog.VideoClickedLog(eventContext);
+    }
+
     //user dismissed or navved away from
     public EventLog createWebOnboardingDismissedLog()
     {

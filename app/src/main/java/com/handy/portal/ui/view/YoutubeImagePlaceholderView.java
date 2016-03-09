@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ImageView;
@@ -14,12 +13,12 @@ import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 public class YoutubeImagePlaceholderView extends ImageView
 {
     public static final String URL_STRING = "https://www.youtube.com/watch?v=";
     private String imageUrl = "http://img.youtube.com/vi/%s/maxresdefault.jpg";
+    private String videoTitle;
 
     private String url;
 
@@ -56,6 +55,16 @@ public class YoutubeImagePlaceholderView extends ImageView
                 .load(getImageUrl())
                 .placeholder(R.drawable.video_placeholder)
                 .into(this);
+    }
+
+    public void setVideoTitle(String videoTitle)
+    {
+        this.videoTitle = videoTitle;
+    }
+
+    public String getVideoTitle()
+    {
+        return videoTitle;
     }
 
     public String getURL()
