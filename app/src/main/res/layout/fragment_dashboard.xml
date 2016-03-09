@@ -31,6 +31,8 @@
                 android:id="@+id/dashboard_ratings_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dashboard_ratings_performance_height"
+                android:paddingLeft="@dimen/default_padding"
+                android:paddingRight="@dimen/default_padding"
                 />
 
             <!-- Negative margin hack hides the mysterious gray divider above this view-->
