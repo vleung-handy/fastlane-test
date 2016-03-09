@@ -37,8 +37,6 @@ public class DashboardTiersFragment extends ActionBarFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setOptionsMenuEnabled(true);
-
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
     }
 
@@ -58,8 +56,9 @@ public class DashboardTiersFragment extends ActionBarFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        setActionBarTitle(R.string.my_tier);
+        setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
+        setActionBarTitle(R.string.my_tier);
 
         if (mEvaluation == null) { return; }
 
