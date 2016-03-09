@@ -1,6 +1,7 @@
-package com.handy.portal.event;
+package com.handy.portal.logger.handylogger;
 
-import com.handy.portal.model.logs.EventLog;
+import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.model.EventLog;
 
 public abstract class LogEvent extends HandyEvent
 {

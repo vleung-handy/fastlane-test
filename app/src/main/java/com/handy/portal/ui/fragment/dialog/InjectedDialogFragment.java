@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.handy.portal.R;
-import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 

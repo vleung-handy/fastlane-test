@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
-import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.ui.element.AvailableBookingElementView;
