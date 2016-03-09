@@ -34,7 +34,10 @@ public class SystemManager extends BroadcastReceiver
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         intentFilter.addAction(Intent.ACTION_BATTERY_LOW);
         intentFilter.addAction(Intent.ACTION_BATTERY_OKAY);
-        //seems i have to register a receiver because the network listener is only available in 21/23
+
+        /*
+        not using ConnectivityManager.OnNetworkActiveListener because that is only available in API 21+
+         */
 
         mContext.registerReceiver(this, intentFilter);
     }
