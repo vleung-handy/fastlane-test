@@ -112,7 +112,6 @@
     <string name="tab_claim">Claim</string>
     <string name="tab_schedule">Schedule</string>
     <string name="tab_notifications">Notifications</string>
-    <string name="dashboard">Ratings &amp; Feedback</string>
     <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>

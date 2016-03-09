@@ -108,10 +108,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels)
-            {
-
-            }
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(final int position)
@@ -120,10 +117,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
             }
 
             @Override
-            public void onPageScrollStateChanged(final int state)
-            {
-
-            }
+            public void onPageScrollStateChanged(final int state) {}
         });
         mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceViewPager);
 
