@@ -3,7 +3,7 @@ package com.handy.portal.webview;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.OnboardingParams;
 import com.squareup.otto.Subscribe;
 

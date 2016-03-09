@@ -1,4 +1,4 @@
-package com.handy.portal.model.logs;
+package com.handy.portal.logger.handylogger.model;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;

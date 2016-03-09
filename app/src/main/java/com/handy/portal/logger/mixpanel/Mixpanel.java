@@ -1,18 +1,18 @@
-package com.handy.portal.analytics;
+package com.handy.portal.logger.mixpanel;
 
 import android.content.Context;
 import android.os.Build;
 
 import com.google.gson.Gson;
 import com.handy.portal.BuildConfig;
-import com.handy.portal.annotation.Track;
-import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.PropertiesReader;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.EventLog;
+import com.handy.portal.logger.mixpanel.annotation.Track;
+import com.handy.portal.logger.mixpanel.annotation.TrackField;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.logs.EventLog;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONException;

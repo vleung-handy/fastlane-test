@@ -1,4 +1,4 @@
-package com.handy.portal.model.logs;
+package com.handy.portal.logger.handylogger.model;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

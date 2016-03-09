@@ -7,9 +7,9 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;

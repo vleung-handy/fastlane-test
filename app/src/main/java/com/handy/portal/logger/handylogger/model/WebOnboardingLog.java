@@ -1,4 +1,4 @@
-package com.handy.portal.model.logs;
+package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.model.OnboardingParams;

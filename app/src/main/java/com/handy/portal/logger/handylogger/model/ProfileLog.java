@@ -1,4 +1,4 @@
-package com.handy.portal.model.logs;
+package com.handy.portal.logger.handylogger.model;
 
 public class ProfileLog extends EventLog
 {
