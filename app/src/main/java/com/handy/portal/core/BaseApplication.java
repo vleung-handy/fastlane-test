@@ -29,6 +29,7 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
@@ -105,6 +106,8 @@ public class BaseApplication extends MultiDexApplication
     NotificationMessageManager notificationMessageManager;
     @Inject
     LocationManager locationManager;
+    @Inject
+    SystemManager systemManager;
 
     @Inject
     Bus bus;

@@ -15,6 +15,7 @@ import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
@@ -164,6 +165,12 @@ public class TestApplicationModule
     final ConfigManager provideConfigManager()
     {
         return mock(ConfigManager.class);
+    }
+
+    @Provides
+    final SystemManager provideSytemManager()
+    {
+        return mock(SystemManager.class);
     }
 
     @Provides
