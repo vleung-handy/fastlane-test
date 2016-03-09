@@ -54,171 +54,171 @@ import retrofit.mime.TypedInput;
 
 public class DataManager
 {
-    private final HandyRetrofitService service;
-    private final HandyRetrofitEndpoint endpoint;
+    private final HandyRetrofitService mService;
+    private final HandyRetrofitEndpoint mEndpoint;
 
-    private final StripeRetrofitService stripeService; //TODO: should refactor and move somewhere else?
+    private final StripeRetrofitService mStripeService; // should refactor and move somewhere else?
 
     @Inject
     public DataManager(final HandyRetrofitService service,
                        final HandyRetrofitEndpoint endpoint,
                        final StripeRetrofitService stripeService)
     {
-        this.service = service;
-        this.endpoint = endpoint;
-        this.stripeService = stripeService;
+        mService = service;
+        mEndpoint = endpoint;
+        mStripeService = stripeService;
     }
 
     public void getLocationSchedule(String providerId, Callback<LocationQuerySchedule> cb)
     {
-        service.getLocationSchedule(providerId, new GetLocationScheduleRetrofitCallback(cb));
+        mService.getLocationSchedule(providerId, new GetLocationScheduleRetrofitCallback(cb));
     }
 
     public void sendGeolocation(String providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb)
     {
-        service.sendGeolocation(providerId, locationBatchUpdate, new SuccessWrapperRetroFitCallback(cb));
+        mService.sendGeolocation(providerId, locationBatchUpdate, new SuccessWrapperRetroFitCallback(cb));
     }
 
     public String getBaseUrl()
     {
-        return endpoint.getBaseUrl();
+        return mEndpoint.getBaseUrl();
     }
 
     public void getAvailableBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
-        service.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+        mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
-        service.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+        mService.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getNearbyBookings(
             int regionId, double latitude, double longitude, final Callback<BookingsWrapper> cb)
     {
-        service.getNearbyBookings(
+        mService.getNearbyBookings(
                 regionId, latitude, longitude, new BookingsWrapperRetroFitCallback(cb));
     }
 
     public void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> cb)
     {
-        service.getComplementaryBookings(bookingId, type.toString().toLowerCase(), new BookingsWrapperRetroFitCallback(cb));
+        mService.getComplementaryBookings(bookingId, type.toString().toLowerCase(), new BookingsWrapperRetroFitCallback(cb));
     }
 
     public void claimBooking(String bookingId, BookingType type, final Callback<BookingClaimDetails> cb)
     {
-        service.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
+        mService.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
     }
 
     public void removeBooking(String bookingId, BookingType type, final Callback<Booking> cb)
     {
-        service.removeBooking(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
+        mService.removeBooking(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
     }
 
     public void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb)
     {
-        service.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
+        mService.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));
     }
 
     public void getProviderProfile(String providerId, Callback<ProviderProfile> cb)
     {
-        service.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
+        mService.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
     }
 
     public void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb)
     {
-        service.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
+        mService.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
     }
 
     public void getProviderSettings(String providerId, Callback<ProviderSettings> cb)
     {
-        service.getProviderSettings(providerId, new GetProviderSettingsRetrofitCallback(cb));
+        mService.getProviderSettings(providerId, new GetProviderSettingsRetrofitCallback(cb));
     }
 
     public void putUpdateProviderSettings(String providerId, ProviderSettings providerSettings, Callback<ProviderSettings> cb)
     {
-        service.putUpdateProviderSettings(providerId, providerSettings, new UpdateProviderSettingsRetroFitCallback(cb));
+        mService.putUpdateProviderSettings(providerId, providerSettings, new UpdateProviderSettingsRetroFitCallback(cb));
     }
 
     public void getResupplyKit(String providerId, Callback<ProviderProfile> cb)
     {
-        service.getResupplyKit(providerId, new ResupplyInfoRetrofitCallback(cb));
+        mService.getResupplyKit(providerId, new ResupplyInfoRetrofitCallback(cb));
     }
 
     public void getBookingDetails(String bookingId, BookingType type, final Callback<Booking> cb)
     {
-        service.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
+        mService.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
     }
 
     public void getPaymentBatches(Date startDate, Date endDate, final Callback<PaymentBatches> cb)
     {
-        service.getPaymentBatches(startDate, endDate, new PaymentBatchesRetroFitCallback(cb));
+        mService.getPaymentBatches(startDate, endDate, new PaymentBatchesRetroFitCallback(cb));
     }
 
     public void getAnnualPaymentSummaries(final Callback<AnnualPaymentSummaries> cb)
     {
-        service.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
+        mService.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
     }
 
     public void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> cb)
     {
-        service.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
+        mService.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
     }
 
     public void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.notifyOnMyWay(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        mService.notifyOnMyWay(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     public void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        service.checkIn(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        mService.checkIn(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     public void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, final Callback<Booking> cb)
     {
-        service.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
+        mService.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
     }
 
     public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)
     {
-        service.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
+        mService.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
     }
 
     public void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb)
     {
-        service.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        mService.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
     public void requestPinCode(String phoneNumber, final Callback<PinRequestDetails> cb)
     {
-        service.requestPinCode(phoneNumber, new PinRequestDetailsResponseHandyRetroFitCallback(cb));
+        mService.requestPinCode(phoneNumber, new PinRequestDetailsResponseHandyRetroFitCallback(cb));
     }
 
     public void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
     {
-        service.requestLogin(phoneNumber, pinCode, new LoginDetailsResponseHandyRetroFitCallback(cb));
+        mService.requestLogin(phoneNumber, pinCode, new LoginDetailsResponseHandyRetroFitCallback(cb));
     }
 
     public void getProviderInfo(Callback<Provider> cb)
     {
-        service.getProviderInfo(new ProviderResponseHandyRetroFitCallback(cb));
+        mService.getProviderInfo(new ProviderResponseHandyRetroFitCallback(cb));
     }
 
     public void checkForUpdates(String appFlavor, int versionCode, final Callback<UpdateDetails> cb)
     {
-        service.checkUpdates(appFlavor, versionCode, new UpdateDetailsResponseHandyRetroFitCallback(cb));
+        mService.checkUpdates(appFlavor, versionCode, new UpdateDetailsResponseHandyRetroFitCallback(cb));
     }
 
     public void checkForAllPendingTerms(final Callback<TermsDetailsGroup> cb)
     {
-        service.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
+        mService.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
     }
 
     public void acceptTerms(String termsCode, final Callback<Void> cb)
     {
-        service.acceptTerms(termsCode, new HandyRetrofitCallback(cb)
+        mService.acceptTerms(termsCode, new HandyRetrofitCallback(cb)
         {
 
             public void success(JSONObject response)
@@ -230,110 +230,105 @@ public class DataManager
 
     public void sendVersionInformation(Map<String, String> versionInfo)
     {
-        service.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback(null));
+        mService.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback(null));
     }
 
     //********Help Center********
-
     public void getHelpInfo(String nodeId,
                             String bookingId,
                             final Callback<HelpNodeWrapper> cb)
     {
-        service.getHelpInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
+        mService.getHelpInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
     }
 
     public void getHelpBookingsInfo(String nodeId,
                                     String bookingId,
                                     final Callback<HelpNodeWrapper> cb)
     {
-        service.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
+        mService.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
     }
 
     public void getHelpPaymentsInfo(final Callback<HelpNodeWrapper> cb)
     {
-        service.getHelpPayments(new HelpNodeResponseHandyRetroFitCallback(cb));
+        mService.getHelpPayments(new HelpNodeResponseHandyRetroFitCallback(cb));
     }
 
     public void createHelpCase(TypedInput body, final Callback<Void> cb)
     {
-        service.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
+        mService.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
     }
-    //********End Help Center********
 
+    //********End Help Center********
     public void createBankAccount(Map<String, String> params, final Callback<SuccessWrapper> cb)
     {
-        service.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));
+        mService.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));
     }
 
     public void createDebitCardRecipient(Map<String, String> params, final Callback<SuccessWrapper> cb)
     {
-        service.createDebitCardRecipient(params, new CreateDebitCardRecipientRetroFitCallback(cb));
+        mService.createDebitCardRecipient(params, new CreateDebitCardRecipientRetroFitCallback(cb));
     }
 
     public void createDebitCardForCharge(String stripeToken, final Callback<CreateDebitCardResponse> cb)
     {
-        service.createDebitCardForCharge(stripeToken, new CreateDebitCardRetroFitCallback(cb));
+        mService.createDebitCardForCharge(stripeToken, new CreateDebitCardRetroFitCallback(cb));
     }
 
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb)
     {
-        service.getPaymentFlow(providerId, new GetPaymentFlowRetroFitCallback(cb));
+        mService.getPaymentFlow(providerId, new GetPaymentFlowRetroFitCallback(cb));
     }
 
     public void getZipClusterPolygons(String providerId, final Callback<ZipClusterPolygons> cb)
     {
-        service.getZipClusterPolygon(providerId, new GetZipClusterPolygonRetroFitCallback(cb));
+        mService.getZipClusterPolygon(providerId, new GetZipClusterPolygonRetroFitCallback(cb));
     }
 
     //Stripe
-
     public void getStripeToken(Map<String, String> params, final Callback<StripeTokenResponse> cb)
     {
-        stripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
+        mStripeService.getStripeToken(params, new StripeTokenRetroFitCallback(cb));
     }
 
     //Eventual replacement for direct access to config params
-
     public void getConfiguration(final Callback<ConfigurationResponse> cb)
     {
-        service.getConfiguration(new ConfigurationResponseHandyRetroFitCallback(cb));
+        mService.getConfiguration(new ConfigurationResponseHandyRetroFitCallback(cb));
     }
 
     //Log Events
-
     public void postLogs(final JsonObject eventLogBundle, final Callback<EventLogResponse> cb)
     {
-        service.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
+        mService.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
     }
 
     // Notifications
-
     public void getNotifications(String providerId, Integer sinceId, Integer untilId, Integer count, Callback<NotificationMessages> cb)
     {
-        service.getNotifications(providerId, sinceId, untilId, count, new NotificationMessagesHandyRetroFitCallback(cb));
+        mService.getNotifications(providerId, sinceId, untilId, count, new NotificationMessagesHandyRetroFitCallback(cb));
     }
 
     public void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb)
     {
-        service.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
+        mService.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
     }
 
     public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)
     {
-        service.getProviderEvaluation(providerId, new GetProviderEvaluationRetrofitCallback(cb));
+        mService.getProviderEvaluation(providerId, new GetProviderEvaluationRetrofitCallback(cb));
     }
 
     public void getProviderFiveStarRatings(final String providerId, final Integer minStar, final String toBookingDate, final String fromBookingDate, final Callback<HashMap<String, List<ProviderRating>>> cb)
     {
-        service.getProviderFiveStarRatings(providerId, minStar, toBookingDate, fromBookingDate, new GetProviderFiveStarRatingsRetrofitCallback(cb));
+        mService.getProviderFiveStarRatings(providerId, minStar, toBookingDate, fromBookingDate, new GetProviderFiveStarRatingsRetrofitCallback(cb));
     }
 
     public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)
     {
-        service.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
+        mService.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
     }
 
-    //TODO: refactor. should this be here?
+
     public interface Callback<T>
     {
         void onSuccess(T response);
