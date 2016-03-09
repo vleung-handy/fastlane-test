@@ -12,14 +12,6 @@ import java.util.LinkedList;
  */
 public class LocationQuerySchedule implements Parcelable
 {
-    //TODO: move
-    public final static String EXTRA_LOCATION_SCHEDULE = "location_query_schedule";
-
-    public LocationQuerySchedule(final LinkedList<LocationQueryStrategy> locationQueryStrategies)
-    {
-        mLocationQueryStrategies = locationQueryStrategies;
-    }
-
     /**
      * this should be already sorted by start date
      */

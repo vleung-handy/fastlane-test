@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -15,14 +14,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.model.LocationQuerySchedule;
-import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
-
-//TODO: test only
 
 
 /**
@@ -52,8 +48,6 @@ public class LocationService extends Service
     @Override
     public void onCreate()
     {
-        sInstance = this; //for testing only
-
         mDefaultUncaughtExceptionHandler =
                 Thread.getDefaultUncaughtExceptionHandler();
         Thread.currentThread().setUncaughtExceptionHandler(this);
@@ -78,18 +72,6 @@ public class LocationService extends Service
         }
         mBus.register(this);
         mGoogleApiClient.connect();
-
-//        //TODO: remove, for toggle testing only
-//        if (intent != null && intent.getExtras() != null && intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE) != null)
-//        {
-//            mBus.post(new LocationEvent.ReceiveLocationSchedule((LocationQuerySchedule)
-//                    intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
-//
-//        }
-//        else
-//        {
-//            requestLocationQuerySchedule();
-//        }
 
         requestLocationQuerySchedule();
 
@@ -247,21 +229,4 @@ public class LocationService extends Service
 
     }
 
-    //EVERYTHING BELOW IS FOR TESTING ONLY!
-
-    @VisibleForTesting
-    private static LocationService sInstance; //for toggle testing only
-
-    @VisibleForTesting
-    public static LocationService getInstance() //for toggle testing only
-    {
-        return sInstance;
-    }
-
-    @VisibleForTesting
-    public LocationQueryStrategy getLatestActiveLocationQueryStrategy()
-    {
-        if (mLocationScheduleHandler == null) { return null; }
-        return mLocationScheduleHandler.getLatestActiveLocationStrategy();
-    }
 }
