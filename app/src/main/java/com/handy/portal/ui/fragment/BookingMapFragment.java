@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.util.Utils;
 
 import java.util.LinkedList;
@@ -115,12 +117,12 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         List<LatLng> points = new LinkedList<>();
         LatLng center = getCenterPoint();
         points.add(center);
-        if (mStatus == Booking.BookingStatus.CLAIMED && !mBooking.isProxy())
+        if (shouldShowMarker())
         {
             MarkerOptions marker = new MarkerOptions().position(center).draggable(false);
             map.addMarker(marker);
         }
-        else if (mBooking.isProxy() && mPolygons != null)
+        else if (shouldShowPolygons())
         {
             showPolygon(map, mPolygons.getOutlines());
             points = mPolygons.getPoints();
@@ -130,7 +132,32 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
             showRangeOverlay(map, center, getRadius());
         }
 
+        if (shouldIncludeCurrentLocation())
+        {
+            final Location lastLocation = ((BaseActivity) getActivity()).getLastLocation();
+            if (lastLocation != null)
+            {
+                points.add(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
+            }
+        }
+
         positionCamera(map, points);
+    }
+
+    private boolean shouldShowMarker()
+    {
+        return !mBooking.isProxy() &&
+                (mStatus == Booking.BookingStatus.CLAIMED || shouldIncludeCurrentLocation());
+    }
+
+    private boolean shouldShowPolygons()
+    {
+        return mBooking.isProxy() && mPolygons != null;
+    }
+
+    private boolean shouldIncludeCurrentLocation()
+    {
+        return true;
     }
 
     /**
