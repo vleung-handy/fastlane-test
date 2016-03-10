@@ -172,11 +172,6 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
                         }
                 );
             }
-            else
-            {
-                Crashlytics.logException(
-                        new RuntimeException("Can't show map. Map view: " + mapView));
-            }
         }
     }
 
