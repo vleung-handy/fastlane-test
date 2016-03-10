@@ -14,6 +14,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
@@ -33,9 +34,10 @@ import butterknife.OnClick;
 
 public class RatingsAndFeedbackFragment extends ActionBarFragment
 {
-
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     @Bind(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
@@ -114,6 +116,10 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
             public void onPageSelected(final int position)
             {
                 bus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
+                if (position == DashboardRatingsPagerAdapter.LIFETIME_POSITION)
+                {
+                    bus.post(mEventLogFactory.createLifetimeRatingsLog());
+                }
             }
 
             @Override
