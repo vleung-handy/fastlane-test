@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.model.LocationBatchUpdate;
@@ -18,11 +20,17 @@ import com.handy.portal.util.SystemUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 public class LocationPingService extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
+    private static final long LOCATION_REQUEST_FASTEST_INTERVAL_MILLIS = 1000;
+    private static final long LOCATION_REQUEST_INTERVAL_MILLIS = 5000;
+    private static final long MAXIMUM_LOCATION_AGE_MILLIS = 5000;
+
     @Inject
     Bus mBus;
 
@@ -52,16 +60,25 @@ public class LocationPingService extends Service implements
         return super.onStartCommand(intent, flags, startId);
     }
 
+    @SuppressWarnings({"ResourceType", "MissingPermission"})
     @Override
     public void onConnected(@Nullable final Bundle bundle)
     {
-        final Location lastLocation =
-                LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (lastLocation != null)
+        // Check for permissions
+        if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
         {
-            sendLocationUpdate(lastLocation);
+            return;
         }
-        stopSelf();
+
+        // Initiate location request
+        final LocationRequest locationRequest = new LocationRequest()
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                .setFastestInterval(LOCATION_REQUEST_FASTEST_INTERVAL_MILLIS)
+                .setInterval(LOCATION_REQUEST_INTERVAL_MILLIS);
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient,
+                locationRequest,
+                mLocationListener);
     }
 
     private void sendLocationUpdate(final Location lastLocation)
@@ -99,5 +116,28 @@ public class LocationPingService extends Service implements
     @Override
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult)
     {
+    }
+
+    private final LocationListener mLocationListener = new LocationListener()
+    {
+        @Override
+        public void onLocationChanged(final Location location)
+        {
+            if (isRecentLocation(location))
+            {
+                sendLocationUpdate(location);
+
+                // We only need one recent location update. After that, we can stop the location
+                // updates and the service itself.
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                stopSelf();
+            }
+        }
+    };
+
+    private boolean isRecentLocation(final Location location)
+    {
+        final long now = new Date().getTime();
+        return now - location.getTime() <= MAXIMUM_LOCATION_AGE_MILLIS;
     }
 }
