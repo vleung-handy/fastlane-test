@@ -35,4 +35,7 @@ public class BundleKeys
 
     // Dashboard
     public static final String EVALUATION = "evaluation";
+
+    // Location
+    public static final String EVENT_NAME = "event_name";
 }

@@ -12,7 +12,7 @@ public class LocationBatchUpdate
     @SerializedName("geolocations")
     LocationUpdate[] mLocationUpdates;
 
-    public LocationBatchUpdate(@NonNull LocationUpdate[] locationUpdates)
+    public LocationBatchUpdate(@NonNull LocationUpdate... locationUpdates)
     {
         mLocationUpdates = locationUpdates;
     }
