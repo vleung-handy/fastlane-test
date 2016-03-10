@@ -18,6 +18,7 @@ import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.location.LocationScheduleHandler;
 import com.handy.portal.location.LocationService;
+import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.EventLogManager;
@@ -161,6 +162,7 @@ import retrofit.converter.GsonConverter;
         DashboardOptionsPerformanceView.class,
         LocationScheduleHandler.class,
         LocationService.class,
+        LocationPingService.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
         AccountSettingsFragment.class,
