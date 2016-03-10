@@ -140,14 +140,14 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createTierTappedLog()));
     }
 
-    @OnClick(R.id.feedback_option)
-    public void switchToFeedback()
-    {
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
-        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
-    }
+//    @OnClick(R.id.feedback_option)
+//    public void switchToFeedback()
+//    {
+//        Bundle arguments = new Bundle();
+//        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
+//        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+//        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
+//    }
 
 
     @OnClick(R.id.reviews_option)

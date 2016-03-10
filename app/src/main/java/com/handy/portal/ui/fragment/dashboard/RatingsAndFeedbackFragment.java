@@ -3,17 +3,21 @@ package com.handy.portal.ui.fragment.dashboard;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
@@ -23,6 +27,7 @@ import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.DashboardRatingsView;
 import com.handy.portal.ui.element.dashboard.DashboardWelcomeView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -33,7 +38,8 @@ import butterknife.OnClick;
 
 public class RatingsAndFeedbackFragment extends ActionBarFragment
 {
-
+    @Inject
+    Bus mBus;
     @Inject
     ProviderManager mProviderManager;
 
@@ -198,5 +204,22 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         {
             createDashboardView(mProviderEvaluation);
         }
+    }
+
+    @OnClick(R.id.feedback_option)
+    public void switchToFeedback()
+    {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        YouTubePlayerSupportFragment fragment = DashboardFeedbackFragment.newInstance(mProviderEvaluation);
+//        transaction.replace(((ViewGroup) getView().getParent()).getId(), fragment);
+        transaction.replace(R.id.main_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+//        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
     }
 }

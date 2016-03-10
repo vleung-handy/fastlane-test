@@ -1,26 +1,31 @@
 package com.handy.portal.ui.fragment.dashboard;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
-import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class DashboardFeedbackFragment extends ActionBarFragment
+public class DashboardFeedbackFragment extends YouTubePlayerSupportFragment
 {
+//    @Inject
+//    Bus mBus;
+
     @Bind(R.id.layout_dashboard_feedback)
     LinearLayout mFeedbackLayout;
     @Bind(R.id.no_result_view)
@@ -30,10 +35,21 @@ public class DashboardFeedbackFragment extends ActionBarFragment
 
     private ProviderEvaluation mEvaluation;
 
-    @Override
-    protected MainViewTab getTab()
+    private static final String LOG_TAG = DashboardFeedbackFragment.class.getSimpleName();
+
+//    @Override
+//    protected MainViewTab getTab()
+//    {
+//        return MainViewTab.DASHBOARD_REVIEWS;
+//    }
+
+    public static DashboardFeedbackFragment newInstance(ProviderEvaluation providerEvaluation)
     {
-        return MainViewTab.DASHBOARD_REVIEWS;
+        DashboardFeedbackFragment fragment = new DashboardFeedbackFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(BundleKeys.EVALUATION, providerEvaluation);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -56,28 +72,73 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        setOptionsMenuEnabled(true);
-        setBackButtonEnabled(true);
-        setActionBarTitle(R.string.feedback);
+        setHasOptionsMenu(true);
+        setMenuVisibility(true);
 
-        if (mEvaluation == null || mEvaluation.getProviderFeedback() == null)
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null)
         {
-            Crashlytics.log("feedback not found in: " + getClass().getSimpleName());
-            return;
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.feedback);
         }
 
-        if (mEvaluation.getProviderFeedback().size() > 0)
+//        if (mEvaluation == null || mEvaluation.getProviderFeedback() == null)
+//        {
+//            Crashlytics.log("feedback not found in: " + getClass().getSimpleName());
+//            return;
+//        }
+//
+//        if (mEvaluation.getProviderFeedback().size() > 0)
+//        {
+//            mNoResultView.setVisibility(View.GONE);
+//            for (ProviderFeedback feedback : mEvaluation.getProviderFeedback())
+//            {
+//                mFeedbackLayout.addView(new DashboardFeedbackView(getContext(), feedback));
+//            }
+//        }
+//        else
+//        {
+//            mNoResultView.setVisibility(View.VISIBLE);
+//            mNoResultText.setText(R.string.no_feedback);
+//        }
+
+//        YouTubePlayerView youTubePlayerView = new YouTubePlayerView(getContext());
+        initialize("AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc", new YouTubePlayer.OnInitializedListener()
         {
-            mNoResultView.setVisibility(View.GONE);
-            for (ProviderFeedback feedback : mEvaluation.getProviderFeedback())
+            @Override
+            public void onInitializationSuccess(final YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, final boolean b)
             {
-                mFeedbackLayout.addView(new DashboardFeedbackView(getContext(), feedback));
+//                activePlayer = youTubePlayer;
+//                activePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                youTubePlayer.loadVideo("tOWJKV4L3pE");
+                youTubePlayer.setFullscreen(true);
+
+//                Log.d(LOG_TAG, "SUCCESS");
+//                youTubePlayer.loadVideo("https://www.youtube.com/watch?v=tOWJKV4L3pE");
             }
-        }
-        else
-        {
-            mNoResultView.setVisibility(View.VISIBLE);
-            mNoResultText.setText(R.string.no_feedback);
-        }
+
+            @Override
+            public void onInitializationFailure(final YouTubePlayer.Provider provider, final YouTubeInitializationResult youTubeInitializationResult)
+            {
+                Log.d(LOG_TAG, "FAILURE");
+            }
+        });
+//        mFeedbackLayout.addView(youTubePlayerView);
     }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+    }
+
+    @OnClick(R.id.video_library)
+    public void switchToVideoLibrary()
+    {
+//        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY, new Bundle()));
+    }
+
+
 }

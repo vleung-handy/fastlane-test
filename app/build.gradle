@@ -140,6 +140,7 @@ dependencies {
     //Recommended for location services
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     //Required for Android (GCM) push notifications
+
     //Guava
     compile 'com.google.guava:guava:18.0'
     //Square libraries, butterknife, dagger, retrofit
@@ -151,9 +152,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-
     compile 'com.squareup.picasso:picasso:2.5.2'
-
     // For better visualizing circular graphs
     compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.5'
     //Mixpanel analytics
@@ -177,8 +176,8 @@ dependencies {
     testCompile 'org.robolectric:shadows-support-v4:3.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
-
     //Espresso libraries for automation testing
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
 }
