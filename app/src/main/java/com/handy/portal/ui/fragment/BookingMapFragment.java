@@ -50,19 +50,30 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
 
     private ScrollView mScrollView;
     private Booking mBooking;
+    private String mSource;
     private Booking.BookingStatus mStatus;
     private ZipClusterPolygons mPolygons;
 
-    public static BookingMapFragment newInstance(final Booking booking, Booking.BookingStatus status)
+    public static BookingMapFragment newInstance(
+            final Booking booking,
+            final String source,
+            final Booking.BookingStatus status
+    )
     {
-        return newInstance(booking, status, null);
+        return newInstance(booking, source, status, null);
     }
 
-    public static BookingMapFragment newInstance(final Booking booking, Booking.BookingStatus status, ZipClusterPolygons polygons)
+    public static BookingMapFragment newInstance(
+            final Booking booking,
+            final String source,
+            final Booking.BookingStatus status,
+            final ZipClusterPolygons polygons
+    )
     {
         BookingMapFragment fragment = new BookingMapFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
+        args.putSerializable(BundleKeys.BOOKING_SOURCE, source);
         args.putSerializable(BundleKeys.BOOKING_STATUS, status);
         args.putSerializable(BundleKeys.ZIP_CLUSTER_POLYGONS, polygons);
         fragment.setArguments(args);
@@ -75,6 +86,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         super.onCreate(savedInstanceState);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
         mStatus = (Booking.BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
+        mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
         mPolygons = (ZipClusterPolygons) getArguments().getSerializable(BundleKeys.ZIP_CLUSTER_POLYGONS);
     }
 
@@ -157,7 +169,8 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
 
     private boolean shouldIncludeCurrentLocation()
     {
-        return true;
+        return mSource != null &&
+                mSource.equals(BookingDetailsFragment.SOURCE_DISPATCH_NOTIFICATION_TOGGLE);
     }
 
     /**
