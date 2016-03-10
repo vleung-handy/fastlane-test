@@ -61,6 +61,7 @@ public class LocationPingService extends Service implements
         {
             sendLocationUpdate(lastLocation);
         }
+        stopSelf();
     }
 
     private void sendLocationUpdate(final Location lastLocation)
