@@ -44,8 +44,11 @@ public class LocationPingService extends Service implements
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
-        mEventName = intent.getStringExtra(BundleKeys.EVENT_NAME);
-        mGoogleApiClient.connect();
+        if (intent != null)
+        {
+            mEventName = intent.getStringExtra(BundleKeys.EVENT_NAME);
+            mGoogleApiClient.connect();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
