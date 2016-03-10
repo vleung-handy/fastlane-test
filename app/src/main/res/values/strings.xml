@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Handy Pro</string>
+
+    <!-- Utils -->
+    <string name="bullet">⋅</string>
+    <string name="dash">\u2013</string>
+    <string name="no_data">--</string>
+    <string name="none">None</string>
+    <string name="time_interval_formatted">%1$s – %2$s</string>
+
+
     <string name="app_update">Handy Pro Update</string>
 
     <string name="phone_number_hint">Cell Phone Number</string>
@@ -50,7 +59,6 @@
     <string name="phone">Phone</string>
     <string name="password">Password</string>
     <string name="loading_more_payments">Loading more payments…</string>
-    <string name="no_data">--</string>
     <string name="profile">Profile</string>
     <string name="my_profile">My Profile</string>
     <string name="my_performance">My Performance</string>
@@ -209,8 +217,6 @@
     <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
 
-    <string name="bullet">⋅</string>
-    <string name="dash">\u2013</string>
     <string name="undo">Undo</string>
     <string name="ok">OK</string>
 
@@ -365,7 +371,6 @@
     <string name="kilometers_away_formatted">%1$s kilometers away</string>
     <string name="withholding_charge">Canceling this job will result in a withholding</string>
     <string name="please_confirm">Please confirm:</string>
-    <string name="time_interval_formatted">%1$s – %2$s</string>
 
     <!-- Logging out a deactivated pro -->
     <string name="handy_account_no_longer_active">Your Handy account is no longer active.</string>

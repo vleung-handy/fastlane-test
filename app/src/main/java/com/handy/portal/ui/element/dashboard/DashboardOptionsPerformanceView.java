@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -43,8 +42,6 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     TextView mTierTitleText;
     @Bind(R.id.tier_hourly_rate)
     TextView mTierHourlyRateText;
-    @Bind(R.id.feedback_icon)
-    ImageView mFeedbackIcon;
     @Bind(R.id.first_feedback_title)
     TextView mFirstFeedbackTitleText;
     @Bind(R.id.dashboard_first_review)
@@ -109,11 +106,10 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         if (feedbackList != null && feedbackList.size() > 0)
         {
             mFirstFeedbackTitleText.setText(feedbackList.get(0).getTitle());
-            mFeedbackIcon.setVisibility(VISIBLE);
         }
         else
         {
-            mFeedbackIcon.setVisibility(GONE);
+            mFirstFeedbackTitleText.setText(getResources().getString(R.string.none));
         }
 
         List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatingsWithComments();
