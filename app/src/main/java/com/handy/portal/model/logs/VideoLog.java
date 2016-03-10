@@ -1,6 +1,8 @@
 package com.handy.portal.model.logs;
 
 
+import com.handy.portal.logger.handylogger.model.EventLog;
+
 public class VideoLog extends EventLog
 {
     public VideoLog(final String eventType, final String eventContext)

@@ -51,6 +51,11 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     private Booking.BookingStatus mStatus;
     private ZipClusterPolygons mPolygons;
 
+    public static BookingMapFragment newInstance(final Booking booking, Booking.BookingStatus status)
+    {
+        return newInstance(booking, status, null);
+    }
+
     public static BookingMapFragment newInstance(final Booking booking, Booking.BookingStatus status, ZipClusterPolygons polygons)
     {
         BookingMapFragment fragment = new BookingMapFragment();

@@ -464,31 +464,18 @@ public class Booking implements Comparable<Booking>, Serializable
     }
 
     //TODO: I don't like having all this business logic in the client, we should get authoritative statuses from the server
-    public BookingStatus inferBookingStatus(String userId)
+    public BookingStatus inferBookingStatus(final String providerId)
     {
-        if (this.isProxy())
-        {
-            return isClaimedByMe() ? BookingStatus.CLAIMED : BookingStatus.AVAILABLE;
-        }
-
-        String assignedProviderId = getProviderId();
-        boolean bookingIsStarted = isStarted();
-
-        if (assignedProviderId.equals(NO_PROVIDER_ASSIGNED))
-        {
-            //Can't claim bookings that have already started
-            if (bookingIsStarted)
-            {
-                return BookingStatus.UNAVAILABLE;
-            }
-            else
-            {
-                return BookingStatus.AVAILABLE;
-            }
-        }
-        else if (getProviderId().equals(userId))
+        final boolean isClaimable = getAction(Action.ACTION_CLAIM) != null;
+        final String assignedProviderId = getProviderId();
+        final boolean isClaimedByMe = isProxy() ? isClaimedByMe() : assignedProviderId.equals(providerId);
+        if (isClaimedByMe)
         {
             return BookingStatus.CLAIMED;
+        }
+        else if (isClaimable)
+        {
+            return BookingStatus.AVAILABLE;
         }
         else
         {

@@ -36,12 +36,13 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
+import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
@@ -50,7 +51,6 @@ import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.logs.ScheduledJobsLog;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView;
@@ -110,8 +110,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     @Inject
     PrefsManager mPrefsManager;
-    @Inject
-    ZipClusterManager mZipClusterManager;
     @Inject
     ConfigManager mConfigManager;
     @Inject
@@ -355,26 +353,13 @@ public class BookingDetailsFragment extends ActionBarFragment
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
         arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, mFromPaymentsTab);
 
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-
         if (mFromPaymentsTab)
         {
             mapLayout.setVisibility(View.GONE);
         }
         else
         {
-            //show either the real map or a placeholder image depending on if we have google play services
-            if (ConnectionResult.SUCCESS ==
-                    GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()))
-            {
-                BookingMapFragment fragment = BookingMapFragment.newInstance(mAssociatedBooking,
-                        bookingStatus, mZipClusterManager.getCachedPolygons(mAssociatedBooking.getZipClusterId()));
-                transaction.replace(mapLayout.getId(), fragment).commit();
-            }
-            else
-            {
-                UIUtils.replaceView(mapLayout, new MapPlaceholderView(getContext()));
-            }
+            initMapLayout();
         }
 
         mDateView.refreshDisplay(booking);
@@ -405,6 +390,51 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         mFullDetailsNoticeText.setVisibility(!booking.isProxy() && booking.getServiceInfo().isHomeCleaning()
                 && bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
+    }
+
+    private void initMapLayout()
+    {//show either the real map or a placeholder image depending on if we have google play services
+        BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
+        if (ConnectionResult.SUCCESS ==
+                GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()))
+        {
+            final String zipClusterId = mAssociatedBooking.getZipClusterId();
+            if (zipClusterId != null)
+            {
+                requestZipClusterPolygons(zipClusterId);
+            }
+            else
+            {
+                BookingMapFragment fragment =
+                        BookingMapFragment.newInstance(mAssociatedBooking, bookingStatus);
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace(mapLayout.getId(), fragment).commit();
+            }
+        }
+        else
+        {
+            UIUtils.replaceView(mapLayout, new MapPlaceholderView(getContext()));
+        }
+    }
+
+    private void requestZipClusterPolygons(final String zipClusterId)
+    {
+        bus.post(new BookingEvent.RequestZipClusterPolygons(zipClusterId));
+    }
+
+    @Subscribe
+    public void onReceiveZipClusterPolygonsSuccess(
+            final BookingEvent.ReceiveZipClusterPolygonsSuccess event
+    )
+    {
+        BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
+        BookingMapFragment fragment = BookingMapFragment.newInstance(
+                mAssociatedBooking,
+                bookingStatus,
+                event.zipClusterPolygons
+        );
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(mapLayout.getId(), fragment).commit();
     }
 
     @OnClick(R.id.try_again_button)

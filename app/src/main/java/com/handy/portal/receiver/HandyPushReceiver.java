@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.event.LogEvent;
-import com.handy.portal.model.logs.EventLog;
-import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.util.Utils;

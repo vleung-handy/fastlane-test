@@ -13,9 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.ui.widget.BulletTextView;
 import com.handy.portal.util.TextUtils;

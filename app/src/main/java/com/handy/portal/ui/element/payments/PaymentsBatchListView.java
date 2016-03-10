@@ -9,8 +9,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.event.LogEvent;
-import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;

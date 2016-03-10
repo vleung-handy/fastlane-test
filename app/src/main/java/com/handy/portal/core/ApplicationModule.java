@@ -10,9 +10,7 @@ import android.util.Base64;
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
-import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
@@ -21,9 +19,11 @@ import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.location.LocationScheduleHandler;
 import com.handy.portal.location.LocationService;
 import com.handy.portal.location.manager.LocationManager;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
@@ -33,13 +33,13 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -316,7 +316,7 @@ public final class ApplicationModule
                                          final StripeRetrofitService stripeService //TODO: refactor and move somewhere else?
     )
     {
-        return new BaseDataManager(service, endpoint, stripeService);
+        return new DataManager(service, endpoint, stripeService);
     }
 
     @Provides
@@ -326,6 +326,13 @@ public final class ApplicationModule
                                                final EventLogFactory eventLogFactory)
     {
         return new BookingManager(bus, dataManager, eventLogFactory);
+    }
+
+    @Provides
+    @Singleton
+    final SystemManager provideSystemManager(final Bus bus)
+    {
+        return new SystemManager(context, bus);
     }
 
     @Provides

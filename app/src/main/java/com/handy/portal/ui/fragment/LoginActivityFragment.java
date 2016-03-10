@@ -18,11 +18,11 @@ import android.widget.TextView;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
-import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;

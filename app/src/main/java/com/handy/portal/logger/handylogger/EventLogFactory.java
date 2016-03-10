@@ -1,4 +1,4 @@
-package com.handy.portal.model.logs;
+package com.handy.portal.logger.handylogger;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -6,12 +6,26 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.handy.portal.constant.LocationKey;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
+import com.handy.portal.logger.handylogger.model.BasicLog;
+import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
+import com.handy.portal.logger.handylogger.model.EventLog;
+import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
+import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
+import com.handy.portal.logger.handylogger.model.PerformanceLog;
+import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.logger.handylogger.model.PushNotificationLog;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.OnboardingParams;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.logs.VideoLog;
 import com.handy.portal.util.MathUtils;
 import com.urbanairship.push.PushMessage;
 

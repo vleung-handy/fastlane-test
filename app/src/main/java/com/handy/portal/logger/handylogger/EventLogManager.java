@@ -1,4 +1,4 @@
-package com.handy.portal.manager;
+package com.handy.portal.logger.handylogger;
 
 
 import android.support.annotation.NonNull;
@@ -9,10 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.LogEvent;
-import com.handy.portal.model.logs.Event;
-import com.handy.portal.model.logs.EventLogBundle;
-import com.handy.portal.model.logs.EventLogResponse;
+import com.handy.portal.logger.handylogger.model.Event;
+import com.handy.portal.logger.handylogger.model.EventLogBundle;
+import com.handy.portal.logger.handylogger.model.EventLogResponse;
+import com.handy.portal.manager.PrefsManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

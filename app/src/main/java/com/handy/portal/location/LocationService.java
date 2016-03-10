@@ -7,22 +7,18 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.model.LocationQuerySchedule;
-import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
-
-//TODO: test only
 
 
 /**
@@ -47,12 +43,13 @@ public class LocationService extends Service
 
     GoogleApiClient mGoogleApiClient;
     LocationScheduleHandler mLocationScheduleHandler;
+    Thread.UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;
 
     @Override
     public void onCreate()
     {
-        sInstance = this; //for testing only
-
+        mDefaultUncaughtExceptionHandler =
+                Thread.getDefaultUncaughtExceptionHandler();
         Thread.currentThread().setUncaughtExceptionHandler(this);
         super.onCreate();
         Utils.inject(getApplicationContext(), this);
@@ -68,8 +65,6 @@ public class LocationService extends Service
     {
         Log.d(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
 
-//        Toast.makeText(getBaseContext(), "started location service", Toast.LENGTH_SHORT).show(); //TODO: remove, test only
-
         super.onStartCommand(intent, flags, startId);
         if (mGoogleApiClient == null)
         {
@@ -77,18 +72,6 @@ public class LocationService extends Service
         }
         mBus.register(this);
         mGoogleApiClient.connect();
-
-//        //TODO: remove, for toggle testing only
-//        if (intent != null && intent.getExtras() != null && intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE) != null)
-//        {
-//            mBus.post(new LocationEvent.ReceiveLocationSchedule((LocationQuerySchedule)
-//                    intent.getExtras().getParcelable(LocationQuerySchedule.EXTRA_LOCATION_SCHEDULE)));
-//
-//        }
-//        else
-//        {
-//            requestLocationQuerySchedule();
-//        }
 
         requestLocationQuerySchedule();
 
@@ -129,14 +112,30 @@ public class LocationService extends Service
     }
 
     @Subscribe
-    public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationSchedule event)
+    public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationScheduleSuccess event)
     {
         Log.d(getClass().getName(), "got new location schedule event");
         LocationQuerySchedule locationQuerySchedule = event.getLocationQuerySchedule();
-        handleNewLocationQuerySchedule(locationQuerySchedule);
+        if(!locationQuerySchedule.isEmpty())
+        {
+            handleNewLocationQuerySchedule(locationQuerySchedule);
+        }
         //TODO: optimize if the schedule did NOT change!!!!!
     }
 
+    /**
+     * delegating bus event here because don't want the handler to subscribe to bus
+     * because it does not have a strict lifecycle
+     * @param event
+     */
+    @Subscribe
+    public void onNetworkReconnected(SystemEvent.NetworkReconnected event)
+    {
+        if(mLocationScheduleHandler != null)
+        {
+            mLocationScheduleHandler.onNetworkReconnected();
+        }
+    }
     /**
      * got a new schedule, create a handler for it
      *
@@ -185,8 +184,12 @@ public class LocationService extends Service
     {
         //overriding this only prevents the error message dialog that shows
         Log.e(getClass().getName(), "got uncaught exception: " + ex.getMessage());
-        Crashlytics.logException(ex); //this won't actually work
         stopSelf(); //looks like this makes the service not restart even if sticky!
+        if (mDefaultUncaughtExceptionHandler != null)
+        {
+            mDefaultUncaughtExceptionHandler.uncaughtException(thread, ex);
+            //default handler should log the exception to crashlytics
+        }
     }
 
     public class LocalBinder extends Binder
@@ -226,21 +229,4 @@ public class LocationService extends Service
 
     }
 
-    //EVERYTHING BELOW IS FOR TESTING ONLY!
-
-    @VisibleForTesting
-    private static LocationService sInstance; //for toggle testing only
-
-    @VisibleForTesting
-    public static LocationService getInstance() //for toggle testing only
-    {
-        return sInstance;
-    }
-
-    @VisibleForTesting
-    public LocationQueryStrategy getLatestActiveLocationQueryStrategy()
-    {
-        if (mLocationScheduleHandler == null) { return null; }
-        return mLocationScheduleHandler.getLatestActiveLocationStrategy();
-    }
 }

@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.handy.portal.annotation.Track;
-import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.logger.mixpanel.annotation.Track;
+import com.handy.portal.logger.mixpanel.annotation.TrackField;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;

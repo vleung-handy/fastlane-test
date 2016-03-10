@@ -40,9 +40,6 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setOptionsMenuEnabled(true);
-        setBackButtonEnabled(true);
-
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
     }
 
@@ -59,6 +56,8 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
         setActionBarTitle(R.string.feedback);
 
         if (mEvaluation == null || mEvaluation.getProviderFeedback() == null)
