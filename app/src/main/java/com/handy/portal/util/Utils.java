@@ -1,5 +1,6 @@
 package com.handy.portal.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -35,6 +36,21 @@ public final class Utils //TODO: we should reorganize these methods into more sp
         {
             if (ActivityCompat.checkSelfPermission(context,
                     permissions[i]) == PackageManager.PERMISSION_GRANTED)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean wereAnyPermissionsRequestedPreviously(@NonNull Activity activity, @NonNull String[] permissions)
+    {
+        for (int i = 0; i < permissions.length; i++)
+        {
+            /**
+             *  The method returns true if the app has requested this permission previously and the user denied the request.
+             */
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i]))
             {
                 return true;
             }

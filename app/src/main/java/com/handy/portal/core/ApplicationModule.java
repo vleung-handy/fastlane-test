@@ -80,6 +80,7 @@ import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.dialog.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -168,6 +169,7 @@ import retrofit.converter.GsonConverter;
         ReferAFriendFragment.class,
         FiveStarRatingPercentageView.class,
         OnboardingFragment.class,
+        LocationPermissionsBlockerDialogFragment.class,
 })
 public final class ApplicationModule
 {
