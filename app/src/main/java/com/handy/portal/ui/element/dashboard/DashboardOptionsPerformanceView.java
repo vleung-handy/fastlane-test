@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,10 +107,12 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         if (feedbackList != null && feedbackList.size() > 0)
         {
             mFirstFeedbackTitleText.setText(feedbackList.get(0).getTitle());
+            mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
         }
         else
         {
             mFirstFeedbackTitleText.setText(getResources().getString(R.string.none));
+            mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_grey));
         }
 
         List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatingsWithComments();
