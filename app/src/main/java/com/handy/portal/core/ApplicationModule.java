@@ -330,9 +330,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final SystemManager provideSystemManager(final Bus bus)
+    final SystemManager provideSystemManager(final Bus bus, final EventLogFactory eventLogFactory)
     {
-        return new SystemManager(context, bus);
+        return new SystemManager(context, bus, eventLogFactory);
     }
 
     @Provides

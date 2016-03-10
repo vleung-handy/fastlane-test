@@ -10,7 +10,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.handy.portal.event.SystemEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.squareup.otto.Bus;
+
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -21,15 +25,18 @@ public class SystemManager extends BroadcastReceiver
 {
     private final Bus mBus;
     private final Context mContext;
+    private EventLogFactory mEventLogFactory;
 
     private boolean mPreviouslyHadNetworkConnectivity = true;
 
     @Inject
-    public SystemManager(@NonNull Context context, @NonNull final Bus bus)
+    public SystemManager(@NonNull Context context, @NonNull final Bus bus,
+                         @NonNull EventLogFactory eventLogFactory)
     {
         mBus = bus;
         mBus.register(this);
         mContext = context;
+        mEventLogFactory = eventLogFactory;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         intentFilter.addAction(Intent.ACTION_BATTERY_LOW);
@@ -59,10 +66,21 @@ public class SystemManager extends BroadcastReceiver
                 hasConnectivity will still be true
                  */
         Log.d(getClass().getName(), "has network connectivity: " + hasConnectivity);
-        if (hasConnectivity && !mPreviouslyHadNetworkConnectivity)
-        //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
+        if(hasConnectivity != mPreviouslyHadNetworkConnectivity)
+        //network connected and couldn't connect before or vice versa.
+        //need second variable to prevent multiple triggers due to multiple network providers
         {
-            mBus.post(new SystemEvent.NetworkReconnected());
+            if(hasConnectivity) //reconnected
+            {
+                mBus.post(new LogEvent.AddLogEvent(
+                        mEventLogFactory.createNetworkReconnectedLog(new Date())));
+                mBus.post(new SystemEvent.NetworkReconnected());
+            }
+            else //disconnected
+            {
+                mBus.post(new LogEvent.AddLogEvent(
+                        mEventLogFactory.createNetworkDisconnectedLog(new Date())));
+            }
         }
 
         //this is a hack to prevent multiple network reconnected triggers, should think of a better solution

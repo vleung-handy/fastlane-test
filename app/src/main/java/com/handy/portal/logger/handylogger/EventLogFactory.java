@@ -13,6 +13,7 @@ import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
 import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
+import com.handy.portal.logger.handylogger.model.NetworkConnectivityChangedLog;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
@@ -48,6 +49,17 @@ public class EventLogFactory
     public EventLog createNavigationLog(String tabName)
     {
         return new BasicLog.Navigation(tabName);
+    }
+
+    // System event logs
+    public EventLog createNetworkReconnectedLog(Date capturedAtDate)
+    {
+        return new NetworkConnectivityChangedLog.Reconnected(capturedAtDate);
+    }
+
+    public EventLog createNetworkDisconnectedLog(Date capturedAtDate)
+    {
+        return new NetworkConnectivityChangedLog.Disconnected(capturedAtDate);
     }
 
     // Nearby Bookings Logs
