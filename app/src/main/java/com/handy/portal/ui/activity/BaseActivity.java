@@ -10,12 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.LocationConstants;
+import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
@@ -256,7 +257,8 @@ public abstract class BaseActivity extends AppCompatActivity
         //client is static across activities
         if (googleApiClient == null)
         {
-            int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            GoogleApiAvailability gApi = GoogleApiAvailability.getInstance();
+            int resultCode = gApi.isGooglePlayServicesAvailable(this);
             if (resultCode == ConnectionResult.SUCCESS)
             {
                 googleApiClient = new GoogleApiClient.Builder(this)
@@ -265,10 +267,12 @@ public abstract class BaseActivity extends AppCompatActivity
                         .addApi(LocationServices.API)
                         .build();
                 bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(true));
+                bus.post(new GoogleApiLog.GoogleApiAvailability(true));
             }
             else
             {
                 bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(false));
+                bus.post(new GoogleApiLog.GoogleApiAvailability(false));
             }
         }
     }
