@@ -79,8 +79,6 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
 
         mCentered = true;
         mOrientation = HORIZONTAL;
-
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
     }
 
     @Override

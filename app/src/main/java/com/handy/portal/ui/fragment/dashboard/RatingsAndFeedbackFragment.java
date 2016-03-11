@@ -116,7 +116,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
             public void onPageSelected(final int position)
             {
                 bus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
-                if (position == DashboardRatingsPagerAdapter.LIFETIME_POSITION)
+                if (position == DashboardRatingsPagerAdapter.LIFETIME_PAGE_POSITION)
                 {
                     bus.post(mEventLogFactory.createLifetimeRatingsLog());
                 }

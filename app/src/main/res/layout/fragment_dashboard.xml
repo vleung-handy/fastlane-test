@@ -44,8 +44,6 @@
                 android:paddingTop="@dimen/circle_indicator_padding"
                 />
 
-            <include layout="@layout/divider_dashboard"/>
-
             <com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView
                 android:id="@+id/dashboard_options_view"
                 android:layout_width="match_parent"
