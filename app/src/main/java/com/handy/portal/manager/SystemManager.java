@@ -14,8 +14,6 @@ import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.squareup.otto.Bus;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 /**
@@ -73,13 +71,13 @@ public class SystemManager extends BroadcastReceiver
             if(hasConnectivity) //reconnected
             {
                 mBus.post(new LogEvent.AddLogEvent(
-                        mEventLogFactory.createNetworkReconnectedLog(new Date())));
+                        mEventLogFactory.createNetworkReconnectedLog()));
                 mBus.post(new SystemEvent.NetworkReconnected());
             }
             else //disconnected
             {
                 mBus.post(new LogEvent.AddLogEvent(
-                        mEventLogFactory.createNetworkDisconnectedLog(new Date())));
+                        mEventLogFactory.createNetworkDisconnectedLog()));
             }
         }
 
