@@ -8,17 +8,17 @@
     >
 
     <RadioButton
-        android:id="@+id/nav_link_payments"
-        style="@style/TrayButton"
-        android:drawableLeft="@drawable/ic_cup_gray"
-        android:text="@string/payments"
-        />
-
-    <RadioButton
         android:id="@+id/nav_link_ratings_and_feedback"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/ic_tray_wallet"
         android:text="@string/ratings_and_feedback"
+        />
+
+    <RadioButton
+        android:id="@+id/nav_link_payments"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/ic_cup_gray"
+        android:text="@string/payments"
         />
 
     <RadioButton

@@ -14,6 +14,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
@@ -33,9 +34,10 @@ import butterknife.OnClick;
 
 public class RatingsAndFeedbackFragment extends ActionBarFragment
 {
-
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     @Bind(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
@@ -104,26 +106,24 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
 
         mRatingsProPerformanceViewPager
                 .setAdapter(new DashboardRatingsPagerAdapter(getContext(), evaluation, shouldAnimateFiveStarPercentageGraphs()));
-
+        mRatingsProPerformanceViewPager.setClipToPadding(false);
         mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels)
-            {
-
-            }
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(final int position)
             {
                 bus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
+                if (position == DashboardRatingsPagerAdapter.LIFETIME_PAGE_POSITION)
+                {
+                    bus.post(mEventLogFactory.createLifetimeRatingsLog());
+                }
             }
 
             @Override
-            public void onPageScrollStateChanged(final int state)
-            {
-
-            }
+            public void onPageScrollStateChanged(final int state) {}
         });
         mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceViewPager);
 

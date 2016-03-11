@@ -105,7 +105,7 @@
     <dimen name="highlight_icon_size">16dp</dimen>
     <dimen name="line_spacing_dashboard">3dp</dimen>
     <dimen name="five_star_review_text_margin">5dp</dimen>
-    <dimen name="dashboard_ratings_performance_height">390dp</dimen>
+    <dimen name="dashboard_ratings_performance_height">400dp</dimen>
     <dimen name="percentage_circle_margin">35dp</dimen>
     <dimen name="circle_page_indicator_height">21dp</dimen>
     <dimen name="circle_negative_margin">-4dp</dimen>
