@@ -55,7 +55,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
         when(details.getSuccess()).thenReturn(true);
         AppUpdateEvent.ReceiveUpdateAvailableSuccess event = new AppUpdateEvent.ReceiveUpdateAvailableSuccess(details);
 
-        activity.onReceiveUpdateAvailableSuccess(event);
+        activity.getBusEventListener().onReceiveUpdateAvailableSuccess(event);
 
         Intent expectedIntent = new Intent(activity, PleaseUpdateActivity.class);
         Intent actualIntent = shadowOf(activity).getNextStartedActivity();
@@ -70,7 +70,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
         when(details.getShouldUpdate()).thenReturn(false);
         AppUpdateEvent.ReceiveUpdateAvailableSuccess event = new AppUpdateEvent.ReceiveUpdateAvailableSuccess(details);
 
-        activity.onReceiveUpdateAvailableSuccess(event);
+        activity.getBusEventListener().onReceiveUpdateAvailableSuccess(event);
 
         assertNull(shadowOf(activity).getNextStartedActivity());
     }
