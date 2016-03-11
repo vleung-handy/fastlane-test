@@ -7,7 +7,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.mixpanel.annotation.Track;
 import com.handy.portal.updater.model.UpdateDetails;
 
-public abstract class AppUpdaterEvent
+public abstract class AppUpdateEvent
 {
     public static class RequestUpdateCheck extends HandyEvent.RequestEvent
     {

@@ -3,7 +3,7 @@ package com.handy.portal.ui.activity;
 import android.content.Intent;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.updater.AppUpdaterEvent;
+import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.model.UpdateDetails;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 
@@ -44,7 +44,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
         ArgumentCaptor<Object> argument = ArgumentCaptor.forClass(Object.class);
         verify(activity.bus, atLeastOnce()).post(argument.capture());
         //TODO: Verify that only one instance of RequestUpdateCheck is in the captor value
-        assertThat(argument.getAllValues(), hasItem(instanceOf(AppUpdaterEvent.RequestUpdateCheck.class)));
+        assertThat(argument.getAllValues(), hasItem(instanceOf(AppUpdateEvent.RequestUpdateCheck.class)));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
         UpdateDetails details = mock(UpdateDetails.class);
         when(details.getShouldUpdate()).thenReturn(true);
         when(details.getSuccess()).thenReturn(true);
-        AppUpdaterEvent.ReceiveUpdateAvailableSuccess event = new AppUpdaterEvent.ReceiveUpdateAvailableSuccess(details);
+        AppUpdateEvent.ReceiveUpdateAvailableSuccess event = new AppUpdateEvent.ReceiveUpdateAvailableSuccess(details);
 
         activity.onReceiveUpdateAvailableSuccess(event);
 
@@ -68,7 +68,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     {
         UpdateDetails details = mock(UpdateDetails.class);
         when(details.getShouldUpdate()).thenReturn(false);
-        AppUpdaterEvent.ReceiveUpdateAvailableSuccess event = new AppUpdaterEvent.ReceiveUpdateAvailableSuccess(details);
+        AppUpdateEvent.ReceiveUpdateAvailableSuccess event = new AppUpdateEvent.ReceiveUpdateAvailableSuccess(details);
 
         activity.onReceiveUpdateAvailableSuccess(event);
 
@@ -78,7 +78,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     @Test
     public void givenUpdateCheckFailed_whenUpdateCheckReceived_thenDoNotStartUpdateActivity() throws Exception
     {
-        AppUpdaterEvent.ReceiveUpdateAvailableError event = new AppUpdaterEvent.ReceiveUpdateAvailableError(null);
+        AppUpdateEvent.ReceiveUpdateAvailableError event = new AppUpdateEvent.ReceiveUpdateAvailableError(null);
 
         activity.onReceiveUpdateAvailableError(event);
 

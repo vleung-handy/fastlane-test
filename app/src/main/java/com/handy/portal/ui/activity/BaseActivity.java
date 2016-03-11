@@ -19,7 +19,7 @@ import com.handy.portal.location.LocationConstants;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
-import com.handy.portal.updater.AppUpdaterEvent;
+import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
@@ -93,13 +93,13 @@ public abstract class BaseActivity extends AppCompatActivity
         busEventListener = new Object()//TODO: put these methods into a service
         {
             @Subscribe
-            public void onReceiveUpdateAvailableSuccess(AppUpdaterEvent.ReceiveUpdateAvailableSuccess event)
+            public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
             {
                 BaseActivity.this.onReceiveUpdateAvailableSuccess(event);
             }
 
             @Subscribe
-            public void onReceiveUpdateAvailableError(AppUpdaterEvent.ReceiveUpdateAvailableError event)
+            public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)
             {
                 String message = event.error.getMessage();
                 if (message != null)
@@ -225,7 +225,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     public void checkForUpdates()
     {
-        bus.post(new AppUpdaterEvent.RequestUpdateCheck(this));
+        bus.post(new AppUpdateEvent.RequestUpdateCheck(this));
     }
 
     public void postActivityResumeEvent()
@@ -238,7 +238,7 @@ public abstract class BaseActivity extends AppCompatActivity
         bus.post(new HandyEvent.ActivityPaused(this));
     }
 
-    public void onReceiveUpdateAvailableSuccess(AppUpdaterEvent.ReceiveUpdateAvailableSuccess event)
+    public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
     {
         if (event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate()) //TODO: there seems to be a lot of redundant updateDetails.getShouldUpdate() calls. clean this up
         {
@@ -247,7 +247,7 @@ public abstract class BaseActivity extends AppCompatActivity
         //otherwise ignore
     }
 
-    public void onReceiveUpdateAvailableError(AppUpdaterEvent.ReceiveUpdateAvailableError event)
+    public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)
     {
         //TODO: Handle receive update available error, do we need to block?
     }

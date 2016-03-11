@@ -20,7 +20,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
-import com.handy.portal.updater.AppUpdaterEvent;
+import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.util.SupportedDeeplinkPath;
 import com.squareup.otto.Subscribe;
 
@@ -253,7 +253,7 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public void onReceiveUpdateAvailableSuccess(AppUpdaterEvent.ReceiveUpdateAvailableSuccess event)
+    public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
     {
         //Do nothing
     }

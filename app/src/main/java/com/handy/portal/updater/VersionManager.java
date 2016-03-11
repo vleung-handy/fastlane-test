@@ -74,27 +74,27 @@ public class VersionManager
     }
 
     @Produce
-    public AppUpdaterEvent.DownloadUpdateSuccessful produceUpdateDownloadSuccessful()
+    public AppUpdateEvent.DownloadUpdateSuccessful produceUpdateDownloadSuccessful()
     {
         if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
         {
-            return new AppUpdaterEvent.DownloadUpdateSuccessful();
+            return new AppUpdateEvent.DownloadUpdateSuccessful();
         }
         return null;
     }
 
     @Produce
-    public AppUpdaterEvent.DownloadUpdateFailed produceUpdateDownloadFailed()
+    public AppUpdateEvent.DownloadUpdateFailed produceUpdateDownloadFailed()
     {
         if (getDownloadStatus() == DownloadManager.STATUS_FAILED)
         {
-            return new AppUpdaterEvent.DownloadUpdateFailed();
+            return new AppUpdateEvent.DownloadUpdateFailed();
         }
         return null;
     }
 
     @Subscribe
-    public void onUpdateCheckRequest(AppUpdaterEvent.RequestUpdateCheck event)
+    public void onUpdateCheckRequest(AppUpdateEvent.RequestUpdateCheck event)
     {
         if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context))
         {
@@ -119,21 +119,21 @@ public class VersionManager
                                 if (updateDetails.getShouldUpdate())
                                 {
                                     mDownloadUrl = updateDetails.getDownloadUrl();
-                                    bus.post(new AppUpdaterEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                    bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
                                 }
                             }
 
                             @Override
                             public void onError(final DataManager.DataManagerError error)
                             {
-                                bus.post(new AppUpdaterEvent.ReceiveUpdateAvailableError(error));
+                                bus.post(new AppUpdateEvent.ReceiveUpdateAvailableError(error));
                             }
                         }
                 );
             }
             else
             {
-                bus.post(new AppUpdaterEvent.ReceiveUpdateAvailableError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.OTHER,
+                bus.post(new AppUpdateEvent.ReceiveUpdateAvailableError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.OTHER,
                         context.getString(R.string.error_update_failed_unwritable))));
             }
 
@@ -193,11 +193,11 @@ public class VersionManager
             {
                 if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
                 {
-                    bus.post(new AppUpdaterEvent.DownloadUpdateSuccessful());
+                    bus.post(new AppUpdateEvent.DownloadUpdateSuccessful());
                 }
                 else
                 {
-                    bus.post(new AppUpdaterEvent.DownloadUpdateFailed());
+                    bus.post(new AppUpdateEvent.DownloadUpdateFailed());
                 }
             }
             else

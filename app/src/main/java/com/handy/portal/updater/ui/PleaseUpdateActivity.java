@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.updater.AppUpdaterEvent;
+import com.handy.portal.updater.AppUpdateEvent;
 
 public class PleaseUpdateActivity extends BaseActivity
 {
@@ -35,7 +35,7 @@ public class PleaseUpdateActivity extends BaseActivity
     }
 
     @Override
-    public void onReceiveUpdateAvailableSuccess(AppUpdaterEvent.ReceiveUpdateAvailableSuccess event)
+    public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
     {
         //Do nothing
     }

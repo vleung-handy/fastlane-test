@@ -82,7 +82,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
 
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
 
-        versionManager.onUpdateCheckRequest(new AppUpdaterEvent.RequestUpdateCheck(activity));
+        versionManager.onUpdateCheckRequest(new AppUpdateEvent.RequestUpdateCheck(activity));
         verify(dataManager).checkForUpdates(anyString(), anyInt(), updateCheckCallbackCaptor.capture());
         updateDetailsCallBack = updateCheckCallbackCaptor.getValue();
 
@@ -106,7 +106,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
         updateDetailsCallBack.onSuccess(updateDetails);
 
         verify(bus).post(eventArgumentCaptor.capture());
-        assertThat(eventArgumentCaptor.getValue(), instanceOf(AppUpdaterEvent.ReceiveUpdateAvailableSuccess.class));
+        assertThat(eventArgumentCaptor.getValue(), instanceOf(AppUpdateEvent.ReceiveUpdateAvailableSuccess.class));
     }
 
     @Test
