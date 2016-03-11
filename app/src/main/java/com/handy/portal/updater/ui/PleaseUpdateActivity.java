@@ -4,11 +4,9 @@ import android.os.Bundle;
 
 import com.handy.portal.R;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.updater.AppUpdateEvent;
 
 public class PleaseUpdateActivity extends BaseActivity
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -35,10 +33,8 @@ public class PleaseUpdateActivity extends BaseActivity
     }
 
     @Override
-    public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
+    public void launchAppUpdater()
     {
-        //Do nothing
+        //do nothing
     }
-
-
 }

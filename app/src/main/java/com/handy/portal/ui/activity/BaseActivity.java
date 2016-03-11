@@ -1,11 +1,12 @@
 package com.handy.portal.ui.activity;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -21,10 +22,11 @@ import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.ui.widget.ProgressDialog;
 import com.handy.portal.updater.AppUpdateEvent;
+import com.handy.portal.updater.AppUpdateEventListener;
+import com.handy.portal.updater.AppUpdateFlowLauncher;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.Stack;
 
@@ -34,9 +36,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener
+        GoogleApiClient.OnConnectionFailedListener,
+        AppUpdateFlowLauncher
 {
-    private Object busEventListener;
+    private AppUpdateEventListener mAppUpdateEventListener;
     protected boolean allowCallbacks;
     private Stack<OnBackPressedListener> onBackPressedListenerStack;
     protected ProgressDialog progressDialog;
@@ -91,49 +94,48 @@ public abstract class BaseActivity extends AppCompatActivity
         final Intent intent = getIntent();
         final Uri data = intent.getData();
 
-        busEventListener = new Object()//TODO: put these methods into a service
-        {
-            @Subscribe
-            public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
-            {
-                BaseActivity.this.onReceiveUpdateAvailableSuccess(event);
-            }
-
-            @Subscribe
-            public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)
-            {
-                String message = event.error.getMessage();
-                if (message != null)
-                {
-                    Toast.makeText(BaseActivity.this, event.error.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Subscribe
-            public void onReceiveEnableApplication(HandyEvent.RequestEnableApplication event)
-            {
-                String packageName = event.packageName;
-                String promptMessage = event.infoMessage;
-                Context context = BaseActivity.this;
-                Toast.makeText(context, promptMessage, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                try
-                {
-                    intent.setData(Uri.parse("package:" + packageName));
-                    context.startActivity(intent);//activity may not be found, may throw exception
-                }
-                catch (ActivityNotFoundException e)
-                {
-                    intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
-                    Utils.safeLaunchIntent(intent, context);
-                }
-            }
-        };
+        mAppUpdateEventListener = new AppUpdateEventListener(this);
 
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
+    }
+
+    @VisibleForTesting
+    public AppUpdateEventListener getBusEventListener()
+    {
+        return mAppUpdateEventListener;
+    }
+
+    @Override
+    public void launchAppUpdater()
+    {
+        startActivity(new Intent(this, PleaseUpdateActivity.class));
+    }
+
+    @Override
+    public void launchEnableRequiredUpdateFlowApplicationIntent(@NonNull final String packageName, final String promptMessage)
+    {
+        Toast.makeText(this, promptMessage, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.setData(Uri.parse("package:" + packageName));
+        boolean successfullyLaunchedIntent = Utils.safeLaunchIntent(intent, this);
+        if(!successfullyLaunchedIntent)
+        {
+            /*
+            unable to launch the application detail settings intent,
+            so try launching the manage application settings intent
+             */
+            intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+            Utils.safeLaunchIntent(intent, this);
+        }
+    }
+
+    @Override
+    public void showAppUpdateFlowError(@NonNull final String message)
+    {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -170,7 +172,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onResumeFragments()
     {
         super.onResumeFragments();
-        this.bus.register(busEventListener);
+        this.bus.register(mAppUpdateEventListener);
         checkForUpdates();
         postActivityResumeEvent(); //do not disable this
     }
@@ -198,7 +200,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onPause()
     {
         postActivityPauseEvent();
-        bus.unregister(busEventListener);
+        bus.unregister(mAppUpdateEventListener);
         super.onPause();
     }
 
@@ -237,15 +239,6 @@ public abstract class BaseActivity extends AppCompatActivity
     public void postActivityPauseEvent()
     {
         bus.post(new HandyEvent.ActivityPaused(this));
-    }
-
-    public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
-    {
-        if (event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate()) //TODO: there seems to be a lot of redundant updateDetails.getShouldUpdate() calls. clean this up
-        {
-            startActivity(new Intent(this, PleaseUpdateActivity.class));
-        }
-        //otherwise ignore
     }
 
     public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)
