@@ -20,7 +20,6 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
-import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.util.SupportedDeeplinkPath;
 import com.squareup.otto.Subscribe;
 
@@ -253,9 +252,9 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
+    public boolean isAppUpdateFlowEnabled()
     {
-        //Do nothing
+        return false;
     }
 
     private void processDeeplink(@NonNull final Uri data)

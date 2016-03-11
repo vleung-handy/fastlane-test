@@ -410,6 +410,12 @@
     <string name="change_location_permissions_dialog_message">Please grant location permissions so your customers are aware of your arrival time.</string>
     <string name="change_location_permissions_dialog_action_button">Go to Settings</string>
 
+    <!--App update-->
+    <string name="app_update_available_dialog_title">Update Available</string>
+    <string name="app_update_available_dialog_message">A new version of this app is available.</string>
+    <string name="app_update_available_dialog_update_button">Update now</string>
+    <string name="app_update_available_dialog_dismiss_button">Later</string>
+
     <!-- Onboarding -->
     <string name="onboarding_tab_title">Welcome to Handy</string>
 
