@@ -1,9 +1,10 @@
-package com.handy.portal.ui.activity;
+package com.handy.portal.updater.ui;
 
 import android.os.Bundle;
 
 import com.handy.portal.R;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.updater.AppUpdaterEvent;
 
 public class PleaseUpdateActivity extends BaseActivity
 {
@@ -34,7 +35,7 @@ public class PleaseUpdateActivity extends BaseActivity
     }
 
     @Override
-    public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
+    public void onReceiveUpdateAvailableSuccess(AppUpdaterEvent.ReceiveUpdateAvailableSuccess event)
     {
         //Do nothing
     }

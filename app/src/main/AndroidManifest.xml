@@ -124,7 +124,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.PleaseUpdateActivity"
+            android:name=".updater.ui.PleaseUpdateActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_please_update" >
         </activity>

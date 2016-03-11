@@ -1,4 +1,4 @@
-package com.handy.portal.manager;
+package com.handy.portal.updater;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -18,7 +18,8 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.UpdateDetails;
+import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.updater.model.UpdateDetails;
 import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
@@ -73,27 +74,27 @@ public class VersionManager
     }
 
     @Produce
-    public HandyEvent.DownloadUpdateSuccessful produceUpdateDownloadSuccessful()
+    public AppUpdaterEvent.DownloadUpdateSuccessful produceUpdateDownloadSuccessful()
     {
         if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
         {
-            return new HandyEvent.DownloadUpdateSuccessful();
+            return new AppUpdaterEvent.DownloadUpdateSuccessful();
         }
         return null;
     }
 
     @Produce
-    public HandyEvent.DownloadUpdateFailed produceUpdateDownloadFailed()
+    public AppUpdaterEvent.DownloadUpdateFailed produceUpdateDownloadFailed()
     {
         if (getDownloadStatus() == DownloadManager.STATUS_FAILED)
         {
-            return new HandyEvent.DownloadUpdateFailed();
+            return new AppUpdaterEvent.DownloadUpdateFailed();
         }
         return null;
     }
 
     @Subscribe
-    public void onUpdateCheckRequest(HandyEvent.RequestUpdateCheck event)
+    public void onUpdateCheckRequest(AppUpdaterEvent.RequestUpdateCheck event)
     {
         if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context))
         {
@@ -118,21 +119,21 @@ public class VersionManager
                                 if (updateDetails.getShouldUpdate())
                                 {
                                     mDownloadUrl = updateDetails.getDownloadUrl();
-                                    bus.post(new HandyEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                    bus.post(new AppUpdaterEvent.ReceiveUpdateAvailableSuccess(updateDetails));
                                 }
                             }
 
                             @Override
                             public void onError(final DataManager.DataManagerError error)
                             {
-                                bus.post(new HandyEvent.ReceiveUpdateAvailableError(error));
+                                bus.post(new AppUpdaterEvent.ReceiveUpdateAvailableError(error));
                             }
                         }
                 );
             }
             else
             {
-                bus.post(new HandyEvent.ReceiveUpdateAvailableError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.OTHER,
+                bus.post(new AppUpdaterEvent.ReceiveUpdateAvailableError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.OTHER,
                         context.getString(R.string.error_update_failed_unwritable))));
             }
 
@@ -192,11 +193,11 @@ public class VersionManager
             {
                 if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
                 {
-                    bus.post(new HandyEvent.DownloadUpdateSuccessful());
+                    bus.post(new AppUpdaterEvent.DownloadUpdateSuccessful());
                 }
                 else
                 {
-                    bus.post(new HandyEvent.DownloadUpdateFailed());
+                    bus.post(new AppUpdaterEvent.DownloadUpdateFailed());
                 }
             }
             else

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.updater.ui;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -23,8 +23,9 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.manager.VersionManager;
+import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.updater.AppUpdaterEvent;
+import com.handy.portal.updater.VersionManager;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -105,13 +106,13 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
+    public void onReceiveUpdateAvailableSuccess(AppUpdaterEvent.ReceiveUpdateAvailableSuccess event)
     {
         downloadApk();
     }
 
     @Subscribe
-    public void onDownloadUpdateSuccessful(HandyEvent.DownloadUpdateSuccessful event)
+    public void onDownloadUpdateSuccessful(AppUpdaterEvent.DownloadUpdateSuccessful event)
     {
         mUpdateImage.setBackgroundResource(R.drawable.img_update_success);
         mUpdateButton.setEnabled(true);
@@ -128,7 +129,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onDownloadUpdateFailed(HandyEvent.DownloadUpdateFailed event)
+    public void onDownloadUpdateFailed(AppUpdaterEvent.DownloadUpdateFailed event)
     {
         showToast(R.string.update_failed);
         getActivity().finish();
@@ -217,7 +218,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     {
         if (mVersionManager.getDownloadUrl() == null)
         {
-            bus.post(new HandyEvent.RequestUpdateCheck(getActivity()));
+            bus.post(new AppUpdaterEvent.RequestUpdateCheck(getActivity()));
         }
         else
         {

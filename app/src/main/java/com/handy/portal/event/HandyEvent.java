@@ -24,7 +24,6 @@ import com.handy.portal.model.Provider;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
-import com.handy.portal.model.UpdateDetails;
 
 import java.util.Date;
 import java.util.List;
@@ -301,40 +300,6 @@ public abstract class HandyEvent
         }
     }
 
-//Update and Version Management
-
-
-    public static class RequestUpdateCheck extends RequestEvent
-    {
-        public Activity sender = null;
-
-        public RequestUpdateCheck(Activity sender)
-        {
-            this.sender = sender;
-        }
-    }
-
-
-    public static class ReceiveUpdateAvailableSuccess extends ReceiveSuccessEvent
-    {
-        public UpdateDetails updateDetails;
-
-        public ReceiveUpdateAvailableSuccess(UpdateDetails updateDetails)
-        {
-            this.updateDetails = updateDetails;
-        }
-    }
-
-
-    public static class ReceiveUpdateAvailableError extends ReceiveErrorEvent
-    {
-        public ReceiveUpdateAvailableError(DataManager.DataManagerError error)
-        {
-            this.error = error;
-        }
-    }
-
-
     public static class RequestEnableApplication extends RequestEvent
     {
         public String packageName;
@@ -359,13 +324,6 @@ public abstract class HandyEvent
             this.available = available;
         }
     }
-
-
-    public static class DownloadUpdateSuccessful extends HandyEvent {}
-
-
-    @Track("portal app update download failed")
-    public static class DownloadUpdateFailed extends HandyEvent {}
 
 
     public static class RequestCheckTerms extends RequestEvent {}
