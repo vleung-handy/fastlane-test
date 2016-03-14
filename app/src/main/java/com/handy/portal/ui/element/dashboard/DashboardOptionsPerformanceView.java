@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
@@ -135,7 +135,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments));
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createTierTappedLog()));
     }
 
@@ -144,7 +144,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
     }
 
@@ -154,7 +154,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS, arguments));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS, arguments));
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFiveStarReviewsTappedLog()));
     }
 }

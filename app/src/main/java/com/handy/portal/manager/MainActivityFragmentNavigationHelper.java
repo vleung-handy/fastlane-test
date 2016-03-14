@@ -1,6 +1,7 @@
 package com.handy.portal.manager;
 
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -24,7 +25,7 @@ public class MainActivityFragmentNavigationHelper
 
     private final Bus bus;
 
-    private HandyEvent.NavigateToTab storedEvent;
+    private NavigationEvent.NavigateToTab storedEvent;
 
     @Inject
     public MainActivityFragmentNavigationHelper(final Bus bus)
@@ -34,7 +35,7 @@ public class MainActivityFragmentNavigationHelper
     }
 
     @Subscribe
-    public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
+    public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
     {
         if(!this.mainActivityFragmentActive)
         {
@@ -42,7 +43,7 @@ public class MainActivityFragmentNavigationHelper
         }
     }
 
-    private void setStoredEvent(HandyEvent.NavigateToTab storedEvent)
+    private void setStoredEvent(NavigationEvent.NavigateToTab storedEvent)
     {
         this.storedEvent = storedEvent;
     }
