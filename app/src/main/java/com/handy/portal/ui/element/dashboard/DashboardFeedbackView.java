@@ -2,9 +2,8 @@ package com.handy.portal.ui.element.dashboard;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,12 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.ui.widget.BulletTextView;
 import com.handy.portal.util.TextUtils;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -70,6 +72,8 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
     {
         inflate(getContext(), R.layout.element_dashboard_feedback, this);
         ButterKnife.bind(this);
+
+        Utils.inject(getContext(), this);
     }
 
     public void setDisplay(@NonNull final ProviderFeedback feedback)
@@ -91,7 +95,6 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
                 {
                     YoutubeImagePlaceholderView youtubeImagePlaceholderView =
                             new YoutubeImagePlaceholderView(getContext());
-                    youtubeImagePlaceholderView.setVideoTitle(feedback.getTitle());
                     youtubeImagePlaceholderView.setID(tip.getData());
 
                     youtubeImagePlaceholderView.setOnClickListener(this);
@@ -105,10 +108,10 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
     @Override
     public void onClick(final View v)
     {
-        YoutubeImagePlaceholderView youtubeImagePlaceholderView = (YoutubeImagePlaceholderView) v;
-        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createVideoClickedLog(youtubeImagePlaceholderView.getVideoTitle())));
+        YoutubeImagePlaceholderView view = (YoutubeImagePlaceholderView) v;
+        Bundle bundle = new Bundle();
+        bundle.putString(BundleKeys.YOUTUBE_ID, view.getID());
 
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(youtubeImagePlaceholderView.getURL()));
-        getContext().startActivity(intent);
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
     }
 }

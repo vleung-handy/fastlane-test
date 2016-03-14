@@ -16,11 +16,8 @@ import com.squareup.picasso.Picasso;
 
 public class YoutubeImagePlaceholderView extends ImageView
 {
-    public static final String URL_STRING = "https://www.youtube.com/watch?v=";
+    private String id;
     private String imageUrl = "http://img.youtube.com/vi/%s/maxresdefault.jpg";
-    private String videoTitle;
-
-    private String url;
 
     public YoutubeImagePlaceholderView(final Context context)
     {
@@ -49,7 +46,7 @@ public class YoutubeImagePlaceholderView extends ImageView
 
     public void setID(String id)
     {
-        url = URL_STRING + id;
+        this.id = id;
         imageUrl = String.format(imageUrl, id);
         Picasso.with(getContext())
                 .load(getImageUrl())
@@ -57,19 +54,9 @@ public class YoutubeImagePlaceholderView extends ImageView
                 .into(this);
     }
 
-    public void setVideoTitle(String videoTitle)
+    public String getID()
     {
-        this.videoTitle = videoTitle;
-    }
-
-    public String getVideoTitle()
-    {
-        return videoTitle;
-    }
-
-    public String getURL()
-    {
-        return url;
+        return id;
     }
 
     public String getImageUrl() { return imageUrl; }
@@ -88,9 +75,6 @@ public class YoutubeImagePlaceholderView extends ImageView
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
         layoutParams.setMargins(0, marginTop, 0, marginBottom);
         setLayoutParams(layoutParams);
-
-//        setAlpha(0.6f);
-//        setBackgroundResource(R.drawable.video_placeholder);
     }
 
     public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2)

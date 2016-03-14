@@ -3,14 +3,12 @@ package com.handy.portal.ui.fragment.dashboard;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -212,14 +210,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        YouTubePlayerSupportFragment fragment = DashboardFeedbackFragment.newInstance(mProviderEvaluation);
-//        transaction.replace(((ViewGroup) getView().getParent()).getId(), fragment);
-        transaction.replace(R.id.main_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-//        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
     }
 }

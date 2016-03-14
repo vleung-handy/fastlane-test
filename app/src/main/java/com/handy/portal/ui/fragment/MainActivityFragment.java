@@ -451,6 +451,7 @@ public class MainActivityFragment extends InjectedFragment
                     mNavLinkPayments.toggle();
                 }
                 break;
+                case YOUTUBE_PLAYER:
                 case RATINGS_AND_FEEDBACK:
                 {
                     mButtonMore.toggle();

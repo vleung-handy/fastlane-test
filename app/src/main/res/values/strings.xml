@@ -407,4 +407,6 @@
     <!-- Onboarding -->
     <string name="onboarding_tab_title">Welcome to Handy</string>
 
+    <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
+
 </resources>

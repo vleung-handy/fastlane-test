@@ -1,8 +1,64 @@
 package com.handy.portal.ui.fragment.dashboard;
 
-/**
- * Created by idhir on 3/14/16.
- */
-public class YoutubePlayerFragment
+
+import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
+
+public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implements YouTubePlayer.OnInitializedListener
 {
+    private String youtubeId;
+
+    public static YoutubePlayerFragment newInstance(String youtubeId)
+    {
+        YoutubePlayerFragment fragment = new YoutubePlayerFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(BundleKeys.YOUTUBE_ID, youtubeId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(final Bundle bundle)
+    {
+        super.onCreate(bundle);
+        youtubeId = getArguments().getString(BundleKeys.YOUTUBE_ID);
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        getActionBar().hide();
+
+        initialize(getString(R.string.google_app_id), this);
+    }
+
+    @Override
+    public void onInitializationSuccess(final YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, final boolean b)
+    {
+        youTubePlayer.loadVideo(youtubeId);
+//        youTubePlayer.setShowFullscreenButton(false);
+//        youTubePlayer.setFullscreen(false);
+    }
+
+    @Override
+    public void onInitializationFailure(final YouTubePlayer.Provider provider, final YouTubeInitializationResult youTubeInitializationResult)
+    {
+        Log.d("BLA", "BLA");
+    }
+
+    private ActionBar getActionBar()
+    {
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
+    }
 }
