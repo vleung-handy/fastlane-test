@@ -78,7 +78,7 @@ public class LocationManager
     {
         String providerId = mProviderManager.getLastProviderId();
         if (providerId == null) { return; }
-        mDataManager.getLocationSchedule(providerId, new DataManager.Callback<LocationQuerySchedule>()
+        mDataManager.getLocationStrategies(providerId, new DataManager.Callback<LocationQuerySchedule>()
         {
             @Override
             public void onSuccess(final LocationQuerySchedule response)

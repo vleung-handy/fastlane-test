@@ -69,9 +69,9 @@ public class DataManager
         mStripeService = stripeService;
     }
 
-    public void getLocationSchedule(String providerId, Callback<LocationQuerySchedule> cb)
+    public void getLocationStrategies(String providerId, Callback<LocationQuerySchedule> cb)
     {
-        mService.getLocationSchedule(providerId, new GetLocationScheduleRetrofitCallback(cb));
+        mService.getLocationStrategies(providerId, new GetLocationScheduleRetrofitCallback(cb));
     }
 
     public void sendGeolocation(String providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb)
