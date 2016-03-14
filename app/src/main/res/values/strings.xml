@@ -8,9 +8,6 @@
     <string name="none">None</string>
     <string name="time_interval_formatted">%1$s – %2$s</string>
 
-
-    <string name="app_update">Handy Pro Update</string>
-
     <string name="phone_number_hint">Cell Phone Number</string>
     <string name="pin_code_hint">PIN Code</string>
     <string name="request_pin">Get PIN Code</string>
@@ -29,8 +26,6 @@
     <string name="login_error_connectivity">The login server could not be reached, please try again</string>
 
     <string name="error_no_intent_handler_found">No application found to handle the requested action</string>
-    <string name="error_update_failed_download_manager_disabled">Update failed. Please enable Download Manager.</string>
-    <string name="error_update_failed_unwritable">Update failed. Your external storage is not writable. Please make sure USB storage mode is off.</string>
     <string name="error_connectivity">The server could not be reached, please ensure you have a data connection and try again</string>
 
     <string name="your_job">Your Job</string>
@@ -102,6 +97,10 @@
     <string name="allow_external_storage_write_button">OK</string>
     <string name="grant_access_copy">Handy Pro Portal needs access to download the latest and greatest.</string>
     <string name="grant_access_button">Grant Access</string>
+    <string name="app_update">Handy Pro Update</string>
+    <string name="error_update_failed_download_manager_disabled">Update failed. Please enable Download Manager.</string>
+    <string name="error_update_failed_unwritable">Update failed. Your external storage is not writable. Please make sure USB storage mode is off.</string>
+    <string name="app_update_later_button">Update Later</string>
 
     <plurals name="hour">
         <item quantity="one">hour</item>
@@ -409,12 +408,6 @@
     <string name="change_location_permissions_dialog_title">Location permissions required</string>
     <string name="change_location_permissions_dialog_message">Please grant location permissions so your customers are aware of your arrival time.</string>
     <string name="change_location_permissions_dialog_action_button">Go to Settings</string>
-
-    <!--App update-->
-    <string name="app_update_available_dialog_title">Update Available</string>
-    <string name="app_update_available_dialog_message">A new version of this app is available.</string>
-    <string name="app_update_available_dialog_update_button">Update now</string>
-    <string name="app_update_available_dialog_dismiss_button">Later</string>
 
     <!-- Onboarding -->
     <string name="onboarding_tab_title">Welcome to Handy</string>

@@ -68,6 +68,20 @@
                 android:text="@string/update_button_label"
                 />
 
+            <Button
+                android:id="@+id/app_update_fragment_update_later_button"
+                style="@style/Button.White.Round.Empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/default_margin"
+                android:enabled="true"
+                android:paddingLeft="@dimen/default_padding_large"
+                android:paddingRight="@dimen/default_padding_large"
+                android:text="@string/app_update_later_button"
+                android:visibility="gone"
+                />
+
             <TextView
                 android:id="@+id/manual_download_text"
                 style="@style/TextView.Small"

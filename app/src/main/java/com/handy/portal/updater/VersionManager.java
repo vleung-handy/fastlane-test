@@ -32,6 +32,10 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+
+ /*
+ TODO this manager needs refactoring
+  */
 public class VersionManager
 {
     //TODO: parameterize these strings
@@ -50,7 +54,8 @@ public class VersionManager
     private DataManager dataManager;
     private PrefsManager prefsManager;
     private DownloadManager downloadManager;
-    private String mDownloadUrl;
+
+    private UpdateDetails mUpdateDetails;
 
     private long downloadReferenceId;
 
@@ -118,7 +123,14 @@ public class VersionManager
                             {
                                 if (updateDetails.getShouldUpdate())
                                 {
-                                    mDownloadUrl = updateDetails.getDownloadUrl();
+                                    /*
+                                    TODO
+                                    used to be mDownloadUrl = updateDetails.getDownloadUrl
+                                    don't like it being used that way.
+                                    not doing a big refactor for now because flow is delicate and extensive testing required
+                                    so simply caching the entire response object instead of just the download url
+                                     */
+                                    mUpdateDetails = updateDetails;
                                     bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
                                 }
                             }
@@ -158,9 +170,17 @@ public class VersionManager
         dataManager.sendVersionInformation(getVersionInfo());
     }
 
+    /**
+     * TODO don't like this. should be refactored
+     */
     public void downloadApk()
     {
-        String apkUrl = getDownloadUrl();
+        if(mUpdateDetails == null)
+        {
+            Crashlytics.logException(new Exception("Tried to download apk when update details is null"));
+            return;
+        }
+        String apkUrl = mUpdateDetails.getDownloadUrl();
         File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         downloadsDirectory.mkdirs();
 
@@ -228,6 +248,9 @@ public class VersionManager
         return -1;
     }
 
+    /*
+    TODO this should be in a util
+     */
     private PackageInfo getPackageInfoFromActivity(Context context)
     {
         PackageInfo pInfo;
@@ -257,9 +280,17 @@ public class VersionManager
         return info;
     }
 
-    public String getDownloadUrl()
+    /**
+     * This was previously:
+     * public String getDownloadUrl()
+     *
+     * TODO don't like this, but simply replacing it with the UpdateDetails model for now
+     * not going to refactor right now because update flow is delicate and no time to test extensively
+     * @return
+     */
+    public UpdateDetails getUpdateDetails()
     {
-        return mDownloadUrl;
+        return mUpdateDetails;
     }
 
     public boolean hasRequestedDownload()

@@ -33,8 +33,8 @@ public class PleaseUpdateActivity extends BaseActivity
     }
 
     @Override
-    public boolean isAppUpdateFlowEnabled()
+    public void launchAppUpdater()
     {
-        return false;
+        //do nothing
     }
 }

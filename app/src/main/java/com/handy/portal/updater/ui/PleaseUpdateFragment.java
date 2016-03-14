@@ -57,6 +57,8 @@ public class PleaseUpdateFragment extends InjectedFragment
     LinearLayout mInstallUpdateSection;
     @Bind(R.id.manual_download_text)
     TextView manualDownloadText;
+    @Bind(R.id.app_update_fragment_update_later_button)
+    Button mUpdateLaterButton;
 
     private boolean mAlreadyAskedPermissions = false;
     private Uri mApkUri;
@@ -103,11 +105,13 @@ public class PleaseUpdateFragment extends InjectedFragment
             mInstallUpdateSection.setVisibility(View.GONE);
             mGrantPermissionsSection.setVisibility(View.VISIBLE);
         }
+        showUpdateLaterButtonForUpdateDetails();
     }
 
     @Subscribe
     public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
     {
+        showUpdateLaterButtonForUpdateDetails();
         downloadApk();
     }
 
@@ -144,6 +148,18 @@ public class PleaseUpdateFragment extends InjectedFragment
         installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
         Utils.safeLaunchIntent(installIntent, getActivity());
+    }
+
+    @OnClick(R.id.app_update_fragment_update_later_button)
+    protected void onUpdateLaterButtonClicked()
+    {
+        finishActivity();
+    }
+
+    private void finishActivity()
+    {
+        //TODO: any possibility of fragment lifecycle-related issues causing a crash here?
+        getActivity().finish();
     }
 
     private void setPackageInstallerComponent(final Intent installIntent)
@@ -214,9 +230,24 @@ public class PleaseUpdateFragment extends InjectedFragment
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
     }
 
+    private void showUpdateLaterButtonForUpdateDetails()
+    {
+        if(mVersionManager.getUpdateDetails() == null || mVersionManager.getUpdateDetails().isUpdateBlocking())
+        {
+            mUpdateLaterButton.setVisibility(View.GONE);
+        }
+        else
+        {
+            mUpdateLaterButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /*
+    TODO don't like this and the assumptions being made
+     */
     private void downloadApk()
     {
-        if (mVersionManager.getDownloadUrl() == null)
+        if (mVersionManager.getUpdateDetails() == null)
         {
             bus.post(new AppUpdateEvent.RequestUpdateCheck(getActivity()));
         }

@@ -21,20 +21,10 @@ public class AppUpdateEventListener
     @Subscribe
     public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
     {
-        //TODO: splash activity and please update activity currently override the launch app updater function to make it do nothing
-        //we should have a more elegant way of disabling that flow
-
         UpdateDetails updateDetails = event.updateDetails;
         if (updateDetails.getSuccess() && updateDetails.getShouldUpdate()) //TODO: there seems to be a lot of redundant updateDetails.getShouldUpdate() calls. clean this up
         {
-            if(updateDetails.isUpdateBlocking())
-            {
-                mAppUpdateFlowLauncher.launchAppUpdater();
-            }
-            else
-            {
-                mAppUpdateFlowLauncher.showAppUpdateAvailableDialog();
-            }
+            mAppUpdateFlowLauncher.launchAppUpdater();
         }
     }
 

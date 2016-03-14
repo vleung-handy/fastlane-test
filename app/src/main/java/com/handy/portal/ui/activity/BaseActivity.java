@@ -1,8 +1,6 @@
 package com.handy.portal.ui.activity;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -16,7 +14,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.LocationConstants;
@@ -97,50 +94,17 @@ public abstract class BaseActivity extends AppCompatActivity
         final Intent intent = getIntent();
         final Uri data = intent.getData();
 
-        if(isAppUpdateFlowEnabled())
-        {
-            mAppUpdateEventListener = new AppUpdateEventListener(this);
-        }
+        mAppUpdateEventListener = new AppUpdateEventListener(this);
 
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
     }
 
-    public boolean isAppUpdateFlowEnabled()
-    {
-        return true;
-    }
-
     @VisibleForTesting
     public AppUpdateEventListener getBusEventListener()
     {
         return mAppUpdateEventListener;
-    }
-
-    @Override
-    public void showAppUpdateAvailableDialog()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.app_update_available_dialog_title)
-                .setMessage(R.string.app_update_available_dialog_message)
-                .setPositiveButton(R.string.app_update_available_dialog_update_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which)
-                    {
-                        launchAppUpdater();
-                    }
-                })
-                .setNegativeButton(R.string.app_update_available_dialog_dismiss_button, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which)
-                    {
-                        //do nothing. dialog will dismiss itself
-                    }
-                })
-                .create()
-                .show();
     }
 
     @Override
@@ -208,10 +172,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onResumeFragments()
     {
         super.onResumeFragments();
-        if(mAppUpdateEventListener != null)
-        {
-            bus.register(mAppUpdateEventListener);
-        }
+        this.bus.register(mAppUpdateEventListener);
         checkForUpdates();
         postActivityResumeEvent(); //do not disable this
     }
@@ -239,10 +200,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onPause()
     {
         postActivityPauseEvent();
-        if(mAppUpdateEventListener != null)
-        {
-            bus.unregister(mAppUpdateEventListener);
-        }
+        bus.unregister(mAppUpdateEventListener);
         super.onPause();
     }
 

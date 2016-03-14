@@ -252,9 +252,9 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public boolean isAppUpdateFlowEnabled()
+    public void launchAppUpdater()
     {
-        return false;
+        //do nothing
     }
 
     private void processDeeplink(@NonNull final Uri data)

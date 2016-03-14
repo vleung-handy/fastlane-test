@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
  */
 public interface AppUpdateFlowLauncher
 {
-    void showAppUpdateAvailableDialog();
     void launchAppUpdater();
     void showAppUpdateFlowError(@NonNull String message);
     void launchEnableRequiredUpdateFlowApplicationIntent(@NonNull String packageName, String promptMessage);
