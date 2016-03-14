@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.util.Utils;
 
 import java.util.LinkedList;
@@ -48,19 +50,30 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
 
     private ScrollView mScrollView;
     private Booking mBooking;
+    private String mSource;
     private Booking.BookingStatus mStatus;
     private ZipClusterPolygons mPolygons;
 
-    public static BookingMapFragment newInstance(final Booking booking, Booking.BookingStatus status)
+    public static BookingMapFragment newInstance(
+            final Booking booking,
+            final String source,
+            final Booking.BookingStatus status
+    )
     {
-        return newInstance(booking, status, null);
+        return newInstance(booking, source, status, null);
     }
 
-    public static BookingMapFragment newInstance(final Booking booking, Booking.BookingStatus status, ZipClusterPolygons polygons)
+    public static BookingMapFragment newInstance(
+            final Booking booking,
+            final String source,
+            final Booking.BookingStatus status,
+            final ZipClusterPolygons polygons
+    )
     {
         BookingMapFragment fragment = new BookingMapFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
+        args.putSerializable(BundleKeys.BOOKING_SOURCE, source);
         args.putSerializable(BundleKeys.BOOKING_STATUS, status);
         args.putSerializable(BundleKeys.ZIP_CLUSTER_POLYGONS, polygons);
         fragment.setArguments(args);
@@ -73,6 +86,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         super.onCreate(savedInstanceState);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
         mStatus = (Booking.BookingStatus) getArguments().getSerializable(BundleKeys.BOOKING_STATUS);
+        mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
         mPolygons = (ZipClusterPolygons) getArguments().getSerializable(BundleKeys.ZIP_CLUSTER_POLYGONS);
     }
 
@@ -115,12 +129,12 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         List<LatLng> points = new LinkedList<>();
         LatLng center = getCenterPoint();
         points.add(center);
-        if (mStatus == Booking.BookingStatus.CLAIMED && !mBooking.isProxy())
+        if (shouldShowMarker())
         {
             MarkerOptions marker = new MarkerOptions().position(center).draggable(false);
             map.addMarker(marker);
         }
-        else if (mBooking.isProxy() && mPolygons != null)
+        else if (shouldShowPolygons())
         {
             showPolygon(map, mPolygons.getOutlines());
             points = mPolygons.getPoints();
@@ -130,7 +144,33 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
             showRangeOverlay(map, center, getRadius());
         }
 
+        if (shouldIncludeCurrentLocation())
+        {
+            final Location lastLocation = ((BaseActivity) getActivity()).getLastLocation();
+            if (lastLocation != null)
+            {
+                points.add(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
+            }
+        }
+
         positionCamera(map, points);
+    }
+
+    private boolean shouldShowMarker()
+    {
+        return !mBooking.isProxy() &&
+                (mStatus == Booking.BookingStatus.CLAIMED || shouldIncludeCurrentLocation());
+    }
+
+    private boolean shouldShowPolygons()
+    {
+        return mBooking.isProxy() && mPolygons != null;
+    }
+
+    private boolean shouldIncludeCurrentLocation()
+    {
+        return mSource != null &&
+                mSource.equals(BookingDetailsFragment.SOURCE_DISPATCH_NOTIFICATION_TOGGLE);
     }
 
     /**
@@ -171,11 +211,6 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
                             }
                         }
                 );
-            }
-            else
-            {
-                Crashlytics.logException(
-                        new RuntimeException("Can't show map. Map view: " + mapView));
             }
         }
     }

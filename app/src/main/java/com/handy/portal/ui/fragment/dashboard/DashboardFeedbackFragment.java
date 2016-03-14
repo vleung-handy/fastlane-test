@@ -112,12 +112,6 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         }
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-    }
-
     @OnClick(R.id.video_library)
     public void switchToVideoLibrary()
     {

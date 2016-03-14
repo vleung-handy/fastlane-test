@@ -80,7 +80,7 @@ import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
-    private static final String SOURCE_DISPATCH_NOTIFICATION_TOGGLE = "dispatch_notification_toggle";
+    public static final String SOURCE_DISPATCH_NOTIFICATION_TOGGLE = "dispatch_notification_toggle";
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout; // Maybe use fragment instead of view group?
     @Bind(R.id.booking_details_date_view)
@@ -405,8 +405,11 @@ public class BookingDetailsFragment extends ActionBarFragment
             }
             else
             {
-                BookingMapFragment fragment =
-                        BookingMapFragment.newInstance(mAssociatedBooking, bookingStatus);
+                BookingMapFragment fragment = BookingMapFragment.newInstance(
+                        mAssociatedBooking,
+                        mSource,
+                        bookingStatus
+                );
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(mapLayout.getId(), fragment).commit();
             }
@@ -430,6 +433,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
         BookingMapFragment fragment = BookingMapFragment.newInstance(
                 mAssociatedBooking,
+                mSource,
                 bookingStatus,
                 event.zipClusterPolygons
         );

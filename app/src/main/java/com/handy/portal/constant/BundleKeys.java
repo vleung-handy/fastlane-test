@@ -36,4 +36,7 @@ public class BundleKeys
     // Dashboard
     public static final String EVALUATION = "evaluation";
     public static final String YOUTUBE_ID = "youtube_id";
+
+    // Location
+    public static final String EVENT_NAME = "event_name";
 }

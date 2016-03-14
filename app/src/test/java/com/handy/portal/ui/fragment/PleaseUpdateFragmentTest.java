@@ -5,7 +5,8 @@ import android.net.Uri;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.manager.VersionManager;
+import com.handy.portal.updater.VersionManager;
+import com.handy.portal.updater.ui.PleaseUpdateFragment;
 
 import org.junit.Before;
 import org.junit.Ignore;

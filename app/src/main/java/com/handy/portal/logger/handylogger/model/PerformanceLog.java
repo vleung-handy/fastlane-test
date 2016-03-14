@@ -41,4 +41,15 @@ public class PerformanceLog extends EventLog
             super(EVENT_TYPE);
         }
     }
+
+
+    public static class LifetimeRatingsLog extends PerformanceLog
+    {
+        private static final String EVENT_TYPE = "lifetime_ratings_viewed";
+
+        public LifetimeRatingsLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
 }

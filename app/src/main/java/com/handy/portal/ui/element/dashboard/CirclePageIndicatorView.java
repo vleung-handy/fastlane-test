@@ -79,8 +79,6 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
 
         mCentered = true;
         mOrientation = HORIZONTAL;
-
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
     }
 
     @Override
@@ -216,12 +214,10 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
     }
 
     @Override
-    public void onPageScrollStateChanged(int state)
-    { }
+    public void onPageScrollStateChanged(int state) { }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-    { }
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
     @Override
     public void onPageSelected(int position)
