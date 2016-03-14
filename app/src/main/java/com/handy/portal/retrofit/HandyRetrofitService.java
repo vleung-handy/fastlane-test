@@ -250,8 +250,8 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/ratings?commented_only=true")
     void getProviderFiveStarRatings(@Path("id") String providerId,
                                     @Query("min_star") Integer minStar,
-                                    @Query("to_booking_date") String toBookingDate,
-                                    @Query("from_booking_date") String fromBookingDate,
+                                    @Query("until_booking_date") String untilBookingDate,
+                                    @Query("since_booking_date") String sinceBookingDate,
                                     HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}/feedback")

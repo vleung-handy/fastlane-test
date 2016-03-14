@@ -36,25 +36,25 @@ public abstract class ProviderDashboardEvent extends HandyEvent
     public static class RequestProviderFiveStarRatings extends RequestEvent
     {
         private Integer mMinStar;
-        private String mToBookingDate;
-        private String mFromBookingDate;
+        private String mUntilBookingDate;
+        private String mSinceBookingDate;
 
         public RequestProviderFiveStarRatings(Integer minStar)
         {
             mMinStar = minStar;
         }
 
-        public RequestProviderFiveStarRatings(Integer minStar, String toBookingDate)
+        public RequestProviderFiveStarRatings(Integer minStar, String untilBookingDate)
         {
             mMinStar = minStar;
-            mToBookingDate = toBookingDate;
+            mUntilBookingDate = untilBookingDate;
         }
 
-        public RequestProviderFiveStarRatings(Integer minStar, String toBookingDate, String fromBookingDate)
+        public RequestProviderFiveStarRatings(Integer minStar, String untilBookingDate, String sinceBookingDate)
         {
             mMinStar = minStar;
-            mToBookingDate = toBookingDate;
-            mFromBookingDate = fromBookingDate;
+            mUntilBookingDate = untilBookingDate;
+            mSinceBookingDate = sinceBookingDate;
         }
 
         public Integer getMinStar()
@@ -62,14 +62,14 @@ public abstract class ProviderDashboardEvent extends HandyEvent
             return mMinStar;
         }
 
-        public String getFromBookingDate()
+        public String getSinceBookingDate()
         {
-            return mFromBookingDate;
+            return mSinceBookingDate;
         }
 
-        public String getToBookingDate()
+        public String getUntilBookingDate()
         {
-            return mToBookingDate;
+            return mUntilBookingDate;
         }
     }
 
