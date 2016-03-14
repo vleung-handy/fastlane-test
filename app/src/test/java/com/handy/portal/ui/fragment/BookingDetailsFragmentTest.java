@@ -10,6 +10,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
@@ -126,12 +127,12 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
         when(bookingClaimDetails.getBooking().isClaimedByMe()).thenReturn(true);
         fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, null));
 
-        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
+        assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
 
         when(bookingClaimDetails.shouldShowClaimTarget()).thenReturn(true); //case when claim target is shown
         fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, null));
 
-        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
+        assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
     }
 
     @Test
@@ -171,7 +172,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
         // the event below depends on the event above being called to set the associated booking
         fragment.onReceiveNotifyJobCheckOutSuccess(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(null, false));
 
-        assertThat(getBusCaptorValue(HandyEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
+        assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_out_success)));
     }
 

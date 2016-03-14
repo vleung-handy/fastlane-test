@@ -10,7 +10,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.payments.NeoPaymentBatch;
@@ -107,7 +107,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
         arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, true);
-        HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
+        NavigationEvent.NavigateToTab event = new NavigationEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
         bus.post(event);
     }
 }
