@@ -19,6 +19,7 @@ import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
@@ -45,6 +46,7 @@ public enum MainViewTab implements Serializable
     DASHBOARD_TIERS(DashboardTiersFragment.class),
     DASHBOARD_REVIEWS(DashboardReviewsFragment.class),
     DASHBOARD_FEEDBACK(DashboardFeedbackFragment.class),
+    DASHBOARD_VIDEO_LIBRARY(DashboardVideoLibraryFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
     HELP(HelpFragment.class),

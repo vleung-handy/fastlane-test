@@ -184,6 +184,7 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_TIERS;
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_FEEDBACK;
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_REVIEWS;
+            addToBackStack |= targetTab == MainViewTab.DASHBOARD_VIDEO_LIBRARY;
             addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;

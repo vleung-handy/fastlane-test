@@ -324,6 +324,7 @@
     <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
     <string name="watch_video"><![CDATA[If you’d like to learn a few tips & tricks, check out this <a href=\'%1$s\'>video</a>.]]></string>
+    <string name="entire_video_library">Entire Video Library</string>
 
 
     <!-- Booking Details-->

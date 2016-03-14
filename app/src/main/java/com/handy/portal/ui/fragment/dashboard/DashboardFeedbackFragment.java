@@ -11,16 +11,24 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DashboardFeedbackFragment extends ActionBarFragment
 {
+    @Inject
+    Bus mBus;
+
     @Bind(R.id.layout_dashboard_feedback)
     LinearLayout mFeedbackLayout;
     @Bind(R.id.no_result_view)
@@ -79,5 +87,11 @@ public class DashboardFeedbackFragment extends ActionBarFragment
             mNoResultView.setVisibility(View.VISIBLE);
             mNoResultText.setText(R.string.no_feedback);
         }
+    }
+
+    @OnClick(R.id.video_library)
+    public void switchToVideoLibrary()
+    {
+        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY, new Bundle()));
     }
 }
