@@ -431,15 +431,22 @@ public class BookingDetailsFragment extends ActionBarFragment
             final BookingEvent.ReceiveZipClusterPolygonsSuccess event
     )
     {
-        BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
-        BookingMapFragment fragment = BookingMapFragment.newInstance(
-                mAssociatedBooking,
-                mSource,
-                bookingStatus,
-                event.zipClusterPolygons
-        );
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(mapLayout.getId(), fragment).commit();
+        if (mAssociatedBooking != null)
+        {
+            BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
+            BookingMapFragment fragment = BookingMapFragment.newInstance(
+                    mAssociatedBooking,
+                    mSource,
+                    bookingStatus,
+                    event.zipClusterPolygons
+            );
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(mapLayout.getId(), fragment).commit();
+        }
+        else
+        {
+            Crashlytics.logException(new RuntimeException("Can't display zip cluster polygon, booking is null"));
+        }
     }
 
     @OnClick(R.id.try_again_button)
