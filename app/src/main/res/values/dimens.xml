@@ -110,6 +110,7 @@
     <dimen name="circle_page_indicator_height">21dp</dimen>
     <dimen name="circle_negative_margin">-4dp</dimen>
     <dimen name="circle_indicator_padding">4dp</dimen>
+    <dimen name="ratings_view_pager_margin">5dp</dimen>
 
     <dimen name="youtube_image_view_width">343dp</dimen>
     <dimen name="youtube_image_view_height">193dp</dimen>

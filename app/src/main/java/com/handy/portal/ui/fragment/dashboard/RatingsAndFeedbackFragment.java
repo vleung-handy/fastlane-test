@@ -108,6 +108,8 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         mRatingsProPerformanceViewPager
                 .setAdapter(new DashboardRatingsPagerAdapter(getContext(), evaluation, shouldAnimateFiveStarPercentageGraphs()));
         mRatingsProPerformanceViewPager.setClipToPadding(false);
+        mRatingsProPerformanceViewPager.setPageMargin((int) getResources().getDimension(R.dimen.ratings_view_pager_margin));
+
         mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
