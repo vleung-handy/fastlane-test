@@ -81,7 +81,7 @@ import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
-    public static final String SOURCE_DISPATCH_NOTIFICATION_TOGGLE = "dispatch_notification_toggle";
+    public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout; // Maybe use fragment instead of view group?
     @Bind(R.id.booking_details_date_view)
@@ -193,7 +193,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
         else if (getArguments().containsKey(BundleKeys.DEEPLINK))
         {
-            mSource = SOURCE_DISPATCH_NOTIFICATION_TOGGLE;
+            mSource = SOURCE_LATE_DISPATCH;
             mSourceExtras = getArguments();
         }
     }
