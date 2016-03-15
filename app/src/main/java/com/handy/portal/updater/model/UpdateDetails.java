@@ -12,7 +12,7 @@ public class UpdateDetails
     private String downloadURL;
     @SerializedName("is_blocking")
     private Boolean mIsUpdateBlocking;
-    @SerializedName("backoff_duration_mins")
+    @SerializedName("hide_nonblocking_update_duration_mins")
     private Integer mHideNonBlockingUpdateDurationMins; //min number of minutes to wait between showing NON-blocking update screen
 
     private static final int DEFAULT_HIDE_NONBLOCKING_UPDATE_DURATION_MINS = 5;

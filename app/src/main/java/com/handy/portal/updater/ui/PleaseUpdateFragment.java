@@ -136,7 +136,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     public void onDownloadUpdateFailed(AppUpdateEvent.DownloadUpdateFailed event)
     {
         showToast(R.string.update_failed);
-        getActivity().finish();
+        finishActivity();
     }
 
     @OnClick(R.id.update_button)
@@ -158,7 +158,6 @@ public class PleaseUpdateFragment extends InjectedFragment
 
     private void finishActivity()
     {
-        //TODO: any possibility of fragment lifecycle-related issues causing a crash here?
         getActivity().finish();
     }
 
