@@ -318,9 +318,9 @@ public class DataManager
         mService.getProviderEvaluation(providerId, new GetProviderEvaluationRetrofitCallback(cb));
     }
 
-    public void getProviderFiveStarRatings(final String providerId, final Integer minStar, final String toBookingDate, final String fromBookingDate, final Callback<HashMap<String, List<ProviderRating>>> cb)
+    public void getProviderFiveStarRatings(final String providerId, final Integer minStar, final String untilBookingDate, final String sinceBookingDate, final Callback<HashMap<String, List<ProviderRating>>> cb)
     {
-        mService.getProviderFiveStarRatings(providerId, minStar, toBookingDate, fromBookingDate, new GetProviderFiveStarRatingsRetrofitCallback(cb));
+        mService.getProviderFiveStarRatings(providerId, minStar, untilBookingDate, sinceBookingDate, new GetProviderFiveStarRatingsRetrofitCallback(cb));
     }
 
     public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)
