@@ -66,6 +66,7 @@ public class DashboardVideoLibraryFragment extends ActionBarFragment
     {
         super.onResume();
 
+        mWebView.onResume();
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
 
@@ -78,5 +79,12 @@ public class DashboardVideoLibraryFragment extends ActionBarFragment
         {
             mWebView.loadUrl(VIDEO_URL);
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        mWebView.onPause();
     }
 }
