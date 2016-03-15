@@ -16,8 +16,8 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
@@ -39,8 +39,6 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
 {
     @Inject
     ProviderManager mProviderManager;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Bind(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
@@ -110,6 +108,8 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         mRatingsProPerformanceViewPager
                 .setAdapter(new DashboardRatingsPagerAdapter(getContext(), evaluation, shouldAnimateFiveStarPercentageGraphs()));
         mRatingsProPerformanceViewPager.setClipToPadding(false);
+        mRatingsProPerformanceViewPager.setPageMargin((int) getResources().getDimension(R.dimen.ratings_view_pager_margin));
+
         mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
@@ -119,9 +119,14 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
             public void onPageSelected(final int position)
             {
                 bus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
-                if (position == DashboardRatingsPagerAdapter.LIFETIME_PAGE_POSITION)
+                switch (position)
                 {
-                    bus.post(mEventLogFactory.createLifetimeRatingsLog());
+                    case DashboardRatingsPagerAdapter.LIFETIME_PAGE_POSITION:
+                        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.LifetimeRatingsLog()));
+                        break;
+                    case DashboardRatingsPagerAdapter.PAST_28_DAYS_PAGE_POSITION:
+                        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.RollingRatingsLog()));
+                        break;
                 }
             }
 
