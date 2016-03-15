@@ -273,7 +273,7 @@ public final class DateTimeUtils
 
     public static int daysBetween(Date d1, Date d2)
     {
-        return (int)( (d2.getTime() - d1.getTime()) / (MILLISECONDS_IN_HOUR * HOURS_IN_DAY));
+        return (int) ((d2.getTime() - d1.getTime()) / (MILLISECONDS_IN_HOUR * HOURS_IN_DAY));
     }
 
     private static SimpleDateFormat getClockFormatter12hr()

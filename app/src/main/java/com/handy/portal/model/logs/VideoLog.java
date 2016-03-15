@@ -5,18 +5,33 @@ import com.handy.portal.logger.handylogger.model.EventLog;
 
 public class VideoLog extends EventLog
 {
-    public VideoLog(final String eventType, final String eventContext)
+    private static final String EVENT_CONTEXT = "feedback";
+
+    public VideoLog(final String eventType)
     {
-        super(eventType, eventContext);
+        super(eventType, EVENT_CONTEXT);
     }
 
-    public static class VideoClickedLog extends VideoLog
+    public static class VideoTappedLog extends VideoLog
     {
-        private static final String EVENT_TYPE = "video_clicked";
+        private static final String EVENT_TYPE = "video_tapped";
+        private String mSection;
 
-        public VideoClickedLog(String eventContext)
+        public VideoTappedLog(String section)
         {
-            super(EVENT_TYPE, eventContext);
+            super(EVENT_TYPE);
+            mSection = section;
+        }
+    }
+
+
+    public static class VideoLibraryTappedLog extends VideoLog
+    {
+        private static final String EVENT_TYPE = "video_library_tapped";
+
+        public VideoLibraryTappedLog()
+        {
+            super(EVENT_TYPE);
         }
     }
 }

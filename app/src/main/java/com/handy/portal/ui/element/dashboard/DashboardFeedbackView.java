@@ -16,6 +16,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.ui.widget.BulletTextView;
@@ -78,7 +79,9 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
 
     public void setDisplay(@NonNull final ProviderFeedback feedback)
     {
-        mTitle.setText(feedback.getTitle());
+        String section = feedback.getTitle();
+
+        mTitle.setText(section);
         mDescription.setText(feedback.getSubtitle());
 
         if (feedback.getFeedbackTips() == null) { return; }
@@ -96,6 +99,7 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
                     YoutubeImagePlaceholderView youtubeImagePlaceholderView =
                             new YoutubeImagePlaceholderView(getContext());
                     youtubeImagePlaceholderView.setID(tip.getData());
+                    youtubeImagePlaceholderView.setSection(section);
 
                     youtubeImagePlaceholderView.setOnClickListener(this);
 
@@ -113,5 +117,6 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
         bundle.putString(BundleKeys.YOUTUBE_ID, view.getID());
 
         mBus.post(new HandyEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createVideoTappedLog(view.getSection())));
     }
 }

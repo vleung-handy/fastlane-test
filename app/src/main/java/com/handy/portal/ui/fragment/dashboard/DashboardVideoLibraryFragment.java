@@ -58,7 +58,7 @@ public class DashboardVideoLibraryFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
-        setActionBarTitle(R.string.entire_video_library);
+        setActionBarTitle(R.string.video_library);
     }
 
     @Override

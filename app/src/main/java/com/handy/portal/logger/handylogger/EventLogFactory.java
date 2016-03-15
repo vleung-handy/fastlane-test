@@ -385,9 +385,14 @@ public class EventLogFactory
     }
 
     // Video Logs
-    public EventLog createVideoClickedLog(String eventContext)
+    public EventLog createVideoTappedLog(String section)
     {
-        return new VideoLog.VideoClickedLog(eventContext);
+        return new VideoLog.VideoTappedLog(section);
+    }
+
+    public EventLog createVideoLibraryTappedLog()
+    {
+        return new VideoLog.VideoLibraryTappedLog();
     }
 
     //user dismissed or navved away from

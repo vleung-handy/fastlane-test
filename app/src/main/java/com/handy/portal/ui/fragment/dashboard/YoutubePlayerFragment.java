@@ -4,7 +4,6 @@ package com.handy.portal.ui.fragment.dashboard;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -47,14 +46,12 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     public void onInitializationSuccess(final YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, final boolean b)
     {
         youTubePlayer.loadVideo(youtubeId);
-//        youTubePlayer.setShowFullscreenButton(false);
-//        youTubePlayer.setFullscreen(false);
+        youTubePlayer.setShowFullscreenButton(false);
     }
 
     @Override
     public void onInitializationFailure(final YouTubePlayer.Provider provider, final YouTubeInitializationResult youTubeInitializationResult)
     {
-        Log.d("BLA", "BLA");
     }
 
     private ActionBar getActionBar()

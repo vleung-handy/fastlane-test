@@ -8,16 +8,24 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.squareup.picasso.Picasso;
 
-public class YoutubeImagePlaceholderView extends ImageView
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+public class YoutubeImagePlaceholderView extends FrameLayout
 {
-    private String id;
-    private String imageUrl = "http://img.youtube.com/vi/%s/maxresdefault.jpg";
+    @Bind(R.id.video_image)
+    ImageView mVideoImage;
+
+    private String mId;
+    private String mImageUrl = "http://img.youtube.com/vi/%s/maxresdefault.jpg";
+    private String mSection;
 
     public YoutubeImagePlaceholderView(final Context context)
     {
@@ -46,23 +54,35 @@ public class YoutubeImagePlaceholderView extends ImageView
 
     public void setID(String id)
     {
-        this.id = id;
-        imageUrl = String.format(imageUrl, id);
+        this.mId = id;
+        mImageUrl = String.format(mImageUrl, id);
         Picasso.with(getContext())
                 .load(getImageUrl())
-                .placeholder(R.drawable.video_placeholder)
-                .into(this);
+                .into(mVideoImage);
+    }
+
+    public void setSection(String section)
+    {
+        mSection = section;
     }
 
     public String getID()
     {
-        return id;
+        return mId;
     }
 
-    public String getImageUrl() { return imageUrl; }
+    public String getImageUrl() { return mImageUrl; }
+
+    public String getSection()
+    {
+        return mSection;
+    }
 
     private void init()
     {
+        inflate(getContext(), R.layout.element_youtube_image_view, this);
+        ButterKnife.bind(this);
+
         int width = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 343, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(
