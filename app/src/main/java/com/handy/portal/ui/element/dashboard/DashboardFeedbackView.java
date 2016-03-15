@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.view.YoutubeImagePlaceholderView;
@@ -112,6 +112,6 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
         Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.YOUTUBE_ID, view.getID());
 
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
     }
 }
