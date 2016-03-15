@@ -121,11 +121,12 @@ public class ScheduledJobsLog extends EventLog
         private Date mDateStart;
         @SerializedName("warning")
         private String mWarning;
-
+        @SerializedName("reason")
+        private String mReason;
 
         public RemoveJobConfirmed(
                 String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
-                Date dateStart, String warning)
+                Date dateStart, String warning, String reason)
         {
             super(EVENT_TYPE);
             mBookingId = bookingId;
@@ -135,6 +136,7 @@ public class ScheduledJobsLog extends EventLog
             mRequested = requested;
             mDateStart = dateStart;
             mWarning = warning;
+            mReason = reason;
         }
     }
 
@@ -265,25 +267,6 @@ public class ScheduledJobsLog extends EventLog
             super(EVENT_TYPE);
             mBookingId = bookingId;
             mRemovalType = removalType;
-        }
-    }
-
-
-    public static class RemoveConfirmationAccepted extends ScheduledJobsLog
-    {
-        private static final String EVENT_TYPE = "remove_confirmation_accepted";
-
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("reason")
-        private String mReason;
-
-
-        public RemoveConfirmationAccepted(String bookingId, String reason)
-        {
-            super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mReason = reason;
         }
     }
 

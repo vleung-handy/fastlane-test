@@ -735,9 +735,6 @@ public class BookingDetailsFragment extends ActionBarFragment
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
-                                bus.post(new LogEvent.AddLogEvent(mEventLogFactory
-                                        .createRemoveJobConfirmedLog(mAssociatedBooking, warning)));
-
                                 //proceed with action, we have accepted the warning
                                 bus.post(new HandyEvent.ActionWarningAccepted(actionType));
                                 takeAction(actionType, true);
@@ -775,8 +772,14 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestRemoveJob(@NonNull Booking booking)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
-                booking, null)));
+        String warning = null;
+        final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
+        if (removeAction != null)
+        {
+            warning = removeAction.getWarningText();
+        }
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
+                booking, warning, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }

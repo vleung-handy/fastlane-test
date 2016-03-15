@@ -174,7 +174,7 @@ public class EventLogFactory
         return new ScheduledJobsLog.RemoveJobClicked(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
     }
 
-    public EventLog createRemoveJobConfirmedLog(Booking booking, String warning)
+    public EventLog createRemoveJobConfirmedLog(Booking booking, String warning, String reason)
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
@@ -183,7 +183,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.RemoveJobConfirmed(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
+        return new ScheduledJobsLog.RemoveJobConfirmed(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning, reason);
     }
 
     public EventLog createRemoveJobErrorLog(Booking booking)
@@ -273,12 +273,6 @@ public class EventLogFactory
     {
         String bookingId = booking.getId();
         return new ScheduledJobsLog.RemoveConfirmationShown(bookingId, removalType);
-    }
-
-    public EventLog createRemoveConfirmationAcceptedLog(@NonNull Booking booking, String reason)
-    {
-        String bookingId = booking.getId();
-        return new ScheduledJobsLog.RemoveConfirmationAccepted(bookingId, reason);
     }
 
     public EventLog createFindJobsSelectedLog()
