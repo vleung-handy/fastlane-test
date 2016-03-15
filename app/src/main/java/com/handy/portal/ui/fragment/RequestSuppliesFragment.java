@@ -14,6 +14,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.Address;
@@ -109,7 +110,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         // Verify with Kenny that this transition is ok; may need to refactor later
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
     }
 
     @Subscribe

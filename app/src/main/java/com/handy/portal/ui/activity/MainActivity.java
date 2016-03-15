@@ -13,6 +13,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.LocationService;
@@ -21,6 +22,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
+import com.handy.portal.ui.fragment.dialog.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -33,6 +35,7 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+//TODO: should move some of this logic out of here
 public class MainActivity extends BaseActivity
 {
     @Inject
@@ -55,53 +58,6 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setFullScreen();
-
-        checkLocationPermissions();
-        startLocationServiceIfNecessaryAndPermissionsGranted();
-    }
-
-    //TODO: move this somewhere else?
-
-    /**
-     * assumes permissions already granted
-     */
-    private void startLocationServiceIfNecessary()
-    {
-        Intent i = new Intent(this, LocationService.class);
-        if (mConfigManager.getConfigurationResponse() != null
-                && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
-        {
-            //nothing will happen if it's already running
-            if (!SystemUtils.isServiceRunning(this, LocationService.class))
-            {
-                startService(i);
-            }
-        }
-        else
-        {
-            //nothing will happen if it's not running
-            stopService(i);
-        }
-        //at most one service instance will be running
-
-    }
-
-    /**
-     * checks if location permissions are granted
-     * if not, show a popup dialog
-     * <p/>
-     * currently non-blocking
-     *
-     * @return true if permissions already granted, false otherwise
-     */
-    private boolean checkLocationPermissions()
-    {
-        if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
-        {
-            ActivityCompat.requestPermissions(this, LocationConstants.LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
-            return false; //permissions not granted yet
-        }
-        return true; //permissions already granted
     }
 
     /**
@@ -110,21 +66,66 @@ public class MainActivity extends BaseActivity
      * and the startLocationServiceIfNecessary may launch the permissions dialog
      * TODO see if we can clean this up
      */
-    private void startLocationServiceIfNecessaryAndPermissionsGranted()
+    private void startLocationServiceIfNecessary()
     {
-        if (Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        if (hasRequiredLocationPermissions() && hasRequiredLocationSettings())
         {
-            startLocationServiceIfNecessary();
+            Intent locationServiceIntent = new Intent(this, LocationService.class);
+            if (mConfigManager.getConfigurationResponse() != null
+                    && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
+            {
+                //nothing will happen if it's already running
+                if (!SystemUtils.isServiceRunning(this, LocationService.class))
+                {
+                    startService(locationServiceIntent);
+                }
+            }
+            else
+            {
+                //nothing will happen if it's not running
+                stopService(locationServiceIntent);
+            }
+            //at most one service instance will be running
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults)
+    private boolean hasRequiredLocationPermissions()
     {
-        if (requestCode == ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE)
+        return Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS);
+    }
+
+    private boolean hasRequiredLocationSettings()
+    {
+        boolean locationServicesEnabled;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
         {
-            startLocationServiceIfNecessaryAndPermissionsGranted();
+            int locationMode = 0;
+            try
+            {
+                locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+            }
+            catch (Settings.SettingNotFoundException e)
+            {
+                e.printStackTrace();
+                Crashlytics.logException(e);
+            }
+            locationServicesEnabled = locationMode != Settings.Secure.LOCATION_MODE_OFF;
         }
+        else
+        {
+            //in versions before KitKat, must check for a different settings key
+            String locationProviders =
+                    Settings.Secure.getString(getContentResolver(),
+                            Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            locationServicesEnabled = !TextUtils.isNullOrEmpty(locationProviders);
+        }
+        return locationServicesEnabled;
+    }
+
+    private void showNecessaryLocationSettingsAndPermissionsBlockers()
+    {
+        showLocationPermissionsBlockerIfNecessary();
+        showLocationSettingsBlockerIfNecessary();
     }
 
     @Override
@@ -137,7 +138,19 @@ public class MainActivity extends BaseActivity
         configManager.prefetch();
         providerManager.prefetch();
         checkForTerms();
-        checkRequiredLocationSettings();
+        /*
+        because this is called each time this resumes,
+        putting it in a try/catch block to be super safe to prevent crashes
+         */
+        try
+        {
+            showNecessaryLocationSettingsAndPermissionsBlockers();
+            startLocationServiceIfNecessary();
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
         checkIfNotificationIsEnabled();
 
         bus.post(new LogEvent.SendLogsEvent());
@@ -199,49 +212,42 @@ public class MainActivity extends BaseActivity
      * pre-kitkat: user has any location provider enabled
      * <p/>
      * if not, block them with a dialog until they do.
+     *
      */
-    private void checkRequiredLocationSettings()
+    private void showLocationSettingsBlockerIfNecessary()
     {
-        /*
-        because this is called each time this resumes,
-        putting it in a try/catch block to be super safe to prevent crashes
-         */
-        try
+        //check whether location services setting is on
+        if (!hasRequiredLocationSettings() &&
+                getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
+        //don't want to show this dialog if it's already showing
         {
-            if (getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
-            //don't want to show this dialog if it's already showing
+            LocationSettingsBlockerDialogFragment locationSettingsBlockerDialogFragment
+                    = new LocationSettingsBlockerDialogFragment();
+            FragmentUtils.safeLaunchDialogFragment(locationSettingsBlockerDialogFragment, this,
+                    LocationSettingsBlockerDialogFragment.FRAGMENT_TAG);
+        }
+    }
+
+    /**
+     * shows the location permissions blocker (Android 6.0+) if user didn't grant permissions yet
+     */
+    private void showLocationPermissionsBlockerIfNecessary()
+    {
+        if (!hasRequiredLocationPermissions() &&
+                getSupportFragmentManager().findFragmentByTag(LocationPermissionsBlockerDialogFragment.FRAGMENT_TAG) == null)
+        {
+            if (Utils.wereAnyPermissionsRequestedPreviously(this, LocationConstants.LOCATION_PERMISSIONS))
             {
-                //check whether location services setting is on
-                boolean locationServicesEnabled;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                {
-                    int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-                    locationServicesEnabled = locationMode != Settings.Secure.LOCATION_MODE_OFF;
-                }
-                else
-                {
-                    //in versions before KitKat, must check for a different settings key
-                    String locationProviders =
-                            Settings.Secure.getString(getContentResolver(),
-                                    Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-                    locationServicesEnabled = !TextUtils.isNullOrEmpty(locationProviders);
-                }
-
-                if (!locationServicesEnabled)
-                {
-                    LocationSettingsBlockerDialogFragment locationSettingsBlockerDialogFragment
-                            = new LocationSettingsBlockerDialogFragment();
-                    FragmentUtils.safeLaunchDialogFragment(locationSettingsBlockerDialogFragment, this,
-                            LocationSettingsBlockerDialogFragment.FRAGMENT_TAG);
-                }
+                //this will be shown if the app requested this permission previously and the user denied the request or revoked it
+                FragmentUtils.safeLaunchDialogFragment(new LocationPermissionsBlockerDialogFragment(),
+                        this, LocationPermissionsBlockerDialogFragment.FRAGMENT_TAG);
             }
-
+            else
+            {
+                //otherwise show the default permission request dialog
+                ActivityCompat.requestPermissions(this, LocationConstants.LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
+            }
         }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e);
-        }
-
     }
 
     @Subscribe
@@ -257,7 +263,7 @@ public class MainActivity extends BaseActivity
                 //Tab Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
                 if (fragmentManager.findFragmentByTag(PaymentBlockingFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
                 {
-                    bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENT_BLOCKING, new Bundle()));
+                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENT_BLOCKING, new Bundle()));
                 }
             }
             else
@@ -297,7 +303,7 @@ public class MainActivity extends BaseActivity
     @Subscribe
     public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
     {
-        startLocationServiceIfNecessaryAndPermissionsGranted();
+        startLocationServiceIfNecessary();
     }
 
     @Subscribe

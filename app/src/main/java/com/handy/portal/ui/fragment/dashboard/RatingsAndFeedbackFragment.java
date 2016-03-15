@@ -14,7 +14,9 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
@@ -25,7 +27,6 @@ import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.DashboardRatingsView;
 import com.handy.portal.ui.element.dashboard.DashboardWelcomeView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -37,9 +38,9 @@ import butterknife.OnClick;
 public class RatingsAndFeedbackFragment extends ActionBarFragment
 {
     @Inject
-    Bus mBus;
-    @Inject
     ProviderManager mProviderManager;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     @Bind(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
@@ -108,26 +109,24 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
 
         mRatingsProPerformanceViewPager
                 .setAdapter(new DashboardRatingsPagerAdapter(getContext(), evaluation, shouldAnimateFiveStarPercentageGraphs()));
-
+        mRatingsProPerformanceViewPager.setClipToPadding(false);
         mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels)
-            {
-
-            }
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(final int position)
             {
                 bus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
+                if (position == DashboardRatingsPagerAdapter.LIFETIME_PAGE_POSITION)
+                {
+                    bus.post(mEventLogFactory.createLifetimeRatingsLog());
+                }
             }
 
             @Override
-            public void onPageScrollStateChanged(final int state)
-            {
-
-            }
+            public void onPageScrollStateChanged(final int state) {}
         });
         mCirclePageIndicatorView.setViewPager(mRatingsProPerformanceViewPager);
 
@@ -208,9 +207,9 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     public void switchToFeedback()
     {
         Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
+        arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
 
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
-        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
     }
 }

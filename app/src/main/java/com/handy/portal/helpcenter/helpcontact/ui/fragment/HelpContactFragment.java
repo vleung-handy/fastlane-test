@@ -11,6 +11,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.helpcenter.helpcontact.HelpContactEvent;
 import com.handy.portal.helpcenter.helpcontact.ui.view.HelpContactView;
 import com.handy.portal.helpcenter.model.HelpNode;
@@ -198,7 +199,7 @@ public final class HelpContactFragment extends ActionBarFragment
 
     private void returnToJobsScreen()
     {
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
     }
 
     private void returnToBookingDetails(String bookingId, String bookingType)
@@ -206,7 +207,7 @@ public final class HelpContactFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
-        HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
+        NavigationEvent.NavigateToTab event = new NavigationEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
         bus.post(event);
     }
 

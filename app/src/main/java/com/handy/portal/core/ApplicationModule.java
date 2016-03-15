@@ -16,6 +16,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.LocationScheduleHandler;
 import com.handy.portal.location.LocationService;
 import com.handy.portal.location.manager.LocationManager;
@@ -37,7 +38,6 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
-import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.receiver.HandyPushReceiver;
@@ -51,7 +51,6 @@ import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
@@ -70,7 +69,6 @@ import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
-import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
@@ -82,6 +80,7 @@ import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.dialog.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -92,6 +91,9 @@ import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
+import com.handy.portal.updater.VersionManager;
+import com.handy.portal.updater.ui.PleaseUpdateActivity;
+import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.OnboardingFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -163,6 +165,7 @@ import retrofit.converter.GsonConverter;
         DashboardOptionsPerformanceView.class,
         LocationScheduleHandler.class,
         LocationService.class,
+        LocationPingService.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
         AccountSettingsFragment.class,
@@ -171,6 +174,7 @@ import retrofit.converter.GsonConverter;
         FiveStarRatingPercentageView.class,
         OnboardingFragment.class,
         DashboardVideoLibraryFragment.class,
+        LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
 })
 public final class ApplicationModule
@@ -334,9 +338,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final SystemManager provideSystemManager(final Bus bus)
+    final SystemManager provideSystemManager(final Bus bus, final EventLogFactory eventLogFactory)
     {
-        return new SystemManager(context, bus);
+        return new SystemManager(context, bus, eventLogFactory);
     }
 
     @Provides

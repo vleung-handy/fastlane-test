@@ -23,7 +23,6 @@ import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
-import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
@@ -39,6 +38,7 @@ import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
+import com.handy.portal.updater.model.UpdateDetails;
 
 import org.json.JSONObject;
 
@@ -69,9 +69,9 @@ public class DataManager
         mStripeService = stripeService;
     }
 
-    public void getLocationSchedule(String providerId, Callback<LocationQuerySchedule> cb)
+    public void getLocationStrategies(String providerId, Callback<LocationQuerySchedule> cb)
     {
-        mService.getLocationSchedule(providerId, new GetLocationScheduleRetrofitCallback(cb));
+        mService.getLocationStrategies(providerId, new GetLocationScheduleRetrofitCallback(cb));
     }
 
     public void sendGeolocation(String providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb)

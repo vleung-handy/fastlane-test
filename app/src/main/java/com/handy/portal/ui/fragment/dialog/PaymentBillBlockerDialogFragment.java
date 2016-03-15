@@ -9,7 +9,7 @@ import android.widget.Button;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,7 +42,7 @@ public class PaymentBillBlockerDialogFragment extends InjectedDialogFragment //T
             @Override
             public void onClick(View v)
             {
-                mBus.post(new HandyEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.REFRESH_TAB));
+                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.REFRESH_TAB));
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }
         });

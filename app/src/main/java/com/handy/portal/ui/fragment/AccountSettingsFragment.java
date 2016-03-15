@@ -16,6 +16,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -97,13 +98,13 @@ public class AccountSettingsFragment extends ActionBarFragment
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile()
     {
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
     @OnClick(R.id.edit_payment_option)
     public void switchToPayments()
     {
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
     @OnClick(R.id.order_resupply_layout)
@@ -114,7 +115,7 @@ public class AccountSettingsFragment extends ActionBarFragment
 
         final Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_PROFILE, mProviderProfile);
-        mBus.post(new HandyEvent.NavigateToTab(
+        mBus.post(new NavigationEvent.NavigateToTab(
                 MainViewTab.REQUEST_SUPPLIES, args, TransitionStyle.NATIVE_TO_NATIVE));
     }
 
@@ -173,7 +174,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event)
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
     }
 
     @Subscribe

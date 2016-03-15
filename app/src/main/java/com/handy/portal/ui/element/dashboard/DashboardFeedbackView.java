@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderFeedback;
@@ -79,9 +79,9 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
 
     public void setDisplay(@NonNull final ProviderFeedback feedback)
     {
-        String section = feedback.getTitle();
+        String sectionTitle = feedback.getTitle();
 
-        mTitle.setText(section);
+        mTitle.setText(sectionTitle);
         mDescription.setText(feedback.getSubtitle());
 
         if (feedback.getFeedbackTips() == null) { return; }
@@ -99,7 +99,7 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
                     YoutubeImagePlaceholderView youtubeImagePlaceholderView =
                             new YoutubeImagePlaceholderView(getContext());
                     youtubeImagePlaceholderView.setID(tip.getData());
-                    youtubeImagePlaceholderView.setSection(section);
+                    youtubeImagePlaceholderView.setSection(sectionTitle);
 
                     youtubeImagePlaceholderView.setOnClickListener(this);
 
@@ -114,9 +114,9 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
     {
         YoutubeImagePlaceholderView view = (YoutubeImagePlaceholderView) v;
         Bundle bundle = new Bundle();
-        bundle.putString(BundleKeys.YOUTUBE_ID, view.getID());
+        bundle.putString(BundleKeys.YOUTUBE_VIDEO_ID, view.getID());
 
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createVideoTappedLog(view.getSection())));
     }
 }

@@ -21,7 +21,6 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
-import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
@@ -34,6 +33,7 @@ import com.handy.portal.model.payments.PaymentFlow;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
+import com.handy.portal.updater.model.UpdateDetails;
 
 import org.json.JSONObject;
 

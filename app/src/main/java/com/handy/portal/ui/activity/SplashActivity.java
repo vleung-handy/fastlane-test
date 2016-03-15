@@ -252,9 +252,9 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
+    public void launchAppUpdater()
     {
-        //Do nothing
+        //do nothing
     }
 
     private void processDeeplink(@NonNull final Uri data)

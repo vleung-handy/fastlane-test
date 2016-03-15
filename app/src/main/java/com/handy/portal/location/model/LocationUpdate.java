@@ -71,6 +71,8 @@ public class LocationUpdate
     float mBatteryLevelPercent; //0.95
     @SerializedName("connection_type")
     String mActiveNetworkType;
+    @SerializedName("event_name")
+    String mEventName;
 
     public LocationUpdate(double latitude,
                           double longitude,
@@ -117,6 +119,11 @@ public class LocationUpdate
     public void setActiveNetworkType(final String activeNetworkType)
     {
         mActiveNetworkType = activeNetworkType;
+    }
+
+    public void setEventName(final String eventName)
+    {
+        mEventName = eventName;
     }
 
     /**

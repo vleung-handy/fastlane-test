@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment.dashboard;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,13 +15,13 @@ import com.handy.portal.constant.BundleKeys;
 
 public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implements YouTubePlayer.OnInitializedListener
 {
-    private String youtubeId;
+    private String mYoutubeVideoId;
 
     public static YoutubePlayerFragment newInstance(String youtubeId)
     {
         YoutubePlayerFragment fragment = new YoutubePlayerFragment();
         Bundle args = new Bundle();
-        args.putSerializable(BundleKeys.YOUTUBE_ID, youtubeId);
+        args.putSerializable(BundleKeys.YOUTUBE_VIDEO_ID, youtubeId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -29,7 +30,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     public void onCreate(final Bundle bundle)
     {
         super.onCreate(bundle);
-        youtubeId = getArguments().getString(BundleKeys.YOUTUBE_ID);
+        mYoutubeVideoId = getArguments().getString(BundleKeys.YOUTUBE_VIDEO_ID);
     }
 
     @Override
@@ -37,7 +38,9 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     {
         super.onViewCreated(view, savedInstanceState);
 
-        getActionBar().hide();
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null)
+        { getActionBar().hide(); }
 
         initialize(getString(R.string.google_app_id), this);
     }
@@ -45,7 +48,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     @Override
     public void onInitializationSuccess(final YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, final boolean b)
     {
-        youTubePlayer.loadVideo(youtubeId);
+        youTubePlayer.loadVideo(mYoutubeVideoId);
         youTubePlayer.setShowFullscreenButton(false);
     }
 
@@ -54,6 +57,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     {
     }
 
+    @Nullable
     private ActionBar getActionBar()
     {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();

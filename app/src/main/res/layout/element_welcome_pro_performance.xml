@@ -3,7 +3,6 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/white"
               android:orientation="vertical"
               android:paddingTop="@dimen/extra_padding_xlarge"
     >
@@ -30,7 +29,5 @@
         android:textSize="@dimen/large_text_size"
         tools:text="Things are lookin good!"
         />
-
-    <include layout="@layout/divider_dashboard"/>
 
 </LinearLayout>

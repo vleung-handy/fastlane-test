@@ -3,11 +3,9 @@ package com.handy.portal.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
+import android.content.res.Resources;
+import android.os.Build;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +22,7 @@ public class YoutubeImagePlaceholderView extends FrameLayout
     ImageView mVideoImage;
 
     private String mId;
-    private String mImageUrl = "http://img.youtube.com/vi/%s/maxresdefault.jpg";
+    private String mImageUrlFormatted = "http://img.youtube.com/vi/%s/maxresdefault.jpg";
     private String mSection;
 
     public YoutubeImagePlaceholderView(final Context context)
@@ -45,7 +43,7 @@ public class YoutubeImagePlaceholderView extends FrameLayout
         init();
     }
 
-    @TargetApi(21)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public YoutubeImagePlaceholderView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -54,10 +52,10 @@ public class YoutubeImagePlaceholderView extends FrameLayout
 
     public void setID(String id)
     {
-        this.mId = id;
-        mImageUrl = String.format(mImageUrl, id);
+        mId = id;
+        mImageUrlFormatted = String.format(mImageUrlFormatted, id);
         Picasso.with(getContext())
-                .load(getImageUrl())
+                .load(mImageUrlFormatted)
                 .into(mVideoImage);
     }
 
@@ -71,8 +69,6 @@ public class YoutubeImagePlaceholderView extends FrameLayout
         return mId;
     }
 
-    public String getImageUrl() { return mImageUrl; }
-
     public String getSection()
     {
         return mSection;
@@ -83,26 +79,14 @@ public class YoutubeImagePlaceholderView extends FrameLayout
         inflate(getContext(), R.layout.element_youtube_image_view, this);
         ButterKnife.bind(this);
 
-        int width = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 343, getResources().getDisplayMetrics());
-        int height = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 193, getResources().getDisplayMetrics());
-        int marginTop = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
-        int marginBottom = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 28, getResources().getDisplayMetrics());
+        Resources resources = getResources();
+        int widthPX = (int) resources.getDimension(R.dimen.youtube_image_view_width);
+        int heightPX = (int) resources.getDimension(R.dimen.youtube_image_view_height);
+        int marginTopPX = (int) resources.getDimension(R.dimen.youtube_image_view_margin_top);
+        int marginBottomPX = (int) resources.getDimension(R.dimen.youtube_image_view_margin_bottom);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-        layoutParams.setMargins(0, marginTop, 0, marginBottom);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(widthPX, heightPX);
+        layoutParams.setMargins(0, marginTopPX, 0, marginBottomPX);
         setLayoutParams(layoutParams);
-    }
-
-    public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2)
-    {
-        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-        Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(bmp1, new Matrix(), null);
-        canvas.drawBitmap(bmp2, 0, 0, null);
-        return bmOverlay;
     }
 }
