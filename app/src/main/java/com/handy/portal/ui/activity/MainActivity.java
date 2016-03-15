@@ -16,7 +16,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.location.LocationConstants;
-import com.handy.portal.location.LocationService;
+import com.handy.portal.location.scheduler.LocationScheduleService;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ConfigManager;
@@ -70,12 +70,12 @@ public class MainActivity extends BaseActivity
     {
         if (hasRequiredLocationPermissions() && hasRequiredLocationSettings())
         {
-            Intent locationServiceIntent = new Intent(this, LocationService.class);
+            Intent locationServiceIntent = new Intent(this, LocationScheduleService.class);
             if (mConfigManager.getConfigurationResponse() != null
                     && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
             {
                 //nothing will happen if it's already running
-                if (!SystemUtils.isServiceRunning(this, LocationService.class))
+                if (!SystemUtils.isServiceRunning(this, LocationScheduleService.class))
                 {
                     startService(locationServiceIntent);
                 }

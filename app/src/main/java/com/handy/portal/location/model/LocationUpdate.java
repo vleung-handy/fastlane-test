@@ -73,6 +73,8 @@ public class LocationUpdate
     String mActiveNetworkType;
     @SerializedName("event_name")
     String mEventName;
+    @SerializedName("booking_id")
+    String mBookingId;
 
     public LocationUpdate(double latitude,
                           double longitude,
@@ -104,6 +106,11 @@ public class LocationUpdate
                 new Date(location.getTime())
         );
         return locationUpdate;
+    }
+
+    public void setBookingId(final String bookingId)
+    {
+        mBookingId = bookingId;
     }
 
     /**

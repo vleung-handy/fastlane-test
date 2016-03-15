@@ -12,6 +12,7 @@
          Google Maps Android API v2, but are recommended. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/> <!--TODO: remove, test only-->
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -55,7 +56,7 @@
         android:theme="@style/AppTheme"
         >
         <service
-            android:name=".location.LocationService"
+            android:name=".location.scheduler.LocationScheduleService"
             android:exported="false"
             >
         </service>

@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.location.model.LocationQuerySchedule;
+import com.handy.portal.location.scheduler.model.LocationStrategies;
 
 /**
  * events used by the bus
@@ -47,16 +47,16 @@ public abstract class LocationEvent
 
     public static class ReceiveLocationScheduleSuccess extends HandyEvent.ReceiveSuccessEvent
     {
-        private final LocationQuerySchedule mLocationQuerySchedule;
+        private final LocationStrategies mLocationStrategies;
 
-        public ReceiveLocationScheduleSuccess(@NonNull LocationQuerySchedule locationQuerySchedule)
+        public ReceiveLocationScheduleSuccess(@NonNull LocationStrategies locationStrategies)
         {
-            mLocationQuerySchedule = locationQuerySchedule;
+            mLocationStrategies = locationStrategies;
         }
 
-        public LocationQuerySchedule getLocationQuerySchedule()
+        public LocationStrategies getLocationStrategies()
         {
-            return mLocationQuerySchedule;
+            return mLocationStrategies;
         }
     }
 
