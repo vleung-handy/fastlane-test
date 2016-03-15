@@ -345,11 +345,6 @@ public class EventLogFactory
         return new PerformanceLog.TierTappedLog();
     }
 
-    public EventLog createLifetimeRatingsLog()
-    {
-        return new PerformanceLog.LifetimeRatingsLog();
-    }
-
     // Help logs
     public EventLog createHelpContactFormSubmittedLog(String path, int helpNodeId, String helpNodeTitle)
     {
