@@ -12,6 +12,10 @@ public class UpdateDetails
     private String downloadURL;
     @SerializedName("is_blocking")
     private Boolean mIsUpdateBlocking;
+    @SerializedName("backoff_duration_mins")
+    private Integer mHideNonBlockingUpdateDurationMins; //min number of minutes to wait between showing NON-blocking update screen
+
+    private static final int DEFAULT_HIDE_NONBLOCKING_UPDATE_DURATION_MINS = 5;
 
     public boolean getSuccess() { return success; }
     public boolean getShouldUpdate() { return shouldUpdate; }
@@ -19,8 +23,17 @@ public class UpdateDetails
 
     public boolean isUpdateBlocking()
     {
-//        return false; //TODO remove test only
         //the update flow should be blocking by default
-        return mIsUpdateBlocking == null ? true : mIsUpdateBlocking.booleanValue();
+        return mIsUpdateBlocking == null ? true : mIsUpdateBlocking;
+    }
+
+    /**
+     * min number of minutes to wait between showing NON-blocking update screen
+     *
+     * @return DEFAULT_HIDE_NONBLOCKING_UPDATE_DURATION_MINS if server doesn't return a backoff duration value
+     */
+    public int getHideNonBlockingUpdateDurationMins()
+    {
+        return mHideNonBlockingUpdateDurationMins == null ? DEFAULT_HIDE_NONBLOCKING_UPDATE_DURATION_MINS : mHideNonBlockingUpdateDurationMins;
     }
 }

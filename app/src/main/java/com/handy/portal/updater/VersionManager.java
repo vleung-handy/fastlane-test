@@ -47,6 +47,7 @@ public class VersionManager
     // doesn't execute the update process.
     private static final int UPDATE_CHECK_BACKOFF_DURATION_MILLIS = DateTimeUtils.MILLISECONDS_IN_MINUTE * 5; // 5 minutes
     private long lastUpdateCheckTimeMillis = 0;
+    private long lastNonblockingUpdateShownTimeMs = 0;
 
     private final Context context;
     private final Bus bus;
@@ -131,7 +132,23 @@ public class VersionManager
                                     so simply caching the entire response object instead of just the download url
                                      */
                                     mUpdateDetails = updateDetails;
-                                    bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                    if(mUpdateDetails.isUpdateBlocking())
+                                    {
+                                        //blocking update
+                                        bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                    }
+                                    else
+                                    {
+                                        //non-blocking update
+                                        long currentTimeMs = System.currentTimeMillis();
+                                        long hideNonBlockingUpdateDurationMs = mUpdateDetails.getHideNonBlockingUpdateDurationMins() * DateTimeUtils.MILLISECONDS_IN_MINUTE;
+                                        if(currentTimeMs - lastNonblockingUpdateShownTimeMs > hideNonBlockingUpdateDurationMs)
+                                        //only show the non-blocking update if the given time interval has passed
+                                        {
+                                            bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                            lastNonblockingUpdateShownTimeMs = currentTimeMs;
+                                        }
+                                    }
                                 }
                             }
 

@@ -55,32 +55,42 @@
                 android:textColor="@color/white"
                 />
 
-            <Button
-                android:id="@+id/update_button"
-                style="@style/Button.SalmonRound"
+            <LinearLayout
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/default_margin_x2"
-                android:enabled="false"
-                android:paddingLeft="@dimen/default_padding_large"
-                android:paddingRight="@dimen/default_padding_large"
-                android:text="@string/update_button_label"
-                />
+                android:orientation="vertical"
+                >
+                <!--need the linear layout to make buttons inside have equal width-->
+                <Button
+                    android:id="@+id/update_button"
+                    style="@style/Button.SalmonRound"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_margin_x2"
+                    android:enabled="false"
+                    android:paddingLeft="@dimen/default_padding_large"
+                    android:paddingRight="@dimen/default_padding_large"
+                    android:text="@string/update_button_label"
+                    />
 
-            <Button
-                android:id="@+id/app_update_fragment_update_later_button"
-                style="@style/Button.White.Round.Empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/default_margin"
-                android:enabled="true"
-                android:paddingLeft="@dimen/default_padding_large"
-                android:paddingRight="@dimen/default_padding_large"
-                android:text="@string/app_update_later_button"
-                android:visibility="gone"
-                />
+                <Button
+                    android:id="@+id/app_update_fragment_update_later_button"
+                    style="@style/Button.White.Round.Empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:enabled="true"
+                    android:paddingLeft="@dimen/default_padding_large"
+                    android:paddingRight="@dimen/default_padding_large"
+                    android:text="@string/app_update_later_button"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/manual_download_text"

@@ -21,7 +21,7 @@
         <corners android:radius="@dimen/round_button_radius" />
         <stroke android:width="@dimen/round_button_stroke"
                 android:color="@color/white" />
-        <solid android:color="@color/handy_bg" />
+        <solid android:color="@color/partner_blue" />
     </shape>
 </item>
 <item android:state_enabled="true">
