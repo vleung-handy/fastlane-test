@@ -3,6 +3,7 @@ package com.handy.portal.util;
 import org.junit.Test;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,9 +20,9 @@ public class DateTimeUtilsTest
     @Test
     public void shouldBeYesterday()
     {
-        Calendar tomorrow = Calendar.getInstance();
-        tomorrow.add(Calendar.DATE, -1);
-        assertEquals("Yesterday", DateTimeUtils.dayDifferenceInWords(tomorrow.getTime()));
+        Calendar yesterday = Calendar.getInstance();
+        yesterday.add(Calendar.DATE, -1);
+        assertEquals("Yesterday", DateTimeUtils.dayDifferenceInWords(yesterday.getTime()));
     }
 
     @Test

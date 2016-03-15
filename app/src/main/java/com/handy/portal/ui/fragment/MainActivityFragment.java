@@ -23,6 +23,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
@@ -169,7 +170,7 @@ public class MainActivityFragment extends InjectedFragment
 //Event Listeners
 
     @Subscribe
-    public void onSetNavigationTabVisibility(HandyEvent.SetNavigationTabVisibility event)
+    public void onSetNavigationTabVisibility(NavigationEvent.SetNavigationTabVisibility event)
     {
         setTabVisibility(event.isVisible);
     }
@@ -188,7 +189,7 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onSetNavigationDrawerActive(HandyEvent.SetNavigationDrawerActive event)
+    public void onSetNavigationDrawerActive(NavigationEvent.SetNavigationDrawerActive event)
     {
         setDrawerActive(event.isActive);
     }
@@ -202,7 +203,7 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
+    public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
     {
         //Catch this event then throw one to have the manager do the processing
         //We need to bother catching it here because we need to know the current tab of this fragment
@@ -214,14 +215,14 @@ public class MainActivityFragment extends InjectedFragment
             MainViewTab targetTab, MainViewTab currentTab, Bundle arguments,
             TransitionStyle transitionStyle, boolean userTriggered)
     {
-        bus.post(new HandyEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
+        bus.post(new NavigationEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
                 transitionStyle, userTriggered));
         bus.post(new LogEvent.AddLogEvent(
                 mEventLogFactory.createNavigationLog(targetTab.name().toLowerCase())));
     }
 
     @Subscribe
-    public void onSwapFragmentNavigation(HandyEvent.SwapFragmentNavigation event)
+    public void onSwapFragmentNavigation(NavigationEvent.SwapFragmentNavigation event)
     {
         SwapFragmentArguments swapFragmentArguments = event.swapFragmentArguments;
 

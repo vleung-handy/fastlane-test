@@ -9,6 +9,7 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.MainActivity;
@@ -93,7 +94,7 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
         verify(mBus, atLeastOnce()).post(captor.capture());
-        HandyEvent.NavigateToTab event = getBusCaptorValue(captor, HandyEvent.NavigateToTab.class);
+        NavigationEvent.NavigateToTab event = getBusCaptorValue(captor, NavigationEvent.NavigateToTab.class);
         assertNotNull("NavigateToTab event was not post to bus", event);
         assertEquals("Failed to navigate to help tab", MainViewTab.HELP, event.targetTab);
     }

@@ -38,6 +38,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.ConfigManager;
@@ -914,7 +915,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_NODE_ID, helpNodeId);
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
     }
 
 //Event Subscription and Handling
@@ -1186,7 +1187,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
@@ -1195,7 +1196,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new HandyEvent.NavigateToTab(targetTab, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
 
 //Handle Action Response Errors
@@ -1264,7 +1265,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
+                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
                     }
                 });
 
