@@ -19,13 +19,14 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ProviderSettings;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.DateButtonView;
@@ -351,7 +352,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
         arguments.putString(BundleKeys.BOOKING_SOURCE, getBookingSourceName());
-        HandyEvent.NavigateToTab event = new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
-        bus.post(event);
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
     }
 }

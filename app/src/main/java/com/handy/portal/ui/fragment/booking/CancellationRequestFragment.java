@@ -16,7 +16,8 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.CurrencyUtils;
@@ -103,8 +104,14 @@ public class CancellationRequestFragment extends ActionBarFragment
         }
         else
         {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
-                    mBooking, reasonBtn.getText().toString())));
+            String warning = null;
+            final Booking.Action action = mBooking.getAction(Booking.Action.ACTION_UNASSIGN_FLOW);
+            if (action != null)
+            {
+                action.getWarningText();
+            }
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
+                    mBooking, warning, reasonBtn.getText().toString())));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestRemoveJob(mBooking));
 
@@ -121,7 +128,7 @@ public class CancellationRequestFragment extends ActionBarFragment
             Bundle arguments = new Bundle();
             arguments.putLong(BundleKeys.DATE_EPOCH_TIME, event.booking.getStartDate().getTime());
             //Return to available jobs on that day
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, transitionStyle));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, transitionStyle));
         }
     }
 

@@ -1,8 +1,8 @@
 package com.handy.portal.core;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.squareup.otto.Subscribe;
 
 import org.junit.Test;

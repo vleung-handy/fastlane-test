@@ -55,7 +55,7 @@ public class TabbedLayout extends RelativeLayout
         final double actualHeight = getRootView().getHeight();
 
         //quick check empties and avoid divide by zero
-        if(proposedHeight == 0 || actualHeight == 0) { return; }
+        if (proposedHeight == 0 || actualHeight == 0) { return; }
 
         final View tabs = findViewById(R.id.tabs);
         if (tabs != null && mAutoHideShowTabs)

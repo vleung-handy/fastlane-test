@@ -23,7 +23,8 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
@@ -60,14 +61,14 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mButtonMore;
     @Bind(R.id.loading_overlay)
     View mLoadingOverlayView;
-    @Bind(R.id.nav_link_my_profile)
-    RadioButton mNavLinkMyProfile;
-    @Bind(R.id.nav_link_dashboard)
-    RadioButton mNavLinkDashboard;
     @Bind(R.id.nav_link_payments)
     RadioButton mNavLinkPayments;
-    @Bind(R.id.nav_link_edit_payment_method)
-    RadioButton mNavLinkEditPaymentMethod;
+    @Bind(R.id.nav_link_ratings_and_feedback)
+    RadioButton mNavLinkRatingsAndFeedback;
+    @Bind(R.id.nav_link_refer_a_friend)
+    RadioButton mNavLinkReferAFriend;
+    @Bind(R.id.nav_link_account_settings)
+    RadioButton mNavAccountSettings;
     @Bind(R.id.nav_link_help)
     RadioButton mNavLinkHelp;
     @Bind(R.id.drawer_layout)
@@ -130,10 +131,10 @@ public class MainActivityFragment extends InjectedFragment
     private void handleOnboardingFlow()
     {
         if (currentTab != null &&
-            currentTab != MainViewTab.ONBOARDING &&
-            configManager.getConfigurationResponse() != null &&
-            configManager.getConfigurationResponse().shouldShowOnboarding()
-            )
+                currentTab != MainViewTab.ONBOARDING &&
+                configManager.getConfigurationResponse() != null &&
+                configManager.getConfigurationResponse().shouldShowOnboarding()
+                )
         {
             //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
             switchToTab(MainViewTab.ONBOARDING, false);
@@ -169,40 +170,40 @@ public class MainActivityFragment extends InjectedFragment
 //Event Listeners
 
     @Subscribe
-    public void onSetNavigationTabVisibility(HandyEvent.SetNavigationTabVisibility event)
+    public void onSetNavigationTabVisibility(NavigationEvent.SetNavigationTabVisibility event)
     {
         setTabVisibility(event.isVisible);
     }
 
     private void setTabVisibility(boolean isVisible)
     {
-        if(mContentFrame != null)
+        if (mContentFrame != null)
         {
             mContentFrame.setAutoHideShowTabs(isVisible);
         }
 
-        if(tabs != null)
+        if (tabs != null)
         {
             tabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
 
     @Subscribe
-    public void onSetNavigationDrawerActive(HandyEvent.SetNavigationDrawerActive event)
+    public void onSetNavigationDrawerActive(NavigationEvent.SetNavigationDrawerActive event)
     {
         setDrawerActive(event.isActive);
     }
 
     private void setDrawerActive(boolean isActive)
     {
-        if(mDrawerLayout != null)
+        if (mDrawerLayout != null)
         {
             mDrawerLayout.setDrawerLockMode(isActive ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 
     @Subscribe
-    public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
+    public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
     {
         //Catch this event then throw one to have the manager do the processing
         //We need to bother catching it here because we need to know the current tab of this fragment
@@ -214,14 +215,14 @@ public class MainActivityFragment extends InjectedFragment
             MainViewTab targetTab, MainViewTab currentTab, Bundle arguments,
             TransitionStyle transitionStyle, boolean userTriggered)
     {
-        bus.post(new HandyEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
+        bus.post(new NavigationEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
                 transitionStyle, userTriggered));
         bus.post(new LogEvent.AddLogEvent(
                 mEventLogFactory.createNavigationLog(targetTab.name().toLowerCase())));
     }
 
     @Subscribe
-    public void onSwapFragmentNavigation(HandyEvent.SwapFragmentNavigation event)
+    public void onSwapFragmentNavigation(NavigationEvent.SwapFragmentNavigation event)
     {
         SwapFragmentArguments swapFragmentArguments = event.swapFragmentArguments;
 
@@ -285,10 +286,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerNavDrawerListeners()
     {
-        mNavLinkMyProfile.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PROFILE, null));
-        mNavLinkDashboard.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
         mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
-        mNavLinkEditPaymentMethod.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.SELECT_PAYMENT_METHOD, TransitionStyle.SLIDE_UP));
+        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.RATINGS_AND_FEEDBACK, null));
+        mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
+        mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
         mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
     }
 
@@ -373,9 +374,9 @@ public class MainActivityFragment extends InjectedFragment
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
         //If the user navved away from a non-blocking onboarding log it
-        if(currentTab == MainViewTab.ONBOARDING &&
-            targetTab != MainViewTab.ONBOARDING &&
-            userTriggered)
+        if (currentTab == MainViewTab.ONBOARDING &&
+                targetTab != MainViewTab.ONBOARDING &&
+                userTriggered)
         {
             bus.post(new LogEvent.AddLogEvent(
                     mEventLogFactory.createWebOnboardingDismissedLog()));
@@ -451,31 +452,29 @@ public class MainActivityFragment extends InjectedFragment
                     mNavLinkPayments.toggle();
                 }
                 break;
-                case PROFILE:
+                case YOUTUBE_PLAYER:
+                case RATINGS_AND_FEEDBACK:
                 {
                     mButtonMore.toggle();
-                    mNavLinkMyProfile.toggle();
+                    mNavLinkRatingsAndFeedback.toggle();
                 }
                 break;
-                case DASHBOARD:
-                case DASHBOARD_TIERS:
-                case DASHBOARD_FEEDBACK:
-                case DASHBOARD_REVIEWS:
+                case REFER_A_FRIEND:
                 {
                     mButtonMore.toggle();
-                    mNavLinkDashboard.toggle();
+                    mNavLinkReferAFriend.toggle();
+                }
+                break;
+                case ACCOUNT_SETTINGS:
+                {
+                    mButtonMore.toggle();
+                    mNavAccountSettings.toggle();
                 }
                 break;
                 case HELP:
                 {
                     mButtonMore.toggle();
                     mNavLinkHelp.toggle();
-                }
-                break;
-                case SELECT_PAYMENT_METHOD:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkEditPaymentMethod.toggle();
                 }
                 break;
             }

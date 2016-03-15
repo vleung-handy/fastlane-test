@@ -34,5 +34,9 @@ public class BundleKeys
     public static final String DEEPLINK_DATA = "deep_link_data";
 
     // Dashboard
-    public static final String EVALUATION = "evaluation";
+    public static final String PROVIDER_EVALUATION = "provider_evaluation";
+    public static final String YOUTUBE_VIDEO_ID = "youtube_video_id";
+
+    // Location
+    public static final String EVENT_NAME = "event_name";
 }

@@ -8,9 +8,6 @@ import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,9 +19,9 @@ import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
@@ -110,33 +107,15 @@ public class ProfileUpdateFragment extends ActionBarFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.menu_x_back, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
+        setBackButtonEnabled(true);
+
         if (mProviderManager.getCachedActiveProvider() != null)
         {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_exit:
-                onBackButtonPressed();
-                return true;
-            default:
-                return false;
         }
     }
 

@@ -16,7 +16,8 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
@@ -137,7 +138,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
             args.putParcelable(BundleKeys.MAP_CENTER,
                     new LatLng(address.getLatitude(), address.getLongitude()));
-            mBus.post(new HandyEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
+            mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
         }
         dismiss();
     }

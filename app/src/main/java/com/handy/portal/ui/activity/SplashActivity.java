@@ -1,7 +1,9 @@
 package com.handy.portal.ui.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -13,10 +15,12 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.util.SupportedDeeplinkPath;
 import com.squareup.otto.Subscribe;
 
 import java.util.regex.Matcher;
@@ -38,11 +42,19 @@ public class SplashActivity extends BaseActivity
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
+    @Inject
+    EventLogFactory mEventLogFactory;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        final Uri data = getIntent().getData();
+        if (data != null)
+        {
+            processDeeplink(data);
+        }
+
         setContentView(R.layout.activity_splash);
 
         String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
@@ -240,8 +252,23 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public void onReceiveUpdateAvailableSuccess(HandyEvent.ReceiveUpdateAvailableSuccess event)
+    public void launchAppUpdater()
     {
-        //Do nothing
+        //do nothing
+    }
+
+    private void processDeeplink(@NonNull final Uri data)
+    {
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createDeeplinkOpenedLog(data)));
+        if (!SupportedDeeplinkPath.matchesAny(data.getPath()))
+        {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createDeeplinkIgnoredLog(data)));
+        }
+        // try to process root if the path matches
+        else if (SupportedDeeplinkPath.ROOT.matches(data.getPath()))
+        {
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createDeeplinkProcessedLog(data)));
+            // nothing else happens, app is already open
+        }
     }
 }

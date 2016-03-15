@@ -16,6 +16,7 @@ public class WebUrlManager
 {
     private static final String WEB_URL_PROVIDER_ID_TOKEN = ":id";
 
+
     @StringDef({BLOCK_JOBS_PAGE, USES_CONFIG_PARAM_ONBOARDING_PAGE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TargetPage {}
@@ -46,7 +47,7 @@ public class WebUrlManager
     {
         String targetUrl = mEndpoint.getBaseUrl();
 
-        if(targetTab == null) { return targetUrl; }
+        if (targetTab == null) { return targetUrl; }
 
         if (targetTab.getWebViewTarget() != null)
         {

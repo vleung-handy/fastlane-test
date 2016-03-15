@@ -1,5 +1,6 @@
 package com.handy.portal.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -35,6 +36,21 @@ public final class Utils //TODO: we should reorganize these methods into more sp
         {
             if (ActivityCompat.checkSelfPermission(context,
                     permissions[i]) == PackageManager.PERMISSION_GRANTED)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean wereAnyPermissionsRequestedPreviously(@NonNull Activity activity, @NonNull String[] permissions)
+    {
+        for (int i = 0; i < permissions.length; i++)
+        {
+            /**
+             *  The method returns true if the app has requested this permission previously and the user denied the request.
+             */
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i]))
             {
                 return true;
             }
@@ -92,7 +108,8 @@ public final class Utils //TODO: we should reorganize these methods into more sp
         {
             Integer.parseInt(input);
             return true;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return false;
         }
@@ -127,7 +144,7 @@ public final class Utils //TODO: we should reorganize these methods into more sp
         Color.colorToHSV(color1, hsva);
         Color.colorToHSV(color2, hsvb);
 
-        for (int i = 0; i < 3; i++) hsvb[i] = (hsva[i] + ((hsvb[i] - hsva[i]) * proportion));
+        for (int i = 0; i < 3; i++) { hsvb[i] = (hsva[i] + ((hsvb[i] - hsva[i]) * proportion)); }
         return Color.HSVToColor(hsvb);
     }
 
@@ -138,10 +155,11 @@ public final class Utils //TODO: we should reorganize these methods into more sp
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e)
+        }
+        catch (PackageManager.NameNotFoundException e)
         {
             // should never happen
-            Crashlytics.logException(new RuntimeException("Could not get package name",  e));
+            Crashlytics.logException(new RuntimeException("Could not get package name", e));
             return -1;
         }
     }
@@ -149,7 +167,7 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     public static LocationData getCurrentLocation(BaseActivity baseActivity)
     {
         LocationData locationData;
-        if(baseActivity != null)
+        if (baseActivity != null)
         {
             locationData = new LocationData(baseActivity.getLastLocation());
         }

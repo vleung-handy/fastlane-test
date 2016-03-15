@@ -2,7 +2,6 @@ package com.handy.portal.ui.fragment.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,6 +10,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.payments.PaymentFlow;
@@ -52,13 +52,13 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked()
     {
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked()
     {
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
     @Override
@@ -68,23 +68,24 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    public void onCreate(final Bundle savedInstanceState)
     {
-        switch (item.getItemId())
-        {
-            case R.id.action_exit:
-                onBackButtonPressed();
-                return true;
-            default:
-                return false;
-        }
+        super.onCreate(savedInstanceState);
+        setOptionsMenuEnabled(true);
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setActionBar(R.string.select_payment_method, false);
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.select_payment_method, false);
+        setBackButtonEnabled(true);
         paymentMethodContainer.setVisibility(View.GONE);
         bus.post(new PaymentEvent.RequestPaymentFlow());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));

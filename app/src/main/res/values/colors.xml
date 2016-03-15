@@ -61,4 +61,8 @@
 
     <!--Notification colors-->
     <color name="inactive_notification_icon_color">#EEEEEE</color>
+
+    <!-- Referral -->
+    <color name="light_grey_trans">#80C1CAD0</color>
+
 </resources>

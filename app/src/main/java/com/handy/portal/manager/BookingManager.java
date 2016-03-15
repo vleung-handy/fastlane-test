@@ -10,7 +10,8 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -18,7 +19,6 @@ import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -353,7 +353,8 @@ public class BookingManager
                 mBus.post(new LogEvent.AddLogEvent(
                         mEventLogFactory.createAvailableJobClaimSuccessLog(
                                 bookingClaimDetails.getBooking(),
-                                event.source)));
+                                event.source,
+                                event.sourceExtras)));
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
 
                 /*

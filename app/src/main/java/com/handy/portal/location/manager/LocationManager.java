@@ -4,9 +4,11 @@ import android.location.Location;
 import android.util.Log;
 
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
+import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
@@ -58,9 +60,6 @@ public class LocationManager
         mDataManager = dataManager;
         mProviderManager = providerManager;
         mPrefsManager = prefsManager;
-        LocationScheduleBuilderManager mLocationScheduleBuilderManager =
-                new LocationScheduleBuilderManager(mBus); //TODO: this means we don't have to provide in app module. is that better?
-        //should comment out the above if toggle-testing
     }
 
     /**
@@ -72,6 +71,27 @@ public class LocationManager
     public Location getLastKnownLocation()
     {
         return mLastKnownLocation;
+    }
+
+    @Subscribe
+    public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
+    {
+        String providerId = mProviderManager.getLastProviderId();
+        if (providerId == null) { return; }
+        mDataManager.getLocationStrategies(providerId, new DataManager.Callback<LocationQuerySchedule>()
+        {
+            @Override
+            public void onSuccess(final LocationQuerySchedule response)
+            {
+                mBus.post(new LocationEvent.ReceiveLocationScheduleSuccess(response));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new LocationEvent.ReceiveLocationScheduleError(error));
+            }
+        });
     }
 
     @Subscribe
@@ -138,19 +158,8 @@ public class LocationManager
     private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
     {
         Log.d(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
-        int providerId = 0;
-        if (mProviderManager.getCachedActiveProvider() != null)
-        {
-            try
-            {
-                providerId = Integer.parseInt(mProviderManager.getCachedActiveProvider().getId());
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-
+        String providerId = mProviderManager.getLastProviderId();
+        if (providerId == null) { return; }
         mDataManager.sendGeolocation(providerId, locationBatchUpdate, new DataManager.Callback<SuccessWrapper>()
         {
             @Override
@@ -202,6 +211,14 @@ public class LocationManager
             }
         }
         mFailedLocationBatchUpdates.add(locationBatchUpdate);
+    }
+
+    @Subscribe
+    public void onBookingChangedOrCreated(HandyEvent.BookingChangedOrCreated event)
+    {
+        //when this happens, we should rebuild the schedule
+        //TODO: see if building schedule is costly. if so, note which bookings were invalidated and rebuild the schedule only for those bookings
+        mBus.post(new LocationEvent.RequestLocationSchedule());
     }
 
 }

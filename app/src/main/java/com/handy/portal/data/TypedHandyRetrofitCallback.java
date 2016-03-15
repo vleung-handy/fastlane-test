@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
+import com.handy.portal.location.model.LocationQuerySchedule;
+import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
@@ -19,12 +21,10 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetailsGroup;
-import com.handy.portal.model.UpdateDetails;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.handy.portal.model.logs.EventLogResponse;
 import com.handy.portal.model.notifications.NotificationMessages;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
@@ -33,8 +33,12 @@ import com.handy.portal.model.payments.PaymentFlow;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
+import com.handy.portal.updater.model.UpdateDetails;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback
 {
@@ -339,7 +343,7 @@ class GetProviderEvaluationRetrofitCallback extends TypedHandyRetrofitCallback<P
 }
 
 
-class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<ProviderRating>
+class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<HashMap<String, List<ProviderRating>>>
 {
     GetProviderFiveStarRatingsRetrofitCallback(DataManager.Callback callback)
     {
@@ -351,6 +355,14 @@ class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallb
 class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<ProviderFeedback>
 {
     GetProviderFeedbackRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationQuerySchedule>
+{
+    GetLocationScheduleRetrofitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

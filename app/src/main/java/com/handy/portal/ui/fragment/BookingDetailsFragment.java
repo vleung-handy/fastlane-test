@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
@@ -36,12 +36,14 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
+import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
@@ -50,7 +52,6 @@ import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.logs.ScheduledJobsLog;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView;
@@ -80,7 +81,7 @@ import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
-    private static final String SOURCE_DISPATCH_NOTIFICATION_TOGGLE = "dispatch_notification_toggle";
+    public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout; // Maybe use fragment instead of view group?
     @Bind(R.id.booking_details_date_view)
@@ -111,8 +112,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
     @Inject
-    ZipClusterManager mZipClusterManager;
-    @Inject
     ConfigManager mConfigManager;
     @Inject
     ProviderManager mProviderManager;
@@ -130,6 +129,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private boolean mHaveTrackedSeenBookingInstructions;
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
     private String mSource;
+    private Bundle mSourceExtras;
 
     @Override
     protected MainViewTab getTab()
@@ -171,7 +171,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 mAssociatedBookingDate = new Date(bookingDateLong);
             }
 
-            setSource();
+            setSourceInfo();
         }
         else
         {
@@ -185,7 +185,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         return view;
     }
 
-    private void setSource()
+    private void setSourceInfo()
     {
         if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
         {
@@ -193,7 +193,8 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
         else if (getArguments().containsKey(BundleKeys.DEEPLINK))
         {
-            mSource = SOURCE_DISPATCH_NOTIFICATION_TOGGLE;
+            mSource = SOURCE_LATE_DISPATCH;
+            mSourceExtras = getArguments();
         }
     }
 
@@ -353,25 +354,13 @@ public class BookingDetailsFragment extends ActionBarFragment
         arguments.putSerializable(BundleKeys.BOOKING_STATUS, bookingStatus);
         arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, mFromPaymentsTab);
 
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-
         if (mFromPaymentsTab)
         {
             mapLayout.setVisibility(View.GONE);
         }
         else
         {
-            //show either the real map or a placeholder image depending on if we have google play services
-            if (ConnectionResult.SUCCESS == GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))
-            {
-                BookingMapFragment fragment = BookingMapFragment.newInstance(mAssociatedBooking,
-                        bookingStatus, mZipClusterManager.getCachedPolygons(mAssociatedBooking.getZipClusterId()));
-                transaction.replace(mapLayout.getId(), fragment).commit();
-            }
-            else
-            {
-                UIUtils.replaceView(mapLayout, new MapPlaceholderView(getContext()));
-            }
+            initMapLayout();
         }
 
         mDateView.refreshDisplay(booking);
@@ -402,6 +391,55 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         mFullDetailsNoticeText.setVisibility(!booking.isProxy() && booking.getServiceInfo().isHomeCleaning()
                 && bookingStatus == BookingStatus.AVAILABLE ? View.VISIBLE : View.GONE);
+    }
+
+    private void initMapLayout()
+    {//show either the real map or a placeholder image depending on if we have google play services
+        BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
+        if (ConnectionResult.SUCCESS ==
+                GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()))
+        {
+            final String zipClusterId = mAssociatedBooking.getZipClusterId();
+            if (zipClusterId != null)
+            {
+                requestZipClusterPolygons(zipClusterId);
+            }
+            else
+            {
+                BookingMapFragment fragment = BookingMapFragment.newInstance(
+                        mAssociatedBooking,
+                        mSource,
+                        bookingStatus
+                );
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace(mapLayout.getId(), fragment).commit();
+            }
+        }
+        else
+        {
+            UIUtils.replaceView(mapLayout, new MapPlaceholderView(getContext()));
+        }
+    }
+
+    private void requestZipClusterPolygons(final String zipClusterId)
+    {
+        bus.post(new BookingEvent.RequestZipClusterPolygons(zipClusterId));
+    }
+
+    @Subscribe
+    public void onReceiveZipClusterPolygonsSuccess(
+            final BookingEvent.ReceiveZipClusterPolygonsSuccess event
+    )
+    {
+        BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
+        BookingMapFragment fragment = BookingMapFragment.newInstance(
+                mAssociatedBooking,
+                mSource,
+                bookingStatus,
+                event.zipClusterPolygons
+        );
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(mapLayout.getId(), fragment).commit();
     }
 
     @OnClick(R.id.try_again_button)
@@ -652,6 +690,10 @@ public class BookingDetailsFragment extends ActionBarFragment
                     getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, mAssociatedBooking));
             mSlideUpPanelLayout.showPanel(R.string.job_support, layout);
         }
+        else
+        {
+            Crashlytics.log("SlideUpPanelLayout is null in: " + getClass().getSimpleName());
+        }
     }
 
     //Check if the current booking data for a given action type has an associated warning to display
@@ -693,9 +735,6 @@ public class BookingDetailsFragment extends ActionBarFragment
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
-                                bus.post(new LogEvent.AddLogEvent(mEventLogFactory
-                                        .createRemoveJobConfirmedLog(mAssociatedBooking, warning)));
-
                                 //proceed with action, we have accepted the warning
                                 bus.post(new HandyEvent.ActionWarningAccepted(actionType));
                                 takeAction(actionType, true);
@@ -728,13 +767,19 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestClaimJob(Booking booking)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(booking, mSource));
+        bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
     }
 
     private void requestRemoveJob(@NonNull Booking booking)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
-                booking, null)));
+        String warning = null;
+        final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
+        if (removeAction != null)
+        {
+            warning = removeAction.getWarningText();
+        }
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
+                booking, warning, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
@@ -873,7 +918,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_NODE_ID, helpNodeId);
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
     }
 
 //Event Subscription and Handling
@@ -1118,6 +1163,9 @@ public class BookingDetailsFragment extends ActionBarFragment
             case REMOVE:
                 removeJob(event.action);
                 break;
+            case UNASSIGN_FLOW:
+                unassignJob(event.action);
+                break;
         }
     }
 
@@ -1126,26 +1174,23 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
                 mAssociatedBooking, removeAction.getWarningText())));
 
-        if (!useNewUnassignFlow())
-        {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                    mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
-            takeAction(BookingActionButtonType.REMOVE, false);
-        }
-        else
-        {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                    mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
-            Bundle arguments = new Bundle();
-            arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-            arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
-        }
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
+        takeAction(BookingActionButtonType.REMOVE, false);
+
     }
 
-    private boolean useNewUnassignFlow()
+    private void unassignJob(@NonNull Booking.Action removeAction)
     {
-        return false;
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
+                mAssociatedBooking, removeAction.getWarningText())));
+
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
+                mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
+        arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
@@ -1154,7 +1199,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new HandyEvent.NavigateToTab(targetTab, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
 
 //Handle Action Response Errors
@@ -1223,7 +1268,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
+                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
                     }
                 });
 

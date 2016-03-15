@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.event.LogEvent;
-import com.handy.portal.model.logs.EventLog;
-import com.handy.portal.model.logs.EventLogFactory;
+import com.handy.portal.location.LocationPingService;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.util.Utils;
@@ -33,6 +34,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
     }
 
     public static final String TYPE_AUTO_CHECK_IN = "P_AUTO_CHECKIN";
+    public static final String TYPE_LOCATION_PING = "P_LOCATION_PING";
 
     @Override
     protected void onChannelRegistrationSucceeded(@NonNull Context context,
@@ -52,6 +54,19 @@ public class HandyPushReceiver extends BaseIntentReceiver
     {
         final EventLog eventLog = mEventLogFactory.createPushNotificationReceivedLog(pushMessage);
         mBus.post(new LogEvent.AddLogEvent(eventLog));
+        final Bundle pushBundle = pushMessage.getPushBundle();
+        final String type = pushBundle.getString(BundleKeys.HANDY_PUSH_TYPE, "");
+        switch (type)
+        {
+            case TYPE_LOCATION_PING:
+                final Intent intent = new Intent(context, LocationPingService.class);
+                final String eventName = pushBundle.getString(BundleKeys.EVENT_NAME);
+                intent.putExtra(BundleKeys.EVENT_NAME, eventName);
+                context.startService(intent);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

@@ -4,22 +4,22 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
@@ -43,8 +43,6 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     TextView mTierTitleText;
     @Bind(R.id.tier_hourly_rate)
     TextView mTierHourlyRateText;
-    @Bind(R.id.feedback_icon)
-    ImageView mFeedbackIcon;
     @Bind(R.id.first_feedback_title)
     TextView mFirstFeedbackTitleText;
     @Bind(R.id.dashboard_first_review)
@@ -52,7 +50,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     @Bind(R.id.review_text)
     TextView mReviewText;
     @Bind(R.id.five_star_reviews_count)
-    TextView mReivewsCountText;
+    TextView mReviewsCountText;
     @Bind(R.id.review_date)
     TextView mReviewDate;
 
@@ -105,15 +103,16 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         {
             mTierHourlyRateText.setText(getResources().getString(R.string.no_data));
         }
-        List<ProviderFeedback> feedbacks = mProviderEvaluation.getProviderFeedback();
-        if (feedbacks != null && feedbacks.size() > 0)
+        List<ProviderFeedback> feedbackList = mProviderEvaluation.getProviderFeedback();
+        if (feedbackList != null && feedbackList.size() > 0)
         {
-            mFirstFeedbackTitleText.setText(feedbacks.get(0).getTitle());
-            mFeedbackIcon.setVisibility(VISIBLE);
+            mFirstFeedbackTitleText.setText(feedbackList.get(0).getTitle());
+            mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
         }
         else
         {
-            mFeedbackIcon.setVisibility(GONE);
+            mFirstFeedbackTitleText.setText(getResources().getString(R.string.none));
+            mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_grey));
         }
 
         List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatingsWithComments();
@@ -122,7 +121,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
             mFirstReview.setVisibility(View.VISIBLE);
             ProviderRating rating = ratings.get(0);
             mReviewText.setText(ratings.get(0).getComment());
-            mReivewsCountText.setText(String.valueOf(ratings.size()));
+            mReviewsCountText.setText(String.valueOf(ratings.size()));
             mReviewDate.setText(DateTimeUtils.getMonthAndYear(rating.getDateRating()));
         }
         else
@@ -135,8 +134,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     public void switchToTiers()
     {
         Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments));
+        arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments));
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createTierTappedLog()));
     }
 
@@ -144,8 +143,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     public void switchToFeedback()
     {
         Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+        arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
     }
 
@@ -154,8 +153,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     public void switchToReviews()
     {
         Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.EVALUATION, mProviderEvaluation);
-        mBus.post(new HandyEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS, arguments));
+        arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS, arguments));
         mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFiveStarReviewsTappedLog()));
     }
 }

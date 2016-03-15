@@ -18,11 +18,12 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.helpcenter.HelpEvent;
 import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.helpcenter.ui.adapter.HelpNodesAdapter;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
@@ -222,7 +223,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments));
         }
     }
 
@@ -239,7 +240,7 @@ public final class PaymentsFragment extends ActionBarFragment
                 }
                 else
                 {
-                    bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP));
+                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP));
                 }
                 return true;
             default:
@@ -328,7 +329,7 @@ public final class PaymentsFragment extends ActionBarFragment
 
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
-                bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
+                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
                 bus.post(new LogEvent.AddLogEvent(
                         mEventLogFactory.createPaymentHelpItemSelectedLog(childNode.getLabel())));
             }

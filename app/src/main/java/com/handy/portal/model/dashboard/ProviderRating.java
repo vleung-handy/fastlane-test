@@ -18,6 +18,8 @@ public class ProviderRating implements Serializable
     private int mBookingId;
     @SerializedName("rating_date")
     private Date mDateRating;
+    @SerializedName("booking_date")
+    private Date mBookingDate;
     @SerializedName("source")
     private String mSource;
     @SerializedName("comment")
@@ -68,5 +70,10 @@ public class ProviderRating implements Serializable
     public String getComment()
     {
         return mComment;
+    }
+
+    public Date getBookingDate()
+    {
+        return mBookingDate;
     }
 }

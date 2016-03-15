@@ -1,8 +1,8 @@
 package com.handy.portal.helpcenter.helpcontact;
 
-import com.handy.portal.annotation.Track;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.mixpanel.annotation.Track;
 
 import retrofit.mime.TypedInput;
 

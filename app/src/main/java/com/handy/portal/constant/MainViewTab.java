@@ -5,25 +5,28 @@ import android.support.annotation.Nullable;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.manager.WebUrlManager;
+import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
+import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
+import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.dashboard.YoutubePlayerFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.OnboardingFragment;
@@ -41,11 +44,10 @@ public enum MainViewTab implements Serializable
     UPDATE_DEBIT_CARD(PaymentsUpdateDebitCardFragment.class),
     PAYMENTS(PaymentsFragment.class),
     PAYMENTS_DETAIL(PaymentsDetailFragment.class),
-    PROFILE(ProfileFragment.class),
-    DASHBOARD(DashboardFragment.class),
     DASHBOARD_TIERS(DashboardTiersFragment.class),
     DASHBOARD_REVIEWS(DashboardReviewsFragment.class),
     DASHBOARD_FEEDBACK(DashboardFeedbackFragment.class),
+    DASHBOARD_VIDEO_LIBRARY(DashboardVideoLibraryFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
     HELP(HelpFragment.class),
@@ -55,7 +57,12 @@ public enum MainViewTab implements Serializable
     NEARBY_JOBS(NearbyBookingsFragment.class),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
-    ONBOARDING(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),;
+    RATINGS_AND_FEEDBACK(RatingsAndFeedbackFragment.class),
+    REFER_A_FRIEND(ReferAFriendFragment.class),
+    ACCOUNT_SETTINGS(AccountSettingsFragment.class),
+    ONBOARDING(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
+    YOUTUBE_PLAYER(YoutubePlayerFragment.class),
+    ;
 
     private Class mClassType;
     private

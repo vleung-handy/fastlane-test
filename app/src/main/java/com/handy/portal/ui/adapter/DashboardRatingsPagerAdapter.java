@@ -12,6 +12,9 @@ import com.handy.portal.util.DateTimeUtils;
 
 public class DashboardRatingsPagerAdapter extends PagerAdapter
 {
+    public static final int PAST_28_DAYS_PAGE_POSITION = 0;
+    public static final int LIFETIME_PAGE_POSITION = 1;
+
     private static final int PAGE_COUNT = 2;
     private Context mContext;
     private ProviderEvaluation mProviderEvaluation;
@@ -29,7 +32,7 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
     {
         DashboardRatingsView view = new DashboardRatingsView(mContext);
         ProviderEvaluation.Rating rating;
-        if (position == 0)
+        if (position == PAST_28_DAYS_PAGE_POSITION)
         {
             rating = mProviderEvaluation.getRolling();
             view.setTitle(mContext.getString(R.string.past_28_days));
@@ -46,7 +49,7 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
                 DateTimeUtils.formatMonthDateYear(rating.getEndDate())));
         view.setJobRatings(rating.getFiveStarRatedBookingCount(),
                 rating.getRatedBookingCount(), rating.getTotalBookingCount());
-        if (rating.getTotalBookingCount() == 0)
+        if (rating.getTotalBookingCount() == PAST_28_DAYS_PAGE_POSITION)
         {
             view.setFiveStarRatingPercentage(0.0f);
         }

@@ -31,7 +31,7 @@ public class OnboardingParams
 
         OnboardingParams other = (OnboardingParams) obj;
 
-        if(mOnboardingCompleteWebUrl == null && other.getOnboardingCompleteWebUrl() != null)
+        if (mOnboardingCompleteWebUrl == null && other.getOnboardingCompleteWebUrl() != null)
         {
             return false;
         }
@@ -51,7 +51,7 @@ public class OnboardingParams
     @Nullable
     public String getOnboardingCompleteWebUrl()
     {
-       return mOnboardingCompleteWebUrl;
+        return mOnboardingCompleteWebUrl;
     }
 
     public boolean isOnboardingBlocking()

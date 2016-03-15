@@ -22,13 +22,14 @@ import com.handy.portal.constant.Country;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingDialogFragment;
 import com.handy.portal.util.DateTimeUtils;
@@ -87,7 +88,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     {
         return MainViewTab.NEARBY_JOBS;
     }
-    
+
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -174,7 +175,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
             bus.post(new LogEvent.AddLogEvent(
                     mEventLogFactory.createNearbyJobClaimSelectedLog(booking, mKilometer)));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestClaimJob(booking, SOURCE));
+            bus.post(new HandyEvent.RequestClaimJob(booking, SOURCE, null));
         }
     }
 
@@ -187,7 +188,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, booking.getStartDate().getTime());
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, null));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, null));
     }
 
     @Subscribe

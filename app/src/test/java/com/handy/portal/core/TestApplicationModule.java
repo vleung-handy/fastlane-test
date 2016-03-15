@@ -2,47 +2,46 @@ package com.handy.portal.core;
 
 import android.app.Application;
 
-import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
-import com.handy.portal.manager.VersionManager;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
-import com.handy.portal.ui.constructor.ProfilePerformanceView;
-import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
-import com.handy.portal.ui.element.profile.ManagementToolsView;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragmentTest;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
-import com.handy.portal.ui.fragment.PleaseUpdateFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragmentTest;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
+import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
+import com.handy.portal.updater.VersionManager;
+import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.securepreferences.SecurePreferences;
 import com.squareup.otto.Bus;
 
@@ -60,7 +59,7 @@ import static org.mockito.Mockito.when;
         LoginActivity.class,
         MainActivityFragment.class,
         MainActivity.class,
-        ProfileFragment.class,
+        ProfileUpdateFragment.class,
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
         ScheduledBookingsFragment.class,
@@ -72,12 +71,10 @@ import static org.mockito.Mockito.when;
         PaymentsDetailFragment.class,
         TestActivity.class,
         PaymentsBatchListView.class,
-        ManagementToolsView.class,
         SupportActionView.class,
         BookingDetailsFragmentTest.class,
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
-        ProfileReferralView.class,
         BookingDetailsJobInstructionsView.class,
         LocationSettingsBlockerDialogFragment.class
 }, library = true)
@@ -117,9 +114,10 @@ public class TestApplicationModule
     }
 
     @Provides
+    @Singleton
     final DataManager provideDataManager()
     {
-        return mock(DataManager.class);
+        return mock(TestDataManager.class);
     }
 
     @Provides
@@ -167,6 +165,12 @@ public class TestApplicationModule
     final ConfigManager provideConfigManager()
     {
         return mock(ConfigManager.class);
+    }
+
+    @Provides
+    final SystemManager provideSytemManager()
+    {
+        return mock(SystemManager.class);
     }
 
     @Provides

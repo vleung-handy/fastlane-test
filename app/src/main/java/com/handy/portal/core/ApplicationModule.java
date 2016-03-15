@@ -10,20 +10,21 @@ import android.util.Base64;
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
-import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.data.BaseDataManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.LocationScheduleHandler;
 import com.handy.portal.location.LocationService;
 import com.handy.portal.location.manager.LocationManager;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
@@ -33,13 +34,12 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
-import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
-import com.handy.portal.model.logs.EventLogFactory;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -51,19 +51,17 @@ import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.activity.PleaseUpdateActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.handy.portal.ui.constructor.ProfileContactView;
-import com.handy.portal.ui.constructor.ProfileReferralView;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
+import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
 import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
-import com.handy.portal.ui.element.profile.ManagementToolsView;
+import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
@@ -71,16 +69,18 @@ import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
-import com.handy.portal.ui.fragment.PleaseUpdateFragment;
+import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
+import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.dialog.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
@@ -90,8 +90,10 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.fragment.profile.ProfileFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
+import com.handy.portal.updater.VersionManager;
+import com.handy.portal.updater.ui.PleaseUpdateActivity;
+import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.OnboardingFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -119,7 +121,6 @@ import retrofit.converter.GsonConverter;
         LoginActivityFragment.class,
         LoginActivity.class,
         ScheduledBookingsFragment.class,
-        ProfileFragment.class,
         AvailableBookingsFragment.class,
         MainActivityFragment.class,
         BaseApplication.class,
@@ -148,16 +149,12 @@ import retrofit.converter.GsonConverter;
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
-        ProfileContactView.class,
         ProfileUpdateFragment.class,
         RateBookingDialogFragment.class,
-        ProfileReferralView.class,
         PaymentsBatchListView.class,
-        DashboardFragment.class,
         NearbyBookingsFragment.class,
         PaymentBlockingFragment.class,
         CancellationRequestFragment.class,
-        ManagementToolsView.class,
         SupportActionView.class,
         NotificationsFragment.class,
         NotificationsListView.class,
@@ -168,10 +165,17 @@ import retrofit.converter.GsonConverter;
         DashboardOptionsPerformanceView.class,
         LocationScheduleHandler.class,
         LocationService.class,
+        LocationPingService.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
+        AccountSettingsFragment.class,
+        RatingsAndFeedbackFragment.class,
+        ReferAFriendFragment.class,
         FiveStarRatingPercentageView.class,
         OnboardingFragment.class,
+        DashboardVideoLibraryFragment.class,
+        LocationPermissionsBlockerDialogFragment.class,
+        DashboardFeedbackView.class,
 })
 public final class ApplicationModule
 {
@@ -320,7 +324,7 @@ public final class ApplicationModule
                                          final StripeRetrofitService stripeService //TODO: refactor and move somewhere else?
     )
     {
-        return new BaseDataManager(service, endpoint, stripeService);
+        return new DataManager(service, endpoint, stripeService);
     }
 
     @Provides
@@ -330,6 +334,13 @@ public final class ApplicationModule
                                                final EventLogFactory eventLogFactory)
     {
         return new BookingManager(bus, dataManager, eventLogFactory);
+    }
+
+    @Provides
+    @Singleton
+    final SystemManager provideSystemManager(final Bus bus, final EventLogFactory eventLogFactory)
+    {
+        return new SystemManager(context, bus, eventLogFactory);
     }
 
     @Provides

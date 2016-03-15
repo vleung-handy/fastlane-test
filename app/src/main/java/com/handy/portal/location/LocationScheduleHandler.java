@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -19,7 +17,6 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationQuerySchedule;
 import com.handy.portal.location.model.LocationQueryStrategy;
@@ -42,7 +39,7 @@ public class LocationScheduleHandler extends BroadcastReceiver
         implements LocationStrategyHandler.LocationStrategyCallbacks
 {
     @Inject
-    Bus bus;
+    Bus mBus;
 
     LocationQuerySchedule mLocationQuerySchedule;
     GoogleApiClient mGoogleApiClient;
@@ -52,13 +49,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
     private static final int ALARM_REQUEST_CODE = 1;
     private static final String LOCATION_SCHEDULE_ALARM_BROADCAST_ID = "LOCATION_SCHEDULE_ALARM_BROADCAST_ID";
     private final static String BUNDLE_EXTRA_LOCATION_STRATEGY = "LOCATION_STRATEGY";
-
-
-    /**
-     * hack for preventing the network reconnected callback from being triggered
-     * multiple times (due to multiple network providers)
-     */
-    private boolean mPreviouslyHadNetworkConnectivity = true;
 
     //TODO: temporary, can remove once we don't have overlapping schedules
     Set<LocationStrategyHandler> mActiveLocationRequestStrategies = new HashSet<>();
@@ -76,7 +66,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LocationScheduleHandler.LOCATION_SCHEDULE_ALARM_BROADCAST_ID);
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         //seems i have to register a receiver because the network listener is only available in 21/23
 
         mContext.registerReceiver(this, intentFilter);
@@ -326,9 +315,6 @@ public class LocationScheduleHandler extends BroadcastReceiver
                 LocationQueryStrategy locationQueryStrategy = LocationQueryStrategy.CREATOR.createFromParcel(strategyParcel);
                 onLocationStrategyAlarmTriggered(locationQueryStrategy);
                 break;
-            case ConnectivityManager.CONNECTIVITY_ACTION:
-                onConnectivityChanged(context);
-                break;
         }
     }
 
@@ -349,44 +335,28 @@ public class LocationScheduleHandler extends BroadcastReceiver
         }
     }
 
-    private void onConnectivityChanged(@NonNull Context context)
+    /**
+     * called by location service when network reconnected event is broadcast
+     *
+     * don't want to subscribe to event here, because this object does not have a strict lifecycle
+     * unlike the location service, so it is harder to guarantee that the bus will be unregistered
+     * when we no longer care about this object (ex. what if this object loses its reference?)
+     */
+    public void onNetworkReconnected()
     {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        boolean hasConnectivity = networkInfo != null
-                && networkInfo.isConnected()
-                && networkInfo.isAvailable();
-
-                /*
-                NOTE: if i have both data and wifi on, and then turn wifi off,
-                hasConnectivity will still be true
-                 */
-        Log.d(getClass().getName(), "has network connectivity: " + hasConnectivity);
-        if (hasConnectivity && !mPreviouslyHadNetworkConnectivity)
-        //network connected and couldn't connect before. need latter check to prevent multiple triggers due to multiple network providers
-        {
-            bus.post(new SystemEvent.NetworkReconnected());
-            rerequestLocationUpdatesForActiveStrategies();
-            //TODO don't like this decoupled from the network event handler, but not sure i want to register a bus to subscribe to events here either
-            //immediately request location updates
-            //this will be much easier when we only have one location listener
-            //which will we do when we don't have overlapping strategies anymore
-        }
-
-        //this is a hack to prevent multiple network reconnected triggers, should think of a better solution
-        mPreviouslyHadNetworkConnectivity = hasConnectivity;
+        rerequestLocationUpdatesForActiveStrategies();
     }
 
     @Override
     public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate)
     {
-        bus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
+        mBus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
     }
 
     @Override
     public void onLocationUpdate(final Location location)
     {
-        bus.post(new LocationEvent.LocationUpdated(location));
+        mBus.post(new LocationEvent.LocationUpdated(location));
     }
 
 

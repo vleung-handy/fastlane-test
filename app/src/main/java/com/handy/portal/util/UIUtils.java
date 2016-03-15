@@ -47,6 +47,8 @@ public final class UIUtils
 {
     public static final ViewGroup.LayoutParams MATCH_PARENT_PARAMS = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    public static final ViewGroup.LayoutParams MATCH_WIDTH_WRAP_HEIGHT_PARAMS = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
     public static boolean validateField(FormFieldTableRow field, FieldDefinition fieldDefinition)
     {

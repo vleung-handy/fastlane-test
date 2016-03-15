@@ -40,7 +40,7 @@ public class ProviderFeedback implements Serializable
     public static class FeedbackTip implements Serializable
     {
         public static final String DATA_TYPE_TEXT = "text";
-        public static final String DATA_TYPE_VIDEO_LINK = "video_link";
+        public static final String DATA_TYPE_VIDEO_ID = "youtube_video_id";
 
         @SerializedName("type")
         private String mDataType;

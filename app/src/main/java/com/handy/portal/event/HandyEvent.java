@@ -3,13 +3,12 @@ package com.handy.portal.event;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.handy.portal.annotation.Track;
-import com.handy.portal.annotation.TrackField;
 import com.handy.portal.constant.BookingActionButtonType;
-import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.logger.mixpanel.annotation.Track;
+import com.handy.portal.logger.mixpanel.annotation.TrackField;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;
@@ -20,10 +19,8 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
-import com.handy.portal.model.UpdateDetails;
 
 import java.util.Date;
 import java.util.List;
@@ -103,89 +100,6 @@ public abstract class HandyEvent
         public ConfigurationResponse getConfigurationResponse()
         {
             return mConfigurationResponse;
-        }
-    }
-//Navigation
-
-
-    public static class NavigateToTab extends HandyEvent
-    {
-        public MainViewTab targetTab;
-        public Bundle arguments;
-        public TransitionStyle transitionStyleOverride;
-
-        public NavigateToTab(MainViewTab targetTab)
-        {
-            this.targetTab = targetTab;
-        }
-
-        public NavigateToTab(MainViewTab targetTab, Bundle arguments)
-        {
-            this.targetTab = targetTab;
-            this.arguments = arguments;
-        }
-
-        public NavigateToTab(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyleOverride)
-        {
-            this.targetTab = targetTab;
-            this.arguments = arguments;
-            this.transitionStyleOverride = transitionStyleOverride;
-        }
-    }
-
-
-    //TODO: Come up with better name
-    public static class RequestProcessNavigateToTab extends HandyEvent
-    {
-        public MainViewTab targetTab;
-        public MainViewTab currentTab;
-        public Bundle arguments;
-        public TransitionStyle transitionStyle;
-        public boolean userTriggered;
-
-        public RequestProcessNavigateToTab(MainViewTab targetTab, MainViewTab currentTab, Bundle arguments, TransitionStyle transitionStyle, boolean userTriggered)
-        {
-            this.targetTab = targetTab;
-            this.currentTab = currentTab;
-            this.arguments = arguments;
-            this.transitionStyle = transitionStyle;
-            this.userTriggered = userTriggered;
-        }
-    }
-
-
-    //TODO: Come up with better name
-    public static class SwapFragmentNavigation extends HandyEvent
-    {
-        public SwapFragmentArguments swapFragmentArguments;
-
-        public SwapFragmentNavigation(SwapFragmentArguments swapFragmentArguments)
-        {
-            this.swapFragmentArguments = swapFragmentArguments;
-        }
-    }
-
-
-    //show hide the tabs restrict navigation, also need to block the drawer?
-    public static class SetNavigationTabVisibility extends HandyEvent
-    {
-        public final boolean isVisible;
-
-        public SetNavigationTabVisibility(boolean isVisible)
-        {
-            this.isVisible = isVisible;
-        }
-    }
-
-
-    //Disable the drawer to block navigation
-    public static class SetNavigationDrawerActive extends HandyEvent
-    {
-        public final boolean isActive;
-
-        public SetNavigationDrawerActive(boolean isActive)
-        {
-            this.isActive = isActive;
         }
     }
 
@@ -300,40 +214,6 @@ public abstract class HandyEvent
         }
     }
 
-//Update and Version Management
-
-
-    public static class RequestUpdateCheck extends RequestEvent
-    {
-        public Activity sender = null;
-
-        public RequestUpdateCheck(Activity sender)
-        {
-            this.sender = sender;
-        }
-    }
-
-
-    public static class ReceiveUpdateAvailableSuccess extends ReceiveSuccessEvent
-    {
-        public UpdateDetails updateDetails;
-
-        public ReceiveUpdateAvailableSuccess(UpdateDetails updateDetails)
-        {
-            this.updateDetails = updateDetails;
-        }
-    }
-
-
-    public static class ReceiveUpdateAvailableError extends ReceiveErrorEvent
-    {
-        public ReceiveUpdateAvailableError(DataManager.DataManagerError error)
-        {
-            this.error = error;
-        }
-    }
-
-
     public static class RequestEnableApplication extends RequestEvent
     {
         public String packageName;
@@ -358,13 +238,6 @@ public abstract class HandyEvent
             this.available = available;
         }
     }
-
-
-    public static class DownloadUpdateSuccessful extends HandyEvent {}
-
-
-    @Track("portal app update download failed")
-    public static class DownloadUpdateFailed extends HandyEvent {}
 
 
     public static class RequestCheckTerms extends RequestEvent {}
@@ -553,12 +426,14 @@ public abstract class HandyEvent
     {
         public final Booking booking;
         public final String source;
+        public Bundle sourceExtras;
 
-        public RequestClaimJob(Booking booking, String source)
+        public RequestClaimJob(Booking booking, String source, @Nullable Bundle sourceExtras)
         {
             this.bookingId = booking.getId();
             this.booking = booking;
             this.source = source;
+            this.sourceExtras = sourceExtras;
         }
     }
 

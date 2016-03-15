@@ -3,7 +3,8 @@ package com.handy.portal.webview;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.LogEvent;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.OnboardingParams;
 import com.squareup.otto.Subscribe;
 
@@ -27,7 +28,7 @@ public class OnboardingFragment extends PortalWebViewFragment
         //Make sure we should still be showing onboarding, and this version of it, otherwise nav away
         //Store current values of config response to compare to the next one
         if (configManager != null &&
-            configManager.getConfigurationResponse() != null)
+                configManager.getConfigurationResponse() != null)
         {
             mLastOnboardingParams = configManager.getConfigurationResponse().getOnboardingParams();
         }
@@ -39,7 +40,7 @@ public class OnboardingFragment extends PortalWebViewFragment
         //We got into a bad state, leave
         if (mLastOnboardingParams == null)
         {
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
         }
         else
         {
@@ -49,8 +50,8 @@ public class OnboardingFragment extends PortalWebViewFragment
             //Lock nav drawers and hide tabs if this is a blocking onboarding fragment
             if (mLastOnboardingParams.isOnboardingBlocking())
             {
-                bus.post(new HandyEvent.SetNavigationDrawerActive(false));
-                bus.post(new HandyEvent.SetNavigationTabVisibility(false));
+                bus.post(new NavigationEvent.SetNavigationDrawerActive(false));
+                bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
             }
         }
     }
@@ -58,7 +59,7 @@ public class OnboardingFragment extends PortalWebViewFragment
     @Subscribe
     public void onReceiveConfigurationSuccess(HandyEvent.ReceiveConfigurationSuccess event)
     {
-        if(event.getConfigurationResponse() != null)
+        if (event.getConfigurationResponse() != null)
         {
             checkToLeaveOnboarding(event.getConfigurationResponse().getOnboardingParams());
         }
@@ -70,20 +71,20 @@ public class OnboardingFragment extends PortalWebViewFragment
         boolean leaveOnboarding = false;
 
         if (onboardingParams == null ||
-            (mLastOnboardingParams != null &&
-                !mLastOnboardingParams.equals(onboardingParams))
-        )
+                (mLastOnboardingParams != null &&
+                        !mLastOnboardingParams.equals(onboardingParams))
+                )
         {
             leaveOnboarding = true;
         }
 
-        if(leaveOnboarding)
+        if (leaveOnboarding)
         {
             bus.post(new LogEvent.AddLogEvent(
                     mEventLogFactory.createWebOnboardingClosedLog()));
 
             //just nav back to main, can lazily reload and tab navigation will handle the rest if we need to go to a different onboarding
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
         }
 
     }

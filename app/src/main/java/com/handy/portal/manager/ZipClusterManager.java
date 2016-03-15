@@ -36,13 +36,6 @@ public class ZipClusterManager
         mRequestInProgressClusters = new HashSet<>();
     }
 
-    public ZipClusterPolygons getCachedPolygons(String id)
-    {
-        if (id == null) { return null; }
-
-        return mZipClusterCache.getIfPresent(id);
-    }
-
     @Subscribe
     public void onRequestZipClusterPolygon(final BookingEvent.RequestZipClusterPolygons event)
     {

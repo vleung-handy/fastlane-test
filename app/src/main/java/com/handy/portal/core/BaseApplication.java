@@ -11,15 +11,15 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
-import com.handy.portal.analytics.Mixpanel;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.HelpContactManager;
 import com.handy.portal.location.manager.LocationManager;
+import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.EventLogManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
@@ -29,13 +29,14 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
+import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
-import com.handy.portal.manager.VersionManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.updater.VersionManager;
 import com.handy.portal.util.FontUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
@@ -105,6 +106,8 @@ public class BaseApplication extends MultiDexApplication
     NotificationMessageManager notificationMessageManager;
     @Inject
     LocationManager locationManager;
+    @Inject
+    SystemManager systemManager;
 
     @Inject
     Bus bus;
