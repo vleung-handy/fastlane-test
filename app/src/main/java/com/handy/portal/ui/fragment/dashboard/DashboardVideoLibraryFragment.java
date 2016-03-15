@@ -68,7 +68,7 @@ public class DashboardVideoLibraryFragment extends ActionBarFragment
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
-        
+
         Provider provider = mProviderManager.getCachedActiveProvider();
         if (provider != null)
         {
