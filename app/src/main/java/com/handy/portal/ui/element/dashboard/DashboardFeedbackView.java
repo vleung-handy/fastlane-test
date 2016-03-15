@@ -3,30 +3,45 @@ package com.handy.portal.ui.element.dashboard;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Html;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.ui.widget.BulletTextView;
 import com.handy.portal.util.TextUtils;
+import com.handy.portal.util.Utils;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class DashboardFeedbackView extends FrameLayout
+public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener
 {
+    @Inject
+    Bus mBus;
+    @Inject
+    EventLogFactory mEventLogFactory;
+
     @Bind(R.id.dashboard_feedback_title)
     TextView mTitle;
     @Bind(R.id.dashboard_feedback_description)
     TextView mDescription;
     @Bind(R.id.dashboard_feedback_tips)
     LinearLayout mTips;
-
 
     public DashboardFeedbackView(final Context context, @NonNull final ProviderFeedback providerFeedback)
     {
@@ -58,11 +73,15 @@ public class DashboardFeedbackView extends FrameLayout
     {
         inflate(getContext(), R.layout.element_dashboard_feedback, this);
         ButterKnife.bind(this);
+
+        Utils.inject(getContext(), this);
     }
 
     public void setDisplay(@NonNull final ProviderFeedback feedback)
     {
-        mTitle.setText(feedback.getTitle());
+        String sectionTitle = feedback.getTitle();
+
+        mTitle.setText(sectionTitle);
         mDescription.setText(feedback.getSubtitle());
 
         if (feedback.getFeedbackTips() == null) { return; }
@@ -73,16 +92,31 @@ public class DashboardFeedbackView extends FrameLayout
             {
                 mTips.addView(new BulletTextView(getContext(), tip.getData()));
             }
-            else if (ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_LINK.equalsIgnoreCase(tip.getDataType()))
+            else if (ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_ID.equalsIgnoreCase(tip.getDataType()))
             {
                 if (!TextUtils.isNullOrEmpty(tip.getData()))
                 {
-                    String videoText = getResources().getString(R.string.watch_video, tip.getData());
-                    BulletTextView bulletTextView = new BulletTextView(getContext());
-                    bulletTextView.setText(Html.fromHtml(videoText));
-                    mTips.addView(bulletTextView);
+                    YoutubeImagePlaceholderView youtubeImagePlaceholderView =
+                            new YoutubeImagePlaceholderView(getContext());
+                    youtubeImagePlaceholderView.setID(tip.getData());
+                    youtubeImagePlaceholderView.setSection(sectionTitle);
+
+                    youtubeImagePlaceholderView.setOnClickListener(this);
+
+                    mTips.addView(youtubeImagePlaceholderView);
                 }
             }
         }
+    }
+
+    @Override
+    public void onClick(final View v)
+    {
+        YoutubeImagePlaceholderView view = (YoutubeImagePlaceholderView) v;
+        Bundle bundle = new Bundle();
+        bundle.putString(BundleKeys.YOUTUBE_VIDEO_ID, view.getID());
+
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
+        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createVideoTappedLog(view.getSection())));
     }
 }

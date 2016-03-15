@@ -192,6 +192,7 @@ public class TabNavigationManager
             // Account Settings
             addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
             addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
+            addToBackStack |= targetTab == MainViewTab.YOUTUBE_PLAYER;
         }
 
         return addToBackStack;

@@ -64,11 +64,11 @@ public class SystemManager extends BroadcastReceiver
                 hasConnectivity will still be true
                  */
         Log.d(getClass().getName(), "has network connectivity: " + hasConnectivity);
-        if(hasConnectivity != mPreviouslyHadNetworkConnectivity)
+        if (hasConnectivity != mPreviouslyHadNetworkConnectivity)
         //network connected and couldn't connect before or vice versa.
         //need second variable to prevent multiple triggers due to multiple network providers
         {
-            if(hasConnectivity) //reconnected
+            if (hasConnectivity) //reconnected
             {
                 mBus.post(new LogEvent.AddLogEvent(
                         mEventLogFactory.createNetworkReconnectedLog()));

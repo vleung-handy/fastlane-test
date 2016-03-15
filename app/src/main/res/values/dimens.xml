@@ -111,6 +111,12 @@
     <dimen name="circle_negative_margin">-4dp</dimen>
     <dimen name="circle_indicator_padding">4dp</dimen>
 
+    <dimen name="youtube_image_view_width">343dp</dimen>
+    <dimen name="youtube_image_view_height">193dp</dimen>
+    <dimen name="youtube_image_view_margin_top">8dp</dimen>
+    <dimen name="youtube_image_view_margin_bottom">28dp</dimen>
+
+
     <!-- warning or error screen -->
     <dimen name="error_margin_top">10dp</dimen>
     <dimen name="error_margin_side">40dp</dimen>

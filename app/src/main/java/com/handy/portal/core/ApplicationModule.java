@@ -55,6 +55,7 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
+import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
 import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
@@ -174,6 +175,7 @@ import retrofit.converter.GsonConverter;
         OnboardingFragment.class,
         DashboardVideoLibraryFragment.class,
         LocationPermissionsBlockerDialogFragment.class,
+        DashboardFeedbackView.class,
 })
 public final class ApplicationModule
 {

@@ -19,6 +19,7 @@ public abstract class NetworkConnectionLog extends EventLog
         }
     }
 
+
     public static class Disconnected extends NetworkConnectionLog
     {
         private static final String EVENT_TYPE = "disconnected";

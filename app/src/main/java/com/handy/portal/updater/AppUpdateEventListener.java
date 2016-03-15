@@ -12,6 +12,7 @@ import com.squareup.otto.Subscribe;
 public class AppUpdateEventListener
 {
     private AppUpdateFlowLauncher mAppUpdateFlowLauncher;
+
     public AppUpdateEventListener(@NonNull AppUpdateFlowLauncher appUpdateFlowLauncher)
     {
         mAppUpdateFlowLauncher = appUpdateFlowLauncher;

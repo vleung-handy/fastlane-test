@@ -49,7 +49,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@id/video_image"
                     android:layout_toRightOf="@id/video_image"
-                    android:text="@string/entire_video_library"
+                    android:text="@string/video_library"
                     />
 
                 <ImageView

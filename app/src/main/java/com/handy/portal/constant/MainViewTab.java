@@ -21,6 +21,7 @@ import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.dashboard.YoutubePlayerFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
@@ -60,6 +61,7 @@ public enum MainViewTab implements Serializable
     REFER_A_FRIEND(ReferAFriendFragment.class),
     ACCOUNT_SETTINGS(AccountSettingsFragment.class),
     ONBOARDING(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
+    YOUTUBE_PLAYER(YoutubePlayerFragment.class),
     ;
 
     private Class mClassType;

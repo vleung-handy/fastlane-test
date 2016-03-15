@@ -12,13 +12,11 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.squareup.otto.Bus;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,9 +24,6 @@ import butterknife.OnClick;
 
 public class DashboardFeedbackFragment extends ActionBarFragment
 {
-    @Inject
-    Bus mBus;
-
     @Bind(R.id.layout_dashboard_feedback)
     LinearLayout mFeedbackLayout;
     @Bind(R.id.no_result_view)
@@ -48,7 +43,7 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
+        mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
     }
 
     @Override
@@ -67,6 +62,7 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
         setActionBarTitle(R.string.feedback);
+        setActionBarVisible(true);
 
         if (mEvaluation == null || mEvaluation.getProviderFeedback() == null)
         {
@@ -92,6 +88,14 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     @OnClick(R.id.video_library)
     public void switchToVideoLibrary()
     {
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY, new Bundle()));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createVideoLibraryTappedLog()));
+    }
+
+    public void swapToVideo(String youtubeId)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BundleKeys.YOUTUBE_VIDEO_ID, youtubeId);
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
     }
 }

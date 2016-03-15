@@ -121,7 +121,7 @@ public abstract class BaseActivity extends AppCompatActivity
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.setData(Uri.parse("package:" + packageName));
         boolean successfullyLaunchedIntent = Utils.safeLaunchIntent(intent, this);
-        if(!successfullyLaunchedIntent)
+        if (!successfullyLaunchedIntent)
         {
             /*
             unable to launch the application detail settings intent,

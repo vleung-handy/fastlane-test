@@ -236,7 +236,7 @@ public class MainActivity extends BaseActivity
         if (!hasRequiredLocationPermissions() &&
                 getSupportFragmentManager().findFragmentByTag(LocationPermissionsBlockerDialogFragment.FRAGMENT_TAG) == null)
         {
-            if(Utils.wereAnyPermissionsRequestedPreviously(this, LocationConstants.LOCATION_PERMISSIONS))
+            if (Utils.wereAnyPermissionsRequestedPreviously(this, LocationConstants.LOCATION_PERMISSIONS))
             {
                 //this will be shown if the app requested this permission previously and the user denied the request or revoked it
                 FragmentUtils.safeLaunchDialogFragment(new LocationPermissionsBlockerDialogFragment(),

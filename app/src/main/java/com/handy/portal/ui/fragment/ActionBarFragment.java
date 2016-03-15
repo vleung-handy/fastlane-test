@@ -103,8 +103,12 @@ public abstract class ActionBarFragment extends InjectedFragment
 
     public void setActionBarVisible(boolean visible)
     {
-        if (visible) { getActionBar().show(); }
-        else { getActionBar().hide(); }
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null)
+        {
+            if (visible) { actionBar.show(); }
+            else { actionBar.hide(); }
+        }
     }
 
     private ActionBar getActionBar()
@@ -114,10 +118,13 @@ public abstract class ActionBarFragment extends InjectedFragment
 
     public void setBackButtonEnabled(boolean enabled)
     {
-        getActionBar().setDisplayShowHomeEnabled(enabled);
-        getActionBar().setDisplayHomeAsUpEnabled(enabled);
-        getActionBar().setHomeButtonEnabled(enabled);
-
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null)
+        {
+            actionBar.setDisplayShowHomeEnabled(enabled);
+            actionBar.setDisplayHomeAsUpEnabled(enabled);
+            actionBar.setHomeButtonEnabled(enabled);
+        }
     }
 
     public void onBackButtonPressed()
@@ -129,12 +136,16 @@ public abstract class ActionBarFragment extends InjectedFragment
 
     public void setActionBarTitle(int resourceId)
     {
-        getActionBar().setTitle(resourceId);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null)
+        { actionBar.setTitle(resourceId); }
     }
 
     public void setActionBarTitle(CharSequence charSequence)
     {
-        getActionBar().setTitle(charSequence);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null)
+        { actionBar.setTitle(charSequence); }
     }
 
     public void setActionBar(String titleString, boolean backButtonEnabled)

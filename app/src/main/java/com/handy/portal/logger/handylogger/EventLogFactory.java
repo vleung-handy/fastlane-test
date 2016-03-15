@@ -26,6 +26,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.OnboardingParams;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.logs.VideoLog;
 import com.handy.portal.util.MathUtils;
 import com.urbanairship.push.PushMessage;
 
@@ -392,6 +393,17 @@ public class EventLogFactory
     public EventLog createWebOnboardingShownLog(final OnboardingParams onboardingParams)
     {
         return new WebOnboardingLog.Shown(onboardingParams);
+    }
+
+    // Video Logs
+    public EventLog createVideoTappedLog(String section)
+    {
+        return new VideoLog.VideoTappedLog(section);
+    }
+
+    public EventLog createVideoLibraryTappedLog()
+    {
+        return new VideoLog.VideoLibraryTappedLog();
     }
 
     //user dismissed or navved away from

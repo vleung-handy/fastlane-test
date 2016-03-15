@@ -10,11 +10,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
@@ -198,5 +201,15 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         {
             createDashboardView(mProviderEvaluation);
         }
+    }
+
+    @OnClick(R.id.feedback_option)
+    public void switchToFeedback()
+    {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
+
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
     }
 }
