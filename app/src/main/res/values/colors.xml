@@ -65,4 +65,5 @@
     <!-- Referral -->
     <color name="light_grey_trans">#80C1CAD0</color>
 
+    <color name="list_divider_checkout">#D1D1D1</color>
 </resources>

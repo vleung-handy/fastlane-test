@@ -72,6 +72,7 @@ import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
@@ -176,6 +177,7 @@ import retrofit.converter.GsonConverter;
         DashboardVideoLibraryFragment.class,
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
+        SendReceiptCheckoutFragment.class,
 })
 public final class ApplicationModule
 {

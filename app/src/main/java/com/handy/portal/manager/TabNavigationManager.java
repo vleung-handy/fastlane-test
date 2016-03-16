@@ -193,6 +193,9 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
             addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
             addToBackStack |= targetTab == MainViewTab.YOUTUBE_PLAYER;
+
+            // New Checkout
+            addToBackStack |= targetTab == MainViewTab.SEND_RECEIPT_CHECKOUT;
         }
 
         return addToBackStack;

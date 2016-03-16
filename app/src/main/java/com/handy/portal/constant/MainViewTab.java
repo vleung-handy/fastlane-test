@@ -14,6 +14,7 @@ import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
@@ -62,6 +63,7 @@ public enum MainViewTab implements Serializable
     ACCOUNT_SETTINGS(AccountSettingsFragment.class),
     ONBOARDING(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
     YOUTUBE_PLAYER(YoutubePlayerFragment.class),
+    SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
     ;
 
     private Class mClassType;
