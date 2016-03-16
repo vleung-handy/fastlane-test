@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.SwitchCompat;
@@ -50,6 +51,13 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mMessage = getArguments().getString(BundleKeys.MESSAGE);
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -61,8 +69,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             {
                 mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
-
-            mMessage = getArguments().getString(BundleKeys.MESSAGE);
 
             setLateDispatchOptInToggleListener();
         }
