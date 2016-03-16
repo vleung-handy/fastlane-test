@@ -3,6 +3,7 @@ package com.handy.portal.location.manager;
 import android.location.Location;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.SystemEvent;
@@ -83,6 +84,7 @@ public class LocationManager
             @Override
             public void onSuccess(final LocationQuerySchedule response)
             {
+                Crashlytics.log("Received location query schedule from server: " + response.toString());
                 mBus.post(new LocationEvent.ReceiveLocationScheduleSuccess(response));
             }
 
