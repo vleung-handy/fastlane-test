@@ -21,17 +21,20 @@ public class BundleKeys
     public static final String PROVIDER_PROFILE = "provider_profile";
     public static final String BOOKINGS = "bookings";
     public static final String MAP_CENTER = "map_center";
+    public static final String MESSAGE = "message";
 
     // UrbanAirship
     public static final String HANDY_PUSH_TYPE = "type_id";
     public static final String HANDY_PUSH_UUID = "handy_push_uuid";
     public static final String CHECK_IN_ACTION_ID = "check_in";
 
-    //Webview
+    // Webview
     public static final String TARGET_URL = "target_url";
 
+    // Deeplinks
     public static final String DEEPLINK = "deep_link";
     public static final String DEEPLINK_DATA = "deep_link_data";
+    public static final String DEEPLINK_HANDLED = "deeplink_handled";
 
     // Dashboard
     public static final String PROVIDER_EVALUATION = "provider_evaluation";

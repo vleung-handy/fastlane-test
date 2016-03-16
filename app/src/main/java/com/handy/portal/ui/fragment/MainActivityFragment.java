@@ -92,6 +92,22 @@ public class MainActivityFragment extends InjectedFragment
     private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
 
     private boolean mFirstTimeConfigReturned = true; //the first time we get config response back we may need to navigate away
+    private Bundle mDeeplinkData;
+    private boolean mDeeplinkHandled;
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setDeeplinkData(savedInstanceState);
+    }
+
+    @Override
+    public void onViewStateRestored(final Bundle savedInstanceState)
+    {
+        super.onViewStateRestored(savedInstanceState);
+        setDeeplinkData(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,23 +157,40 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+    private void setDeeplinkData(final Bundle savedInstanceState)
+    {
+        if (savedInstanceState == null || !(mDeeplinkHandled = savedInstanceState.getBoolean(BundleKeys.DEEPLINK_HANDLED)))
+        {
+            mDeeplinkData = getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
+        }
+    }
+
     private void handleDeeplink()
     {
-        final Bundle deeplinkData =
-                getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
-        if (deeplinkData != null)
+        if (mDeeplinkData != null && !mDeeplinkHandled)
         {
-            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            final String deeplink = mDeeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
                 final MainViewTab targetTab = DeeplinkMapper.getTabForDeeplink(deeplink);
                 if (targetTab != null)
                 {
-                    switchToTab(targetTab, deeplinkData, false);
+                    switchToTab(targetTab, mDeeplinkData, false);
                 }
             }
-            ((BaseActivity) getActivity()).setDeeplinkHandled();
         }
+        mDeeplinkHandled = true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        if (outState == null)
+        {
+            outState = new Bundle();
+        }
+        outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
