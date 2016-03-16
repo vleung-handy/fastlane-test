@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
@@ -40,6 +41,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     ViewGroup mNoAvailableBookingsLayout;
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
+    private String mMessage;
 
     @Override
     protected MainViewTab getTab()
@@ -59,6 +61,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             {
                 mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
+
+            mMessage = getArguments().getString(BundleKeys.MESSAGE);
 
             setLateDispatchOptInToggleListener();
         }
@@ -152,6 +156,16 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory
                 .createAvailableJobDateClickedLog(dateOfBookings, bookingsForDay.size())));
+
+        if (mMessage != null)
+        {
+            Snackbar.make(
+                    mBookingsContent,
+                    mMessage,
+                    Snackbar.LENGTH_LONG
+            ).show();
+            mMessage = null; // this is a one-off
+        }
     }
 
     @Subscribe

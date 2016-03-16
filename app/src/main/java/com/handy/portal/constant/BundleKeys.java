@@ -21,6 +21,7 @@ public class BundleKeys
     public static final String PROVIDER_PROFILE = "provider_profile";
     public static final String BOOKINGS = "bookings";
     public static final String MAP_CENTER = "map_center";
+    public static final String MESSAGE = "message";
 
     // UrbanAirship
     public static final String HANDY_PUSH_TYPE = "type_id";
