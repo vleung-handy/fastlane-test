@@ -779,12 +779,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestRemoveJob(@NonNull Booking booking)
     {
-        String warning = null;
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
-        if (removeAction != null)
-        {
-            warning = removeAction.getWarningText();
-        }
+        String warning = (removeAction != null) ? removeAction.getWarningText() : null;
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
                 booking, warning, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -935,7 +931,15 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mAssociatedBooking = event.booking;
-        updateDisplayForBooking(event.booking);
+        final BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
+        if (bookingStatus == BookingStatus.UNAVAILABLE)
+        {
+            returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB, getString(R.string.job_no_longer_available));
+        }
+        else
+        {
+            updateDisplayForBooking(event.booking);
+        }
     }
 
     @Subscribe
@@ -1202,10 +1206,19 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
     {
+        returnToTab(targetTab, epochTime, transitionStyle, null);
+    }
+
+    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle, String message)
+    {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
+        if (message != null)
+        {
+            arguments.putString(BundleKeys.MESSAGE, message);
+        }
         bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
 

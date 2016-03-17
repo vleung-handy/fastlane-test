@@ -79,11 +79,6 @@ public abstract class BaseActivity extends AppCompatActivity
         super.startActivity(intent);
     }
 
-    public void setDeeplinkHandled()
-    {
-        getIntent().removeExtra(BundleKeys.DEEPLINK_DATA);
-    }
-
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
