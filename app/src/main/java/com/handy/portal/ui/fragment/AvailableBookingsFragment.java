@@ -16,6 +16,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.element.AvailableBookingElementView;
@@ -170,6 +171,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                     mMessage,
                     Snackbar.LENGTH_LONG
             ).show();
+            final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
+            bus.post(new LogEvent.AddLogEvent(
+                    new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
             mMessage = null; // this is a one-off
         }
     }
