@@ -22,6 +22,7 @@ public class BundleKeys
     public static final String BOOKINGS = "bookings";
     public static final String MAP_CENTER = "map_center";
     public static final String MESSAGE = "message";
+    public static final String EXTRAS = "extras";
 
     // UrbanAirship
     public static final String HANDY_PUSH_TYPE = "type_id";
