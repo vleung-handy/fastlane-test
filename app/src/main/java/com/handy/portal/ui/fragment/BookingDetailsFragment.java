@@ -779,12 +779,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestRemoveJob(@NonNull Booking booking)
     {
-        String warning = null;
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
-        if (removeAction != null)
-        {
-            warning = removeAction.getWarningText();
-        }
+        String warning = (removeAction != null) ? removeAction.getWarningText() : null;
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
                 booking, warning, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
