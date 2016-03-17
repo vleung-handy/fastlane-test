@@ -70,6 +70,27 @@ public class AvailableJobsLog extends EventLog
         }
     }
 
+    public static class UnavailableJobNoticeShown extends AvailableJobsLog
+    {
+        private static final String EVENT_TYPE = "unavailable_job_notice_shown";
+
+        @SerializedName("extras")
+        private Map<String, Object> mExtras;
+
+        public UnavailableJobNoticeShown(@Nullable final Bundle extras)
+        {
+            super(EVENT_TYPE);
+            if (extras != null)
+            {
+                mExtras = new HashMap<>(extras.size());
+                for (final String key : extras.keySet())
+                {
+                    mExtras.put(key, extras.get(key));
+                }
+            }
+        }
+    }
+
     public static class ClaimSuccess extends AvailableJobsLog
     {
         private static final String EVENT_TYPE = "claim_success";
