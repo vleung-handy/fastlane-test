@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -37,6 +38,9 @@ public final class NotificationsFragment extends ActionBarFragment
 
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
+
+    @Bind(R.id.no_notifications_view)
+    LinearLayout mNoNotificationsView;
 
     private View mFragmentView;
     private boolean isRequestingNotifications = false;
@@ -117,17 +121,28 @@ public final class NotificationsFragment extends ActionBarFragment
         cleanUpView();
         markUnreadNotificationsAsRead(notificationMessages);
 
-        if (mNotificationsListView.shouldRequestMoreNotifications())
+        if (isFirstRequest && mNotificationsListView.isEmpty())
         {
-            mNotificationsListView.setFooterVisible(false);
-            if (isFirstRequest)
-            {
-                setNotificationsListViewOnScrollListener();
-            }
+            mNoNotificationsView.setVisibility(View.VISIBLE);
+            mRefreshLayout.setVisibility(View.GONE);
         }
         else
         {
-            mNotificationsListView.setFooterText(R.string.no_more_notifications);
+            mNoNotificationsView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+
+            if (mNotificationsListView.shouldRequestMoreNotifications())
+            {
+                mNotificationsListView.setFooterVisible(false);
+                if (isFirstRequest)
+                {
+                    setNotificationsListViewOnScrollListener();
+                }
+            }
+            else
+            {
+                mNotificationsListView.setFooterText(R.string.no_more_notifications);
+            }
         }
     }
 

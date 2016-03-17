@@ -378,6 +378,7 @@
     <string name="load_notifications">Loading more notifications…</string>
     <string name="no_more_notifications">You have no more notifications to load.</string>
     <string name="error_loading_notifications">Oops! There was an error loading your notifications.</string>
+    <string name="no_notifications">No new notifications! Check back later.</string>
 
     <!-- Late dispatch available job notification toggle -->
     <string name="notify_available_jobs">Notify me of open jobs today</string>
@@ -414,5 +415,4 @@
 
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
     <string name="job_no_longer_available">That job is no longer available.</string>
-
 </resources>
