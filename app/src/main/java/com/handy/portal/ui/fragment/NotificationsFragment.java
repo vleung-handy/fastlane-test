@@ -86,6 +86,8 @@ public final class NotificationsFragment extends ActionBarFragment
         {
             setLoadingOverlayVisible(false);
         }
+
+        bus.post(new NotificationEvent.ReceiveUnreadCountSuccess(0));
     }
 
     @Override
