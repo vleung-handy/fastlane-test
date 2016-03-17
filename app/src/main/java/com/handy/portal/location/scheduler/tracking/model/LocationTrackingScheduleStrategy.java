@@ -1,10 +1,10 @@
-package com.handy.portal.location.scheduler.tracker.model;
+package com.handy.portal.location.scheduler.tracking.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.location.scheduler.model.LocationStrategy;
+import com.handy.portal.location.scheduler.model.ScheduleStrategy;
 
 import java.util.Date;
 
@@ -16,20 +16,20 @@ import java.util.Date;
  * <p/>
  * the location service uses this to determine when and at what accuracy we should get location updates
  */
-public class LocationTrackerStrategy extends LocationStrategy implements Parcelable
+public class LocationTrackingScheduleStrategy extends ScheduleStrategy implements Parcelable
 {
-    public static final Creator<LocationTrackerStrategy> CREATOR = new Creator<LocationTrackerStrategy>()
+    public static final Creator<LocationTrackingScheduleStrategy> CREATOR = new Creator<LocationTrackingScheduleStrategy>()
     {
         @Override
-        public LocationTrackerStrategy createFromParcel(Parcel in)
+        public LocationTrackingScheduleStrategy createFromParcel(Parcel in)
         {
-            return new LocationTrackerStrategy(in);
+            return new LocationTrackingScheduleStrategy(in);
         }
 
         @Override
-        public LocationTrackerStrategy[] newArray(int size)
+        public LocationTrackingScheduleStrategy[] newArray(int size)
         {
-            return new LocationTrackerStrategy[size];
+            return new LocationTrackingScheduleStrategy[size];
         }
     };
     @SerializedName("start_date")
@@ -45,28 +45,12 @@ public class LocationTrackerStrategy extends LocationStrategy implements Parcela
     @SerializedName("distance_filter")
     int mDistanceFilterMeters;
 
-    public LocationTrackerStrategy()
-    {
-    }
-
-    public LocationTrackerStrategy setDistanceFilterMeters(final int distanceFilterMeters)
-    {
-        mDistanceFilterMeters = distanceFilterMeters;
-        return this;
-    }
-
     public int getDistanceFilterMeters()
     {
         return mDistanceFilterMeters;
     }
 
-    public LocationTrackerStrategy setServerPollingIntervalSeconds(final int serverPollingIntervalSeconds)
-    {
-        mServerPollingIntervalSeconds = serverPollingIntervalSeconds;
-        return this;
-    }
-
-    protected LocationTrackerStrategy(Parcel in)
+    protected LocationTrackingScheduleStrategy(Parcel in)
     {
         mStartDate = new Date(in.readLong());
         mEndDate = new Date(in.readLong());
@@ -86,21 +70,9 @@ public class LocationTrackerStrategy extends LocationStrategy implements Parcela
         return mAccuracy;
     }
 
-    public LocationTrackerStrategy setAccuracy(final int accuracy)
-    {
-        mAccuracy = accuracy;
-        return this;
-    }
-
     public int getLocationPollingIntervalSeconds()
     {
         return mLocationPollingIntervalSeconds;
-    }
-
-    public LocationTrackerStrategy setLocationPollingIntervalSeconds(final int locationPollingIntervalSeconds)
-    {
-        mLocationPollingIntervalSeconds = locationPollingIntervalSeconds;
-        return this;
     }
 
     public Date getEndDate()
@@ -108,21 +80,9 @@ public class LocationTrackerStrategy extends LocationStrategy implements Parcela
         return mEndDate;
     }
 
-    public LocationTrackerStrategy setEndDate(final Date endDate)
-    {
-        mEndDate = endDate;
-        return this;
-    }
-
     public Date getStartDate()
     {
         return mStartDate;
-    }
-
-    public LocationTrackerStrategy setStartDate(final Date startDate)
-    {
-        mStartDate = startDate;
-        return this;
     }
 
     @Override

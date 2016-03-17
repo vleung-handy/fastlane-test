@@ -14,8 +14,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
-import com.handy.portal.location.scheduler.handler.LocationStrategiesHandler;
-import com.handy.portal.location.scheduler.model.LocationStrategies;
+import com.handy.portal.location.scheduler.handler.LocationScheduleStrategiesHandler;
+import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -39,7 +39,7 @@ public class LocationScheduleService extends Service
     Bus mBus;
 
     GoogleApiClient mGoogleApiClient;
-    LocationStrategiesHandler mLocationStrategiesHandler;
+    LocationScheduleStrategiesHandler mLocationScheduleStrategiesHandler;
     Thread.UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;
 
     @Override
@@ -88,9 +88,9 @@ public class LocationScheduleService extends Service
             //this happens when this isn't registered to the bus. one case is when stopService() is called twice
         }
 
-        if (mLocationStrategiesHandler != null)
+        if (mLocationScheduleStrategiesHandler != null)
         {
-            mLocationStrategiesHandler.destroy();
+            mLocationScheduleStrategiesHandler.destroy();
         }
 
         if (mGoogleApiClient != null)
@@ -113,10 +113,10 @@ public class LocationScheduleService extends Service
     public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationScheduleSuccess event)
     {
         Log.d(getClass().getName(), "got new location schedule event");
-        LocationStrategies locationStrategies = event.getLocationStrategies();
-        if(!locationStrategies.isEmpty())
+        LocationScheduleStrategies locationScheduleStrategies = event.getLocationScheduleStrategies();
+        if(!locationScheduleStrategies.isEmpty())
         {
-            handleNewLocationStrategies(locationStrategies);
+            handleNewLocationStrategies(locationScheduleStrategies);
         }
         //TODO: optimize if the schedule did NOT change!!!!!
     }
@@ -129,27 +129,27 @@ public class LocationScheduleService extends Service
     @Subscribe
     public void onNetworkReconnected(SystemEvent.NetworkReconnected event)
     {
-        if(mLocationStrategiesHandler != null)
+        if(mLocationScheduleStrategiesHandler != null)
         {
-            mLocationStrategiesHandler.onNetworkReconnected();
+            mLocationScheduleStrategiesHandler.onNetworkReconnected();
         }
     }
     /**
      * got a new schedule, create a handler for it
      *
-     * @param locationStrategies
+     * @param locationScheduleStrategies
      */
-    private void handleNewLocationStrategies(@NonNull LocationStrategies locationStrategies)
+    private void handleNewLocationStrategies(@NonNull LocationScheduleStrategies locationScheduleStrategies)
     {
-        Log.d(getClass().getName(), "handling new schedule: " + locationStrategies.toString());
-        if (mLocationStrategiesHandler != null)
+        Log.d(getClass().getName(), "handling new schedule: " + locationScheduleStrategies.toString());
+        if (mLocationScheduleStrategiesHandler != null)
         {
-            mLocationStrategiesHandler.destroy(); //TODO: don't want to do this if the schedule didn't change!
+            mLocationScheduleStrategiesHandler.destroy(); //TODO: don't want to do this if the schedule didn't change!
         }
         boolean locationTrackingEnabled = true; //TODO not using config params yet
         boolean bookingGeofencesEnabled = true;
-        mLocationStrategiesHandler = new LocationStrategiesHandler(
-                locationStrategies,
+        mLocationScheduleStrategiesHandler = new LocationScheduleStrategiesHandler(
+                locationScheduleStrategies,
                 locationTrackingEnabled,
                 bookingGeofencesEnabled,
                 mGoogleApiClient,
@@ -161,10 +161,10 @@ public class LocationScheduleService extends Service
 
     private void startLocationQueryingIfReady()
     {
-        if (isGoogleApiClientConnected() && mLocationStrategiesHandler != null)
+        if (isGoogleApiClientConnected() && mLocationScheduleStrategiesHandler != null)
         {
             //should be safe if called twice because handled strategies are removed
-            mLocationStrategiesHandler.start();
+            mLocationScheduleStrategiesHandler.start();
         }
     }
 

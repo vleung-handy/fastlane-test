@@ -5,7 +5,7 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.location.scheduler.model.LocationStrategies;
+import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
@@ -69,7 +69,7 @@ public class DataManager
         mStripeService = stripeService;
     }
 
-    public void getLocationStrategies(String providerId, Callback<LocationStrategies> cb)
+    public void getLocationStrategies(String providerId, Callback<LocationScheduleStrategies> cb)
     {
         mService.getLocationStrategies(providerId, new GetLocationScheduleRetrofitCallback(cb));
     }

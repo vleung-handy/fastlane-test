@@ -3,11 +3,11 @@ package com.handy.portal.location.scheduler.geofences.model;
 import android.os.Parcel;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.location.scheduler.model.LocationStrategy;
+import com.handy.portal.location.scheduler.model.ScheduleStrategy;
 
 import java.util.Date;
 
-public class BookingGeofenceStrategy extends LocationStrategy
+public class BookingGeofenceStrategy extends ScheduleStrategy
 {
     @SerializedName("booking_id")
     String mBookingId;

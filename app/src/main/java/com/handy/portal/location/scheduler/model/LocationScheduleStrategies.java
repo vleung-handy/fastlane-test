@@ -5,20 +5,17 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.location.scheduler.geofences.model.BookingGeofenceStrategy;
-import com.handy.portal.location.scheduler.tracker.model.LocationTrackerStrategy;
+import com.handy.portal.location.scheduler.tracking.model.LocationTrackingScheduleStrategy;
 
 import java.util.LinkedList;
 
 /**
- * model received from the server. contains a list of location strategies
+ * model received from the server. contains location schedules that should be sorted by start date
  */
-public class LocationStrategies implements Parcelable
+public class LocationScheduleStrategies implements Parcelable
 {
-    /**
-     * this should be already sorted by start date
-     */
     @SerializedName("location_schedules")
-    private LinkedList<LocationTrackerStrategy> mLocationQueryStrategies;
+    private LinkedList<LocationTrackingScheduleStrategy> mLocationTrackingStrategies;
 
     @SerializedName("booking_geofences")
     private LinkedList<BookingGeofenceStrategy> mBookingGeofenceStrategies;
@@ -26,10 +23,10 @@ public class LocationStrategies implements Parcelable
     @SerializedName("success")
     private boolean mSuccess;
 
-    protected LocationStrategies(Parcel in)
+    protected LocationScheduleStrategies(Parcel in)
     {
-        mLocationQueryStrategies = new LinkedList<>();
-        in.readTypedList(mLocationQueryStrategies, LocationTrackerStrategy.CREATOR);
+        mLocationTrackingStrategies = new LinkedList<>();
+        in.readTypedList(mLocationTrackingStrategies, LocationTrackingScheduleStrategy.CREATOR);
 
         mBookingGeofenceStrategies = new LinkedList<>();
         in.readTypedList(mBookingGeofenceStrategies, BookingGeofenceStrategy.CREATOR);
@@ -41,9 +38,9 @@ public class LocationStrategies implements Parcelable
         return mBookingGeofenceStrategies;
     }
 
-    public LinkedList<LocationTrackerStrategy> getLocationQueryStrategies()
+    public LinkedList<LocationTrackingScheduleStrategy> getLocationTrackingStrategies()
     {
-        return mLocationQueryStrategies;
+        return mLocationTrackingStrategies;
     }
 
     @Override
@@ -55,22 +52,22 @@ public class LocationStrategies implements Parcelable
     @Override
     public void writeToParcel(final Parcel dest, final int flags)
     {
-        dest.writeTypedList(mLocationQueryStrategies);
+        dest.writeTypedList(mLocationTrackingStrategies);
         dest.writeTypedList(mBookingGeofenceStrategies);
     }
 
-    public static final Creator<LocationStrategies> CREATOR = new Creator<LocationStrategies>()
+    public static final Creator<LocationScheduleStrategies> CREATOR = new Creator<LocationScheduleStrategies>()
     {
         @Override
-        public LocationStrategies createFromParcel(Parcel in)
+        public LocationScheduleStrategies createFromParcel(Parcel in)
         {
-            return new LocationStrategies(in);
+            return new LocationScheduleStrategies(in);
         }
 
         @Override
-        public LocationStrategies[] newArray(int size)
+        public LocationScheduleStrategies[] newArray(int size)
         {
-            return new LocationStrategies[size];
+            return new LocationScheduleStrategies[size];
         }
     };
 
@@ -81,7 +78,7 @@ public class LocationStrategies implements Parcelable
 
     public boolean isEmpty()
     {
-        return (mLocationQueryStrategies == null || mLocationQueryStrategies.isEmpty())
+        return (mLocationTrackingStrategies == null || mLocationTrackingStrategies.isEmpty())
                 && (mBookingGeofenceStrategies == null || mBookingGeofenceStrategies.isEmpty());
     }
 
@@ -94,7 +91,7 @@ public class LocationStrategies implements Parcelable
     public String toString()
     {
         String result = "Location tracker schedules:\n";
-        for (LocationTrackerStrategy locationTrackerStrategy : mLocationQueryStrategies)
+        for (LocationTrackingScheduleStrategy locationTrackerStrategy : mLocationTrackingStrategies)
         {
             result = result + locationTrackerStrategy.toString() + "\n";
         }

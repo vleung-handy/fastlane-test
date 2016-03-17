@@ -6,17 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.handy.portal.location.LocationEvent;
-import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.location.scheduler.model.LocationStrategy;
+import com.handy.portal.location.scheduler.model.ScheduleStrategy;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -29,30 +25,28 @@ import java.util.Set;
 import javax.inject.Inject;
 
 /**
- * TODO: at testing stage. totally needs refactoring
- * <p/>
- * does whatever needs to be done given a location query schedule
+ *
+ * does whatever needs to be done given a schedule that contains strategies, sorted by start date
  */
-public abstract class LocationScheduleHandler<T extends LocationStrategyHandler, V extends LocationStrategy> extends BroadcastReceiver
+public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandler, ScheduleStrategyType extends ScheduleStrategy>
+        extends BroadcastReceiver
+        implements StrategyHandler.StrategyCallbacks<StrategyHandlerType>
 {
     @Inject
-    Bus mBus;
+    protected Bus mBus;
 
-    protected LinkedList<V> mSortedLocationStrategies;
-    protected GoogleApiClient mGoogleApiClient;
-    AlarmManager mAlarmManager;
+    protected LinkedList<ScheduleStrategyType> mSortedStrategies;
+    private AlarmManager mAlarmManager;
     protected Context mContext;
 
-    Set<T> mActiveLocationRequestStrategies = new HashSet<>();
+    private Set<StrategyHandlerType> mActiveStrategies = new HashSet<>();
 
-    public LocationScheduleHandler(@NonNull LinkedList<V> sortedLocationStrategies,
-                                   @NonNull GoogleApiClient googleApiClient,
-                                   @NonNull Context context)
+    public ScheduleHandler(@NonNull LinkedList<ScheduleStrategyType> sortedByDateAscendingStrategies,
+                           @NonNull Context context)
     {
         Utils.inject(context, this);
 
-        mSortedLocationStrategies = sortedLocationStrategies;
-        mGoogleApiClient = googleApiClient;
+        mSortedStrategies = sortedByDateAscendingStrategies;
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         mContext = context;
 
@@ -60,15 +54,22 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
         mContext.registerReceiver(this, getAlarmIntentFilter());
     }
 
-    protected abstract int getAlarmRequestCode();
-    protected abstract String getAlarmBroadcastId();
+    /**
+     * the request code for the wake-up alarm
+     * @return
+     */
+    protected abstract int getWakeupAlarmRequestCode();
+    protected abstract String getWakeupAlarmBroadcastAction();
     protected IntentFilter getAlarmIntentFilter()
     {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getAlarmBroadcastId());
+        intentFilter.addAction(getWakeupAlarmBroadcastAction());
         return intentFilter;
     }
 
+    /**
+     * starts handling this schedule
+     */
     public final void start()
     {
         try
@@ -82,7 +83,6 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
         }
     }
 
-    protected abstract void stopStrategy(T t);
     /**
      * assume schedule sorted by date asc
      * <p/>
@@ -91,13 +91,13 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
     protected final void scanSchedule()
     {
         //look for any strategies within scope and starts them if not already started
-        ListIterator<V> locationQueryStrategyListIterator
-                = mSortedLocationStrategies.listIterator();
-        while (locationQueryStrategyListIterator.hasNext())
+        ListIterator<ScheduleStrategyType> strategyListIterator
+                = mSortedStrategies.listIterator();
+        while (strategyListIterator.hasNext())
         {
-            V strategy = locationQueryStrategyListIterator.next();
+            ScheduleStrategyType strategy = strategyListIterator.next();
 
-            locationQueryStrategyListIterator.remove(); //strategy is handled, don't need to handle again
+            strategyListIterator.remove(); //strategy is handled, don't need to handle again
 
             //TODO: use a util instead
             long currentTimeMillis = System.currentTimeMillis();
@@ -119,23 +119,22 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
         //TODO: when the schedule is completely expired, we want to request a schedule for the next N days in case the user never opens the app
     }
 
-    public final void startStrategy(@NonNull final V v) throws SecurityException, IllegalStateException
+    public final void startStrategy(@NonNull final ScheduleStrategyType scheduleStrategyType) throws SecurityException, IllegalStateException
     {
         Log.d(getClass().getName(), "starting strategy...");
-        T t = createStrategyHandler(v);
-        mActiveLocationRequestStrategies.add(t); //only needed for removing updates on destroy
-
-        t.requestUpdates(mGoogleApiClient);
+        StrategyHandlerType strategyHandlerType = createStrategyHandler(scheduleStrategyType);
+        mActiveStrategies.add(strategyHandlerType); //only needed for removing updates on destroy
+        strategyHandlerType.startStrategy();
     }
 
-    public abstract T createStrategyHandler(V v);
-    public final void stopAllActiveStrategies()
+    public abstract StrategyHandlerType createStrategyHandler(ScheduleStrategyType scheduleStrategyType);
+    public void stopAllActiveStrategies()
     {
-        for (T t : mActiveLocationRequestStrategies)
+        for (StrategyHandlerType strategyHandlerType : mActiveStrategies)
         {
-            stopStrategy(t);
+            strategyHandlerType.stopStrategy();
         }
-        mActiveLocationRequestStrategies.clear();
+        mActiveStrategies.clear();
     }
     /**
      * TODO: need to consolidate with below function
@@ -143,13 +142,13 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
      * called when this handler is destroyed
      * sends out all queued location updates to the server
      */
-    protected final void sendAllQueuedLocationUpdates()
+    protected final void sendAllQueuedStrategyUpdates()
     {
         Log.d(getClass().getName(), "sending out all queued location updates");
-        Iterator<T> locationStrategyHandlerIterator = mActiveLocationRequestStrategies.iterator();
+        Iterator<StrategyHandlerType> locationStrategyHandlerIterator = mActiveStrategies.iterator();
         while (locationStrategyHandlerIterator.hasNext())
         {
-            LocationStrategyHandler locationScheduleStrategyHandler = locationStrategyHandlerIterator.next();
+            StrategyHandler locationScheduleStrategyHandler = locationStrategyHandlerIterator.next();
             if (locationScheduleStrategyHandler.isStrategyExpired())
             {
                 //remove, just in case it wasn't properly removed before
@@ -157,7 +156,7 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
             }
             else
             {
-                locationScheduleStrategyHandler.buildBatchUpdateAndNotifyReady();
+                locationScheduleStrategyHandler.buildStrategyBatchUpdatesAndNotifyReady();
             }
         }
     }
@@ -170,12 +169,12 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
         try
         {
             //cancels scheduled alarms
-            Intent intent = new Intent(getAlarmBroadcastId());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, getAlarmRequestCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            Intent intent = new Intent(getWakeupAlarmBroadcastAction());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, getWakeupAlarmRequestCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
             mAlarmManager.cancel(pendingIntent);
 
             //sends all location updates that are supposed to be sent to server
-            sendAllQueuedLocationUpdates();
+            sendAllQueuedStrategyUpdates();
 
             //stops all location updates
             stopAllActiveStrategies();
@@ -193,11 +192,11 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
     }
 
     /**
-     * TODO: clean
      *
+     * Schedules an alarm to wake this broadcast receiver up with the strategy, for the strategy start date
      * @param strategy
      */
-    private final void scheduleAlarm(@NonNull V strategy)
+    private final void scheduleAlarm(@NonNull ScheduleStrategyType strategy)
     {
         /**
          * passing byte array to avoid exception
@@ -211,23 +210,34 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
         Bundle args = new Bundle();
         args.putByteArray(getStrategyBundleExtraKey(), strategyParcel.marshall());
 
-        Intent intent = new Intent(getAlarmBroadcastId());
-        intent.setAction(getAlarmBroadcastId()); //probably redundant, test this
+        Intent intent = new Intent(getWakeupAlarmBroadcastAction());
+        intent.setAction(getWakeupAlarmBroadcastAction()); //probably redundant, test this
         intent.setPackage(mContext.getPackageName());
         intent.putExtras(args);
-        PendingIntent operation = PendingIntent.getBroadcast(mContext, getAlarmRequestCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent operation = PendingIntent.getBroadcast(mContext, getWakeupAlarmRequestCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         mAlarmManager.set(AlarmManager.RTC_WAKEUP, strategy.getStartDate().getTime(), operation);
     }
 
+    /**
+     * the bundle key used to marshall and unmarshall the strategy parcel
+     * which is used to pass the strategy to the alarm manager
+     * @return
+     */
     protected abstract String getStrategyBundleExtraKey();
-    public final void onStrategyAlarmTriggered(V v)
+
+    /**
+     * called when the wake-up alarm for the given strategy is triggered
+     * will start the strategy and then scan the schedule
+     * @param scheduleStrategyType
+     */
+    public final void onStrategyAlarmTriggered(ScheduleStrategyType scheduleStrategyType)
     {
-        if (v == null) { return; }
-        Log.d(getClass().getName(), "Got location strategy " + v.toString());
+        if (scheduleStrategyType == null) { return; }
+        Log.d(getClass().getName(), "Got strategy " + scheduleStrategyType.toString());
         try
         {
-            startStrategy(v);
+            startStrategy(scheduleStrategyType);
             scanSchedule();
         }
         catch (Exception e)
@@ -237,7 +247,6 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
             Crashlytics.logException(e);
         }
     }
-
 
     /**
      *
@@ -253,13 +262,42 @@ public abstract class LocationScheduleHandler<T extends LocationStrategyHandler,
         //maybe do something
     }
 
-    public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate)
+    public void onStrategyExpired(StrategyHandlerType strategyHandler)
     {
-        mBus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
+        try
+        {
+            Log.d(getClass().getName(), "strategy expired, posting remaining update objects in queue...");
+            //strategy expired, we want to post any remaining update objects in the queue
+            strategyHandler.buildStrategyBatchUpdatesAndNotifyReady();
+            mActiveStrategies.remove(strategyHandler);
+        }
+        catch (Exception e)
+        {
+            //not trusting post delayed
+            e.printStackTrace();
+            Crashlytics.logException(e);
+        }
     }
 
-    public void onLocationUpdate(final Location location)
+    /**
+     * might want to call this when the network is reconnected
+     */
+    protected void restartActiveStrategies()
     {
-        mBus.post(new LocationEvent.LocationUpdated(location));
+        Log.d(getClass().getName(), "restarting active strategies");
+        Iterator<StrategyHandlerType> strategyHandlerIterator = mActiveStrategies.iterator();
+        while (strategyHandlerIterator.hasNext())
+        {
+            StrategyHandlerType locationLocationTrackingStrategyHandler = strategyHandlerIterator.next();
+            if (locationLocationTrackingStrategyHandler.isStrategyExpired())
+            {
+                //remove, just in case it wasn't properly removed before
+                strategyHandlerIterator.remove();
+            }
+            else
+            {
+                locationLocationTrackingStrategyHandler.startStrategy();
+            }
+        }
     }
 }

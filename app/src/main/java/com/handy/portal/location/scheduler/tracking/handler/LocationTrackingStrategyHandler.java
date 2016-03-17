@@ -1,4 +1,4 @@
-package com.handy.portal.location.scheduler.tracker.handler;
+package com.handy.portal.location.scheduler.tracking.handler;
 
 import android.content.Context;
 import android.location.Location;
@@ -13,8 +13,8 @@ import com.google.android.gms.location.LocationServices;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationUpdate;
-import com.handy.portal.location.scheduler.handler.LocationStrategyHandler;
-import com.handy.portal.location.scheduler.tracker.model.LocationTrackerStrategy;
+import com.handy.portal.location.scheduler.handler.StrategyHandler;
+import com.handy.portal.location.scheduler.tracking.model.LocationTrackingScheduleStrategy;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.SystemUtils;
 import com.handy.portal.util.Utils;
@@ -35,7 +35,7 @@ import java.util.Queue;
  * <p/>
  * TODO needs major cleanup
  */
-public class LocationTrackerStrategyHandler extends LocationStrategyHandler //TODO: rename this so it is more distinct from the location query strategy model
+public class LocationTrackingStrategyHandler extends StrategyHandler
 {
     /**
      * any strategy that wants accuracy equal to or below this amount
@@ -47,7 +47,7 @@ public class LocationTrackerStrategyHandler extends LocationStrategyHandler //TO
 
     Queue<LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
     long mTimestampLastUpdatePostedMs;
-    LocationTrackerStrategy mLocationTrackerStrategy;
+    LocationTrackingScheduleStrategy mLocationTrackerStrategy;
     LocationStrategyCallbacks mLocationStrategyCallbacks;
     Context mContext;
 
@@ -63,14 +63,13 @@ public class LocationTrackerStrategyHandler extends LocationStrategyHandler //TO
     }
 
 
-    public LocationTrackerStrategyHandler(@NonNull LocationTrackerStrategy locationTrackerStrategy,
-                                          @NonNull final LocationStrategyCallbacks locationStrategyCallbacks,
-                                          @NonNull Handler handler,
-                                          @NonNull Context context)
+    public LocationTrackingStrategyHandler(@NonNull LocationTrackingScheduleStrategy locationTrackerStrategy,
+                                           @NonNull final LocationStrategyCallbacks locationStrategyCallbacks,
+                                           @NonNull Handler handler,
+                                           @NonNull Context context)
     {
         mLocationTrackerStrategy = locationTrackerStrategy;
         mLocationStrategyCallbacks = locationStrategyCallbacks;
-
         mContext = context;
         mHandler = handler;
         mTimestampLastUpdatePostedMs = System.currentTimeMillis(); //don't want to post immediately
@@ -145,7 +144,7 @@ public class LocationTrackerStrategyHandler extends LocationStrategyHandler //TO
      * @throws SecurityException
      */
     @SuppressWarnings({"ResourceType", "MissingPermission"})
-    public void requestLocationUpdates(GoogleApiClient googleApiClient)
+    private void requestLocationUpdates(GoogleApiClient googleApiClient)
     {
         //this handles the permission system in Android 6.0
         if (!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
@@ -166,12 +165,12 @@ public class LocationTrackerStrategyHandler extends LocationStrategyHandler //TO
             @Override
             public void run()
             {
-                mLocationStrategyCallbacks.onLocationStrategyExpired(LocationTrackerStrategyHandler.this);
+                mLocationStrategyCallbacks.onStrategyExpired(LocationTrackingStrategyHandler.this);
             }
         }, expirationTimeMs);
     }
 
-    public LocationTrackerStrategy getLocationTrackerStrategy()
+    public LocationTrackingScheduleStrategy getLocationTrackerStrategy()
     {
         return mLocationTrackerStrategy;
     }
@@ -217,14 +216,14 @@ public class LocationTrackerStrategyHandler extends LocationStrategyHandler //TO
         mLocationUpdateQueue.add(locationUpdate);
         if (shouldPostUpdate())
         {
-            buildBatchUpdateAndNotifyReady();
+            buildStrategyBatchUpdatesAndNotifyReady();
         }
     }
 
     /**
      * called when it's time to post the location updates to the server
      */
-    public void buildBatchUpdateAndNotifyReady()
+    public void buildStrategyBatchUpdatesAndNotifyReady()
     {
         LocationBatchUpdate locationBatchUpdate = buildLocationBatchUpdateAndClearQueue();
         mTimestampLastUpdatePostedMs = System.currentTimeMillis();
@@ -235,14 +234,21 @@ public class LocationTrackerStrategyHandler extends LocationStrategyHandler //TO
     }
 
     @Override
-    protected void requestUpdates(final GoogleApiClient googleApiClient)
+    protected void startStrategy()
     {
-        requestLocationUpdates(googleApiClient);
+        requestLocationUpdates(mLocationStrategyCallbacks.getGoogleApiClient());
     }
 
-    public interface LocationStrategyCallbacks
+    @Override
+    protected void stopStrategy()
     {
-        void onLocationStrategyExpired(LocationTrackerStrategyHandler locationTrackerStrategyHandler);
+        GoogleApiClient googleApiClient = mLocationStrategyCallbacks.getGoogleApiClient();
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, getLocationListener());
+    }
+
+    public interface LocationStrategyCallbacks extends StrategyHandler.StrategyCallbacks<LocationTrackingStrategyHandler>
+    {
+        GoogleApiClient getGoogleApiClient();
 
         void onLocationBatchUpdateReady(LocationBatchUpdate locationBatchUpdate);
 
