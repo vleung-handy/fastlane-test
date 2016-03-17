@@ -53,7 +53,7 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1003 //0.10.3
+        versionCode 1004 //0.10.4
         versionName computeVersionName(versionCode)
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
