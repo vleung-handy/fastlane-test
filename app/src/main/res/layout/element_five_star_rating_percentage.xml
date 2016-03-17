@@ -16,7 +16,6 @@
         android:id="@+id/five_star_percentage_info_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
         >
 
         <TextView

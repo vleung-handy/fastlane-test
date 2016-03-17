@@ -133,4 +133,6 @@
     <!-- Rating Dialog  -->
     <dimen name="submit_button_height">64dp</dimen>
 
+    <!-- Badge text size -->
+    <dimen name="badge_text_size">10sp</dimen>
 </resources>

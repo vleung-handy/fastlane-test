@@ -243,6 +243,9 @@ public interface HandyRetrofitService
                                      @Field("notification_ids[]") ArrayList<Integer> notificationIds,
                                      HandyRetrofitCallback cb);
 
+    @GET(PROVIDERS_PATH + "{id}/notifications/unread_count")
+    void getNotificationsUnreadCount(@Path("id") String providerId, HandyRetrofitCallback cb);
+
     // Dashboard
     @GET(PROVIDERS_PATH + "{id}/evaluation")
     void getProviderEvaluation(@Path("id") String providerId, HandyRetrofitCallback cb);

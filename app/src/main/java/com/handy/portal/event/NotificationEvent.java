@@ -36,6 +36,7 @@ public abstract class NotificationEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveNotificationMessagesSuccess extends ReceiveSuccessEvent
     {
         private final NotificationMessage[] mNotificationMessages;
@@ -52,6 +53,7 @@ public abstract class NotificationEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveNotificationMessagesError extends ReceiveErrorEvent
     {
         public ReceiveNotificationMessagesError(DataManager.DataManagerError error)
@@ -59,6 +61,7 @@ public abstract class NotificationEvent extends HandyEvent
             this.error = error;
         }
     }
+
 
     public static class RequestMarkNotificationsAsRead extends RequestEvent
     {
@@ -75,6 +78,7 @@ public abstract class NotificationEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveMarkNotificationsAsReadSuccess extends ReceiveSuccessEvent
     {
         private final NotificationMessage[] mNotificationMessages;
@@ -90,11 +94,31 @@ public abstract class NotificationEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveMarkNotificationsAsReadError extends ReceiveErrorEvent
     {
         public ReceiveMarkNotificationsAsReadError(DataManager.DataManagerError error)
         {
             this.error = error;
+        }
+    }
+
+
+    public static class RequestUnreadCount extends RequestEvent {}
+
+
+    public static class ReceiveUnreadCountSuccess extends ReceiveSuccessEvent
+    {
+        private final int mUnreadCount;
+
+        public ReceiveUnreadCountSuccess(int unreadCount)
+        {
+            mUnreadCount = unreadCount;
+        }
+
+        public int getUnreadCount()
+        {
+            return mUnreadCount;
         }
     }
 }
