@@ -8,6 +8,13 @@
     <string name="none">None</string>
     <string name="time_interval_formatted">%1$s – %2$s</string>
 
+    <!-- Generic Single Word -->
+    <string name="success">Success</string>
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
+    <string name="undo">Undo</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
 
     <string name="app_update">Handy Pro Update</string>
 
@@ -59,8 +66,6 @@
     <string name="phone">Phone</string>
     <string name="password">Password</string>
     <string name="loading_more_payments">Loading more payments…</string>
-    <string name="profile">Profile</string>
-    <string name="my_profile">My Profile</string>
     <string name="my_performance">My Performance</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="update">Update</string>
@@ -81,8 +86,6 @@
     <string name="description">Description</string>
     <string name="promo_code_opt">Promo Code (optional)</string>
     <string name="promo_code">Promo Code</string>
-    <string name="set">Set</string>
-    <string name="cancel">Cancel</string>
     <string name="i_still_need_help">I Still Need Help</string>
     <string name="contact_us">Contact Us</string>
     <string name="send_message">Send Message</string>
@@ -163,7 +166,6 @@
     <string name="job_support">Job Support</string>
     <string name="job_remove_error">Error Removing Job"</string>
     <string name="job_remove_error_generic">This job could not be removed</string>
-    <string name="error">Error</string>
 
     <string name="notify_customer_of_lateness">Notify customer of your late arrival</string>
     <string name="notify_customer_of_earliness">Notify customer of your early arrival</string>
@@ -215,9 +217,6 @@
     <string name="customer_no_show_cancelled">Customer no show report cancelled</string>
     <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
-
-    <string name="undo">Undo</string>
-    <string name="ok">OK</string>
 
     <string name="unable_to_fetch_user">Unable to fetch your information. Please try again.</string>
     <string name="help_center_subject">Subject: </string>
@@ -281,7 +280,6 @@
 
     <!-- Profile -->
     <string name="share_with">Share with…</string>
-    <string name="joined_handy"><![CDATA[Joined Handy <b>%1$s</b>]]></string>
     <string name="earn_a_bonus">Earn a %1$s bonus</string>
     <string name="refer_a_pro">Refer a professional to Handy</string>
     <string name="jobs_and_rating"><![CDATA[<b>%1$d</b> jobs · <b>%2$s</b> overall rating]]></string>
@@ -357,10 +355,11 @@
     <string name="no_address_on_file">No Address On File</string>
 
     <!-- Rate Booking -->
-    <string name="rate_booking_title">How did this job go?</string>
-    <string name="rate_booking_confirm_checkout_button">Confirm Check Out</string>
+    <string name="rate_booking_submit_rating">Submit Rating</string>
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
+    <string name="you_earned_money_formatted">You made %1$s!</string>
+    <string name="how_was_cleaning_formatted">How was your experience cleaning %1$s’s home?</string>
 
     <!-- Nearby Booking -->
     <string name="start_timer_formatted">STARTS IN %1$s</string>

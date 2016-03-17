@@ -130,4 +130,7 @@
     <!-- Referrals -->
     <dimen name="default_button_height">48dp</dimen>
 
+    <!-- Rating Dialog  -->
+    <dimen name="submit_button_height">64dp</dimen>
+
 </resources>
