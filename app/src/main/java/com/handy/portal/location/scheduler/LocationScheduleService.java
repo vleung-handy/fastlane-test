@@ -16,6 +16,8 @@ import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.scheduler.handler.LocationScheduleStrategiesHandler;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -37,6 +39,8 @@ public class LocationScheduleService extends Service
 {
     @Inject
     Bus mBus;
+    @Inject
+    ConfigManager mConfigManager;
 
     GoogleApiClient mGoogleApiClient;
     LocationScheduleStrategiesHandler mLocationScheduleStrategiesHandler;
@@ -146,8 +150,9 @@ public class LocationScheduleService extends Service
         {
             mLocationScheduleStrategiesHandler.destroy(); //TODO: don't want to do this if the schedule didn't change!
         }
-        boolean locationTrackingEnabled = true; //TODO not using config params yet
-        boolean bookingGeofencesEnabled = true;
+        ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
+        boolean locationTrackingEnabled = configurationResponse == null || configurationResponse.isLocationScheduleServiceEnabled();
+        boolean bookingGeofencesEnabled = configurationResponse == null || configurationResponse.isBookingGeofenceServiceEnabled();
         mLocationScheduleStrategiesHandler = new LocationScheduleStrategiesHandler(
                 locationScheduleStrategies,
                 locationTrackingEnabled,

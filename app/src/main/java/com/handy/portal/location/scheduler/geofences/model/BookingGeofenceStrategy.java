@@ -22,8 +22,29 @@ public class BookingGeofenceStrategy extends ScheduleStrategy
     @SerializedName("radius")
     float mRadius;
 
+//    /**
+//     * TODO REMOVE THIS, FOR TEST PURPOSES ONLY
+//     * @param bookingId
+//     * @param startDate
+//     * @param endDate
+//     * @param latitude
+//     * @param longitude
+//     * @param radius
+//     */
+//    public BookingGeofenceStrategy(String bookingId, Date startDate, Date endDate, double latitude, double longitude, float radius)
+//    {
+//        mBookingId = bookingId;
+//        mStartDate = startDate;
+//        mEndDate = endDate;
+//        mLatitude = latitude;
+//        mLongitude = longitude;
+//        mRadius = radius;
+//    }
+
     protected BookingGeofenceStrategy(Parcel in)
     {
+        mStartDate = new Date(in.readLong());
+        mEndDate = new Date(in.readLong());
         mBookingId = in.readString();
         mLongitude = in.readDouble();
         mLatitude = in.readDouble();
@@ -84,6 +105,8 @@ public class BookingGeofenceStrategy extends ScheduleStrategy
     @Override
     public void writeToParcel(final Parcel dest, final int flags)
     {
+        dest.writeLong(getStartDate().getTime());
+        dest.writeLong(getEndDate().getTime());
         dest.writeString(mBookingId);
         dest.writeDouble(mLongitude);
         dest.writeDouble(mLatitude);

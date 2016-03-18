@@ -35,6 +35,42 @@ public class LocationScheduleStrategies implements Parcelable
 
     public LinkedList<BookingGeofenceStrategy> getBookingGeofenceStrategies()
     {
+//        //TODO: mocking this out for testing purposes only, remove later
+//        //testing with multiple geofences in one location
+//        LinkedList<BookingGeofenceStrategy> blah = new LinkedList<>();
+//
+//        Date startDate = new Date();
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(startDate);
+//        calendar.add(Calendar.HOUR, 4);
+//        Date endDate = calendar.getTime();
+//
+//        double latitude = 40.740402;
+//        double longitude = -73.993034;
+//        float radius = 1000;
+//
+//        BookingGeofenceStrategy bookingGeofenceStrategy1 = new BookingGeofenceStrategy(
+//                "test_booking_1",
+//                startDate,
+//                endDate,
+//                latitude,
+//                longitude,
+//                radius
+//        );
+//
+//        BookingGeofenceStrategy bookingGeofenceStrategy2 = new BookingGeofenceStrategy(
+//                "test_booking_2",
+//                startDate,
+//                endDate,
+//                latitude,
+//                longitude,
+//                radius
+//        );
+//
+//        blah.add(bookingGeofenceStrategy1);
+//        blah.add(bookingGeofenceStrategy2);
+//
+//        mBookingGeofenceStrategies = blah;
         return mBookingGeofenceStrategies;
     }
 

@@ -27,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * TODO CLEAN UP!!!
+ * Geofences are only activated (triggered by alarm) at their start dates, and expire at their end dates
  */
 public class BookingGeofenceScheduleHandler
         extends ScheduleHandler<BookingGeofenceStrategyHandler, BookingGeofenceStrategy>
@@ -111,6 +111,7 @@ public class BookingGeofenceScheduleHandler
                  *
                  * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
                  */
+                //TODO put into a util
                 if(args == null) return;
                 byte[] strategyByteArray = args.getByteArray(getStrategyBundleExtraKey());
                 if (strategyByteArray == null) { return; }
@@ -144,8 +145,8 @@ public class BookingGeofenceScheduleHandler
         if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER
                 || geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT)
         {
-            Log.i(getClass().getName(), "got geofence transition: " + geofenceTransition);
             String eventName = getLocationUpdateEventNameFromGeofenceTransition(geofenceTransition);
+            Log.i(getClass().getName(), "got geofence transition: " + eventName);
             if(eventName == null)
             {
                 Log.e(getClass().getName(), "No event name found to match geofence transition: " + geofenceTransition);
@@ -158,6 +159,7 @@ public class BookingGeofenceScheduleHandler
             String activeNetworkType = SystemUtils.getActiveNetworkType(mContext);
             for(Geofence geofence : triggeringGeofences)
             {
+                Log.d(getClass().getName(), "geofence triggered with request id: " + geofence.getRequestId());
                 LocationUpdate locationUpdate = LocationUpdate.from(location);
                 locationUpdate.setBookingId(geofence.getRequestId());
                 locationUpdate.setEventName(eventName);
@@ -169,7 +171,7 @@ public class BookingGeofenceScheduleHandler
             LocationBatchUpdate locationBatchUpdate = new LocationBatchUpdate(locationUpdateList.toArray(new LocationUpdate[locationUpdateList.size()]));
 
             Log.d(getClass().getName(), "location batch update: " + locationBatchUpdate.toString());
-            Toast.makeText(mContext, "Geofence triggered: " + eventName, Toast.LENGTH_SHORT).show(); //TODO test only. remove later
+            Toast.makeText(mContext, "Geofence event triggered: " + eventName, Toast.LENGTH_SHORT).show(); //TODO test only. remove later
             onLocationBatchUpdateReady(locationBatchUpdate);
         }
     }

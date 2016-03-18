@@ -72,7 +72,8 @@ public class MainActivity extends BaseActivity
         {
             Intent locationServiceIntent = new Intent(this, LocationScheduleService.class);
             if (mConfigManager.getConfigurationResponse() != null
-                    && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
+                    && (mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled()
+                        || mConfigManager.getConfigurationResponse().isBookingGeofenceServiceEnabled()))
             {
                 //nothing will happen if it's already running
                 if (!SystemUtils.isServiceRunning(this, LocationScheduleService.class))

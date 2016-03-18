@@ -30,12 +30,20 @@ public class ConfigurationResponse
     @SerializedName("location_schedule_service_enabled")
     private boolean mLocationScheduleServiceEnabled; //false by default
 
+    @SerializedName("booking_geofence_service_enabled") //TODO need to implement this on server side
+    private boolean mBookingGeofenceServiceEnabled;
+
     @SerializedName("onboarding_info")
     private OnboardingParams mOnboardingParams;
 
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
+    }
+
+    public boolean isBookingGeofenceServiceEnabled()
+    {
+        return mBookingGeofenceServiceEnabled;
     }
 
     public boolean isComplementaryJobsEnabled()
