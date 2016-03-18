@@ -165,17 +165,6 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.eta_success)));
     }
 
-    @Test
-    public void onCheckOutSuccess_switchToScheduleTabAndDisplayToast() throws Exception
-    {
-        fragment.onReceiveBookingDetailsSuccess(new HandyEvent.ReceiveBookingDetailsSuccess(booking));
-        // the event below depends on the event above being called to set the associated booking
-        fragment.onReceiveNotifyJobCheckOutSuccess(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(null, false));
-
-        assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
-        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_out_success)));
-    }
-
     private void assertBusPost(Matcher matcher)
     {
         verify(fragment.bus, atLeastOnce()).post(captor.capture());

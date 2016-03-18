@@ -43,4 +43,7 @@ public class BundleKeys
 
     // Location
     public static final String EVENT_NAME = "event_name";
+
+    // New Checkout
+    public static final String NOTE_TO_CUSTOMER = "note_to_customer";
 }

@@ -412,6 +412,20 @@
     <!-- Onboarding -->
     <string name="onboarding_tab_title">Welcome to Handy</string>
 
+    <!-- Checkout -->
+    <string name="send_your_receipt">Send Your Receipt</string>
+    <string name="started_with_space">Started: &#160;</string>
+    <string name="ended_with_space">Ended: &#160;</string>
+    <string name="completed_tasks">Completed Tasks</string>
+    <string name="send_note_to_customer_formatted">Send a Note to %1$s</string>
+    <string name="send_note_to_customer_placeholder">Write a thank you. Let them know how the job went. Did you have enough time?</string>
+
+    <string name="more_tasks_formatted">+%1$d more tasks</string>
+
+    <string name="sign_here">Sign Here</string>
+    <string name="complete_checkout">Complete checkout</string>
+
+    <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
     <string name="job_no_longer_available">That job is no longer available.</string>
 

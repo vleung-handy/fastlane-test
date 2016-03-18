@@ -56,6 +56,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
     private Booking mBooking;
+    private String mNoteToCustomer;
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -75,9 +76,13 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         mBooking = null;
-        if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING))
+
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey(BundleKeys.BOOKING))
         {
-            mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
+            mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
+            mNoteToCustomer = bundle.getString(BundleKeys.NOTE_TO_CUSTOMER);
+
             mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingShownLog()));
             String amount = mBooking.getPaymentToProvider().getCurrencySymbol() +
                     TextUtils.DECIMAL_FORMAT_NO_ZERO.format(mBooking.getPaymentToProvider().getAdjustedAmount());
@@ -91,9 +96,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
-                    getLocationData(),
-                    new ProBookingFeedback(getBookingRatingScore(),
-                            getBookingRatingComment()), null)));
+                    getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
+                    getBookingRatingComment()), mNoteToCustomer, null)));
         }
     }
 
@@ -113,7 +117,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
                     getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
-                    getBookingRatingComment()), mBooking.getCustomerPreferences())
+                    getBookingRatingComment()), mNoteToCustomer, mBooking.getCustomerPreferences())
             ));
             mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingSubmittedLog(getBookingRatingScore())));
         }

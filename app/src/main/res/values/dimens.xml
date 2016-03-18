@@ -65,6 +65,9 @@
     <dimen name="x_icon_size">60dp</dimen>
     <dimen name="default_elevation">2dp</dimen>
 
+    <!-- Generic -->
+    <dimen name="complete_button_height">64dp</dimen>
+
     <!--notifications-->
     <dimen name="notification_list_entry_vertical_padding">14dp</dimen>
     <dimen name="notification_list_entry_horizontal_padding">16dp</dimen>
@@ -130,7 +133,13 @@
     <!-- Referrals -->
     <dimen name="default_button_height">48dp</dimen>
 
-    <!-- Rating Dialog  -->
-    <dimen name="submit_button_height">64dp</dimen>
+    <!-- New Checkout -->
+    <dimen name="job_times_margin">12dp</dimen>
+    <dimen name="swipe_checkout_text_size">16sp</dimen>
+    <dimen name="completed_task_width">104dp</dimen>
+    <dimen name="completed_task_text_margin">14dp</dimen>
+    <dimen name="completed_task_margin_bottom">8dp</dimen>
+    <dimen name="checkbox_width_height">16dp</dimen>
+    <dimen name="customer_note_text_min_height">100dp</dimen>
 
 </resources>

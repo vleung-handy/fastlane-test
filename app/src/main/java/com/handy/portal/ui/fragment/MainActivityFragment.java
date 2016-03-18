@@ -467,6 +467,7 @@ public class MainActivityFragment extends InjectedFragment
                     mNavTrayLinks.clearCheck();
                 }
                 break;
+                case SEND_RECEIPT_CHECKOUT:
                 case SCHEDULED_JOBS:
                 {
                     mScheduleButton.toggle();

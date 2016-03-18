@@ -152,7 +152,7 @@
         android:id="@+id/rate_booking_submit_button"
         style="@style/Button.Green"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/submit_button_height"
+        android:layout_height="@dimen/complete_button_height"
         android:layout_alignParentBottom="true"
         android:text="@string/rate_booking_submit_rating"
         />

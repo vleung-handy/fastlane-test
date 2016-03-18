@@ -41,16 +41,13 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
-import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
-import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.model.Provider;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
@@ -61,7 +58,6 @@ import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
-import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.widget.BookingActionButton;
@@ -111,8 +107,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     @Inject
     PrefsManager mPrefsManager;
-    @Inject
-    ConfigManager mConfigManager;
     @Inject
     ProviderManager mProviderManager;
 
@@ -602,24 +596,12 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CHECK_OUT:
             {
-                boolean showCheckoutRatingFlow = false;
-                if (mConfigManager.getConfigurationResponse() != null)
-                {
-                    showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
-                }
                 final boolean proReportedNoShow = mAssociatedBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
                 if (proReportedNoShow || mAssociatedBooking.isAnyPreferenceChecked())
                 {
-                    if (showCheckoutRatingFlow)
-                    {
-                        showCheckoutRatingFlow();
-                    }
-                    else
-                    {
-                        CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
-                                new ProBookingFeedback(-1, ""), mAssociatedBooking.getCustomerPreferences());
-                        requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
-                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
+                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
                 }
                 else
                 {
@@ -659,23 +641,6 @@ public class BookingDetailsFragment extends ActionBarFragment
             {
                 Crashlytics.log("Could not find associated behavior for : " + actionType.getActionName());
             }
-        }
-    }
-
-    //TODO: check if the dialog is already shown
-    private void showCheckoutRatingFlow()
-    {
-        RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-        rateBookingDialogFragment.setArguments(arguments);
-        try
-        {
-            rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
-        }
-        catch (IllegalStateException e)
-        {
-            Crashlytics.logException(e);
         }
     }
 
@@ -828,13 +793,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestCancelNoShow(mAssociatedBooking.getId(), getLocationData()));
-    }
-
-    private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest, LocationData locationData)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCheckOutLog(mAssociatedBooking, locationData)));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
@@ -1069,31 +1027,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
-    {
-        if (!event.isAutoCheckIn)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), null);
-
-            //return to schedule page
-            returnToTab(MainViewTab.SCHEDULED_JOBS, mAssociatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
-
-            showToast(R.string.check_out_success, Toast.LENGTH_LONG);
-        }
-    }
-
-    @Subscribe
-    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
-    {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            handleNotifyCheckOutError(event);
-        }
-    }
-
-    @Subscribe
     public void onReceiveNotifyJobUpdateArrivalTimeSuccess(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -1314,11 +1247,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     private void handleNotifyCheckInError(final HandyEvent.ReceiveNotifyJobCheckInError event)
-    {
-        handleCheckInFlowError(event.error.getMessage());
-    }
-
-    private void handleNotifyCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
         handleCheckInFlowError(event.error.getMessage());
     }

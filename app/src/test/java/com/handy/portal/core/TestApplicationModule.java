@@ -35,6 +35,8 @@ import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragmentTest;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
@@ -76,7 +78,9 @@ import static org.mockito.Mockito.when;
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
         BookingDetailsJobInstructionsView.class,
-        LocationSettingsBlockerDialogFragment.class
+        LocationSettingsBlockerDialogFragment.class,
+        SendReceiptCheckoutFragment.class,
+        SendReceiptCheckoutFragmentTest.class,
 }, library = true)
 public class TestApplicationModule
 {
