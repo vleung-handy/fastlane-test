@@ -1,6 +1,8 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.webkit.CookieManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -24,6 +27,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
@@ -31,9 +35,11 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
+import com.handy.portal.ui.drawable.BadgeDrawable;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.layout.TabbedLayout;
 import com.handy.portal.util.DeeplinkMapper;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -142,6 +148,12 @@ public class MainActivityFragment extends InjectedFragment
             mFirstTimeConfigReturned = false;
             handleOnboardingFlow();
         }
+    }
+
+    @Subscribe
+    public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
+    {
+        setNotificationsBadgeCount(event.getUnreadCount());
     }
 
     private void handleOnboardingFlow()
@@ -600,4 +612,23 @@ public class MainActivityFragment extends InjectedFragment
         getActivity().finish();
     }
 
+    private void setNotificationsBadgeCount(int unreadCount)
+    {
+        LayerDrawable icon = (LayerDrawable) mNotificationsButton.getCompoundDrawables()[Utils.DRAWABLE_TOP_INDEX];
+        // Reuse drawable if possible
+        BadgeDrawable badge;
+        // Getting the layer 2
+        Drawable reuse = icon.findDrawableByLayerId(R.id.ic_notifications_badge);
+        if (reuse != null && reuse instanceof BadgeDrawable)
+        {
+            badge = (BadgeDrawable) reuse;
+        }
+        else
+        {
+            badge = new BadgeDrawable(getContext());
+        }
+        badge.setCount(String.valueOf(unreadCount));
+        icon.mutate();
+        icon.setDrawableByLayerId(R.id.ic_notifications_badge, badge);
+    }
 }

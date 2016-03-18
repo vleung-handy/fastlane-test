@@ -313,6 +313,11 @@ public class DataManager
         mService.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
     }
 
+    public void getNotificationsUnreadCount(final String providerId, final Callback<HashMap<String, Object>> cb)
+    {
+        mService.getNotificationsUnreadCount(providerId, new NotificationUnreadCountHandyRetroFitCallback(cb));
+    }
+
     public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)
     {
         mService.getProviderEvaluation(providerId, new GetProviderEvaluationRetrofitCallback(cb));
