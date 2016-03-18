@@ -885,7 +885,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mAssociatedBooking = event.booking;
         final BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
-        if (bookingStatus == BookingStatus.UNAVAILABLE)
+        if (!mFromPaymentsTab && bookingStatus == BookingStatus.UNAVAILABLE)
         {
             final Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.MESSAGE, getString(R.string.job_no_longer_available));
