@@ -48,7 +48,6 @@ import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.LocationData;
-import com.handy.portal.model.Provider;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView;
@@ -369,11 +368,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         mJobInstructionsView.refreshDisplay(booking, mFromPaymentsTab, bookingStatus);
         mProxyLocationView.refreshDisplay(booking);
 
-        final Provider cachedActiveProvider = mProviderManager.getCachedActiveProvider();
-        final String bookingProviderId = booking.getProviderId();
-        if (booking.isClaimedByMe() ||
-                (cachedActiveProvider != null &&
-                        bookingProviderId.equals(cachedActiveProvider.getId())))
+        if (!mFromPaymentsTab && bookingStatus == BookingStatus.CLAIMED)
         {
             mSupportButton.init(booking, this, BookingActionButtonType.HELP);
             mSupportButton.setVisibility(View.VISIBLE);
@@ -890,7 +885,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mAssociatedBooking = event.booking;
         final BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
-        if (bookingStatus == BookingStatus.UNAVAILABLE)
+        if (!mFromPaymentsTab && bookingStatus == BookingStatus.UNAVAILABLE)
         {
             final Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.MESSAGE, getString(R.string.job_no_longer_available));
