@@ -6,6 +6,8 @@
 
     <include layout="@layout/layout_fetch_error" />
 
+    <include layout="@layout/layout_no_notifications" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="wrap_content"

@@ -13,6 +13,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.LocationService;
@@ -235,7 +236,7 @@ public class MainActivity extends BaseActivity
         if (!hasRequiredLocationPermissions() &&
                 getSupportFragmentManager().findFragmentByTag(LocationPermissionsBlockerDialogFragment.FRAGMENT_TAG) == null)
         {
-            if(Utils.wereAnyPermissionsRequestedPreviously(this, LocationConstants.LOCATION_PERMISSIONS))
+            if (Utils.wereAnyPermissionsRequestedPreviously(this, LocationConstants.LOCATION_PERMISSIONS))
             {
                 //this will be shown if the app requested this permission previously and the user denied the request or revoked it
                 FragmentUtils.safeLaunchDialogFragment(new LocationPermissionsBlockerDialogFragment(),
@@ -262,7 +263,7 @@ public class MainActivity extends BaseActivity
                 //Tab Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
                 if (fragmentManager.findFragmentByTag(PaymentBlockingFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
                 {
-                    bus.post(new HandyEvent.NavigateToTab(MainViewTab.PAYMENT_BLOCKING, new Bundle()));
+                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENT_BLOCKING, new Bundle()));
                 }
             }
             else

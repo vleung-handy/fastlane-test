@@ -1,6 +1,7 @@
 package com.handy.portal.core;
 
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NotificationEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

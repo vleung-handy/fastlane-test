@@ -14,9 +14,12 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.CurrencyUtils;
@@ -24,12 +27,17 @@ import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CancellationRequestFragment extends ActionBarFragment
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
     @Bind(R.id.cancellation_address)
     TextView mAddressTextView;
     @Bind(R.id.cancellation_date)
@@ -103,8 +111,10 @@ public class CancellationRequestFragment extends ActionBarFragment
         }
         else
         {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
-                    mBooking, reasonBtn.getText().toString())));
+            final Booking.Action action = mBooking.getAction(Booking.Action.ACTION_UNASSIGN_FLOW);
+            String warning = (action != null) ? action.getWarningText() : null;
+            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
+                    mBooking, warning, reasonBtn.getText().toString())));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestRemoveJob(mBooking));
 
@@ -121,7 +131,7 @@ public class CancellationRequestFragment extends ActionBarFragment
             Bundle arguments = new Bundle();
             arguments.putLong(BundleKeys.DATE_EPOCH_TIME, event.booking.getStartDate().getTime());
             //Return to available jobs on that day
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, transitionStyle));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, transitionStyle));
         }
     }
 
@@ -135,7 +145,9 @@ public class CancellationRequestFragment extends ActionBarFragment
 
     private void init()
     {
-        String address = mBooking.getAddress().getAddress1() + " " + mBooking.getAddress().getAddress2();
+        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(providerId);
+        String address = mBooking.getFormattedLocation(bookingStatus);
         mAddressTextView.setText(address);
 
         mDateTextView.setText(DateTimeUtils.formatDateDayOfWeekMonthDay(mBooking.getStartDate()));

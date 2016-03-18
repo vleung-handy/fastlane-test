@@ -3,42 +3,92 @@
 <RelativeLayout
     android:id="@+id/rate_booking_window"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:background="@color/white"
+    android:background="@color/white_pressed"
     >
+
+    <LinearLayout
+        android:id="@+id/rate_booking_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/default_padding_medium"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_success_circle"
+            />
+
+        <TextView
+            style="@style/CircularBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/success"
+            android:textColor="@color/black"
+            android:textSize="@dimen/hero_text_size"
+            />
+
+        <TextView
+            android:id="@+id/rate_booking_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/default_margin_medium"
+            android:textColor="@color/black"
+            android:textSize="@dimen/xlarge_text_size"
+            tools:text="You made $45!"
+            />
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:src="@drawable/ic_x"
         android:layout_alignParentRight="true"
+        android:layout_gravity="right"
         android:background="@null"
         android:padding="@dimen/default_padding"
+        android:src="@drawable/ic_x"
         />
 
     <LinearLayout
-        android:id="@+id/rate_booking_container"
+        android:id="@+id/rate_booking_middle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
+        android:layout_below="@id/rate_booking_top"
+        android:background="@color/white_pressed"
         android:orientation="vertical"
-        android:padding="@dimen/default_padding"
         >
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/img_point"
+            />
+
         <TextView
-            android:id="@+id/rate_booking_title"
+            android:id="@+id/rate_booking_experience_text"
+            style="@style/CircularBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:gravity="center_horizontal"
             android:lineSpacingExtra="@dimen/lineSpacing"
-            android:text="@string/rate_booking_title"
-            android:textAppearance="@style/TextView.Bold"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:textColor="@color/black"
             android:textSize="@dimen/large_text_size"
+            tools:text="How was your experience cleaning Elizabeths home?"
             />
 
         <RadioGroup
@@ -46,9 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/default_padding"
-            android:layout_marginLeft="-14dp"
-            android:layout_marginRight="-14dp"
+            android:padding="@dimen/default_padding_medium"
             >
 
             <RadioButton
@@ -81,30 +129,32 @@
                 android:drawableTop="@drawable/rating_button_rating_5"
                 />
         </RadioGroup>
-
-        <EditText
-            android:id="@+id/rate_booking_comment_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/payment_container_vertical_padding"
-            android:hint="@string/rate_booking_comment_text_hint"
-            android:lineSpacingExtra="@dimen/lineSpacing"
-            android:maxLength="160"
-            android:textAppearance="@style/HandyTextAppearanceMedium"
-            android:textColor="@color/dark_grey"
-            android:lines="4"
-            android:background="@drawable/text_view_box"
-            android:gravity="top|left"
-            android:padding="10dp"
-            />
-
-        <Button
-            android:id="@+id/rate_booking_confirm_checkout_button"
-            style="@style/Button.Teal.Round"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rate_booking_confirm_checkout_button"
-            />
-
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/rate_booking_comment_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rate_booking_middle"
+        android:background="@drawable/border_gray_no_side"
+        android:gravity="top|left"
+        android:hint="@string/rate_booking_comment_text_hint"
+        android:lineSpacingExtra="@dimen/lineSpacing"
+        android:lines="4"
+        android:maxLength="160"
+        android:padding="@dimen/default_padding"
+        android:textAppearance="@style/HandyTextAppearanceMedium"
+        android:textColorHint="@color/subtitle_grey"
+        android:textColor="@color/dark_grey"
+        />
+
+    <Button
+        android:id="@+id/rate_booking_submit_button"
+        style="@style/Button.Green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_button_height"
+        android:layout_alignParentBottom="true"
+        android:text="@string/rate_booking_submit_rating"
+        />
+
 </RelativeLayout>

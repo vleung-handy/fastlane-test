@@ -1,6 +1,8 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.webkit.CookieManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -23,6 +26,8 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
@@ -30,9 +35,11 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
+import com.handy.portal.ui.drawable.BadgeDrawable;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.layout.TabbedLayout;
 import com.handy.portal.util.DeeplinkMapper;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -91,6 +98,22 @@ public class MainActivityFragment extends InjectedFragment
     private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
 
     private boolean mFirstTimeConfigReturned = true; //the first time we get config response back we may need to navigate away
+    private Bundle mDeeplinkData;
+    private boolean mDeeplinkHandled;
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setDeeplinkData(savedInstanceState);
+    }
+
+    @Override
+    public void onViewStateRestored(final Bundle savedInstanceState)
+    {
+        super.onViewStateRestored(savedInstanceState);
+        setDeeplinkData(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,6 +150,12 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+    @Subscribe
+    public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
+    {
+        setNotificationsBadgeCount(event.getUnreadCount());
+    }
+
     private void handleOnboardingFlow()
     {
         if (currentTab != null &&
@@ -140,23 +169,40 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+    private void setDeeplinkData(final Bundle savedInstanceState)
+    {
+        if (savedInstanceState == null || !(mDeeplinkHandled = savedInstanceState.getBoolean(BundleKeys.DEEPLINK_HANDLED)))
+        {
+            mDeeplinkData = getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
+        }
+    }
+
     private void handleDeeplink()
     {
-        final Bundle deeplinkData =
-                getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
-        if (deeplinkData != null)
+        if (mDeeplinkData != null && !mDeeplinkHandled)
         {
-            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            final String deeplink = mDeeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
                 final MainViewTab targetTab = DeeplinkMapper.getTabForDeeplink(deeplink);
                 if (targetTab != null)
                 {
-                    switchToTab(targetTab, deeplinkData, false);
+                    switchToTab(targetTab, mDeeplinkData, false);
                 }
             }
-            ((BaseActivity) getActivity()).setDeeplinkHandled();
         }
+        mDeeplinkHandled = true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        if (outState == null)
+        {
+            outState = new Bundle();
+        }
+        outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -169,7 +215,7 @@ public class MainActivityFragment extends InjectedFragment
 //Event Listeners
 
     @Subscribe
-    public void onSetNavigationTabVisibility(HandyEvent.SetNavigationTabVisibility event)
+    public void onSetNavigationTabVisibility(NavigationEvent.SetNavigationTabVisibility event)
     {
         setTabVisibility(event.isVisible);
     }
@@ -188,7 +234,7 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onSetNavigationDrawerActive(HandyEvent.SetNavigationDrawerActive event)
+    public void onSetNavigationDrawerActive(NavigationEvent.SetNavigationDrawerActive event)
     {
         setDrawerActive(event.isActive);
     }
@@ -202,7 +248,7 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onNavigateToTabEvent(HandyEvent.NavigateToTab event)
+    public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
     {
         //Catch this event then throw one to have the manager do the processing
         //We need to bother catching it here because we need to know the current tab of this fragment
@@ -214,14 +260,14 @@ public class MainActivityFragment extends InjectedFragment
             MainViewTab targetTab, MainViewTab currentTab, Bundle arguments,
             TransitionStyle transitionStyle, boolean userTriggered)
     {
-        bus.post(new HandyEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
+        bus.post(new NavigationEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
                 transitionStyle, userTriggered));
         bus.post(new LogEvent.AddLogEvent(
                 mEventLogFactory.createNavigationLog(targetTab.name().toLowerCase())));
     }
 
     @Subscribe
-    public void onSwapFragmentNavigation(HandyEvent.SwapFragmentNavigation event)
+    public void onSwapFragmentNavigation(NavigationEvent.SwapFragmentNavigation event)
     {
         SwapFragmentArguments swapFragmentArguments = event.swapFragmentArguments;
 
@@ -433,6 +479,7 @@ public class MainActivityFragment extends InjectedFragment
                     mNavTrayLinks.clearCheck();
                 }
                 break;
+                case SEND_RECEIPT_CHECKOUT:
                 case SCHEDULED_JOBS:
                 {
                     mScheduleButton.toggle();
@@ -451,6 +498,7 @@ public class MainActivityFragment extends InjectedFragment
                     mNavLinkPayments.toggle();
                 }
                 break;
+                case YOUTUBE_PLAYER:
                 case RATINGS_AND_FEEDBACK:
                 {
                     mButtonMore.toggle();
@@ -564,4 +612,23 @@ public class MainActivityFragment extends InjectedFragment
         getActivity().finish();
     }
 
+    private void setNotificationsBadgeCount(int unreadCount)
+    {
+        LayerDrawable icon = (LayerDrawable) mNotificationsButton.getCompoundDrawables()[Utils.DRAWABLE_TOP_INDEX];
+        // Reuse drawable if possible
+        BadgeDrawable badge;
+        // Getting the layer 2
+        Drawable reuse = icon.findDrawableByLayerId(R.id.ic_notifications_badge);
+        if (reuse != null && reuse instanceof BadgeDrawable)
+        {
+            badge = (BadgeDrawable) reuse;
+        }
+        else
+        {
+            badge = new BadgeDrawable(getContext());
+        }
+        badge.setCount(String.valueOf(unreadCount));
+        icon.mutate();
+        icon.setDrawableByLayerId(R.id.ic_notifications_badge, badge);
+    }
 }

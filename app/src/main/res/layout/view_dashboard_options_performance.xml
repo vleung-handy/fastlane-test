@@ -33,15 +33,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/tier_chevron"
-            android:layout_toStartOf="@+id/tier_chevron"
+            android:layout_toLeftOf="@+id/video_chevron"
+            android:layout_toStartOf="@+id/video_chevron"
             android:textColor="@color/tertiary_grey"
             android:textSize="@dimen/large_text_size"
             tools:text="$15"
             />
 
         <ImageView
-            android:id="@+id/tier_chevron"
+            android:id="@+id/video_chevron"
             android:layout_width="@dimen/dashboard_chevron_width_height"
             android:layout_height="@dimen/dashboard_chevron_width_height"
             android:layout_alignParentEnd="true"

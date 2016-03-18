@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.SwitchCompat;
@@ -9,11 +10,13 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.element.AvailableBookingElementView;
@@ -40,11 +43,19 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     ViewGroup mNoAvailableBookingsLayout;
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
+    private String mMessage;
 
     @Override
     protected MainViewTab getTab()
     {
         return MainViewTab.AVAILABLE_JOBS;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mMessage = getArguments().getString(BundleKeys.MESSAGE);
     }
 
     @Override
@@ -152,6 +163,19 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory
                 .createAvailableJobDateClickedLog(dateOfBookings, bookingsForDay.size())));
+
+        if (mMessage != null)
+        {
+            Snackbar.make(
+                    mBookingsContent,
+                    mMessage,
+                    Snackbar.LENGTH_LONG
+            ).show();
+            final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
+            bus.post(new LogEvent.AddLogEvent(
+                    new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
+            mMessage = null; // this is a one-off
+        }
     }
 
     @Subscribe

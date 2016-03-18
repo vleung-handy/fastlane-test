@@ -69,9 +69,9 @@ public class DataManager
         mStripeService = stripeService;
     }
 
-    public void getLocationSchedule(String providerId, Callback<LocationQuerySchedule> cb)
+    public void getLocationStrategies(String providerId, Callback<LocationQuerySchedule> cb)
     {
-        mService.getLocationSchedule(providerId, new GetLocationScheduleRetrofitCallback(cb));
+        mService.getLocationStrategies(providerId, new GetLocationScheduleRetrofitCallback(cb));
     }
 
     public void sendGeolocation(String providerId, LocationBatchUpdate locationBatchUpdate, Callback<SuccessWrapper> cb)
@@ -313,14 +313,19 @@ public class DataManager
         mService.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
     }
 
+    public void getNotificationsUnreadCount(final String providerId, final Callback<HashMap<String, Object>> cb)
+    {
+        mService.getNotificationsUnreadCount(providerId, new NotificationUnreadCountHandyRetroFitCallback(cb));
+    }
+
     public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)
     {
         mService.getProviderEvaluation(providerId, new GetProviderEvaluationRetrofitCallback(cb));
     }
 
-    public void getProviderFiveStarRatings(final String providerId, final Integer minStar, final String toBookingDate, final String fromBookingDate, final Callback<HashMap<String, List<ProviderRating>>> cb)
+    public void getProviderFiveStarRatings(final String providerId, final Integer minStar, final String untilBookingDate, final String sinceBookingDate, final Callback<HashMap<String, List<ProviderRating>>> cb)
     {
-        mService.getProviderFiveStarRatings(providerId, minStar, toBookingDate, fromBookingDate, new GetProviderFiveStarRatingsRetrofitCallback(cb));
+        mService.getProviderFiveStarRatings(providerId, minStar, untilBookingDate, sinceBookingDate, new GetProviderFiveStarRatingsRetrofitCallback(cb));
     }
 
     public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)

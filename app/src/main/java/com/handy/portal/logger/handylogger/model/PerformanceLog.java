@@ -52,4 +52,15 @@ public class PerformanceLog extends EventLog
             super(EVENT_TYPE);
         }
     }
+
+
+    public static class RollingRatingsLog extends PerformanceLog
+    {
+        private static final String EVENT_TYPE = "rolling_ratings_viewed";
+
+        public RollingRatingsLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
 }

@@ -268,7 +268,7 @@ public class ProviderManager
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        mDataManager.getProviderFiveStarRatings(providerId, event.getMinStar(), event.getToBookingDate(), event.getFromBookingDate(), new DataManager.Callback<HashMap<String, List<ProviderRating>>>()
+        mDataManager.getProviderFiveStarRatings(providerId, event.getMinStar(), event.getUntilBookingDate(), event.getSinceBookingDate(), new DataManager.Callback<HashMap<String, List<ProviderRating>>>()
         {
             @Override
             public void onSuccess(final HashMap<String, List<ProviderRating>> responseHash)

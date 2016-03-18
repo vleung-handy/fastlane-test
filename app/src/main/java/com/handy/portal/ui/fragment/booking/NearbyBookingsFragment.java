@@ -22,6 +22,7 @@ import com.handy.portal.constant.Country;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.manager.ProviderManager;
@@ -87,7 +88,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     {
         return MainViewTab.NEARBY_JOBS;
     }
-    
+
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -187,7 +188,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, booking.getStartDate().getTime());
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, null));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, null));
     }
 
     @Subscribe

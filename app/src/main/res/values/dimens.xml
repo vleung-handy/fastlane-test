@@ -65,6 +65,9 @@
     <dimen name="x_icon_size">60dp</dimen>
     <dimen name="default_elevation">2dp</dimen>
 
+    <!-- Generic -->
+    <dimen name="complete_button_height">64dp</dimen>
+
     <!--notifications-->
     <dimen name="notification_list_entry_vertical_padding">14dp</dimen>
     <dimen name="notification_list_entry_horizontal_padding">16dp</dimen>
@@ -110,6 +113,13 @@
     <dimen name="circle_page_indicator_height">21dp</dimen>
     <dimen name="circle_negative_margin">-4dp</dimen>
     <dimen name="circle_indicator_padding">4dp</dimen>
+    <dimen name="ratings_view_pager_margin">5dp</dimen>
+
+    <dimen name="youtube_image_view_width">343dp</dimen>
+    <dimen name="youtube_image_view_height">193dp</dimen>
+    <dimen name="youtube_image_view_margin_top">8dp</dimen>
+    <dimen name="youtube_image_view_margin_bottom">28dp</dimen>
+
 
     <!-- warning or error screen -->
     <dimen name="error_margin_top">10dp</dimen>
@@ -123,4 +133,15 @@
     <!-- Referrals -->
     <dimen name="default_button_height">48dp</dimen>
 
+    <!-- New Checkout -->
+    <dimen name="job_times_margin">12dp</dimen>
+    <dimen name="swipe_checkout_text_size">16sp</dimen>
+    <dimen name="completed_task_width">104dp</dimen>
+    <dimen name="completed_task_text_margin">14dp</dimen>
+    <dimen name="completed_task_margin_bottom">8dp</dimen>
+    <dimen name="checkbox_width_height">16dp</dimen>
+    <dimen name="customer_note_text_min_height">100dp</dimen>
+
+    <!-- Badge text size -->
+    <dimen name="badge_text_size">10sp</dimen>
 </resources>

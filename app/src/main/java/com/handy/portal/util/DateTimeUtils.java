@@ -29,6 +29,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
     public final static SimpleDateFormat MONTH_YEAR_FORMATTER = new SimpleDateFormat("MMM yyyy");
     public final static SimpleDateFormat ISO8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    public final static SimpleDateFormat LOCAL_TIME_12_HOURS = new SimpleDateFormat("hh:mm a");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int DAYS_IN_WEEK = 7;
@@ -219,6 +220,13 @@ public final class DateTimeUtils
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+    public static String getTimeWithoutDate(final Date date)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return getLocalTime12HoursFormatter().format(cal.getTime());
+    }
+
     public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis)
     {
         return new CountDownTimer(timeRemainMillis, DateTimeUtils.MILLISECONDS_IN_SECOND)
@@ -273,7 +281,7 @@ public final class DateTimeUtils
 
     public static int daysBetween(Date d1, Date d2)
     {
-        return (int)( (d2.getTime() - d1.getTime()) / (MILLISECONDS_IN_HOUR * HOURS_IN_DAY));
+        return (int) ((d2.getTime() - d1.getTime()) / (MILLISECONDS_IN_HOUR * HOURS_IN_DAY));
     }
 
     private static SimpleDateFormat getClockFormatter12hr()
@@ -340,6 +348,12 @@ public final class DateTimeUtils
     {
         ISO8601_FORMATTER.setTimeZone(TimeZone.getTimeZone(UTC_TIMEZONE));
         return ISO8601_FORMATTER;
+    }
+
+    private static SimpleDateFormat getLocalTime12HoursFormatter()
+    {
+        LOCAL_TIME_12_HOURS.setTimeZone(TimeZone.getDefault());
+        return LOCAL_TIME_12_HOURS;
     }
 
 }

@@ -60,7 +60,7 @@ public class AutoCheckInService extends IntentService
                 {
                     if (isRecent(location))
                     {
-                        handleAction(action, bookingId, location);
+                        handleAction(action, bookingId, null, location);
                     }
                 }
             });
@@ -72,7 +72,7 @@ public class AutoCheckInService extends IntentService
         return location != null && System.currentTimeMillis() - location.getTime() <= MAXIMUM_LOCATION_AGE_MILLIS;
     }
 
-    private void handleAction(String action, String bookingId, Location location)
+    private void handleAction(String action, String bookingId, String noteToCustomer, Location location)
     {
         switch (action)
         {
@@ -85,7 +85,7 @@ public class AutoCheckInService extends IntentService
                                         bookingId,
                                         true,
                                         new CheckoutRequest(new LocationData(location),
-                                                new ProBookingFeedback(), null)
+                                                new ProBookingFeedback(), noteToCustomer, null)
                                 )
                 );
                 break;

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -122,8 +123,9 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
         }
 
+        Crashlytics.log("Creating location request with strategy: \n" + mLocationQueryStrategy.toString());
         long pollingIntervalMs = mLocationQueryStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
-        long expirationDurationMs = mLocationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis();
+        long expirationDurationMs = mLocationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis(); //no harm if this is negative
 
         LocationRequest locationRequest = new LocationRequest()
                 .setSmallestDisplacement(mLocationQueryStrategy.getDistanceFilterMeters())
@@ -144,28 +146,36 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
      */
     public void requestLocationUpdates(GoogleApiClient googleApiClient)
     {
-        //this handles the permission system in Android 6.0
-        if (!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
+        try
         {
-            return;
+            //this handles the permission system in Android 6.0
+            if (!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
+            {
+                return;
+            }
+
+            Log.d(getClass().getName(), "requesting location updates for " + mLocationQueryStrategy.toString());
+            LocationRequest locationRequest = createLocationRequest();
+            long expirationTimeMs = locationRequest.getExpirationTime();
+
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
+                    createLocationRequest(),
+                    mLocationListener);
+
+            mHandler.postAtTime(new Runnable() //callback for when strategy expires
+            {
+                @Override
+                public void run()
+                {
+                    mLocationStrategyCallbacks.onLocationStrategyExpired(LocationStrategyHandler.this);
+                }
+            }, expirationTimeMs);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
         }
 
-        Log.d(getClass().getName(), "requesting location updates for " + mLocationQueryStrategy.toString());
-        LocationRequest locationRequest = createLocationRequest();
-        long expirationTimeMs = locationRequest.getExpirationTime();
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
-                createLocationRequest(),
-                mLocationListener);
-
-        mHandler.postAtTime(new Runnable() //callback for when strategy expires
-        {
-            @Override
-            public void run()
-            {
-                mLocationStrategyCallbacks.onLocationStrategyExpired(LocationStrategyHandler.this);
-            }
-        }, expirationTimeMs);
     }
 
     public LocationQueryStrategy getLocationQueryStrategy()

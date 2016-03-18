@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -40,7 +40,7 @@ public class TabNavigationManager
 
     @Subscribe
     //catch this , add extra data/process needed data, pass along to fragment for final usage/swap
-    public void onRequestProcessNavigateToTab(HandyEvent.RequestProcessNavigateToTab event)
+    public void onRequestProcessNavigateToTab(NavigationEvent.RequestProcessNavigateToTab event)
     {
         //Ordering is important for these checks, they have different priorities
 
@@ -80,7 +80,7 @@ public class TabNavigationManager
                 event.userTriggered
         );
 
-        mBus.post(new HandyEvent.SwapFragmentNavigation(swapFragmentArguments));
+        mBus.post(new NavigationEvent.SwapFragmentNavigation(swapFragmentArguments));
     }
 
     private boolean isCachedProviderBlockPro()
@@ -170,7 +170,7 @@ public class TabNavigationManager
 
         if (!userTriggered)
         {
-            //TODO: Some really ugly logic about adding to the backstack, clean this up somehow
+            //TODO: Some really ugly logic about adding to the backstack, clean this up `
             addToBackStack = targetTab == MainViewTab.COMPLEMENTARY_JOBS;
             addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
             addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
@@ -184,6 +184,7 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_TIERS;
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_FEEDBACK;
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_REVIEWS;
+            addToBackStack |= targetTab == MainViewTab.DASHBOARD_VIDEO_LIBRARY;
             addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
@@ -191,6 +192,10 @@ public class TabNavigationManager
             // Account Settings
             addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
             addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
+            addToBackStack |= targetTab == MainViewTab.YOUTUBE_PLAYER;
+
+            // New Checkout
+            addToBackStack |= targetTab == MainViewTab.SEND_RECEIPT_CHECKOUT;
         }
 
         return addToBackStack;

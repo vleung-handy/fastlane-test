@@ -8,6 +8,14 @@
     <string name="none">None</string>
     <string name="time_interval_formatted">%1$s – %2$s</string>
 
+    <!-- Generic Single Word -->
+    <string name="success">Success</string>
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
+    <string name="undo">Undo</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    
     <string name="phone_number_hint">Cell Phone Number</string>
     <string name="pin_code_hint">PIN Code</string>
     <string name="request_pin">Get PIN Code</string>
@@ -54,8 +62,6 @@
     <string name="phone">Phone</string>
     <string name="password">Password</string>
     <string name="loading_more_payments">Loading more payments…</string>
-    <string name="profile">Profile</string>
-    <string name="my_profile">My Profile</string>
     <string name="my_performance">My Performance</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="update">Update</string>
@@ -76,8 +82,6 @@
     <string name="description">Description</string>
     <string name="promo_code_opt">Promo Code (optional)</string>
     <string name="promo_code">Promo Code</string>
-    <string name="set">Set</string>
-    <string name="cancel">Cancel</string>
     <string name="i_still_need_help">I Still Need Help</string>
     <string name="contact_us">Contact Us</string>
     <string name="send_message">Send Message</string>
@@ -162,7 +166,6 @@
     <string name="job_support">Job Support</string>
     <string name="job_remove_error">Error Removing Job"</string>
     <string name="job_remove_error_generic">This job could not be removed</string>
-    <string name="error">Error</string>
 
     <string name="notify_customer_of_lateness">Notify customer of your late arrival</string>
     <string name="notify_customer_of_earliness">Notify customer of your early arrival</string>
@@ -214,9 +217,6 @@
     <string name="customer_no_show_cancelled">Customer no show report cancelled</string>
     <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
-
-    <string name="undo">Undo</string>
-    <string name="ok">OK</string>
 
     <string name="unable_to_fetch_user">Unable to fetch your information. Please try again.</string>
     <string name="help_center_subject">Subject: </string>
@@ -280,7 +280,6 @@
 
     <!-- Profile -->
     <string name="share_with">Share with…</string>
-    <string name="joined_handy"><![CDATA[Joined Handy <b>%1$s</b>]]></string>
     <string name="earn_a_bonus">Earn a %1$s bonus</string>
     <string name="refer_a_pro">Refer a professional to Handy</string>
     <string name="jobs_and_rating"><![CDATA[<b>%1$d</b> jobs · <b>%2$s</b> overall rating]]></string>
@@ -323,6 +322,7 @@
     <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
     <string name="watch_video"><![CDATA[If you’d like to learn a few tips & tricks, check out this <a href=\'%1$s\'>video</a>.]]></string>
+    <string name="video_library">Video Library</string>
 
 
     <!-- Booking Details-->
@@ -355,10 +355,11 @@
     <string name="no_address_on_file">No Address On File</string>
 
     <!-- Rate Booking -->
-    <string name="rate_booking_title">How did this job go?</string>
-    <string name="rate_booking_confirm_checkout_button">Confirm Check Out</string>
+    <string name="rate_booking_submit_rating">Submit Rating</string>
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
+    <string name="you_earned_money_formatted">You made %1$s!</string>
+    <string name="how_was_cleaning_formatted">How was your experience cleaning %1$s’s home?</string>
 
     <!-- Nearby Booking -->
     <string name="start_timer_formatted">STARTS IN %1$s</string>
@@ -377,6 +378,7 @@
     <string name="load_notifications">Loading more notifications…</string>
     <string name="no_more_notifications">You have no more notifications to load.</string>
     <string name="error_loading_notifications">Oops! There was an error loading your notifications.</string>
+    <string name="no_notifications">No new notifications! Check back later.</string>
 
     <!-- Late dispatch available job notification toggle -->
     <string name="notify_available_jobs">Notify me of open jobs today</string>
@@ -387,7 +389,6 @@
     <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
     <string name="refer_a_friend">Refer a Friend</string>
     <string name="account_settings">Account Settings</string>
-    <string name="edit_payment_methods">Edit Payment Methods</string>
 
     <string name="order_resupply_kit">Order a Resupply Kit</string>
     <string name="income_verification">Income Verification</string>
@@ -412,5 +413,20 @@
     <!-- Onboarding -->
     <string name="onboarding_tab_title">Welcome to Handy</string>
 
+    <!-- Checkout -->
+    <string name="send_your_receipt">Send Your Receipt</string>
+    <string name="started_with_space">Started: &#160;</string>
+    <string name="ended_with_space">Ended: &#160;</string>
+    <string name="completed_tasks">Completed Tasks</string>
+    <string name="send_note_to_customer_formatted">Send a Note to %1$s</string>
+    <string name="send_note_to_customer_placeholder">Write a thank you. Let them know how the job went. Did you have enough time?</string>
 
+    <string name="more_tasks_formatted">+%1$d more tasks</string>
+
+    <string name="sign_here">Sign Here</string>
+    <string name="complete_checkout">Complete checkout</string>
+
+    <!-- API -->
+    <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
+    <string name="job_no_longer_available">That job is no longer available.</string>
 </resources>

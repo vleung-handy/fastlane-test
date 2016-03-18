@@ -170,7 +170,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     private boolean shouldIncludeCurrentLocation()
     {
         return mSource != null &&
-                mSource.equals(BookingDetailsFragment.SOURCE_DISPATCH_NOTIFICATION_TOGGLE);
+                mSource.equals(BookingDetailsFragment.SOURCE_LATE_DISPATCH);
     }
 
     /**

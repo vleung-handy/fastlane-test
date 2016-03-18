@@ -52,7 +52,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.EVALUATION);
+        mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
     }
 
     @Override
@@ -93,11 +93,11 @@ public class DashboardReviewsFragment extends ActionBarFragment
                         !mEvaluation.getFiveStarRatingsWithComments().isEmpty())
                 {
 
-                    Date toBookingDate = ((ReviewListAdapter) mReviewRecyclerView.getAdapter()).getToBookingDate();
-                    if (toBookingDate != null)
+                    Date untilBookingDate = ((ReviewListAdapter) mReviewRecyclerView.getAdapter()).getToBookingDate();
+                    if (untilBookingDate != null)
                     {
-                        String toBookingDateString = DateTimeUtils.formatIso8601(toBookingDate);
-                        bus.post(new RequestProviderFiveStarRatings(MIN_STAR, toBookingDateString));
+                        String untilBookingDateString = DateTimeUtils.formatIso8601(untilBookingDate);
+                        bus.post(new RequestProviderFiveStarRatings(MIN_STAR, untilBookingDateString));
                     }
                 }
             }

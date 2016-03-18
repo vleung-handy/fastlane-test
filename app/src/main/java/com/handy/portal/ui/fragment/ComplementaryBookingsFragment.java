@@ -16,6 +16,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
@@ -114,7 +115,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         else
         {
             showToast(R.string.error_fetching_matching_jobs);
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
         }
 
         loadingOverlay.setVisibility(View.VISIBLE);
@@ -144,7 +145,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     {
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, claimedBooking.getStartDate().getTime());
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, arguments));
     }
 
     @OnClick(R.id.try_again_button)
@@ -296,7 +297,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
             arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
             arguments.putString(BundleKeys.BOOKING_SOURCE, SOURCE_COMPLEMENTARY_JOBS_LIST);
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DETAILS, arguments));
         }
     }
 }

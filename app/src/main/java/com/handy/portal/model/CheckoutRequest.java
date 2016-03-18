@@ -19,17 +19,21 @@ public class CheckoutRequest
     private String mAccuracy;
     @SerializedName("pro_feedback")
     private ProBookingFeedback mProFeedback;
+    @SerializedName("note_to_customer")
+    private String mNoteToCustomer;
     @SerializedName("booking_instructions")
     private List<Booking.BookingInstructionUpdateRequest> mCustomerPreferences;
 
 
     public CheckoutRequest(@NonNull LocationData locationData, ProBookingFeedback feedback,
+                           @Nullable String noteToCustomer,
                            @Nullable List<Booking.BookingInstructionUpdateRequest> customerPreferences)
     {
         mLatitude = locationData.getLocationMap().get(LocationKey.LATITUDE);
         mLongitude = locationData.getLocationMap().get(LocationKey.LONGITUDE);
         mAccuracy = locationData.getLocationMap().get(LocationKey.ACCURACY);
         mProFeedback = feedback;
+        mNoteToCustomer = noteToCustomer;
         mCustomerPreferences = customerPreferences;
     }
 }

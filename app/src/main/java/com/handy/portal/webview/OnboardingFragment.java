@@ -3,6 +3,7 @@ package com.handy.portal.webview;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.OnboardingParams;
 import com.squareup.otto.Subscribe;
@@ -39,7 +40,7 @@ public class OnboardingFragment extends PortalWebViewFragment
         //We got into a bad state, leave
         if (mLastOnboardingParams == null)
         {
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
         }
         else
         {
@@ -49,8 +50,8 @@ public class OnboardingFragment extends PortalWebViewFragment
             //Lock nav drawers and hide tabs if this is a blocking onboarding fragment
             if (mLastOnboardingParams.isOnboardingBlocking())
             {
-                bus.post(new HandyEvent.SetNavigationDrawerActive(false));
-                bus.post(new HandyEvent.SetNavigationTabVisibility(false));
+                bus.post(new NavigationEvent.SetNavigationDrawerActive(false));
+                bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
             }
         }
     }
@@ -83,7 +84,7 @@ public class OnboardingFragment extends PortalWebViewFragment
                     mEventLogFactory.createWebOnboardingClosedLog()));
 
             //just nav back to main, can lazily reload and tab navigation will handle the rest if we need to go to a different onboarding
-            bus.post(new HandyEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
         }
 
     }

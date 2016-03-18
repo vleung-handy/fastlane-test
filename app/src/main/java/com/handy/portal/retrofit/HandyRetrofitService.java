@@ -33,8 +33,8 @@ public interface HandyRetrofitService
     String ZIP_CLUSTER_POLYGONS_PATH = "/zipcluster_polygons/";
 
 
-    @GET(PROVIDERS_PATH + "{id}/location_schedules")
-    void getLocationSchedule(@Path("id") String providerId, HandyRetrofitCallback cb);
+    @GET(PROVIDERS_PATH + "{id}/location_strategies")
+    void getLocationStrategies(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @POST(PROVIDERS_PATH + "{id}/geolocation")
     void sendGeolocation(
@@ -243,6 +243,9 @@ public interface HandyRetrofitService
                                      @Field("notification_ids[]") ArrayList<Integer> notificationIds,
                                      HandyRetrofitCallback cb);
 
+    @GET(PROVIDERS_PATH + "{id}/notifications/unread_count")
+    void getNotificationsUnreadCount(@Path("id") String providerId, HandyRetrofitCallback cb);
+
     // Dashboard
     @GET(PROVIDERS_PATH + "{id}/evaluation")
     void getProviderEvaluation(@Path("id") String providerId, HandyRetrofitCallback cb);
@@ -250,8 +253,8 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/ratings?commented_only=true")
     void getProviderFiveStarRatings(@Path("id") String providerId,
                                     @Query("min_star") Integer minStar,
-                                    @Query("to_booking_date") String toBookingDate,
-                                    @Query("from_booking_date") String fromBookingDate,
+                                    @Query("until_booking_date") String untilBookingDate,
+                                    @Query("since_booking_date") String sinceBookingDate,
                                     HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}/feedback")

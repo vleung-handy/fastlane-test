@@ -26,6 +26,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.OnboardingParams;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.logs.VideoLog;
 import com.handy.portal.util.MathUtils;
 import com.urbanairship.push.PushMessage;
 
@@ -174,7 +175,7 @@ public class EventLogFactory
         return new ScheduledJobsLog.RemoveJobClicked(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
     }
 
-    public EventLog createRemoveJobConfirmedLog(Booking booking, String warning)
+    public EventLog createRemoveJobConfirmedLog(Booking booking, String warning, String reason)
     {
         String bookingId = booking.getId();
         String serviceId = booking.getService();
@@ -183,7 +184,7 @@ public class EventLogFactory
         boolean requested = booking.isRequested();
         Date dateStart = booking.getStartDate();
 
-        return new ScheduledJobsLog.RemoveJobConfirmed(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
+        return new ScheduledJobsLog.RemoveJobConfirmed(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning, reason);
     }
 
     public EventLog createRemoveJobErrorLog(Booking booking)
@@ -275,12 +276,6 @@ public class EventLogFactory
         return new ScheduledJobsLog.RemoveConfirmationShown(bookingId, removalType);
     }
 
-    public EventLog createRemoveConfirmationAcceptedLog(@NonNull Booking booking, String reason)
-    {
-        String bookingId = booking.getId();
-        return new ScheduledJobsLog.RemoveConfirmationAccepted(bookingId, reason);
-    }
-
     public EventLog createFindJobsSelectedLog()
     {
         return new ScheduledJobsLog.FindJobsSelected();
@@ -350,11 +345,6 @@ public class EventLogFactory
         return new PerformanceLog.TierTappedLog();
     }
 
-    public EventLog createLifetimeRatingsLog()
-    {
-        return new PerformanceLog.LifetimeRatingsLog();
-    }
-
     // Help logs
     public EventLog createHelpContactFormSubmittedLog(String path, int helpNodeId, String helpNodeTitle)
     {
@@ -398,6 +388,17 @@ public class EventLogFactory
     public EventLog createWebOnboardingShownLog(final OnboardingParams onboardingParams)
     {
         return new WebOnboardingLog.Shown(onboardingParams);
+    }
+
+    // Video Logs
+    public EventLog createVideoTappedLog(String section)
+    {
+        return new VideoLog.VideoTappedLog(section);
+    }
+
+    public EventLog createVideoLibraryTappedLog()
+    {
+        return new VideoLog.VideoLibraryTappedLog();
     }
 
     //user dismissed or navved away from

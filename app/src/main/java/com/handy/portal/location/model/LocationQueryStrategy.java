@@ -3,6 +3,7 @@ package com.handy.portal.location.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -44,25 +45,9 @@ public class LocationQueryStrategy implements Parcelable
     @SerializedName("distance_filter")
     int mDistanceFilterMeters;
 
-    public LocationQueryStrategy()
-    {
-    }
-
-    public LocationQueryStrategy setDistanceFilterMeters(final int distanceFilterMeters)
-    {
-        mDistanceFilterMeters = distanceFilterMeters;
-        return this;
-    }
-
     public int getDistanceFilterMeters()
     {
         return mDistanceFilterMeters;
-    }
-
-    public LocationQueryStrategy setServerPollingIntervalSeconds(final int serverPollingIntervalSeconds)
-    {
-        mServerPollingIntervalSeconds = serverPollingIntervalSeconds;
-        return this;
     }
 
     protected LocationQueryStrategy(Parcel in)
@@ -73,6 +58,9 @@ public class LocationQueryStrategy implements Parcelable
         mLocationPollingIntervalSeconds = in.readInt();
         mDistanceFilterMeters = in.readInt();
         mAccuracy = in.readInt();
+
+        //logging this for now to rule out parcel reading errors
+        Crashlytics.log("Created location query strategy from parcel: \n" + toString());
     }
 
     public int getServerPollingIntervalSeconds()
@@ -85,21 +73,9 @@ public class LocationQueryStrategy implements Parcelable
         return mAccuracy;
     }
 
-    public LocationQueryStrategy setAccuracy(final int accuracy)
-    {
-        mAccuracy = accuracy;
-        return this;
-    }
-
     public int getLocationPollingIntervalSeconds()
     {
         return mLocationPollingIntervalSeconds;
-    }
-
-    public LocationQueryStrategy setLocationPollingIntervalSeconds(final int locationPollingIntervalSeconds)
-    {
-        mLocationPollingIntervalSeconds = locationPollingIntervalSeconds;
-        return this;
     }
 
     public Date getEndDate()
@@ -107,21 +83,9 @@ public class LocationQueryStrategy implements Parcelable
         return mEndDate;
     }
 
-    public LocationQueryStrategy setEndDate(final Date endDate)
-    {
-        mEndDate = endDate;
-        return this;
-    }
-
     public Date getStartDate()
     {
         return mStartDate;
-    }
-
-    public LocationQueryStrategy setStartDate(final Date startDate)
-    {
-        mStartDate = startDate;
-        return this;
     }
 
     @Override

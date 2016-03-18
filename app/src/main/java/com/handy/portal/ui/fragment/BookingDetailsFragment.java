@@ -38,18 +38,16 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
-import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
-import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.model.Provider;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
@@ -60,7 +58,6 @@ import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
-import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.widget.BookingActionButton;
@@ -80,7 +77,7 @@ import butterknife.OnClick;
 
 public class BookingDetailsFragment extends ActionBarFragment
 {
-    public static final String SOURCE_DISPATCH_NOTIFICATION_TOGGLE = "dispatch_notification_toggle";
+    public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
     @Bind(R.id.booking_details_map_layout)
     ViewGroup mapLayout; // Maybe use fragment instead of view group?
     @Bind(R.id.booking_details_date_view)
@@ -110,8 +107,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     @Inject
     PrefsManager mPrefsManager;
-    @Inject
-    ConfigManager mConfigManager;
     @Inject
     ProviderManager mProviderManager;
 
@@ -192,7 +187,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
         else if (getArguments().containsKey(BundleKeys.DEEPLINK))
         {
-            mSource = SOURCE_DISPATCH_NOTIFICATION_TOGGLE;
+            mSource = SOURCE_LATE_DISPATCH;
             mSourceExtras = getArguments();
         }
     }
@@ -430,15 +425,22 @@ public class BookingDetailsFragment extends ActionBarFragment
             final BookingEvent.ReceiveZipClusterPolygonsSuccess event
     )
     {
-        BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
-        BookingMapFragment fragment = BookingMapFragment.newInstance(
-                mAssociatedBooking,
-                mSource,
-                bookingStatus,
-                event.zipClusterPolygons
-        );
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(mapLayout.getId(), fragment).commit();
+        if (mAssociatedBooking != null)
+        {
+            BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
+            BookingMapFragment fragment = BookingMapFragment.newInstance(
+                    mAssociatedBooking,
+                    mSource,
+                    bookingStatus,
+                    event.zipClusterPolygons
+            );
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(mapLayout.getId(), fragment).commit();
+        }
+        else
+        {
+            Crashlytics.logException(new RuntimeException("Can't display zip cluster polygon, booking is null"));
+        }
     }
 
     @OnClick(R.id.try_again_button)
@@ -594,24 +596,12 @@ public class BookingDetailsFragment extends ActionBarFragment
 
             case CHECK_OUT:
             {
-                boolean showCheckoutRatingFlow = false;
-                if (mConfigManager.getConfigurationResponse() != null)
-                {
-                    showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
-                }
                 final boolean proReportedNoShow = mAssociatedBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
                 if (proReportedNoShow || mAssociatedBooking.isAnyPreferenceChecked())
                 {
-                    if (showCheckoutRatingFlow)
-                    {
-                        showCheckoutRatingFlow();
-                    }
-                    else
-                    {
-                        CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
-                                new ProBookingFeedback(-1, ""), mAssociatedBooking.getCustomerPreferences());
-                        requestNotifyCheckOutJob(mAssociatedBooking.getId(), checkoutRequest, locationData);
-                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
+                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
                 }
                 else
                 {
@@ -651,23 +641,6 @@ public class BookingDetailsFragment extends ActionBarFragment
             {
                 Crashlytics.log("Could not find associated behavior for : " + actionType.getActionName());
             }
-        }
-    }
-
-    //TODO: check if the dialog is already shown
-    private void showCheckoutRatingFlow()
-    {
-        RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-        rateBookingDialogFragment.setArguments(arguments);
-        try
-        {
-            rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
-        }
-        catch (IllegalStateException e)
-        {
-            Crashlytics.logException(e);
         }
     }
 
@@ -734,9 +707,6 @@ public class BookingDetailsFragment extends ActionBarFragment
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
-                                bus.post(new LogEvent.AddLogEvent(mEventLogFactory
-                                        .createRemoveJobConfirmedLog(mAssociatedBooking, warning)));
-
                                 //proceed with action, we have accepted the warning
                                 bus.post(new HandyEvent.ActionWarningAccepted(actionType));
                                 takeAction(actionType, true);
@@ -774,8 +744,10 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestRemoveJob(@NonNull Booking booking)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationAcceptedLog(
-                booking, null)));
+        final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
+        String warning = (removeAction != null) ? removeAction.getWarningText() : null;
+        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
+                booking, warning, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
@@ -821,13 +793,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestCancelNoShow(mAssociatedBooking.getId(), getLocationData()));
-    }
-
-    private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest, LocationData locationData)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCheckOutLog(mAssociatedBooking, locationData)));
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
@@ -914,7 +879,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_NODE_ID, helpNodeId);
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.HELP, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
     }
 
 //Event Subscription and Handling
@@ -924,7 +889,18 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mAssociatedBooking = event.booking;
-        updateDisplayForBooking(event.booking);
+        final BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
+        if (bookingStatus == BookingStatus.UNAVAILABLE)
+        {
+            final Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.MESSAGE, getString(R.string.job_no_longer_available));
+            arguments.putBundle(BundleKeys.EXTRAS, getArguments());
+            returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB, arguments);
+        }
+        else
+        {
+            updateDisplayForBooking(event.booking);
+        }
     }
 
     @Subscribe
@@ -1051,31 +1027,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
-    {
-        if (!event.isAutoCheckIn)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            mPrefsManager.setBookingInstructions(mAssociatedBooking.getId(), null);
-
-            //return to schedule page
-            returnToTab(MainViewTab.SCHEDULED_JOBS, mAssociatedBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
-
-            showToast(R.string.check_out_success, Toast.LENGTH_LONG);
-        }
-    }
-
-    @Subscribe
-    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
-    {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            handleNotifyCheckOutError(event);
-        }
-    }
-
-    @Subscribe
     public void onReceiveNotifyJobUpdateArrivalTimeSuccess(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -1186,16 +1137,25 @@ public class BookingDetailsFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-        bus.post(new HandyEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
+    {
+        returnToTab(targetTab, epochTime, transitionStyle, null);
+    }
+
+    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle, Bundle additionalArguments)
     {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new HandyEvent.NavigateToTab(targetTab, arguments, transitionStyle));
+        if (additionalArguments != null)
+        {
+            arguments.putAll(additionalArguments);
+        }
+        bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
 
 //Handle Action Response Errors
@@ -1264,7 +1224,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        bus.post(new HandyEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
+                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
                     }
                 });
 
@@ -1287,11 +1247,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     private void handleNotifyCheckInError(final HandyEvent.ReceiveNotifyJobCheckInError event)
-    {
-        handleCheckInFlowError(event.error.getMessage());
-    }
-
-    private void handleNotifyCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
         handleCheckInFlowError(event.error.getMessage());
     }

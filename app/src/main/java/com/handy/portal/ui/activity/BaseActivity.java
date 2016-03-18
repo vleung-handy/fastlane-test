@@ -16,6 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -79,11 +80,6 @@ public abstract class BaseActivity extends AppCompatActivity
         super.startActivity(intent);
     }
 
-    public void setDeeplinkHandled()
-    {
-        getIntent().removeExtra(BundleKeys.DEEPLINK_DATA);
-    }
-
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
@@ -121,7 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.setData(Uri.parse("package:" + packageName));
         boolean successfullyLaunchedIntent = Utils.safeLaunchIntent(intent, this);
-        if(!successfullyLaunchedIntent)
+        if (!successfullyLaunchedIntent)
         {
             /*
             unable to launch the application detail settings intent,
@@ -174,6 +170,7 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onResumeFragments();
         this.bus.register(mAppUpdateEventListener);
         checkForUpdates();
+        getNotificationsUnreadCount();
         postActivityResumeEvent(); //do not disable this
     }
 
@@ -229,6 +226,11 @@ public abstract class BaseActivity extends AppCompatActivity
     public void checkForUpdates()
     {
         bus.post(new AppUpdateEvent.RequestUpdateCheck(this));
+    }
+
+    private void getNotificationsUnreadCount()
+    {
+        bus.post(new NotificationEvent.RequestUnreadCount());
     }
 
     public void postActivityResumeEvent()

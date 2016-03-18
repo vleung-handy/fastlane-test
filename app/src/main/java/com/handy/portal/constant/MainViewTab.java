@@ -14,12 +14,15 @@ import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.dashboard.YoutubePlayerFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
@@ -45,6 +48,7 @@ public enum MainViewTab implements Serializable
     DASHBOARD_TIERS(DashboardTiersFragment.class),
     DASHBOARD_REVIEWS(DashboardReviewsFragment.class),
     DASHBOARD_FEEDBACK(DashboardFeedbackFragment.class),
+    DASHBOARD_VIDEO_LIBRARY(DashboardVideoLibraryFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
     HELP(HelpFragment.class),
@@ -58,6 +62,8 @@ public enum MainViewTab implements Serializable
     REFER_A_FRIEND(ReferAFriendFragment.class),
     ACCOUNT_SETTINGS(AccountSettingsFragment.class),
     ONBOARDING(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
+    YOUTUBE_PLAYER(YoutubePlayerFragment.class),
+    SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
     ;
 
     private Class mClassType;
