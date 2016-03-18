@@ -18,6 +18,8 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AppUpdateLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.updater.model.UpdateDetails;
 import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
@@ -155,6 +157,7 @@ public class VersionManager
                             @Override
                             public void onError(final DataManager.DataManagerError error)
                             {
+                                bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Failed(null)));
                                 bus.post(new AppUpdateEvent.ReceiveUpdateAvailableError(error));
                             }
                         }

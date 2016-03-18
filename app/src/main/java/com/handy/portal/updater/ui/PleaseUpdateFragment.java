@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AppUpdateLog;
 import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.VersionManager;
@@ -87,6 +89,8 @@ public class PleaseUpdateFragment extends InjectedFragment
         // Make link in text clickable
         manualDownloadText.setMovementMethod(LinkMovementMethod.getInstance());
 
+        bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Shown(getApkDownloadUrl())));
+
         return view;
     }
 
@@ -135,6 +139,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Subscribe
     public void onDownloadUpdateFailed(AppUpdateEvent.DownloadUpdateFailed event)
     {
+        bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Failed(getApkDownloadUrl())));
         showToast(R.string.update_failed);
         finishActivity();
     }
@@ -142,18 +147,36 @@ public class PleaseUpdateFragment extends InjectedFragment
     @OnClick(R.id.update_button)
     protected void installApk()
     {
+        bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Started(getApkDownloadUrl())));
+
         final Intent installIntent = new Intent(Intent.ACTION_VIEW);
         setPackageInstallerComponent(installIntent);
 
         installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
-        Utils.safeLaunchIntent(installIntent, getActivity());
+        boolean successfullyLaunchedInstallIntent = Utils.safeLaunchIntent(installIntent, getActivity());
+        if(!successfullyLaunchedInstallIntent)
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Failed(getApkDownloadUrl())));
+        }
     }
 
     @OnClick(R.id.app_update_fragment_update_later_button)
     protected void onUpdateLaterButtonClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Skipped(getApkDownloadUrl())));
         finishActivity();
+    }
+
+    /**
+     * convenience method to get apk download url for the logger events created in this fragment,
+     * handling the case when the update details object is null (shouldn't be here, but just to be safe)
+     *
+     * @return
+     */
+    private String getApkDownloadUrl()
+    {
+        return mVersionManager.getUpdateDetails() == null ? null : mVersionManager.getUpdateDetails().getDownloadUrl();
     }
 
     private void finishActivity()
