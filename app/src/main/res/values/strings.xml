@@ -418,11 +418,11 @@
     <string name="ended_with_space">Ended: &#160;</string>
     <string name="completed_tasks">Completed Tasks</string>
     <string name="send_note_to_customer_formatted">Send a Note to %1$s</string>
-    <string name="send_note_to_customer_placeholder">Write a thank you. Let them know how the job went. Did you have enough time?</string>
-
+    <string name="send_note_to_customer_placeholder">How\'d the job go?</string>
     <string name="more_tasks_formatted">+%1$d more tasks</string>
-
     <string name="sign_here">Sign Here</string>
+    <string name="clear_signature">clear signature</string>
+    <string name="use_finger_to_sign">use your finger to sign</string>
     <string name="complete_checkout">Complete checkout</string>
 
     <!-- API -->
