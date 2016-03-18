@@ -39,6 +39,7 @@ import com.handy.portal.ui.drawable.BadgeDrawable;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.layout.TabbedLayout;
 import com.handy.portal.util.DeeplinkMapper;
+import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -612,8 +613,7 @@ public class MainActivityFragment extends InjectedFragment
 
     private void setNotificationsBadgeCount(int unreadCount)
     {
-        // Index for drawableTop is 1
-        LayerDrawable icon = (LayerDrawable) mNotificationsButton.getCompoundDrawables()[1];
+        LayerDrawable icon = (LayerDrawable) mNotificationsButton.getCompoundDrawables()[Utils.DRAWABLE_TOP_INDEX];
         // Reuse drawable if possible
         BadgeDrawable badge;
         // Getting the layer 2

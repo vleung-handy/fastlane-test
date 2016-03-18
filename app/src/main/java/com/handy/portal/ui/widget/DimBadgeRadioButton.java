@@ -54,8 +54,7 @@ public class DimBadgeRadioButton extends RadioButton
 
     private void setIconAlpha(int alpha)
     {
-        // Index for drawableTop is 1
-        LayerDrawable layerList = (LayerDrawable) getCompoundDrawables()[1];
+        LayerDrawable layerList = (LayerDrawable) getCompoundDrawables()[Utils.DRAWABLE_TOP_INDEX];
         if (layerList != null)
         {
             Drawable icon = layerList.findDrawableByLayerId(R.id.ic_notifications_bell_icon);
