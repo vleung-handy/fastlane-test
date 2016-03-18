@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import android.webkit.CookieManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -124,6 +124,28 @@ public class MainActivityFragment extends InjectedFragment
         ButterKnife.bind(this, view);
         registerButtonListeners();
         return view;
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        {
+            @Override
+            public void onDrawerOpened(final View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+                setDrawerActive(true);
+            }
+
+            @Override
+            public void onDrawerClosed(final View drawerView)
+            {
+                super.onDrawerClosed(drawerView);
+                setDrawerActive(false);
+            }
+        });
     }
 
     @Override
@@ -277,7 +299,7 @@ public class MainActivityFragment extends InjectedFragment
         trackSwitchToTab(swapFragmentArguments.targetTab);
         //Turn navigation tabs and drawer on by default, some fragments may lock these afterwards
         setTabVisibility(true);
-        setDrawerActive(true);
+        setDrawerActive(false);
         //Swap the fragments
         swapFragment(swapFragmentArguments);
         //Update the tab button display

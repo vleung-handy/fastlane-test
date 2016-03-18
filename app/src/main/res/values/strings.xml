@@ -15,7 +15,11 @@
     <string name="undo">Undo</string>
     <string name="ok">OK</string>
     <string name="error">Error</string>
-    
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Navigation drawer opened</string>
+    <string name="navigation_drawer_close">Navigation drawer closed</string>
+
     <string name="phone_number_hint">Cell Phone Number</string>
     <string name="pin_code_hint">PIN Code</string>
     <string name="request_pin">Get PIN Code</string>
