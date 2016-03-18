@@ -251,6 +251,13 @@
         <item name="android:textColor">@drawable/button_text_blue</item>
     </style>
 
+    <style name="Button.White.Round.Empty">
+        <item name="android:background">@drawable/button_white_empty_round</item>
+        <item name="android:textColor">@drawable/button_text_white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+    </style>
+
     <style name="Button.BookingAction">
         <item name="android:textColor">@drawable/button_text_booking_action_white</item>
     </style>
