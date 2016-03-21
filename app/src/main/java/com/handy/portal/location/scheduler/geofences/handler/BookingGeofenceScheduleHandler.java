@@ -19,6 +19,7 @@ import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.location.scheduler.geofences.model.BookingGeofenceStrategy;
 import com.handy.portal.location.scheduler.handler.ScheduleHandler;
+import com.handy.portal.util.ParcelableUtils;
 import com.handy.portal.util.SystemUtils;
 
 import java.util.ArrayList;
@@ -113,15 +114,9 @@ public class BookingGeofenceScheduleHandler
                  * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
                  */
                 //TODO put into a util
-                if(args == null) return;
-                byte[] strategyByteArray = args.getByteArray(getStrategyBundleExtraKey());
-                if (strategyByteArray == null) { return; }
-                Parcel strategyParcel = Parcel.obtain();
-                strategyParcel.unmarshall(strategyByteArray, 0, strategyByteArray.length);
-                strategyParcel.setDataPosition(0);
-
-                BookingGeofenceStrategy strategy = BookingGeofenceStrategy.CREATOR.createFromParcel(strategyParcel);
-
+                Parcel parcel = ParcelableUtils.unmarshall(args, getStrategyBundleExtraKey());
+                if(parcel == null) return;
+                BookingGeofenceStrategy strategy = BookingGeofenceStrategy.CREATOR.createFromParcel(parcel);
                 onStrategyAlarmTriggered(strategy);
                 break;
             case GEOFENCE_TRIGGERED_BROADCAST_ID:

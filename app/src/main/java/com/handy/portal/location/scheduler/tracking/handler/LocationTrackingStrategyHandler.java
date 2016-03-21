@@ -168,6 +168,7 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
                 mLocationStrategyCallbacks.onStrategyExpired(LocationTrackingStrategyHandler.this);
             }
         }, expirationTimeMs);
+        //let the callback know so that we can remove this strategy from the active strategies list and post all pending updates
     }
 
     public LocationTrackingScheduleStrategy getLocationTrackingStrategy()

@@ -10,36 +10,17 @@ import java.util.Date;
 public class BookingGeofenceStrategy extends ScheduleStrategy
 {
     @SerializedName("booking_id")
-    String mBookingId;
+    String mBookingId; //booking id this geofence is associated with
     @SerializedName("start_date")
-    Date mStartDate;
+    Date mStartDate; //start date of the geofence active period
     @SerializedName("end_date")
-    Date mEndDate;
+    Date mEndDate; //end date of the geofence active period
     @SerializedName("longitude")
-    double mLongitude;
+    double mLongitude; //longitude of the geofence center, in degrees
     @SerializedName("latitude")
-    double mLatitude;
+    double mLatitude; //latitude of the geofence center, in degrees
     @SerializedName("radius")
-    float mRadius;
-
-    /**
-     * TODO REMOVE THIS, FOR TEST PURPOSES ONLY
-     * @param bookingId
-     * @param startDate
-     * @param endDate
-     * @param latitude
-     * @param longitude
-     * @param radius
-     */
-    public BookingGeofenceStrategy(String bookingId, Date startDate, Date endDate, double latitude, double longitude, float radius)
-    {
-        mBookingId = bookingId;
-        mStartDate = startDate;
-        mEndDate = endDate;
-        mLatitude = latitude;
-        mLongitude = longitude;
-        mRadius = radius;
-    }
+    float mRadius; //radius of the geofence, in meters
 
     protected BookingGeofenceStrategy(Parcel in)
     {

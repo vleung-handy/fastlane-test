@@ -3,6 +3,7 @@ package com.handy.portal.location.scheduler.geofences.handler;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -66,29 +67,14 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
         }
         GoogleApiClient googleApiClient = mBookingGeofenceStrategyCallbacks.getGoogleApiClient();
 
-        //build the geofence
-        long expirationDurationMs = mBookingGeofenceStrategy.getEndDate().getTime() - System.currentTimeMillis();
-        Geofence geofence = new Geofence.Builder()
-                .setRequestId(mBookingGeofenceStrategy.getBookingId())
-                .setCircularRegion(mBookingGeofenceStrategy.getLatitude(),
-                        mBookingGeofenceStrategy.getLongitude(),
-                        mBookingGeofenceStrategy.getRadius())
-                .setExpirationDuration(expirationDurationMs)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                .build();
+        Geofence geofence = buildGeofenceFromStrategy();
+        GeofencingRequest geofencingRequest = buildGeofencingRequestFromGeofence(geofence);
 
-        //build the geofence request
-        GeofencingRequest.Builder geofencingRequestBuilder = new GeofencingRequest.Builder();
-        geofencingRequestBuilder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER); //todo TEST ONLY
-        geofencingRequestBuilder.addGeofence(geofence);
-        GeofencingRequest geofencingRequest = geofencingRequestBuilder.build();
-
-        //add the geofence
+        //add the geofence request
         LocationServices.GeofencingApi.addGeofences(googleApiClient,
                 geofencingRequest,
                 mBookingGeofenceStrategyCallbacks.getPendingIntent(mBookingGeofenceStrategy)).setResultCallback(this);
         Log.d(getClass().getName(), "Building geofence for geofence strategy: " + mBookingGeofenceStrategy.toString());
-
 
         //todo postdelayed or postattime?
         mHandler.postDelayed(new Runnable() //callback for when strategy expires
@@ -98,7 +84,39 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
             {
                 mBookingGeofenceStrategyCallbacks.onStrategyExpired(BookingGeofenceStrategyHandler.this);
             }
-        }, expirationDurationMs);
+        }, getGeofenceExpirationDurationMs());
+        //let the callback know so that we can remove this strategy from the active strategies list and post all pending updates
+    }
+
+    /**
+     * gets the duration in ms that this geofence has to be active, starting from the current time
+     * @return
+     */
+    private long getGeofenceExpirationDurationMs()
+    {
+        return mBookingGeofenceStrategy.getEndDate().getTime() - System.currentTimeMillis();
+    }
+
+    private GeofencingRequest buildGeofencingRequestFromGeofence(@NonNull Geofence geofence)
+    {
+        GeofencingRequest.Builder geofencingRequestBuilder = new GeofencingRequest.Builder();
+        geofencingRequestBuilder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        geofencingRequestBuilder.addGeofence(geofence);
+        return geofencingRequestBuilder.build();
+    }
+
+
+    private Geofence buildGeofenceFromStrategy()
+    {
+
+        return new Geofence.Builder()
+                .setRequestId(mBookingGeofenceStrategy.getBookingId())
+                .setCircularRegion(mBookingGeofenceStrategy.getLatitude(),
+                        mBookingGeofenceStrategy.getLongitude(),
+                        mBookingGeofenceStrategy.getRadius())
+                .setExpirationDuration(getGeofenceExpirationDurationMs())
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
     }
 
     @Override
@@ -117,11 +135,8 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
         Log.d(getClass().getName(), "got result callback. status: " + status.getStatusCode() + ":" + status.getStatusMessage());
     }
 
-    //todo refine this
     public interface BookingGeofenceStrategyCallbacks extends StrategyHandler.StrategyCallbacks<BookingGeofenceStrategyHandler>{
         GoogleApiClient getGoogleApiClient();
         PendingIntent getPendingIntent(BookingGeofenceStrategy bookingGeofenceStrategy);
     }
-
-
 }

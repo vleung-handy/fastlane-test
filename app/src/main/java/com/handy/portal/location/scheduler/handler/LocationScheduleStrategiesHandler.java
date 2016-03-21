@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class LocationScheduleStrategiesHandler
 {
-    List<ScheduleHandler> mScheduleHandlerList;
+    private List<ScheduleHandler> mScheduleHandlerList;
     public LocationScheduleStrategiesHandler(LocationScheduleStrategies locationScheduleStrategies,
                                              boolean locationTrackingEnabled,
                                              boolean bookingGeofencesEnabled,

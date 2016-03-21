@@ -7,12 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.location.scheduler.model.ScheduleStrategy;
+import com.handy.portal.util.ParcelableUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -163,9 +163,6 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
         }
     }
 
-    /**
-     * TODO: make this right
-     */
     public final void destroy()
     {
         try
@@ -205,17 +202,14 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
          *
          * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
          */
-        Parcel strategyParcel = Parcel.obtain();
-        strategy.writeToParcel(strategyParcel, 0);
-        strategyParcel.setDataPosition(0);
-
-        Bundle args = new Bundle();
-        args.putByteArray(getStrategyBundleExtraKey(), strategyParcel.marshall());
+        byte[] byteArray = ParcelableUtils.marshall(strategy);
+        Bundle bundle = new Bundle();
+        bundle.putByteArray(getStrategyBundleExtraKey(), byteArray);
 
         Intent intent = new Intent(getWakeupAlarmBroadcastAction());
         intent.setAction(getWakeupAlarmBroadcastAction()); //probably redundant, test this
         intent.setPackage(mContext.getPackageName());
-        intent.putExtras(args);
+        intent.putExtras(bundle);
         PendingIntent operation = PendingIntent.getBroadcast(mContext, getWakeupAlarmRequestCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         mAlarmManager.set(AlarmManager.RTC_WAKEUP, strategy.getStartDate().getTime(), operation);
@@ -264,6 +258,10 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
         //maybe do something
     }
 
+    /**
+     * remove the expired strategy from the active strategies list and post all pending updates for it
+     * @param strategyHandler
+     */
     public void onStrategyExpired(StrategyHandlerType strategyHandler)
     {
         try

@@ -14,6 +14,7 @@ import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.handler.ScheduleHandler;
 import com.handy.portal.location.scheduler.tracking.model.LocationTrackingScheduleStrategy;
+import com.handy.portal.util.ParcelableUtils;
 
 import java.util.LinkedList;
 
@@ -95,13 +96,9 @@ public class LocationTrackingScheduleHandler
                  *
                  * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
                  */
-                byte[] strategyByteArray = args.getByteArray(BUNDLE_EXTRA_LOCATION_STRATEGY);
-                if (strategyByteArray == null) { break; }
-                Parcel strategyParcel = Parcel.obtain();
-                strategyParcel.unmarshall(strategyByteArray, 0, strategyByteArray.length);
-                strategyParcel.setDataPosition(0);
-
-                LocationTrackingScheduleStrategy locationTrackerStrategy = LocationTrackingScheduleStrategy.CREATOR.createFromParcel(strategyParcel);
+                Parcel parcel = ParcelableUtils.unmarshall(args, getStrategyBundleExtraKey());
+                if(parcel == null) return;
+                LocationTrackingScheduleStrategy locationTrackerStrategy = LocationTrackingScheduleStrategy.CREATOR.createFromParcel(parcel);
                 onStrategyAlarmTriggered(locationTrackerStrategy);
                 break;
         }
