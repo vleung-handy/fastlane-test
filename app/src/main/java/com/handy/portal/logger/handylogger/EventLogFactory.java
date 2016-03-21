@@ -41,11 +41,6 @@ public class EventLogFactory
         mProviderManager = providerManager;
     }
 
-    public EventLog createNavigationLog(String tabName)
-    {
-        return new BasicLog.Navigation(tabName);
-    }
-
     // System event logs
     public EventLog createNetworkReconnectedLog()
     {

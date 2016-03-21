@@ -29,6 +29,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
@@ -285,7 +286,7 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new NavigationEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
                 transitionStyle, userTriggered));
         bus.post(new LogEvent.AddLogEvent(
-                mEventLogFactory.createNavigationLog(targetTab.name().toLowerCase())));
+                new BasicLog.Navigation(targetTab.name().toLowerCase())));
     }
 
     @Subscribe
