@@ -1,6 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.model.Booking;
 
 public class NearbyJobsLog extends EventLog
 {
@@ -49,13 +50,12 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("payment_to_provider")
         private float mPaymentAmount;
 
-        public ClaimJobSelected(
-                final String bookingId, final double distanceInKilometer, final float paymentAmount)
+        public ClaimJobSelected(final Booking booking, final double distanceInKilometer)
         {
             super(EVENT_TYPE);
-            mBookingId = bookingId;
+            mBookingId = booking.getId();
             mDistanceInKilometer = distanceInKilometer;
-            mPaymentAmount = paymentAmount;
+            mPaymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
         }
     }
 
@@ -71,13 +71,12 @@ public class NearbyJobsLog extends EventLog
         @SerializedName("payment_to_provider")
         private float mPaymentAmount;
 
-        public ClaimJobSuccess(
-                final String bookingId, final double distanceInKilometer, final float paymentAmount)
+        public ClaimJobSuccess(final Booking booking, final double distanceInKilometer)
         {
             super(EVENT_TYPE);
-            mBookingId = bookingId;
+            mBookingId = booking.getId();
             mDistanceInKilometer = distanceInKilometer;
-            mPaymentAmount = paymentAmount;
+            mPaymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
         }
     }
 

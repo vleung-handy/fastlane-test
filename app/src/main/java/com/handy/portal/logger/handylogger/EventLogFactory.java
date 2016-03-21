@@ -39,34 +39,6 @@ public class EventLogFactory
         mProviderManager = providerManager;
     }
 
-    // Nearby Bookings Logs
-    public EventLog createNearbyJobsLaunchedLog(int numOfJobs)
-    {
-        return new NearbyJobsLog.Shown(numOfJobs);
-    }
-
-    public EventLog createPinSelectedLog()
-    {
-        return new NearbyJobsLog.PinSelected();
-    }
-
-    public EventLog createNearbyJobClaimSelectedLog(Booking booking, double distanceInKilometer)
-    {
-        String bookingId = booking.getId();
-        float paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
-
-        return new NearbyJobsLog.ClaimJobSelected(bookingId, distanceInKilometer, paymentAmount);
-    }
-
-    public EventLog createNearbyJobClaimSuccessLog(Booking booking, double distanceInKilometer)
-    {
-        String bookingId = booking.getId();
-        float paymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
-
-        return new NearbyJobsLog.ClaimJobSuccess(bookingId,
-                distanceInKilometer, paymentAmount);
-    }
-
     // Available Booking Logs
     public EventLog createAvailableJobDateClickedLog(Date date, int jobCount)
     {
