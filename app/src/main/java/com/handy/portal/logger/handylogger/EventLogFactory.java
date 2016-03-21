@@ -1,9 +1,6 @@
 package com.handy.portal.logger.handylogger;
 
-import android.net.Uri;
-
 import com.handy.portal.constant.LocationKey;
-import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ProviderManager;
@@ -20,22 +17,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-    // Deeplink logs
-    public EventLog createDeeplinkOpenedLog(final Uri data)
-    {
-        return new DeeplinkLog.Opened(data);
-    }
-
-    public EventLog createDeeplinkProcessedLog(final Uri data)
-    {
-        return new DeeplinkLog.Processed(data);
-    }
-
-    public EventLog createDeeplinkIgnoredLog(final Uri data)
-    {
-        return new DeeplinkLog.Ignored(data);
     }
 
     //Web onboarding logs
