@@ -1,19 +1,16 @@
 package com.handy.portal.location.scheduler.tracking.handler;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.handler.ScheduleHandler;
 import com.handy.portal.location.scheduler.tracking.model.LocationTrackingScheduleStrategy;
-import com.handy.portal.util.ParcelableUtils;
 
 import java.util.LinkedList;
 
@@ -26,10 +23,10 @@ public class LocationTrackingScheduleHandler
         extends ScheduleHandler<LocationTrackingStrategyHandler, LocationTrackingScheduleStrategy>
         implements LocationTrackingStrategyHandler.LocationStrategyCallbacks
 {
-    Handler mHandler = new Handler();
+    private Handler mHandler = new Handler();
     private static final int ALARM_REQUEST_CODE = 1;
-    private static final String LOCATION_SCHEDULE_ALARM_BROADCAST_ID = "LOCATION_SCHEDULE_ALARM_BROADCAST_ID";
-    private final static String BUNDLE_EXTRA_LOCATION_STRATEGY = "LOCATION_STRATEGY";
+    private static final String LOCATION_TRACKING_ALARM_BROADCAST_ACTION = "LOCATION_TRACKING_ALARM_BROADCAST_ACTION";
+    private final static String BUNDLE_EXTRA_LOCATION_TRACKING_STRATEGY = "BUNDLE_EXTRA_LOCATION_TRACKING_STRATEGY";
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -48,7 +45,7 @@ public class LocationTrackingScheduleHandler
     @Override
     protected String getWakeupAlarmBroadcastAction()
     {
-        return LOCATION_SCHEDULE_ALARM_BROADCAST_ID;
+        return LOCATION_TRACKING_ALARM_BROADCAST_ACTION;
     }
 
     @Override
@@ -61,45 +58,10 @@ public class LocationTrackingScheduleHandler
                         mContext);
     }
 
-    /**
-     * receives wake ups from alarm manager
-     * TODO: clean up
-     *
-     * @param context
-     * @param intent
-     */
     @Override
-    public void onReceive(final Context context, final Intent intent)
+    protected Parcelable.Creator<LocationTrackingScheduleStrategy> getStrategyCreator()
     {
-        Bundle args = intent.getExtras();
-        if (args == null)
-        {
-            //shouldn't happen
-            Log.e(getClass().getName(), "Args is null on receive alarm");
-            return;
-        }
-        if (intent.getAction() == null)
-        {
-            Log.e(getClass().getName(), "Intent action is null on receive alarm");
-            return;
-        }
-
-        switch (intent.getAction())
-        {
-            //TODO: refactor this
-            case LOCATION_SCHEDULE_ALARM_BROADCAST_ID: //todo how can i make the base class handle this
-                Log.d(getClass().getName(), "Woke up");
-
-                /**
-                 * using byte array to avoid exception
-                 *
-                 * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
-                 */
-                LocationTrackingScheduleStrategy locationTrackerStrategy = ParcelableUtils.unmarshall(args, getStrategyBundleExtraKey(), LocationTrackingScheduleStrategy.CREATOR);
-                if(locationTrackerStrategy == null) return;
-                onStrategyAlarmTriggered(locationTrackerStrategy);
-                break;
-        }
+        return LocationTrackingScheduleStrategy.CREATOR;
     }
 
     @Override
@@ -111,7 +73,7 @@ public class LocationTrackingScheduleHandler
     @Override
     protected String getStrategyBundleExtraKey()
     {
-        return BUNDLE_EXTRA_LOCATION_STRATEGY;
+        return BUNDLE_EXTRA_LOCATION_TRACKING_STRATEGY;
     }
 
     /**

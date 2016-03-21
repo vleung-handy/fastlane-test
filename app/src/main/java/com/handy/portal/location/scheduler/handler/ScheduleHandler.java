@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -86,6 +87,11 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
     }
 
     /**
+     * need this because to work around being unable to inherit static methods
+     * @return the static Creator object of the ScheduleStrategyType
+     */
+    protected abstract Parcelable.Creator<ScheduleStrategyType> getStrategyCreator();
+    /**
      * assume schedule sorted by date asc
      * <p/>
      * TODO: stop the service when schedule is completely handled
@@ -119,6 +125,39 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
         }
 
         //TODO: when the schedule is completely expired, we want to request a schedule for the next N days in case the user never opens the app
+    }
+
+    /**
+     * receives wake ups from alarm manager
+     *
+     * subclasses must make sure that they call super.onReceive()
+     *
+     * @param context
+     * @param intent
+     */
+    @Override
+    public void onReceive(final Context context, final Intent intent)
+    {
+        Bundle extrasBundle = intent.getExtras();
+        if (extrasBundle == null)
+        {
+            //shouldn't happen
+            Log.e(getClass().getName(), "Args is null on receive alarm");
+            return;
+        }
+        String intentAction = intent.getAction();
+        if (intentAction == null)
+        {
+            Log.e(getClass().getName(), "Intent action is null on receive alarm");
+            return;
+        }
+
+        if(intentAction.equals(getWakeupAlarmBroadcastAction()))
+        {
+            ScheduleStrategyType scheduleStrategy = ParcelableUtils.unmarshall(extrasBundle, getStrategyBundleExtraKey(), getStrategyCreator());
+            if(scheduleStrategy == null) return;
+            onStrategyAlarmTriggered(scheduleStrategy);
+        }
     }
 
     public final void startStrategy(@NonNull final ScheduleStrategyType scheduleStrategyType) throws SecurityException, IllegalStateException

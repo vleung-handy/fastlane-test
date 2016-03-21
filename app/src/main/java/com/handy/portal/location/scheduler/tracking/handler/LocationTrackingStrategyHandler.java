@@ -45,17 +45,17 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
      */
     public static final int HIGH_ACCURACY_THRESHOLD_METERS = 100;
 
-    Queue<LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
-    long mTimestampLastUpdatePostedMs;
-    LocationTrackingScheduleStrategy mLocationTrackingStrategy;
-    LocationStrategyCallbacks mLocationStrategyCallbacks;
-    Context mContext;
+    private Queue<LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
+    private long mTimestampLastUpdatePostedMs;
+    private LocationTrackingScheduleStrategy mLocationTrackingStrategy;
+    private LocationStrategyCallbacks mLocationStrategyCallbacks;
+    private Context mContext;
 
     /**
      * this listener is tied to the lifecycle of the strategy and gets location update callbacks
      */
-    LocationListener mLocationListener;
-    Handler mHandler;
+    private LocationListener mLocationListener;
+    private Handler mHandler;
 
     public LocationListener getLocationListener()
     {

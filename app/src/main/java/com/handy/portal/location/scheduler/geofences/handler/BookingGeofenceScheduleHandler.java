@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -18,7 +18,6 @@ import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.location.scheduler.geofences.model.BookingGeofenceStrategy;
 import com.handy.portal.location.scheduler.handler.ScheduleHandler;
-import com.handy.portal.util.ParcelableUtils;
 import com.handy.portal.util.SystemUtils;
 
 import java.util.ArrayList;
@@ -33,10 +32,10 @@ public class BookingGeofenceScheduleHandler
         implements BookingGeofenceStrategyHandler.BookingGeofenceStrategyCallbacks
 {
     private static final int ALARM_REQUEST_CODE = 2;
-    static final int ALARM_PENDING_INTENT_REQUEST_CODE = 3;
-    private static final String WAKEUP_ALARM_BROADCAST_ID = "GEOFENCE_WAKEUP_ALARM_BROADCAST_ID";
-    private final static String BUNDLE_EXTRA_BOOKING_GEOFENCE = "BUNDLE_EXTRA_BOOKING_GEOFENCE";
-    static final String GEOFENCE_TRIGGERED_BROADCAST_ID = "GEOFENCE_TRIGGERED_BROADCAST_ID";
+    private static final int ALARM_PENDING_INTENT_REQUEST_CODE = 3;
+    private static final String WAKEUP_ALARM_BROADCAST_ACTION = "GEOFENCE_WAKEUP_ALARM_BROADCAST_ACTION";
+    private final static String BUNDLE_EXTRA_BOOKING_GEOFENCE_STRATEGY = "BUNDLE_EXTRA_BOOKING_GEOFENCE_STRATEGY";
+    private static final String GEOFENCE_TRIGGERED_BROADCAST_ID = "GEOFENCE_TRIGGERED_BROADCAST_ID";
 
     private GoogleApiClient mGoogleApiClient;
     private Handler mHandler =  new Handler();
@@ -56,7 +55,7 @@ public class BookingGeofenceScheduleHandler
     @Override
     protected String getWakeupAlarmBroadcastAction()
     {
-        return WAKEUP_ALARM_BROADCAST_ID;
+        return WAKEUP_ALARM_BROADCAST_ACTION;
     }
 
     @Override
@@ -76,7 +75,7 @@ public class BookingGeofenceScheduleHandler
     @Override
     protected String getStrategyBundleExtraKey()
     {
-        return BUNDLE_EXTRA_BOOKING_GEOFENCE;
+        return BUNDLE_EXTRA_BOOKING_GEOFENCE_STRATEGY;
     }
 
     @Override
@@ -89,37 +88,18 @@ public class BookingGeofenceScheduleHandler
     @Override
     public void onReceive(final Context context, final Intent intent)
     {
-        Log.d(getClass().getName(), "geofence broadcast receiver got something");
-        Bundle args = intent.getExtras();
-        if (intent.getAction() == null)
+        super.onReceive(context, intent);
+        if(intent == null || intent.getAction() == null) return;
+        if(GEOFENCE_TRIGGERED_BROADCAST_ID.equals(intent.getAction()))
         {
-            Log.e(getClass().getName(), "Intent action is null on receive alarm");
-            return;
+            handleGeofenceIntent(intent);
         }
+    }
 
-
-        //todo put in function in superclass
-        Log.d(getClass().getName(), "intent action: " + intent.getAction());
-
-        switch (intent.getAction())
-        {
-            //TODO: refactor this
-            case WAKEUP_ALARM_BROADCAST_ID: //todo how can i make the base class handle this
-                Log.d(getClass().getName(), "Woke up");
-
-                /**
-                 * using byte array to avoid exception
-                 *
-                 * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
-                 */
-                BookingGeofenceStrategy strategy = ParcelableUtils.unmarshall(args, getStrategyBundleExtraKey(), BookingGeofenceStrategy.CREATOR);
-                if(strategy == null) return;
-                onStrategyAlarmTriggered(strategy);
-                break;
-            case GEOFENCE_TRIGGERED_BROADCAST_ID:
-                handleGeofenceIntent(intent);
-                break;
-        }
+    @Override
+    protected Parcelable.Creator<BookingGeofenceStrategy> getStrategyCreator()
+    {
+        return BookingGeofenceStrategy.CREATOR;
     }
 
     /**
