@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
@@ -34,8 +33,10 @@ public class BookingGeofenceScheduleHandler
         implements BookingGeofenceStrategyHandler.BookingGeofenceStrategyCallbacks
 {
     private static final int ALARM_REQUEST_CODE = 2;
+    static final int ALARM_PENDING_INTENT_REQUEST_CODE = 3;
     private static final String WAKEUP_ALARM_BROADCAST_ID = "GEOFENCE_WAKEUP_ALARM_BROADCAST_ID";
     private final static String BUNDLE_EXTRA_BOOKING_GEOFENCE = "BUNDLE_EXTRA_BOOKING_GEOFENCE";
+    static final String GEOFENCE_TRIGGERED_BROADCAST_ID = "GEOFENCE_TRIGGERED_BROADCAST_ID";
 
     private GoogleApiClient mGoogleApiClient;
     private Handler mHandler =  new Handler();
@@ -130,6 +131,14 @@ public class BookingGeofenceScheduleHandler
         }
     }
 
+    /**
+     * handles the geofence intent that is broadcasted when the alarm is triggered at
+     * the strategy's start date
+     *
+     * finds out which geofences were triggered, and builds and sends a
+     * location batch update from them
+     * @param intent
+     */
     public void handleGeofenceIntent(Intent intent)
     {
         Log.d(getClass().getName(), "got geofence intent");
@@ -171,11 +180,15 @@ public class BookingGeofenceScheduleHandler
             LocationBatchUpdate locationBatchUpdate = new LocationBatchUpdate(locationUpdateList.toArray(new LocationUpdate[locationUpdateList.size()]));
 
             Log.d(getClass().getName(), "location batch update: " + locationBatchUpdate.toString());
-            Toast.makeText(mContext, "Geofence event triggered: " + eventName, Toast.LENGTH_SHORT).show(); //TODO test only. remove later
             onLocationBatchUpdateReady(locationBatchUpdate);
         }
     }
 
+    /**
+     * gets the event name to send to the server from the geofence transition type
+     * @param geofenceTransition
+     * @return
+     */
     private String getLocationUpdateEventNameFromGeofenceTransition(int geofenceTransition)
     {
         switch (geofenceTransition)
@@ -188,8 +201,6 @@ public class BookingGeofenceScheduleHandler
         return null;
     }
 
-    static final int PENDING_INTENT_REQUEST_CODE = 3;
-    static final String GEOFENCE_TRIGGERED_BROADCAST_ID = "GEOFENCE_TRIGGERED_BROADCAST_ID";
     @Override
     public PendingIntent getPendingIntent(BookingGeofenceStrategy strategy)
     {
@@ -198,10 +209,8 @@ public class BookingGeofenceScheduleHandler
         Log.d(getClass().getName(), "creating pending intent...");
         Intent intent = new Intent(GEOFENCE_TRIGGERED_BROADCAST_ID);
         intent.setAction(GEOFENCE_TRIGGERED_BROADCAST_ID); //probably redundant, test this
-//        intent.setPackage(mContext.getPackageName());
 
-        //todo put in function in superclass
-        return PendingIntent.getBroadcast(mContext, PENDING_INTENT_REQUEST_CODE,
+        return PendingIntent.getBroadcast(mContext, ALARM_PENDING_INTENT_REQUEST_CODE,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }

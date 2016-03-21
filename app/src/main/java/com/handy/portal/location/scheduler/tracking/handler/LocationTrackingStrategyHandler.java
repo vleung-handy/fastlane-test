@@ -47,7 +47,7 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
 
     Queue<LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
     long mTimestampLastUpdatePostedMs;
-    LocationTrackingScheduleStrategy mLocationTrackerStrategy;
+    LocationTrackingScheduleStrategy mLocationTrackingStrategy;
     LocationStrategyCallbacks mLocationStrategyCallbacks;
     Context mContext;
 
@@ -63,12 +63,12 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
     }
 
 
-    public LocationTrackingStrategyHandler(@NonNull LocationTrackingScheduleStrategy locationTrackerStrategy,
+    public LocationTrackingStrategyHandler(@NonNull LocationTrackingScheduleStrategy locationTrackingStrategy,
                                            @NonNull final LocationStrategyCallbacks locationStrategyCallbacks,
                                            @NonNull Handler handler,
                                            @NonNull Context context)
     {
-        mLocationTrackerStrategy = locationTrackerStrategy;
+        mLocationTrackingStrategy = locationTrackingStrategy;
         mLocationStrategyCallbacks = locationStrategyCallbacks;
         mContext = context;
         mHandler = handler;
@@ -79,7 +79,7 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
             public void onLocationChanged(final Location location)
             {
                 //TODO: use a util instead
-                if (location.getTime() > mLocationTrackerStrategy.getEndDate().getTime())
+                if (location.getTime() > mLocationTrackingStrategy.getEndDate().getTime())
                 {
                     Log.d(getClass().getName(), "location request expired but got location changed callback, not doing anything");
                     //would be messy if i unregistered this here, because no reference to required arguments
@@ -103,7 +103,7 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
     public boolean isStrategyExpired()
     {
         //TODO use a util instead
-        return System.currentTimeMillis() > mLocationTrackerStrategy.getEndDate().getTime();
+        return System.currentTimeMillis() > mLocationTrackingStrategy.getEndDate().getTime();
     }
 
     /**
@@ -114,7 +114,7 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
     private LocationRequest createLocationRequest()
     {
         int priority;
-        if(mLocationTrackerStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS)
+        if(mLocationTrackingStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS)
         {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
         }
@@ -123,11 +123,11 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
         }
 
-        long pollingIntervalMs = mLocationTrackerStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
-        long expirationDurationMs = mLocationTrackerStrategy.getEndDate().getTime() - System.currentTimeMillis();
+        long pollingIntervalMs = mLocationTrackingStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
+        long expirationDurationMs = mLocationTrackingStrategy.getEndDate().getTime() - System.currentTimeMillis();
 
         LocationRequest locationRequest = new LocationRequest()
-                .setSmallestDisplacement(mLocationTrackerStrategy.getDistanceFilterMeters())
+                .setSmallestDisplacement(mLocationTrackingStrategy.getDistanceFilterMeters())
                 .setPriority(priority)
                 .setExpirationDuration(expirationDurationMs)
                 .setInterval(pollingIntervalMs)
@@ -152,7 +152,7 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
             return;
         }
 
-        Log.d(getClass().getName(), "requesting location updates for " + mLocationTrackerStrategy.toString());
+        Log.d(getClass().getName(), "requesting location updates for " + mLocationTrackingStrategy.toString());
         LocationRequest locationRequest = createLocationRequest();
         long expirationTimeMs = locationRequest.getExpirationTime();
 
@@ -170,9 +170,9 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
         }, expirationTimeMs);
     }
 
-    public LocationTrackingScheduleStrategy getLocationTrackerStrategy()
+    public LocationTrackingScheduleStrategy getLocationTrackingStrategy()
     {
-        return mLocationTrackerStrategy;
+        return mLocationTrackingStrategy;
     }
 
     /**
@@ -201,7 +201,7 @@ public class LocationTrackingStrategyHandler extends StrategyHandler
     private boolean shouldPostUpdate()
     {
         //TODO use a util instead
-        long serverPollingIntervalMs = mLocationTrackerStrategy.getServerPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
+        long serverPollingIntervalMs = mLocationTrackingStrategy.getServerPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
         return (System.currentTimeMillis() - mTimestampLastUpdatePostedMs >= serverPollingIntervalMs);
     }
 

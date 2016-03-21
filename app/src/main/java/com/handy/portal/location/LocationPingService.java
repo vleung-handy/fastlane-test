@@ -133,7 +133,7 @@ public class LocationPingService extends Service implements
                 stopSelf();
             }
         }
-};
+    };
 
     private boolean isRecentLocation(final Location location)
     {

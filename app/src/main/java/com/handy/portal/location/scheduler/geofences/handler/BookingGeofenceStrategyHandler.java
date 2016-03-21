@@ -65,22 +65,25 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
             return;
         }
         GoogleApiClient googleApiClient = mBookingGeofenceStrategyCallbacks.getGoogleApiClient();
+
+        //build the geofence
         long expirationDurationMs = mBookingGeofenceStrategy.getEndDate().getTime() - System.currentTimeMillis();
         Geofence geofence = new Geofence.Builder()
                 .setRequestId(mBookingGeofenceStrategy.getBookingId())
                 .setCircularRegion(mBookingGeofenceStrategy.getLatitude(),
                         mBookingGeofenceStrategy.getLongitude(),
                         mBookingGeofenceStrategy.getRadius())
-//                .setCircularRegion(40.740402, -73.993034, 10000) //TODO test only, remove
                 .setExpirationDuration(expirationDurationMs)
-                .setNotificationResponsiveness(1) //TODO make this much higher. test only
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
+
+        //build the geofence request
         GeofencingRequest.Builder geofencingRequestBuilder = new GeofencingRequest.Builder();
         geofencingRequestBuilder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER); //todo TEST ONLY
         geofencingRequestBuilder.addGeofence(geofence);
-
         GeofencingRequest geofencingRequest = geofencingRequestBuilder.build();
+
+        //add the geofence
         LocationServices.GeofencingApi.addGeofences(googleApiClient,
                 geofencingRequest,
                 mBookingGeofenceStrategyCallbacks.getPendingIntent(mBookingGeofenceStrategy)).setResultCallback(this);
@@ -103,7 +106,6 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
     {
         GoogleApiClient googleApiClient = mBookingGeofenceStrategyCallbacks.getGoogleApiClient();
         Log.d(getClass().getName(), "stopping strategy: " + toString());
-        LocationServices.GeofencingApi.removeGeofences(googleApiClient, mBookingGeofenceStrategyCallbacks.getPendingIntent(mBookingGeofenceStrategy));
         List<String> requestIdsList = new LinkedList<>();
         requestIdsList.add(mBookingGeofenceStrategy.getBookingId());
         LocationServices.GeofencingApi.removeGeofences(googleApiClient, requestIdsList);
@@ -115,6 +117,7 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
         Log.d(getClass().getName(), "got result callback. status: " + status.getStatusCode() + ":" + status.getStatusMessage());
     }
 
+    //todo refine this
     public interface BookingGeofenceStrategyCallbacks extends StrategyHandler.StrategyCallbacks<BookingGeofenceStrategyHandler>{
         GoogleApiClient getGoogleApiClient();
         PendingIntent getPendingIntent(BookingGeofenceStrategy bookingGeofenceStrategy);

@@ -27,6 +27,7 @@ import javax.inject.Inject;
 /**
  *
  * does whatever needs to be done given a schedule that contains strategies, sorted by start date
+ * TODO: try to not have to define the StrategyHandler class type, because that's supposed to be implied from the strategy type
  */
 public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandler, ScheduleStrategyType extends ScheduleStrategy>
         extends BroadcastReceiver
@@ -50,6 +51,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         mContext = context;
 
+        //TODO: investigate using this later. need to refactor other stuff before this can be used
 //        LocalBroadcastManager.getInstance(mContext).registerReceiver(this, getAlarmIntentFilter());
         mContext.registerReceiver(this, getAlarmIntentFilter());
     }
@@ -86,7 +88,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
     /**
      * assume schedule sorted by date asc
      * <p/>
-     * TODO: super crude, clean up
+     * TODO: stop the service when schedule is completely handled
      */
     protected final void scanSchedule()
     {
@@ -192,7 +194,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
     }
 
     /**
-     *
+     * TODO refactor this later to not use system alarms. investigate alternative
      * Schedules an alarm to wake this broadcast receiver up with the strategy, for the strategy start date
      * @param strategy
      */
