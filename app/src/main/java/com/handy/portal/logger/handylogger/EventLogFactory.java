@@ -1,17 +1,13 @@
 package com.handy.portal.logger.handylogger;
 
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.handy.portal.constant.LocationKey;
-import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
-import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
@@ -37,59 +33,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-    // Available Booking Logs
-    public EventLog createAvailableJobDateClickedLog(Date date, int jobCount)
-    {
-        return new AvailableJobsLog.DateClicked(date, jobCount);
-    }
-
-    public EventLog createAvailableJobClickedLog(@NonNull Booking booking, int listNumber)
-    {
-        String bookingId = booking.getId();
-        String serviceId = booking.getService();
-        int regionId = booking.getRegionId();
-        String zipCode = getZipCode(booking.getAddress());
-        boolean requested = booking.isRequested();
-        Date dateStart = booking.getStartDate();
-
-        return new AvailableJobsLog.Clicked(bookingId,
-                serviceId, regionId, zipCode, requested, dateStart, listNumber);
-    }
-
-    public EventLog createAvailableJobClaimSuccessLog(
-            Booking booking,
-            String source,
-            @Nullable Bundle sourceExtras
-    )
-    {
-        String bookingId = booking.getId();
-        String serviceId = booking.getService();
-        int regionId = booking.getRegionId();
-        String zipCode = getZipCode(booking.getAddress());
-        boolean requested = booking.isRequested();
-        Date dateStart = booking.getStartDate();
-        int frequency = booking.getFrequency();
-
-        return new AvailableJobsLog.ClaimSuccess(
-                bookingId, serviceId, regionId, zipCode, requested, dateStart, frequency, source,
-                sourceExtras
-        );
-    }
-
-    public EventLog createAvailableJobClaimErrorLog(Booking booking, String source)
-    {
-        String bookingId = booking.getId();
-        String serviceId = booking.getService();
-        int regionId = booking.getRegionId();
-        String zipCode = getZipCode(booking.getAddress());
-        boolean requested = booking.isRequested();
-        Date dateStart = booking.getStartDate();
-        int frequency = booking.getFrequency();
-
-        return new AvailableJobsLog.ClaimError(bookingId,
-                serviceId, regionId, zipCode, requested, dateStart, frequency, source);
     }
 
     // Scheduled Booking Logs

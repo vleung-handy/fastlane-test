@@ -23,6 +23,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
@@ -330,8 +331,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     int oneBasedIndex = position + 1;
                     if (getTrackingType().equalsIgnoreCase(getString(R.string.available_job)))
                     {
-                        bus.post(new LogEvent.AddLogEvent(mEventLogFactory
-                                .createAvailableJobClickedLog(booking, oneBasedIndex)));
+                        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.Clicked(booking, oneBasedIndex)));
                     }
                     else if (getTrackingType().equalsIgnoreCase(getString(R.string.scheduled_job)))
                     {
