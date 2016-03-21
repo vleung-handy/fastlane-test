@@ -5,7 +5,6 @@ import android.net.Uri;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
-import com.handy.portal.logger.handylogger.model.PushNotificationLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
@@ -13,7 +12,6 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.OnboardingParams;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.logs.VideoLog;
-import com.urbanairship.push.PushMessage;
 
 public class EventLogFactory
 {
@@ -22,23 +20,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-    // Push logs
-
-    public EventLog createPushNotificationReceivedLog(final PushMessage pushMessage)
-    {
-        return new PushNotificationLog.Received(pushMessage);
-    }
-
-    public EventLog createPushNotificationOpenedLog(final PushMessage pushMessage)
-    {
-        return new PushNotificationLog.Opened(pushMessage);
-    }
-
-    public EventLog createPushNotificationDismissedLog(final PushMessage pushMessage)
-    {
-        return new PushNotificationLog.Dismissed(pushMessage);
     }
 
     // Deeplink logs
