@@ -90,7 +90,7 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     public void switchToVideoLibrary()
     {
         bus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoLibrarySelected()));
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY, true));
     }
 
     public void swapToVideo(String youtubeId)

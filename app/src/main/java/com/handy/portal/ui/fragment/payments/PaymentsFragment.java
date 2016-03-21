@@ -233,7 +233,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments, true));
         }
     }
 
@@ -263,7 +263,7 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HELP_PAYMENTS_SECTION_REDIRECT_PATH);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
     }
 
     private void showHelpOptions()
@@ -274,7 +274,7 @@ public final class PaymentsFragment extends ActionBarFragment
         }
         else
         {
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, true));
         }
     }
 
@@ -361,7 +361,7 @@ public final class PaymentsFragment extends ActionBarFragment
                         new PaymentsLog.HelpItemSelected(childNode.getLabel())));
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
-                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
+                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
             }
         });
     }

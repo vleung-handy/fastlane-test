@@ -10,26 +10,42 @@ public abstract class NavigationEvent extends HandyEvent
 {
     public static class NavigateToTab extends NavigationEvent
     {
-        public MainViewTab targetTab;
-        public Bundle arguments;
-        public TransitionStyle transitionStyleOverride;
+        public final MainViewTab targetTab;
+        public final boolean addToBackStack;
+        public final Bundle arguments;
+        public final TransitionStyle transitionStyle;
 
         public NavigateToTab(MainViewTab targetTab)
         {
-            this.targetTab = targetTab;
+            this(targetTab, null, null, false);
+        }
+
+        public NavigateToTab(MainViewTab targetTab, boolean addToBackStack)
+        {
+            this(targetTab, null, null, addToBackStack);
         }
 
         public NavigateToTab(MainViewTab targetTab, Bundle arguments)
         {
-            this.targetTab = targetTab;
-            this.arguments = arguments;
+            this(targetTab, arguments, null, false);
         }
 
-        public NavigateToTab(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyleOverride)
+        public NavigateToTab(MainViewTab targetTab, Bundle arguments, boolean addToBackStack)
+        {
+            this(targetTab, arguments, null, addToBackStack);
+        }
+
+        public NavigateToTab(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyle)
+        {
+            this(targetTab, arguments, transitionStyle, false);
+        }
+
+        public NavigateToTab(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
         {
             this.targetTab = targetTab;
+            this.addToBackStack = addToBackStack;
             this.arguments = arguments;
-            this.transitionStyleOverride = transitionStyleOverride;
+            this.transitionStyle = transitionStyle;
         }
     }
 
@@ -41,15 +57,15 @@ public abstract class NavigationEvent extends HandyEvent
         public MainViewTab currentTab;
         public Bundle arguments;
         public TransitionStyle transitionStyle;
-        public boolean userTriggered;
+        public boolean addToBackStack;
 
-        public RequestProcessNavigateToTab(MainViewTab targetTab, MainViewTab currentTab, Bundle arguments, TransitionStyle transitionStyle, boolean userTriggered)
+        public RequestProcessNavigateToTab(MainViewTab targetTab, MainViewTab currentTab, Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
         {
             this.targetTab = targetTab;
             this.currentTab = currentTab;
             this.arguments = arguments;
             this.transitionStyle = transitionStyle;
-            this.userTriggered = userTriggered;
+            this.addToBackStack = addToBackStack;
         }
     }
 
