@@ -140,7 +140,8 @@
     <dimen name="completed_task_text_margin">14dp</dimen>
     <dimen name="completed_task_margin_bottom">8dp</dimen>
     <dimen name="checkbox_width_height">16dp</dimen>
-    <dimen name="customer_note_text_min_height">100dp</dimen>
+    <dimen name="customer_note_text_min_height">50dp</dimen>
+    <dimen name="sign_helper_text_margin_top">4dp</dimen>
 
     <!-- Badge text size -->
     <dimen name="badge_text_size">10sp</dimen>

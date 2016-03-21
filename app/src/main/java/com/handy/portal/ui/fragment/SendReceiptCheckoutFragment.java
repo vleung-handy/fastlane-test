@@ -11,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -47,7 +49,7 @@ import butterknife.OnClick;
 import butterknife.OnFocusChange;
 
 
-public class SendReceiptCheckoutFragment extends ActionBarFragment implements View.OnFocusChangeListener
+public class SendReceiptCheckoutFragment extends ActionBarFragment implements View.OnFocusChangeListener, SignaturePad.OnSignedListener
 {
     @Inject
     ConfigManager mConfigManager;
@@ -66,6 +68,10 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     ViewGroup mChecklistFirstColumn;
     @Bind(R.id.checklist_column_two)
     ViewGroup mChecklistSecondColumn;
+    @Bind(R.id.signature_pad)
+    SignaturePad mSignaturePad;
+    @Bind(R.id.complete_checkout_button)
+    Button mCompleteCheckoutButton;
 
     private static final IntentFilter mTimeIntentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
     private Booking mBooking;
@@ -134,6 +140,12 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         getContext().unregisterReceiver(mTimeBroadcastReceiver);
     }
 
+    @OnClick(R.id.clear_signature_button)
+    public void clearSignature()
+    {
+        mSignaturePad.clear();
+    }
+
     @OnClick(R.id.complete_checkout_button)
     public void completeCheckout()
     {
@@ -192,6 +204,8 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
     private void initialize()
     {
+        mSignaturePad.setOnSignedListener(this);
+
         if (mBooking != null)
         {
             String startTime = DateTimeUtils.getTimeWithoutDate(mBooking.getCheckInSummary().getCheckInTime());
@@ -303,5 +317,24 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         InputMethodManager inputMethodManager =
                 (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
+    @Override
+    public void onStartSigning()
+    {
+        mCompleteCheckoutButton.setAlpha(1.0f);
+        mCompleteCheckoutButton.setEnabled(true);
+        mCompleteCheckoutButton.setClickable(true);
+    }
+
+    @Override
+    public void onSigned() { }
+
+    @Override
+    public void onClear()
+    {
+        mCompleteCheckoutButton.setAlpha(0.5f);
+        mCompleteCheckoutButton.setEnabled(false);
+        mCompleteCheckoutButton.setClickable(false);
     }
 }
