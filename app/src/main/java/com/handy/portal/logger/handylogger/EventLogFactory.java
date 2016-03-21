@@ -7,7 +7,6 @@ import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
-import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ProviderManager;
@@ -27,32 +26,6 @@ public class EventLogFactory
         mProviderManager = providerManager;
     }
 
-
-    // Profile Logs
-    public EventLog createReferralSelectedLog()
-    {
-        return new ProfileLog.ReferralSelectedLog();
-    }
-
-    public EventLog createResupplyKitSelectedLog()
-    {
-        return new ProfileLog.ResupplyKitSelectedLog();
-    }
-
-    public EventLog createResupplyKitConfirmedLog()
-    {
-        return new ProfileLog.ResupplyKitConfirmedLog();
-    }
-
-    public EventLog createEditProfileSelectedLog()
-    {
-        return new ProfileLog.EditProfileSelectedLog();
-    }
-
-    public EventLog createEditProfileConfirmedLog()
-    {
-        return new ProfileLog.EditProfileConfirmedLog();
-    }
 
     // Performance Dashboard Logs
     public EventLog createFeedbackTappedLog()
