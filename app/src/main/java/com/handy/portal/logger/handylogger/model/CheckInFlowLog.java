@@ -1,6 +1,11 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.constant.LocationKey;
+import com.handy.portal.model.Address;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.LocationData;
+import com.handy.portal.util.MathUtils;
 
 public class CheckInFlowLog extends EventLog
 {
@@ -21,32 +26,25 @@ public class CheckInFlowLog extends EventLog
     @SerializedName("distance_to_job")
     private double mDistance;
 
-    public CheckInFlowLog(
-            final String eventType, final String bookingId, final double proLatitude,
-            final double proLongitude, final double bookingLatitude, final double bookingLongitude,
-            final double accuracy, final double distance)
+    public CheckInFlowLog(final String eventType, final Booking booking, final LocationData location)
     {
         super(eventType, EVENT_CONTEXT);
-        mBookingId = bookingId;
-        mProLatitude = proLatitude;
-        mProLongitude = proLongitude;
-        mBookingLatitude = bookingLatitude;
-        mBookingLongitude = bookingLongitude;
-        mAccuracy = accuracy;
-        mDistance = distance;
+        mBookingId = booking.getId();
+        mProLatitude = getLatitude(location);
+        mProLongitude = getLongitude(location);
+        mBookingLatitude = getLatitude(booking.getAddress());
+        mBookingLongitude = getLongitude(booking.getAddress());
+        mAccuracy = getAccuracy(location);
+        mDistance = MathUtils.getDistance(mProLatitude, mProLatitude, mBookingLatitude, mBookingLongitude);
     }
 
     public static class OnMyWay extends CheckInFlowLog
     {
         private static final String EVENT_TYPE = "on_my_way_submitted";
 
-        public OnMyWay(
-                final String bookingId, final double proLatitude, final double proLongitude,
-                final double bookingLatitude, final double bookingLongitude, final double accuracy,
-                final double distance)
+        public OnMyWay(final Booking booking, final LocationData location)
         {
-            super(EVENT_TYPE, bookingId, proLatitude, proLongitude, bookingLatitude,
-                    bookingLongitude, accuracy, distance);
+            super(EVENT_TYPE, booking, location);
         }
     }
 
@@ -55,13 +53,9 @@ public class CheckInFlowLog extends EventLog
     {
         private static final String EVENT_TYPE = "manual_checkin_submitted";
 
-        public CheckIn(
-                final String bookingId, final double proLatitude, final double proLongitude,
-                final double bookingLatitude, final double bookingLongitude, final double accuracy,
-                double distance)
+        public CheckIn(final Booking booking, final LocationData location)
         {
-            super(EVENT_TYPE, bookingId, proLatitude, proLongitude, bookingLatitude,
-                    bookingLongitude, accuracy, distance);
+            super(EVENT_TYPE, booking, location);
         }
     }
 
@@ -70,13 +64,71 @@ public class CheckInFlowLog extends EventLog
     {
         private static final String EVENT_TYPE = "manual_checkout_submitted";
 
-        public CheckOut(
-                final String bookingId, final double proLatitude, final double proLongitude,
-                final double bookingLatitude, final double bookingLongitude, final double accuracy,
-                final double distance)
+        public CheckOut(final Booking booking, final LocationData location)
         {
-            super(EVENT_TYPE, bookingId, proLatitude, proLongitude, bookingLatitude,
-                    bookingLongitude, accuracy, distance);
+            super(EVENT_TYPE, booking, location);
+        }
+    }
+
+    private double getLatitude(Address address)
+    {
+
+        if (address != null)
+        {
+            return address.getLatitude();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    private double getLongitude(Address address)
+    {
+
+        if (address != null)
+        {
+            return address.getLongitude();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    private double getLatitude(LocationData location)
+    {
+        try
+        {
+            return Double.parseDouble(location.getLocationMap().get(LocationKey.LATITUDE));
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
+    }
+
+    private double getLongitude(LocationData location)
+    {
+        try
+        {
+            return Double.parseDouble(location.getLocationMap().get(LocationKey.LONGITUDE));
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
+    }
+
+    private double getAccuracy(LocationData location)
+    {
+        try
+        {
+            return Double.parseDouble(location.getLocationMap().get(LocationKey.ACCURACY));
+        }
+        catch (Exception e)
+        {
+            return 0;
         }
     }
 }

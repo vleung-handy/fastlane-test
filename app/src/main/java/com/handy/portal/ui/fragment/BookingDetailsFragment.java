@@ -41,6 +41,7 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
@@ -745,14 +746,14 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createOnMyWayLog(mAssociatedBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWay(mAssociatedBooking, locationData)));
     }
 
     private void requestNotifyCheckInJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCheckInLog(mAssociatedBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckIn(mAssociatedBooking, locationData)));
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)

@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.LocationKey;
-import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
@@ -21,7 +20,6 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.OnboardingParams;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.logs.VideoLog;
-import com.handy.portal.util.MathUtils;
 import com.urbanairship.push.PushMessage;
 
 public class EventLogFactory
@@ -31,49 +29,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-    public EventLog createOnMyWayLog(@NonNull Booking booking, LocationData location)
-    {
-        String bookingId = booking.getId();
-        double proLatitude = getLatitude(location);
-        double proLongitude = getLongitude(location);
-        double accuracy = getAccuracy(location);
-        double bookingLatitude = getLatitude(booking.getAddress());
-        double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
-
-        return new CheckInFlowLog.OnMyWay(bookingId,
-                proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
-    }
-
-    public EventLog createCheckInLog(@NonNull Booking booking, LocationData location)
-    {
-        String bookingId = booking.getId();
-        double proLatitude = getLatitude(location);
-        double proLongitude = getLongitude(location);
-        double accuracy = getAccuracy(location);
-        double bookingLatitude = getLatitude(booking.getAddress());
-        double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
-
-        return new CheckInFlowLog.CheckIn(bookingId,
-                proLatitude, proLongitude, bookingLatitude,
-                bookingLongitude, accuracy, distance);
-    }
-
-    public EventLog createCheckOutLog(@NonNull Booking booking, LocationData location)
-    {
-        String bookingId = booking.getId();
-        double proLatitude = getLatitude(location);
-        double proLongitude = getLongitude(location);
-        double accuracy = getAccuracy(location);
-        double bookingLatitude = getLatitude(booking.getAddress());
-        double bookingLongitude = getLongitude(booking.getAddress());
-        double distance = MathUtils.getDistance(proLatitude, proLatitude, bookingLatitude, bookingLongitude);
-
-        return new CheckInFlowLog.CheckOut(bookingId,
-                proLatitude, proLongitude, bookingLatitude, bookingLongitude, accuracy, distance);
     }
 
     public EventLog createCustomerRatingShownLog()
