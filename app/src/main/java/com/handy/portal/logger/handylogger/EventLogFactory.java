@@ -6,7 +6,6 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
-import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ProviderManager;
@@ -26,22 +25,6 @@ public class EventLogFactory
         mProviderManager = providerManager;
     }
 
-
-    // Performance Dashboard Logs
-    public EventLog createFeedbackTappedLog()
-    {
-        return new PerformanceLog.FeedbackTappedLog();
-    }
-
-    public EventLog createFiveStarReviewsTappedLog()
-    {
-        return new PerformanceLog.FiveStarReviewsTappedLog();
-    }
-
-    public EventLog createTierTappedLog()
-    {
-        return new PerformanceLog.TierTappedLog();
-    }
 
     // Help logs
     public EventLog createHelpContactFormSubmittedLog(String path, int helpNodeId, String helpNodeTitle)
