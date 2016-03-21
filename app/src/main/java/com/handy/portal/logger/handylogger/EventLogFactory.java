@@ -5,7 +5,6 @@ import android.net.Uri;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
-import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ProviderManager;
@@ -23,13 +22,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-
-    // Help logs
-    public EventLog createHelpContactFormSubmittedLog(String path, int helpNodeId, String helpNodeTitle)
-    {
-        return new HelpContactFormSubmittedLog(path, helpNodeId, helpNodeTitle);
     }
 
     // Push logs
