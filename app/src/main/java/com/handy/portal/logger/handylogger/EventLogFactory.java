@@ -1,7 +1,6 @@
 package com.handy.portal.logger.handylogger;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
@@ -11,11 +10,9 @@ import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
-import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.OnboardingParams;
 import com.handy.portal.model.Provider;
@@ -29,45 +26,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-    public EventLog createCustomerRatingShownLog()
-    {
-        return new ScheduledJobsLog.CustomerRatingShown();
-    }
-
-    public EventLog createCustomerRatingSubmittedLog(int rating)
-    {
-        return new ScheduledJobsLog.CustomerRatingSubmitted(rating);
-    }
-
-    public EventLog createBookingInstructionsSeenLog(@NonNull Booking booking)
-    {
-        String bookingId = booking.getId();
-        return new ScheduledJobsLog.BookingInstructionsSeen(bookingId);
-    }
-
-    public EventLog createSupportSelectedLog(@NonNull Booking booking)
-    {
-        String bookingId = booking.getId();
-        return new ScheduledJobsLog.SupportSelected(bookingId);
-    }
-
-    public EventLog createHelpItemSelectedLog(@NonNull Booking booking, String helpItemLabel)
-    {
-        String bookingId = booking.getId();
-        return new ScheduledJobsLog.HelpItemSelected(bookingId, helpItemLabel);
-    }
-
-    public EventLog createRemoveConfirmationShownLog(@NonNull Booking booking, String removalType)
-    {
-        String bookingId = booking.getId();
-        return new ScheduledJobsLog.RemoveConfirmationShown(bookingId, removalType);
-    }
-
-    public EventLog createFindJobsSelectedLog()
-    {
-        return new ScheduledJobsLog.FindJobsSelected();
     }
 
 

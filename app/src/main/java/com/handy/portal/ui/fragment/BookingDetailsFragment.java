@@ -209,7 +209,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                         mHaveTrackedSeenBookingInstructions = true; //not guaranteed to stay flipped throughout session just on screen
                         //track event
                         bus.post(new LogEvent.AddLogEvent(
-                                mEventLogFactory.createBookingInstructionsSeenLog(mAssociatedBooking)));
+                                new ScheduledJobsLog.BookingInstructionsSeen(mAssociatedBooking.getId())));
                     }
                 }
             }
@@ -642,7 +642,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void showHelpOptions()
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createSupportSelectedLog(mAssociatedBooking)));
+        String bookingId = mAssociatedBooking.getId();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SupportSelected(bookingId)));
         //TODO: We might no longer need this null check since we no longer do ButterKnife.unbind()
         if (mSlideUpPanelLayout != null)
         {
@@ -1076,8 +1077,8 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onSupportActionTriggered(HandyEvent.SupportActionTriggered event)
     {
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createHelpItemSelectedLog(
-                mAssociatedBooking, event.action.getActionName())));
+        String bookingId = mAssociatedBooking.getId();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.HelpItemSelected(bookingId, event.action.getActionName())));
 
         switch (supportActionType)
         {
@@ -1110,8 +1111,8 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobClicked(mAssociatedBooking, removeAction.getWarningText())));
 
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
+        String bookingId = mAssociatedBooking.getId();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveConfirmationShown(bookingId, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
         takeAction(BookingActionButtonType.REMOVE, false);
 
     }
@@ -1120,8 +1121,8 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobClicked(mAssociatedBooking, removeAction.getWarningText())));
 
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
+        String bookingId = mAssociatedBooking.getId();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveConfirmationShown(bookingId, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);

@@ -19,6 +19,7 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
@@ -83,7 +84,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
             mNoteToCustomer = bundle.getString(BundleKeys.NOTE_TO_CUSTOMER);
 
-            mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingShownLog()));
+            mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
             String amount = mBooking.getPaymentToProvider().getCurrencySymbol() +
                     TextUtils.DECIMAL_FORMAT_NO_ZERO.format(mBooking.getPaymentToProvider().getAdjustedAmount());
             mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
@@ -119,7 +120,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                     getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
                     getBookingRatingComment()), mNoteToCustomer, mBooking.getCustomerPreferences())
             ));
-            mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingSubmittedLog(getBookingRatingScore())));
+            mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(getBookingRatingScore())));
         }
         else
         {
