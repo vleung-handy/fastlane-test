@@ -1,12 +1,10 @@
 package com.handy.portal.logger.handylogger;
 
 import com.handy.portal.constant.LocationKey;
-import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.logs.VideoLog;
 
 public class EventLogFactory
 {
@@ -15,17 +13,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-    // Video Logs
-    public EventLog createVideoTappedLog(String section)
-    {
-        return new VideoLog.VideoTappedLog(section);
-    }
-
-    public EventLog createVideoLibraryTappedLog()
-    {
-        return new VideoLog.VideoLibraryTappedLog();
     }
 
     // private helpers
