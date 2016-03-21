@@ -19,6 +19,7 @@ import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.LocationService;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
@@ -132,7 +133,6 @@ public class MainActivity extends BaseActivity
     public void onResume()
     {
         super.onResume();
-        mEventLogFactory.createAppOpenLog();
         bus.register(this);
         //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
         configManager.prefetch();
@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity
         checkIfNotificationIsEnabled();
 
         bus.post(new LogEvent.SendLogsEvent());
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createAppOpenLog()));
+        bus.post(new LogEvent.AddLogEvent(new BasicLog.Open()));
     }
 
     @Override

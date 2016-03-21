@@ -41,12 +41,6 @@ public class EventLogFactory
         mProviderManager = providerManager;
     }
 
-    // Basic Logs
-    public EventLog createAppOpenLog()
-    {
-        return new BasicLog.Open();
-    }
-
     public EventLog createNavigationLog(String tabName)
     {
         return new BasicLog.Navigation(tabName);
