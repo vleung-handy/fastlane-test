@@ -5,7 +5,8 @@ import android.os.Parcelable;
 import java.util.Date;
 
 /**
- * An abstract strategy that contains start and end dates. Used in schedules
+ * An abstract strategy model that contains start and end dates that denote when the strategy should be active
+ * Used in schedules
  */
 public abstract class ScheduleStrategy implements Parcelable
 {

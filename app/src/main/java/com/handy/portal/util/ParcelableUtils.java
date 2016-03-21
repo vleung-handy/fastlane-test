@@ -6,13 +6,21 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+/**
+ * utils related to parcelables
+ */
 public class ParcelableUtils
 {
     @Nullable
-    public static Parcel unmarshall(@Nullable Bundle bundle, @Nullable String bundleKey)
+    private static byte[] getByteArray(@Nullable Bundle bundle, @Nullable String bundleKey)
     {
         if(bundle == null || bundleKey == null) return null;
-        byte[] byteArray = bundle.getByteArray(bundleKey);
+        return bundle.getByteArray(bundleKey);
+    }
+
+    @Nullable
+    public static Parcel unmarshall(@Nullable byte[] byteArray)
+    {
         if (byteArray == null) { return null; }
         Parcel parcel = Parcel.obtain();
         parcel.unmarshall(byteArray, 0, byteArray.length);
@@ -27,5 +35,17 @@ public class ParcelableUtils
         byte[] bytes = parcel.marshall();
         parcel.recycle();
         return bytes;
+    }
+
+    public static <T extends Parcelable> T unmarshall(@Nullable Bundle bundle, @Nullable String bundleKey, @NonNull Parcelable.Creator<T> creator)
+    {
+        return unmarshall(getByteArray(bundle, bundleKey), creator);
+    }
+
+    public static <T extends Parcelable> T unmarshall(byte[] bytes, @NonNull Parcelable.Creator<T> creator)
+    {
+        Parcel parcel = unmarshall(bytes);
+        if(parcel == null) return null;
+        return creator.createFromParcel(parcel);
     }
 }

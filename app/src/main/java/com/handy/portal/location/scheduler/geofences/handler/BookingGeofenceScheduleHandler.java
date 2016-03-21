@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -113,14 +112,11 @@ public class BookingGeofenceScheduleHandler
                  *
                  * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
                  */
-                //TODO put into a util
-                Parcel parcel = ParcelableUtils.unmarshall(args, getStrategyBundleExtraKey());
-                if(parcel == null) return;
-                BookingGeofenceStrategy strategy = BookingGeofenceStrategy.CREATOR.createFromParcel(parcel);
+                BookingGeofenceStrategy strategy = ParcelableUtils.unmarshall(args, getStrategyBundleExtraKey(), BookingGeofenceStrategy.CREATOR);
+                if(strategy == null) return;
                 onStrategyAlarmTriggered(strategy);
                 break;
             case GEOFENCE_TRIGGERED_BROADCAST_ID:
-
                 handleGeofenceIntent(intent);
                 break;
         }

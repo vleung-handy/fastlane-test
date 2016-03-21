@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -96,9 +95,8 @@ public class LocationTrackingScheduleHandler
                  *
                  * http://blog.nocturnaldev.com/blog/2013/09/01/parcelable-in-pendingintent/
                  */
-                Parcel parcel = ParcelableUtils.unmarshall(args, getStrategyBundleExtraKey());
-                if(parcel == null) return;
-                LocationTrackingScheduleStrategy locationTrackerStrategy = LocationTrackingScheduleStrategy.CREATOR.createFromParcel(parcel);
+                LocationTrackingScheduleStrategy locationTrackerStrategy = ParcelableUtils.unmarshall(args, getStrategyBundleExtraKey(), LocationTrackingScheduleStrategy.CREATOR);
+                if(locationTrackerStrategy == null) return;
                 onStrategyAlarmTriggered(locationTrackerStrategy);
                 break;
         }
