@@ -10,7 +10,6 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.Booking;
@@ -36,7 +35,6 @@ import javax.inject.Inject;
 public class BookingManager
 {
     private final Bus mBus;
-    private EventLogFactory mEventLogFactory;
     private final DataManager mDataManager;
 
     private final Cache<Date, List<Booking>> availableBookingsCache;
@@ -44,11 +42,9 @@ public class BookingManager
     private final Cache<Date, List<Booking>> complementaryBookingsCache;
 
     @Inject
-    public BookingManager(final Bus bus, final DataManager dataManager,
-                          final EventLogFactory eventLogFactory)
+    public BookingManager(final Bus bus, final DataManager dataManager)
     {
         mBus = bus;
-        mEventLogFactory = eventLogFactory;
         mBus.register(this);
         mDataManager = dataManager;
 

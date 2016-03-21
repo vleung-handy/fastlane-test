@@ -17,7 +17,6 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.LocationService;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.manager.ConfigManager;
@@ -43,8 +42,6 @@ public class MainActivity extends BaseActivity
     ProviderManager providerManager;
     @Inject
     ConfigManager mConfigManager;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();

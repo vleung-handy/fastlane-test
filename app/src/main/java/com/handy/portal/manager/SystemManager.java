@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.handy.portal.event.SystemEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NetworkConnectionLog;
 import com.squareup.otto.Bus;
@@ -24,18 +23,15 @@ public class SystemManager extends BroadcastReceiver
 {
     private final Bus mBus;
     private final Context mContext;
-    private EventLogFactory mEventLogFactory;
 
     private boolean mPreviouslyHadNetworkConnectivity = true;
 
     @Inject
-    public SystemManager(@NonNull Context context, @NonNull final Bus bus,
-                         @NonNull EventLogFactory eventLogFactory)
+    public SystemManager(@NonNull Context context, @NonNull final Bus bus)
     {
         mBus = bus;
         mBus.register(this);
         mContext = context;
-        mEventLogFactory = eventLogFactory;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         intentFilter.addAction(Intent.ACTION_BATTERY_LOW);

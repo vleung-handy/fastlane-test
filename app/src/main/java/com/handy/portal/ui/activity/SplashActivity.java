@@ -15,7 +15,6 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
@@ -43,8 +42,6 @@ public class SplashActivity extends BaseActivity
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)

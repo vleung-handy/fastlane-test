@@ -21,7 +21,6 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
@@ -49,8 +48,6 @@ import butterknife.OnClick;
 
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment
 {
-    @Inject
-    protected EventLogFactory mEventLogFactory;
     @Inject
     ConfigManager mConfigManager;
     @Inject

@@ -15,7 +15,6 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
@@ -37,8 +36,6 @@ public class DashboardOptionsPerformanceView extends FrameLayout
 {
     @Inject
     Bus mBus;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Bind(R.id.tier_title)
     TextView mTierTitleText;

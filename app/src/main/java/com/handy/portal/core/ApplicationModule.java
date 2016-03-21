@@ -20,7 +20,6 @@ import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.LocationScheduleHandler;
 import com.handy.portal.location.LocationService;
 import com.handy.portal.location.manager.LocationManager;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
@@ -332,17 +331,16 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final Bus bus,
-                                               final DataManager dataManager,
-                                               final EventLogFactory eventLogFactory)
+                                               final DataManager dataManager)
     {
-        return new BookingManager(bus, dataManager, eventLogFactory);
+        return new BookingManager(bus, dataManager);
     }
 
     @Provides
     @Singleton
-    final SystemManager provideSystemManager(final Bus bus, final EventLogFactory eventLogFactory)
+    final SystemManager provideSystemManager(final Bus bus)
     {
-        return new SystemManager(context, bus, eventLogFactory);
+        return new SystemManager(context, bus);
     }
 
     @Provides
@@ -512,13 +510,6 @@ public final class ApplicationModule
     )
     {
         return new TabNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
-    }
-
-    @Provides
-    @Singleton
-    final EventLogFactory provideEventLogFactory(final ProviderManager providerManager)
-    {
-        return new EventLogFactory(providerManager);
     }
 
     private String getDeviceId()

@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.LocationPingService;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
@@ -24,8 +23,6 @@ public class HandyPushReceiver extends BaseIntentReceiver
 {
     @Inject
     Bus mBus;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Override
     public void onReceive(final Context context, final Intent intent)

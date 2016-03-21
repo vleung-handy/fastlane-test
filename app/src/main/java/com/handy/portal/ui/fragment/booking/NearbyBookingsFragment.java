@@ -23,7 +23,6 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
 import com.handy.portal.manager.ProviderManager;
@@ -51,8 +50,6 @@ public class NearbyBookingsFragment extends ActionBarFragment
 
     @Inject
     ProviderManager mProviderManager;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Bind(R.id.nearby_bookings_description)
     TextView mDescriptionText;

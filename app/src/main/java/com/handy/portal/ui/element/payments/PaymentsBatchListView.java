@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.model.payments.PaymentBatch;
@@ -27,8 +26,6 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 {
     @Inject
     Bus mBus;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     private TextView footerView;
     private OnDataItemClickListener onDataItemClickListener; //TODO: WIP. refine
