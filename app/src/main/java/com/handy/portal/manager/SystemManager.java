@@ -12,6 +12,7 @@ import android.util.Log;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.NetworkConnectionLog;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -71,13 +72,13 @@ public class SystemManager extends BroadcastReceiver
             if (hasConnectivity) //reconnected
             {
                 mBus.post(new LogEvent.AddLogEvent(
-                        mEventLogFactory.createNetworkReconnectedLog()));
+                        new NetworkConnectionLog.Reconnected()));
                 mBus.post(new SystemEvent.NetworkReconnected());
             }
             else //disconnected
             {
                 mBus.post(new LogEvent.AddLogEvent(
-                        mEventLogFactory.createNetworkDisconnectedLog()));
+                        new NetworkConnectionLog.Disconnected()));
             }
         }
 

@@ -7,13 +7,11 @@ import android.support.annotation.Nullable;
 
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
-import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
 import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
-import com.handy.portal.logger.handylogger.model.NetworkConnectionLog;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
@@ -39,17 +37,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-    // System event logs
-    public EventLog createNetworkReconnectedLog()
-    {
-        return new NetworkConnectionLog.Reconnected();
-    }
-
-    public EventLog createNetworkDisconnectedLog()
-    {
-        return new NetworkConnectionLog.Disconnected();
     }
 
     // Nearby Bookings Logs
