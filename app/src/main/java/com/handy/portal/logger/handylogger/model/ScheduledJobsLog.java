@@ -1,6 +1,8 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.model.Address;
+import com.handy.portal.model.Booking;
 
 import java.util.Date;
 
@@ -50,17 +52,15 @@ public class ScheduledJobsLog extends EventLog
         @SerializedName("list_number")
         private int mListNumber;
 
-        public Clicked(
-                String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
-                Date dateStart, int listNumber)
+        public Clicked(final Booking booking, final int listNumber)
         {
             super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
+            mBookingId = booking.getId();
+            mServiceId = booking.getService();
+            mRegionId = booking.getRegionId();
+            mZipCode = getZipCode(booking.getAddress());
+            mRequested = booking.isRequested();
+            mDateStart = booking.getStartDate();
             mListNumber = listNumber;
         }
     }
@@ -86,18 +86,15 @@ public class ScheduledJobsLog extends EventLog
         private String mWarning;
 
 
-        public RemoveJobClicked(
-                String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
-                Date dateStart, String warning)
+        public RemoveJobClicked(final Booking booking, final String warning)
         {
             super(EVENT_TYPE);
-
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
+            mBookingId = booking.getId();
+            mServiceId = booking.getService();
+            mRegionId = booking.getRegionId();
+            mZipCode = getZipCode(booking.getAddress());
+            mRequested = booking.isRequested();
+            mDateStart = booking.getStartDate();
             mWarning = warning;
         }
     }
@@ -124,17 +121,15 @@ public class ScheduledJobsLog extends EventLog
         @SerializedName("reason")
         private String mReason;
 
-        public RemoveJobConfirmed(
-                String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
-                Date dateStart, String warning, String reason)
+        public RemoveJobConfirmed(final Booking booking, final String warning, final String reason)
         {
             super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
+            mBookingId = booking.getId();
+            mServiceId = booking.getService();
+            mRegionId = booking.getRegionId();
+            mZipCode = getZipCode(booking.getAddress());
+            mRequested = booking.isRequested();
+            mDateStart = booking.getStartDate();
             mWarning = warning;
             mReason = reason;
         }
@@ -159,17 +154,15 @@ public class ScheduledJobsLog extends EventLog
         private Date mDateStart;
 
 
-        public RemoveJobError(
-                String bookingId, String serviceId, int regionId, String zipCode, boolean requested,
-                Date dateStart)
+        public RemoveJobError(final Booking booking)
         {
             super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
+            mBookingId = booking.getId();
+            mServiceId = booking.getService();
+            mRegionId = booking.getRegionId();
+            mZipCode = getZipCode(booking.getAddress());
+            mRequested = booking.isRequested();
+            mDateStart = booking.getStartDate();
         }
     }
 
@@ -278,6 +271,18 @@ public class ScheduledJobsLog extends EventLog
         public FindJobsSelected()
         {
             super(EVENT_TYPE);
+        }
+    }
+
+    private static String getZipCode(Address address)
+    {
+        if (address != null)
+        {
+            return address.getZip();
+        }
+        else
+        {
+            return "";
         }
     }
 }

@@ -19,6 +19,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -113,8 +114,7 @@ public class CancellationRequestFragment extends ActionBarFragment
         {
             final Booking.Action action = mBooking.getAction(Booking.Action.ACTION_UNASSIGN_FLOW);
             String warning = (action != null) ? action.getWarningText() : null;
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
-                    mBooking, warning, reasonBtn.getText().toString())));
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmed(mBooking, warning, reasonBtn.getText().toString())));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestRemoveJob(mBooking));
 
@@ -139,7 +139,7 @@ public class CancellationRequestFragment extends ActionBarFragment
     public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(mBooking)));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(mBooking)));
         showToast(R.string.job_remove_error);
     }
 

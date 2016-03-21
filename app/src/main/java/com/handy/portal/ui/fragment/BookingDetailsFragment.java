@@ -736,8 +736,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
         String warning = (removeAction != null) ? removeAction.getWarningText() : null;
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
-                booking, warning, null)));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmed(booking, warning, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
@@ -951,7 +950,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
             handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic,
                     R.string.return_to_schedule, mAssociatedBooking.getStartDate());
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(mAssociatedBooking)));
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(mAssociatedBooking)));
 
         }
     }
@@ -960,7 +959,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(mAssociatedBooking)));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(mAssociatedBooking)));
         handleBookingRemoveError(event);
     }
 
@@ -1108,8 +1107,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void removeJob(@NonNull Booking.Action removeAction)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
-                mAssociatedBooking, removeAction.getWarningText())));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobClicked(mAssociatedBooking, removeAction.getWarningText())));
 
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
                 mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
@@ -1119,8 +1117,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void unassignJob(@NonNull Booking.Action removeAction)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
-                mAssociatedBooking, removeAction.getWarningText())));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobClicked(mAssociatedBooking, removeAction.getWarningText())));
 
         bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
                 mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));

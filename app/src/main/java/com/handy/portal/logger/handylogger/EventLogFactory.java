@@ -24,8 +24,6 @@ import com.handy.portal.model.logs.VideoLog;
 import com.handy.portal.util.MathUtils;
 import com.urbanairship.push.PushMessage;
 
-import java.util.Date;
-
 public class EventLogFactory
 {
     private ProviderManager mProviderManager;
@@ -33,61 +31,6 @@ public class EventLogFactory
     public EventLogFactory(ProviderManager providerManager)
     {
         mProviderManager = providerManager;
-    }
-
-    // Scheduled Booking Logs
-    public EventLog createScheduledJobDateClickedLog(Date date, int jobCount)
-    {
-        return new ScheduledJobsLog.DateClicked(date, jobCount);
-    }
-
-    public EventLog createScheduledJobClickedLog(@NonNull Booking booking, int listNumber)
-    {
-        String bookingId = booking.getId();
-        String serviceId = booking.getService();
-        int regionId = booking.getRegionId();
-        String zipCode = getZipCode(booking.getAddress());
-        boolean requested = booking.isRequested();
-        Date dateStart = booking.getStartDate();
-
-        return new ScheduledJobsLog.Clicked(bookingId,
-                serviceId, regionId, zipCode, requested, dateStart, listNumber);
-    }
-
-    public EventLog createRemoveJobClickedLog(Booking booking, String warning)
-    {
-        String bookingId = booking.getId();
-        String serviceId = booking.getService();
-        int regionId = booking.getRegionId();
-        String zipCode = getZipCode(booking.getAddress());
-        boolean requested = booking.isRequested();
-        Date dateStart = booking.getStartDate();
-
-        return new ScheduledJobsLog.RemoveJobClicked(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning);
-    }
-
-    public EventLog createRemoveJobConfirmedLog(Booking booking, String warning, String reason)
-    {
-        String bookingId = booking.getId();
-        String serviceId = booking.getService();
-        int regionId = booking.getRegionId();
-        String zipCode = getZipCode(booking.getAddress());
-        boolean requested = booking.isRequested();
-        Date dateStart = booking.getStartDate();
-
-        return new ScheduledJobsLog.RemoveJobConfirmed(bookingId, serviceId, regionId, zipCode, requested, dateStart, warning, reason);
-    }
-
-    public EventLog createRemoveJobErrorLog(Booking booking)
-    {
-        String bookingId = booking.getId();
-        String serviceId = booking.getService();
-        int regionId = booking.getRegionId();
-        String zipCode = getZipCode(booking.getAddress());
-        boolean requested = booking.isRequested();
-        Date dateStart = booking.getStartDate();
-
-        return new ScheduledJobsLog.RemoveJobError(bookingId, serviceId, regionId, zipCode, requested, dateStart);
     }
 
     public EventLog createOnMyWayLog(@NonNull Booking booking, LocationData location)
