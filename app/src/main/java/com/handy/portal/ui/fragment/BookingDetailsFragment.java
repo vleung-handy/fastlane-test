@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,7 +43,6 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingStatus;
 import com.handy.portal.model.Booking.BookingType;
@@ -106,8 +106,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     @Inject
     PrefsManager mPrefsManager;
-    @Inject
-    ProviderManager mProviderManager;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
     private static final float TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD = 0.5f; //50% of booking instructions view visible on screen
@@ -115,7 +113,6 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private String mRequestedBookingId;
     private BookingType mRequestedBookingType;
-    private Booking mAssociatedBooking; //used to return to correct date on jobs tab if a job action fails and the returned booking is null
     private Date mAssociatedBookingDate;
     private boolean mFromPaymentsTab;
     private MainViewTab mCurrentTab;
@@ -123,6 +120,8 @@ public class BookingDetailsFragment extends ActionBarFragment
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
     private String mSource;
     private Bundle mSourceExtras;
+    @Nullable
+    private Booking mAssociatedBooking;
 
     @Override
     protected MainViewTab getTab()
@@ -431,10 +430,6 @@ public class BookingDetailsFragment extends ActionBarFragment
             );
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(mapLayout.getId(), fragment).commit();
-        }
-        else
-        {
-            Crashlytics.logException(new RuntimeException("Can't display zip cluster polygon, booking is null"));
         }
     }
 
