@@ -12,6 +12,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.Payment;
@@ -92,7 +93,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
         Payment payment = (Payment) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
         String bookingId = payment.getBookingId();
         String bookingType = payment.getBookingType() != null ? payment.getBookingType().toUpperCase() : Booking.BookingType.BOOKING.toString();
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPaymentDetailSelectedLog(bookingType)));
+        bus.post(new LogEvent.AddLogEvent(new PaymentsLog.DetailSelected(bookingType)));
 
         if (bookingId != null)
         {

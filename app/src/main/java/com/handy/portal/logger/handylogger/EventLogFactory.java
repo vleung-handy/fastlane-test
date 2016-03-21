@@ -6,7 +6,6 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
-import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
@@ -28,27 +27,6 @@ public class EventLogFactory
         mProviderManager = providerManager;
     }
 
-
-    // Payments Logs
-    public EventLog createPaymentBatchSelectedLog(boolean currentWeek, int listNumber)
-    {
-        return new PaymentsLog.BatchSelected(currentWeek, listNumber);
-    }
-
-    public EventLog createPaymentDetailSelectedLog(String paymentType)
-    {
-        return new PaymentsLog.DetailSelected(paymentType);
-    }
-
-    public EventLog createPaymentHelpSlideUpLog()
-    {
-        return new PaymentsLog.HelpSlideUpSelected();
-    }
-
-    public EventLog createPaymentHelpItemSelectedLog(String helpItemLabel)
-    {
-        return new PaymentsLog.HelpItemSelected(helpItemLabel);
-    }
 
     // Profile Logs
     public EventLog createReferralSelectedLog()
