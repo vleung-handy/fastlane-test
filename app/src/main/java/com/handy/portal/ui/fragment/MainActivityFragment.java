@@ -30,6 +30,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
+import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
@@ -447,7 +448,7 @@ public class MainActivityFragment extends InjectedFragment
                 userTriggered)
         {
             bus.post(new LogEvent.AddLogEvent(
-                    mEventLogFactory.createWebOnboardingDismissedLog()));
+                    new WebOnboardingLog.Dismissed()));
         }
 
         requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
