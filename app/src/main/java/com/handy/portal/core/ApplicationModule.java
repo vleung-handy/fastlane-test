@@ -21,7 +21,7 @@ import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.scheduler.LocationScheduleService;
 import com.handy.portal.location.scheduler.geofences.handler.BookingGeofenceScheduleHandler;
 import com.handy.portal.location.scheduler.tracking.handler.LocationTrackingScheduleHandler;
-\import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
