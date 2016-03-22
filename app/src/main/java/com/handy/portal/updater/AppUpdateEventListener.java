@@ -3,6 +3,7 @@ package com.handy.portal.updater;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.updater.model.UpdateDetails;
 import com.squareup.otto.Subscribe;
 
 /**
@@ -21,7 +22,8 @@ public class AppUpdateEventListener
     @Subscribe
     public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
     {
-        if (event.updateDetails.getSuccess() && event.updateDetails.getShouldUpdate()) //TODO: there seems to be a lot of redundant updateDetails.getShouldUpdate() calls. clean this up
+        UpdateDetails updateDetails = event.updateDetails;
+        if (updateDetails.getSuccess() && updateDetails.getShouldUpdate()) //TODO: there seems to be a lot of redundant updateDetails.getShouldUpdate() calls. clean this up
         {
             mAppUpdateFlowLauncher.launchAppUpdater();
         }

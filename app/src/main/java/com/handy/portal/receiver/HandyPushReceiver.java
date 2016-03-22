@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.LocationPingService;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventLog;
+import com.handy.portal.logger.handylogger.model.PushNotificationLog;
 import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.util.Utils;
@@ -23,8 +23,6 @@ public class HandyPushReceiver extends BaseIntentReceiver
 {
     @Inject
     Bus mBus;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Override
     public void onReceive(final Context context, final Intent intent)
@@ -52,7 +50,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                   @NonNull PushMessage pushMessage,
                                   int notificationId)
     {
-        final EventLog eventLog = mEventLogFactory.createPushNotificationReceivedLog(pushMessage);
+        final EventLog eventLog = new PushNotificationLog.Received(pushMessage);
         mBus.post(new LogEvent.AddLogEvent(eventLog));
         final Bundle pushBundle = pushMessage.getPushBundle();
         final String type = pushBundle.getString(BundleKeys.HANDY_PUSH_TYPE, "");
@@ -92,7 +90,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                            @NonNull PushMessage pushMessage,
                                            int notificationId)
     {
-        final EventLog eventLog = mEventLogFactory.createPushNotificationOpenedLog(pushMessage);
+        final EventLog eventLog = new PushNotificationLog.Opened(pushMessage);
         mBus.post(new LogEvent.AddLogEvent(eventLog));
 
         final Bundle pushBundle = pushMessage.getPushBundle();
@@ -125,7 +123,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
             @NonNull final PushMessage pushMessage,
             final int notificationId)
     {
-        final EventLog eventLog = mEventLogFactory.createPushNotificationDismissedLog(pushMessage);
+        final EventLog eventLog = new PushNotificationLog.Dismissed(pushMessage);
         mBus.post(new LogEvent.AddLogEvent(eventLog));
     }
 

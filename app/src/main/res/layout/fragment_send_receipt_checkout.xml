@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/complete_checkout_button"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/job_times_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                >
+
+                <TextView
+                    android:id="@+id/started_text"
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/started_with_space"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/started_time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/started_text"
+                    android:layout_toRightOf="@id/started_text"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="07:56 am"
+                    />
+
+                <TextView
+                    android:id="@+id/ended_text"
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/ended_time_text"
+                    android:layout_toStartOf="@+id/ended_time_text"
+                    android:text="@string/ended_with_space"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/ended_time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="10:45 am"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:background="@color/list_divider_checkout"
+                />
+
+            <TextView
+                style="@style/CircularBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/section_item_margin"
+                android:text="@string/completed_tasks"
+                android:textColor="@color/black"
+                android:textSize="@dimen/default_text_size"
+                />
+
+            <!-- checklist -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin"
+                android:orientation="horizontal"
+                >
+
+                <LinearLayout
+                    android:id="@+id/checklist_column_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:orientation="vertical"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/checklist_column_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:orientation="vertical"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/send_note_formatted_text"
+                style="@style/CircularBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin_medium"
+                android:textColor="@color/black"
+                android:textSize="@dimen/default_text_size"
+                tools:text="Send a Note to Michael"
+                />
+
+            <EditText
+                android:id="@+id/send_note_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/customer_note_text_min_height"
+                android:layout_marginTop="@dimen/row_margin"
+                android:background="@color/white"
+                android:gravity="top"
+                android:hint="@string/send_note_to_customer_placeholder"
+                android:inputType="textCapSentences"
+                android:lineSpacingExtra="@dimen/line_spacing_dashboard"
+                android:maxLength="2000"
+                android:maxLines="4"
+                android:minHeight="@dimen/customer_note_text_min_height"
+                android:minLines="1"
+                android:padding="@dimen/default_padding"
+                android:textColor="@color/black"
+                android:textColorHint="@color/subtitle_grey"
+                android:textSize="@dimen/default_text_size"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/row_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/section_item_margin"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/sign_here"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/clear_signature_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="end"
+                    android:text="@string/clear_signature"
+                    android:textColor="@color/handy_blue"
+                    android:textSize="@dimen/small_text_size"
+                    />
+
+            </RelativeLayout>
+
+            <com.github.gcacace.signaturepad.views.SignaturePad
+                android:id="@+id/signature_pad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:penColor="@color/black"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/row_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/row_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:src="@drawable/ic_sign_pencil"
+                    />
+
+                <include
+                    layout="@layout/divider_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="@dimen/default_margin_medium"
+                    android:layout_marginRight="@dimen/default_margin_medium"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/row_margin"
+                android:layout_marginTop="@dimen/sign_helper_text_margin_top"
+                android:gravity="center_horizontal"
+                android:text="@string/use_finger_to_sign"
+                android:textColor="@color/subtitle_grey"
+                android:textSize="@dimen/xsmall_text_size"
+                />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+    <Button
+        android:id="@+id/complete_checkout_button"
+        style="@style/Button.Green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_button_height"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.5"
+        android:clickable="false"
+        android:enabled="false"
+        android:text="@string/complete_checkout"
+        android:textSize="@dimen/swipe_checkout_text_size"
+        />
+
+</RelativeLayout>

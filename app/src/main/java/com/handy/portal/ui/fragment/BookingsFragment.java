@@ -21,8 +21,9 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
@@ -48,8 +49,6 @@ import butterknife.OnClick;
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment
 {
     @Inject
-    protected EventLogFactory mEventLogFactory;
-    @Inject
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
@@ -66,7 +65,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract BookingListView getBookingListView();
 
-    protected abstract ViewGroup getNoBookingsView();
+    protected abstract SwipeRefreshLayout getNoBookingsSwipeRefreshLayout();
 
     protected abstract LinearLayout getDatesLayout();
 
@@ -116,15 +115,20 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
         }
 
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                requestBookingsForSelectedDay(false);
-            }
-        });
+        final SwipeRefreshLayout.OnRefreshListener refreshListener =
+                new SwipeRefreshLayout.OnRefreshListener()
+                {
+                    @Override
+                    public void onRefresh()
+                    {
+                        requestBookingsForSelectedDay(false);
+                    }
+                };
+        final SwipeRefreshLayout noBookingsSwipeRefreshLayout = getNoBookingsSwipeRefreshLayout();
+        mRefreshLayout.setOnRefreshListener(refreshListener);
+        noBookingsSwipeRefreshLayout.setOnRefreshListener(refreshListener);
         mRefreshLayout.setColorSchemeResources(R.color.handy_blue);
+        noBookingsSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
 
         return view;
     }
@@ -211,6 +215,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
     {
         mRefreshLayout.setRefreshing(false);
+        getNoBookingsSwipeRefreshLayout().setRefreshing(false);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         List<Booking> bookings = event.bookings;
@@ -247,6 +252,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
         mRefreshLayout.setRefreshing(false);
+        getNoBookingsSwipeRefreshLayout().setRefreshing(false);
         if (event.days.contains(mSelectedDay))
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -313,7 +319,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         mBookingsForSelectedDay = bookings;
         getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();
-        getNoBookingsView().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
+        getNoBookingsSwipeRefreshLayout().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
         afterDisplayBookings(bookings, dateOfBookings);
     }
 
@@ -330,13 +336,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     int oneBasedIndex = position + 1;
                     if (getTrackingType().equalsIgnoreCase(getString(R.string.available_job)))
                     {
-                        bus.post(new LogEvent.AddLogEvent(mEventLogFactory
-                                .createAvailableJobClickedLog(booking, oneBasedIndex)));
+                        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.Clicked(booking, oneBasedIndex)));
                     }
                     else if (getTrackingType().equalsIgnoreCase(getString(R.string.scheduled_job)))
                     {
-                        bus.post(new LogEvent.AddLogEvent(mEventLogFactory
-                                .createScheduledJobClickedLog(booking, oneBasedIndex)));
+                        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.Clicked(booking, oneBasedIndex)));
                     }
                     bus.post(new HandyEvent.BookingSelected(getTrackingType(), booking.getId()));
                     showBookingDetails(booking);

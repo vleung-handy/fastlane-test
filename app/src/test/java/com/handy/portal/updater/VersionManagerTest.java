@@ -92,10 +92,10 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     @Test
     public void givenSuccessfulUpdateCheck_whenUpdateNeeded_thenRegisterApkDownloadBroadcastReceiver() throws Exception
     {
-        assertNull(versionManager.getDownloadUrl());
+        assertNull(versionManager.getUpdateDetails());
         when(updateDetails.getShouldUpdate()).thenReturn(true);
         updateDetailsCallBack.onSuccess(updateDetails);
-        assertNotNull(versionManager.getDownloadUrl());
+        assertNotNull(versionManager.getUpdateDetails());
     }
 
     @Test

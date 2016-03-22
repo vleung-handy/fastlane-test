@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -35,7 +37,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Bind(R.id.scheduled_bookings_dates_scroll_view_layout)
     LinearLayout mScheduledJobsDatesScrollViewLayout;
     @Bind(R.id.scheduled_bookings_empty)
-    ViewGroup mNoScheduledBookingsLayout;
+    SwipeRefreshLayout mNoScheduledBookingsLayout;
     @Bind(R.id.find_jobs_for_day_button)
     Button mFindJobsForDayButton;
     @Bind(R.id.find_matching_jobs_button_container)
@@ -71,7 +73,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected ViewGroup getNoBookingsView()
+    protected SwipeRefreshLayout getNoBookingsSwipeRefreshLayout()
     {
         return mNoScheduledBookingsLayout;
     }
@@ -121,8 +123,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory
-                .createScheduledJobDateClickedLog(dateOfBookings, bookingsForDay.size())));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
         bus.post(new HandyEvent.RequestProviderInfo());
 
         //Show "Find Jobs" buttons only if we're inside of our available bookings length range and we have no jobs
@@ -169,7 +170,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @OnClick(R.id.find_jobs_for_day_button)
     public void onFindJobsButtonClicked()
     {
-        mEventLogFactory.createFindJobsSelectedLog();
+        bus.post(new LogEvent.AddLogEvent((new ScheduledJobsLog.FindJobsSelected())));
         TransitionStyle transitionStyle = TransitionStyle.TAB_TO_TAB;
         long epochTime = mSelectedDay.getTime();
         //navigate back to available bookings for this day

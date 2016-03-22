@@ -21,8 +21,7 @@ import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.scheduler.LocationScheduleService;
 import com.handy.portal.location.scheduler.geofences.handler.BookingGeofenceScheduleHandler;
 import com.handy.portal.location.scheduler.tracking.handler.LocationTrackingScheduleHandler;
-import com.handy.portal.logger.handylogger.EventLogFactory;
-import com.handy.portal.logger.handylogger.EventLogManager;
+\import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
@@ -73,6 +72,7 @@ import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
@@ -178,6 +178,7 @@ import retrofit.converter.GsonConverter;
         DashboardVideoLibraryFragment.class,
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
+        SendReceiptCheckoutFragment.class,
 })
 public final class ApplicationModule
 {
@@ -332,17 +333,16 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final Bus bus,
-                                               final DataManager dataManager,
-                                               final EventLogFactory eventLogFactory)
+                                               final DataManager dataManager)
     {
-        return new BookingManager(bus, dataManager, eventLogFactory);
+        return new BookingManager(bus, dataManager);
     }
 
     @Provides
     @Singleton
-    final SystemManager provideSystemManager(final Bus bus, final EventLogFactory eventLogFactory)
+    final SystemManager provideSystemManager(final Bus bus)
     {
-        return new SystemManager(context, bus, eventLogFactory);
+        return new SystemManager(context, bus);
     }
 
     @Provides
@@ -512,13 +512,6 @@ public final class ApplicationModule
     )
     {
         return new TabNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
-    }
-
-    @Provides
-    @Singleton
-    final EventLogFactory provideEventLogFactory(final ProviderManager providerManager)
-    {
-        return new EventLogFactory(providerManager);
     }
 
     private String getDeviceId()

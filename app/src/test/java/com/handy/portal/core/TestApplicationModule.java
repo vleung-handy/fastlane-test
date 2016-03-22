@@ -6,7 +6,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
@@ -35,6 +34,8 @@ import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragmentTest;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
@@ -76,7 +77,9 @@ import static org.mockito.Mockito.when;
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
         BookingDetailsJobInstructionsView.class,
-        LocationSettingsBlockerDialogFragment.class
+        LocationSettingsBlockerDialogFragment.class,
+        SendReceiptCheckoutFragment.class,
+        SendReceiptCheckoutFragmentTest.class,
 }, library = true)
 public class TestApplicationModule
 {
@@ -227,8 +230,4 @@ public class TestApplicationModule
     {
         return mock(UrbanAirshipManager.class);
     }
-
-    @Provides
-    final EventLogFactory provideEventLogFactory() { return mock(EventLogFactory.class); }
-
 }

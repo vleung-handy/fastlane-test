@@ -7,7 +7,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.squareup.otto.Bus;
@@ -30,8 +29,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     protected GoogleManager googleManager;
     @Inject
     protected Bus bus;
-    @Inject
-    protected EventLogFactory mEventLogFactory;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)

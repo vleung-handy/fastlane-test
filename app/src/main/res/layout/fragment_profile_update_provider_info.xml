@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_payment_method_option"
+            android:background="@drawable/border_gray_no_side"
             android:orientation="horizontal"
             >
 

@@ -9,8 +9,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
@@ -26,8 +26,6 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 {
     @Inject
     Bus mBus;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     private TextView footerView;
     private OnDataItemClickListener onDataItemClickListener; //TODO: WIP. refine
@@ -90,8 +88,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPaymentBatchSelectedLog(false,
-                position + 1))); // index needs to be one based
+        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchSelected(false, position + 1))); // index needs to be one based
         PaymentBatch paymentBatch = getWrappedAdapter().getDataItem(position);
         notifyDataItemClickListener(paymentBatch);
     }

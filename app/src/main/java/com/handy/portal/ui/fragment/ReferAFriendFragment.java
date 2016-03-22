@@ -15,6 +15,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ReferralInfo;
@@ -101,7 +102,7 @@ public class ReferAFriendFragment extends ActionBarFragment
     @OnClick(R.id.referral_code_layout)
     public void createReferral()
     {
-        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createReferralSelectedLog()));
+        mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralSelectedLog()));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mReferralInfo.getReferralLink());
