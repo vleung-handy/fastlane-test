@@ -9,7 +9,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.location.model.LocationQuerySchedule;
+import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
@@ -79,10 +79,10 @@ public class LocationManager
     {
         String providerId = mProviderManager.getLastProviderId();
         if (providerId == null) { return; }
-        mDataManager.getLocationStrategies(providerId, new DataManager.Callback<LocationQuerySchedule>()
+        mDataManager.getLocationStrategies(providerId, new DataManager.Callback<LocationScheduleStrategies>()
         {
             @Override
-            public void onSuccess(final LocationQuerySchedule response)
+            public void onSuccess(final LocationScheduleStrategies response)
             {
                 Crashlytics.log("Received location query schedule from server: " + response.toString());
                 mBus.post(new LocationEvent.ReceiveLocationScheduleSuccess(response));

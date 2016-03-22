@@ -1,4 +1,4 @@
-package com.handy.portal.location;
+package com.handy.portal.location.scheduler.tracking.handler;
 
 import android.content.Context;
 import android.location.Location;
@@ -11,9 +11,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.location.model.LocationQueryStrategy;
 import com.handy.portal.location.model.LocationUpdate;
+import com.handy.portal.location.scheduler.handler.ScheduleStrategyHandler;
+import com.handy.portal.location.scheduler.tracking.model.LocationTrackingScheduleStrategy;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.SystemUtils;
 import com.handy.portal.util.Utils;
@@ -34,7 +36,7 @@ import java.util.Queue;
  * <p/>
  * TODO needs major cleanup
  */
-public class LocationStrategyHandler //TODO: rename this so it is more distinct from the location query strategy model
+public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHandler
 {
     /**
      * any strategy that wants accuracy equal to or below this amount
@@ -44,17 +46,17 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
      */
     public static final int HIGH_ACCURACY_THRESHOLD_METERS = 100;
 
-    Queue<LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
-    long mTimestampLastUpdatePostedMs;
-    LocationQueryStrategy mLocationQueryStrategy;
-    LocationStrategyCallbacks mLocationStrategyCallbacks;
-    Context mContext;
+    private Queue<LocationUpdate> mLocationUpdateQueue = new LinkedList<>();
+    private long mTimestampLastUpdatePostedMs;
+    private LocationTrackingScheduleStrategy mLocationTrackingStrategy;
+    private LocationStrategyCallbacks mLocationStrategyCallbacks;
+    private Context mContext;
 
     /**
      * this listener is tied to the lifecycle of the strategy and gets location update callbacks
      */
-    LocationListener mLocationListener;
-    Handler mHandler;
+    private LocationListener mLocationListener;
+    private Handler mHandler;
 
     public LocationListener getLocationListener()
     {
@@ -62,14 +64,13 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     }
 
 
-    public LocationStrategyHandler(@NonNull LocationQueryStrategy locationQueryStrategy,
-                                   @NonNull final LocationStrategyCallbacks locationStrategyCallbacks,
-                                   @NonNull Handler handler,
-                                   @NonNull Context context)
+    public LocationTrackingScheduleStrategyHandler(@NonNull LocationTrackingScheduleStrategy locationTrackingStrategy,
+                                                   @NonNull final LocationStrategyCallbacks locationStrategyCallbacks,
+                                                   @NonNull Handler handler,
+                                                   @NonNull Context context)
     {
-        mLocationQueryStrategy = locationQueryStrategy;
+        mLocationTrackingStrategy = locationTrackingStrategy;
         mLocationStrategyCallbacks = locationStrategyCallbacks;
-
         mContext = context;
         mHandler = handler;
         mTimestampLastUpdatePostedMs = System.currentTimeMillis(); //don't want to post immediately
@@ -79,7 +80,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
             public void onLocationChanged(final Location location)
             {
                 //TODO: use a util instead
-                if (location.getTime() > mLocationQueryStrategy.getEndDate().getTime())
+                if (location.getTime() > mLocationTrackingStrategy.getEndDate().getTime())
                 {
                     Log.d(getClass().getName(), "location request expired but got location changed callback, not doing anything");
                     //would be messy if i unregistered this here, because no reference to required arguments
@@ -103,7 +104,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     public boolean isStrategyExpired()
     {
         //TODO use a util instead
-        return System.currentTimeMillis() > mLocationQueryStrategy.getEndDate().getTime();
+        return System.currentTimeMillis() > mLocationTrackingStrategy.getEndDate().getTime();
     }
 
     /**
@@ -114,7 +115,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     private LocationRequest createLocationRequest()
     {
         int priority;
-        if(mLocationQueryStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS)
+        if(mLocationTrackingStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS)
         {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
         }
@@ -123,12 +124,11 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
         }
 
-        Crashlytics.log("Creating location request with strategy: \n" + mLocationQueryStrategy.toString());
-        long pollingIntervalMs = mLocationQueryStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
-        long expirationDurationMs = mLocationQueryStrategy.getEndDate().getTime() - System.currentTimeMillis(); //no harm if this is negative
+        long pollingIntervalMs = mLocationTrackingStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
+        long expirationDurationMs = mLocationTrackingStrategy.getEndDate().getTime() - System.currentTimeMillis();
 
         LocationRequest locationRequest = new LocationRequest()
-                .setSmallestDisplacement(mLocationQueryStrategy.getDistanceFilterMeters())
+                .setSmallestDisplacement(mLocationTrackingStrategy.getDistanceFilterMeters())
                 .setPriority(priority)
                 .setExpirationDuration(expirationDurationMs)
                 .setInterval(pollingIntervalMs)
@@ -136,51 +136,6 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
                 ;
 
         return locationRequest;
-    }
-
-    /**
-     * asks the location api for location updates
-     *
-     * @param googleApiClient
-     * @throws SecurityException
-     */
-    public void requestLocationUpdates(GoogleApiClient googleApiClient)
-    {
-        try
-        {
-            //this handles the permission system in Android 6.0
-            if (!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
-            {
-                return;
-            }
-
-            Log.d(getClass().getName(), "requesting location updates for " + mLocationQueryStrategy.toString());
-            LocationRequest locationRequest = createLocationRequest();
-            long expirationTimeMs = locationRequest.getExpirationTime();
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
-                    createLocationRequest(),
-                    mLocationListener);
-
-            mHandler.postAtTime(new Runnable() //callback for when strategy expires
-            {
-                @Override
-                public void run()
-                {
-                    mLocationStrategyCallbacks.onLocationStrategyExpired(LocationStrategyHandler.this);
-                }
-            }, expirationTimeMs);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e);
-        }
-
-    }
-
-    public LocationQueryStrategy getLocationQueryStrategy()
-    {
-        return mLocationQueryStrategy;
     }
 
     /**
@@ -209,7 +164,7 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
     private boolean shouldPostUpdate()
     {
         //TODO use a util instead
-        long serverPollingIntervalMs = mLocationQueryStrategy.getServerPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
+        long serverPollingIntervalMs = mLocationTrackingStrategy.getServerPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
         return (System.currentTimeMillis() - mTimestampLastUpdatePostedMs >= serverPollingIntervalMs);
     }
 
@@ -224,14 +179,14 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
         mLocationUpdateQueue.add(locationUpdate);
         if (shouldPostUpdate())
         {
-            buildBatchUpdateAndNotifyReady();
+            buildStrategyBatchUpdatesAndNotifyReady();
         }
     }
 
     /**
      * called when it's time to post the location updates to the server
      */
-    public void buildBatchUpdateAndNotifyReady()
+    public void buildStrategyBatchUpdatesAndNotifyReady()
     {
         LocationBatchUpdate locationBatchUpdate = buildLocationBatchUpdateAndClearQueue();
         mTimestampLastUpdatePostedMs = System.currentTimeMillis();
@@ -241,9 +196,66 @@ public class LocationStrategyHandler //TODO: rename this so it is more distinct 
         }
     }
 
-    public interface LocationStrategyCallbacks
+    /**
+     * asks the location api for location updates
+     **/
+    @SuppressWarnings({"ResourceType", "MissingPermission"})
+    @Override
+    protected void startStrategy()
     {
-        void onLocationStrategyExpired(LocationStrategyHandler locationStrategyHandler);
+        try
+        {
+            GoogleApiClient googleApiClient = mLocationStrategyCallbacks.getGoogleApiClient();
+            //this handles the permission system in Android 6.0
+            if (!Utils.areAllPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
+            {
+                return;
+            }
+
+            Log.d(getClass().getName(), "requesting location updates for " + mLocationTrackingStrategy.toString());
+            LocationRequest locationRequest = createLocationRequest();
+            long expirationTimeMs = locationRequest.getExpirationTime();
+
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
+                    createLocationRequest(),
+                    mLocationListener);
+
+            mHandler.postAtTime(new Runnable() //callback for when strategy expires
+            {
+                @Override
+                public void run()
+                {
+                    mLocationStrategyCallbacks.onStrategyExpired(LocationTrackingScheduleStrategyHandler.this);
+                }
+            }, expirationTimeMs);
+            //let the callback know so that we can remove this strategy from the active strategies list and post all pending updates
+        }
+        catch (Exception e)
+        {
+            Log.e(getClass().getName(), e.getMessage());
+            Crashlytics.logException(e);
+        }
+
+    }
+
+    @Override
+    protected void stopStrategy()
+    {
+        try
+        {
+            GoogleApiClient googleApiClient = mLocationStrategyCallbacks.getGoogleApiClient();
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, getLocationListener());
+        }
+        catch (Exception e)
+        {
+            Log.e(getClass().getName(), e.getMessage());
+            Crashlytics.logException(e);
+        }
+    }
+
+    public interface LocationStrategyCallbacks extends ScheduleStrategyHandler.StrategyCallbacks<LocationTrackingScheduleStrategyHandler>
+    {
+        GoogleApiClient getGoogleApiClient();
 
         void onLocationBatchUpdateReady(LocationBatchUpdate locationBatchUpdate);
 

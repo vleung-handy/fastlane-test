@@ -55,7 +55,7 @@
         android:theme="@style/AppTheme"
         >
         <service
-            android:name=".location.LocationService"
+            android:name=".location.scheduler.LocationScheduleService"
             android:exported="false"
             >
         </service>

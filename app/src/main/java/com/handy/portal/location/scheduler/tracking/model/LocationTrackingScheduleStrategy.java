@@ -1,35 +1,33 @@
-package com.handy.portal.location.model;
+package com.handy.portal.location.scheduler.tracking.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.location.scheduler.model.ScheduleStrategy;
 
 import java.util.Date;
 
-//TODO: at testing stage. not finalized, needs lots of refactoring
-
-
 /**
- * part of the LocationQuerySchedule model received from the server
- * <p/>
- * the location service uses this to determine when and at what accuracy we should get location updates
+ * part of the LocationScheduleStrategies model received from the server
+ *
+ * this model defines the parameters of a LocationRequest, the time range during which it should be active,
+ * and how often updates should be posted to the server
  */
-public class LocationQueryStrategy implements Parcelable
+public class LocationTrackingScheduleStrategy extends ScheduleStrategy implements Parcelable
 {
-    public static final Creator<LocationQueryStrategy> CREATOR = new Creator<LocationQueryStrategy>()
+    public static final Creator<LocationTrackingScheduleStrategy> CREATOR = new Creator<LocationTrackingScheduleStrategy>()
     {
         @Override
-        public LocationQueryStrategy createFromParcel(Parcel in)
+        public LocationTrackingScheduleStrategy createFromParcel(Parcel in)
         {
-            return new LocationQueryStrategy(in);
+            return new LocationTrackingScheduleStrategy(in);
         }
 
         @Override
-        public LocationQueryStrategy[] newArray(int size)
+        public LocationTrackingScheduleStrategy[] newArray(int size)
         {
-            return new LocationQueryStrategy[size];
+            return new LocationTrackingScheduleStrategy[size];
         }
     };
     @SerializedName("start_date")
@@ -50,7 +48,7 @@ public class LocationQueryStrategy implements Parcelable
         return mDistanceFilterMeters;
     }
 
-    protected LocationQueryStrategy(Parcel in)
+    protected LocationTrackingScheduleStrategy(Parcel in)
     {
         mStartDate = new Date(in.readLong());
         mEndDate = new Date(in.readLong());
@@ -58,9 +56,6 @@ public class LocationQueryStrategy implements Parcelable
         mLocationPollingIntervalSeconds = in.readInt();
         mDistanceFilterMeters = in.readInt();
         mAccuracy = in.readInt();
-
-        //logging this for now to rule out parcel reading errors
-        Crashlytics.log("Created location query strategy from parcel: \n" + toString());
     }
 
     public int getServerPollingIntervalSeconds()

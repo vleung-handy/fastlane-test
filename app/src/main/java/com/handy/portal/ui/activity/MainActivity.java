@@ -16,7 +16,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.location.LocationConstants;
-import com.handy.portal.location.LocationService;
+import com.handy.portal.location.scheduler.LocationScheduleService;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.manager.ConfigManager;
@@ -68,12 +68,13 @@ public class MainActivity extends BaseActivity
     {
         if (hasRequiredLocationPermissions() && hasRequiredLocationSettings())
         {
-            Intent locationServiceIntent = new Intent(this, LocationService.class);
+            Intent locationServiceIntent = new Intent(this, LocationScheduleService.class);
             if (mConfigManager.getConfigurationResponse() != null
-                    && mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled())
+                    && (mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled()
+                        || mConfigManager.getConfigurationResponse().isBookingGeofenceServiceEnabled()))
             {
                 //nothing will happen if it's already running
-                if (!SystemUtils.isServiceRunning(this, LocationService.class))
+                if (!SystemUtils.isServiceRunning(this, LocationScheduleService.class))
                 {
                     startService(locationServiceIntent);
                 }
@@ -89,7 +90,7 @@ public class MainActivity extends BaseActivity
 
     private boolean hasRequiredLocationPermissions()
     {
-        return Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS);
+        return Utils.areAllPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS);
     }
 
     private boolean hasRequiredLocationSettings()

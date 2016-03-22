@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
-import com.handy.portal.location.model.LocationQuerySchedule;
+import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
@@ -368,7 +368,7 @@ class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<Pro
     }
 }
 
-class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationQuerySchedule>
+class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationScheduleStrategies>
 {
     GetLocationScheduleRetrofitCallback(DataManager.Callback callback)
     {
