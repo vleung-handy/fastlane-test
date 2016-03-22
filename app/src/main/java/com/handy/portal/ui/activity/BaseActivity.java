@@ -277,7 +277,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public void onConnected(Bundle connectionHint)
     {
-        if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        if (!Utils.areAllPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
         {
             return;
         }

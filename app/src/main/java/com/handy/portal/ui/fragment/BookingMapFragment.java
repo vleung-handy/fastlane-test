@@ -119,7 +119,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     {
         if (mBooking == null) { return; }
 
-        if (!Utils.areAnyPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
+        if (!Utils.areAllPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
         {
             return;
         }

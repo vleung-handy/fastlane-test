@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity
 
     private boolean hasRequiredLocationPermissions()
     {
-        return Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS);
+        return Utils.areAllPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS);
     }
 
     private boolean hasRequiredLocationSettings()

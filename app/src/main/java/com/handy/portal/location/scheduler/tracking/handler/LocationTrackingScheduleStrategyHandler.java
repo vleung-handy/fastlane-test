@@ -207,7 +207,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
         {
             GoogleApiClient googleApiClient = mLocationStrategyCallbacks.getGoogleApiClient();
             //this handles the permission system in Android 6.0
-            if (!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
+            if (!Utils.areAllPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
             {
                 return;
             }

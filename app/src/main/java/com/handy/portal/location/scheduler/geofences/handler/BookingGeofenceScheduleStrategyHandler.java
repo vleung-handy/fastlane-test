@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -59,7 +60,7 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
     {
         try
         {
-            if(!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
+            if(!Utils.areAllPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
             {
                 return;
             }
@@ -112,7 +113,6 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
 
     private Geofence buildGeofenceFromStrategy()
     {
-
         return new Geofence.Builder()
                 .setRequestId(getGeofenceRequestId())
                 .setCircularRegion(mBookingGeofenceStrategy.getLatitude(),
@@ -153,7 +153,12 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
     @Override
     public void onResult(final Status status)
     {
-        Log.d(getClass().getName(), "got result callback. status: " + status.getStatusCode() + ":" + status.getStatusMessage());
+        int statusCode = status.getStatusCode();
+        Log.d(getClass().getName(), "got result callback. status: " + statusCode + ": " + status.getStatusMessage());
+        if(statusCode != CommonStatusCodes.SUCCESS)
+        {
+            Crashlytics.logException(new Exception("Unable to create geofence. Status code: " + statusCode + ", message: " + status.getStatusMessage()));
+        }
     }
 
     public interface BookingGeofenceStrategyCallbacks extends ScheduleStrategyHandler.StrategyCallbacks<BookingGeofenceScheduleStrategyHandler>{
