@@ -30,9 +30,9 @@ import javax.inject.Inject;
  * does whatever needs to be done given a schedule that contains strategies, sorted by start date
  * TODO: try to not have to define the StrategyHandler class type, because that's supposed to be implied from the strategy type
  */
-public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandler, ScheduleStrategyType extends ScheduleStrategy>
+public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrategyHandler, ScheduleStrategyType extends ScheduleStrategy>
         extends BroadcastReceiver
-        implements StrategyHandler.StrategyCallbacks<StrategyHandlerType>
+        implements ScheduleStrategyHandler.StrategyCallbacks<StrategyHandlerType>
 {
     @Inject
     protected Bus mBus;
@@ -51,9 +51,6 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
         mSortedStrategies = sortedByDateAscendingStrategies;
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         mContext = context;
-
-        //TODO: investigate using this later. need to refactor other stuff before this can be used
-//        LocalBroadcastManager.getInstance(mContext).registerReceiver(this, getAlarmIntentFilter());
         mContext.registerReceiver(this, getAlarmIntentFilter());
     }
 
@@ -75,15 +72,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
      */
     public final void start()
     {
-        try
-        {
-            scanSchedule(); //can throw security exception, or maybe the client won't be connected
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
+        scanSchedule();
     }
 
     /**
@@ -98,33 +87,41 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
      */
     protected final void scanSchedule()
     {
-        //look for any strategies within scope and starts them if not already started
-        ListIterator<ScheduleStrategyType> strategyListIterator
-                = mSortedStrategies.listIterator();
-        while (strategyListIterator.hasNext())
+        try
         {
-            ScheduleStrategyType strategy = strategyListIterator.next();
-
-            strategyListIterator.remove(); //strategy is handled, don't need to handle again
-
-            //TODO: use a util instead
-            long currentTimeMillis = System.currentTimeMillis();
-            if (currentTimeMillis >= strategy.getStartDate().getTime()
-                    && currentTimeMillis < strategy.getEndDate().getTime()) //current time is within start/end date bounds
+            //look for any strategies within scope and starts them if not already started
+            ListIterator<ScheduleStrategyType> strategyListIterator
+                    = mSortedStrategies.listIterator();
+            while (strategyListIterator.hasNext())
             {
-                //starts this strategy
-                startStrategy(strategy);
+                ScheduleStrategyType strategy = strategyListIterator.next();
+
+                strategyListIterator.remove(); //strategy is handled, don't need to handle again
+
+                //TODO: use a util instead
+                long currentTimeMillis = System.currentTimeMillis();
+                if (currentTimeMillis >= strategy.getStartDate().getTime()
+                        && currentTimeMillis < strategy.getEndDate().getTime()) //current time is within start/end date bounds
+                {
+                    //starts this strategy
+                    startStrategy(strategy);
+                }
+                else if (currentTimeMillis < strategy.getStartDate().getTime()) //current time is before start date
+                {
+                    //start date is in the future
+                    scheduleAlarm(strategy);
+                    Log.d(getClass().getName(), "Scheduled an alarm for " + strategy.getStartDate().toString());
+                    break; //only want one alarm a time and don't need to look further into future
+                }
             }
-            else if (currentTimeMillis < strategy.getStartDate().getTime()) //current time is before start date
-            {
-                //start date is in the future
-                scheduleAlarm(strategy);
-                Log.d(getClass().getName(), "Scheduled an alarm for " + strategy.getStartDate().toString());
-                break; //only want one alarm a time and don't need to look further into future
-            }
+
+            //TODO: when the schedule is completely expired, we want to request a schedule for the next N days in case the user never opens the app
         }
-
-        //TODO: when the schedule is completely expired, we want to request a schedule for the next N days in case the user never opens the app
+        catch (Exception e)
+        {
+            Log.e(getClass().getName(), e.getMessage());
+            Crashlytics.logException(e);
+        }
     }
 
     /**
@@ -189,15 +186,15 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
         Iterator<StrategyHandlerType> locationStrategyHandlerIterator = mActiveStrategies.iterator();
         while (locationStrategyHandlerIterator.hasNext())
         {
-            StrategyHandler locationScheduleStrategyHandler = locationStrategyHandlerIterator.next();
-            if (locationScheduleStrategyHandler.isStrategyExpired())
+            ScheduleStrategyHandler locationScheduleScheduleStrategyHandler = locationStrategyHandlerIterator.next();
+            if (locationScheduleScheduleStrategyHandler.isStrategyExpired())
             {
                 //remove, just in case it wasn't properly removed before
                 locationStrategyHandlerIterator.remove();
             }
             else
             {
-                locationScheduleStrategyHandler.buildStrategyBatchUpdatesAndNotifyReady();
+                locationScheduleScheduleStrategyHandler.buildStrategyBatchUpdatesAndNotifyReady();
             }
         }
     }
@@ -230,7 +227,6 @@ public abstract class ScheduleHandler<StrategyHandlerType extends StrategyHandle
     }
 
     /**
-     * TODO refactor this later to not use system alarms. investigate alternative
      * Schedules an alarm to wake this broadcast receiver up with the strategy, for the strategy start date
      * @param strategy
      */

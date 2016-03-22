@@ -20,8 +20,8 @@ import java.util.LinkedList;
  * does whatever needs to be done given a location query schedule
  */
 public class LocationTrackingScheduleHandler
-        extends ScheduleHandler<LocationTrackingStrategyHandler, LocationTrackingScheduleStrategy>
-        implements LocationTrackingStrategyHandler.LocationStrategyCallbacks
+        extends ScheduleHandler<LocationTrackingScheduleStrategyHandler, LocationTrackingScheduleStrategy>
+        implements LocationTrackingScheduleStrategyHandler.LocationStrategyCallbacks
 {
     private Handler mHandler = new Handler();
     private static final int ALARM_REQUEST_CODE = 1;
@@ -49,9 +49,9 @@ public class LocationTrackingScheduleHandler
     }
 
     @Override
-    public LocationTrackingStrategyHandler createStrategyHandler(final LocationTrackingScheduleStrategy locationTrackerStrategy)
+    public LocationTrackingScheduleStrategyHandler createStrategyHandler(final LocationTrackingScheduleStrategy locationTrackerStrategy)
     {
-        return new LocationTrackingStrategyHandler(
+        return new LocationTrackingScheduleStrategyHandler(
                         locationTrackerStrategy,
                         this,
                         mHandler,

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -14,13 +15,13 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.scheduler.geofences.model.BookingGeofenceStrategy;
-import com.handy.portal.location.scheduler.handler.StrategyHandler;
+import com.handy.portal.location.scheduler.handler.ScheduleStrategyHandler;
 import com.handy.portal.util.Utils;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class BookingGeofenceStrategyHandler extends StrategyHandler implements ResultCallback<Status>
+public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHandler implements ResultCallback<Status>
 {
     private BookingGeofenceStrategy mBookingGeofenceStrategy;
     private BookingGeofenceStrategyCallbacks mBookingGeofenceStrategyCallbacks;
@@ -28,20 +29,15 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
     private Context mContext;
     private Handler mHandler;
 
-    public BookingGeofenceStrategyHandler(BookingGeofenceStrategy bookingGeofenceStrategy,
-                                          BookingGeofenceStrategyCallbacks bookingGeofenceStrategyCallbacks,
-                                          Handler handler,
-                                          Context context)
+    public BookingGeofenceScheduleStrategyHandler(BookingGeofenceStrategy bookingGeofenceStrategy,
+                                                  BookingGeofenceStrategyCallbacks bookingGeofenceStrategyCallbacks,
+                                                  Handler handler,
+                                                  Context context)
     {
         mBookingGeofenceStrategy = bookingGeofenceStrategy;
         mBookingGeofenceStrategyCallbacks = bookingGeofenceStrategyCallbacks;
         mHandler = handler;
         mContext = context;
-    }
-
-    public BookingGeofenceStrategy getBookingGeofenceStrategy()
-    {
-        return mBookingGeofenceStrategy;
     }
 
     @Override
@@ -61,31 +57,39 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
     @Override
     protected void startStrategy()
     {
-        if(!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
+        try
         {
-            return;
-        }
-        GoogleApiClient googleApiClient = mBookingGeofenceStrategyCallbacks.getGoogleApiClient();
-
-        Geofence geofence = buildGeofenceFromStrategy();
-        GeofencingRequest geofencingRequest = buildGeofencingRequestFromGeofence(geofence);
-
-        //add the geofence request
-        LocationServices.GeofencingApi.addGeofences(googleApiClient,
-                geofencingRequest,
-                mBookingGeofenceStrategyCallbacks.getPendingIntent(mBookingGeofenceStrategy)).setResultCallback(this);
-        Log.d(getClass().getName(), "Building geofence for geofence strategy: " + mBookingGeofenceStrategy.toString());
-
-        //todo postdelayed or postattime?
-        mHandler.postDelayed(new Runnable() //callback for when strategy expires
-        {
-            @Override
-            public void run()
+            if(!Utils.areAnyPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
             {
-                mBookingGeofenceStrategyCallbacks.onStrategyExpired(BookingGeofenceStrategyHandler.this);
+                return;
             }
-        }, getGeofenceExpirationDurationMs());
-        //let the callback know so that we can remove this strategy from the active strategies list and post all pending updates
+            GoogleApiClient googleApiClient = mBookingGeofenceStrategyCallbacks.getGoogleApiClient();
+
+            Geofence geofence = buildGeofenceFromStrategy();
+            GeofencingRequest geofencingRequest = buildGeofencingRequestFromGeofence(geofence);
+
+            //add the geofence request
+            LocationServices.GeofencingApi.addGeofences(googleApiClient,
+                    geofencingRequest,
+                    mBookingGeofenceStrategyCallbacks.getPendingIntent(mBookingGeofenceStrategy)).setResultCallback(this);
+            Log.d(getClass().getName(), "Building geofence for geofence strategy: " + mBookingGeofenceStrategy.toString());
+
+            //todo postdelayed or postattime?
+            mHandler.postDelayed(new Runnable() //callback for when strategy expires
+            {
+                @Override
+                public void run()
+                {
+                    mBookingGeofenceStrategyCallbacks.onStrategyExpired(BookingGeofenceScheduleStrategyHandler.this);
+                }
+            }, getGeofenceExpirationDurationMs());
+            //let the callback know so that we can remove this strategy from the active strategies list and post all pending updates
+        }
+        catch (Exception e)
+        {
+            Log.e(getClass().getName(), e.getMessage());
+            Crashlytics.logException(e);
+        }
     }
 
     /**
@@ -122,11 +126,19 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
     @Override
     protected void stopStrategy()
     {
-        GoogleApiClient googleApiClient = mBookingGeofenceStrategyCallbacks.getGoogleApiClient();
-        Log.d(getClass().getName(), "stopping strategy: " + toString());
-        List<String> requestIdsList = new LinkedList<>();
-        requestIdsList.add(mBookingGeofenceStrategy.getBookingId());
-        LocationServices.GeofencingApi.removeGeofences(googleApiClient, requestIdsList);
+        try
+        {
+            GoogleApiClient googleApiClient = mBookingGeofenceStrategyCallbacks.getGoogleApiClient();
+            Log.d(getClass().getName(), "stopping strategy: " + toString());
+            List<String> requestIdsList = new LinkedList<>();
+            requestIdsList.add(mBookingGeofenceStrategy.getBookingId());
+            LocationServices.GeofencingApi.removeGeofences(googleApiClient, requestIdsList);
+        }
+        catch (Exception e)
+        {
+            Log.e(getClass().getName(), e.getMessage());
+            Crashlytics.logException(e);
+        }
     }
 
     @Override
@@ -135,7 +147,7 @@ public class BookingGeofenceStrategyHandler extends StrategyHandler implements R
         Log.d(getClass().getName(), "got result callback. status: " + status.getStatusCode() + ":" + status.getStatusMessage());
     }
 
-    public interface BookingGeofenceStrategyCallbacks extends StrategyHandler.StrategyCallbacks<BookingGeofenceStrategyHandler>{
+    public interface BookingGeofenceStrategyCallbacks extends ScheduleStrategyHandler.StrategyCallbacks<BookingGeofenceScheduleStrategyHandler>{
         GoogleApiClient getGoogleApiClient();
         PendingIntent getPendingIntent(BookingGeofenceStrategy bookingGeofenceStrategy);
     }

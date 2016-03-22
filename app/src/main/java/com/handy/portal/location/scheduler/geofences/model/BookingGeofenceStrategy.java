@@ -7,6 +7,11 @@ import com.handy.portal.location.scheduler.model.ScheduleStrategy;
 
 import java.util.Date;
 
+/**
+ * part of the LocationScheduleStrategies model received from the server
+ *
+ * this model defines the parameters of a geofence, and time range during which it should be active
+ */
 public class BookingGeofenceStrategy extends ScheduleStrategy
 {
     @SerializedName("booking_id")

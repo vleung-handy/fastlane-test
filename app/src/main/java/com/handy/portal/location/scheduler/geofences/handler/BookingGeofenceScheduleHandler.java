@@ -28,8 +28,8 @@ import java.util.List;
  * Geofences are only activated (triggered by alarm) at their start dates, and expire at their end dates
  */
 public class BookingGeofenceScheduleHandler
-        extends ScheduleHandler<BookingGeofenceStrategyHandler, BookingGeofenceStrategy>
-        implements BookingGeofenceStrategyHandler.BookingGeofenceStrategyCallbacks
+        extends ScheduleHandler<BookingGeofenceScheduleStrategyHandler, BookingGeofenceStrategy>
+        implements BookingGeofenceScheduleStrategyHandler.BookingGeofenceStrategyCallbacks
 {
     private static final int ALARM_REQUEST_CODE = 2;
     private static final int ALARM_PENDING_INTENT_REQUEST_CODE = 3;
@@ -67,9 +67,9 @@ public class BookingGeofenceScheduleHandler
     }
 
     @Override
-    public BookingGeofenceStrategyHandler createStrategyHandler(final BookingGeofenceStrategy bookingGeofenceStrategy)
+    public BookingGeofenceScheduleStrategyHandler createStrategyHandler(final BookingGeofenceStrategy bookingGeofenceStrategy)
     {
-        return new BookingGeofenceStrategyHandler(bookingGeofenceStrategy, this, mHandler, mContext);
+        return new BookingGeofenceScheduleStrategyHandler(bookingGeofenceStrategy, this, mHandler, mContext);
     }
 
     @Override

@@ -8,13 +8,11 @@ import com.handy.portal.location.scheduler.model.ScheduleStrategy;
 
 import java.util.Date;
 
-//TODO: at testing stage. not finalized, needs lots of refactoring
-
-
 /**
- * part of the LocationQuerySchedule model received from the server
- * <p/>
- * the location service uses this to determine when and at what accuracy we should get location updates
+ * part of the LocationScheduleStrategies model received from the server
+ *
+ * this model defines the parameters of a LocationRequest, the time range during which it should be active,
+ * and how often updates should be posted to the server
  */
 public class LocationTrackingScheduleStrategy extends ScheduleStrategy implements Parcelable
 {
