@@ -72,7 +72,6 @@ public class CheckInFlowLog extends EventLog
 
     private double getLatitude(Address address)
     {
-
         if (address != null)
         {
             return address.getLatitude();
@@ -85,7 +84,6 @@ public class CheckInFlowLog extends EventLog
 
     private double getLongitude(Address address)
     {
-
         if (address != null)
         {
             return address.getLongitude();
