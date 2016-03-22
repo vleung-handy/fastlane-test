@@ -17,13 +17,20 @@ public class DeeplinkUtils
         {
             final Bundle deeplinkBundle = new Bundle();
             final String path = sanitizeUriPath(uri);
-            deeplinkBundle.putString(BundleKeys.DEEPLINK, path);
-            for (String key : uri.getQueryParameterNames())
+            if (DeeplinkMapper.getTabForDeeplink(path) != null)
             {
-                deeplinkBundle.putString(key, uri.getQueryParameter(key));
-                // TODO: Support list types
+                deeplinkBundle.putString(BundleKeys.DEEPLINK, path);
+                for (String key : uri.getQueryParameterNames())
+                {
+                    deeplinkBundle.putString(key, uri.getQueryParameter(key));
+                    // TODO: Support list types
+                }
+                return deeplinkBundle;
             }
-            return deeplinkBundle;
+            else
+            {
+                return null;
+            }
         }
         return null;
     }
