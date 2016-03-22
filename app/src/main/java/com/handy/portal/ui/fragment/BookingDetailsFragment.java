@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,6 +40,7 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
@@ -120,7 +120,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
     private String mSource;
     private Bundle mSourceExtras;
-    @Nullable
     private Booking mAssociatedBooking;
 
     @Override
@@ -208,7 +207,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                         mHaveTrackedSeenBookingInstructions = true; //not guaranteed to stay flipped throughout session just on screen
                         //track event
                         bus.post(new LogEvent.AddLogEvent(
-                                mEventLogFactory.createBookingInstructionsSeenLog(mAssociatedBooking)));
+                                new ScheduledJobsLog.BookingInstructionsSeen(mAssociatedBooking.getId())));
                     }
                 }
             }
@@ -419,6 +418,10 @@ public class BookingDetailsFragment extends ActionBarFragment
             final BookingEvent.ReceiveZipClusterPolygonsSuccess event
     )
     {
+        // There's a null check here due to a race condition with BookingsFragment.
+        // BookingsFragment requests for zip clusters and the response may come back here. If the
+        // result comes back before this fragment and this fragment hasn't loaded a booking, then
+        // mAssociatedBooking will be null.
         if (mAssociatedBooking != null)
         {
             BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
@@ -641,7 +644,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void showHelpOptions()
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createSupportSelectedLog(mAssociatedBooking)));
+        String bookingId = mAssociatedBooking.getId();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SupportSelected(bookingId)));
         //TODO: We might no longer need this null check since we no longer do ButterKnife.unbind()
         if (mSlideUpPanelLayout != null)
         {
@@ -736,8 +740,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
         String warning = (removeAction != null) ? removeAction.getWarningText() : null;
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
-                booking, warning, null)));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmed(booking, warning, null)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
@@ -746,14 +749,14 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createOnMyWayLog(mAssociatedBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWay(mAssociatedBooking, locationData)));
     }
 
     private void requestNotifyCheckInJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCheckInLog(mAssociatedBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckIn(mAssociatedBooking, locationData)));
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
@@ -951,7 +954,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
             handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic,
                     R.string.return_to_schedule, mAssociatedBooking.getStartDate());
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(mAssociatedBooking)));
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(mAssociatedBooking)));
 
         }
     }
@@ -960,7 +963,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(mAssociatedBooking)));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(mAssociatedBooking)));
         handleBookingRemoveError(event);
     }
 
@@ -1076,8 +1079,8 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onSupportActionTriggered(HandyEvent.SupportActionTriggered event)
     {
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createHelpItemSelectedLog(
-                mAssociatedBooking, event.action.getActionName())));
+        String bookingId = mAssociatedBooking.getId();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.HelpItemSelected(bookingId, event.action.getActionName())));
 
         switch (supportActionType)
         {
@@ -1108,22 +1111,20 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void removeJob(@NonNull Booking.Action removeAction)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
-                mAssociatedBooking, removeAction.getWarningText())));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobClicked(mAssociatedBooking, removeAction.getWarningText())));
 
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
+        String bookingId = mAssociatedBooking.getId();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveConfirmationShown(bookingId, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
         takeAction(BookingActionButtonType.REMOVE, false);
 
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobClickedLog(
-                mAssociatedBooking, removeAction.getWarningText())));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobClicked(mAssociatedBooking, removeAction.getWarningText())));
 
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveConfirmationShownLog(
-                mAssociatedBooking, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
+        String bookingId = mAssociatedBooking.getId();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveConfirmationShown(bookingId, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);

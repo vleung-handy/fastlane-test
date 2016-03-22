@@ -17,6 +17,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
@@ -89,7 +90,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @OnClick(R.id.request_supplies_button)
     public void onRequestSuppliesButtonClicked()
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createResupplyKitConfirmedLog()));
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitConfirmedLog()));
         if(mProviderProfile != null)
         {
             if(mProviderProfile.getResupplyInfo().providerCanRequestSuppliesNow() && mProviderProfile.getProviderPersonalInfo().getAddress() != null)

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.model.Address;
+import com.handy.portal.model.Booking;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -54,18 +56,15 @@ public class AvailableJobsLog extends EventLog
         @SerializedName("list_number")
         private int mListNumber;
 
-        public Clicked(
-                final String bookingId, final String serviceId, final int regionId,
-                final String zipCode, final boolean requested, final Date dateStart,
-                final int listNumber)
+        public Clicked(final Booking booking, final int listNumber)
         {
             super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
+            mBookingId = booking.getId();
+            mServiceId = booking.getService();
+            mRegionId = booking.getRegionId();
+            mZipCode = getZipCode(booking.getAddress());
+            mRequested = booking.isRequested();
+            mDateStart = booking.getStartDate();
             mListNumber = listNumber;
         }
     }
@@ -114,20 +113,17 @@ public class AvailableJobsLog extends EventLog
         @SerializedName("claim_source_extras")
         private Map<String, Object> mSourceExtras;
 
-
-        public ClaimSuccess(
-                final String bookingId, final String serviceId, final int regionId,
-                final String zipCode, final boolean requested, final Date dateStart,
-                final int frequency, final String source, @Nullable final Bundle sourceExtras)
+        public ClaimSuccess(final Booking booking, final String source,
+                            @Nullable final Bundle sourceExtras)
         {
             super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
-            mFrequency = frequency;
+            mBookingId = booking.getId();
+            mServiceId = booking.getService();
+            mRegionId = booking.getRegionId();
+            mZipCode = getZipCode(booking.getAddress());
+            mRequested = booking.isRequested();
+            mDateStart = booking.getStartDate();
+            mFrequency = booking.getFrequency();
             mSource = source;
             if (sourceExtras != null)
             {
@@ -161,21 +157,29 @@ public class AvailableJobsLog extends EventLog
         @SerializedName("claim_source")
         private String mSource;
 
-
-        public ClaimError(
-                final String bookingId, final String serviceId, final int regionId,
-                final String zipCode, final boolean requested, final Date dateStart,
-                final int frequency, final String source)
+        public ClaimError(final Booking booking, final String source)
         {
             super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
-            mFrequency = frequency;
+            mBookingId = booking.getId();
+            mServiceId = booking.getService();
+            mRegionId = booking.getRegionId();
+            mZipCode = getZipCode(booking.getAddress());
+            mRequested = booking.isRequested();
+            mDateStart = booking.getStartDate();
+            mFrequency = booking.getFrequency();
             mSource = source;
+        }
+    }
+
+    private static String getZipCode(Address address)
+    {
+        if (address != null)
+        {
+            return address.getZip();
+        }
+        else
+        {
+            return "";
         }
     }
 }

@@ -22,6 +22,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
@@ -124,7 +125,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (validate())
         {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createEditProfileConfirmedLog()));
+            bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileConfirmedLog()));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
                     mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));

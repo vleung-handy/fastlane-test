@@ -24,6 +24,7 @@ import com.handy.portal.helpcenter.HelpEvent;
 import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.helpcenter.ui.adapter.HelpNodesAdapter;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
@@ -235,7 +236,7 @@ public final class PaymentsFragment extends ActionBarFragment
             case R.id.action_help:
                 if (helpNodesListView.getCount() > 0)
                 {
-                    bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPaymentHelpSlideUpLog()));
+                    bus.post(new LogEvent.AddLogEvent(new PaymentsLog.HelpSlideUpSelected()));
                     mSlideUpPanelLayout.showPanel(R.string.payment_help, helpNodesListView);
                 }
                 else
@@ -331,7 +332,7 @@ public final class PaymentsFragment extends ActionBarFragment
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
                 bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
                 bus.post(new LogEvent.AddLogEvent(
-                        mEventLogFactory.createPaymentHelpItemSelectedLog(childNode.getLabel())));
+                        new PaymentsLog.HelpItemSelected(childNode.getLabel())));
             }
         });
     }

@@ -6,7 +6,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
@@ -231,8 +230,4 @@ public class TestApplicationModule
     {
         return mock(UrbanAirshipManager.class);
     }
-
-    @Provides
-    final EventLogFactory provideEventLogFactory() { return mock(EventLogFactory.class); }
-
 }

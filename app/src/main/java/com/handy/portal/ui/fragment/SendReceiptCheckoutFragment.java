@@ -25,6 +25,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
@@ -261,7 +262,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCheckOutLog(mBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
     }
 
     //TODO: check if the dialog is already shown

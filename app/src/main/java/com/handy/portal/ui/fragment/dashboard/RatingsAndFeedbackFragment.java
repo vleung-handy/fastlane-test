@@ -215,6 +215,6 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
 
         bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
+        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackTappedLog()));
     }
 }

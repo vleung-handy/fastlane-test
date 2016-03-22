@@ -15,8 +15,8 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -42,8 +42,6 @@ public class SplashActivity extends BaseActivity
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
@@ -259,15 +257,15 @@ public class SplashActivity extends BaseActivity
 
     private void processDeeplink(@NonNull final Uri data)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createDeeplinkOpenedLog(data)));
+        bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(data)));
         if (!SupportedDeeplinkPath.matchesAny(data.getPath()))
         {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createDeeplinkIgnoredLog(data)));
+            bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(data)));
         }
         // try to process root if the path matches
         else if (SupportedDeeplinkPath.ROOT.matches(data.getPath()))
         {
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createDeeplinkProcessedLog(data)));
+            bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(data)));
             // nothing else happens, app is already open
         }
     }
