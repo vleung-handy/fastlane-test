@@ -208,6 +208,14 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
             PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, getWakeupAlarmRequestCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
             mAlarmManager.cancel(pendingIntent);
 
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+
+        try
+        {
             //sends all location updates that are supposed to be sent to server
             sendAllQueuedStrategyUpdates();
 
@@ -217,11 +225,9 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
             //TODO: consider not putting this here
             //unregister the alarm receiver
             mContext.unregisterReceiver(this);
-
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             Crashlytics.logException(e);
         }
     }

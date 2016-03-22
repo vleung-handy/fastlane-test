@@ -141,7 +141,7 @@ public class BookingGeofenceScheduleHandler
             {
                 Log.d(getClass().getName(), "geofence triggered with request id: " + geofence.getRequestId());
                 LocationUpdate locationUpdate = LocationUpdate.from(location);
-                locationUpdate.setBookingId(geofence.getRequestId());
+                locationUpdate.setBookingId(geofence.getRequestId()); //the geofence was created with request id equal to the associated booking id
                 locationUpdate.setEventName(eventName);
                 locationUpdate.setBatteryLevelPercent(batteryLevelPercent);
                 locationUpdate.setActiveNetworkType(activeNetworkType);

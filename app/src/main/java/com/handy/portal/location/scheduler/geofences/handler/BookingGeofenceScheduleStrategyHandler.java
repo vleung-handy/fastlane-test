@@ -114,13 +114,22 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
     {
 
         return new Geofence.Builder()
-                .setRequestId(mBookingGeofenceStrategy.getBookingId())
+                .setRequestId(getGeofenceRequestId())
                 .setCircularRegion(mBookingGeofenceStrategy.getLatitude(),
                         mBookingGeofenceStrategy.getLongitude(),
                         mBookingGeofenceStrategy.getRadius())
                 .setExpirationDuration(getGeofenceExpirationDurationMs())
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
+    }
+
+    /**
+     * the geofence unique request id should be the strategy's associated booking id
+     * @return
+     */
+    private String getGeofenceRequestId()
+    {
+        return mBookingGeofenceStrategy.getBookingId();
     }
 
     @Override
@@ -131,7 +140,7 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
             GoogleApiClient googleApiClient = mBookingGeofenceStrategyCallbacks.getGoogleApiClient();
             Log.d(getClass().getName(), "stopping strategy: " + toString());
             List<String> requestIdsList = new LinkedList<>();
-            requestIdsList.add(mBookingGeofenceStrategy.getBookingId());
+            requestIdsList.add(getGeofenceRequestId());
             LocationServices.GeofencingApi.removeGeofences(googleApiClient, requestIdsList);
         }
         catch (Exception e)
