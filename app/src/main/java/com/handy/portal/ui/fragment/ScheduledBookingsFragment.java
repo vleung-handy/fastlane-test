@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -36,7 +37,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Bind(R.id.scheduled_bookings_dates_scroll_view_layout)
     LinearLayout mScheduledJobsDatesScrollViewLayout;
     @Bind(R.id.scheduled_bookings_empty)
-    ViewGroup mNoScheduledBookingsLayout;
+    SwipeRefreshLayout mNoScheduledBookingsLayout;
     @Bind(R.id.find_jobs_for_day_button)
     Button mFindJobsForDayButton;
     @Bind(R.id.find_matching_jobs_button_container)
@@ -72,7 +73,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected ViewGroup getNoBookingsView()
+    protected SwipeRefreshLayout getNoBookingsSwipeRefreshLayout()
     {
         return mNoScheduledBookingsLayout;
     }

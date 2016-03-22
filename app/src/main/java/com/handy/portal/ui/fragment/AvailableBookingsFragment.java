@@ -3,9 +3,9 @@ package com.handy.portal.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
@@ -40,7 +40,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Bind(R.id.available_bookings_dates_scroll_view_layout)
     LinearLayout mAvailableJobsDatesScrollViewLayout;
     @Bind(R.id.available_bookings_empty)
-    ViewGroup mNoAvailableBookingsLayout;
+    SwipeRefreshLayout mNoAvailableBookingsLayout;
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
     private String mMessage;
@@ -81,7 +81,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected ViewGroup getNoBookingsView()
+    protected SwipeRefreshLayout getNoBookingsSwipeRefreshLayout()
     {
         return mNoAvailableBookingsLayout;
     }
