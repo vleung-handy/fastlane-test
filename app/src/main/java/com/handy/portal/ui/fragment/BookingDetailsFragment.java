@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -121,7 +120,6 @@ public class BookingDetailsFragment extends ActionBarFragment
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
     private String mSource;
     private Bundle mSourceExtras;
-    @Nullable
     private Booking mAssociatedBooking;
 
     @Override
@@ -420,6 +418,10 @@ public class BookingDetailsFragment extends ActionBarFragment
             final BookingEvent.ReceiveZipClusterPolygonsSuccess event
     )
     {
+        // There's a null check here due to a race condition with BookingsFragment.
+        // BookingsFragment requests for zip clusters and the response may come back here. If the
+        // result comes back before this fragment and this fragment hasn't loaded a booking, then
+        // mAssociatedBooking will be null.
         if (mAssociatedBooking != null)
         {
             BookingStatus bookingStatus = mAssociatedBooking.inferBookingStatus(getLoggedInUserId());
