@@ -203,8 +203,16 @@ public class SplashActivity extends BaseActivity
     @Override
     public final void onSaveInstanceState(final Bundle outState)
     {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(STATE_LAUNCHED_NEXT, launchedNext);
+        try
+        {
+            outState.putBoolean(STATE_LAUNCHED_NEXT, launchedNext);
+            super.onSaveInstanceState(outState);
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Non fatal
+            Crashlytics.logException(e);
+        }
     }
 
     private void checkForTerms()
