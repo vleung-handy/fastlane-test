@@ -108,7 +108,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
         arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, true);
-        NavigationEvent.NavigateToTab event = new NavigationEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
+        NavigationEvent.NavigateToTab event = new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments);
         bus.post(event);
     }
 }

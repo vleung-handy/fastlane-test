@@ -208,7 +208,7 @@ public final class HelpContactFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
-        NavigationEvent.NavigateToTab event = new NavigationEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
+        NavigationEvent.NavigateToTab event = new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments);
         bus.post(event);
     }
 
