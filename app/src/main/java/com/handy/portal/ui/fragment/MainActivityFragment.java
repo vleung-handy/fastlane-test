@@ -30,6 +30,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
+import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
@@ -138,6 +139,7 @@ public class MainActivityFragment extends InjectedFragment
             public void onDrawerOpened(final View drawerView)
             {
                 super.onDrawerOpened(drawerView);
+                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Opened()));
                 setDrawerActive(true);
             }
 
@@ -145,6 +147,7 @@ public class MainActivityFragment extends InjectedFragment
             public void onDrawerClosed(final View drawerView)
             {
                 super.onDrawerClosed(drawerView);
+                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
                 setDrawerActive(false);
             }
         });
@@ -394,6 +397,7 @@ public class MainActivityFragment extends InjectedFragment
         @Override
         public void onClick(View view)
         {
+            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mTab.name().toLowerCase())));
             if (mTransitionStyle != null)
             {
                 switchToTab(mTab, null, mTransitionStyle, false);
