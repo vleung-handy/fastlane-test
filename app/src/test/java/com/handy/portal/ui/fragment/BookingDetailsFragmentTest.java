@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.TestUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
@@ -174,7 +175,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     private <T> T getBusCaptorValue(Class<T> classType)
     {
         verify(fragment.bus, atLeastOnce()).post(captor.capture());
-        return getBusCaptorValue(captor, classType);
+        return TestUtils.getBusCaptorValue(captor, classType);
     }
 
 }
