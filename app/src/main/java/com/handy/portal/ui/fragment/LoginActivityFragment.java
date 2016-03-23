@@ -22,6 +22,8 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.LoginLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LoginDetails;
@@ -101,6 +103,8 @@ public class LoginActivityFragment extends InjectedFragment
 
         registerControlListeners();
 
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown()));
+
         return view;
     }
 
@@ -115,6 +119,7 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     case INPUTTING_PHONE_NUMBER:
                     {
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PhoneNumberSubmitted()));
                         if (phoneNumberEditText.validate())
                         {
                             sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
@@ -125,6 +130,7 @@ public class LoginActivityFragment extends InjectedFragment
                     break;
                     case INPUTTING_PIN:
                     {
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PinCodeSubmitted()));
                         if (pinCodeEditText.validate())
                         {
                             sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());
@@ -244,6 +250,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onPinCodeRequestError(HandyEvent.ReceivePinCodeError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
             postLoginErrorEvent("server");
@@ -277,6 +284,7 @@ public class LoginActivityFragment extends InjectedFragment
         {
             if (event.loginDetails.getSuccess())
             {
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success()));
                 beginLogin(event.loginDetails);
             }
             else
@@ -292,6 +300,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onLoginRequestError(HandyEvent.ReceiveLoginError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
             postLoginErrorEvent("server");
