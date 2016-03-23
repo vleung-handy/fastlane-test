@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -74,6 +76,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
 
         View view = inflater.inflate(R.layout.fragment_request_supplies, container, false);
         ButterKnife.bind(this, view);
+        setRequestSuppliesButton();
         processProviderProfile(mProviderProfile);
 
         return view;
@@ -87,17 +90,16 @@ public class RequestSuppliesFragment extends ActionBarFragment
         setBackButtonEnabled(true);
     }
 
+    /**
+     * this button should be disabled if the required request supplies info is missing
+     *
+     * see setRequestSuppliesButton() and canProviderRequestSupplies()
+     */
     @OnClick(R.id.request_supplies_button)
     public void onRequestSuppliesButtonClicked()
     {
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitConfirmedLog()));
-        if(mProviderProfile != null)
-        {
-            if(mProviderProfile.getResupplyInfo().providerCanRequestSuppliesNow() && mProviderProfile.getProviderPersonalInfo().getAddress() != null)
-            {
-                requestSendResupplyKit();
-            }
-        }
+        requestSendResupplyKit();
     }
 
     public void requestSendResupplyKit()
@@ -120,13 +122,21 @@ public class RequestSuppliesFragment extends ActionBarFragment
         this.handleRequestError(event);
     }
 
-
     private void processProviderProfile(ProviderProfile providerProfile)
     {
+        if (providerProfile == null
+                || providerProfile.getProviderPersonalInfo() == null
+                || providerProfile.getResupplyInfo() == null)
+        {
+            showToast(R.string.error_loading_profile);
+            Crashlytics.logException(
+                    new Exception("Unable to process provider profile due to null or missing profile info"));
+            return;
+        }
         ProviderPersonalInfo personalInfo = providerProfile.getProviderPersonalInfo();
+        ResupplyInfo resupplyInfo = providerProfile.getResupplyInfo();
         Address shippingAddress = personalInfo.getAddress();
         displayShippingAddress(shippingAddress);
-        ResupplyInfo resupplyInfo = providerProfile.getResupplyInfo();
         processResupplyInfo(resupplyInfo);
     }
 
@@ -144,25 +154,39 @@ public class RequestSuppliesFragment extends ActionBarFragment
         }
     }
 
-    private void processResupplyInfo(ResupplyInfo resupplyInfo)
+    private boolean canProviderRequestSupplies()
     {
-        createSupplyList(resupplyInfo.getSupplyList());
-        setWithholdingAmountText(resupplyInfo.getWithholdingAmount());
+        return mProviderProfile != null
+                && mProviderProfile.getResupplyInfo() != null
+                && mProviderProfile.getResupplyInfo().providerCanRequestSupplies()
+                && mProviderProfile.getResupplyInfo().providerCanRequestSuppliesNow()
+                && mProviderProfile.getProviderPersonalInfo() != null
+                && mProviderProfile.getProviderPersonalInfo().getAddress() != null;
+    }
 
-        boolean canRequestSupplies = resupplyInfo.providerCanRequestSupplies();
-        boolean canRequestSuppliesNow = resupplyInfo.providerCanRequestSuppliesNow();
-
-        if (canRequestSupplies && canRequestSuppliesNow)
+    /**
+     * enables/disables the request supplies button as necessary
+     */
+    private void setRequestSuppliesButton()
+    {
+        if (canProviderRequestSupplies())
         {
             mRequestSuppliesButton.setEnabled(true);
         }
         else
         {
+            //TODO: we should show a message to the user explaining why they can't request supplies
             mRequestSuppliesButton.setEnabled(false);
         }
     }
 
-    private void createSupplyList(List<SupplyListItem> supplyListItems)
+    private void processResupplyInfo(@NonNull ResupplyInfo resupplyInfo)
+    {
+        createSupplyList(resupplyInfo.getSupplyList());
+        setWithholdingAmountText(resupplyInfo.getWithholdingAmount());
+    }
+
+    private void createSupplyList(@NonNull List<SupplyListItem> supplyListItems)
     {
         for (int i = 0; i < supplyListItems.size(); i++)
         {
