@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AvailableJobsLog extends EventLog
+public abstract class AvailableJobsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "available_jobs";
 
@@ -22,7 +22,7 @@ public class AvailableJobsLog extends EventLog
 
     public static class DateClicked extends AvailableJobsLog
     {
-        private static final String EVENT_TYPE = "date_scroller_date_selected";
+        private static final String EVENT_TYPE = "date_selected";
 
         @SerializedName("date")
         private Date mDate;
@@ -37,37 +37,6 @@ public class AvailableJobsLog extends EventLog
         }
     }
 
-    public static class Clicked extends AvailableJobsLog
-    {
-        private static final String EVENT_TYPE = "selected";
-
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("list_number")
-        private int mListNumber;
-
-        public Clicked(final Booking booking, final int listNumber)
-        {
-            super(EVENT_TYPE);
-            mBookingId = booking.getId();
-            mServiceId = booking.getService();
-            mRegionId = booking.getRegionId();
-            mZipCode = getZipCode(booking.getAddress());
-            mRequested = booking.isRequested();
-            mDateStart = booking.getStartDate();
-            mListNumber = listNumber;
-        }
-    }
 
     public static class UnavailableJobNoticeShown extends AvailableJobsLog
     {
@@ -90,12 +59,15 @@ public class AvailableJobsLog extends EventLog
         }
     }
 
-    public static class ClaimSuccess extends AvailableJobsLog
-    {
-        private static final String EVENT_TYPE = "claim_success";
+    // Booking-specific events
 
+
+    public static abstract class AvailableJobsBookingLog extends AvailableJobsLog
+    {
         @SerializedName("booking_id")
         private String mBookingId;
+        @SerializedName("booking_type")
+        private String mBookingType;
         @SerializedName("service_id")
         private String mServiceId;
         @SerializedName("region_id")
@@ -108,22 +80,79 @@ public class AvailableJobsLog extends EventLog
         private Date mDateStart;
         @SerializedName("frequency")
         private int mFrequency;
-        @SerializedName("claim_source")
-        private String mSource;
-        @SerializedName("claim_source_extras")
-        private Map<String, Object> mSourceExtras;
+        @SerializedName("hours")
+        private float mHours;
+        @SerializedName("min_hours")
+        private float mMinimumHours;
+        @SerializedName("payment_to_provider")
+        private int mPaymentToProvider;
+        @SerializedName("hourly_rate")
+        private int mHourlyRate;
+        @SerializedName("bonus")
+        private int mBonus;
 
-        public ClaimSuccess(final Booking booking, final String source,
-                            @Nullable final Bundle sourceExtras)
+        public AvailableJobsBookingLog(final String eventType, final Booking booking)
         {
-            super(EVENT_TYPE);
+            super(eventType);
             mBookingId = booking.getId();
+            mBookingType = booking.getType().name().toLowerCase();
             mServiceId = booking.getService();
             mRegionId = booking.getRegionId();
             mZipCode = getZipCode(booking.getAddress());
             mRequested = booking.isRequested();
             mDateStart = booking.getStartDate();
             mFrequency = booking.getFrequency();
+            mHours = booking.getHours();
+            mMinimumHours = booking.getMinimumHours();
+            if (booking.getPaymentToProvider() != null)
+            {
+                mPaymentToProvider = booking.getPaymentToProvider().getAmount();
+            }
+            if (booking.getHourlyRate() != null)
+            {
+                mHourlyRate = booking.getHourlyRate().getAmount();
+            }
+            if (booking.getBonusPaymentToProvider() != null)
+            {
+                mBonus = booking.getBonusPaymentToProvider().getAmount();
+            }
+        }
+    }
+
+
+    public static class Clicked extends AvailableJobsBookingLog
+    {
+        private static final String EVENT_TYPE = "selected";
+
+        @SerializedName("list_number")
+        private int mListNumber;
+
+        public Clicked(final Booking booking, final int listNumber)
+        {
+            super(EVENT_TYPE, booking);
+            mListNumber = listNumber;
+        }
+    }
+
+    // Claim-related events
+
+
+    public static abstract class AvailableJobsBookingClaimLog extends AvailableJobsBookingLog
+    {
+        @SerializedName("claim_source")
+        private String mSource;
+        @SerializedName("claim_source_extras")
+        private Map<String, Object> mSourceExtras;
+        @SerializedName("distance_to_job")
+        private double mDistanceToJobInMeters;
+
+        public AvailableJobsBookingClaimLog(final String eventType,
+                                            final Booking booking,
+                                            final String source,
+                                            @Nullable final Bundle sourceExtras,
+                                            final int distanceToJobInMeters)
+        {
+            super(eventType, booking);
             mSource = source;
             if (sourceExtras != null)
             {
@@ -133,41 +162,49 @@ public class AvailableJobsLog extends EventLog
                     mSourceExtras.put(key, sourceExtras.get(key));
                 }
             }
+            mDistanceToJobInMeters = distanceToJobInMeters;
         }
     }
 
-    public static class ClaimError extends AvailableJobsLog
+
+    public static class ClaimSubmitted extends AvailableJobsBookingClaimLog
+    {
+        private static final String EVENT_TYPE = "claim_submitted";
+
+        public ClaimSubmitted(final Booking booking,
+                              final String source,
+                              @Nullable final Bundle sourceExtras,
+                              final int distanceToJobInMeters)
+        {
+            super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
+        }
+    }
+
+
+    public static class ClaimSuccess extends AvailableJobsBookingClaimLog
+    {
+        private static final String EVENT_TYPE = "claim_success";
+
+        public ClaimSuccess(final Booking booking,
+                            final String source,
+                            @Nullable final Bundle sourceExtras,
+                            final int distanceToJobInMeters)
+        {
+            super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
+        }
+    }
+
+
+    public static class ClaimError extends AvailableJobsBookingClaimLog
     {
         private static final String EVENT_TYPE = "claim_error";
 
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("frequency")
-        private int mFrequency;
-        @SerializedName("claim_source")
-        private String mSource;
-
-        public ClaimError(final Booking booking, final String source)
+        public ClaimError(final Booking booking,
+                          final String source,
+                          @Nullable final Bundle sourceExtras,
+                          final int distanceToJobInMeters)
         {
-            super(EVENT_TYPE);
-            mBookingId = booking.getId();
-            mServiceId = booking.getService();
-            mRegionId = booking.getRegionId();
-            mZipCode = getZipCode(booking.getAddress());
-            mRequested = booking.isRequested();
-            mDateStart = booking.getStartDate();
-            mFrequency = booking.getFrequency();
-            mSource = source;
+            super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
         }
     }
 
