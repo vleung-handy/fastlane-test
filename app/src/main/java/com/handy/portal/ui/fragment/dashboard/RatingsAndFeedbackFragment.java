@@ -65,7 +65,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     @Override
     protected MainViewTab getTab()
     {
-        return MainViewTab.RATINGS_AND_FEEDBACK;
+        return MainViewTab.DASHBOARD;
     }
 
     @Nullable

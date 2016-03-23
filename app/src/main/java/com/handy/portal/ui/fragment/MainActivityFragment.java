@@ -356,7 +356,7 @@ public class MainActivityFragment extends InjectedFragment
     private void registerNavDrawerListeners()
     {
         mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
-        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.RATINGS_AND_FEEDBACK, null));
+        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
         mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
         mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
         mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
@@ -492,12 +492,12 @@ public class MainActivityFragment extends InjectedFragment
     private void updateSelectedTabButton(MainViewTab targetTab)
     {
         //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
-        if (targetTab != MainViewTab.DETAILS)
+        if (targetTab != MainViewTab.JOB_DETAILS)
         {
             switch (targetTab)
             {
                 case AVAILABLE_JOBS:
-                case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
+                case BLOCK_PRO_AVAILABLE_JOBS:
                 {
                     mJobsButton.toggle();
                     mNavTrayLinks.clearCheck();
@@ -523,7 +523,7 @@ public class MainActivityFragment extends InjectedFragment
                 }
                 break;
                 case YOUTUBE_PLAYER:
-                case RATINGS_AND_FEEDBACK:
+                case DASHBOARD:
                 {
                     mButtonMore.toggle();
                     mNavLinkRatingsAndFeedback.toggle();

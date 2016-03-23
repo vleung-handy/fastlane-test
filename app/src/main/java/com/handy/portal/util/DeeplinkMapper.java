@@ -16,9 +16,9 @@ public class DeeplinkMapper
     {
         final Map<String, MainViewTab> deeplinkMap = new HashMap<>();
 
-        deeplinkMap.put("booking_details", MainViewTab.DETAILS);
+        deeplinkMap.put("booking_details", MainViewTab.JOB_DETAILS);
         deeplinkMap.put("payments", MainViewTab.PAYMENTS);
-        deeplinkMap.put("ratings_and_feedback", MainViewTab.RATINGS_AND_FEEDBACK);
+        deeplinkMap.put("ratings_and_feedback", MainViewTab.DASHBOARD);
         deeplinkMap.put("ratings_and_feedback/video_library", MainViewTab.DASHBOARD_VIDEO_LIBRARY);
         deeplinkMap.put("refer_a_friend", MainViewTab.REFER_A_FRIEND);
         deeplinkMap.put("account_settings", MainViewTab.ACCOUNT_SETTINGS);

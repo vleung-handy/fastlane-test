@@ -60,7 +60,7 @@ public class TabNavigationManager
                 (
                         event.targetTab == MainViewTab.AVAILABLE_JOBS ||
                                 event.targetTab == MainViewTab.SCHEDULED_JOBS ||
-                                event.targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW
+                                event.targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS
                 )
                 )
         {
@@ -69,7 +69,7 @@ public class TabNavigationManager
         //HACK : Magical hack to turn block pros available jobs into the webview block jobs
         else if (isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
         {
-            event.targetTab = MainViewTab.BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW;
+            event.targetTab = MainViewTab.BLOCK_PRO_AVAILABLE_JOBS;
         }
 
         SwapFragmentArguments swapFragmentArguments = generateSwapFragmentArguments(
@@ -149,7 +149,7 @@ public class TabNavigationManager
             inputArgumentsBundle = new Bundle();
         }
 
-        if (targetTab == MainViewTab.DETAILS)
+        if (targetTab == MainViewTab.JOB_DETAILS)
         {
             inputArgumentsBundle.putSerializable(BundleKeys.TAB, currentTab);
         }
@@ -175,7 +175,7 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
             addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
             addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
-            addToBackStack |= targetTab == MainViewTab.DETAILS;
+            addToBackStack |= targetTab == MainViewTab.JOB_DETAILS;
             addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
             addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
             addToBackStack |= targetTab == MainViewTab.REQUEST_SUPPLIES;
@@ -185,7 +185,7 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_FEEDBACK;
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_REVIEWS;
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_VIDEO_LIBRARY;
-            addToBackStack |= currentTab == MainViewTab.DETAILS && targetTab == MainViewTab.HELP;
+            addToBackStack |= currentTab == MainViewTab.JOB_DETAILS && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
 
