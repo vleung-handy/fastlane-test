@@ -652,7 +652,6 @@ public class MainActivityFragment extends InjectedFragment
             badge = new BadgeDrawable(getContext());
         }
         badge.setCount(String.valueOf(unreadCount));
-        icon.mutate();
         icon.setDrawableByLayerId(R.id.ic_notifications_badge, badge);
     }
 }
