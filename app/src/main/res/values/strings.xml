@@ -66,7 +66,6 @@
     <string name="phone">Phone</string>
     <string name="password">Password</string>
     <string name="loading_more_payments">Loading more payments…</string>
-    <string name="my_performance">My Performance</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="update">Update</string>
     <string name="job_num">Job #</string>
@@ -304,7 +303,8 @@
     <string name="email_income_verification">Email income verification</string>
     <string name="get_resupply_kit">Get a resupply kit</string>
 
-    <!-- Dashboard -->
+    <!-- Performance Dashboard -->
+    <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
     <string name="welcome_back">Welcome back</string>
     <string name="welcome_back_formatted">Welcome back, %1$s</string>
     <string name="past_28_days">Past 28 days</string>
@@ -390,7 +390,6 @@
     <string name="notify_available_jobs_update_error">Oops! There was an error turning on notifications. Please check your connection and try again.</string>
 
     <!-- Account settings layout -->
-    <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
     <string name="refer_a_friend">Refer a Friend</string>
     <string name="account_settings">Account Settings</string>
 
