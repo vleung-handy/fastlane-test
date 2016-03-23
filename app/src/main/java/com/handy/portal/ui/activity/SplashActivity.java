@@ -3,7 +3,6 @@ package com.handy.portal.ui.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -11,16 +10,15 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
-import com.handy.portal.util.SupportedDeeplinkPath;
+import com.handy.portal.util.DeeplinkUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.regex.Matcher;
@@ -47,11 +45,6 @@ public class SplashActivity extends BaseActivity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        final Uri data = getIntent().getData();
-        if (data != null)
-        {
-            processDeeplink(data);
-        }
 
         setContentView(R.layout.activity_splash);
 
@@ -65,7 +58,7 @@ public class SplashActivity extends BaseActivity
         if (buildConfigWrapper.isDebug())
         {
             String authToken = getIntent().getDataString();
-            if (authToken != null)
+            if (authToken != null && authToken.matches("[A-Za-z0-9_]+"))
             {
                 prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
 
@@ -240,7 +233,14 @@ public class SplashActivity extends BaseActivity
 
     private void launchActivity(Class<? extends BaseActivity> activityClass)
     {
-        startActivity(new Intent(this, activityClass));
+        final Intent intent = new Intent(this, activityClass);
+        final Uri data = getIntent().getData();
+        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
+        if (deeplinkBundle != null)
+        {
+            intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
+        }
+        startActivity(intent);
     }
 
     @Override
@@ -253,20 +253,5 @@ public class SplashActivity extends BaseActivity
     public void launchAppUpdater()
     {
         //do nothing
-    }
-
-    private void processDeeplink(@NonNull final Uri data)
-    {
-        bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(data)));
-        if (!SupportedDeeplinkPath.matchesAny(data.getPath()))
-        {
-            bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(data)));
-        }
-        // try to process root if the path matches
-        else if (SupportedDeeplinkPath.ROOT.matches(data.getPath()))
-        {
-            bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(data)));
-            // nothing else happens, app is already open
-        }
     }
 }

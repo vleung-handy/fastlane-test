@@ -3,13 +3,19 @@ package com.handy.portal.webview;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.GoogleManager;
+import com.handy.portal.util.DeeplinkMapper;
+import com.handy.portal.util.DeeplinkUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -34,6 +40,18 @@ public class PortalWebViewClient extends WebViewClient
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url)
     {
+        final Uri uri = Uri.parse(url);
+        final Bundle deeplinkData = DeeplinkUtils.createDeeplinkBundleFromUri(uri);
+        if (deeplinkData != null)
+        {
+            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            if (deeplink != null)
+            {
+                final MainViewTab tab = DeeplinkMapper.getTabForDeeplink(deeplink);
+                bus.post(new NavigationEvent.NavigateToTab(tab, deeplinkData));
+            }
+        }
+
         // To prevent a bug in webkit where it redirects to a url ending with /undefined
         if (url.substring(Math.max(0, url.length() - 10)).equals("/undefined"))
         {
