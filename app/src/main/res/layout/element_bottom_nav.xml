@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabs"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
@@ -36,12 +36,6 @@
         android:checked="false"
         android:drawableTop="@drawable/notification_icon_with_badge"
         android:text="@string/tab_notifications"
-        />
-
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
         />
 
     <com.handy.portal.ui.widget.DimRadioButton
