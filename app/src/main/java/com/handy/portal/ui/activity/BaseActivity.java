@@ -10,6 +10,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -197,7 +198,19 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onPause()
     {
         postActivityPauseEvent();
-        bus.unregister(mAppUpdateEventListener);
+        try
+        {
+             /*
+                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
+                 Activity.onPause() can be called without Activity.onResume()
+                 so unregistering the bus here can cause an exception
+              */
+            bus.unregister(mAppUpdateEventListener);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e); //want more info for now
+        }
         super.onPause();
     }
 
