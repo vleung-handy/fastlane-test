@@ -53,8 +53,9 @@
         android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:background="@null"
         android:padding="@dimen/default_padding"
         android:src="@drawable/ic_x"
@@ -137,15 +138,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rate_booking_middle"
         android:background="@drawable/border_gray_no_side"
-        android:gravity="top|left"
+        android:gravity="top|start"
         android:hint="@string/rate_booking_comment_text_hint"
         android:lineSpacingExtra="@dimen/lineSpacing"
         android:lines="4"
         android:maxLength="160"
         android:padding="@dimen/default_padding"
         android:textAppearance="@style/HandyTextAppearanceMedium"
-        android:textColorHint="@color/subtitle_grey"
         android:textColor="@color/dark_grey"
+        android:textColorHint="@color/subtitle_grey"
         />
 
     <Button

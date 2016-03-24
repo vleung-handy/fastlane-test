@@ -285,23 +285,16 @@
     <string name="share_with">Share with…</string>
     <string name="earn_a_bonus">Earn a %1$s bonus</string>
     <string name="refer_a_pro">Refer a professional to Handy</string>
-    <string name="jobs_and_rating"><![CDATA[<b>%1$d</b> jobs · <b>%2$s</b> overall rating]]></string>
     <string name="rating">Rating</string>
     <string name="jobs">Jobs</string>
     <string name="rate">Rate</string>
-    <string name="tier_x">TIER %1$d</string>
     <string name="error_loading_profile">There was an error loading your profile information.</string>
     <string name="unable_to_process_request">Sorry, we are unable to process your request at this time.</string>
     <string name="resupply_kit_on_its_way">Your resupply kit is on its way!</string>
-    <string name="based_on_last_28_days">Based on the last 28 days</string>
-    <string name="performance">Performance</string>
     <string name="your_contact_information">Contact information</string>
     <string name="edit_your_profile">Edit Your Profile</string>
     <string name="update_profile_success">Successfully updated profile information</string>
     <string name="update_profile_failed">Failed to update profile information</string>
-    <string name="management_tools">Management tools</string>
-    <string name="email_income_verification">Email income verification</string>
-    <string name="get_resupply_kit">Get a resupply kit</string>
 
     <!-- Performance Dashboard -->
     <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
@@ -325,7 +318,6 @@
     <string name="no_reviews">There are no 5 star reviews for you yet.</string>
     <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
-    <string name="watch_video"><![CDATA[If you’d like to learn a few tips & tricks, check out this <a href=\'%1$s\'>video</a>.]]></string>
     <string name="video_library">Video Library</string>
 
 
@@ -398,11 +390,6 @@
     <string name="send_email">Send Email</string>
 
     <!-- Referrals -->
-    <string name="referral_invite_label">Invite Friends</string>
-    <string name="referral_code_label">Your code:</string>
-    <string name="share_using">Share using&#8230;</string>
-    <string name="referral_title_formatted">Give %1$s, Get %2$s</string>
-    <string name="referral_subtitle_formatted">Give your friends %1$s off their first Handy booking, and you get %2$s!</string>
     <string name="chevron_description">Chevron</string>
 
     <!-- Location -->
@@ -431,5 +418,8 @@
 
     <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
+
     <string name="job_no_longer_available">That job is no longer available.</string>
+    <string name="environment">Environment</string>
+
 </resources>

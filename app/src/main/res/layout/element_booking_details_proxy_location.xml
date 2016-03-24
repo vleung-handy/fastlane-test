@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin_medium"
         android:paddingLeft="@dimen/extra_padding"
+        android:paddingStart="@dimen/extra_padding"
         android:textColor="@color/black"
         android:textSize="@dimen/medium_text_size"
         />
