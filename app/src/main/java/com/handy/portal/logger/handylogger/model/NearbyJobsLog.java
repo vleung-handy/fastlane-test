@@ -1,7 +1,6 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.Booking;
 
 public class NearbyJobsLog extends EventLog
 {
@@ -32,51 +31,13 @@ public class NearbyJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "pin_selected";
 
-        public PinSelected()
-        {
-            super(EVENT_TYPE);
-        }
-    }
-
-
-    public static class ClaimJobSelected extends NearbyJobsLog
-    {
-        private static final String EVENT_TYPE = "claim_job_selected";
-
         @SerializedName("booking_id")
         private String mBookingId;
-        @SerializedName("distance_to_job")
-        private double mDistanceInKilometer;
-        @SerializedName("payment_to_provider")
-        private float mPaymentAmount;
 
-        public ClaimJobSelected(final Booking booking, final double distanceInKilometer)
+        public PinSelected(final String bookingId)
         {
             super(EVENT_TYPE);
-            mBookingId = booking.getId();
-            mDistanceInKilometer = distanceInKilometer;
-            mPaymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
-        }
-    }
-
-
-    public static class ClaimJobSuccess extends NearbyJobsLog
-    {
-        private static final String EVENT_TYPE = "claim_job_success";
-
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("distance_to_job")
-        private double mDistanceInKilometer;
-        @SerializedName("payment_to_provider")
-        private float mPaymentAmount;
-
-        public ClaimJobSuccess(final Booking booking, final double distanceInKilometer)
-        {
-            super(EVENT_TYPE);
-            mBookingId = booking.getId();
-            mDistanceInKilometer = distanceInKilometer;
-            mPaymentAmount = booking.getPaymentToProvider().getAdjustedAmount();
+            mBookingId = bookingId;
         }
     }
 

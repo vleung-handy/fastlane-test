@@ -168,7 +168,7 @@
     <string name="remove_job">Remove Job</string>
     <string name="job_support">Job Support</string>
     <string name="job_remove_error">Error Removing Job"</string>
-    <string name="job_remove_error_generic">This job could not be removed</string>
+    <string name="job_remove_error_generic">This job could not be removed.</string>
 
     <string name="notify_customer_of_lateness">Notify customer of your late arrival</string>
     <string name="notify_customer_of_earliness">Notify customer of your early arrival</string>
@@ -333,7 +333,7 @@
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>
     <string name="why_cancel">Why do you need to cancel?</string>
-    <string name="select_a_reason">Oops! Let us know why you need to cancel.</string>
+    <string name="select_a_reason">Let us know why you need to cancel.</string>
     <string name="sure_to_cancel">Are you sure you need to cancel?</string>
     <string name="will_be_charged">You’ll be charged a&#160;</string>
     <string name="withholding_fee_formatted">%1$s withholding fee.</string>

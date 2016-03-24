@@ -170,9 +170,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                     mMessage,
                     Snackbar.LENGTH_LONG
             ).show();
-            final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
-            bus.post(new LogEvent.AddLogEvent(
-                    new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
+            if (mMessage.equals(getString(R.string.job_no_longer_available)))
+            {
+                final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
+                bus.post(new LogEvent.AddLogEvent(
+                        new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
+            }
             mMessage = null; // this is a one-off
         }
     }

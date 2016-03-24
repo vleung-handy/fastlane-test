@@ -40,6 +40,7 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
@@ -677,7 +678,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 if (action.getWarningText() != null && !action.getWarningText().isEmpty())
                 {
                     showingWarningDialog = true;
-                    showBookingActionWarningDialog(action.getWarningText(), UIUtils.getAssociatedActionType(action));
+                    showBookingActionWarningDialog(action.getWarningText(), action);
                 }
             }
         }
@@ -685,9 +686,10 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     //Show a warning dialog for a button action, confirming triggers the original action
-    private void showBookingActionWarningDialog(final String warning, final BookingActionButtonType actionType)
+    private void showBookingActionWarningDialog(final String warning, final Booking.Action action)
     {
-        trackShowActionWarning(actionType);
+        final BookingActionButtonType actionType = UIUtils.getAssociatedActionType(action);
+        trackShowActionWarning(action);
         //specific booking error, show an alert dialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -716,15 +718,25 @@ public class BookingDetailsFragment extends ActionBarFragment
         alertDialog.show();
     }
 
-    private void trackShowActionWarning(final BookingActionButtonType actionType)
+    private void trackShowActionWarning(final Booking.Action action)
     {
-        switch (actionType)
+        final BookingActionButtonType actionType = UIUtils.getAssociatedActionType(action);
+        if (actionType != null)
         {
-            case REMOVE:
+            switch (actionType)
             {
-                bus.post(new HandyEvent.ShowConfirmationRemoveJob());
+                case REMOVE:
+                {
+                    bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
+                            mAssociatedBooking,
+                            ScheduledJobsLog.RemoveJobLog.POPUP,
+                            action.getWithholdingAmount(),
+                            action.getWarningText()
+                    )));
+                    bus.post(new HandyEvent.ShowConfirmationRemoveJob());
+                }
+                break;
             }
-            break;
         }
     }
 
@@ -732,6 +744,8 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestClaimJob(Booking booking)
     {
+        bus.post(new LogEvent.AddLogEvent(
+                new AvailableJobsLog.ClaimSubmitted(booking, mSource, mSourceExtras, 0.0f)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
     }
@@ -740,7 +754,13 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
         String warning = (removeAction != null) ? removeAction.getWarningText() : null;
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmed(booking, warning, null)));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
+                booking,
+                ScheduledJobsLog.RemoveJobLog.POPUP,
+                null,
+                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                warning
+        )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
@@ -907,6 +927,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
+        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSuccess(bookingClaimDetails.getBooking(), mSource, mSourceExtras, 0.0f)));
 
         if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
         {
@@ -935,6 +956,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(event.getBooking(), mSource, mSourceExtras, 0.0f, event.error.getMessage())));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleBookingClaimError(event.error.getMessage());
     }
@@ -945,6 +967,15 @@ public class BookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         if (!event.booking.isClaimedByMe() || event.booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
         {
+            final Booking.Action removeAction =
+                    mAssociatedBooking.getAction(Booking.Action.ACTION_REMOVE);
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
+                    mAssociatedBooking,
+                    ScheduledJobsLog.RemoveJobLog.POPUP,
+                    null,
+                    removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                    removeAction != null ? removeAction.getWarningText() : null
+            )));
             //TODO: can't currently remove series using portal endpoint so only removing the single job
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
             returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle);
@@ -952,10 +983,10 @@ public class BookingDetailsFragment extends ActionBarFragment
         else
         {
             //Something has gone very wrong, show a generic error and return to date based on original associated booking
-            handleBookingRemoveError(getString(R.string.job_remove_error), R.string.job_remove_error_generic,
+            final String errorMessage = getString(R.string.job_remove_error_generic);
+            trackRemoveJobError(errorMessage);
+            handleBookingRemoveError(errorMessage, R.string.job_remove_error,
                     R.string.return_to_schedule, mAssociatedBooking.getStartDate());
-            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(mAssociatedBooking)));
-
         }
     }
 
@@ -963,8 +994,22 @@ public class BookingDetailsFragment extends ActionBarFragment
     public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(mAssociatedBooking)));
+        trackRemoveJobError(event.error.getMessage());
         handleBookingRemoveError(event);
+    }
+
+    private void trackRemoveJobError(final String errorMessage)
+    {
+        final Booking.Action removeAction =
+                mAssociatedBooking.getAction(Booking.Action.ACTION_REMOVE);
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
+                mAssociatedBooking,
+                ScheduledJobsLog.RemoveJobLog.POPUP,
+                null,
+                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                removeAction != null ? removeAction.getWarningText() : null,
+                errorMessage
+        )));
     }
 
     @Subscribe
@@ -1111,20 +1156,11 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void removeJob(@NonNull Booking.Action removeAction)
     {
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobClicked(mAssociatedBooking, removeAction.getWarningText())));
-
-        String bookingId = mAssociatedBooking.getId();
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveConfirmationShown(bookingId, ScheduledJobsLog.RemoveConfirmationShown.POPUP)));
         takeAction(BookingActionButtonType.REMOVE, false);
-
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction)
     {
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobClicked(mAssociatedBooking, removeAction.getWarningText())));
-
-        String bookingId = mAssociatedBooking.getId();
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveConfirmationShown(bookingId, ScheduledJobsLog.RemoveConfirmationShown.REASON_FLOW)));
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);

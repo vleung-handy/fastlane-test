@@ -17,7 +17,7 @@ public class ScheduledJobsLog extends EventLog
 
     public static class DateClicked extends ScheduledJobsLog
     {
-        private static final String EVENT_TYPE = "date_scroller_date_selected";
+        private static final String EVENT_TYPE = "date_selected";
 
         @SerializedName("date")
         private Date mDate;
@@ -33,138 +33,117 @@ public class ScheduledJobsLog extends EventLog
     }
 
 
-    public static class Clicked extends ScheduledJobsLog
+    public static class Clicked extends JobsLog
     {
-        private static final String EVENT_TYPE = "selected";
+        private static final String EVENT_TYPE = "job_selected";
 
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("list_number")
-        private int mListNumber;
+        @SerializedName("list_index")
+        private int mListIndex;
 
-        public Clicked(final Booking booking, final int listNumber)
+        public Clicked(final Booking booking, final int listIndex)
         {
-            super(EVENT_TYPE);
-            mBookingId = booking.getId();
-            mServiceId = booking.getService();
-            mRegionId = booking.getRegionId();
-            mZipCode = getZipCode(booking.getAddress());
-            mRequested = booking.isRequested();
-            mDateStart = booking.getStartDate();
-            mListNumber = listNumber;
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+            mListIndex = listIndex;
+        }
+    }
+
+    // Job removal events
+
+
+    public static abstract class RemoveJobLog extends JobsLog
+    {
+        public static final String REASON_FLOW = "reason_flow";
+        public static final String POPUP = "popup";
+
+        @SerializedName("removal_type")
+        private String mRemovalType;
+        @SerializedName("removal_reason")
+        private String mRemovalReason;
+        @SerializedName("withholding_amount")
+        private int mWithholdingAmount;
+        @SerializedName("warning_message")
+        private String mWarningMessage;
+
+        public RemoveJobLog(final String eventType,
+                            final Booking booking,
+                            final String removalType,
+                            final String removalReason,
+                            final int withholdingAmount,
+                            final String warningMessage)
+        {
+            super(eventType, EVENT_CONTEXT, booking);
+            mRemovalType = removalType;
+            mRemovalReason = removalReason;
+            mWithholdingAmount = withholdingAmount;
+            mWarningMessage = warningMessage;
         }
     }
 
 
-    public static class RemoveJobClicked extends ScheduledJobsLog
+    public static class RemoveJobConfirmationShown extends RemoveJobLog
     {
         private static final String EVENT_TYPE = "remove_confirmation_shown";
 
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("warning")
-        private String mWarning;
-
-
-        public RemoveJobClicked(final Booking booking, final String warning)
+        public RemoveJobConfirmationShown(final Booking booking,
+                                          final String removalType,
+                                          final int withholdingAmount,
+                                          final String warningMessage)
         {
-            super(EVENT_TYPE);
-            mBookingId = booking.getId();
-            mServiceId = booking.getService();
-            mRegionId = booking.getRegionId();
-            mZipCode = getZipCode(booking.getAddress());
-            mRequested = booking.isRequested();
-            mDateStart = booking.getStartDate();
-            mWarning = warning;
+            super(EVENT_TYPE, booking, removalType, null, withholdingAmount, warningMessage);
         }
     }
 
 
-    public static class RemoveJobConfirmed extends ScheduledJobsLog
+    public static class RemoveJobSubmitted extends RemoveJobLog
     {
-        private static final String EVENT_TYPE = "remove_confirmation_accepted";
+        private static final String EVENT_TYPE = "remove_job_submitted";
 
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("warning")
-        private String mWarning;
-        @SerializedName("reason")
-        private String mReason;
-
-        public RemoveJobConfirmed(final Booking booking, final String warning, final String reason)
+        public RemoveJobSubmitted(final Booking booking,
+                                  final String removalType,
+                                  final String removalReason,
+                                  final int withholdingAmount,
+                                  final String warningMessage)
         {
-            super(EVENT_TYPE);
-            mBookingId = booking.getId();
-            mServiceId = booking.getService();
-            mRegionId = booking.getRegionId();
-            mZipCode = getZipCode(booking.getAddress());
-            mRequested = booking.isRequested();
-            mDateStart = booking.getStartDate();
-            mWarning = warning;
-            mReason = reason;
+            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount, warningMessage);
         }
     }
 
 
-    public static class RemoveJobError extends ScheduledJobsLog
+    public static class RemoveJobSuccess extends RemoveJobLog
+    {
+        private static final String EVENT_TYPE = "remove_job_success";
+
+        public RemoveJobSuccess(final Booking booking,
+                                final String removalType,
+                                final String removalReason,
+                                final int withholdingAmount,
+                                final String warningMessage)
+        {
+            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount, warningMessage);
+        }
+    }
+
+
+    public static class RemoveJobError extends RemoveJobLog
     {
         private static final String EVENT_TYPE = "remove_job_error";
 
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
+        @SerializedName("error_message")
+        private String mErrorMessage;
 
-
-        public RemoveJobError(final Booking booking)
+        public RemoveJobError(final Booking booking,
+                              final String removalType,
+                              final String removalReason,
+                              final int withholdingAmount,
+                              final String warningMessage,
+                              final String errorMessage)
         {
-            super(EVENT_TYPE);
-            mBookingId = booking.getId();
-            mServiceId = booking.getService();
-            mRegionId = booking.getRegionId();
-            mZipCode = getZipCode(booking.getAddress());
-            mRequested = booking.isRequested();
-            mDateStart = booking.getStartDate();
+            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount, warningMessage);
+            mErrorMessage = errorMessage;
         }
     }
+
+    // Customer rating events
 
 
     public static class CustomerRatingShown extends ScheduledJobsLog
@@ -238,28 +217,6 @@ public class ScheduledJobsLog extends EventLog
             super(EVENT_TYPE);
             mBookingId = bookingId;
             mHelpItemLabel = helpItemLabel;
-        }
-    }
-
-
-    public static class RemoveConfirmationShown extends ScheduledJobsLog
-    {
-        public static final String REASON_FLOW = "reason_flow";
-        public static final String POPUP = "popup";
-
-        private static final String EVENT_TYPE = "remove_confirmation_shown";
-
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("removal_type")
-        private String mRemovalType;
-
-
-        public RemoveConfirmationShown(String bookingId, String removalType)
-        {
-            super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mRemovalType = removalType;
         }
     }
 

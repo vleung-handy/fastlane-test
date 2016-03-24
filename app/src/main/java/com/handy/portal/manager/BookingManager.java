@@ -10,8 +10,6 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -347,8 +345,6 @@ public class BookingManager
             public void onSuccess(BookingClaimDetails bookingClaimDetails)
             {
                 invalidateCachesForDay(day);
-                mBus.post(new LogEvent.AddLogEvent(
-                        new AvailableJobsLog.ClaimSuccess(bookingClaimDetails.getBooking(), event.source, event.sourceExtras)));
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
 
                 /*
@@ -364,8 +360,6 @@ public class BookingManager
             {
                 //still need to invalidate so we don't allow them to click on same booking
                 invalidateCachesForDay(day);
-                mBus.post(new LogEvent.AddLogEvent(
-                        new AvailableJobsLog.ClaimError(event.booking, event.source)));
                 mBus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
             }
         });

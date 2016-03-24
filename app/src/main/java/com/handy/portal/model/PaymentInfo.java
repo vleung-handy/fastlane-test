@@ -13,6 +13,8 @@ public class PaymentInfo implements Serializable
     private float mAdjustedAmount;
     @SerializedName("symbol")
     private String mCurrencySymbol;
+    @SerializedName("code")
+    private String mCurrencyCode;
 
     public int getAmount()
     {
@@ -27,6 +29,11 @@ public class PaymentInfo implements Serializable
     public String getCurrencySymbol()
     {
         return mCurrencySymbol;
+    }
+
+    public String getCurrencyCode()
+    {
+        return mCurrencyCode;
     }
 
     public static class Builder
