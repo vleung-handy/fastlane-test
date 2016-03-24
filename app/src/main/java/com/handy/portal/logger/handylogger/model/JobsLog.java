@@ -3,6 +3,7 @@ package com.handy.portal.logger.handylogger.model;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.PaymentInfo;
 
 import java.util.Date;
 
@@ -34,6 +35,8 @@ public abstract class JobsLog extends EventLog
     private int mHourlyRate;
     @SerializedName("bonus")
     private int mBonus;
+    @SerializedName("currency_code")
+    private String mCurrencyCode;
 
     public JobsLog(final String eventType, final String eventContext, final Booking booking)
     {
@@ -48,13 +51,17 @@ public abstract class JobsLog extends EventLog
         mFrequency = booking.getFrequency();
         mHours = booking.getHours();
         mMinimumHours = booking.getMinimumHours();
-        if (booking.getPaymentToProvider() != null)
+        final PaymentInfo paymentToProvider = booking.getPaymentToProvider();
+        if (paymentToProvider != null)
         {
-            mPaymentToProvider = booking.getPaymentToProvider().getAmount();
+            mPaymentToProvider = paymentToProvider.getAmount();
+            mCurrencyCode = paymentToProvider.getCurrencyCode();
         }
-        if (booking.getHourlyRate() != null)
+        final PaymentInfo hourlyRate = booking.getHourlyRate();
+        if (hourlyRate != null)
         {
-            mHourlyRate = booking.getHourlyRate().getAmount();
+            mHourlyRate = hourlyRate.getAmount();
+            mCurrencyCode = hourlyRate.getCurrencyCode(); // just to be safe
         }
         if (booking.getBonusPaymentToProvider() != null)
         {
