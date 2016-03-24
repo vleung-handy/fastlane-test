@@ -24,10 +24,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/extra_margin_xlarge"
         android:layout_marginTop="@dimen/lineSpacing"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingLeft="@dimen/default_padding"
         android:gravity="center_horizontal"
         android:textColor="@color/requested_green"
         android:textSize="@dimen/large_text_size"
-        tools:text="Things are lookin good!"
+        tools:text="Sit tight. You don't have any recent ratings."
         />
 
 </LinearLayout>
