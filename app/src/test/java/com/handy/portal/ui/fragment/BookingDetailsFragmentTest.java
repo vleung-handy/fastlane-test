@@ -126,6 +126,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     {
         when(bookingClaimDetails.shouldShowClaimTarget()).thenReturn(false); //case when claim target is not shown
         when(bookingClaimDetails.getBooking().isClaimedByMe()).thenReturn(true);
+        when(bookingClaimDetails.getBooking().getType()).thenReturn(Booking.BookingType.BOOKING);
         fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, null));
 
         assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
