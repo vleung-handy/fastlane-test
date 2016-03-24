@@ -85,7 +85,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
             mNoteToCustomer = bundle.getString(BundleKeys.NOTE_TO_CUSTOMER);
 
-            mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
             String amount = mBooking.getPaymentToProvider().getCurrencySymbol() +
                     TextUtils.DECIMAL_FORMAT_NO_ZERO.format(mBooking.getPaymentToProvider().getAdjustedAmount());
             mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
@@ -103,6 +102,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                     locationData, new ProBookingFeedback(getBookingRatingScore(),
                     getBookingRatingComment()), mNoteToCustomer, null)));
         }
+
+        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
     }
 
     @OnClick(R.id.close_button)
