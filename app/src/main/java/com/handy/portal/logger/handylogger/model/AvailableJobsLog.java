@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 
 import java.util.Date;
@@ -62,65 +61,7 @@ public abstract class AvailableJobsLog extends EventLog
     // Booking-specific events
 
 
-    public static abstract class AvailableJobsBookingLog extends AvailableJobsLog
-    {
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("booking_type")
-        private String mBookingType;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("frequency")
-        private int mFrequency;
-        @SerializedName("hours")
-        private float mHours;
-        @SerializedName("min_hours")
-        private float mMinimumHours;
-        @SerializedName("payment_to_provider")
-        private int mPaymentToProvider;
-        @SerializedName("hourly_rate")
-        private int mHourlyRate;
-        @SerializedName("bonus")
-        private int mBonus;
-
-        public AvailableJobsBookingLog(final String eventType, final Booking booking)
-        {
-            super(eventType);
-            mBookingId = booking.getId();
-            mBookingType = booking.getType().name().toLowerCase();
-            mServiceId = booking.getService();
-            mRegionId = booking.getRegionId();
-            mZipCode = getZipCode(booking.getAddress());
-            mRequested = booking.isRequested();
-            mDateStart = booking.getStartDate();
-            mFrequency = booking.getFrequency();
-            mHours = booking.getHours();
-            mMinimumHours = booking.getMinimumHours();
-            if (booking.getPaymentToProvider() != null)
-            {
-                mPaymentToProvider = booking.getPaymentToProvider().getAmount();
-            }
-            if (booking.getHourlyRate() != null)
-            {
-                mHourlyRate = booking.getHourlyRate().getAmount();
-            }
-            if (booking.getBonusPaymentToProvider() != null)
-            {
-                mBonus = booking.getBonusPaymentToProvider().getAmount();
-            }
-        }
-    }
-
-
-    public static class Clicked extends AvailableJobsBookingLog
+    public static class Clicked extends JobsLog
     {
         private static final String EVENT_TYPE = "job_selected";
 
@@ -129,7 +70,7 @@ public abstract class AvailableJobsLog extends EventLog
 
         public Clicked(final Booking booking, final int listNumber)
         {
-            super(EVENT_TYPE, booking);
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
             mListNumber = listNumber;
         }
     }
@@ -137,7 +78,7 @@ public abstract class AvailableJobsLog extends EventLog
     // Claim-related events
 
 
-    public static abstract class AvailableJobsBookingClaimLog extends AvailableJobsBookingLog
+    public static abstract class AvailableJobsBookingClaimLog extends JobsLog
     {
         @SerializedName("claim_source")
         private String mSource;
@@ -152,7 +93,7 @@ public abstract class AvailableJobsLog extends EventLog
                                             @Nullable final Bundle sourceExtras,
                                             final double distanceToJobInMeters)
         {
-            super(eventType, booking);
+            super(eventType, EVENT_CONTEXT, booking);
             mSource = source;
             if (sourceExtras != null)
             {
@@ -199,24 +140,17 @@ public abstract class AvailableJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "claim_error";
 
+        @SerializedName("error_reason")
+        private String mErrorReason;
+
         public ClaimError(final Booking booking,
                           final String source,
                           @Nullable final Bundle sourceExtras,
-                          final double distanceToJobInMeters)
+                          final double distanceToJobInMeters,
+                          final String errorReason)
         {
             super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
-        }
-    }
-
-    private static String getZipCode(Address address)
-    {
-        if (address != null)
-        {
-            return address.getZip();
-        }
-        else
-        {
-            return "";
+            mErrorReason = errorReason;
         }
     }
 }
