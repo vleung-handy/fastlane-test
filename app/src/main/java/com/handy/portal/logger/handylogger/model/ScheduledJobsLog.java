@@ -37,13 +37,13 @@ public class ScheduledJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "job_selected";
 
-        @SerializedName("list_number")
-        private int mListNumber;
+        @SerializedName("list_index")
+        private int mListIndex;
 
-        public Clicked(final Booking booking, final int listNumber)
+        public Clicked(final Booking booking, final int listIndex)
         {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
-            mListNumber = listNumber;
+            mListIndex = listIndex;
         }
     }
 

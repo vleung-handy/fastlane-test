@@ -17,14 +17,14 @@ public class PaymentsLog extends EventLog
 
         @SerializedName("current_week")
         private boolean mCurrentWeek;
-        @SerializedName("list_number")
-        private int mListNumber;
+        @SerializedName("list_index")
+        private int mListIndex;
 
-        public BatchSelected(boolean currentWeek, int listNumber)
+        public BatchSelected(boolean currentWeek, int listIndex)
         {
             super(EVENT_TYPE);
             mCurrentWeek = currentWeek;
-            mListNumber = listNumber;
+            mListIndex = listIndex;
         }
     }
 
