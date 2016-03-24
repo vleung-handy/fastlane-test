@@ -125,7 +125,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (validate())
         {
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileConfirmedLog()));
+            bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSubmitted()));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
                     mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));
@@ -133,7 +133,9 @@ public class ProfileUpdateFragment extends ActionBarFragment
         }
         else
         {
-            showToast(R.string.form_not_filled_out_correctly, Toast.LENGTH_LONG);
+            final String errorMessage = getString(R.string.form_not_filled_out_correctly);
+            bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileValidationFailure(errorMessage)));
+            showToast(errorMessage, Toast.LENGTH_LONG);
         }
     }
 
@@ -148,6 +150,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     public void onReceiveUpdateProfileSuccess(ProfileEvent.ReceiveProfileUpdateSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileConfirmed()));
         showToast(R.string.update_profile_success, Toast.LENGTH_LONG);
         UIUtils.dismissOnBackPressed(getActivity());
     }
@@ -156,14 +159,13 @@ public class ProfileUpdateFragment extends ActionBarFragment
     public void onReceiveUpdateProfileError(ProfileEvent.ReceiveProfileUpdateError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event.error.getMessage() != null)
+        String errorMessage = event.error.getMessage();
+        if (errorMessage == null)
         {
-            showToast(event.error.getMessage(), Toast.LENGTH_LONG);
+            errorMessage = getString(R.string.update_profile_failed);
         }
-        else
-        {
-            showToast(R.string.update_profile_failed, Toast.LENGTH_LONG);
-        }
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileError(errorMessage)));
+        showToast(errorMessage, Toast.LENGTH_LONG);
     }
 
     private void initialize()

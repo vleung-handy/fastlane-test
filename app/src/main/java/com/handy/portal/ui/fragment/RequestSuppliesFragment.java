@@ -98,13 +98,13 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @OnClick(R.id.request_supplies_button)
     public void onRequestSuppliesButtonClicked()
     {
-        bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitConfirmedLog()));
         requestSendResupplyKit();
     }
 
     public void requestSendResupplyKit()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitRequestSubmitted()));
         bus.post(new ProfileEvent.RequestSendResupplyKit());
     }
 
@@ -112,6 +112,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void onReceiveSendResupplyKitSuccess(ProfileEvent.ReceiveSendResupplyKitSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitRequestConfirmed()));
         // Verify with Kenny that this transition is ok; may need to refactor later
         bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
     }
@@ -119,7 +120,14 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveSendResupplyKitError(ProfileEvent.ReceiveSendResupplyKitError event)
     {
-        this.handleRequestError(event);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        String errorMessage = event.error.getMessage();
+        if (errorMessage == null)
+        {
+            errorMessage = getContext().getString(R.string.unable_to_process_request);
+        }
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitRequestError(errorMessage)));
+        showToast(errorMessage);
     }
 
     private void processProviderProfile(ProviderProfile providerProfile)
@@ -206,14 +214,4 @@ public class RequestSuppliesFragment extends ActionBarFragment
         mRequestSuppliesWithholdingAmount.setText(withholdingAmount);
     }
 
-    private void handleRequestError(HandyEvent.ReceiveErrorEvent event)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        String message = event.error.getMessage();
-        if (message == null)
-        {
-            message = getContext().getString(R.string.unable_to_process_request);
-        }
-        showToast(message);
-    }
 }

@@ -102,7 +102,7 @@ public class ReferAFriendFragment extends ActionBarFragment
     @OnClick(R.id.referral_code_layout)
     public void createReferral()
     {
-        mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralSelectedLog()));
+        mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralSelected()));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mReferralInfo.getReferralLink());
