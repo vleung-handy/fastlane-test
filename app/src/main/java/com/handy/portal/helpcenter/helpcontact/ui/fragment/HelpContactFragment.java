@@ -16,7 +16,7 @@ import com.handy.portal.helpcenter.helpcontact.HelpContactEvent;
 import com.handy.portal.helpcenter.helpcontact.ui.view.HelpContactView;
 import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.HelpContactFormSubmittedLog;
+import com.handy.portal.logger.handylogger.model.HelpContactFormLog;
 import com.handy.portal.model.Provider;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
@@ -177,6 +177,11 @@ public final class HelpContactFragment extends ActionBarFragment
 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
 
+        bus.post(new LogEvent.AddLogEvent(new HelpContactFormLog.Submitted(
+                path,
+                associatedNode.getId(),
+                associatedNode.getLabel()
+        )));
         bus.post(new HelpContactEvent.RequestNotifyHelpContact(body));
     }
 
@@ -217,7 +222,11 @@ public final class HelpContactFragment extends ActionBarFragment
     public void onReceiveNotifyHelpContactSuccess(HelpContactEvent.ReceiveNotifyHelpContactSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new HelpContactFormSubmittedLog(path, associatedNode.getId(), associatedNode.getLabel())));
+        bus.post(new LogEvent.AddLogEvent(new HelpContactFormLog.Success(
+                path,
+                associatedNode.getId(),
+                associatedNode.getLabel()
+        )));
         if (bookingId == null || bookingId.isEmpty())
         {
             returnToJobsScreen();
@@ -234,7 +243,15 @@ public final class HelpContactFragment extends ActionBarFragment
     public void onReceiveNotifyHelpContactError(HelpContactEvent.ReceiveNotifyHelpContactError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(getString(R.string.an_error_has_occurred));
+
+        final String errorMessage = getString(R.string.an_error_has_occurred);
+        bus.post(new LogEvent.AddLogEvent(new HelpContactFormLog.Error(
+                path,
+                associatedNode.getId(),
+                associatedNode.getLabel(),
+                errorMessage
+        )));
+        showToast(errorMessage);
     }
 
     @Subscribe
@@ -244,6 +261,7 @@ public final class HelpContactFragment extends ActionBarFragment
         helpContactView.prepopulateProviderData(provider);
 
     }
+
     @Subscribe
     public void onReceiveProviderInfoFailure(HandyEvent.ReceiveProviderInfoError event)
     {
