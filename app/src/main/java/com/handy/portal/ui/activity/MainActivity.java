@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity
             Intent locationServiceIntent = new Intent(this, LocationScheduleService.class);
             if (mConfigManager.getConfigurationResponse() != null
                     && (mConfigManager.getConfigurationResponse().isLocationScheduleServiceEnabled()
-                        || mConfigManager.getConfigurationResponse().isBookingGeofenceServiceEnabled()))
+                    || mConfigManager.getConfigurationResponse().isBookingGeofenceServiceEnabled()))
             {
                 //nothing will happen if it's already running
                 if (!SystemUtils.isServiceRunning(this, LocationScheduleService.class))
@@ -93,6 +93,7 @@ public class MainActivity extends BaseActivity
         return Utils.areAllPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS);
     }
 
+    @SuppressWarnings("deprecation")
     private boolean hasRequiredLocationSettings()
     {
         boolean locationServicesEnabled;
@@ -210,7 +211,6 @@ public class MainActivity extends BaseActivity
      * pre-kitkat: user has any location provider enabled
      * <p/>
      * if not, block them with a dialog until they do.
-     *
      */
     private void showLocationSettingsBlockerIfNecessary()
     {

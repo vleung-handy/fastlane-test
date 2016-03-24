@@ -288,6 +288,7 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Override
+    @SuppressWarnings({"ResourceType", "MissingPermission"})
     public void onConnected(Bundle connectionHint)
     {
         if (!Utils.areAllPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))

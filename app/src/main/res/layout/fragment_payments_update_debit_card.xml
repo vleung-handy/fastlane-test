@@ -80,7 +80,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/default_padding"
-                    android:paddingLeft="11dp"
+                    android:paddingLeft="@dimen/form_field_left_padding"
+                    android:paddingStart="@dimen/form_field_left_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:textColor="@color/black"
                     />
@@ -95,6 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
+                        android:inputType="date"
                         android:maxLength="2"
                         android:nextFocusDown="@+id/year_value_text"
                         android:padding="@dimen/default_padding"

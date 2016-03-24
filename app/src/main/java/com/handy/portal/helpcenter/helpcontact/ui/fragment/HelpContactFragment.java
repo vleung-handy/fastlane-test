@@ -164,6 +164,7 @@ public final class HelpContactFragment extends ActionBarFragment
             salesforceWrapper.put(SALESFORCE_DATA_WRAPPER_KEY, new JSONObject(contactFormInfo));
         } catch (Exception e)
         {
+            Crashlytics.logException(e);
         }
 
         TypedInput body;

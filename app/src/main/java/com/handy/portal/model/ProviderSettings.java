@@ -24,10 +24,9 @@ public class ProviderSettings implements Serializable, Cloneable
     {
         try
         {
-            ProviderSettings cloned = (ProviderSettings) super.clone();
             // Note: if any of the serialized attributes of this object are objects themselves,
             // you must clone them within here as well.
-            return cloned;
+            return (ProviderSettings) super.clone();
         }
         catch (CloneNotSupportedException e)
         {

@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:paddingBottom="12dp"
-            android:text="0"
             android:textSize="50sp"
             tools:text="80"
             />

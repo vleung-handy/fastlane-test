@@ -41,7 +41,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
     /**
      * any strategy that wants accuracy equal to or below this amount
      * will use the high accuracy mode in LocationApi
-     *
+     * <p/>
      * otherwise it will use balanced power mode
      */
     public static final int HIGH_ACCURACY_THRESHOLD_METERS = 100;
@@ -115,7 +115,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
     private LocationRequest createLocationRequest()
     {
         int priority;
-        if(mLocationTrackingStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS)
+        if (mLocationTrackingStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS)
         {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
         }
@@ -127,15 +127,13 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
         long pollingIntervalMs = mLocationTrackingStrategy.getLocationPollingIntervalSeconds() * DateUtils.SECOND_IN_MILLIS;
         long expirationDurationMs = mLocationTrackingStrategy.getEndDate().getTime() - System.currentTimeMillis();
 
-        LocationRequest locationRequest = new LocationRequest()
+        return new LocationRequest()
                 .setSmallestDisplacement(mLocationTrackingStrategy.getDistanceFilterMeters())
                 .setPriority(priority)
                 .setExpirationDuration(expirationDurationMs)
                 .setInterval(pollingIntervalMs)
                 .setFastestInterval(pollingIntervalMs) //TODO: consider changing this
                 ;
-
-        return locationRequest;
     }
 
     /**

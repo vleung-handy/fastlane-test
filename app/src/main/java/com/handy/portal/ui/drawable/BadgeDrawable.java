@@ -17,7 +17,6 @@ import com.handy.portal.util.Utils;
 public class BadgeDrawable extends Drawable
 {
 
-    private float mTextSize;
     private Paint mBadgePaint;
     private Paint mTextPaint;
     private Rect mTxtRect = new Rect();
@@ -27,7 +26,7 @@ public class BadgeDrawable extends Drawable
 
     public BadgeDrawable(Context context)
     {
-        mTextSize = context.getResources().getDimension(R.dimen.badge_text_size);
+        float textSize = context.getResources().getDimension(R.dimen.badge_text_size);
         mBadgePaint = new Paint();
         mBadgePaint.setColor(ContextCompat.getColor(context, R.color.error_red));
         mBadgePaint.setAntiAlias(true);
@@ -37,7 +36,7 @@ public class BadgeDrawable extends Drawable
         mTextPaint = new Paint();
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setTypeface(Typeface.DEFAULT);
-        mTextPaint.setTextSize(mTextSize);
+        mTextPaint.setTextSize(textSize);
         mTextPaint.setAntiAlias(true);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }

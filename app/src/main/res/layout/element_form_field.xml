@@ -5,6 +5,7 @@
         android:id="@+id/error_indicator"
         android:layout_width="5dp"
         android:layout_height="match_parent"
+        android:contentDescription="@string/error"
         android:paddingBottom="1dp"
         android:src="@drawable/rectangle_red"
         android:visibility="invisible"
