@@ -140,17 +140,17 @@ public abstract class AvailableJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "claim_error";
 
-        @SerializedName("error_reason")
-        private String mErrorReason;
+        @SerializedName("error_message")
+        private String mErrorMessage;
 
         public ClaimError(final Booking booking,
                           final String source,
                           @Nullable final Bundle sourceExtras,
                           final double distanceToJobInMeters,
-                          final String errorReason)
+                          final String errorMessage)
         {
             super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
-            mErrorReason = errorReason;
+            mErrorMessage = errorMessage;
         }
     }
 }
