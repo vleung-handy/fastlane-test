@@ -122,7 +122,7 @@ public abstract class AvailableJobsLog extends EventLog
 
     public static class Clicked extends AvailableJobsBookingLog
     {
-        private static final String EVENT_TYPE = "selected";
+        private static final String EVENT_TYPE = "job_selected";
 
         @SerializedName("list_number")
         private int mListNumber;
