@@ -46,7 +46,21 @@ public class EventLogManager
     @Subscribe
     public synchronized void addLog(@NonNull LogEvent.AddLogEvent event)
     {
-        Crashlytics.log(event.getLog().getEventName());
+        //log the payload to Crashlytics too
+        try
+        {
+            //putting in try/catch block just in case GSON.toJson throws an exception
+            String eventLogJson = GSON.toJson(event.getLog());
+            String crashlyticsLogString =
+                    event.getLog().getEventName()
+                            + ": " + eventLogJson;
+            Crashlytics.log(crashlyticsLogString);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+
         sLogs.add(new Event(event.getLog()));
         if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
         {
