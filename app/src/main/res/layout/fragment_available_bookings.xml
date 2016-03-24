@@ -41,7 +41,7 @@
 
             <include layout="@layout/layout_available_bookings_empty"/>
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
                 android:id="@+id/refresh_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                     android:dividerHeight="1dp"
                     android:paddingTop="1dp"
                     />
-            </android.support.v4.widget.SwipeRefreshLayout>
+            </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
 
         </LinearLayout>
 
