@@ -172,7 +172,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         {
             Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
             bus.post(new LogEvent.AddLogEvent(
-                    new AvailableJobsLog.ClaimSubmitted(booking, SOURCE, null, mKilometer / 1000)));
+                    new AvailableJobsLog.ClaimSubmitted(booking, SOURCE, null, mKilometer * 1000)));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestClaimJob(booking, SOURCE, null));
         }
@@ -183,7 +183,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     {
         Booking booking = event.bookingClaimDetails.getBooking();
         bus.post(new LogEvent.AddLogEvent(
-                new AvailableJobsLog.ClaimSuccess(booking, SOURCE, null, mKilometer / 1000)));
+                new AvailableJobsLog.ClaimSuccess(booking, SOURCE, null, mKilometer * 1000)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, booking.getStartDate().getTime());
@@ -194,7 +194,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
         bus.post(new LogEvent.AddLogEvent(
-                new AvailableJobsLog.ClaimError(event.getBooking(), SOURCE, null, mKilometer / 1000, event.error.getMessage())));
+                new AvailableJobsLog.ClaimError(event.getBooking(), SOURCE, null, mKilometer * 1000, event.error.getMessage())));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(R.string.job_claim_error);
     }
