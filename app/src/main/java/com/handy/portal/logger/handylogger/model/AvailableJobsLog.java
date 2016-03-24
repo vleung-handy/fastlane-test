@@ -150,7 +150,7 @@ public abstract class AvailableJobsLog extends EventLog
                                             final Booking booking,
                                             final String source,
                                             @Nullable final Bundle sourceExtras,
-                                            final int distanceToJobInMeters)
+                                            final double distanceToJobInMeters)
         {
             super(eventType, booking);
             mSource = source;
@@ -174,7 +174,7 @@ public abstract class AvailableJobsLog extends EventLog
         public ClaimSubmitted(final Booking booking,
                               final String source,
                               @Nullable final Bundle sourceExtras,
-                              final int distanceToJobInMeters)
+                              final double distanceToJobInMeters)
         {
             super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
         }
@@ -188,7 +188,7 @@ public abstract class AvailableJobsLog extends EventLog
         public ClaimSuccess(final Booking booking,
                             final String source,
                             @Nullable final Bundle sourceExtras,
-                            final int distanceToJobInMeters)
+                            final double distanceToJobInMeters)
         {
             super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
         }
@@ -202,7 +202,7 @@ public abstract class AvailableJobsLog extends EventLog
         public ClaimError(final Booking booking,
                           final String source,
                           @Nullable final Bundle sourceExtras,
-                          final int distanceToJobInMeters)
+                          final double distanceToJobInMeters)
         {
             super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
         }
