@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+<com.handy.portal.ui.widget.SafeSwipeRefreshLayout
     android:id="@+id/scheduled_bookings_empty"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -44,4 +44,4 @@
             />
 
     </LinearLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+</com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
