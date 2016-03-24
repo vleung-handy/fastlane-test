@@ -16,11 +16,13 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
@@ -289,7 +291,9 @@ public class LoginActivityFragment extends InjectedFragment
             }
             else
             {
-                postLoginErrorEvent("pin code");
+                //this should never happen anymore since we changed the HTTP response code for login failure. logging for now just in case
+                Crashlytics.logException(new Exception("Login request success event fired but login details success parameter is false"));
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
                 showToast(R.string.login_error_bad_login);
                 changeState(LoginState.INPUTTING_PIN);
                 pinCodeEditText.highlight();
@@ -303,8 +307,30 @@ public class LoginActivityFragment extends InjectedFragment
         bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
-            postLoginErrorEvent("server");
-            showToast(R.string.login_error_connectivity);
+            DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
+            if(errorType != null)
+            {
+                if(errorType.equals(DataManager.DataManagerError.Type.NETWORK))
+                {
+                    showToast(R.string.error_connectivity);
+                }
+                else if(errorType.equals(DataManager.DataManagerError.Type.CLIENT))
+                {
+                    showToast(R.string.login_error_bad_login);
+                }
+                else //server error
+                {
+                    showToast(R.string.login_error_connectivity);
+                }
+            }
+            else
+            {
+                //should never happen
+                showToast(R.string.login_error_connectivity);
+                Crashlytics.logException(new Exception("Login request error type is null"));
+            }
+            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+            pinCodeEditText.highlight();
             changeState(LoginState.INPUTTING_PIN);
         }
     }
