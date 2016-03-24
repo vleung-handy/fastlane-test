@@ -193,10 +193,15 @@ public class NearbyBookingsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
+        String errorMessage = event.error.getMessage();
+        if (errorMessage == null)
+        {
+            errorMessage = getString(R.string.job_claim_error);
+        }
         bus.post(new LogEvent.AddLogEvent(
-                new AvailableJobsLog.ClaimError(event.getBooking(), SOURCE, null, mKilometer * 1000, event.error.getMessage())));
+                new AvailableJobsLog.ClaimError(event.getBooking(), SOURCE, null, mKilometer * 1000, errorMessage)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(R.string.job_claim_error);
+        showToast(errorMessage);
     }
 
     private void setBookingInfoDisplay(final Booking booking)
