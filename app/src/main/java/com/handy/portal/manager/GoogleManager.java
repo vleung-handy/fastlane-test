@@ -116,7 +116,8 @@ public class GoogleManager
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("deviceId", regId);
                     editor.commit();
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                 }
                 return "";

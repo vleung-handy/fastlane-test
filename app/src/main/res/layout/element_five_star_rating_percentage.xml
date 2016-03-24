@@ -7,9 +7,9 @@
     >
 
     <com.hookedonplay.decoviewlib.DecoView
+        android:id="@+id/dynamicArcView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/dynamicArcView"
         />
 
     <RelativeLayout
@@ -22,10 +22,10 @@
             android:id="@+id/five_star_percentage_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="50sp"
             android:layout_centerInParent="true"
             android:paddingBottom="12dp"
             android:text="0"
+            android:textSize="50sp"
             tools:text="80"
             />
 
@@ -33,11 +33,12 @@
             android:id="@+id/five_star_percentage_sign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/five_star_percentage_number"
             android:layout_alignTop="@+id/five_star_percentage_number"
             android:layout_marginTop="@dimen/default_margin"
-            android:textSize="@dimen/medium_text_size"
+            android:layout_toEndOf="@id/five_star_percentage_number"
+            android:layout_toRightOf="@+id/five_star_percentage_number"
             android:text="@string/percentage"
+            android:textSize="@dimen/medium_text_size"
             />
 
         <TextView
@@ -46,8 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/five_star_percentage_number"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/tertiary_grey"
             android:text="@string/five_star"
+            android:textColor="@color/tertiary_grey"
             />
 
     </RelativeLayout>

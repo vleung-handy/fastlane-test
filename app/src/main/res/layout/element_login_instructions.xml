@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:autoLink="web"
     android:background="@color/white"
-    android:gravity="left"
+    android:gravity="start"
     android:linksClickable="true"
     android:paddingBottom="@dimen/default_padding"
     android:paddingLeft="@dimen/extra_padding_xlarge"

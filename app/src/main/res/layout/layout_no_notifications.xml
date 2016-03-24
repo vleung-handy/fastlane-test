@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/no_notifications_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -19,8 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="3dp"
+            android:layout_marginLeft="@dimen/notification_image_margin_left"
+            android:layout_marginStart="@dimen/notification_image_margin_left"
+            android:layout_marginTop="@dimen/notification_image_margin_top"
             android:src="@drawable/postit"
             />
 
@@ -40,10 +41,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
         android:gravity="center_horizontal"
-        android:textColor="@color/subtitle_grey"
-        android:textSize="@dimen/error_text"
         android:maxWidth="200dp"
         android:text="@string/no_notifications"
+        android:textColor="@color/subtitle_grey"
+        android:textSize="@dimen/error_text"
         />
 
 </LinearLayout>

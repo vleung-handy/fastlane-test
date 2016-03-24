@@ -22,7 +22,7 @@ public class DateFormFieldTableRow extends TableRow implements Errorable
 
     public TextView getLabel()
     {
-        return (TextView) findViewById(R.id.label_text);
+        return (TextView) findViewById(R.id.label_text_date);
     }
 
     public TextView getMonthValue()
@@ -37,7 +37,7 @@ public class DateFormFieldTableRow extends TableRow implements Errorable
 
     public View getErrorIndicator()
     {
-        return findViewById(R.id.error_indicator);
+        return findViewById(R.id.error_indicator_date);
     }
 
     @Override

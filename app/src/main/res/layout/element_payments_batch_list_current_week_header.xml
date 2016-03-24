@@ -77,7 +77,7 @@
                     android:id="@+id/payments_current_week_total_earnings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_weight="1"
                     android:text="@string/no_data"
                     android:textAppearance="@style/HandyTextAppearanceLarge"/>
@@ -118,7 +118,7 @@
                     android:id="@+id/payments_current_week_withholdings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_weight="1"
                     android:text="@string/no_data"
                     android:textAppearance="@style/HandyTextAppearanceLarge"/>
@@ -135,7 +135,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|left"
+                    android:layout_gravity="center|start"
                     android:layout_weight="1"
                     android:text="@string/expected_payment"
                     android:textAppearance="@style/HandyTextAppearanceLarge"/>
@@ -191,7 +191,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center|left"
+                        android:layout_gravity="center|start"
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:singleLine="true"
@@ -204,7 +204,7 @@
                     android:id="@+id/payments_current_week_remaining_withholdings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|right"
+                    android:layout_gravity="center|end"
                     android:layout_weight="1"
                     android:text="@string/no_data"
                     android:textAppearance="@style/HandyTextAppearanceLarge"
