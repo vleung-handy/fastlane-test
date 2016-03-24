@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.format.DateUtils;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.common.annotations.VisibleForTesting;
@@ -23,7 +24,6 @@ import com.handy.portal.logger.handylogger.model.AppUpdateLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.updater.model.UpdateDetails;
 import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
-import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -47,7 +47,7 @@ public class VersionManager
     // This backoff duration is used to prevent the app from executing download repeatedly when
     // download fails. It is used to check whether there was a download attempt recently and if so,
     // doesn't execute the update process.
-    private static final int UPDATE_CHECK_BACKOFF_DURATION_MILLIS = DateTimeUtils.MILLISECONDS_IN_MINUTE * 5; // 5 minutes
+    private static final long UPDATE_CHECK_BACKOFF_DURATION_MILLIS = DateUtils.MINUTE_IN_MILLIS * 5; // 5 minutes
     private long lastUpdateCheckTimeMillis = 0;
     private long lastNonblockingUpdateShownTimeMs = 0;
 
@@ -143,7 +143,7 @@ public class VersionManager
                                     {
                                         //non-blocking update
                                         long currentTimeMs = System.currentTimeMillis();
-                                        long hideNonBlockingUpdateDurationMs = mUpdateDetails.getHideNonBlockingUpdateDurationMins() * DateTimeUtils.MILLISECONDS_IN_MINUTE;
+                                        long hideNonBlockingUpdateDurationMs = mUpdateDetails.getHideNonBlockingUpdateDurationMins() * DateUtils.MINUTE_IN_MILLIS;
                                         if(currentTimeMs - lastNonblockingUpdateShownTimeMs > hideNonBlockingUpdateDurationMs)
                                         //only show the non-blocking update if the given time interval has passed
                                         {
