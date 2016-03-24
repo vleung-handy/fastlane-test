@@ -86,7 +86,15 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
                 @Override
                 public void onAnimationEnd(Animation animation)
                 {
-                    TransientOverlayDialogFragment.this.dismiss();
+                    try
+                    //handles IllegalStateException: Can not perform this action after onSaveInstanceState
+                    {
+                        TransientOverlayDialogFragment.this.dismiss();
+                    }
+                    catch (Exception e)
+                    {
+                        //do nothing
+                    }
                 }
 
                 @Override
