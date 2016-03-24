@@ -44,11 +44,11 @@ public class PaymentsLog extends EventLog
     }
 
 
-    public static class HelpSlideUpSelected extends PaymentsLog
+    public static class HelpSelected extends PaymentsLog
     {
-        private static final String EVENT_TYPE = "help_slide_up_selected";
+        private static final String EVENT_TYPE = "help_selected";
 
-        public HelpSlideUpSelected()
+        public HelpSelected()
         {
             super(EVENT_TYPE);
         }
