@@ -208,7 +208,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                         mHaveTrackedSeenBookingInstructions = true; //not guaranteed to stay flipped throughout session just on screen
                         //track event
                         bus.post(new LogEvent.AddLogEvent(
-                                new ScheduledJobsLog.BookingInstructionsSeen(mAssociatedBooking.getId())));
+                                new ScheduledJobsLog.BookingInstructionsShown(mAssociatedBooking.getId())));
                     }
                 }
             }

@@ -133,8 +133,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
+        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierSelected()));
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments));
-        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierTappedLog()));
     }
 
     @OnClick(R.id.feedback_option)
@@ -142,8 +142,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
+        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
-        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackTappedLog()));
     }
 
 
@@ -152,7 +152,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
+        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FiveStarReviewsSelected()));
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS, arguments));
-        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FiveStarReviewsTappedLog()));
     }
 }

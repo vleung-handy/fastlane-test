@@ -172,14 +172,14 @@ public class ScheduledJobsLog extends EventLog
     }
 
 
-    public static class BookingInstructionsSeen extends ScheduledJobsLog
+    public static class BookingInstructionsShown extends ScheduledJobsLog
     {
-        private static final String EVENT_TYPE = "job_instructions_viewed";
+        private static final String EVENT_TYPE = "job_instructions_shown";
 
         @SerializedName("booking_id")
         private String mBookingId;
 
-        public BookingInstructionsSeen(String bookingId)
+        public BookingInstructionsShown(String bookingId)
         {
             super(EVENT_TYPE);
             mBookingId = bookingId;
