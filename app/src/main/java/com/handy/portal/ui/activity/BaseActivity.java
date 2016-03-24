@@ -19,6 +19,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.location.LocationConstants;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
@@ -277,12 +278,12 @@ public abstract class BaseActivity extends AppCompatActivity
                         .addApi(LocationServices.API)
                         .build();
                 bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(true));
-                bus.post(new GoogleApiLog.GoogleApiAvailability(true));
+                bus.post(new LogEvent.AddLogEvent(new GoogleApiLog.GoogleApiAvailability(true)));
             }
             else
             {
                 bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(false));
-                bus.post(new GoogleApiLog.GoogleApiAvailability(false));
+                bus.post(new LogEvent.AddLogEvent(new GoogleApiLog.GoogleApiAvailability(false)));
             }
         }
     }
