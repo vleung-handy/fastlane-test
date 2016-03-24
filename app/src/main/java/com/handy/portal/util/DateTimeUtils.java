@@ -2,6 +2,7 @@ package com.handy.portal.util;
 
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.widget.TextView;
 
@@ -32,15 +33,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat LOCAL_TIME_12_HOURS = new SimpleDateFormat("hh:mm a");
 
     public final static int HOURS_IN_DAY = 24;
-    public final static int DAYS_IN_WEEK = 7;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
-    public final static int HOURS_IN_WEEK = HOURS_IN_DAY * DAYS_IN_WEEK;
-    public final static int MILLISECONDS_IN_MINUTE = 60000;
-    public final static int MILLISECONDS_IN_SECOND = 1000;
-    public final static long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_MINUTE * 60;
-    public final static long MILLISECONDS_IN_30_MINS = MILLISECONDS_IN_MINUTE * 30;
-    public final static long MILLISECONDS_IN_52_MINS = MILLISECONDS_IN_MINUTE * 52;
-    public final static int SECONDS_IN_MINUTE = 60;
     public final static String UTC_TIMEZONE = "UTC";
 
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)
@@ -48,7 +41,7 @@ public final class DateTimeUtils
         long currentTime = DateTimeUtils.getDateWithoutTime(new Date()).getTime();
         long dateOfBookingsTime = date.getTime();
         long dateDifference = dateOfBookingsTime - currentTime;
-        return dateDifference <= DateTimeUtils.MILLISECONDS_IN_HOUR * hours;
+        return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
     }
 
     @Nullable
@@ -229,7 +222,7 @@ public final class DateTimeUtils
 
     public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis)
     {
-        return new CountDownTimer(timeRemainMillis, DateTimeUtils.MILLISECONDS_IN_SECOND)
+        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
         {
             @Override
             public void onTick(final long millisUntilFinished)
@@ -281,7 +274,7 @@ public final class DateTimeUtils
 
     public static int daysBetween(Date d1, Date d2)
     {
-        return (int) ((d2.getTime() - d1.getTime()) / (MILLISECONDS_IN_HOUR * HOURS_IN_DAY));
+        return Math.round((d2.getTime() - d1.getTime()) / (float) (DateUtils.HOUR_IN_MILLIS * HOURS_IN_DAY));
     }
 
     private static SimpleDateFormat getClockFormatter12hr()

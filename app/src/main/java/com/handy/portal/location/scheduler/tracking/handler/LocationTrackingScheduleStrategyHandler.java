@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -16,7 +17,6 @@ import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.location.scheduler.handler.ScheduleStrategyHandler;
 import com.handy.portal.location.scheduler.tracking.model.LocationTrackingScheduleStrategy;
-import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.SystemUtils;
 import com.handy.portal.util.Utils;
 
@@ -124,7 +124,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
         }
 
-        long pollingIntervalMs = mLocationTrackingStrategy.getLocationPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
+        long pollingIntervalMs = mLocationTrackingStrategy.getLocationPollingIntervalSeconds() * DateUtils.SECOND_IN_MILLIS;
         long expirationDurationMs = mLocationTrackingStrategy.getEndDate().getTime() - System.currentTimeMillis();
 
         LocationRequest locationRequest = new LocationRequest()
@@ -164,7 +164,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
     private boolean shouldPostUpdate()
     {
         //TODO use a util instead
-        long serverPollingIntervalMs = mLocationTrackingStrategy.getServerPollingIntervalSeconds() * DateTimeUtils.MILLISECONDS_IN_SECOND;
+        long serverPollingIntervalMs = mLocationTrackingStrategy.getServerPollingIntervalSeconds() * DateUtils.SECOND_IN_MILLIS;
         return (System.currentTimeMillis() - mTimestampLastUpdatePostedMs >= serverPollingIntervalMs);
     }
 
