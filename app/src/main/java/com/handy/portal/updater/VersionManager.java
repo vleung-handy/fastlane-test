@@ -178,18 +178,6 @@ public class VersionManager
 
     }
 
-    @Subscribe
-    public void onApplicationResumed(HandyEvent.ApplicationResumed event)
-    {
-        dataManager.sendVersionInformation(getVersionInfo());
-    }
-
-    @Subscribe
-    public void onReceiveLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
-    {
-        dataManager.sendVersionInformation(getVersionInfo());
-    }
-
     /**
      * TODO don't like this. should be refactored
      */

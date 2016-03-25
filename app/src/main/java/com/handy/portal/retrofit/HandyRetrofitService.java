@@ -55,11 +55,6 @@ public interface HandyRetrofitService
     void acceptTerms(@Part("code") String termsCode,
                      HandyRetrofitCallback handyRetrofitCallback);
 
-    @FormUrlEncoded
-    @POST("/log_version_info")
-    void sendVersionInformation(@FieldMap Map<String, String> params,
-                                HandyRetrofitCallback cb);
-
     @GET("/config_params")
     void getConfigParams(@Query("key[]") String[] key,
                          HandyRetrofitCallback cb);
