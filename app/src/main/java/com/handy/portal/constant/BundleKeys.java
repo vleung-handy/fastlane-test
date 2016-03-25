@@ -35,7 +35,9 @@ public class BundleKeys
     // Deeplinks
     public static final String DEEPLINK = "deep_link";
     public static final String DEEPLINK_DATA = "deep_link_data";
+    public static final String DEEPLINK_SOURCE = "deeplink_source";
     public static final String DEEPLINK_HANDLED = "deeplink_handled";
+    public static final String DEEPLINK_OPENED_LOGGED = "deeplink_opened_logged";
 
     // Dashboard
     public static final String PROVIDER_EVALUATION = "provider_evaluation";

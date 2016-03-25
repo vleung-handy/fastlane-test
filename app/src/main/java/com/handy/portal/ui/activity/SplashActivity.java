@@ -15,6 +15,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -247,6 +248,7 @@ public class SplashActivity extends BaseActivity
         if (deeplinkBundle != null)
         {
             intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
+            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
         }
         startActivity(intent);
     }

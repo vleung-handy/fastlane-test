@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.LocationPingService;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
 import com.handy.portal.service.AutoCheckInService;
@@ -134,6 +135,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkData);
+        intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.PUSH_NOTIFICATION);
         context.startActivity(intent);
     }
 }
