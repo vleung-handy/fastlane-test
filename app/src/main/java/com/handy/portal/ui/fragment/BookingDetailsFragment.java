@@ -646,7 +646,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void showHelpOptions()
     {
         String bookingId = mAssociatedBooking.getId();
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SupportSelected(bookingId)));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportSelected(bookingId)));
         //TODO: We might no longer need this null check since we no longer do ButterKnife.unbind()
         if (mSlideUpPanelLayout != null)
         {
@@ -1125,7 +1125,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
         String bookingId = mAssociatedBooking.getId();
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.HelpItemSelected(bookingId, event.action.getActionName())));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportItemSelected(bookingId, event.action.getActionName())));
 
         switch (supportActionType)
         {
