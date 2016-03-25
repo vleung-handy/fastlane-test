@@ -2,6 +2,7 @@ package com.handy.portal.webview;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,4 +97,22 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
         webView.loadUrl(urlWithParams);
     }
 
+    protected @NonNull WebView getWebView()
+    {
+        return webView;
+    }
+
+    @Override
+    public void onResume()
+    {
+        webView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        webView.onPause();
+    }
 }
