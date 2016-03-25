@@ -38,6 +38,7 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
+import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.receiver.HandyPushReceiver;
@@ -205,6 +206,13 @@ public final class ApplicationModule
     final EnvironmentModifier provideEnvironmentModifier(PrefsManager prefsManager)
     {
         return new EnvironmentModifier(context, prefsManager);
+    }
+
+    @Provides
+    @Singleton
+    final UserInterfaceUpdateManager provideUserInterfaceManager(final Bus bus)
+    {
+        return new UserInterfaceUpdateManager(bus);
     }
 
     @Provides
