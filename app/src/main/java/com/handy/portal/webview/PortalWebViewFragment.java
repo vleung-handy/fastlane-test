@@ -97,7 +97,8 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
         webView.loadUrl(urlWithParams);
     }
 
-    protected @NonNull WebView getWebView()
+    @NonNull
+    protected WebView getWebView()
     {
         return webView;
     }
