@@ -18,6 +18,7 @@ import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
+import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -223,6 +224,12 @@ public class TestApplicationModule
     final GoogleManager provideGoogleService()
     {
         return mock(GoogleManager.class);
+    }
+
+    @Provides
+    final UserInterfaceUpdateManager provideUserInterfaceUpdateManager()
+    {
+        return mock(UserInterfaceUpdateManager.class);
     }
 
     @Provides
