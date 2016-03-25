@@ -188,7 +188,6 @@ public abstract class BaseActivity extends AppCompatActivity
         this.bus.register(mAppUpdateEventListener);
         checkForUpdates();
         getNotificationsUnreadCount();
-        postActivityResumeEvent(); //do not disable this
     }
 
     @Override
@@ -213,7 +212,6 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public void onPause()
     {
-        postActivityPauseEvent();
         try
         {
              /*
@@ -260,16 +258,6 @@ public abstract class BaseActivity extends AppCompatActivity
     private void getNotificationsUnreadCount()
     {
         bus.post(new NotificationEvent.RequestUnreadCount());
-    }
-
-    public void postActivityResumeEvent()
-    {
-        bus.post(new HandyEvent.ActivityResumed(this));
-    }
-
-    public void postActivityPauseEvent()
-    {
-        bus.post(new HandyEvent.ActivityPaused(this));
     }
 
     public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)

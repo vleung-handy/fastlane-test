@@ -228,11 +228,6 @@ public class DataManager
         });
     }
 
-    public void sendVersionInformation(Map<String, String> versionInfo)
-    {
-        mService.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback(null));
-    }
-
     //********Help Center********
     public void getHelpInfo(String nodeId,
                             String bookingId,

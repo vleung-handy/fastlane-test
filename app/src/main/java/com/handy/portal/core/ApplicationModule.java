@@ -419,13 +419,6 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ApplicationOnResumeWatcher provideApplicationOnResumeWatcher(final Bus bus)
-    {
-        return new ApplicationOnResumeWatcher(bus);
-    }
-
-    @Provides
-    @Singleton
     final Mixpanel provideMixpanel(final PrefsManager prefsManager)
     {
         return new Mixpanel(this.context, prefsManager);

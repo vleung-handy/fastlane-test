@@ -96,8 +96,6 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     UrbanAirshipManager urbanAirshipManager;
     @Inject
-    ApplicationOnResumeWatcher applicationOnResumeWatcher;
-    @Inject
     MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
     @Inject
     TabNavigationManager tabNavigationManager;

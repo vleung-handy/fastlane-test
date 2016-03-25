@@ -209,12 +209,6 @@ public class TestApplicationModule
     }
 
     @Provides
-    final ApplicationOnResumeWatcher provideApplicationOnResumeWatcher()
-    {
-        return mock(ApplicationOnResumeWatcher.class);
-    }
-
-    @Provides
     final Mixpanel provideMixpanel()
     {
         return mock(Mixpanel.class);

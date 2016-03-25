@@ -57,35 +57,6 @@ public abstract class HandyEvent
         public Activity sender;
     }
 
-    //Activity lifecycle management
-
-
-    public static class ActivityPaused extends ApplicationLifeCycleEvent
-    {
-        public ActivityPaused(Activity sender)
-        {
-            this.sender = sender;
-        }
-    }
-
-
-    public static class ActivityResumed extends ApplicationLifeCycleEvent
-    {
-        public ActivityResumed(Activity sender)
-        {
-            this.sender = sender;
-        }
-    }
-
-
-    public static class ApplicationResumed extends ApplicationLifeCycleEvent
-    {
-        public ApplicationResumed(Activity sender)
-        {
-            this.sender = sender;
-        }
-    }
-
 
     //Config
     public static class ReceiveConfigurationSuccess extends HandyEvent
