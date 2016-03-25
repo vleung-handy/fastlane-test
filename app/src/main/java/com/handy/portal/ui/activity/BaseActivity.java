@@ -20,6 +20,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
@@ -77,6 +78,20 @@ public abstract class BaseActivity extends AppCompatActivity
             if (deeplinkData != null)
             {
                 intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkData);
+
+                // Since deeplink data gets passed along through activity launches, we want to
+                // avoid logging deeplink_opened event multiple times.
+                boolean deeplinkOpenedLogged =
+                        intent.getBooleanExtra(BundleKeys.DEEPLINK_OPENED_LOGGED, false);
+                if (!deeplinkOpenedLogged)
+                {
+                    final String deeplinkSource = intent.getStringExtra(BundleKeys.DEEPLINK_SOURCE);
+                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
+                            deeplinkSource,
+                            deeplinkData
+                    )));
+                    intent.putExtra(BundleKeys.DEEPLINK_OPENED_LOGGED, true);
+                }
             }
         }
         super.startActivity(intent);

@@ -69,15 +69,12 @@ public abstract class JobsLog extends EventLog
         }
     }
 
-    private static String getZipCode(Address address)
+    private static String getZipCode(final Address address)
     {
         if (address != null)
         {
             return address.getZip();
         }
-        else
-        {
-            return "";
-        }
+        return null;
     }
 }

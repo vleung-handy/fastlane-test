@@ -16,6 +16,8 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.util.DeeplinkMapper;
 import com.handy.portal.util.DeeplinkUtils;
@@ -47,12 +49,28 @@ public class PortalWebViewClient extends WebViewClient
         final Bundle deeplinkData = DeeplinkUtils.createDeeplinkBundleFromUri(uri);
         if (deeplinkData != null)
         {
+            bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
+                    DeeplinkLog.Source.WEBVIEW,
+                    uri
+            )));
             final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
                 final MainViewTab tab = DeeplinkMapper.getTabForDeeplink(deeplink);
+                bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
+                        DeeplinkLog.Source.WEBVIEW,
+                        uri
+                )));
                 bus.post(new NavigationEvent.NavigateToTab(tab, deeplinkData));
             }
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                    DeeplinkLog.Source.WEBVIEW,
+                    DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
+                    uri
+            )));
         }
 
         // To prevent a bug in webkit where it redirects to a url ending with /undefined

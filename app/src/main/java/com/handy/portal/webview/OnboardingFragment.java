@@ -17,7 +17,7 @@ public class OnboardingFragment extends PortalWebViewFragment
     @Override
     protected MainViewTab getTab()
     {
-        return MainViewTab.ONBOARDING;
+        return MainViewTab.ONBOARDING_WEBVIEW;
     }
 
     @Override

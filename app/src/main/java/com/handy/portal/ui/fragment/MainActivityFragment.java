@@ -30,6 +30,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
@@ -103,6 +104,7 @@ public class MainActivityFragment extends InjectedFragment
     private boolean mFirstTimeConfigReturned = true; //the first time we get config response back we may need to navigate away
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
+    private String mDeeplinkSource;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -186,13 +188,13 @@ public class MainActivityFragment extends InjectedFragment
     private void handleOnboardingFlow()
     {
         if (currentTab != null &&
-                currentTab != MainViewTab.ONBOARDING &&
+                currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
                 configManager.getConfigurationResponse() != null &&
                 configManager.getConfigurationResponse().shouldShowOnboarding()
                 )
         {
             //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
-            switchToTab(MainViewTab.ONBOARDING, false);
+            switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
         }
     }
 
@@ -200,7 +202,9 @@ public class MainActivityFragment extends InjectedFragment
     {
         if (savedInstanceState == null || !(mDeeplinkHandled = savedInstanceState.getBoolean(BundleKeys.DEEPLINK_HANDLED)))
         {
-            mDeeplinkData = getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
+            final Intent intent = getActivity().getIntent();
+            mDeeplinkData = intent.getBundleExtra(BundleKeys.DEEPLINK_DATA);
+            mDeeplinkSource = intent.getStringExtra(BundleKeys.DEEPLINK_SOURCE);
         }
     }
 
@@ -214,7 +218,20 @@ public class MainActivityFragment extends InjectedFragment
                 final MainViewTab targetTab = DeeplinkMapper.getTabForDeeplink(deeplink);
                 if (targetTab != null)
                 {
+                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
+                            mDeeplinkSource,
+                            mDeeplinkData
+                    )));
                     switchToTab(targetTab, mDeeplinkData, false);
+                }
+                else
+                {
+                    // Unable to find a matching tab for deeplink, so ignore it.
+                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                            mDeeplinkSource,
+                            DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
+                            mDeeplinkData
+                    )));
                 }
             }
         }
@@ -447,8 +464,8 @@ public class MainActivityFragment extends InjectedFragment
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
         //If the user navved away from a non-blocking onboarding log it
-        if (currentTab == MainViewTab.ONBOARDING &&
-                targetTab != MainViewTab.ONBOARDING &&
+        if (currentTab == MainViewTab.ONBOARDING_WEBVIEW &&
+                targetTab != MainViewTab.ONBOARDING_WEBVIEW &&
                 userTriggered)
         {
             bus.post(new LogEvent.AddLogEvent(
@@ -501,7 +518,7 @@ public class MainActivityFragment extends InjectedFragment
             switch (targetTab)
             {
                 case AVAILABLE_JOBS:
-                case BLOCK_PRO_AVAILABLE_JOBS:
+                case BLOCK_PRO_WEBVIEW:
                 {
                     mJobsButton.toggle();
                     mNavTrayLinks.clearCheck();
