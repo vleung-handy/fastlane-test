@@ -186,13 +186,13 @@ public class MainActivityFragment extends InjectedFragment
     private void handleOnboardingFlow()
     {
         if (currentTab != null &&
-                currentTab != MainViewTab.ONBOARDING &&
+                currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
                 configManager.getConfigurationResponse() != null &&
                 configManager.getConfigurationResponse().shouldShowOnboarding()
                 )
         {
             //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
-            switchToTab(MainViewTab.ONBOARDING, false);
+            switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
         }
     }
 
@@ -447,8 +447,8 @@ public class MainActivityFragment extends InjectedFragment
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
         //If the user navved away from a non-blocking onboarding log it
-        if (currentTab == MainViewTab.ONBOARDING &&
-                targetTab != MainViewTab.ONBOARDING &&
+        if (currentTab == MainViewTab.ONBOARDING_WEBVIEW &&
+                targetTab != MainViewTab.ONBOARDING_WEBVIEW &&
                 userTriggered)
         {
             bus.post(new LogEvent.AddLogEvent(

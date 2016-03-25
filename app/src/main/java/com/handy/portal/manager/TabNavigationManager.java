@@ -52,7 +52,7 @@ public class TabNavigationManager
             {
                 mHaveShownNonBlockingOnboarding = true;
             }
-            event.targetTab = MainViewTab.ONBOARDING;
+            event.targetTab = MainViewTab.ONBOARDING_WEBVIEW;
         }
         //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
         else if (doesCachedProviderNeedPaymentInformation() &&

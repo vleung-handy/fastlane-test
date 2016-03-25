@@ -69,7 +69,7 @@ public enum MainViewTab implements Serializable
     HELP_CONTACT(HelpContactFragment.class),
 
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
-    ONBOARDING(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
+    ONBOARDING_WEBVIEW(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
     ;
 
