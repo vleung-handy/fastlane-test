@@ -106,12 +106,12 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         ButterKnife.bind(this, view);
 
         //Optional param, needs to be validated
-        if (getArguments() != null)
+        if (getArguments() != null && getArguments().containsKey(BundleKeys.DATE_EPOCH_TIME))
         {
             long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
             if (targetDateTime > 0)
             {
-                mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date(targetDateTime));
+                mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date(getArguments().getLong(BundleKeys.DATE_EPOCH_TIME)));
             }
         }
 
@@ -243,7 +243,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
         }
 
-        if (mSelectedDay != null && mSelectedDay.equals(event.day))
+        if (mSelectedDay.equals(event.day))
         {
             displayBookings(bookings, mSelectedDay);
         }
