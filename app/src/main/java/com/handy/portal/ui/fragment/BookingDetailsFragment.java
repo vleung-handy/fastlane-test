@@ -208,7 +208,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                         mHaveTrackedSeenBookingInstructions = true; //not guaranteed to stay flipped throughout session just on screen
                         //track event
                         bus.post(new LogEvent.AddLogEvent(
-                                new ScheduledJobsLog.BookingInstructionsSeen(mAssociatedBooking.getId())));
+                                new ScheduledJobsLog.BookingInstructionsShown(mAssociatedBooking.getId())));
                     }
                 }
             }
@@ -646,7 +646,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void showHelpOptions()
     {
         String bookingId = mAssociatedBooking.getId();
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SupportSelected(bookingId)));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportSelected(bookingId)));
         //TODO: We might no longer need this null check since we no longer do ButterKnife.unbind()
         if (mSlideUpPanelLayout != null)
         {
@@ -768,15 +768,15 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestNotifyOnMyWayJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWay(mAssociatedBooking, locationData)));
+        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
     }
 
     private void requestNotifyCheckInJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckIn(mAssociatedBooking, locationData)));
+        bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
@@ -1125,7 +1125,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         SupportActionType supportActionType = SupportActionUtils.getSupportActionType(event.action);
         String bookingId = mAssociatedBooking.getId();
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.HelpItemSelected(bookingId, event.action.getActionName())));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportItemSelected(bookingId, event.action.getActionName())));
 
         switch (supportActionType)
         {

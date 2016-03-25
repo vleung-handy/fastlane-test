@@ -1,7 +1,6 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 
 import java.util.Date;
@@ -172,14 +171,14 @@ public class ScheduledJobsLog extends EventLog
     }
 
 
-    public static class BookingInstructionsSeen extends ScheduledJobsLog
+    public static class BookingInstructionsShown extends ScheduledJobsLog
     {
-        private static final String EVENT_TYPE = "job_instructions_viewed";
+        private static final String EVENT_TYPE = "job_instructions_shown";
 
         @SerializedName("booking_id")
         private String mBookingId;
 
-        public BookingInstructionsSeen(String bookingId)
+        public BookingInstructionsShown(String bookingId)
         {
             super(EVENT_TYPE);
             mBookingId = bookingId;
@@ -187,14 +186,14 @@ public class ScheduledJobsLog extends EventLog
     }
 
 
-    public static class SupportSelected extends ScheduledJobsLog
+    public static class JobSupportSelected extends ScheduledJobsLog
     {
-        private static final String EVENT_TYPE = "booking_support_selected";
+        private static final String EVENT_TYPE = "job_support_selected";
 
         @SerializedName("booking_id")
         private String mBookingId;
 
-        public SupportSelected(String bookingId)
+        public JobSupportSelected(String bookingId)
         {
             super(EVENT_TYPE);
             mBookingId = bookingId;
@@ -202,21 +201,21 @@ public class ScheduledJobsLog extends EventLog
     }
 
 
-    public static class HelpItemSelected extends ScheduledJobsLog
+    public static class JobSupportItemSelected extends ScheduledJobsLog
     {
-        private static final String EVENT_TYPE = "help_item_selected";
+        private static final String EVENT_TYPE = "job_support_item_selected";
 
         @SerializedName("booking_id")
         private String mBookingId;
-        @SerializedName("help_item_label")
-        private String mHelpItemLabel;
+        @SerializedName("action_name")
+        private String mActionName;
 
 
-        public HelpItemSelected(String bookingId, String helpItemLabel)
+        public JobSupportItemSelected(String bookingId, String actionName)
         {
             super(EVENT_TYPE);
             mBookingId = bookingId;
-            mHelpItemLabel = helpItemLabel;
+            mActionName = actionName;
         }
     }
 
@@ -225,21 +224,13 @@ public class ScheduledJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "find_jobs_selected";
 
-        public FindJobsSelected()
+        @SerializedName("date")
+        private Date mSelectedDate;
+
+        public FindJobsSelected(final Date selectedDate)
         {
             super(EVENT_TYPE);
-        }
-    }
-
-    private static String getZipCode(Address address)
-    {
-        if (address != null)
-        {
-            return address.getZip();
-        }
-        else
-        {
-            return "";
+            mSelectedDate = selectedDate;
         }
     }
 }

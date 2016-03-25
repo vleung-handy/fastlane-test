@@ -32,8 +32,8 @@ public class CheckInFlowLog extends EventLog
         mBookingId = booking.getId();
         mProLatitude = getLatitude(location);
         mProLongitude = getLongitude(location);
-        mBookingLatitude = getLatitude(booking.getAddress());
-        mBookingLongitude = getLongitude(booking.getAddress());
+        mBookingLatitude = getLatitude(booking);
+        mBookingLongitude = getLongitude(booking);
         mAccuracy = getAccuracy(location);
         mDistance = MathUtils.getDistance(mProLatitude, mProLatitude, mBookingLatitude, mBookingLongitude);
     }
@@ -70,11 +70,17 @@ public class CheckInFlowLog extends EventLog
         }
     }
 
-    private double getLatitude(Address address)
+    private double getLatitude(final Booking booking)
     {
+        final Address address = booking.getAddress();
+        final Booking.Coordinates midpoint = booking.getMidpoint();
         if (address != null)
         {
             return address.getLatitude();
+        }
+        else if (midpoint != null)
+        {
+            return midpoint.getLatitude();
         }
         else
         {
@@ -82,11 +88,17 @@ public class CheckInFlowLog extends EventLog
         }
     }
 
-    private double getLongitude(Address address)
+    private double getLongitude(final Booking booking)
     {
+        final Address address = booking.getAddress();
+        final Booking.Coordinates midpoint = booking.getMidpoint();
         if (address != null)
         {
             return address.getLongitude();
+        }
+        else if (midpoint != null)
+        {
+            return midpoint.getLongitude();
         }
         else
         {

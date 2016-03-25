@@ -234,9 +234,9 @@ public final class PaymentsFragment extends ActionBarFragment
         switch (item.getItemId())
         {
             case R.id.action_help:
+                bus.post(new LogEvent.AddLogEvent(new PaymentsLog.HelpSelected()));
                 if (helpNodesListView.getCount() > 0)
                 {
-                    bus.post(new LogEvent.AddLogEvent(new PaymentsLog.HelpSlideUpSelected()));
                     mSlideUpPanelLayout.showPanel(R.string.payment_help, helpNodesListView);
                 }
                 else
@@ -328,11 +328,11 @@ public final class PaymentsFragment extends ActionBarFragment
 
                 mSlideUpPanelLayout.hidePanel();
 
+                bus.post(new LogEvent.AddLogEvent(
+                        new PaymentsLog.HelpItemSelected(childNode.getLabel())));
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
                 bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
-                bus.post(new LogEvent.AddLogEvent(
-                        new PaymentsLog.HelpItemSelected(childNode.getLabel())));
             }
         });
     }

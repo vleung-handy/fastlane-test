@@ -19,6 +19,7 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
@@ -84,7 +85,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
             mNoteToCustomer = bundle.getString(BundleKeys.NOTE_TO_CUSTOMER);
 
-            mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
             String amount = mBooking.getPaymentToProvider().getCurrencySymbol() +
                     TextUtils.DECIMAL_FORMAT_NO_ZERO.format(mBooking.getPaymentToProvider().getAdjustedAmount());
             mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
@@ -96,10 +96,14 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         {
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            final LocationData locationData = getLocationData();
+            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
-                    getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
+                    locationData, new ProBookingFeedback(getBookingRatingScore(),
                     getBookingRatingComment()), mNoteToCustomer, null)));
         }
+
+        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
     }
 
     @OnClick(R.id.close_button)
@@ -112,15 +116,18 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public void onConfirmCheckoutButtonClick()
     {
         //Endpoint is expecting a rating of 1 - 5
-        if (getBookingRatingScore() > 0)
+        final int bookingRatingScore = getBookingRatingScore();
+        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(bookingRatingScore)));
+        if (bookingRatingScore > 0)
         {
             // TODO: combine this with line 71
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            final LocationData locationData = getLocationData();
+            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
-                    getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
+                    locationData, new ProBookingFeedback(bookingRatingScore,
                     getBookingRatingComment()), mNoteToCustomer, mBooking.getCustomerPreferences())
             ));
-            mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(getBookingRatingScore())));
         }
         else
         {

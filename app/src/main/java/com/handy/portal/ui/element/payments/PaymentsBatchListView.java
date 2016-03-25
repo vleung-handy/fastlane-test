@@ -88,7 +88,8 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchSelected(false, position + 1))); // index needs to be one based
+        final boolean isCurrentWeek = (position == 0);
+        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchSelected(isCurrentWeek, position + 1))); // index needs to be one based
         PaymentBatch paymentBatch = getWrappedAdapter().getDataItem(position);
         notifyDataItemClickListener(paymentBatch);
     }

@@ -99,7 +99,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile()
     {
-        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelectedLog()));
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
@@ -112,8 +112,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     @OnClick(R.id.order_resupply_layout)
     public void getResupplyKit()
     {
-        mBus.post(new LogEvent.AddLogEvent(
-                new ProfileLog.ResupplyKitSelectedLog()));
+        mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
         final Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_PROFILE, mProviderProfile);
