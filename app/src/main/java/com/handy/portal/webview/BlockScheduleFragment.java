@@ -8,7 +8,7 @@ public class BlockScheduleFragment extends PortalWebViewFragment
     @Override
     protected MainViewTab getTab()
     {
-        return MainViewTab.BLOCK_PRO_AVAILABLE_JOBS;
+        return MainViewTab.BLOCK_PRO_WEBVIEW;
     }
 
     @Override

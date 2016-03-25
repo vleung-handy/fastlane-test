@@ -501,7 +501,7 @@ public class MainActivityFragment extends InjectedFragment
             switch (targetTab)
             {
                 case AVAILABLE_JOBS:
-                case BLOCK_PRO_AVAILABLE_JOBS:
+                case BLOCK_PRO_WEBVIEW:
                 {
                     mJobsButton.toggle();
                     mNavTrayLinks.clearCheck();

@@ -60,7 +60,7 @@ public class TabNavigationManager
                 (
                         event.targetTab == MainViewTab.AVAILABLE_JOBS ||
                                 event.targetTab == MainViewTab.SCHEDULED_JOBS ||
-                                event.targetTab == MainViewTab.BLOCK_PRO_AVAILABLE_JOBS
+                                event.targetTab == MainViewTab.BLOCK_PRO_WEBVIEW
                 )
                 )
         {
@@ -69,7 +69,7 @@ public class TabNavigationManager
         //HACK : Magical hack to turn block pros available jobs into the webview block jobs
         else if (isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
         {
-            event.targetTab = MainViewTab.BLOCK_PRO_AVAILABLE_JOBS;
+            event.targetTab = MainViewTab.BLOCK_PRO_WEBVIEW;
         }
 
         SwapFragmentArguments swapFragmentArguments = generateSwapFragmentArguments(
