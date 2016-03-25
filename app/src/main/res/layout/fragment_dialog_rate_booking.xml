@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:paddingTop="@dimen/default_padding_medium"
+        android:paddingTop="@dimen/default_padding_large"
         >
 
         <ImageView
@@ -57,6 +57,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="end"
         android:background="@null"
+        android:layout_marginTop="@dimen/default_margin_medium"
         android:padding="@dimen/default_padding"
         android:src="@drawable/ic_x"
         />
