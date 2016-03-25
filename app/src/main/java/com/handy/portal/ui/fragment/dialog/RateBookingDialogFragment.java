@@ -157,6 +157,17 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     }
 
     @Subscribe
+    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
+    {
+        if(!event.isAuto)
+        {
+            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
+            //allow them to try again. they can always click the X button if they don't want to.
+        }
+    }
+
+    @Subscribe
     public void onReceiveNearbyBookingsSuccess(final BookingEvent.ReceiveNearbyBookingsSuccess event)
     {
         if (event.getBookings().size() > 0)
