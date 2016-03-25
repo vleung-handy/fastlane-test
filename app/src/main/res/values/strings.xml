@@ -421,5 +421,10 @@
 
     <string name="job_no_longer_available">That job is no longer available.</string>
     <string name="environment">Environment</string>
+    <string name="navigation">Navigation</string>
+    <string name="service">Service</string>
+    <string name="date">Date</string>
+    <string name="progress">Progress</string>
+    <string name="share">Share</string>
 
 </resources>

@@ -25,7 +25,7 @@ public class LocationSettingsBlockerDialogFragment extends InjectedDialogFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = new DialogBlockerView(getContext())
+        return new DialogBlockerView(getContext())
                 .setTitle(R.string.change_location_settings_dialog_title)
                 .setMessage(R.string.change_location_settings_dialog_message)
                 .setActionButton(R.string.change_location_settings_dialog_action_button, new View.OnClickListener()
@@ -38,6 +38,5 @@ public class LocationSettingsBlockerDialogFragment extends InjectedDialogFragmen
                         dismiss();
                     }
                 });
-        return view;
     }
 }

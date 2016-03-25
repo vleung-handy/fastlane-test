@@ -1,6 +1,7 @@
 package com.handy.portal.manager;
 
 import android.app.Application;
+import android.support.v4.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
@@ -45,7 +46,7 @@ public class UrbanAirshipManager
 
     protected void startUrbanAirship()
     {
-        if(UAirship.isTakingOff() || UAirship.isFlying())
+        if (UAirship.isTakingOff() || UAirship.isFlying())
         {
             Crashlytics.log("startUrbanAirship : Alreadying taking off or flying, aborting subsequent startup");
             return;
@@ -62,7 +63,7 @@ public class UrbanAirshipManager
                 final DefaultNotificationFactory defaultNotificationFactory =
                         new DefaultNotificationFactory(associatedApplication.getApplicationContext());
 
-                defaultNotificationFactory.setColor(associatedApplication.getApplicationContext().getResources().getColor(R.color.handy_blue));
+                defaultNotificationFactory.setColor(ContextCompat.getColor(associatedApplication.getApplicationContext(), R.color.handy_blue));
                 defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
 
                 airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
@@ -93,7 +94,7 @@ public class UrbanAirshipManager
 
     private void setUniqueIdentifiers(String id)
     {
-        if(UAirship.isFlying() && id != null && !id.isEmpty())
+        if (UAirship.isFlying() && id != null && !id.isEmpty())
         {
             //Keep alias around for backwards compatibility until
             //named user is backfilled by UrbanAirship

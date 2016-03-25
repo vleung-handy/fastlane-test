@@ -76,7 +76,9 @@ public class LocationUpdate
     @SerializedName("booking_id")
     String mBookingId;
 
-    public static class EventName {
+
+    public static class EventName
+    {
         public static final String BOOKING_GEOFENCE_ENTERED = "BOOKING_GEOFENCE_ENTERED";
         public static final String BOOKING_GEOFENCE_EXITED = "BOOKING_GEOFENCE_EXITED";
     }
@@ -145,8 +147,7 @@ public class LocationUpdate
     @Override
     public String toString()
     {
-        String result =
-                "booking id (optional): " + mBookingId
+        return "booking id (optional): " + mBookingId
                 + "\nevent name (optional): " + mEventName
                 + "\nlat: " + mLatitude
                 + "\nlong: " + mLongitude
@@ -157,6 +158,5 @@ public class LocationUpdate
                 + "\ntimestamp: " + mCapturedTimestamp.toString()
                 + "\nbattery level: " + mBatteryLevelPercent
                 + "\nconnection type: " + mActiveNetworkType;
-        return result;
     }
 }

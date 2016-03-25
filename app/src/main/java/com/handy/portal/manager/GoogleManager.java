@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -119,6 +120,7 @@ public class GoogleManager
                 }
                 catch (Exception ex)
                 {
+                    Crashlytics.logException(ex);
                 }
                 return "";
             }

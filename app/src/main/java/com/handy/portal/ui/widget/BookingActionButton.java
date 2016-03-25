@@ -1,6 +1,7 @@
 package com.handy.portal.ui.widget;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
@@ -44,12 +45,20 @@ public class BookingActionButton extends Button
         setEnabled(data.isEnabled());
     }
 
+    @SuppressWarnings("deprecation")
     public void init(@NonNull final Booking booking, @NonNull final BookingDetailsFragment fragment,
                      @NonNull final BookingActionButtonType bookingActionButtonType)
     {
         setId(bookingActionButtonType.getId());
         setBackgroundResource(bookingActionButtonType.getBackgroundDrawableId());
-        setTextAppearance(getContext(), bookingActionButtonType.getTextStyleId());
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+        {
+            setTextAppearance(getContext(), bookingActionButtonType.getTextStyleId());
+        }
+        else
+        {
+            setTextAppearance(bookingActionButtonType.getTextStyleId());
+        }
         setText(bookingActionButtonType.getDisplayNameId(booking));
         setTypeface(TextUtils.get(getContext(), FontUtils.CIRCULAR_BOOK));
         setOnClickListener(new View.OnClickListener()

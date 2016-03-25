@@ -13,101 +13,93 @@
 
         <include layout="@layout/layout_fetch_error"/>
 
-        <LinearLayout
-            android:id="@+id/booking_details_main_layout"
+        <ScrollView
+            android:id="@+id/booking_details_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical"
             >
 
-            <ScrollView
-                android:id="@+id/booking_details_scroll_view"
+            <LinearLayout
+                android:id="@+id/wrapper_for_details_disclaimer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 >
 
-                <LinearLayout
-                    android:id="@+id/wrapper_for_details_disclaimer"
+                <FrameLayout
+                    android:id="@+id/booking_details_map_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/booking_details_map_height"
+                    android:orientation="vertical"
+                    />
+
+                <com.handy.portal.ui.element.bookings.BookingDetailsDateView
+                    android:id="@+id/booking_details_date_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:layout_marginBottom="@dimen/booking_details_date_margin"
+                    android:layout_marginTop="@dimen/booking_details_date_margin"
+                    android:orientation="horizontal"
+                    />
 
-                    <FrameLayout
-                        android:id="@+id/booking_details_map_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/booking_details_map_height"
-                        android:orientation="vertical"
-                        />
+                <com.handy.portal.ui.element.bookings.BookingDetailsTitleView
+                    android:id="@+id/booking_details_title_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
 
-                    <com.handy.portal.ui.element.bookings.BookingDetailsDateView
-                        android:id="@+id/booking_details_date_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/booking_details_date_margin"
-                        android:layout_marginTop="@dimen/booking_details_date_margin"
-                        android:orientation="horizontal"
-                        />
+                <com.handy.portal.ui.element.bookings.BookingDetailsActionPanelView
+                    android:id="@+id/booking_details_action_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
 
-                    <com.handy.portal.ui.element.bookings.BookingDetailsTitleView
-                        android:id="@+id/booking_details_title_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
+                <com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView
+                    android:id="@+id/booking_details_contact_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/extra_margin_medium"
+                    />
 
-                    <com.handy.portal.ui.element.bookings.BookingDetailsActionPanelView
-                        android:id="@+id/booking_details_action_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
+                <com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView
+                    android:id="@+id/booking_details_job_instructions_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/extra_margin_medium"
+                    android:orientation="horizontal"
+                    />
 
-                    <com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView
-                        android:id="@+id/booking_details_contact_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/extra_margin_medium"
-                        />
+                <com.handy.portal.ui.element.bookings.ProxyLocationView
+                    android:id="@+id/booking_details_location_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/extra_margin_medium"
+                    />
 
-                    <com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView
-                        android:id="@+id/booking_details_job_instructions_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/extra_margin_medium"
-                        android:orientation="horizontal"
-                        />
+                <com.handy.portal.ui.widget.BookingActionButton
+                    android:id="@+id/booking_details_support_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/extra_margin_large"
+                    android:layout_marginBottom="@dimen/extra_padding_medium"
+                    android:background="@color/transparent"
+                    />
 
-                    <com.handy.portal.ui.element.bookings.ProxyLocationView
-                        android:id="@+id/booking_details_location_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/extra_margin_medium"
-                        />
+                <TextView
+                    android:id="@+id/booking_details_full_details_notice_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/booking_details_notice_text_margin"
+                    android:layout_marginTop="@dimen/booking_details_notice_text_margin"
+                    android:text="@string/full_details_after_claim"
+                    android:textColor="@color/helper_text_grey"
+                    android:textSize="@dimen/small_text_size"
+                    android:visibility="invisible"
+                    />
 
-                    <com.handy.portal.ui.widget.BookingActionButton
-                        android:id="@+id/booking_details_support_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/extra_padding_medium"
-                        android:background="@color/transparent"
-                        android:layout_margin="@dimen/extra_margin_large"
-                        />
-
-                    <TextView
-                        android:id="@+id/booking_details_full_details_notice_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="@dimen/booking_details_notice_text_margin"
-                        android:layout_marginTop="@dimen/booking_details_notice_text_margin"
-                        android:text="@string/full_details_after_claim"
-                        android:textColor="@color/helper_text_grey"
-                        android:textSize="@dimen/small_text_size"
-                        android:visibility="invisible"
-                        />
-
-                </LinearLayout>
-            </ScrollView>
-        </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </com.handy.portal.ui.layout.SlideUpPanelLayout>

@@ -1,10 +1,13 @@
 package com.handy.portal.webview;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -99,6 +102,8 @@ public class PortalWebViewClient extends WebViewClient
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -113,6 +118,16 @@ public class PortalWebViewClient extends WebViewClient
         }
         // Default behaviour
         super.onReceivedError(view, errorCode, description, failingUrl);
+    }
+
+    @SuppressWarnings("deprecation")
+    @TargetApi(android.os.Build.VERSION_CODES.M)
+    @Override
+    public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError rerr)
+    {
+        // Redirect to deprecated method, so you can use it in all SDK versions
+        onReceivedError(view, rerr.getErrorCode(), rerr.getDescription().toString(),
+                req.getUrl().toString());
     }
 
     private void loadUrlWithFromAppParam(String url)
@@ -133,8 +148,7 @@ public class PortalWebViewClient extends WebViewClient
                 + "&skip_web_portal_version_tracking=1"
                 + "&skip_web_portal_blocking=1"
                 + "&from_android_native=1"
-                + "&disable_mobile_splash=1"
-                ;
+                + "&disable_mobile_splash=1";
         String urlWithParams = url + (url.contains("?") ? (url.endsWith("&") ? "" : "&") : "?") + endOfUrl;
         webView.loadUrl(urlWithParams);
     }

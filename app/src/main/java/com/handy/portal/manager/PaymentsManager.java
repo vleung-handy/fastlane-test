@@ -95,7 +95,7 @@ public class PaymentsManager
                 for (int i = 0; i < neoPaymentBatches.length; i++)
                 {
                     PaymentGroup paymentGroups[] = neoPaymentBatches[i].getPaymentGroups();
-                    List<PaymentGroup> paymentGroupList = new LinkedList<PaymentGroup>();
+                    List<PaymentGroup> paymentGroupList = new LinkedList<>();
                     for (int j = 0; j < paymentGroups.length; j++)
                     {
                         if (paymentGroups[j].getPayments() != null && paymentGroups[j].getPayments().length > 0)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/dark_grey_border_bottom_light_background"
@@ -17,7 +18,7 @@
         android:paddingTop="@dimen/notification_section_header_vertical_padding"
         android:textColor="@color/section_header_text_color"
         android:textSize="@dimen/small_text_size"
-        android:text="Yesterday · Wed, Jan 6, 2016"
+        tools:text="Yesterday · Wed, Jan 6, 2016"
         />
 
 </LinearLayout>
