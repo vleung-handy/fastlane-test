@@ -187,7 +187,6 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onResumeFragments();
         this.bus.register(mAppUpdateEventListener);
         checkForUpdates();
-        getNotificationsUnreadCount();
     }
 
     @Override
@@ -253,11 +252,6 @@ public abstract class BaseActivity extends AppCompatActivity
     public void checkForUpdates()
     {
         bus.post(new AppUpdateEvent.RequestUpdateCheck(this));
-    }
-
-    private void getNotificationsUnreadCount()
-    {
-        bus.post(new NotificationEvent.RequestUnreadCount());
     }
 
     public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)

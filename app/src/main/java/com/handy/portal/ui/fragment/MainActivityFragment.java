@@ -155,6 +155,7 @@ public class MainActivityFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        bus.post(new NotificationEvent.RequestUnreadCount());
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentTab == null)
         {
