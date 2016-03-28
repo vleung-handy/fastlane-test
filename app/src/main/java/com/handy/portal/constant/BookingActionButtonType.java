@@ -1,7 +1,7 @@
 package com.handy.portal.constant;
 
 import com.handy.portal.R;
-import com.handy.portal.model.Booking;
+import com.handy.portal.model.booking.Booking;
 
 public enum BookingActionButtonType
 {

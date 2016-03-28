@@ -28,15 +28,15 @@ import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
-import com.handy.portal.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
-import com.handy.portal.ui.fragment.BookingDetailsFragmentTest;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
-import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
-import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.SendReceiptCheckoutFragmentTest;
+import com.handy.portal.ui.fragment.booking.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.booking.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.booking.BookingDetailsFragmentTest;
+import com.handy.portal.ui.fragment.booking.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.booking.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
@@ -125,6 +125,7 @@ public class TestApplicationModule
     }
 
     @Provides
+    @Singleton
     final Bus provideBus()
     {
         return mock(Bus.class);

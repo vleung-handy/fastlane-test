@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.Booking;
+import com.handy.portal.model.booking.Booking;
 
 import java.util.List;
 

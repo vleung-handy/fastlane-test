@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.booking;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -28,11 +28,12 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
+import com.handy.portal.model.booking.Booking;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.view.CheckoutCompletedTaskView;
 import com.handy.portal.util.DateTimeUtils;

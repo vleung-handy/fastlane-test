@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.booking;
 
 import android.content.Context;
 import android.location.Location;
@@ -28,8 +28,8 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.LocationConstants;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.booking.Booking;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.util.Utils;
 

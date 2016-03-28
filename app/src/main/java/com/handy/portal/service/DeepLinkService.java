@@ -8,7 +8,7 @@ import android.os.Bundle;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.model.Booking.BookingType;
+import com.handy.portal.model.booking.Booking.BookingType;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 

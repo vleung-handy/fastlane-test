@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.handy.portal.model.Booking;
+import com.handy.portal.model.booking.Booking;
 
 //mediators push information to the view telling them what to display
 //they listen for signals from and intended for the associated view

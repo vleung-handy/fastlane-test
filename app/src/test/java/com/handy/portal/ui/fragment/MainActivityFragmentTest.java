@@ -8,6 +8,7 @@ import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.fragment.booking.AvailableBookingsFragment;
 
 import org.junit.Before;
 import org.junit.Ignore;

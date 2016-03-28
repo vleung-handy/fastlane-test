@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.handy.portal.model.Booking;
+import com.handy.portal.model.booking.Booking;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

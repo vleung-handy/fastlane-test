@@ -21,8 +21,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.RequestCode;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.model.booking.Booking;
 import com.handy.portal.util.DateTimeUtils;
 
 import butterknife.Bind;

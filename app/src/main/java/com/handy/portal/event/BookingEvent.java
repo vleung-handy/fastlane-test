@@ -1,8 +1,8 @@
 package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.ZipClusterPolygons;
+import com.handy.portal.model.booking.Booking;
 
 import java.util.List;
 
