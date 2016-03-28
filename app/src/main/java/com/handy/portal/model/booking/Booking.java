@@ -410,6 +410,17 @@ public class Booking implements Comparable<Booking>, Serializable
     }
 
 
+    public enum BookingProgress
+    {
+        UNAVAILABLE,
+        READY_FOR_CLAIM,
+        READY_FOR_ON_MY_WAY,
+        READY_FOR_CHECK_IN,
+        READY_FOR_CHECK_OUT,
+        FINISHED
+    }
+
+
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
         /* KEEP IN SYNC WITH SERVER VALUES */
@@ -482,6 +493,32 @@ public class Booking implements Comparable<Booking>, Serializable
         else
         {
             return BookingStatus.UNAVAILABLE;
+        }
+    }
+
+    public BookingProgress getBookingProgress(final String providerId)
+    {
+        final boolean isClaimable = getAction(Action.ACTION_CLAIM) != null;
+        final String assignedProviderId = getProviderId();
+        final boolean isClaimedByMe = isProxy() ? isClaimedByMe() : assignedProviderId.equals(providerId);
+        if (!isClaimable && !isClaimedByMe)
+        {
+            return BookingProgress.UNAVAILABLE;
+        }
+        else if (isClaimable)
+        {
+            return BookingProgress.READY_FOR_CLAIM;
+        }
+        else
+        {
+            if (getAction(Action.ACTION_ON_MY_WAY) != null)
+            { return BookingProgress.READY_FOR_ON_MY_WAY; }
+            else if (getAction(Action.ACTION_CHECK_IN) != null)
+            { return BookingProgress.READY_FOR_CHECK_IN; }
+            else if (getAction(Action.ACTION_CHECK_OUT) != null)
+            { return BookingProgress.READY_FOR_CHECK_OUT; }
+            else
+            { return BookingProgress.FINISHED; }
         }
     }
 
