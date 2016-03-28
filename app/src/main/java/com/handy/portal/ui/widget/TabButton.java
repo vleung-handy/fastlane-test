@@ -28,6 +28,7 @@ public class TabButton extends FrameLayout
     TextView mTabTitle;
     @Bind(R.id.tab_unread_count)
     TextView mTabUnreadCount;
+    private TabButtonGroup mGroup;
 
     public TabButton(final Context context)
     {
@@ -87,5 +88,21 @@ public class TabButton extends FrameLayout
         final Drawable drawable = typedArray.getDrawable(0);
         typedArray.recycle();
         return drawable;
+    }
+
+    public void setGroup(final TabButtonGroup group)
+    {
+        mGroup = group;
+    }
+
+    public void toggle()
+    {
+        mGroup.toggle(this);
+    }
+
+    public void dim(final float alpha)
+    {
+        mTabIcon.setAlpha(alpha);
+        mTabTitle.setAlpha(alpha);
     }
 }

@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -366,14 +367,16 @@ public class MainActivityFragment extends InjectedFragment
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mTabs.setTabs(mJobsButton, mScheduleButton, mNotificationsButton, mButtonMore);
 
-        mJobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        mJobsButton.setOnClickListener(
+                new TabOnClickListener(mJobsButton, MainViewTab.AVAILABLE_JOBS));
+        mScheduleButton.setOnClickListener(
+                new TabOnClickListener(mScheduleButton, MainViewTab.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
-        tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
 
         if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
         {
-            mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
+            mNotificationsButton.setOnClickListener(
+                    new TabOnClickListener(mNotificationsButton, MainViewTab.NOTIFICATIONS));
             mNotificationsButton.setVisibility(View.VISIBLE);
         }
     }
@@ -389,16 +392,22 @@ public class MainActivityFragment extends InjectedFragment
 
     private class TabOnClickListener implements View.OnClickListener
     {
+        private TabButton mTabButton;
         private MainViewTab mTab;
 
-        TabOnClickListener(MainViewTab tab)
+        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewTab tab)
         {
+            mTabButton = tabButton;
             mTab = tab;
         }
 
         @Override
         public void onClick(View view)
         {
+            if (mTabButton != null)
+            {
+                mTabButton.toggle();
+            }
             switchToTab(mTab, true);
         }
     }
@@ -409,9 +418,12 @@ public class MainActivityFragment extends InjectedFragment
         private MainViewTab mTab;
         private TransitionStyle mTransitionStyle;
 
-        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride)
+        NavDrawerOnClickListener(
+                final MainViewTab tab,
+                final TransitionStyle transitionStyleOverride
+        )
         {
-            super(tab);
+            super(null, tab);
             mTab = tab;
             mTransitionStyle = transitionStyleOverride;
         }
@@ -420,6 +432,7 @@ public class MainActivityFragment extends InjectedFragment
         public void onClick(View view)
         {
             bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mTab.name().toLowerCase())));
+            mButtonMore.toggle();
             if (mTransitionStyle != null)
             {
                 switchToTab(mTab, null, mTransitionStyle, false);
@@ -440,19 +453,6 @@ public class MainActivityFragment extends InjectedFragment
         public void onClick(View view)
         {
             mDrawerLayout.openDrawer(mNavigationDrawer);
-        }
-    }
-
-
-    private class BottomNavOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener
-    {
-        @Override
-        public void onCheckedChanged(RadioGroup radioGroup, int radioButtonId)
-        {
-            if (radioButtonId == mButtonMore.getId() && currentTab != null)
-            {
-                updateSelectedTabButton(currentTab);
-            }
         }
     }
 

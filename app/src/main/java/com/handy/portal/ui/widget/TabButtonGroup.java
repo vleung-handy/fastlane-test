@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 
 public class TabButtonGroup extends LinearLayout
 {
+    private TabButton[] mTabButtons;
+
     public TabButtonGroup(final Context context)
     {
         super(context);
@@ -32,9 +34,23 @@ public class TabButtonGroup extends LinearLayout
     public void setTabs(final TabButton... tabButtons)
     {
         removeAllViews();
+        mTabButtons = tabButtons;
         for (TabButton tabButton : tabButtons)
         {
+            tabButton.setGroup(this);
             addView(tabButton);
         }
+    }
+
+    public void toggle(final TabButton tabButtonToToggle)
+    {
+        if (mTabButtons != null)
+        {
+            for (TabButton tabButton : mTabButtons)
+            {
+                tabButton.dim(0.5f);
+            }
+        }
+        tabButtonToToggle.dim(1.0f);
     }
 }
