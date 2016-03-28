@@ -1,6 +1,7 @@
-package com.handy.portal.model;
+package com.handy.portal.model.booking;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.model.PaymentInfo;
 
 import java.io.Serializable;
 

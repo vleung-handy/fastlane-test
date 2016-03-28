@@ -6,8 +6,8 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.model.booking.Booking;
 import com.handy.portal.ui.element.BookingDetailsSinglePaymentView.Size;
 
 public class BookingDetailsPaymentView extends FrameLayout

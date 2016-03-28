@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.booking;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,11 +17,12 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.booking.Booking;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 

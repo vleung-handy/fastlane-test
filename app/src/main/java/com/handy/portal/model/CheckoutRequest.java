@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.constant.LocationKey;
+import com.handy.portal.model.booking.Booking;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.booking;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -26,11 +26,13 @@ import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.Booking;
 import com.handy.portal.model.ProviderSettings;
+import com.handy.portal.model.booking.Booking;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
 import com.handy.portal.ui.element.DateButtonView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.util.DateTimeUtils;
 
 import java.util.Calendar;

@@ -1,7 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.Booking;
+import com.handy.portal.model.booking.Booking;
 
 import java.util.Date;
 

@@ -9,8 +9,8 @@ import android.widget.Button;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.BookingActionButtonType;
-import com.handy.portal.model.Booking;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.model.booking.Booking;
+import com.handy.portal.ui.fragment.booking.BookingDetailsFragment;
 import com.handy.portal.util.FontUtils;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
