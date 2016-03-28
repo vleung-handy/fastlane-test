@@ -10,9 +10,11 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.google.android.gms.location.LocationServices;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationUpdate;
@@ -67,6 +69,26 @@ public class BookingGeofenceScheduleHandler
     }
 
     @Override
+    public void start()
+    {
+        removeExistingGeofences(); //just in case destroy() wasn't called before, because geofences persist even when app is killed
+        super.start();
+    }
+
+    //remove existing geofences
+    private void removeExistingGeofences()
+    {
+        try
+        {
+            LocationServices.GeofencingApi.removeGeofences(getGoogleApiClient(), getPendingIntent());
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+    }
+
+    @Override
     public BookingGeofenceScheduleStrategyHandler createStrategyHandler(final BookingGeofenceStrategy bookingGeofenceStrategy)
     {
         return new BookingGeofenceScheduleStrategyHandler(bookingGeofenceStrategy, this, mHandler, mContext);
@@ -118,7 +140,7 @@ public class BookingGeofenceScheduleHandler
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if(geofencingEvent.hasError())
         {
-            Log.e(getClass().getName(), "error getting geofence event: "+ geofencingEvent.getErrorCode());
+            Log.e(getClass().getName(), "error getting geofence event: " + geofencingEvent.getErrorCode());
         }
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
         Location location = geofencingEvent.getTriggeringLocation();
@@ -130,6 +152,7 @@ public class BookingGeofenceScheduleHandler
             if(eventName == null)
             {
                 Log.e(getClass().getName(), "No event name found to match geofence transition: " + geofenceTransition);
+                Crashlytics.logException(new Exception("No event name found to match geofence transition: " + geofenceTransition));
                 return;
             }
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
@@ -173,13 +196,21 @@ public class BookingGeofenceScheduleHandler
     }
 
     @Override
-    public PendingIntent getPendingIntent(BookingGeofenceStrategy strategy)
+    public void stopAllActiveStrategies()
+    {
+        super.stopAllActiveStrategies();
+        removeExistingGeofences();
+    }
+
+    @Override
+    public PendingIntent getPendingIntent()
     {
         //also add the booking strategy
 
         Log.d(getClass().getName(), "creating pending intent...");
-        Intent intent = new Intent(GEOFENCE_TRIGGERED_BROADCAST_ID);
-        intent.setAction(GEOFENCE_TRIGGERED_BROADCAST_ID); //probably redundant, test this
+        Intent intent = new Intent();
+        intent.setAction(GEOFENCE_TRIGGERED_BROADCAST_ID);
+        intent.setPackage(mContext.getPackageName());
 
         return PendingIntent.getBroadcast(mContext, ALARM_PENDING_INTENT_REQUEST_CODE,
                 intent,
