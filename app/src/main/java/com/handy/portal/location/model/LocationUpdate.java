@@ -79,8 +79,8 @@ public class LocationUpdate
 
     public static class EventName
     {
-        public static final String BOOKING_GEOFENCE_ENTERED = "BOOKING_GEOFENCE_ENTERED";
-        public static final String BOOKING_GEOFENCE_EXITED = "BOOKING_GEOFENCE_EXITED";
+        public static final String BOOKING_GEOFENCE_ENTERED = "booking_geofence_entered";
+        public static final String BOOKING_GEOFENCE_EXITED = "booking_geofence_exited";
     }
 
     public LocationUpdate(double latitude,

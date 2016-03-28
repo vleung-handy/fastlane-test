@@ -72,7 +72,7 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
             //add the geofence request
             LocationServices.GeofencingApi.addGeofences(googleApiClient,
                     geofencingRequest,
-                    mBookingGeofenceStrategyCallbacks.getPendingIntent(mBookingGeofenceStrategy)).setResultCallback(this);
+                    mBookingGeofenceStrategyCallbacks.getPendingIntent()).setResultCallback(this);
             Log.d(getClass().getName(), "Building geofence for geofence strategy: " + mBookingGeofenceStrategy.toString());
 
             //todo postdelayed or postattime?
@@ -163,6 +163,6 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
 
     public interface BookingGeofenceStrategyCallbacks extends ScheduleStrategyHandler.StrategyCallbacks<BookingGeofenceScheduleStrategyHandler>{
         GoogleApiClient getGoogleApiClient();
-        PendingIntent getPendingIntent(BookingGeofenceStrategy bookingGeofenceStrategy);
+        PendingIntent getPendingIntent();
     }
 }
