@@ -380,6 +380,10 @@ public class MainActivityFragment extends InjectedFragment
                     new TabOnClickListener(mNotificationsButton, MainViewTab.NOTIFICATIONS));
             mNotificationsButton.setVisibility(View.VISIBLE);
         }
+        else
+        {
+            mNotificationsButton.setVisibility(View.GONE);
+        }
     }
 
     private void registerNavDrawerListeners()
