@@ -46,6 +46,7 @@ public class BookingGeofenceScheduleHandler
         super(locationQuerySchedule, context);
         mGoogleApiClient = googleApiClient;
         stopAllActiveStrategies();
+        //just in case destroy() wasn't called before, because geofences persist even when app is killed
     }
 
     @Override
@@ -66,13 +67,6 @@ public class BookingGeofenceScheduleHandler
         IntentFilter intentFilter = super.getAlarmIntentFilter();
         intentFilter.addAction(GEOFENCE_TRIGGERED_BROADCAST_ID);
         return intentFilter;
-    }
-
-    @Override
-    public void start()
-    {
-        removeExistingGeofences(); //just in case destroy() wasn't called before, because geofences persist even when app is killed
-        super.start();
     }
 
     //remove existing geofences

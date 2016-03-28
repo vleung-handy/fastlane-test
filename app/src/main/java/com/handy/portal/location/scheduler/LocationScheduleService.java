@@ -168,8 +168,8 @@ public class LocationScheduleService extends Service
     {
         if (isGoogleApiClientConnected() && mLocationScheduleStrategiesHandler != null)
         {
-            //should be safe if called twice because handled strategies are removed
-            mLocationScheduleStrategiesHandler.start();
+            //the schedule handler will not start again if already started
+            mLocationScheduleStrategiesHandler.startIfNotStarted();
         }
     }
 

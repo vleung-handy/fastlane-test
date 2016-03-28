@@ -35,11 +35,11 @@ public class LocationScheduleStrategiesHandler
         }
     }
 
-    public void start()
+    public void startIfNotStarted()
     {
         for(ScheduleHandler scheduleHandler : mScheduleHandlerList)
         {
-            scheduleHandler.start();
+            scheduleHandler.startIfNotStarted();
         }
     }
 
