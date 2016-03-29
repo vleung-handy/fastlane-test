@@ -392,7 +392,14 @@ public class MainActivityFragment extends InjectedFragment
         mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
         mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
         mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
+
+        final ConfigurationResponse configuration = getConfigurationResponse();
+        final boolean shouldUseHelpCenterWebview =
+                configuration != null && getConfigurationResponse().shouldUseHelpCenterWebView();
+        final MainViewTab helpTab =
+                shouldUseHelpCenterWebview ?
+                        MainViewTab.HELP_WEBVIEW : MainViewTab.HELP;
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(helpTab, null));
     }
 
     private class TabOnClickListener implements View.OnClickListener
@@ -573,6 +580,7 @@ public class MainActivityFragment extends InjectedFragment
                 }
                 break;
                 case HELP:
+                case HELP_WEBVIEW:
                 {
                     mButtonMore.toggle();
                     mNavLinkHelp.toggle();

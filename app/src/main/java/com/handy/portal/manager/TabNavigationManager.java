@@ -186,8 +186,10 @@ public class TabNavigationManager
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_REVIEWS;
             addToBackStack |= targetTab == MainViewTab.DASHBOARD_VIDEO_LIBRARY;
             addToBackStack |= currentTab == MainViewTab.JOB_DETAILS && targetTab == MainViewTab.HELP;
+            addToBackStack |= currentTab == MainViewTab.JOB_DETAILS && targetTab == MainViewTab.HELP_WEBVIEW;
             addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
             addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
+            addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP_WEBVIEW;
 
             // Account Settings
             addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;

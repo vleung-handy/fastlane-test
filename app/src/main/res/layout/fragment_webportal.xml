@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".PortalWebViewFragment">
 
-    <WebView
+    <com.handy.portal.webview.PortalWebView
         android:id="@+id/portal_web_view"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"

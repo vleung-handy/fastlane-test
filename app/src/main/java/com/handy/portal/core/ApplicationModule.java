@@ -16,6 +16,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.scheduler.LocationScheduleService;
@@ -134,6 +135,7 @@ import retrofit.converter.GsonConverter;
         TermsActivity.class,
         TermsFragment.class,
         HelpFragment.class,
+        HelpWebViewFragment.class,
         HelpContactFragment.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,

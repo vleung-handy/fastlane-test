@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -66,6 +67,7 @@ public enum MainViewTab implements Serializable
     REFER_A_FRIEND(ReferAFriendFragment.class),
 
     HELP(HelpFragment.class),
+    HELP_WEBVIEW(HelpWebViewFragment.class),
     HELP_CONTACT(HelpContactFragment.class),
 
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
