@@ -36,6 +36,12 @@ public class ConfigurationResponse
     @SerializedName("onboarding_info")
     private OnboardingParams mOnboardingParams;
 
+    @SerializedName("should_use_help_center_web_view")
+    private boolean mShouldUseHelpCenterWebView;
+
+    @SerializedName("help_center_url")
+    private String mHelpCenterUrl;
+
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
@@ -90,5 +96,15 @@ public class ConfigurationResponse
     public boolean shouldShowOnboarding()
     {
         return getOnboardingParams() != null && mOnboardingParams.shouldShowOnboarding();
+    }
+
+    public boolean shouldUseHelpCenterWebView()
+    {
+        return mShouldUseHelpCenterWebView;
+    }
+
+    public String getHelpCenterUrl()
+    {
+        return mHelpCenterUrl;
     }
 }
