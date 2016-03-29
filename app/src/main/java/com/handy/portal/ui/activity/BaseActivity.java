@@ -18,7 +18,7 @@ import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NotificationEvent;
-import com.handy.portal.location.LocationConstants;
+import com.handy.portal.location.LocationUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
@@ -289,7 +289,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @SuppressWarnings({"ResourceType", "MissingPermission"})
     public void onConnected(Bundle connectionHint)
     {
-        if (!Utils.areAllPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        if (!LocationUtils.hasRequiredLocationPermissions(this))
         {
             return;
         }
