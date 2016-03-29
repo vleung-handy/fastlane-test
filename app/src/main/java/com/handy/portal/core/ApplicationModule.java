@@ -56,6 +56,10 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
+import com.handy.portal.ui.element.bookings.CheckInBookingView;
+import com.handy.portal.ui.element.bookings.CheckOutBookingView;
+import com.handy.portal.ui.element.bookings.ClaimBookingView;
+import com.handy.portal.ui.element.bookings.OnMyWayBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
@@ -75,6 +79,7 @@ import com.handy.portal.ui.fragment.booking.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.booking.NewBookingDetailsFragment;
 import com.handy.portal.ui.fragment.booking.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.booking.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
@@ -120,6 +125,7 @@ import retrofit.converter.GsonConverter;
 
 @Module(injects = {
         BookingDetailsFragment.class,
+        NewBookingDetailsFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
         ScheduledBookingsFragment.class,
@@ -180,6 +186,10 @@ import retrofit.converter.GsonConverter;
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
         SendReceiptCheckoutFragment.class,
+        ClaimBookingView.class,
+        OnMyWayBookingView.class,
+        CheckInBookingView.class,
+        CheckOutBookingView.class,
 })
 public final class ApplicationModule
 {

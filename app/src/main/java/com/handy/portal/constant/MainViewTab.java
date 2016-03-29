@@ -11,10 +11,10 @@ import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.booking.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.booking.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.booking.NewBookingDetailsFragment;
 import com.handy.portal.ui.fragment.booking.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.booking.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
@@ -40,7 +40,7 @@ public enum MainViewTab implements Serializable
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
     NEARBY_JOBS(NearbyBookingsFragment.class),
-    JOB_DETAILS(BookingDetailsFragment.class),
+    JOB_DETAILS(NewBookingDetailsFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
 
