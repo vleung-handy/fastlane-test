@@ -2,13 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
     >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/booking_claim"
         >
 
         <LinearLayout
@@ -17,8 +18,8 @@
             android:orientation="vertical"
             >
 
-            <FrameLayout
-                android:id="@+id/nearby_bookings_map"
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/available_booking_details_map_height"
                 />
@@ -172,6 +173,7 @@
     </ScrollView>
 
     <Button
+        android:id="@id/booking_claim"
         android:layout_width="match_parent"
         android:layout_height="@dimen/complete_button_height"
         android:layout_alignParentBottom="true"

@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+    >
+
+    <!--<FrameLayout-->
+    <!--android:id="@+id/map_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/check_in_booking_details_map_height"-->
+    <!--/>-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:background="@color/white"
+                >
+
+                <TextView
+                    android:id="@+id/customer_name_text"
+                    style="@style/CircularMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/large_text_size"
+                    tools:text="Customer's Name"
+                    />
+
+                <ImageView
+                    android:id="@+id/call_customer_view"
+                    android:layout_width="@dimen/customer_action_width_height"
+                    android:layout_height="@dimen/customer_action_width_height"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/default_margin_x2"
+                    android:layout_marginRight="@dimen/default_margin_x2"
+                    android:layout_toLeftOf="@+id/message_customer_view"
+                    android:layout_toStartOf="@id/message_customer_view"
+                    />
+
+                <ImageView
+                    android:id="@+id/message_customer_view"
+                    android:layout_width="@dimen/customer_action_width_height"
+                    android:layout_height="@dimen/customer_action_width_height"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        style="@style/CircularBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/address"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <TextView
+                        android:id="@+id/address_line_one_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.3"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="123 Perry Lane, Apt 4A"
+                        />
+
+                    <TextView
+                        android:id="@+id/address_line_two_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.3"
+                        android:text="@string/address"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="Brooklyn, NY 11231"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/get_directions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical"
+                    >
+
+                    <ImageView
+                        android:layout_width="@dimen/get_directions_width_height"
+                        android:layout_height="@dimen/get_directions_width_height"
+                        android:layout_gravity="center_horizontal"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/get_directions_margin_top"
+                        android:paddingEnd="@dimen/extra_padding"
+                        android:paddingLeft="@dimen/extra_padding"
+                        android:paddingRight="@dimen/extra_padding"
+                        android:paddingStart="@dimen/extra_padding"
+                        android:text="@string/get_directions"
+                        android:textAllCaps="false"
+                        android:textColor="@color/handy_blue"
+                        android:textSize="@dimen/small_text_size"
+                        />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/job_date_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/extra_padding"
+                    android:paddingLeft="@dimen/extra_padding"
+                    android:paddingRight="@dimen/extra_padding"
+                    android:paddingStart="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="Today, Thursday, February 8"
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/job_time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/extra_padding"
+                    android:paddingLeft="@dimen/extra_padding"
+                    android:paddingRight="@dimen/extra_padding"
+                    android:paddingStart="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="8:00 am -- 10:30 am"
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/job_payment_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/extra_padding"
+                    android:paddingLeft="@dimen/extra_padding"
+                    android:paddingRight="@dimen/extra_padding"
+                    android:paddingStart="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="$45"
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/house_details"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/bedrooms_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/extra_padding"
+                    android:paddingLeft="@dimen/extra_padding"
+                    android:paddingRight="@dimen/extra_padding"
+                    android:paddingStart="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="2x"
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/paid_extras"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/paid_extras_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/extra_padding"
+                    android:paddingLeft="@dimen/extra_padding"
+                    android:paddingRight="@dimen/extra_padding"
+                    android:paddingStart="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="Inside Oven"
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        style="@style/CircularBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/entry_information"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <TextView
+                        android:id="@+id/entry_info_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="@dimen/extra_padding"
+                        android:paddingLeft="@dimen/extra_padding"
+                        android:paddingRight="@dimen/extra_padding"
+                        android:paddingStart="@dimen/extra_padding"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="I'll hide the key."
+                        />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/entry_info_description_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginTop="@dimen/row_margin"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="Please enter property through side gate, which can be accessed through the parking lot next door."
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/customer_request"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/customer_request_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="I'll hide the key."
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/small_text_size"
+                tools:text="Job # 123456"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/job_support_button_height"
+                android:layout_margin="@dimen/default_margin"
+                android:background="@color/white"
+                android:text="@string/job_support"
+                android:textAllCaps="false"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/large_text_size"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/booking_action_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_button_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/requested_green"
+        android:text="@string/on_my_way"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
+        />
+
+</RelativeLayout>

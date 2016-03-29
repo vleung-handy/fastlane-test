@@ -43,6 +43,7 @@
     <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
+    <string name="claimed_job">Claimed Job</string>
     <string name="claim_job">Claim Job</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
@@ -416,6 +417,11 @@
     <string name="use_finger_to_sign">use your finger to sign</string>
     <string name="complete_checkout">Complete checkout</string>
     <string name="payment">Payment</string>
+    <string name="get_directions">get directions</string>
+    <string name="house_details">House Details</string>
+    <string name="paid_extras">Paid Extras</string>
+    <string name="entry_information">Entry Information</string>
+    <string name="customer_request">Customer Request</string>
 
     <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>

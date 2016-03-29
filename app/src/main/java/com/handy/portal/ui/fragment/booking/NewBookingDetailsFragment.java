@@ -22,11 +22,10 @@ import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.booking.Booking;
 import com.handy.portal.model.booking.BookingClaimDetails;
-import com.handy.portal.ui.element.bookings.CheckInBookingView;
 import com.handy.portal.ui.element.bookings.CheckOutBookingView;
-import com.handy.portal.ui.element.bookings.ClaimBookingView;
+import com.handy.portal.ui.element.bookings.AvailableBookingView;
+import com.handy.portal.ui.element.bookings.ClaimedBookingView;
 import com.handy.portal.ui.element.bookings.FinishedBookingView;
-import com.handy.portal.ui.element.bookings.OnMyWayBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.squareup.otto.Subscribe;
@@ -89,6 +88,14 @@ public class NewBookingDetailsFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_new_booking_details, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
     }
 
     @Subscribe
@@ -297,24 +304,29 @@ public class NewBookingDetailsFragment extends ActionBarFragment
         switch (mBooking.getBookingProgress(getLoggedInUserId()))
         {
             case READY_FOR_CLAIM:
-                ClaimBookingView claimBookingView = new ClaimBookingView(getContext());
-                claimBookingView.setBooking(mBooking);
-                mContainer.addView(claimBookingView);
+                AvailableBookingView availableBookingView = new AvailableBookingView(getContext());
+                availableBookingView.setBooking(mBooking);
+                mContainer.addView(availableBookingView);
+                setActionBarTitle(R.string.available_job);
                 break;
             case READY_FOR_ON_MY_WAY:
-                OnMyWayBookingView onMyWayBookingView = new OnMyWayBookingView(getContext());
-                onMyWayBookingView.setBooking(mBooking);
-                mContainer.addView(onMyWayBookingView);
+                ClaimedBookingView claimedBookingView = new ClaimedBookingView(getContext());
+                claimedBookingView.setBooking(mBooking);
+                mContainer.addView(claimedBookingView);
+                setActionBarTitle(R.string.claimed_job);
                 break;
             case READY_FOR_CHECK_IN:
-                CheckInBookingView checkInBookingView = new CheckInBookingView(getContext());
-                checkInBookingView.setBooking(mBooking);
-                mContainer.addView(checkInBookingView);
+                ClaimedBookingView checkinBookingView = new ClaimedBookingView(getContext());
+                checkinBookingView.setBooking(mBooking);
+                checkinBookingView.setCheckedIn(true);
+                mContainer.addView(checkinBookingView);
+                setActionBarTitle(R.string.claimed_job);
                 break;
             case READY_FOR_CHECK_OUT:
                 CheckOutBookingView checkOutBookingView = new CheckOutBookingView(getContext());
                 checkOutBookingView.setBooking(mBooking);
                 mContainer.addView(checkOutBookingView);
+                setActionBarTitle(R.string.claimed_job);
                 break;
             case FINISHED:
             default:
