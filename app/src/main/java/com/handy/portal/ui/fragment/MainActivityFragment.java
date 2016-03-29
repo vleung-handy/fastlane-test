@@ -573,6 +573,7 @@ public class MainActivityFragment extends InjectedFragment
                 }
                 break;
                 case HELP:
+                case HELP_WEBVIEW:
                 {
                     mButtonMore.toggle();
                     mNavLinkHelp.toggle();

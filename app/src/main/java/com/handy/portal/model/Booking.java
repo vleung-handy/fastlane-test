@@ -547,7 +547,7 @@ public class Booking implements Comparable<Booking>, Serializable
         @SerializedName("deep_link_data")
         private String mDeepLinkData;
         @SerializedName("redirect_to")
-        private String mArticleRedirectPath;
+        private String mHelpRedirectPath;
         @SerializedName("extras")
         private Extras mExtras;
 
@@ -581,9 +581,9 @@ public class Booking implements Comparable<Booking>, Serializable
 
         public List<String> getRemoveReasons() { return mExtras.getRemoveReasons(); }
 
-        public String getArticleRedirectPath()
+        public String getHelpRedirectPath()
         {
-            return mArticleRedirectPath;
+            return mHelpRedirectPath;
         }
 
         public static class Extras implements Serializable
