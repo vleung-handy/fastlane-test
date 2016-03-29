@@ -65,7 +65,7 @@ public class LocationPingService extends Service implements
     public void onConnected(@Nullable final Bundle bundle)
     {
         // Check for permissions
-        if (!Utils.areAllPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        if (!LocationUtils.hasRequiredLocationPermissions(this))
         {
             return;
         }
