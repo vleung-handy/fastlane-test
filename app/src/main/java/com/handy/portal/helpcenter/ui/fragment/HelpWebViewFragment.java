@@ -45,5 +45,6 @@ public class HelpWebViewFragment extends PortalWebViewFragment
             }
             getWebView().loadUrl(helpCenterUrl);
         }
+        // TODO: Handle null configuration
     }
 }
