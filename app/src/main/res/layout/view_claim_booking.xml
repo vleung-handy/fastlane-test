@@ -1,20 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
     >
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Claim this booking?"
-        />
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <FrameLayout
+                android:id="@+id/nearby_bookings_map"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/available_booking_details_map_height"
+                />
+
+            <TextView
+                android:id="@+id/job_location_text"
+                style="@style/CircularBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:textColor="@color/black"
+                android:textSize="@dimen/default_text_size"
+                tools:text="Midtown East, Upper East Side"
+                />
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/job_date_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/extra_padding"
+                    android:paddingLeft="@dimen/extra_padding"
+                    android:paddingRight="@dimen/extra_padding"
+                    android:paddingStart="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="Today, Thursday, February 8"
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/job_time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/extra_padding"
+                    android:paddingLeft="@dimen/extra_padding"
+                    android:paddingRight="@dimen/extra_padding"
+                    android:paddingStart="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="8:00 am -- 10:30 am"
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/job_payment_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/extra_padding"
+                    android:paddingLeft="@dimen/extra_padding"
+                    android:paddingRight="@dimen/extra_padding"
+                    android:paddingStart="@dimen/extra_padding"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="$45"
+                    />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <Button
-        android:id="@+id/booking_claim"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/claim"
+        android:layout_height="@dimen/complete_button_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/requested_green"
+        android:text="@string/claim_job"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
         />
-</LinearLayout>
+
+</RelativeLayout>

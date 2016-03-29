@@ -415,6 +415,7 @@
     <string name="clear_signature">clear signature</string>
     <string name="use_finger_to_sign">use your finger to sign</string>
     <string name="complete_checkout">Complete checkout</string>
+    <string name="payment">Payment</string>
 
     <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
