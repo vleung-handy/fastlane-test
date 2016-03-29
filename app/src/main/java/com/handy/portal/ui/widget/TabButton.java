@@ -74,7 +74,7 @@ public class TabButton extends FrameLayout
     {
         mTabUnreadCount.setVisibility(unreadCount > 0 ? VISIBLE : GONE);
         String unreadCountText = String.valueOf(unreadCount);
-        if (unreadCount / 100 > 0) // if unread count if greater than 99
+        if (unreadCount > 99)
         {
             unreadCountText = "99+";
         }
