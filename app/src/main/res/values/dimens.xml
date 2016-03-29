@@ -23,6 +23,8 @@
     <!-- padding -->
     <dimen name="payment_container_horizontal_padding">20dp</dimen>
     <dimen name="payment_container_vertical_padding">20dp</dimen>
+    <dimen name="extra_padding_xsmall">1dp</dimen>
+    <dimen name="extra_padding_small">3dp</dimen>
     <dimen name="extra_padding">5dp</dimen>
     <dimen name="extra_padding_medium">10dp</dimen>
     <dimen name="extra_padding_large">15dp</dimen>
@@ -47,6 +49,7 @@
 
     <!-- text sizes -->
     <dimen name="default_text_size">16sp</dimen>
+    <dimen name="xxsmall_text_size">10sp</dimen>
     <dimen name="xsmall_text_size">12sp</dimen>
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
@@ -146,5 +149,6 @@
     <!-- Notifications -->
     <dimen name="notification_image_margin_left">3dp</dimen>
     <dimen name="notification_image_margin_top">10dp</dimen>
+    <dimen name="notification_unread_count_min_width">20dp</dimen>
 
 </resources>

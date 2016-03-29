@@ -1,10 +1,9 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -39,11 +38,11 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
-import com.handy.portal.ui.drawable.BadgeDrawable;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.layout.TabbedLayout;
+import com.handy.portal.ui.widget.TabButton;
+import com.handy.portal.ui.widget.TabButtonGroup;
 import com.handy.portal.util.DeeplinkMapper;
-import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -60,15 +59,12 @@ public class MainActivityFragment extends InjectedFragment
     /////////////Bad useless injection that breaks if not in?
 
     @Bind(R.id.tabs)
-    RadioGroup tabs;
-    @Bind(R.id.button_jobs)
-    RadioButton mJobsButton;
-    @Bind(R.id.button_schedule)
-    RadioButton mScheduleButton;
-    @Bind(R.id.button_notifications)
-    RadioButton mNotificationsButton;
-    @Bind(R.id.button_more)
-    RadioButton mButtonMore;
+    TabButtonGroup mTabs;
+    private TabButton mJobsButton;
+    private TabButton mScheduleButton;
+    private TabButton mNotificationsButton;
+    private TabButton mButtonMore;
+
     @Bind(R.id.loading_overlay)
     View mLoadingOverlayView;
     @Bind(R.id.nav_link_payments)
@@ -159,6 +155,7 @@ public class MainActivityFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        bus.post(new NotificationEvent.RequestUnreadCount());
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentTab == null)
         {
@@ -182,7 +179,7 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
     {
-        setNotificationsBadgeCount(event.getUnreadCount());
+        mNotificationsButton.setUnreadCount(event.getUnreadCount());
     }
 
     private void handleOnboardingFlow()
@@ -271,9 +268,9 @@ public class MainActivityFragment extends InjectedFragment
             mContentFrame.setAutoHideShowTabs(isVisible);
         }
 
-        if (tabs != null)
+        if (mTabs != null)
         {
-            tabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+            mTabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -361,15 +358,31 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerBottomNavListeners()
     {
-        mJobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        mJobsButton = new TabButton(getContext())
+                .init(R.string.tab_claim, R.drawable.ic_menu_search);
+        mScheduleButton = new TabButton(getContext())
+                .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
+        mNotificationsButton = new TabButton(getContext())
+                .init(R.string.tab_notifications, R.drawable.ic_menu_notifications);
+        mButtonMore = new TabButton(getContext())
+                .init(R.string.tab_more, R.drawable.ic_menu_more);
+        mTabs.setTabs(mJobsButton, mScheduleButton, mNotificationsButton, mButtonMore);
+
+        mJobsButton.setOnClickListener(
+                new TabOnClickListener(mJobsButton, MainViewTab.AVAILABLE_JOBS));
+        mScheduleButton.setOnClickListener(
+                new TabOnClickListener(mScheduleButton, MainViewTab.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
-        tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
 
         if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
         {
-            mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
+            mNotificationsButton.setOnClickListener(
+                    new TabOnClickListener(mNotificationsButton, MainViewTab.NOTIFICATIONS));
             mNotificationsButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mNotificationsButton.setVisibility(View.GONE);
         }
     }
 
@@ -384,16 +397,22 @@ public class MainActivityFragment extends InjectedFragment
 
     private class TabOnClickListener implements View.OnClickListener
     {
+        private TabButton mTabButton;
         private MainViewTab mTab;
 
-        TabOnClickListener(MainViewTab tab)
+        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewTab tab)
         {
+            mTabButton = tabButton;
             mTab = tab;
         }
 
         @Override
         public void onClick(View view)
         {
+            if (mTabButton != null)
+            {
+                mTabButton.toggle();
+            }
             switchToTab(mTab, true);
         }
     }
@@ -404,9 +423,12 @@ public class MainActivityFragment extends InjectedFragment
         private MainViewTab mTab;
         private TransitionStyle mTransitionStyle;
 
-        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride)
+        NavDrawerOnClickListener(
+                final MainViewTab tab,
+                final TransitionStyle transitionStyleOverride
+        )
         {
-            super(tab);
+            super(null, tab);
             mTab = tab;
             mTransitionStyle = transitionStyleOverride;
         }
@@ -415,6 +437,7 @@ public class MainActivityFragment extends InjectedFragment
         public void onClick(View view)
         {
             bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mTab.name().toLowerCase())));
+            mButtonMore.toggle();
             if (mTransitionStyle != null)
             {
                 switchToTab(mTab, null, mTransitionStyle, false);
@@ -435,19 +458,6 @@ public class MainActivityFragment extends InjectedFragment
         public void onClick(View view)
         {
             mDrawerLayout.openDrawer(mNavigationDrawer);
-        }
-    }
-
-
-    private class BottomNavOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener
-    {
-        @Override
-        public void onCheckedChanged(RadioGroup radioGroup, int radioButtonId)
-        {
-            if (radioButtonId == mButtonMore.getId() && currentTab != null)
-            {
-                updateSelectedTabButton(currentTab);
-            }
         }
     }
 
@@ -504,7 +514,7 @@ public class MainActivityFragment extends InjectedFragment
             @Override
             public void updateTabs(MainViewTab tab)
             {
-                if (tabs != null) { updateSelectedTabButton(tab); }
+                if (mTabs != null) { updateSelectedTabButton(tab); }
             }
         });
     }
@@ -655,24 +665,5 @@ public class MainActivityFragment extends InjectedFragment
         CookieManager.getInstance().removeAllCookie();
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
-    }
-
-    private void setNotificationsBadgeCount(int unreadCount)
-    {
-        LayerDrawable icon = (LayerDrawable) mNotificationsButton.getCompoundDrawables()[Utils.DRAWABLE_TOP_INDEX];
-        // Reuse drawable if possible
-        BadgeDrawable badge;
-        // Getting the layer 2
-        Drawable reuse = icon.findDrawableByLayerId(R.id.ic_notifications_badge);
-        if (reuse != null && reuse instanceof BadgeDrawable)
-        {
-            badge = (BadgeDrawable) reuse;
-        }
-        else
-        {
-            badge = new BadgeDrawable(getContext());
-        }
-        badge.setCount(String.valueOf(unreadCount));
-        icon.setDrawableByLayerId(R.id.ic_notifications_badge, badge);
     }
 }
