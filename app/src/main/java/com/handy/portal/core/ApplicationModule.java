@@ -55,9 +55,9 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.element.bookings.AvailableBookingView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.CheckOutBookingView;
-import com.handy.portal.ui.element.bookings.AvailableBookingView;
 import com.handy.portal.ui.element.bookings.ClaimedBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
@@ -97,6 +97,7 @@ import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
 import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
+import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
@@ -188,6 +189,7 @@ import retrofit.converter.GsonConverter;
         AvailableBookingView.class,
         ClaimedBookingView.class,
         CheckOutBookingView.class,
+        InjectedBusView.class,
 })
 public final class ApplicationModule
 {

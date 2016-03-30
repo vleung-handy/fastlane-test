@@ -6,15 +6,17 @@
                 android:background="@color/white"
     >
 
-    <!--<FrameLayout-->
-    <!--android:id="@+id/map_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="@dimen/check_in_booking_details_map_height"-->
-    <!--/>-->
+    <FrameLayout
+        android:id="@+id/map_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/check_in_booking_details_map_height"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/booking_action_button"
+        android:layout_below="@id/map_layout"
         >
 
         <LinearLayout
@@ -64,6 +66,16 @@
                     />
 
             </RelativeLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -476,7 +488,7 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/booking_action_button"
+        android:id="@id/booking_action_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/complete_button_height"
         android:layout_alignParentBottom="true"
@@ -485,6 +497,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/large_text_size"
+        android:visibility="gone"
         />
 
 </RelativeLayout>

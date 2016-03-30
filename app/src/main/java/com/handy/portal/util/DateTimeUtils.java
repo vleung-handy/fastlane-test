@@ -1,7 +1,9 @@
 package com.handy.portal.util;
 
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.widget.TextView;
@@ -228,6 +230,22 @@ public final class DateTimeUtils
             public void onTick(final long millisUntilFinished)
             {
                 textView.setText(textView.getContext().getString(R.string.start_timer_formatted,
+                        DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
+            }
+
+            @Override
+            public void onFinish() { }
+        }.start();
+    }
+
+    public static CountDownTimer setCountDownTimer(final Context context, final ActionBar actionBar, long timeRemainMillis)
+    {
+        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
+        {
+            @Override
+            public void onTick(final long millisUntilFinished)
+            {
+                actionBar.setTitle(context.getString(R.string.start_timer_lowercase_formatted,
                         DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
             }
 

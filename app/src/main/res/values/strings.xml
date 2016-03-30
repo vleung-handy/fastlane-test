@@ -329,7 +329,12 @@
     <string name="location_details">LOCATION DETAILS</string>
     <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
     <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
-
+    <string name="payment">Payment</string>
+    <string name="get_directions">get directions</string>
+    <string name="house_details">House Details</string>
+    <string name="paid_extras">Paid Extras</string>
+    <string name="entry_information">Entry Information</string>
+    <string name="customer_request">Customer Request</string>
 
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>
@@ -360,6 +365,7 @@
 
     <!-- Nearby Booking -->
     <string name="start_timer_formatted">STARTS IN %1$s</string>
+    <string name="start_timer_lowercase_formatted">Starts in %1$s</string>
     <string name="nearby_booking_one">There is 1 open job nearby! Claim it now.</string>
     <string name="nearby_booking_formatted">There are %1$d open jobs nearby! Claim one now.</string>
     <string name="claim_n_dollar_job_formatted">Claim %1$s Job</string>
@@ -416,12 +422,6 @@
     <string name="clear_signature">clear signature</string>
     <string name="use_finger_to_sign">use your finger to sign</string>
     <string name="complete_checkout">Complete checkout</string>
-    <string name="payment">Payment</string>
-    <string name="get_directions">get directions</string>
-    <string name="house_details">House Details</string>
-    <string name="paid_extras">Paid Extras</string>
-    <string name="entry_information">Entry Information</string>
-    <string name="customer_request">Customer Request</string>
 
     <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>

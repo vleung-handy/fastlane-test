@@ -18,11 +18,11 @@
             android:orientation="vertical"
             >
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map_view"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/available_booking_details_map_height"
-                />
+            <FrameLayout
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/available_booking_details_map_height"
+            />
 
             <TextView
                 android:id="@+id/job_location_text"

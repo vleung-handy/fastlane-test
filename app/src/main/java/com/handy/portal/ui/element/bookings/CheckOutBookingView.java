@@ -6,27 +6,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.model.booking.Booking;
+import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.util.Utils;
-import com.squareup.otto.Bus;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CheckOutBookingView extends FrameLayout
+public class CheckOutBookingView extends InjectedBusView
 {
-    @Inject
-    Bus mBus;
-
     @Bind(R.id.booking_check_out)
     Button mActionButton;
 
