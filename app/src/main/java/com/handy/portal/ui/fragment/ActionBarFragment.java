@@ -58,7 +58,6 @@ public abstract class ActionBarFragment extends InjectedFragment
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
-        super.onViewCreated(view, savedInstanceState);
         setActionBarVisible(true);
     }
 
