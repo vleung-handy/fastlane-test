@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
@@ -52,6 +53,13 @@ public abstract class ActionBarFragment extends InjectedFragment
                 public void updateTabs(MainViewTab tab) { }
             };
         }
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setActionBarVisible(true);
     }
 
     @Override

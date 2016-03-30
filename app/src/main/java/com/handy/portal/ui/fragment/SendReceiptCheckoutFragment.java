@@ -117,6 +117,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
+        super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
         setOptionsMenuEnabled(true);
