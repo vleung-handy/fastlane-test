@@ -400,9 +400,6 @@
     <string name="change_location_permissions_dialog_message">Please grant location permissions so your customers are aware of your arrival time.</string>
     <string name="change_location_permissions_dialog_action_button">Go to Settings</string>
 
-    <!-- Onboarding -->
-    <string name="onboarding_tab_title">Welcome to Handy</string>
-
     <!-- Checkout -->
     <string name="send_your_receipt">Send Your Receipt</string>
     <string name="started_with_space">Started: &#160;</string>
