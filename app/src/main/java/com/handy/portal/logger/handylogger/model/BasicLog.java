@@ -3,7 +3,7 @@ package com.handy.portal.logger.handylogger.model;
 import com.google.gson.annotations.SerializedName;
 
 /*
-    Basic app events shuch as app open and navigation change
+    Basic app events such as app open and navigation change
  */
 public class BasicLog extends EventLog
 {
@@ -29,13 +29,13 @@ public class BasicLog extends EventLog
     {
         private static final String EVENT_TYPE = "navigation";
 
-        @SerializedName("tab_name")
-        private String mTabName;
+        @SerializedName("page_name")
+        private String mPageName;
 
-        public Navigation(final String tabName)
+        public Navigation(final String pageName)
         {
             super(EVENT_TYPE);
-            mTabName = tabName;
+            mPageName = pageName;
         }
     }
 

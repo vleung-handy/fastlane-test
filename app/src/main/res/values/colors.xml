@@ -13,12 +13,10 @@
     <color name="handy_love">#F9002E</color>
     <color name="tertiary_grey">#9CABB5</color>
     <color name="disabled">#4D9CABB5</color>
-    <color name="nav_bg">#1D1D1D</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="white_trans">#7EFFFFFF</color>
     <color name="black_trans">#80000000</color>
-    <color name="black_trans_extra_dark">#CC000000</color>
     <color name="white_pressed">#F4F4F4</color>
     <color name="black">#434343</color>
     <color name="black_disabled">#8A8A8A</color>
@@ -27,7 +25,6 @@
     <color name="light_grey">#606060</color>
     <color name="dark_grey">#4A4A4A</color>
     <color name="dark_grey_pressed">#949494</color>
-    <color name="xdark_grey">#434343</color>
     <color name="steel">#8B9BA6</color>
     <color name="service_sep">#D6D6D6</color>
     <color name="cell_sep">#D6D6D6</color>
@@ -36,14 +33,10 @@
     <color name="category_selected">#F6F6F6</color>
     <color name="error_red">#FF5C5C</color>
     <color name="error_red_pressed">#F25757</color>
-    <color name="price_green">#ACC63F</color>
-    <color name="facebook">#246BAB</color>
-    <color name="facebook_pressed">#1C4B76</color>
     <color name="very_light_grey">#9F9794</color>
     <color name="bg_inactive_grey">#9CABB5</color>
     <color name="bg_active_grey">#8A969E</color>
     <color name="text_light_grey">#CCCCCC</color>
-    <color name="title_grey">#666666</color>
     <color name="subtitle_grey">#9CABB5</color>
     <color name="subtitle_grey_disabled">#BFC8CE</color>
     <color name="requested_green">#8BC53E</color>
@@ -54,7 +47,6 @@
     <color name="border_mid_grey">#CCCCCC</color>
     <color name="list_divider">#E2E2E2</color>
     <color name="payments_batch_list_entry_subtitle">#999999</color>
-    <color name="black_20_percent">#14000000</color>
 
     <!--List colors-->
     <color name="section_header_text_color">#999999</color>
@@ -65,4 +57,5 @@
     <!-- Referral -->
     <color name="light_grey_trans">#80C1CAD0</color>
 
+    <color name="list_divider_checkout">#D1D1D1</color>
 </resources>

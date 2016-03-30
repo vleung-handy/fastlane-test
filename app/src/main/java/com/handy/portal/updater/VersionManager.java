@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.format.DateUtils;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.common.annotations.VisibleForTesting;
@@ -18,10 +19,11 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AppUpdateLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.updater.model.UpdateDetails;
 import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
-import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -32,6 +34,10 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+
+ /*
+ TODO this manager needs refactoring
+  */
 public class VersionManager
 {
     //TODO: parameterize these strings
@@ -41,8 +47,9 @@ public class VersionManager
     // This backoff duration is used to prevent the app from executing download repeatedly when
     // download fails. It is used to check whether there was a download attempt recently and if so,
     // doesn't execute the update process.
-    private static final int UPDATE_CHECK_BACKOFF_DURATION_MILLIS = DateTimeUtils.MILLISECONDS_IN_MINUTE * 5; // 5 minutes
+    private static final long UPDATE_CHECK_BACKOFF_DURATION_MILLIS = DateUtils.MINUTE_IN_MILLIS * 5; // 5 minutes
     private long lastUpdateCheckTimeMillis = 0;
+    private long lastNonblockingUpdateShownTimeMs = 0;
 
     private final Context context;
     private final Bus bus;
@@ -50,7 +57,8 @@ public class VersionManager
     private DataManager dataManager;
     private PrefsManager prefsManager;
     private DownloadManager downloadManager;
-    private String mDownloadUrl;
+
+    private UpdateDetails mUpdateDetails;
 
     private long downloadReferenceId;
 
@@ -118,14 +126,38 @@ public class VersionManager
                             {
                                 if (updateDetails.getShouldUpdate())
                                 {
-                                    mDownloadUrl = updateDetails.getDownloadUrl();
-                                    bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                    /*
+                                    TODO
+                                    used to be mDownloadUrl = updateDetails.getDownloadUrl
+                                    don't like it being used that way.
+                                    not doing a big refactor for now because flow is delicate and extensive testing required
+                                    so simply caching the entire response object instead of just the download url
+                                     */
+                                    mUpdateDetails = updateDetails;
+                                    if(mUpdateDetails.isUpdateBlocking())
+                                    {
+                                        //blocking update
+                                        bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                    }
+                                    else
+                                    {
+                                        //non-blocking update
+                                        long currentTimeMs = System.currentTimeMillis();
+                                        long hideNonBlockingUpdateDurationMs = mUpdateDetails.getHideNonBlockingUpdateDurationMins() * DateUtils.MINUTE_IN_MILLIS;
+                                        if(currentTimeMs - lastNonblockingUpdateShownTimeMs > hideNonBlockingUpdateDurationMs)
+                                        //only show the non-blocking update if the given time interval has passed
+                                        {
+                                            bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
+                                            lastNonblockingUpdateShownTimeMs = currentTimeMs;
+                                        }
+                                    }
                                 }
                             }
 
                             @Override
                             public void onError(final DataManager.DataManagerError error)
                             {
+                                bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Failed(null)));
                                 bus.post(new AppUpdateEvent.ReceiveUpdateAvailableError(error));
                             }
                         }
@@ -146,21 +178,17 @@ public class VersionManager
 
     }
 
-    @Subscribe
-    public void onApplicationResumed(HandyEvent.ApplicationResumed event)
-    {
-        dataManager.sendVersionInformation(getVersionInfo());
-    }
-
-    @Subscribe
-    public void onReceiveLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
-    {
-        dataManager.sendVersionInformation(getVersionInfo());
-    }
-
+    /**
+     * TODO don't like this. should be refactored
+     */
     public void downloadApk()
     {
-        String apkUrl = getDownloadUrl();
+        if(mUpdateDetails == null)
+        {
+            Crashlytics.logException(new Exception("Tried to download apk when update details is null"));
+            return;
+        }
+        String apkUrl = mUpdateDetails.getDownloadUrl();
         File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         downloadsDirectory.mkdirs();
 
@@ -228,6 +256,9 @@ public class VersionManager
         return -1;
     }
 
+    /*
+    TODO this should be in a util
+     */
     private PackageInfo getPackageInfoFromActivity(Context context)
     {
         PackageInfo pInfo;
@@ -257,9 +288,17 @@ public class VersionManager
         return info;
     }
 
-    public String getDownloadUrl()
+    /**
+     * This was previously:
+     * public String getDownloadUrl()
+     *
+     * TODO don't like this, but simply replacing it with the UpdateDetails model for now
+     * not going to refactor right now because update flow is delicate and no time to test extensively
+     * @return
+     */
+    public UpdateDetails getUpdateDetails()
     {
-        return mDownloadUrl;
+        return mUpdateDetails;
     }
 
     public boolean hasRequestedDownload()

@@ -66,7 +66,8 @@
                 android:button="@drawable/checkbox_blue"
                 android:drawablePadding="5dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="8dp"
+                android:paddingLeft="@dimen/terms_side_padding"
+                android:paddingStart="@dimen/terms_side_padding"
                 android:text="@string/i_agree"
                 android:textColor="@color/black"
                 />
@@ -79,7 +80,7 @@
                 android:layout_marginBottom="2dp"
                 android:gravity="center"
                 android:textAllCaps="false"
-                android:textSize="20sp"
+                android:textSize="@dimen/accept_terms_button_text_size"
                 />
         </LinearLayout>
 

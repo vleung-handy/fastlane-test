@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.TestUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
@@ -125,6 +126,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     {
         when(bookingClaimDetails.shouldShowClaimTarget()).thenReturn(false); //case when claim target is not shown
         when(bookingClaimDetails.getBooking().isClaimedByMe()).thenReturn(true);
+        when(bookingClaimDetails.getBooking().getType()).thenReturn(Booking.BookingType.BOOKING);
         fragment.onReceiveClaimJobSuccess(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, null));
 
         assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
@@ -165,17 +167,6 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.eta_success)));
     }
 
-    @Test
-    public void onCheckOutSuccess_switchToScheduleTabAndDisplayToast() throws Exception
-    {
-        fragment.onReceiveBookingDetailsSuccess(new HandyEvent.ReceiveBookingDetailsSuccess(booking));
-        // the event below depends on the event above being called to set the associated booking
-        fragment.onReceiveNotifyJobCheckOutSuccess(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(null, false));
-
-        assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
-        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_out_success)));
-    }
-
     private void assertBusPost(Matcher matcher)
     {
         verify(fragment.bus, atLeastOnce()).post(captor.capture());
@@ -185,7 +176,7 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     private <T> T getBusCaptorValue(Class<T> classType)
     {
         verify(fragment.bus, atLeastOnce()).post(captor.capture());
-        return getBusCaptorValue(captor, classType);
+        return TestUtils.getBusCaptorValue(captor, classType);
     }
 
 }

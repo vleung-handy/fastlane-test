@@ -15,9 +15,9 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.dashboard.ProviderFeedback;
+import com.handy.portal.model.logs.FeedbackLog;
 import com.handy.portal.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.ui.widget.BulletTextView;
 import com.handy.portal.util.TextUtils;
@@ -33,8 +33,6 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
 {
     @Inject
     Bus mBus;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Bind(R.id.dashboard_feedback_title)
     TextView mTitle;
@@ -116,7 +114,7 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
         Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.YOUTUBE_VIDEO_ID, view.getID());
 
+        mBus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoSelected(view.getSection())));
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
-        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createVideoTappedLog(view.getSection())));
     }
 }

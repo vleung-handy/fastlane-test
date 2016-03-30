@@ -43,7 +43,14 @@
                 android:layout_above="@+id/tabs"
                 />
 
-            <include layout="@layout/element_bottom_nav"/>
+            <com.handy.portal.ui.widget.TabButtonGroup
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/light_grey"
+                android:orientation="horizontal"
+                />
 
             <include layout="@layout/overlay_loading"/>
 

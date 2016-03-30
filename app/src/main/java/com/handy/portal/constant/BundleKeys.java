@@ -12,6 +12,7 @@ public class BundleKeys
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
     public static final String HELP_NODE = "help_node";
     public static final String HELP_NODE_ID = "help_node_id";
+    public static final String HELP_REDIRECT_PATH = "help_redirect_path";
     public static final String PATH = "path";
     public static final String TAB = "tab";
     public static final String PAYMENT_BATCH = "payment_batch";
@@ -35,7 +36,9 @@ public class BundleKeys
     // Deeplinks
     public static final String DEEPLINK = "deep_link";
     public static final String DEEPLINK_DATA = "deep_link_data";
+    public static final String DEEPLINK_SOURCE = "deeplink_source";
     public static final String DEEPLINK_HANDLED = "deeplink_handled";
+    public static final String DEEPLINK_OPENED_LOGGED = "deeplink_opened_logged";
 
     // Dashboard
     public static final String PROVIDER_EVALUATION = "provider_evaluation";
@@ -43,4 +46,7 @@ public class BundleKeys
 
     // Location
     public static final String EVENT_NAME = "event_name";
+
+    // New Checkout
+    public static final String NOTE_TO_CUSTOMER = "note_to_customer";
 }

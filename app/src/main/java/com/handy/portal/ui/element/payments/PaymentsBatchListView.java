@@ -2,6 +2,7 @@ package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
@@ -26,8 +27,6 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 {
     @Inject
     Bus mBus;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     private TextView footerView;
     private OnDataItemClickListener onDataItemClickListener; //TODO: WIP. refine
@@ -72,7 +71,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         setAdapter(itemsAdapter);
         setOnItemClickListener(this);
         // Override the StickyListHeaderView not setting these correctly
-        ColorDrawable divider = new ColorDrawable(this.getResources().getColor(R.color.list_divider));
+        ColorDrawable divider = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.list_divider));
         getWrappedList().setDivider(divider);
         getWrappedList().setDividerHeight(1);
     }
@@ -90,8 +89,8 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-        mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPaymentBatchSelectedLog(false,
-                position + 1))); // index needs to be one based
+        final boolean isCurrentWeek = (position == 0);
+        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchSelected(isCurrentWeek, position + 1))); // index needs to be one based
         PaymentBatch paymentBatch = getWrappedAdapter().getDataItem(position);
         notifyDataItemClickListener(paymentBatch);
     }

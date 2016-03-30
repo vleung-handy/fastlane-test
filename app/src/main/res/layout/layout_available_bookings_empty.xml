@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.handy.portal.ui.widget.SafeSwipeRefreshLayout
     android:id="@+id/available_bookings_empty"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     android:visibility="gone"
     >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_no_available_jobs"
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:text="@string/no_available_jobs"
-        android:textColor="@color/subtitle_grey"
-        android:textSize="20sp"
-        />
-</LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_no_available_jobs"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_xlarge"
+            android:layout_marginLeft="@dimen/default_margin_xlarge"
+            android:layout_marginRight="@dimen/default_margin_xlarge"
+            android:layout_marginTop="@dimen/default_margin"
+            android:gravity="center_horizontal"
+            android:text="@string/no_available_jobs"
+            android:textColor="@color/subtitle_grey"
+            android:textSize="@dimen/large_text_size"
+            />
+    </LinearLayout>
+</com.handy.portal.ui.widget.SafeSwipeRefreshLayout>

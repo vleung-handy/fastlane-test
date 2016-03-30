@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/default_margin"
     android:background="@color/handy_bg"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <RelativeLayout
         android:id="@+id/bank_account_option"
@@ -15,25 +16,29 @@
         android:background="@drawable/background_list_entry"
         android:clickable="true"
         android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding">
+        android:paddingRight="@dimen/default_padding"
+        >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <LinearLayout
                 android:id="@+id/verified_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:visibility="gone"
+                >
 
                 <ImageView
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/circle_teal"/>
+                    android:src="@drawable/circle_teal"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -44,7 +49,8 @@
                     android:textAllCaps="true"
                     android:textAppearance="@style/TextView.Bold"
                     android:textColor="@color/handy_teal"
-                    android:textSize="@dimen/small_text_size"/>
+                    android:textSize="@dimen/small_text_size"
+                    />
 
             </LinearLayout>
 
@@ -52,13 +58,15 @@
                 android:id="@+id/failed_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:visibility="gone"
+                >
 
                 <ImageView
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/circle_red"/>
+                    android:src="@drawable/circle_red"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -69,7 +77,8 @@
                     android:textAllCaps="true"
                     android:textAppearance="@style/TextView.Bold"
                     android:textColor="@color/error_red"
-                    android:textSize="@dimen/small_text_size"/>
+                    android:textSize="@dimen/small_text_size"
+                    />
 
             </LinearLayout>
 
@@ -77,13 +86,15 @@
                 android:id="@+id/pending_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:visibility="gone"
+                >
 
                 <ImageView
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/circle_steel"/>
+                    android:src="@drawable/circle_steel"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -94,7 +105,8 @@
                     android:textAllCaps="true"
                     android:textAppearance="@style/TextView.Bold"
                     android:textColor="@color/steel"
-                    android:textSize="@dimen/small_text_size"/>
+                    android:textSize="@dimen/small_text_size"
+                    />
 
             </LinearLayout>
 
@@ -104,7 +116,8 @@
                 android:text="@string/bank_account"
                 android:textAppearance="@style/TextView.Bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/large_text_size"/>
+                android:textSize="@dimen/large_text_size"
+                />
         </LinearLayout>
 
         <TextView
@@ -113,8 +126,10 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/bank_account_chevron"
+            android:layout_toStartOf="@id/bank_account_chevron"
             android:textColor="@color/black"
-            android:textSize="@dimen/large_text_size"/>
+            android:textSize="@dimen/large_text_size"
+            />
 
         <ImageView
             android:id="@+id/bank_account_chevron"
@@ -124,7 +139,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/extra_margin"
-            android:src="@drawable/ic_chevron_black"/>
+            android:layout_marginStart="@dimen/extra_margin"
+            android:src="@drawable/ic_chevron_black"
+            />
 
     </RelativeLayout>
 
@@ -132,10 +149,11 @@
         android:id="@+id/debit_card_option"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginTop="1dp"
         android:background="@drawable/background_list_entry"
         android:clickable="true"
-        android:layout_marginTop="1dp"
-        android:padding="@dimen/default_padding">
+        android:padding="@dimen/default_padding"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -144,7 +162,8 @@
             android:text="@string/debit_card"
             android:textAppearance="@style/TextView.Bold"
             android:textColor="@color/black"
-            android:textSize="@dimen/large_text_size"/>
+            android:textSize="@dimen/large_text_size"
+            />
 
         <TextView
             android:id="@+id/debit_card_details"
@@ -152,8 +171,10 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/debit_card_chevron"
+            android:layout_toStartOf="@id/debit_card_chevron"
             android:textColor="@color/black"
-            android:textSize="@dimen/large_text_size"/>
+            android:textSize="@dimen/large_text_size"
+            />
 
         <ImageView
             android:id="@+id/debit_card_chevron"
@@ -163,7 +184,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/extra_margin"
-            android:src="@drawable/ic_chevron_black"/>
+            android:layout_marginStart="@dimen/extra_margin"
+            android:src="@drawable/ic_chevron_black"
+            />
 
     </RelativeLayout>
 
@@ -173,6 +196,7 @@
         android:layout_margin="@dimen/default_margin"
         android:text="@string/update_payment_method_note"
         android:textColor="@color/subtitle_grey"
-        android:textSize="@dimen/small_text_size"/>
+        android:textSize="@dimen/small_text_size"
+        />
 
 </LinearLayout>

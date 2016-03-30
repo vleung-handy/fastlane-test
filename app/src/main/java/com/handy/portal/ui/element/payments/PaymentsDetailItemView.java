@@ -1,6 +1,7 @@
 package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,7 +57,7 @@ public class PaymentsDetailItemView extends LinearLayout
         locationText.setText(payment.getTitle());
         timeText.setText(payment.getSubTitle());
         paymentText.setText(CurrencyUtils.formatPriceWithCents(payment.getAmount(), parentBatch.getCurrencySymbol()));
-        paymentText.setTextColor(getResources().getColor(payment.getAmount() < 0 ? R.color.error_red : R.color.black));
+        paymentText.setTextColor(ContextCompat.getColor(getContext(), payment.getAmount() < 0 ? R.color.error_red : R.color.black));
     }
 
 }

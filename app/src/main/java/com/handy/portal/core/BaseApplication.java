@@ -33,6 +33,7 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
+import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -95,8 +96,6 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     UrbanAirshipManager urbanAirshipManager;
     @Inject
-    ApplicationOnResumeWatcher applicationOnResumeWatcher;
-    @Inject
     MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
     @Inject
     TabNavigationManager tabNavigationManager;
@@ -108,6 +107,8 @@ public class BaseApplication extends MultiDexApplication
     LocationManager locationManager;
     @Inject
     SystemManager systemManager;
+    @Inject
+    UserInterfaceUpdateManager userInterfaceUpdateManager;
 
     @Inject
     Bus bus;

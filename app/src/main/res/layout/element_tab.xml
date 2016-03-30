@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="@dimen/extra_padding"
+    tools:background="@color/light_grey"
+    >
+
+    <ImageView
+        android:id="@+id/tab_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        tools:src="@drawable/ic_menu_notifications"
+        />
+
+    <TextView
+        android:id="@+id/tab_unread_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginStart="-10dp"
+        android:layout_toEndOf="@id/tab_icon"
+        android:layout_toRightOf="@id/tab_icon"
+        android:background="@drawable/pill_red"
+        android:gravity="center"
+        android:minWidth="@dimen/notification_unread_count_min_width"
+        android:paddingBottom="@dimen/extra_padding_xsmall"
+        android:paddingLeft="@dimen/extra_padding_small"
+        android:paddingRight="@dimen/extra_padding_small"
+        android:paddingTop="@dimen/extra_padding_xsmall"
+        android:textColor="@color/white"
+        android:textSize="@dimen/xsmall_text_size"
+        android:visibility="gone"
+        tools:text="13"
+        tools:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/tab_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tab_icon"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        tools:text="@string/tab_notifications"
+        />
+
+</RelativeLayout>

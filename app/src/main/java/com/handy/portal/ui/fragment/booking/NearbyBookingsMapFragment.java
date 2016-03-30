@@ -14,13 +14,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.location.LocationConstants;
+import com.handy.portal.location.LocationUtils;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.view.PriceMarker;
 import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +76,7 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
     @SuppressWarnings({"ResourceType", "MissingPermission"})
     public void onMapReady(GoogleMap map)
     {
-        if (!Utils.areAnyPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
+        if (!LocationUtils.hasRequiredLocationPermissions(this.getContext()))
         {
             return;
         }
@@ -104,7 +103,7 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
     @SuppressWarnings({"ResourceType", "MissingPermission"})
     private void addCustomMarkers(GoogleMap map)
     {
-        if (!Utils.areAnyPermissionsGranted(this.getContext(), LocationConstants.LOCATION_PERMISSIONS))
+        if (!LocationUtils.hasRequiredLocationPermissions(this.getContext()))
         {
             return;
         }

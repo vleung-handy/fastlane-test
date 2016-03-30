@@ -1,64 +1,67 @@
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
     android:background="@color/handy_blue"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="com.handy.portal.updater.ui.PleaseUpdateFragment"
     >
 
-    <LinearLayout
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/update_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/anim_update"
+        />
+
+    <TextView
+        android:id="@+id/update_header_text"
+        style="@style/TextView.XLarge.Bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_marginTop="@dimen/default_margin"
+        android:gravity="center_horizontal"
+        android:text="@string/update_header"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        />
+
+    <LinearLayout
+        android:id="@+id/install_update_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_margin"
         android:orientation="vertical"
-        tools:context="com.handy.portal.updater.ui.PleaseUpdateFragment"
         >
 
-        <!-- TODO: Update blank fragment layout -->
-        <ImageView
-            android:id="@+id/update_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/anim_update"
-            />
-
         <TextView
-            android:id="@+id/update_header_text"
-            style="@style/TextView.XLarge.Bold"
+            android:id="@+id/update_text"
+            style="@style/TextView.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
             android:gravity="center_horizontal"
-            android:text="@string/update_header"
+            android:paddingLeft="@dimen/default_padding_large"
+            android:paddingRight="@dimen/default_padding_large"
+            android:text="@string/download_copy"
             android:textColor="@color/white"
-            android:textStyle="bold"
             />
 
         <LinearLayout
-            android:id="@+id/install_update_section"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/extra_margin"
+            android:layout_gravity="center"
             android:orientation="vertical"
             >
-
-            <TextView
-                android:id="@+id/update_text"
-                style="@style/TextView.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingLeft="@dimen/default_padding_large"
-                android:paddingRight="@dimen/default_padding_large"
-                android:text="@string/download_copy"
-                android:textColor="@color/white"
-                />
-
+            <!--need the linear layout to make buttons inside have equal width-->
             <Button
                 android:id="@+id/update_button"
                 style="@style/Button.SalmonRound"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/default_margin_x2"
@@ -68,55 +71,70 @@
                 android:text="@string/update_button_label"
                 />
 
-            <TextView
-                android:id="@+id/manual_download_text"
-                style="@style/TextView.Small"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:gravity="center_horizontal"
-                android:paddingLeft="@dimen/default_padding_large"
-                android:paddingRight="@dimen/default_padding_large"
-                android:text="@string/issues_manual_download"
-                android:textColor="@color/white"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/grant_permissions_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:orientation="vertical"
-            android:visibility="gone"
-            >
-
-            <TextView
-                style="@style/TextView.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingLeft="@dimen/default_padding_large"
-                android:paddingRight="@dimen/default_padding_large"
-                android:text="@string/grant_access_copy"
-                android:textColor="@color/white"
-                />
-
             <Button
-                android:id="@+id/grant_access_button"
-                style="@style/Button.Green.Round"
-                android:layout_width="wrap_content"
+                android:id="@+id/app_update_fragment_update_later_button"
+                style="@style/Button.White.Round.Empty"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/default_margin"
+                android:enabled="true"
                 android:paddingLeft="@dimen/default_padding_large"
                 android:paddingRight="@dimen/default_padding_large"
-                android:text="@string/grant_access_button"
+                android:text="@string/app_update_later_button"
+                android:visibility="gone"
+                tools:visibility="visible"
                 />
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/manual_download_text"
+            style="@style/TextView.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/default_padding_large"
+            android:paddingRight="@dimen/default_padding_large"
+            android:text="@string/issues_manual_download"
+            android:textColor="@color/white"
+            />
+
     </LinearLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/grant_permissions_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <TextView
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/default_padding_large"
+            android:paddingRight="@dimen/default_padding_large"
+            android:text="@string/grant_access_copy"
+            android:textColor="@color/white"
+            />
+
+        <Button
+            android:id="@+id/grant_access_button"
+            style="@style/Button.Green.Round"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/default_margin"
+            android:paddingLeft="@dimen/default_padding_large"
+            android:paddingRight="@dimen/default_padding_large"
+            android:text="@string/grant_access_button"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

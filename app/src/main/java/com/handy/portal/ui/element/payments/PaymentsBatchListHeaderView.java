@@ -1,6 +1,7 @@
 package com.handy.portal.ui.element.payments;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -62,7 +63,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         currentWeekExpectedPaymentCentsText.setText(CurrencyUtils.formatCents(neoPaymentBatch.getNetEarningsTotalAmount()));
         currentWeekWithholdingsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getWithholdingsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getGrossEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekWithholdingsText.setTextColor(getResources().getColor(neoPaymentBatch.getWithholdingsTotalAmount() < 0 ? R.color.error_red : R.color.black));
+        currentWeekWithholdingsText.setTextColor(ContextCompat.getColor(getContext(), neoPaymentBatch.getWithholdingsTotalAmount() < 0 ? R.color.error_red : R.color.black));
 
         if (neoPaymentBatch.getRemainingWithholdingAmount() == 0)
         {

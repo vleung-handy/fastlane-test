@@ -1,6 +1,9 @@
 package com.handy.portal.ui.fragment.dialog;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,8 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
@@ -25,6 +30,7 @@ import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -42,41 +48,73 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Inject
     PrefsManager mPrefsManager;
 
+    @Bind(R.id.rate_booking_amount_text)
+    TextView mAmountText;
+    @Bind(R.id.rate_booking_experience_text)
+    TextView mExperienceText;
     @Bind(R.id.rate_booking_comment_text)
     EditText mCommentText;
     @Bind(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
-    @Bind(R.id.rate_booking_title)
-    TextView mRatingTitle;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
     private Booking mBooking;
+    private String mNoteToCustomer;
+
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState)
+    {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_down_from_bottom);
+        return dialog;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dialog_rate_booking, container, false);
         ButterKnife.bind(this, view);
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
         mBooking = null;
-        if (getArguments() != null && getArguments().containsKey(BundleKeys.BOOKING))
+
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey(BundleKeys.BOOKING))
         {
-            mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
-            mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingShownLog()));
+            mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
+            mNoteToCustomer = bundle.getString(BundleKeys.NOTE_TO_CUSTOMER);
+
+            String amount = mBooking.getPaymentToProvider().getCurrencySymbol() +
+                    TextUtils.DECIMAL_FORMAT_NO_ZERO.format(mBooking.getPaymentToProvider().getAdjustedAmount());
+            mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
+            String name = mBooking.getUser().getFirstName();
+            mExperienceText.setText(getString(R.string.how_was_cleaning_formatted, name));
         }
 
         if (mBooking == null)
         {
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(getBookingId(), new CheckoutRequest(
-                    getLocationData(),
-                    new ProBookingFeedback(getBookingRatingScore(),
-                            getBookingRatingComment()), null)));
+            final LocationData locationData = getLocationData();
+            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
+            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
+                    locationData, new ProBookingFeedback(getBookingRatingScore(),
+                    getBookingRatingComment()), mNoteToCustomer, null)));
         }
 
-        return view;
+        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
     }
 
     @OnClick(R.id.close_button)
@@ -85,19 +123,22 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         dismiss();
     }
 
-    @OnClick(R.id.rate_booking_confirm_checkout_button)
+    @OnClick(R.id.rate_booking_submit_button)
     public void onConfirmCheckoutButtonClick()
     {
         //Endpoint is expecting a rating of 1 - 5
-        if (getBookingRatingScore() > 0)
+        final int bookingRatingScore = getBookingRatingScore();
+        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(bookingRatingScore)));
+        if (bookingRatingScore > 0)
         {
             // TODO: combine this with line 71
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(getBookingId(), new CheckoutRequest(
-                    getLocationData(), new ProBookingFeedback(getBookingRatingScore(),
-                    getBookingRatingComment()), mBooking.getCustomerPreferences())
+            final LocationData locationData = getLocationData();
+            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
+            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
+                    locationData, new ProBookingFeedback(bookingRatingScore,
+                    getBookingRatingComment()), mNoteToCustomer, mBooking.getCustomerPreferences())
             ));
-            mBus.post(new LogEvent.AddLogEvent(mEventLogFactory.createCustomerRatingSubmittedLog(getBookingRatingScore())));
         }
         else
         {
@@ -127,18 +168,30 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     }
 
     @Subscribe
+    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
+    {
+        if (!event.isAuto)
+        {
+            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
+            //allow them to try again. they can always click the X button if they don't want to.
+        }
+    }
+
+    @Subscribe
     public void onReceiveNearbyBookingsSuccess(final BookingEvent.ReceiveNearbyBookingsSuccess event)
     {
-        if (event.getBookings().size() < 1) { return; }
-
-        Address address = mBooking.getAddress();
-        if (address != null)
+        if (event.getBookings().size() > 0)
         {
-            Bundle args = new Bundle();
-            args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
-            args.putParcelable(BundleKeys.MAP_CENTER,
-                    new LatLng(address.getLatitude(), address.getLongitude()));
-            mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
+            Address address = mBooking.getAddress();
+            if (address != null)
+            {
+                Bundle args = new Bundle();
+                args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
+                args.putParcelable(BundleKeys.MAP_CENTER,
+                        new LatLng(address.getLatitude(), address.getLongitude()));
+                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
+            }
         }
         dismiss();
     }
@@ -147,11 +200,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public void onReceiveNearbyBookingsError(final BookingEvent.ReceiveNearbyBookingsError event)
     {
         dismiss();
-    }
-
-    private String getBookingId()
-    {
-        return mBooking.getId();
     }
 
     private LocationData getLocationData()

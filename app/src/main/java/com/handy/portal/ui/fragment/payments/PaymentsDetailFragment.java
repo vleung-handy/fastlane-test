@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.crashlytics.android.Crashlytics;
@@ -12,9 +13,11 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.Payment;
+import com.handy.portal.model.payments.PaymentGroup;
 import com.handy.portal.ui.element.payments.PaymentDetailExpandableListView;
 import com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -89,11 +92,16 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
     {
-        Payment payment = (Payment) parent.getExpandableListAdapter().getChild(groupPosition, childPosition);
-        String bookingId = payment.getBookingId();
-        String bookingType = payment.getBookingType() != null ? payment.getBookingType().toUpperCase() : Booking.BookingType.BOOKING.toString();
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPaymentDetailSelectedLog(bookingType)));
+        final ExpandableListAdapter parentListAdapter = parent.getExpandableListAdapter();
 
+        final PaymentGroup paymentGroup = (PaymentGroup) parentListAdapter.getGroup(groupPosition);
+        bus.post(new LogEvent.AddLogEvent(
+                new PaymentsLog.DetailSelected(paymentGroup.getMachineName())));
+
+        final Payment payment = (Payment) parentListAdapter.getChild(groupPosition, childPosition);
+        final String bookingId = payment.getBookingId();
+        final String bookingType = payment.getBookingType() != null ?
+                payment.getBookingType().toUpperCase() : Booking.BookingType.BOOKING.toString();
         if (bookingId != null)
         {
             showBookingDetails(bookingId, bookingType);
@@ -107,7 +115,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
         arguments.putBoolean(BundleKeys.IS_FOR_PAYMENTS, true);
-        NavigationEvent.NavigateToTab event = new NavigationEvent.NavigateToTab(MainViewTab.DETAILS, arguments);
+        NavigationEvent.NavigateToTab event = new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments);
         bus.post(event);
     }
 }

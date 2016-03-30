@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.AvailableBookingsFragment;
@@ -14,6 +15,7 @@ import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
@@ -37,31 +39,40 @@ public enum MainViewTab implements Serializable
 {
     AVAILABLE_JOBS(AvailableBookingsFragment.class),
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
-    NOTIFICATIONS(NotificationsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
+    NEARBY_JOBS(NearbyBookingsFragment.class),
+    JOB_DETAILS(BookingDetailsFragment.class),
+    CANCELLATION_REQUEST(CancellationRequestFragment.class),
+    SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
+
+    NOTIFICATIONS(NotificationsFragment.class),
+
+    PAYMENTS(PaymentsFragment.class),
+    PAYMENTS_DETAIL(PaymentsDetailFragment.class),
     SELECT_PAYMENT_METHOD(SelectPaymentMethodFragment.class),
     UPDATE_BANK_ACCOUNT(PaymentsUpdateBankAccountFragment.class),
     UPDATE_DEBIT_CARD(PaymentsUpdateDebitCardFragment.class),
-    PAYMENTS(PaymentsFragment.class),
-    PAYMENTS_DETAIL(PaymentsDetailFragment.class),
+
+    DASHBOARD(RatingsAndFeedbackFragment.class),
     DASHBOARD_TIERS(DashboardTiersFragment.class),
     DASHBOARD_REVIEWS(DashboardReviewsFragment.class),
     DASHBOARD_FEEDBACK(DashboardFeedbackFragment.class),
     DASHBOARD_VIDEO_LIBRARY(DashboardVideoLibraryFragment.class),
+    YOUTUBE_PLAYER(YoutubePlayerFragment.class),
+
+    ACCOUNT_SETTINGS(AccountSettingsFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
-    HELP(HelpFragment.class),
-    DETAILS(BookingDetailsFragment.class),
-    HELP_CONTACT(HelpContactFragment.class),
-    BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
-    NEARBY_JOBS(NearbyBookingsFragment.class),
-    PAYMENT_BLOCKING(PaymentBlockingFragment.class),
-    CANCELLATION_REQUEST(CancellationRequestFragment.class),
-    RATINGS_AND_FEEDBACK(RatingsAndFeedbackFragment.class),
+
     REFER_A_FRIEND(ReferAFriendFragment.class),
-    ACCOUNT_SETTINGS(AccountSettingsFragment.class),
-    ONBOARDING(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
-    YOUTUBE_PLAYER(YoutubePlayerFragment.class),
+
+    HELP(HelpFragment.class),
+    HELP_WEBVIEW(HelpWebViewFragment.class),
+    HELP_CONTACT(HelpContactFragment.class),
+
+    BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
+    ONBOARDING_WEBVIEW(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
+    PAYMENT_BLOCKING(PaymentBlockingFragment.class),
     ;
 
     private Class mClassType;
@@ -101,7 +112,7 @@ public enum MainViewTab implements Serializable
             return TransitionStyle.REFRESH_TAB;
         }
 
-        if (this.equals(MainViewTab.AVAILABLE_JOBS) && targetTab.equals(MainViewTab.DETAILS))
+        if (this.equals(MainViewTab.AVAILABLE_JOBS) && targetTab.equals(MainViewTab.JOB_DETAILS))
         {
             return TransitionStyle.JOB_LIST_TO_DETAILS;
         }

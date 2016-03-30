@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.handy.portal.R;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
@@ -16,8 +15,6 @@ public class InjectedDialogFragment extends DialogFragment
 {
     @Inject
     protected Bus mBus;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)

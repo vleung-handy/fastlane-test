@@ -30,12 +30,23 @@ public class ConfigurationResponse
     @SerializedName("location_schedule_service_enabled")
     private boolean mLocationScheduleServiceEnabled; //false by default
 
+    @SerializedName("booking_geofencing_service_enabled")
+    private boolean mBookingGeofenceServiceEnabled;
+
     @SerializedName("onboarding_info")
     private OnboardingParams mOnboardingParams;
+
+    @SerializedName("help_center")
+    private HelpCenterInfo mHelpCenterInfo;
 
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
+    }
+
+    public boolean isBookingGeofenceServiceEnabled()
+    {
+        return mBookingGeofenceServiceEnabled;
     }
 
     public boolean isComplementaryJobsEnabled()
@@ -82,5 +93,34 @@ public class ConfigurationResponse
     public boolean shouldShowOnboarding()
     {
         return getOnboardingParams() != null && mOnboardingParams.shouldShowOnboarding();
+    }
+
+    public boolean shouldUseHelpCenterWebView()
+    {
+        return mHelpCenterInfo.shouldUseHelpCenterWebView();
+    }
+
+    public String getHelpCenterUrl()
+    {
+        return mHelpCenterInfo.getHelpCenterUrl();
+    }
+
+    public static class HelpCenterInfo
+    {
+        @SerializedName("should_use_help_center_web_view")
+        private boolean mShouldUseHelpCenterWebView;
+
+        @SerializedName("help_center_url")
+        private String mHelpCenterUrl;
+
+        public boolean shouldUseHelpCenterWebView()
+        {
+            return mShouldUseHelpCenterWebView;
+        }
+
+        public String getHelpCenterUrl()
+        {
+            return mHelpCenterUrl;
+        }
     }
 }

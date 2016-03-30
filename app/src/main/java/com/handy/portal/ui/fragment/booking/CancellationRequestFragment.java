@@ -1,6 +1,7 @@
 package com.handy.portal.ui.fragment.booking;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -71,7 +73,14 @@ public class CancellationRequestFragment extends ActionBarFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_cancellation_request, container, false);
+        final View view = inflater.inflate(R.layout.fragment_cancellation_request, container, false);
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
+                mBooking,
+                ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
+                mAction.getWithholdingAmount(),
+                mAction.getWarningText()
+        )));
+        return view;
     }
 
     @Override
@@ -104,20 +113,22 @@ public class CancellationRequestFragment extends ActionBarFragment
     @OnClick(R.id.cancellation_confirm_button)
     public void cancelBooking()
     {
-        RadioButton reasonBtn = UIUtils.getCheckedRadioButton(mReasonsRadioGroup);
-        if (reasonBtn == null)
+        final String selectedReason = getSelectedReason();
+        if (selectedReason == null)
         {
             showToast(R.string.select_a_reason);
         }
         else
         {
-            final Booking.Action action = mBooking.getAction(Booking.Action.ACTION_UNASSIGN_FLOW);
-            String warning = (action != null) ? action.getWarningText() : null;
-            bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobConfirmedLog(
-                    mBooking, warning, reasonBtn.getText().toString())));
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
+                    mBooking,
+                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
+                    selectedReason,
+                    mAction.getWithholdingAmount(),
+                    mAction.getWarningText()
+            )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestRemoveJob(mBooking));
-
         }
     }
 
@@ -126,6 +137,13 @@ public class CancellationRequestFragment extends ActionBarFragment
     {
         if (event.booking.getId().equals(mBooking.getId()))
         {
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
+                    mBooking,
+                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
+                    getSelectedReason(),
+                    mAction.getWithholdingAmount(),
+                    mAction.getWarningText()
+            )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
             Bundle arguments = new Bundle();
@@ -138,9 +156,21 @@ public class CancellationRequestFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
     {
+        String errorMessage = event.error.getMessage();
+        if (errorMessage == null)
+        {
+            errorMessage = getString(R.string.job_remove_error_generic);
+        }
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
+                mBooking,
+                ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
+                getSelectedReason(),
+                mAction.getWithholdingAmount(),
+                mAction.getWarningText(),
+                errorMessage
+        )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createRemoveJobErrorLog(mBooking)));
-        showToast(R.string.job_remove_error);
+        showToast(errorMessage);
     }
 
     private void init()
@@ -169,4 +199,14 @@ public class CancellationRequestFragment extends ActionBarFragment
         }
     }
 
+    @Nullable
+    public String getSelectedReason()
+    {
+        final RadioButton reasonButton = UIUtils.getCheckedRadioButton(mReasonsRadioGroup);
+        if (reasonButton != null)
+        {
+            return reasonButton.getText().toString();
+        }
+        return null;
+    }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -116,8 +117,10 @@ public class GoogleManager
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("deviceId", regId);
                     editor.commit();
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
+                    Crashlytics.logException(ex);
                 }
                 return "";
             }

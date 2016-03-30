@@ -16,12 +16,16 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.LoginLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LoginDetails;
@@ -101,6 +105,8 @@ public class LoginActivityFragment extends InjectedFragment
 
         registerControlListeners();
 
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown()));
+
         return view;
     }
 
@@ -115,6 +121,7 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     case INPUTTING_PHONE_NUMBER:
                     {
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PhoneNumberSubmitted()));
                         if (phoneNumberEditText.validate())
                         {
                             sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
@@ -125,6 +132,7 @@ public class LoginActivityFragment extends InjectedFragment
                     break;
                     case INPUTTING_PIN:
                     {
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PinCodeSubmitted()));
                         if (pinCodeEditText.validate())
                         {
                             sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());
@@ -244,6 +252,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onPinCodeRequestError(HandyEvent.ReceivePinCodeError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
             postLoginErrorEvent("server");
@@ -277,11 +286,14 @@ public class LoginActivityFragment extends InjectedFragment
         {
             if (event.loginDetails.getSuccess())
             {
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success()));
                 beginLogin(event.loginDetails);
             }
             else
             {
-                postLoginErrorEvent("pin code");
+                //this should never happen anymore since we changed the HTTP response code for login failure. logging for now just in case
+                Crashlytics.logException(new Exception("Login request success event fired but login details success parameter is false"));
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
                 showToast(R.string.login_error_bad_login);
                 changeState(LoginState.INPUTTING_PIN);
                 pinCodeEditText.highlight();
@@ -292,10 +304,33 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onLoginRequestError(HandyEvent.ReceiveLoginError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
-            postLoginErrorEvent("server");
-            showToast(R.string.login_error_connectivity);
+            DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
+            if(errorType != null)
+            {
+                if(errorType.equals(DataManager.DataManagerError.Type.NETWORK))
+                {
+                    showToast(R.string.error_connectivity);
+                }
+                else if(errorType.equals(DataManager.DataManagerError.Type.CLIENT))
+                {
+                    showToast(R.string.login_error_bad_login);
+                }
+                else //server error
+                {
+                    showToast(R.string.login_error_connectivity);
+                }
+            }
+            else
+            {
+                //should never happen
+                showToast(R.string.login_error_connectivity);
+                Crashlytics.logException(new Exception("Login request error type is null"));
+            }
+            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+            pinCodeEditText.highlight();
             changeState(LoginState.INPUTTING_PIN);
         }
     }

@@ -28,19 +28,22 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     public final static float HDPI = 1.5f;
     public final static float XHDPI = 2.0f;
     public final static float XXHDPI = 3.0f;
+    public final static int RGBA_ALPHA_100_PERCENT = 255;
+    public final static int RGBA_ALPHA_50_PERCENT = 127;
+    public final static int DRAWABLE_TOP_INDEX = 1;
 
     //TODO move somewhere else
-    public static boolean areAnyPermissionsGranted(@NonNull Context context, @NonNull String[] permissions)
+    public static boolean areAllPermissionsGranted(@NonNull Context context, @NonNull String[] permissions)
     {
         for (int i = 0; i < permissions.length; i++)
         {
             if (ActivityCompat.checkSelfPermission(context,
-                    permissions[i]) == PackageManager.PERMISSION_GRANTED)
+                    permissions[i]) != PackageManager.PERMISSION_GRANTED)
             {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public static boolean wereAnyPermissionsRequestedPreviously(@NonNull Activity activity, @NonNull String[] permissions)

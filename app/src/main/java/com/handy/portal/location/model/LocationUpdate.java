@@ -73,6 +73,15 @@ public class LocationUpdate
     String mActiveNetworkType;
     @SerializedName("event_name")
     String mEventName;
+    @SerializedName("booking_id")
+    String mBookingId;
+
+
+    public static class EventName
+    {
+        public static final String BOOKING_GEOFENCE_ENTERED = "booking_geofence_entered";
+        public static final String BOOKING_GEOFENCE_EXITED = "booking_geofence_exited";
+    }
 
     public LocationUpdate(double latitude,
                           double longitude,
@@ -94,7 +103,7 @@ public class LocationUpdate
     //TODO: move this?
     public static LocationUpdate from(@NonNull Location location)
     {
-        LocationUpdate locationUpdate = new LocationUpdate(
+        return new LocationUpdate(
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getAccuracy(),
@@ -103,7 +112,11 @@ public class LocationUpdate
                 location.getBearing(),
                 new Date(location.getTime())
         );
-        return locationUpdate;
+    }
+
+    public void setBookingId(final String bookingId)
+    {
+        mBookingId = bookingId;
     }
 
     /**
@@ -134,7 +147,9 @@ public class LocationUpdate
     @Override
     public String toString()
     {
-        String result = "lat: " + mLatitude
+        return "booking id (optional): " + mBookingId
+                + "\nevent name (optional): " + mEventName
+                + "\nlat: " + mLatitude
                 + "\nlong: " + mLongitude
                 + "\naccuracy: " + mAccuracyMeters
                 + "\nalt: " + mAltitudeMeters
@@ -143,6 +158,5 @@ public class LocationUpdate
                 + "\ntimestamp: " + mCapturedTimestamp.toString()
                 + "\nbattery level: " + mBatteryLevelPercent
                 + "\nconnection type: " + mActiveNetworkType;
-        return result;
     }
 }

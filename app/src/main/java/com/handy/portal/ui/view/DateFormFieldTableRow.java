@@ -1,6 +1,7 @@
 package com.handy.portal.ui.view;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TableRow;
@@ -22,7 +23,7 @@ public class DateFormFieldTableRow extends TableRow implements Errorable
 
     public TextView getLabel()
     {
-        return (TextView) findViewById(R.id.label_text);
+        return (TextView) findViewById(R.id.label_text_date);
     }
 
     public TextView getMonthValue()
@@ -37,14 +38,14 @@ public class DateFormFieldTableRow extends TableRow implements Errorable
 
     public View getErrorIndicator()
     {
-        return findViewById(R.id.error_indicator);
+        return findViewById(R.id.error_indicator_date);
     }
 
     @Override
     public void setErrorState(boolean error)
     {
-        int errorColor = getResources().getColor(R.color.error_red);
-        int normalColor = getResources().getColor(R.color.black);
+        int errorColor = ContextCompat.getColor(getContext(), R.color.error_red);
+        int normalColor = ContextCompat.getColor(getContext(), R.color.black);
 
         getErrorIndicator().setVisibility(error ? VISIBLE : INVISIBLE);
         getLabel().setTextColor(error ? errorColor : normalColor);

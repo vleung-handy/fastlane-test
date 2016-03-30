@@ -65,7 +65,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     @Override
     protected MainViewTab getTab()
     {
-        return MainViewTab.RATINGS_AND_FEEDBACK;
+        return MainViewTab.DASHBOARD;
     }
 
     @Nullable
@@ -122,10 +122,10 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
                 switch (position)
                 {
                     case DashboardRatingsPagerAdapter.LIFETIME_PAGE_POSITION:
-                        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.LifetimeRatingsLog()));
+                        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.LifetimeRatingsShown()));
                         break;
                     case DashboardRatingsPagerAdapter.PAST_28_DAYS_PAGE_POSITION:
-                        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.RollingRatingsLog()));
+                        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.RollingRatingsShown()));
                         break;
                 }
             }
@@ -214,7 +214,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
 
+        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
         bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments));
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createFeedbackTappedLog()));
     }
 }

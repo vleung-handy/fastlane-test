@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.model.Booking;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AvailableJobsLog extends EventLog
+public abstract class AvailableJobsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "available_jobs";
 
@@ -20,7 +21,7 @@ public class AvailableJobsLog extends EventLog
 
     public static class DateClicked extends AvailableJobsLog
     {
-        private static final String EVENT_TYPE = "date_scroller_date_selected";
+        private static final String EVENT_TYPE = "date_selected";
 
         @SerializedName("date")
         private Date mDate;
@@ -35,40 +36,6 @@ public class AvailableJobsLog extends EventLog
         }
     }
 
-    public static class Clicked extends AvailableJobsLog
-    {
-        private static final String EVENT_TYPE = "selected";
-
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("list_number")
-        private int mListNumber;
-
-        public Clicked(
-                final String bookingId, final String serviceId, final int regionId,
-                final String zipCode, final boolean requested, final Date dateStart,
-                final int listNumber)
-        {
-            super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
-            mListNumber = listNumber;
-        }
-    }
 
     public static class UnavailableJobNoticeShown extends AvailableJobsLog
     {
@@ -91,43 +58,42 @@ public class AvailableJobsLog extends EventLog
         }
     }
 
-    public static class ClaimSuccess extends AvailableJobsLog
-    {
-        private static final String EVENT_TYPE = "claim_success";
+    // Booking-specific events
 
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("frequency")
-        private int mFrequency;
+
+    public static class Clicked extends JobsLog
+    {
+        private static final String EVENT_TYPE = "job_selected";
+
+        @SerializedName("list_index")
+        private int mListIndex;
+
+        public Clicked(final Booking booking, final int listIndex)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+            mListIndex = listIndex;
+        }
+    }
+
+    // Job claim events
+
+
+    public static abstract class AvailableJobsBookingClaimLog extends JobsLog
+    {
         @SerializedName("claim_source")
         private String mSource;
         @SerializedName("claim_source_extras")
         private Map<String, Object> mSourceExtras;
+        @SerializedName("distance_to_job")
+        private double mDistanceToJobInMeters;
 
-
-        public ClaimSuccess(
-                final String bookingId, final String serviceId, final int regionId,
-                final String zipCode, final boolean requested, final Date dateStart,
-                final int frequency, final String source, @Nullable final Bundle sourceExtras)
+        public AvailableJobsBookingClaimLog(final String eventType,
+                                            final Booking booking,
+                                            final String source,
+                                            @Nullable final Bundle sourceExtras,
+                                            final double distanceToJobInMeters)
         {
-            super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
-            mFrequency = frequency;
+            super(eventType, EVENT_CONTEXT, booking);
             mSource = source;
             if (sourceExtras != null)
             {
@@ -137,45 +103,54 @@ public class AvailableJobsLog extends EventLog
                     mSourceExtras.put(key, sourceExtras.get(key));
                 }
             }
+            mDistanceToJobInMeters = distanceToJobInMeters;
         }
     }
 
-    public static class ClaimError extends AvailableJobsLog
+
+    public static class ClaimSubmitted extends AvailableJobsBookingClaimLog
+    {
+        private static final String EVENT_TYPE = "claim_submitted";
+
+        public ClaimSubmitted(final Booking booking,
+                              final String source,
+                              @Nullable final Bundle sourceExtras,
+                              final double distanceToJobInMeters)
+        {
+            super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
+        }
+    }
+
+
+    public static class ClaimSuccess extends AvailableJobsBookingClaimLog
+    {
+        private static final String EVENT_TYPE = "claim_success";
+
+        public ClaimSuccess(final Booking booking,
+                            final String source,
+                            @Nullable final Bundle sourceExtras,
+                            final double distanceToJobInMeters)
+        {
+            super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
+        }
+    }
+
+
+    public static class ClaimError extends AvailableJobsBookingClaimLog
     {
         private static final String EVENT_TYPE = "claim_error";
 
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("service_id")
-        private String mServiceId;
-        @SerializedName("region_id")
-        private int mRegionId;
-        @SerializedName("zipcode")
-        private String mZipCode;
-        @SerializedName("requested")
-        private boolean mRequested;
-        @SerializedName("date_start")
-        private Date mDateStart;
-        @SerializedName("frequency")
-        private int mFrequency;
-        @SerializedName("claim_source")
-        private String mSource;
+        @SerializedName("error_message")
+        private String mErrorMessage;
 
-
-        public ClaimError(
-                final String bookingId, final String serviceId, final int regionId,
-                final String zipCode, final boolean requested, final Date dateStart,
-                final int frequency, final String source)
+        public ClaimError(final Booking booking,
+                          final String source,
+                          @Nullable final Bundle sourceExtras,
+                          final double distanceToJobInMeters,
+                          final String errorMessage)
         {
-            super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mServiceId = serviceId;
-            mRegionId = regionId;
-            mZipCode = zipCode;
-            mRequested = requested;
-            mDateStart = dateStart;
-            mFrequency = frequency;
-            mSource = source;
+            super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
+            mErrorMessage = errorMessage;
         }
     }
 }

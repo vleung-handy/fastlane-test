@@ -16,11 +16,12 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.LocationPingService;
-import com.handy.portal.location.LocationScheduleHandler;
-import com.handy.portal.location.LocationService;
 import com.handy.portal.location.manager.LocationManager;
-import com.handy.portal.logger.handylogger.EventLogFactory;
+import com.handy.portal.location.scheduler.LocationScheduleService;
+import com.handy.portal.location.scheduler.geofences.handler.BookingGeofenceScheduleHandler;
+import com.handy.portal.location.scheduler.tracking.handler.LocationTrackingScheduleHandler;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
@@ -38,6 +39,7 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
+import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.receiver.HandyPushReceiver;
@@ -72,6 +74,7 @@ import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
@@ -132,6 +135,7 @@ import retrofit.converter.GsonConverter;
         TermsActivity.class,
         TermsFragment.class,
         HelpFragment.class,
+        HelpWebViewFragment.class,
         HelpContactFragment.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
@@ -163,8 +167,9 @@ import retrofit.converter.GsonConverter;
         DashboardFeedbackFragment.class,
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
-        LocationScheduleHandler.class,
-        LocationService.class,
+        LocationTrackingScheduleHandler.class,
+        BookingGeofenceScheduleHandler.class,
+        LocationScheduleService.class,
         LocationPingService.class,
         BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
@@ -176,6 +181,7 @@ import retrofit.converter.GsonConverter;
         DashboardVideoLibraryFragment.class,
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
+        SendReceiptCheckoutFragment.class,
 })
 public final class ApplicationModule
 {
@@ -202,6 +208,13 @@ public final class ApplicationModule
     final EnvironmentModifier provideEnvironmentModifier(PrefsManager prefsManager)
     {
         return new EnvironmentModifier(context, prefsManager);
+    }
+
+    @Provides
+    @Singleton
+    final UserInterfaceUpdateManager provideUserInterfaceManager(final Bus bus)
+    {
+        return new UserInterfaceUpdateManager(bus);
     }
 
     @Provides
@@ -330,17 +343,16 @@ public final class ApplicationModule
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final Bus bus,
-                                               final DataManager dataManager,
-                                               final EventLogFactory eventLogFactory)
+                                               final DataManager dataManager)
     {
-        return new BookingManager(bus, dataManager, eventLogFactory);
+        return new BookingManager(bus, dataManager);
     }
 
     @Provides
     @Singleton
-    final SystemManager provideSystemManager(final Bus bus, final EventLogFactory eventLogFactory)
+    final SystemManager provideSystemManager(final Bus bus)
     {
-        return new SystemManager(context, bus, eventLogFactory);
+        return new SystemManager(context, bus);
     }
 
     @Provides
@@ -405,13 +417,6 @@ public final class ApplicationModule
                                          final DataManager dataManager)
     {
         return new HelpManager(bus, dataManager);
-    }
-
-    @Provides
-    @Singleton
-    final ApplicationOnResumeWatcher provideApplicationOnResumeWatcher(final Bus bus)
-    {
-        return new ApplicationOnResumeWatcher(bus);
     }
 
     @Provides
@@ -510,13 +515,6 @@ public final class ApplicationModule
     )
     {
         return new TabNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
-    }
-
-    @Provides
-    @Singleton
-    final EventLogFactory provideEventLogFactory(final ProviderManager providerManager)
-    {
-        return new EventLogFactory(providerManager);
     }
 
     private String getDeviceId()

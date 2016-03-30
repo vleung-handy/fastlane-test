@@ -2,6 +2,7 @@ package com.handy.portal.ui.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -54,8 +55,8 @@ public abstract class InputTextField extends EditText
     public final void highlight()
     {
         isHighlighted = true;
-        this.setHintTextColor(getResources().getColor(R.color.error_red));
-        this.setTextColor(getResources().getColor(R.color.error_red));
+        setHintTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
+        setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
     }
 
     public final void unHighlight()

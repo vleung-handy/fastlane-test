@@ -2,6 +2,7 @@ package com.handy.portal.webview;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.webkit.WebView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import java.util.ArrayList;
@@ -96,4 +98,34 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
         webView.loadUrl(urlWithParams);
     }
 
+    @NonNull
+    protected WebView getWebView()
+    {
+        return webView;
+    }
+
+    @Override
+    public void onResume()
+    {
+        webView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        webView.onPause();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        /*
+        quick-fix: since the whole app shares one loading spinner,
+        have to remove it when this fragment is destroyed (i.e. back press)
+        */
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        super.onDestroy();
+    }
 }

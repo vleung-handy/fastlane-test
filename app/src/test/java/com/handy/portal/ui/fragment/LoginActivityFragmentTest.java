@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.TestUtils;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.data.DataManager;
@@ -21,7 +22,6 @@ import com.squareup.otto.Bus;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
@@ -35,8 +35,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
@@ -80,9 +78,9 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     {
         makePinRequest("1111111111");
 
-        ArgumentCaptor<HandyEvent.RequestPinCode> argument = ArgumentCaptor.forClass(HandyEvent.RequestPinCode.class);
-        verify(bus).post(argument.capture());
-        assertThat(argument.getValue().phoneNumber, equalTo("1111111111"));
+        final HandyEvent.RequestPinCode event = TestUtils.getFirstMatchingBusEvent(bus, HandyEvent.RequestPinCode.class);
+        assertNotNull(event);
+        assertThat(event.phoneNumber, equalTo("1111111111"));
     }
 
     @Test
@@ -90,10 +88,10 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     {
         makeLoginRequest("5353");
 
-        ArgumentCaptor<HandyEvent.RequestLogin> argument = ArgumentCaptor.forClass(HandyEvent.RequestLogin.class);
-        verify(bus).post(argument.capture());
-        assertThat(argument.getValue().phoneNumber, equalTo(VALID_PHONE_NUMBER));
-        assertThat(argument.getValue().pinCode, equalTo("5353"));
+        final HandyEvent.RequestLogin event = TestUtils.getFirstMatchingBusEvent(bus, HandyEvent.RequestLogin.class);
+        assertNotNull(event);
+        assertThat(event.phoneNumber, equalTo(VALID_PHONE_NUMBER));
+        assertThat(event.pinCode, equalTo("5353"));
     }
 
     @Test
@@ -111,7 +109,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     {
         makeLoginRequest("123");
 
-        verifyZeroInteractions(bus);
+        final HandyEvent.RequestLogin event = TestUtils.getFirstMatchingBusEvent(bus, HandyEvent.RequestLogin.class);
+        assertNull(event);
     }
 
     @Test

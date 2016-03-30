@@ -17,14 +17,14 @@ public class PaymentsLog extends EventLog
 
         @SerializedName("current_week")
         private boolean mCurrentWeek;
-        @SerializedName("list_number")
-        private int mListNumber;
+        @SerializedName("list_index")
+        private int mListIndex;
 
-        public BatchSelected(boolean currentWeek, int listNumber)
+        public BatchSelected(boolean currentWeek, int listIndex)
         {
             super(EVENT_TYPE);
             mCurrentWeek = currentWeek;
-            mListNumber = listNumber;
+            mListIndex = listIndex;
         }
     }
 
@@ -44,11 +44,11 @@ public class PaymentsLog extends EventLog
     }
 
 
-    public static class HelpSlideUpSelected extends PaymentsLog
+    public static class HelpSelected extends PaymentsLog
     {
-        private static final String EVENT_TYPE = "help_slide_up_selected";
+        private static final String EVENT_TYPE = "help_selected";
 
-        public HelpSlideUpSelected()
+        public HelpSelected()
         {
             super(EVENT_TYPE);
         }

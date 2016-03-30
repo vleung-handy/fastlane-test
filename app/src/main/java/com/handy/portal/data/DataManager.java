@@ -5,7 +5,7 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.location.model.LocationQuerySchedule;
+import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
@@ -69,7 +69,7 @@ public class DataManager
         mStripeService = stripeService;
     }
 
-    public void getLocationStrategies(String providerId, Callback<LocationQuerySchedule> cb)
+    public void getLocationStrategies(String providerId, Callback<LocationScheduleStrategies> cb)
     {
         mService.getLocationStrategies(providerId, new GetLocationScheduleRetrofitCallback(cb));
     }
@@ -228,11 +228,6 @@ public class DataManager
         });
     }
 
-    public void sendVersionInformation(Map<String, String> versionInfo)
-    {
-        mService.sendVersionInformation(versionInfo, new EmptyHandyRetroFitCallback(null));
-    }
-
     //********Help Center********
     public void getHelpInfo(String nodeId,
                             String bookingId,
@@ -311,6 +306,11 @@ public class DataManager
     public void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb)
     {
         mService.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
+    }
+
+    public void getNotificationsUnreadCount(final String providerId, final Callback<HashMap<String, Object>> cb)
+    {
+        mService.getNotificationsUnreadCount(providerId, new NotificationUnreadCountHandyRetroFitCallback(cb));
     }
 
     public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)

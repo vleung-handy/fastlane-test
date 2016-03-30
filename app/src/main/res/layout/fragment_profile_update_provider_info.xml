@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_payment_method_option"
+            android:background="@drawable/border_gray_no_side"
             android:orientation="horizontal"
             >
 
@@ -35,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/name"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_textfield_padding"
+                android:paddingLeft="@dimen/inner_text_field_padding"
+                android:paddingStart="@dimen/inner_text_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_profile"
                 />
@@ -77,7 +78,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/email"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_textfield_padding"
+                android:paddingLeft="@dimen/inner_text_field_padding"
+                android:paddingStart="@dimen/inner_text_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_email"
                 />
@@ -119,7 +121,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/address"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_textfield_padding"
+                android:paddingLeft="@dimen/inner_text_field_padding"
+                android:paddingStart="@dimen/inner_text_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_location"
                 />
@@ -181,7 +184,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/address"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_textfield_padding"
+                android:paddingLeft="@dimen/inner_text_field_padding"
+                android:paddingStart="@dimen/inner_text_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_location"
                 />
@@ -254,7 +258,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/phone"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_textfield_padding"
+                android:paddingLeft="@dimen/inner_text_field_padding"
+                android:paddingStart="@dimen/inner_text_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_phone"
                 />

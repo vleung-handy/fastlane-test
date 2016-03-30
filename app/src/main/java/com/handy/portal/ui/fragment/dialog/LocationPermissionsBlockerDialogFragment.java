@@ -26,7 +26,7 @@ public class LocationPermissionsBlockerDialogFragment extends InjectedDialogFrag
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = new DialogBlockerView(getContext())
+        return new DialogBlockerView(getContext())
                 .setTitle(R.string.change_location_permissions_dialog_title)
                 .setMessage(R.string.change_location_permissions_dialog_message)
                 .setActionButton(R.string.change_location_permissions_dialog_action_button, new View.OnClickListener()
@@ -41,6 +41,5 @@ public class LocationPermissionsBlockerDialogFragment extends InjectedDialogFrag
                         dismiss();
                     }
                 });
-        return view;
     }
 }

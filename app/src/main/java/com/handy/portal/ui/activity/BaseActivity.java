@@ -10,13 +10,17 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.location.LocationConstants;
+import com.handy.portal.event.NotificationEvent;
+import com.handy.portal.location.LocationUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
@@ -74,6 +78,20 @@ public abstract class BaseActivity extends AppCompatActivity
             if (deeplinkData != null)
             {
                 intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkData);
+
+                // Since deeplink data gets passed along through activity launches, we want to
+                // avoid logging deeplink_opened event multiple times.
+                boolean deeplinkOpenedLogged =
+                        intent.getBooleanExtra(BundleKeys.DEEPLINK_OPENED_LOGGED, false);
+                if (!deeplinkOpenedLogged)
+                {
+                    final String deeplinkSource = intent.getStringExtra(BundleKeys.DEEPLINK_SOURCE);
+                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
+                            deeplinkSource,
+                            deeplinkData
+                    )));
+                    intent.putExtra(BundleKeys.DEEPLINK_OPENED_LOGGED, true);
+                }
             }
         }
         super.startActivity(intent);
@@ -169,7 +187,6 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onResumeFragments();
         this.bus.register(mAppUpdateEventListener);
         checkForUpdates();
-        postActivityResumeEvent(); //do not disable this
     }
 
     @Override
@@ -194,8 +211,19 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public void onPause()
     {
-        postActivityPauseEvent();
-        bus.unregister(mAppUpdateEventListener);
+        try
+        {
+             /*
+                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
+                 Activity.onPause() can be called without Activity.onResume()
+                 so unregistering the bus here can cause an exception
+              */
+            bus.unregister(mAppUpdateEventListener);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e); //want more info for now
+        }
         super.onPause();
     }
 
@@ -226,16 +254,6 @@ public abstract class BaseActivity extends AppCompatActivity
         bus.post(new AppUpdateEvent.RequestUpdateCheck(this));
     }
 
-    public void postActivityResumeEvent()
-    {
-        bus.post(new HandyEvent.ActivityResumed(this));
-    }
-
-    public void postActivityPauseEvent()
-    {
-        bus.post(new HandyEvent.ActivityPaused(this));
-    }
-
     public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)
     {
         //TODO: Handle receive update available error, do we need to block?
@@ -257,20 +275,21 @@ public abstract class BaseActivity extends AppCompatActivity
                         .addApi(LocationServices.API)
                         .build();
                 bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(true));
-                bus.post(new GoogleApiLog.GoogleApiAvailability(true));
+                bus.post(new LogEvent.AddLogEvent(new GoogleApiLog.GoogleApiAvailability(true)));
             }
             else
             {
                 bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(false));
-                bus.post(new GoogleApiLog.GoogleApiAvailability(false));
+                bus.post(new LogEvent.AddLogEvent(new GoogleApiLog.GoogleApiAvailability(false)));
             }
         }
     }
 
     @Override
+    @SuppressWarnings({"ResourceType", "MissingPermission"})
     public void onConnected(Bundle connectionHint)
     {
-        if (!Utils.areAnyPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS))
+        if (!LocationUtils.hasRequiredLocationPermissions(this))
         {
             return;
         }

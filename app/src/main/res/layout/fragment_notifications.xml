@@ -6,13 +6,15 @@
 
     <include layout="@layout/layout_fetch_error" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <include layout="@layout/layout_no_notifications" />
+
+    <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <include layout="@layout/element_notifications_list" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
 
 </LinearLayout>

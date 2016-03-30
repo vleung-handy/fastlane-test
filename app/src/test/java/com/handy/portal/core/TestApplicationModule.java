@@ -6,7 +6,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
@@ -19,6 +18,7 @@ import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
+import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -35,6 +35,8 @@ import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
+import com.handy.portal.ui.fragment.SendReceiptCheckoutFragmentTest;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
@@ -76,7 +78,9 @@ import static org.mockito.Mockito.when;
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
         BookingDetailsJobInstructionsView.class,
-        LocationSettingsBlockerDialogFragment.class
+        LocationSettingsBlockerDialogFragment.class,
+        SendReceiptCheckoutFragment.class,
+        SendReceiptCheckoutFragmentTest.class,
 }, library = true)
 public class TestApplicationModule
 {
@@ -205,12 +209,6 @@ public class TestApplicationModule
     }
 
     @Provides
-    final ApplicationOnResumeWatcher provideApplicationOnResumeWatcher()
-    {
-        return mock(ApplicationOnResumeWatcher.class);
-    }
-
-    @Provides
     final Mixpanel provideMixpanel()
     {
         return mock(Mixpanel.class);
@@ -223,12 +221,14 @@ public class TestApplicationModule
     }
 
     @Provides
+    final UserInterfaceUpdateManager provideUserInterfaceUpdateManager()
+    {
+        return mock(UserInterfaceUpdateManager.class);
+    }
+
+    @Provides
     final UrbanAirshipManager providerUrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return mock(UrbanAirshipManager.class);
     }
-
-    @Provides
-    final EventLogFactory provideEventLogFactory() { return mock(EventLogFactory.class); }
-
 }

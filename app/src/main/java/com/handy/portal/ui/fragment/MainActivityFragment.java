@@ -3,10 +3,12 @@ package com.handy.portal.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,12 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.BasicLog;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
+import com.handy.portal.logger.handylogger.model.SideMenuLog;
+import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
@@ -33,6 +40,8 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.layout.TabbedLayout;
+import com.handy.portal.ui.widget.TabButton;
+import com.handy.portal.ui.widget.TabButtonGroup;
 import com.handy.portal.util.DeeplinkMapper;
 import com.squareup.otto.Subscribe;
 
@@ -50,15 +59,12 @@ public class MainActivityFragment extends InjectedFragment
     /////////////Bad useless injection that breaks if not in?
 
     @Bind(R.id.tabs)
-    RadioGroup tabs;
-    @Bind(R.id.button_jobs)
-    RadioButton mJobsButton;
-    @Bind(R.id.button_schedule)
-    RadioButton mScheduleButton;
-    @Bind(R.id.button_notifications)
-    RadioButton mNotificationsButton;
-    @Bind(R.id.button_more)
-    RadioButton mButtonMore;
+    TabButtonGroup mTabs;
+    private TabButton mJobsButton;
+    private TabButton mScheduleButton;
+    private TabButton mNotificationsButton;
+    private TabButton mButtonMore;
+
     @Bind(R.id.loading_overlay)
     View mLoadingOverlayView;
     @Bind(R.id.nav_link_payments)
@@ -94,6 +100,7 @@ public class MainActivityFragment extends InjectedFragment
     private boolean mFirstTimeConfigReturned = true; //the first time we get config response back we may need to navigate away
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
+    private String mDeeplinkSource;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -121,9 +128,34 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        {
+            @Override
+            public void onDrawerOpened(final View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Opened()));
+                setDrawerActive(true);
+            }
+
+            @Override
+            public void onDrawerClosed(final View drawerView)
+            {
+                super.onDrawerClosed(drawerView);
+                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
+                setDrawerActive(false);
+            }
+        });
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
+        bus.post(new NotificationEvent.RequestUnreadCount());
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentTab == null)
         {
@@ -144,16 +176,22 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+    @Subscribe
+    public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
+    {
+        mNotificationsButton.setUnreadCount(event.getUnreadCount());
+    }
+
     private void handleOnboardingFlow()
     {
         if (currentTab != null &&
-                currentTab != MainViewTab.ONBOARDING &&
+                currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
                 configManager.getConfigurationResponse() != null &&
                 configManager.getConfigurationResponse().shouldShowOnboarding()
                 )
         {
             //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
-            switchToTab(MainViewTab.ONBOARDING, false);
+            switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
         }
     }
 
@@ -161,7 +199,9 @@ public class MainActivityFragment extends InjectedFragment
     {
         if (savedInstanceState == null || !(mDeeplinkHandled = savedInstanceState.getBoolean(BundleKeys.DEEPLINK_HANDLED)))
         {
-            mDeeplinkData = getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
+            final Intent intent = getActivity().getIntent();
+            mDeeplinkData = intent.getBundleExtra(BundleKeys.DEEPLINK_DATA);
+            mDeeplinkSource = intent.getStringExtra(BundleKeys.DEEPLINK_SOURCE);
         }
     }
 
@@ -175,7 +215,20 @@ public class MainActivityFragment extends InjectedFragment
                 final MainViewTab targetTab = DeeplinkMapper.getTabForDeeplink(deeplink);
                 if (targetTab != null)
                 {
+                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
+                            mDeeplinkSource,
+                            mDeeplinkData
+                    )));
                     switchToTab(targetTab, mDeeplinkData, false);
+                }
+                else
+                {
+                    // Unable to find a matching tab for deeplink, so ignore it.
+                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                            mDeeplinkSource,
+                            DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
+                            mDeeplinkData
+                    )));
                 }
             }
         }
@@ -215,9 +268,9 @@ public class MainActivityFragment extends InjectedFragment
             mContentFrame.setAutoHideShowTabs(isVisible);
         }
 
-        if (tabs != null)
+        if (mTabs != null)
         {
-            tabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+            mTabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -251,7 +304,7 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new NavigationEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
                 transitionStyle, userTriggered));
         bus.post(new LogEvent.AddLogEvent(
-                mEventLogFactory.createNavigationLog(targetTab.name().toLowerCase())));
+                new BasicLog.Navigation(targetTab.name().toLowerCase())));
     }
 
     @Subscribe
@@ -265,7 +318,7 @@ public class MainActivityFragment extends InjectedFragment
         trackSwitchToTab(swapFragmentArguments.targetTab);
         //Turn navigation tabs and drawer on by default, some fragments may lock these afterwards
         setTabVisibility(true);
-        setDrawerActive(true);
+        setDrawerActive(false);
         //Swap the fragments
         swapFragment(swapFragmentArguments);
         //Update the tab button display
@@ -305,39 +358,68 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerBottomNavListeners()
     {
-        mJobsButton.setOnClickListener(new TabOnClickListener(MainViewTab.AVAILABLE_JOBS));
-        mScheduleButton.setOnClickListener(new TabOnClickListener(MainViewTab.SCHEDULED_JOBS));
+        mJobsButton = new TabButton(getContext())
+                .init(R.string.tab_claim, R.drawable.ic_menu_search);
+        mScheduleButton = new TabButton(getContext())
+                .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
+        mNotificationsButton = new TabButton(getContext())
+                .init(R.string.tab_notifications, R.drawable.ic_menu_notifications);
+        mButtonMore = new TabButton(getContext())
+                .init(R.string.tab_more, R.drawable.ic_menu_more);
+        mTabs.setTabs(mJobsButton, mScheduleButton, mNotificationsButton, mButtonMore);
+
+        mJobsButton.setOnClickListener(
+                new TabOnClickListener(mJobsButton, MainViewTab.AVAILABLE_JOBS));
+        mScheduleButton.setOnClickListener(
+                new TabOnClickListener(mScheduleButton, MainViewTab.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
-        tabs.setOnCheckedChangeListener(new BottomNavOnCheckedChangeListener());
 
         if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
         {
-            mNotificationsButton.setOnClickListener(new TabOnClickListener(MainViewTab.NOTIFICATIONS));
+            mNotificationsButton.setOnClickListener(
+                    new TabOnClickListener(mNotificationsButton, MainViewTab.NOTIFICATIONS));
             mNotificationsButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mNotificationsButton.setVisibility(View.GONE);
         }
     }
 
     private void registerNavDrawerListeners()
     {
         mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
-        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.RATINGS_AND_FEEDBACK, null));
+        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
         mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
         mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP, null));
+
+        final ConfigurationResponse configuration = getConfigurationResponse();
+        final boolean shouldUseHelpCenterWebview =
+                configuration != null && getConfigurationResponse().shouldUseHelpCenterWebView();
+        final MainViewTab helpTab =
+                shouldUseHelpCenterWebview ?
+                        MainViewTab.HELP_WEBVIEW : MainViewTab.HELP;
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(helpTab, null));
     }
 
     private class TabOnClickListener implements View.OnClickListener
     {
+        private TabButton mTabButton;
         private MainViewTab mTab;
 
-        TabOnClickListener(MainViewTab tab)
+        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewTab tab)
         {
+            mTabButton = tabButton;
             mTab = tab;
         }
 
         @Override
         public void onClick(View view)
         {
+            if (mTabButton != null)
+            {
+                mTabButton.toggle();
+            }
             switchToTab(mTab, true);
         }
     }
@@ -348,9 +430,12 @@ public class MainActivityFragment extends InjectedFragment
         private MainViewTab mTab;
         private TransitionStyle mTransitionStyle;
 
-        NavDrawerOnClickListener(MainViewTab tab, TransitionStyle transitionStyleOverride)
+        NavDrawerOnClickListener(
+                final MainViewTab tab,
+                final TransitionStyle transitionStyleOverride
+        )
         {
-            super(tab);
+            super(null, tab);
             mTab = tab;
             mTransitionStyle = transitionStyleOverride;
         }
@@ -358,6 +443,8 @@ public class MainActivityFragment extends InjectedFragment
         @Override
         public void onClick(View view)
         {
+            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mTab.name().toLowerCase())));
+            mButtonMore.toggle();
             if (mTransitionStyle != null)
             {
                 switchToTab(mTab, null, mTransitionStyle, false);
@@ -381,19 +468,6 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-
-    private class BottomNavOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener
-    {
-        @Override
-        public void onCheckedChanged(RadioGroup radioGroup, int radioButtonId)
-        {
-            if (radioButtonId == mButtonMore.getId() && currentTab != null)
-            {
-                updateSelectedTabButton(currentTab);
-            }
-        }
-    }
-
     private void switchToTab(MainViewTab tab, boolean userTriggered)
     {
         switchToTab(tab, null, userTriggered);
@@ -407,12 +481,12 @@ public class MainActivityFragment extends InjectedFragment
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
         //If the user navved away from a non-blocking onboarding log it
-        if (currentTab == MainViewTab.ONBOARDING &&
-                targetTab != MainViewTab.ONBOARDING &&
+        if (currentTab == MainViewTab.ONBOARDING_WEBVIEW &&
+                targetTab != MainViewTab.ONBOARDING_WEBVIEW &&
                 userTriggered)
         {
             bus.post(new LogEvent.AddLogEvent(
-                    mEventLogFactory.createWebOnboardingDismissedLog()));
+                    new WebOnboardingLog.Dismissed()));
         }
 
         requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
@@ -447,7 +521,7 @@ public class MainActivityFragment extends InjectedFragment
             @Override
             public void updateTabs(MainViewTab tab)
             {
-                if (tabs != null) { updateSelectedTabButton(tab); }
+                if (mTabs != null) { updateSelectedTabButton(tab); }
             }
         });
     }
@@ -456,17 +530,18 @@ public class MainActivityFragment extends InjectedFragment
     private void updateSelectedTabButton(MainViewTab targetTab)
     {
         //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
-        if (targetTab != MainViewTab.DETAILS)
+        if (targetTab != MainViewTab.JOB_DETAILS)
         {
             switch (targetTab)
             {
                 case AVAILABLE_JOBS:
-                case BLOCK_PRO_AVAILABLE_JOBS_WEBVIEW:
+                case BLOCK_PRO_WEBVIEW:
                 {
                     mJobsButton.toggle();
                     mNavTrayLinks.clearCheck();
                 }
                 break;
+                case SEND_RECEIPT_CHECKOUT:
                 case SCHEDULED_JOBS:
                 {
                     mScheduleButton.toggle();
@@ -486,7 +561,7 @@ public class MainActivityFragment extends InjectedFragment
                 }
                 break;
                 case YOUTUBE_PLAYER:
-                case RATINGS_AND_FEEDBACK:
+                case DASHBOARD:
                 {
                     mButtonMore.toggle();
                     mNavLinkRatingsAndFeedback.toggle();
@@ -505,6 +580,7 @@ public class MainActivityFragment extends InjectedFragment
                 }
                 break;
                 case HELP:
+                case HELP_WEBVIEW:
                 {
                     mButtonMore.toggle();
                     mNavLinkHelp.toggle();
@@ -598,5 +674,4 @@ public class MainActivityFragment extends InjectedFragment
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
     }
-
 }

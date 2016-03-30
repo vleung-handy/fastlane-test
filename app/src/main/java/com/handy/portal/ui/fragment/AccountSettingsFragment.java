@@ -20,6 +20,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
@@ -98,6 +99,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile()
     {
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
     }
 
@@ -110,8 +112,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     @OnClick(R.id.order_resupply_layout)
     public void getResupplyKit()
     {
-        mBus.post(new LogEvent.AddLogEvent(
-                mEventLogFactory.createResupplyKitSelectedLog()));
+        mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
         final Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_PROFILE, mProviderProfile);

@@ -31,53 +31,13 @@ public class NearbyJobsLog extends EventLog
     {
         private static final String EVENT_TYPE = "pin_selected";
 
-        public PinSelected()
-        {
-            super(EVENT_TYPE);
-        }
-    }
-
-
-    public static class ClaimJobSelected extends NearbyJobsLog
-    {
-        private static final String EVENT_TYPE = "claim_job_selected";
-
         @SerializedName("booking_id")
         private String mBookingId;
-        @SerializedName("distance_to_job")
-        private double mDistanceInKilometer;
-        @SerializedName("payment_to_provider")
-        private float mPaymentAmount;
 
-        public ClaimJobSelected(
-                final String bookingId, final double distanceInKilometer, final float paymentAmount)
+        public PinSelected(final String bookingId)
         {
             super(EVENT_TYPE);
             mBookingId = bookingId;
-            mDistanceInKilometer = distanceInKilometer;
-            mPaymentAmount = paymentAmount;
-        }
-    }
-
-
-    public static class ClaimJobSuccess extends NearbyJobsLog
-    {
-        private static final String EVENT_TYPE = "claim_job_success";
-
-        @SerializedName("booking_id")
-        private String mBookingId;
-        @SerializedName("distance_to_job")
-        private double mDistanceInKilometer;
-        @SerializedName("payment_to_provider")
-        private float mPaymentAmount;
-
-        public ClaimJobSuccess(
-                final String bookingId, final double distanceInKilometer, final float paymentAmount)
-        {
-            super(EVENT_TYPE);
-            mBookingId = bookingId;
-            mDistanceInKilometer = distanceInKilometer;
-            mPaymentAmount = paymentAmount;
         }
     }
 

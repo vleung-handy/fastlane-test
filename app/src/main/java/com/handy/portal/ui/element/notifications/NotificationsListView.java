@@ -3,6 +3,7 @@ package com.handy.portal.ui.element.notifications;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
@@ -56,7 +57,7 @@ public final class NotificationsListView extends InfiniteScrollListView
         addFooterView(mFooterView, null, false);
         setAdapter(notificationsListAdapter);
         // Override the StickyListHeaderView not setting these correctly
-        ColorDrawable divider = new ColorDrawable(getResources().getColor(R.color.list_divider));
+        ColorDrawable divider = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.list_divider));
         getWrappedList().setDivider(divider);
         getWrappedList().setDividerHeight(1);
     }

@@ -23,8 +23,9 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
+import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
@@ -50,8 +51,6 @@ public class NearbyBookingsFragment extends ActionBarFragment
 
     @Inject
     ProviderManager mProviderManager;
-    @Inject
-    EventLogFactory mEventLogFactory;
 
     @Bind(R.id.nearby_bookings_description)
     TextView mDescriptionText;
@@ -129,7 +128,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     {
         super.onResume();
         bus.post(new LogEvent.AddLogEvent(
-                mEventLogFactory.createNearbyJobsLaunchedLog(mBookings.size())));
+                new NearbyJobsLog.Shown(mBookings.size())));
     }
 
     @Override
@@ -162,7 +161,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     @Override
     public void markerClicked(final Booking booking)
     {
-        bus.post(new LogEvent.AddLogEvent(mEventLogFactory.createPinSelectedLog()));
+        bus.post(new LogEvent.AddLogEvent(new NearbyJobsLog.PinSelected(booking.getId())));
         setBookingInfoDisplay(booking);
     }
 
@@ -173,7 +172,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         {
             Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
             bus.post(new LogEvent.AddLogEvent(
-                    mEventLogFactory.createNearbyJobClaimSelectedLog(booking, mKilometer)));
+                    new AvailableJobsLog.ClaimSubmitted(booking, SOURCE, null, mKilometer * 1000)));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestClaimJob(booking, SOURCE, null));
         }
@@ -184,7 +183,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     {
         Booking booking = event.bookingClaimDetails.getBooking();
         bus.post(new LogEvent.AddLogEvent(
-                mEventLogFactory.createNearbyJobClaimSuccessLog(booking, mKilometer)));
+                new AvailableJobsLog.ClaimSuccess(booking, SOURCE, null, mKilometer * 1000)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, booking.getStartDate().getTime());
@@ -194,8 +193,15 @@ public class NearbyBookingsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
+        String errorMessage = event.error.getMessage();
+        if (errorMessage == null)
+        {
+            errorMessage = getString(R.string.job_claim_error);
+        }
+        bus.post(new LogEvent.AddLogEvent(
+                new AvailableJobsLog.ClaimError(event.getBooking(), SOURCE, null, mKilometer * 1000, errorMessage)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        showToast(R.string.job_claim_error);
+        showToast(errorMessage);
     }
 
     private void setBookingInfoDisplay(final Booking booking)

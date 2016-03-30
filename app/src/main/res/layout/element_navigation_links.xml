@@ -11,6 +11,7 @@
         android:id="@+id/nav_link_ratings_and_feedback"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/ic_cup_gray"
+        android:drawableStart="@drawable/ic_cup_gray"
         android:text="@string/ratings_and_feedback"
         />
 
@@ -18,6 +19,7 @@
         android:id="@+id/nav_link_payments"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/ic_tray_wallet"
+        android:drawableStart="@drawable/ic_tray_wallet"
         android:text="@string/payments"
         />
 
@@ -35,6 +37,7 @@
         android:id="@+id/nav_link_refer_a_friend"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/tray_refer_a_friend"
+        android:drawableStart="@drawable/tray_refer_a_friend"
         android:text="@string/refer_a_friend"
         />
 
@@ -52,6 +55,7 @@
         android:id="@+id/nav_link_account_settings"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/tray_account_settings"
+        android:drawableStart="@drawable/tray_account_settings"
         android:text="@string/account_settings"
         />
 
@@ -59,6 +63,7 @@
         android:id="@+id/nav_link_help"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/ic_lifesaver"
+        android:drawableStart="@drawable/ic_lifesaver"
         android:text="@string/help"
         />
 

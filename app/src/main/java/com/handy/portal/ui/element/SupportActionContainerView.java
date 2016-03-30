@@ -1,7 +1,10 @@
 package com.handy.portal.ui.element;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -26,6 +29,26 @@ public class SupportActionContainerView extends FrameLayout
     @Bind(R.id.support_actions_container)
     ViewGroup supportActionsContainer;
 
+    public SupportActionContainerView(final Context context)
+    {
+        super(context);
+    }
+
+    public SupportActionContainerView(final Context context, final AttributeSet attrs)
+    {
+        super(context, attrs);
+    }
+
+    public SupportActionContainerView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public SupportActionContainerView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
+    {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
 
     public SupportActionContainerView(@NonNull final Context context,
                                       @NonNull final Collection<String> allowedActionNames,

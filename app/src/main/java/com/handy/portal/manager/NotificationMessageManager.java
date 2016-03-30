@@ -7,10 +7,14 @@ import com.handy.portal.model.notifications.NotificationMessages;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 public class NotificationMessageManager
 {
+    private static final String UNREAD_COUNT_KEY = "unread_count";
+
     private final Bus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
@@ -62,5 +66,26 @@ public class NotificationMessageManager
                 mBus.post(new NotificationEvent.ReceiveMarkNotificationsAsReadError(error));
             }
         });
+    }
+
+    @Subscribe
+    public void onRequestUnreadCount(final NotificationEvent.RequestUnreadCount event)
+    {
+        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        if (providerId != null)
+        {
+            mDataManager.getNotificationsUnreadCount(providerId, new DataManager.Callback<HashMap<String, Object>>()
+            {
+                @Override
+                public void onSuccess(final HashMap<String, Object> response)
+                {
+                    int unreadCount = (int) ((double) response.get(UNREAD_COUNT_KEY));
+                    mBus.post(new NotificationEvent.ReceiveUnreadCountSuccess(unreadCount));
+                }
+
+                @Override
+                public void onError(final DataManager.DataManagerError error) {}
+            });
+        }
     }
 }

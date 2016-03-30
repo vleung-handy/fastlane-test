@@ -10,8 +10,6 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.handylogger.EventLogFactory;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
@@ -35,7 +33,6 @@ import javax.inject.Inject;
 public class BookingManager
 {
     private final Bus mBus;
-    private EventLogFactory mEventLogFactory;
     private final DataManager mDataManager;
 
     private final Cache<Date, List<Booking>> availableBookingsCache;
@@ -43,11 +40,9 @@ public class BookingManager
     private final Cache<Date, List<Booking>> complementaryBookingsCache;
 
     @Inject
-    public BookingManager(final Bus bus, final DataManager dataManager,
-                          final EventLogFactory eventLogFactory)
+    public BookingManager(final Bus bus, final DataManager dataManager)
     {
         mBus = bus;
-        mEventLogFactory = eventLogFactory;
         mBus.register(this);
         mDataManager = dataManager;
 
@@ -350,11 +345,6 @@ public class BookingManager
             public void onSuccess(BookingClaimDetails bookingClaimDetails)
             {
                 invalidateCachesForDay(day);
-                mBus.post(new LogEvent.AddLogEvent(
-                        mEventLogFactory.createAvailableJobClaimSuccessLog(
-                                bookingClaimDetails.getBooking(),
-                                event.source,
-                                event.sourceExtras)));
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
 
                 /*
@@ -370,9 +360,6 @@ public class BookingManager
             {
                 //still need to invalidate so we don't allow them to click on same booking
                 invalidateCachesForDay(day);
-                mBus.post(new LogEvent.AddLogEvent(
-                        mEventLogFactory.createAvailableJobClaimErrorLog(event.booking,
-                                event.source)));
                 mBus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
             }
         });
