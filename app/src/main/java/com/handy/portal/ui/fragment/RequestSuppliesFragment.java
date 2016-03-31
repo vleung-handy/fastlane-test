@@ -114,7 +114,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitRequestConfirmed()));
         // Verify with Kenny that this transition is ok; may need to refactor later
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.REQUEST_SUPPLY_SUCCESS, true));
     }
 
     @Subscribe

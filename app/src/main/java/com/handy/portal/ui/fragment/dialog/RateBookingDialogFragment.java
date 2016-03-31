@@ -190,7 +190,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                 args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
                 args.putParcelable(BundleKeys.MAP_CENTER,
                         new LatLng(address.getLatitude(), address.getLongitude()));
-                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
+                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args, true));
             }
         }
         dismiss();

@@ -297,7 +297,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
             arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
             arguments.putString(BundleKeys.BOOKING_SOURCE, SOURCE_COMPLEMENTARY_JOBS_LIST);
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments, true));
         }
     }
 }

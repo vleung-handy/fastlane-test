@@ -293,16 +293,16 @@ public class MainActivityFragment extends InjectedFragment
     {
         //Catch this event then throw one to have the manager do the processing
         //We need to bother catching it here because we need to know the current tab of this fragment
-        requestProcessNavigateToTab(event.targetTab, this.currentTab, event.arguments, event.transitionStyleOverride, false);
+        requestProcessNavigateToTab(event.targetTab, this.currentTab, event.arguments, event.transitionStyle, event.addToBackStack);
     }
 
     //Ask the managers to do all the argument processing and post back a SwapFragmentNavigation event
     private void requestProcessNavigateToTab(
             MainViewTab targetTab, MainViewTab currentTab, Bundle arguments,
-            TransitionStyle transitionStyle, boolean userTriggered)
+            TransitionStyle transitionStyle, boolean addToBackStack)
     {
         bus.post(new NavigationEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
-                transitionStyle, userTriggered));
+                transitionStyle, addToBackStack));
         bus.post(new LogEvent.AddLogEvent(
                 new BasicLog.Navigation(targetTab.name().toLowerCase())));
     }
@@ -470,7 +470,7 @@ public class MainActivityFragment extends InjectedFragment
 
     private void switchToTab(MainViewTab tab, boolean userTriggered)
     {
-        switchToTab(tab, null, userTriggered);
+        switchToTab(tab, null, null, userTriggered);
     }
 
     private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, boolean userTriggered)
@@ -485,11 +485,10 @@ public class MainActivityFragment extends InjectedFragment
                 targetTab != MainViewTab.ONBOARDING_WEBVIEW &&
                 userTriggered)
         {
-            bus.post(new LogEvent.AddLogEvent(
-                    new WebOnboardingLog.Dismissed()));
+            bus.post(new LogEvent.AddLogEvent(new WebOnboardingLog.Dismissed()));
         }
 
-        requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, userTriggered);
+        requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, false);
     }
 
 ///Fragment swapping and related

@@ -596,7 +596,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
+                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
                 }
                 else
                 {
@@ -896,13 +896,13 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             final Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
         }
         else
         {
             final Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.HELP_NODE_ID, action.getDeepLinkData());
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
         }
     }
 
@@ -1175,7 +1175,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments, true));
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
