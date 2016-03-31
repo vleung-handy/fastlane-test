@@ -1,4 +1,4 @@
-package com.handy.portal.model.notifications;
+package com.handy.portal.notification.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.util.DateTimeUtils;

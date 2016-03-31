@@ -1,4 +1,4 @@
-package com.handy.portal.ui.element.notifications;
+package com.handy.portal.notification.ui.view;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.notifications.NotificationMessage;
+import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.ui.adapter.NotificationsListAdapter;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.Utils;

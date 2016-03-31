@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.notifications.NotificationMessage;
-import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
+import com.handy.portal.notification.model.NotificationMessage;
+import com.handy.portal.notification.ui.view.NotificationsListEntryView;
 import com.handy.portal.util.DateTimeUtils;
 
 import java.util.HashSet;
