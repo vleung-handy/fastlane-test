@@ -356,7 +356,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment
                 setActionBarTitle(R.string.claimed_job);
                 break;
             case READY_FOR_CHECK_OUT:
-                mCurrentView = new CheckOutBookingView(getContext());
+                mCurrentView = new CheckOutBookingView(getContext(), mBooking, mSource, mSourceExtras);
                 setActionBarTitle(R.string.claimed_job);
                 break;
             case FINISHED:

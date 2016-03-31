@@ -145,6 +145,9 @@
     <dimen name="get_directions_width_height">16dp</dimen>
     <dimen name="get_directions_margin_top">4dp</dimen>
     <dimen name="job_support_button_height">48dp</dimen>
+    <dimen name="job_details_chevron_width_height">16dp</dimen>
+
+    <dimen name="customer_name_height">60dp</dimen>
 
     <!-- Badge text size -->
     <dimen name="badge_text_size">10sp</dimen>

@@ -54,6 +54,8 @@
                     android:layout_marginRight="@dimen/default_margin_x2"
                     android:layout_toLeftOf="@+id/message_customer_view"
                     android:layout_toStartOf="@id/message_customer_view"
+                    android:src="@drawable/customer_call"
+                    android:visibility="gone"
                     />
 
                 <ImageView
@@ -63,6 +65,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:src="@drawable/customer_message"
+                    android:visibility="gone"
                     />
 
             </RelativeLayout>
