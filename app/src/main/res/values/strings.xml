@@ -25,7 +25,7 @@
     <string name="request_pin">Get PIN Code</string>
     <string name="professional_portal">Professional Portal</string>
     <string name="login_instructions_1">Log in to Handy</string>
-    <string name="login_instructions_2">We sent a 4-digit code to %1$s and your email. Enter it below:</string>
+    <string name="login_instructions_2">We sent a 6-digit PIN code to %1$s and your email.\nEnter it below:</string>
     <string name="sending_pin">Sending PIN code…</string>
     <string name="logging_in">Logging in…</string>
     <string name="login_need_help"><u>I need help logging in</u></string>
