@@ -3,6 +3,9 @@ package com.handy.portal.ui.fragment.booking;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +24,13 @@ import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.booking.Booking;
 import com.handy.portal.model.booking.BookingClaimDetails;
-import com.handy.portal.ui.element.bookings.CheckInBookingView;
+import com.handy.portal.ui.element.bookings.AvailableBookingView;
 import com.handy.portal.ui.element.bookings.CheckOutBookingView;
-import com.handy.portal.ui.element.bookings.ClaimBookingView;
+import com.handy.portal.ui.element.bookings.ClaimedBookingView;
 import com.handy.portal.ui.element.bookings.FinishedBookingView;
-import com.handy.portal.ui.element.bookings.OnMyWayBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
+import com.handy.portal.ui.view.InjectedBusView;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -47,6 +50,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment
     @Bind(R.id.booking_details_container)
     ViewGroup mContainer;
 
+    private InjectedBusView mCurrentView;
     private Booking mBooking;
     private String mRequestedBookingId;
     private Booking.BookingType mRequestedBookingType;
@@ -66,27 +70,59 @@ public class NewBookingDetailsFragment extends ActionBarFragment
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
+        if (arguments == null) { return; }
+
         mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
         mRequestedBookingType = Booking.BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
         mAssociatedBookingDate = new Date(arguments.getLong(BundleKeys.BOOKING_DATE, 0L));
-
-        setSourceInfo();
+        if (arguments.containsKey(BundleKeys.BOOKING_SOURCE))
+        {
+            mSource = arguments.getString(BundleKeys.BOOKING_SOURCE);
+        }
+        else if (arguments.containsKey(BundleKeys.DEEPLINK))
+        {
+            mSource = SOURCE_LATE_DISPATCH;
+            mSourceExtras = arguments;
+        }
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
+        if (mCurrentView != null)
+        {
+            mCurrentView.registerBus();
+        }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate));
     }
 
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        if (mCurrentView != null)
+        {
+            mCurrentView.unregisterBus();
+        }
+    }
+
+    @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_new_booking_details, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
     }
 
     @Subscribe
@@ -182,6 +218,29 @@ public class NewBookingDetailsFragment extends ActionBarFragment
         }
     }
 
+//    @Subscribe
+//    public void onReceiveZipClusterPolygonsSuccess(
+//            final BookingEvent.ReceiveZipClusterPolygonsSuccess event
+//    )
+//    {
+//        // There's a null check here due to a race condition with BookingsFragment.
+//        // BookingsFragment requests for zip clusters and the response may come back here. If the
+//        // result comes back before this fragment and this fragment hasn't loaded a booking, then
+//        // mAssociatedBooking will be null.
+//        if (mBooking != null)
+//        {
+//            Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
+//            BookingMapFragment fragment = BookingMapFragment.newInstance(
+//                    mBooking,
+//                    mSource,
+//                    bookingStatus,
+//                    event.zipClusterPolygons
+//            );
+//            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//            transaction.replace(mapLayout.getId(), fragment).commit();
+//        }
+//    }
+
     private String getLoggedInUserId()
     {
         return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
@@ -276,50 +335,41 @@ public class NewBookingDetailsFragment extends ActionBarFragment
         }
     }
 
-    private void setSourceInfo()
-    {
-        if (getArguments().containsKey(BundleKeys.BOOKING_SOURCE))
-        {
-            mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
-        }
-        else if (getArguments().containsKey(BundleKeys.DEEPLINK))
-        {
-            mSource = SOURCE_LATE_DISPATCH;
-            mSourceExtras = getArguments();
-        }
-    }
 
     private void updateDisplay()
     {
-        mContainer.removeAllViews();
+        if (mCurrentView != null)
+        {
+            mCurrentView.unregisterBus();
+            mContainer.removeView(mCurrentView);
+        }
+
         switch (mBooking.getBookingProgress(getLoggedInUserId()))
         {
             case READY_FOR_CLAIM:
-                ClaimBookingView claimBookingView = new ClaimBookingView(getContext());
-                claimBookingView.setBooking(mBooking);
-                mContainer.addView(claimBookingView);
+                mCurrentView = new AvailableBookingView(getContext(), mBooking, mSource, mSourceExtras);
+                setActionBarTitle(R.string.available_job);
                 break;
             case READY_FOR_ON_MY_WAY:
-                OnMyWayBookingView onMyWayBookingView = new OnMyWayBookingView(getContext());
-                onMyWayBookingView.setBooking(mBooking);
-                mContainer.addView(onMyWayBookingView);
-                break;
             case READY_FOR_CHECK_IN:
-                CheckInBookingView checkInBookingView = new CheckInBookingView(getContext());
-                checkInBookingView.setBooking(mBooking);
-                mContainer.addView(checkInBookingView);
+                mCurrentView = new ClaimedBookingView(getContext(), mBooking, mSource, mSourceExtras, getActionBar());
+                setActionBarTitle(R.string.claimed_job);
                 break;
             case READY_FOR_CHECK_OUT:
-                CheckOutBookingView checkOutBookingView = new CheckOutBookingView(getContext());
-                checkOutBookingView.setBooking(mBooking);
-                mContainer.addView(checkOutBookingView);
+                mCurrentView = new CheckOutBookingView(getContext());
+                setActionBarTitle(R.string.claimed_job);
                 break;
             case FINISHED:
             default:
-                FinishedBookingView finishedBookingView = new FinishedBookingView(getContext());
-                finishedBookingView.setBooking(mBooking);
-                mContainer.addView(finishedBookingView);
+                mCurrentView = new FinishedBookingView(getContext());
                 break;
         }
+        mContainer.addView(mCurrentView);
+        mCurrentView.registerBus();
+    }
+
+    private ActionBar getActionBar()
+    {
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 }

@@ -4,14 +4,14 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.model.booking.Booking;
+import com.handy.portal.ui.view.InjectedBusView;
 
 import butterknife.ButterKnife;
 
-public class FinishedBookingView extends FrameLayout
+public class FinishedBookingView extends InjectedBusView
 {
     private Booking mBooking;
 
