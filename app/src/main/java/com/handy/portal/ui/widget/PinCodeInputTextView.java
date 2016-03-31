@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 
 public final class PinCodeInputTextView extends InputTextField
 {
-    private static final int PIN_CODE_LENGTH = 4;
+    private static final int PIN_CODE_LENGTH = 6;
 
     public PinCodeInputTextView(final Context context)
     {
