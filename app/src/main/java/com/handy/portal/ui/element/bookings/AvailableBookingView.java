@@ -208,7 +208,8 @@ public class AvailableBookingView extends InjectedBusView
     }
 
     private void initMapLayout()
-    {//show either the real map or a placeholder image depending on if we have google play services
+    {
+        //show either the real map or a placeholder image depending on if we have google play services
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
         if (ConnectionResult.SUCCESS ==
                 GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()))
