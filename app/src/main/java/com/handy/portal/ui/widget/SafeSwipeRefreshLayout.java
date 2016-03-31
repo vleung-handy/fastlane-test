@@ -37,4 +37,18 @@ public class SafeSwipeRefreshLayout extends SwipeRefreshLayout
         }
         return false;
     }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent ev)
+    {
+        try
+        {
+            return super.onTouchEvent(ev);
+        }
+        catch (IllegalArgumentException e)
+        {
+            Crashlytics.log(e.getMessage());
+        }
+        return false;
+    }
 }

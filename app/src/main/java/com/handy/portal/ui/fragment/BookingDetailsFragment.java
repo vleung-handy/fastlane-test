@@ -199,8 +199,8 @@ public class BookingDetailsFragment extends ActionBarFragment
             @Override
             public void onScrollChanged()
             {
-                if (!mHaveTrackedSeenBookingInstructions &&
-                        mScrollView != null)
+                if (!mHaveTrackedSeenBookingInstructions && mScrollView != null
+                        && mAssociatedBooking != null)
                 {
                     float percentVis = UIUtils.getPercentViewVisibleInScrollView(mJobInstructionsView, mScrollView);
                     if (percentVis >= TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD)
