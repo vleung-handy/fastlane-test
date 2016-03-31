@@ -1,9 +1,10 @@
-package com.handy.portal.manager;
+package com.handy.portal.notification;
 
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.NotificationEvent;
-import com.handy.portal.model.notifications.NotificationMessages;
+import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.notification.model.NotificationMessages;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

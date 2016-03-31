@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment.dialog;
+package com.handy.portal.location.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.R;
+import com.handy.portal.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.ui.view.DialogBlockerView;
 import com.handy.portal.util.Utils;
 

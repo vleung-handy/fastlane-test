@@ -1,4 +1,4 @@
-package com.handy.portal.util;
+package com.handy.portal.notification;
 
 import android.app.AppOpsManager;
 import android.content.Context;

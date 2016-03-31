@@ -1,7 +1,7 @@
 package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.model.notifications.NotificationMessage;
+import com.handy.portal.notification.model.NotificationMessage;
 
 import java.util.ArrayList;
 
