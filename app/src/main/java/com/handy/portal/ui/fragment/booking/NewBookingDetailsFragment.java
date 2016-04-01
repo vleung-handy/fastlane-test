@@ -57,6 +57,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment
     private Date mAssociatedBookingDate;
     private String mSource;
     private Bundle mSourceExtras;
+    private boolean mFromPaymentsTab;
 
     @Override
     protected MainViewTab getTab()
@@ -84,6 +85,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment
             mSource = SOURCE_LATE_DISPATCH;
             mSourceExtras = arguments;
         }
+        mFromPaymentsTab = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
     }
 
     @Override
@@ -356,7 +358,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment
                 setActionBarTitle(R.string.claimed_job);
                 break;
             case READY_FOR_CHECK_OUT:
-                mCurrentView = new CheckOutBookingView(getContext(), mBooking, mSource, mSourceExtras);
+                mCurrentView = new CheckOutBookingView(getContext(), mBooking, mSource, mSourceExtras,
+                        mFromPaymentsTab);
                 setActionBarTitle(R.string.claimed_job);
                 break;
             case FINISHED:

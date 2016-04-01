@@ -153,13 +153,24 @@
                 android:layout_marginTop="@dimen/default_margin_medium"
                 />
 
-            <!--<com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView-->
-            <!--android:id="@+id/booking_details_job_instructions_view"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="@dimen/extra_margin_medium"-->
-            <!--android:orientation="horizontal"-->
-            <!--/>-->
+            <com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView
+                android:id="@+id/booking_details_job_instructions_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/extra_margin_medium"
+                android:orientation="horizontal"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/job_support_button_height"
+                android:layout_margin="@dimen/default_margin"
+                android:background="@color/white"
+                android:text="@string/job_support"
+                android:textAllCaps="false"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/large_text_size"
+                />
 
         </LinearLayout>
 
