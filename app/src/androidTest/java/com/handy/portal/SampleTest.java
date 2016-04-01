@@ -4,7 +4,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.SplashActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,8 +22,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class SampleTest
 {
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
-            MainActivity.class);
+    public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<>(
+            SplashActivity.class);
 
     @Before
     public void init() {
