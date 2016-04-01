@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.booking.Booking;
+import com.handy.portal.model.booking.Booking.BookingInstructionGroup;
 import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.util.DateTimeUtils;
@@ -44,6 +46,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_ENTRY_METHOD;
+import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_LINENS_LAUNDRY;
+import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_NOTE_TO_PRO;
+import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_PREFERENCES;
+import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_REFRIGERATOR;
+import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_TRASH;
+
 public class CheckOutBookingView extends InjectedBusView
 {
     @Inject
@@ -59,6 +68,10 @@ public class CheckOutBookingView extends InjectedBusView
     View mMessageCustomerView;
     @Bind(R.id.booking_support_button)
     Button mSupportButton;
+    @Bind(R.id.entry_method_layout)
+    ViewGroup mEntryMethodLayout;
+    @Bind(R.id.entry_method_text)
+    TextView mEntryMethodText;
     @Bind(R.id.booking_details_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
     @Bind(R.id.booking_action_button)
@@ -75,12 +88,12 @@ public class CheckOutBookingView extends InjectedBusView
     static
     {
         GROUP_ICONS = new HashMap<>();
-        GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_ENTRY_METHOD, R.drawable.ic_details_entry);
-        GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_LINENS_LAUNDRY, R.drawable.ic_details_linens);
-        GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_REFRIGERATOR, R.drawable.ic_details_fridge);
-        GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_TRASH, R.drawable.ic_details_trash);
-        GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_NOTE_TO_PRO, R.drawable.ic_details_request);
-        GROUP_ICONS.put(Booking.BookingInstructionGroup.GROUP_PREFERENCES, R.drawable.ic_details_request);
+        GROUP_ICONS.put(GROUP_ENTRY_METHOD, R.drawable.ic_details_entry);
+        GROUP_ICONS.put(GROUP_LINENS_LAUNDRY, R.drawable.ic_details_linens);
+        GROUP_ICONS.put(GROUP_REFRIGERATOR, R.drawable.ic_details_fridge);
+        GROUP_ICONS.put(GROUP_TRASH, R.drawable.ic_details_trash);
+        GROUP_ICONS.put(GROUP_NOTE_TO_PRO, R.drawable.ic_details_request);
+        GROUP_ICONS.put(GROUP_PREFERENCES, R.drawable.ic_details_request);
     }
 
     public CheckOutBookingView(
@@ -121,14 +134,13 @@ public class CheckOutBookingView extends InjectedBusView
         mSupportButton.setOnClickListener(onSupportClickListener);
 
         // Booking actions
-        List<Booking.Action> allowedActions = booking.getAllowedActions();
+        List<Booking.Action> allowedActions = mBooking.getAllowedActions();
         for (Booking.Action action : allowedActions)
         {
             enableActionsIfNeeded(action);
         }
 
-        Booking.BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
-//        mJobInstructionsView.refreshDisplay(booking, mFromPaymentsTab, bookingStatus);
+        Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
 
         Booking.User user = mBooking.getUser();
         if (user != null)
@@ -138,14 +150,22 @@ public class CheckOutBookingView extends InjectedBusView
 
         mJobStartTime.setText(DateTimeUtils.formatDateTo12HourClock(mBooking.getCheckInSummary().getCheckInTime()));
 
-        // Checklist
-        List<Booking.BookingInstructionGroup> bookingInstructionGroups = booking.getBookingInstructionGroups();
+        // Booking Instructions
+        List<BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();
         if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
         {
-            Booking.BookingInstructionGroup preferencesGroup = null;
-            for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
+            BookingInstructionGroup preferencesGroup = null;
+            for (BookingInstructionGroup group : bookingInstructionGroups)
             {
-                if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+                String groupString = group.getGroup();
+
+                if (groupString.equals(GROUP_ENTRY_METHOD))
+                {
+                    mEntryMethodLayout.setVisibility(VISIBLE);
+
+                    // TODO: Set entry method here
+                }
+                else if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
                 {
                     preferencesGroup = group;
                 }
@@ -156,22 +176,23 @@ public class CheckOutBookingView extends InjectedBusView
                             group.getInstructions());
                 }
             }
+
             if (preferencesGroup != null)
             {
                 List<Booking.BookingInstructionUpdateRequest> checklist = null;
-                if (mPrefsManager.getBookingInstructions(booking.getId()).isEmpty())
+                if (mPrefsManager.getBookingInstructions(mBooking.getId()).isEmpty())
                 {
-                    checklist = booking.getCustomerPreferences();
+                    checklist = mBooking.getCustomerPreferences();
                 }
                 else
                 {
                     try
                     {
                         Booking.BookingInstructionUpdateRequest[] checklistArray = GSON.fromJson(
-                                mPrefsManager.getBookingInstructions(booking.getId()),
+                                mPrefsManager.getBookingInstructions(mBooking.getId()),
                                 Booking.BookingInstructionUpdateRequest[].class);
                         checklist = Arrays.asList(checklistArray);
-                        booking.setCustomerPreferences(checklist);
+                        mBooking.setCustomerPreferences(checklist);
                     }
                     catch (JsonSyntaxException e)
                     {
@@ -183,7 +204,7 @@ public class CheckOutBookingView extends InjectedBusView
                     CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
                             preferencesGroup.getLabel(), GROUP_ICONS.get(preferencesGroup.getGroup()),
                             checklist);
-                    customerRequestsView.setEnabled(booking.isCheckedIn());
+                    customerRequestsView.setEnabled(mBooking.isCheckedIn());
                     mInstructionsLayout.addView(customerRequestsView);
                 }
             }

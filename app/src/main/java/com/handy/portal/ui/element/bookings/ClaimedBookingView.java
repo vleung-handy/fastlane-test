@@ -160,7 +160,7 @@ public class ClaimedBookingView extends InjectedBusView
         if (address != null)
         {
             mAddressLineOneText.setText(address.getAddress1());
-            mAddressLineTwoText.setText(address.getAddress2());
+            mAddressLineTwoText.setText(address.getCityStateZip());
 
             initGetDirections(address);
         }
@@ -282,7 +282,7 @@ public class ClaimedBookingView extends InjectedBusView
         String latitude = Float.toString(address.getLatitude());
         String longitude = Float.toString(address.getLongitude());
 
-        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=query");
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + address.getAddress1() + " " + address.getCityStateZip());
         Intent getDirectionsIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 
         // Use default maps app
