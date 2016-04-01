@@ -49,6 +49,8 @@ public class CheckOutBookingView extends InjectedBusView
     View mCallCustomerView;
     @Bind(R.id.message_customer_view)
     View mMessageCustomerView;
+    @Bind(R.id.booking_support_button)
+    Button mSupportButton;
     @Bind(R.id.booking_action_button)
     Button mActionButton;
     @Bind(R.id.booking_details_job_instructions_view)
@@ -59,12 +61,13 @@ public class CheckOutBookingView extends InjectedBusView
     private Bundle mSourceExtras;
     private boolean mFromPaymentsTab;
 
-    public CheckOutBookingView(final Context context, @NonNull Booking booking,
-                               String source, Bundle sourceExtras, boolean fromPaymentsTab)
+    public CheckOutBookingView(
+            final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
+            boolean fromPaymentsTab, OnClickListener onSupportClickListener)
     {
         super(context);
         init();
-        setBooking(booking, source, sourceExtras, fromPaymentsTab);
+        setBooking(booking, source, sourceExtras, fromPaymentsTab, onSupportClickListener);
     }
 
     public CheckOutBookingView(final Context context, final AttributeSet attrs)
@@ -87,12 +90,13 @@ public class CheckOutBookingView extends InjectedBusView
     }
 
     public void setBooking(@NonNull Booking booking, String source, Bundle sourceExtras,
-                           boolean fromPaymentsTab)
+                           boolean fromPaymentsTab, OnClickListener onSupportClickListener)
     {
         mBooking = booking;
         mSource = source;
         mSourceExtras = sourceExtras;
         mFromPaymentsTab = fromPaymentsTab;
+        mSupportButton.setOnClickListener(onSupportClickListener);
 
         // Booking actions
         List<Booking.Action> allowedActions = booking.getAllowedActions();

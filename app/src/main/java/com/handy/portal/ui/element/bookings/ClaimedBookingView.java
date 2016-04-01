@@ -83,6 +83,8 @@ public class ClaimedBookingView extends InjectedBusView
     TextView mJobPaymentText;
     @Bind(R.id.paid_extras_text)
     TextView mPaidExtrasText;
+    @Bind(R.id.booking_support_button)
+    Button mSupportButton;
     @Bind(R.id.booking_action_button)
     Button mActionButton;
 
@@ -96,12 +98,13 @@ public class ClaimedBookingView extends InjectedBusView
     private static final String DATE_FORMAT = "E, MMM d";
     private static final String INTERPUNCT = "\u00B7";
 
-    public ClaimedBookingView(final Context context, @NonNull Booking booking, String source,
-                              Bundle sourceExtras, ActionBar actionBar)
+    public ClaimedBookingView(
+            final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
+            ActionBar actionBar, OnClickListener onSupportClickListener)
     {
         super(context);
         init();
-        setDisplay(booking, source, sourceExtras, actionBar);
+        setDisplay(booking, source, sourceExtras, actionBar, onSupportClickListener);
     }
 
     public ClaimedBookingView(final Context context, final AttributeSet attrs)
@@ -124,12 +127,14 @@ public class ClaimedBookingView extends InjectedBusView
         init();
     }
 
-    public void setDisplay(@NonNull Booking booking, String source, Bundle sourceExtras, ActionBar actionBar)
+    public void setDisplay(@NonNull Booking booking, String source, Bundle sourceExtras,
+                           ActionBar actionBar, OnClickListener onSupportClickListener)
     {
         mBooking = booking;
         mSource = source;
         mSourceExtras = sourceExtras;
         mActionBar = actionBar;
+        mSupportButton.setOnClickListener(onSupportClickListener);
 
         if (DateTimeUtils.isDateWithinXHoursFromNow(booking.getStartDate(), 3))
         {
@@ -178,7 +183,6 @@ public class ClaimedBookingView extends InjectedBusView
 
 //        mPaidExtrasText.setText();
     }
-
 
     @Subscribe
     public void onReceiveZipClusterPolygonsSuccess(final BookingEvent.ReceiveZipClusterPolygonsSuccess event)

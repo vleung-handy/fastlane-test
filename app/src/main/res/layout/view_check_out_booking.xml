@@ -162,14 +162,13 @@
                 />
 
             <Button
+                android:id="@+id/booking_support_button"
+                style="@style/Button.Grey.Round"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/job_support_button_height"
-                android:layout_margin="@dimen/default_margin"
-                android:background="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/extra_margin_large"
+                android:layout_marginBottom="@dimen/extra_padding_medium"
                 android:text="@string/job_support"
-                android:textAllCaps="false"
-                android:textColor="@color/tertiary_grey"
-                android:textSize="@dimen/large_text_size"
                 />
 
         </LinearLayout>
