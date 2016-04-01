@@ -312,4 +312,6 @@ public class ClaimedBookingView extends InjectedBusView
             }
         }
     }
+
 }
+

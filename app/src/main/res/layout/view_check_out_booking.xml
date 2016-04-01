@@ -1,20 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
     >
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Check out?"
-        />
+        android:layout_above="@+id/booking_action_button"
+        android:layout_alignParentTop="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/customer_name_height"
+                android:background="@color/white"
+                android:padding="@dimen/default_padding"
+                >
+
+                <TextView
+                    android:id="@+id/customer_name_text"
+                    style="@style/CircularMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/large_text_size"
+                    tools:text="Customer's Name"
+                    />
+
+                <ImageView
+                    android:id="@+id/call_customer_view"
+                    android:layout_width="@dimen/customer_action_width_height"
+                    android:layout_height="@dimen/customer_action_width_height"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/default_margin_x2"
+                    android:layout_marginRight="@dimen/default_margin_x2"
+                    android:layout_toLeftOf="@+id/message_customer_view"
+                    android:layout_toStartOf="@id/message_customer_view"
+                    android:src="@drawable/customer_call"
+                    android:visibility="gone"
+                    />
+
+                <ImageView
+                    android:id="@+id/message_customer_view"
+                    android:layout_width="@dimen/customer_action_width_height"
+                    android:layout_height="@dimen/customer_action_width_height"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/customer_message"
+                    android:visibility="gone"
+                    />
+
+            </RelativeLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/customer_name_height"
+                android:background="@color/white"
+                android:padding="@dimen/default_padding"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        style="@style/CircularBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/job_started"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <TextView
+                        android:id="@+id/job_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="@dimen/extra_padding"
+                        android:paddingLeft="@dimen/extra_padding"
+                        android:paddingRight="@dimen/extra_padding"
+                        android:paddingStart="@dimen/extra_padding"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/large_text_size"
+                        tools:text="7:56 am"
+                        />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/job_details_chevron"
+                    android:layout_toStartOf="@id/job_details_chevron"
+                    android:text="@string/see_job_details"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <ImageView
+                    android:id="@id/job_details_chevron"
+                    android:layout_width="@dimen/job_details_chevron_width_height"
+                    android:layout_height="@dimen/job_details_chevron_width_height"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/row_margin"
+                    android:layout_marginStart="@dimen/row_margin"
+                    android:src="@drawable/ic_chevron_dashboard_gray"
+                    />
+
+            </RelativeLayout>
+
+            <include
+                layout="@layout/divider_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                />
+
+            <FrameLayout
+                android:id="@+id/bubble"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_medium"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin_medium"
+                />
+
+            <!--<com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView-->
+            <!--android:id="@+id/booking_details_job_instructions_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="@dimen/extra_margin_medium"-->
+            <!--android:orientation="horizontal"-->
+            <!--/>-->
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <Button
-        android:id="@+id/booking_check_out"
+        android:id="@id/booking_action_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/check_out"
+        android:layout_height="@dimen/complete_button_height"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.5"
+        android:background="@color/requested_green"
+        android:enabled="false"
+        android:text="@string/continue_to_check_out"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
         />
-</LinearLayout>
+
+</RelativeLayout>
