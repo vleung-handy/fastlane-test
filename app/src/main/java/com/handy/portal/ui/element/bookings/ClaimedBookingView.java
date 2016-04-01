@@ -1,7 +1,10 @@
 package com.handy.portal.ui.element.bookings;
 
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -10,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -49,6 +53,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ClaimedBookingView extends InjectedBusView
 {
@@ -68,6 +73,8 @@ public class ClaimedBookingView extends InjectedBusView
     ImageView mCallCustomerView;
     @Bind(R.id.message_customer_view)
     ImageView mMessageCustomerView;
+    @Bind(R.id.get_directions_layout)
+    ViewGroup mGetDirectionsLayout;
     @Bind(R.id.job_date_text)
     TextView mJobDateText;
     @Bind(R.id.job_time_text)
@@ -84,6 +91,7 @@ public class ClaimedBookingView extends InjectedBusView
     private Bundle mSourceExtras;
     private CountDownTimer mCounter;
     private ActionBar mActionBar;
+    private Intent mGetDirectionsIntent;
 
     private static final String DATE_FORMAT = "E, MMM d";
     private static final String INTERPUNCT = "\u00B7";
@@ -148,6 +156,8 @@ public class ClaimedBookingView extends InjectedBusView
         {
             mAddressLineOneText.setText(address.getAddress1());
             mAddressLineTwoText.setText(address.getAddress2());
+
+            initGetDirections(address);
         }
 
         Date startDate = booking.getStartDate();
@@ -184,6 +194,47 @@ public class ClaimedBookingView extends InjectedBusView
         transaction.replace(mMapLayout.getId(), fragment).commit();
     }
 
+    @OnClick(R.id.get_directions_layout)
+    public void getDirections()
+    {
+        if (mGetDirectionsIntent != null)
+        {
+            getContext().startActivity(mGetDirectionsIntent);
+        }
+    }
+
+    @OnClick(R.id.call_customer_view)
+    public void callCustomer()
+    {
+        mBus.post(new HandyEvent.CallCustomerClicked());
+
+        String phoneNumber = mBooking.getBookingPhone();
+        try
+        {
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
+        }
+        catch (ActivityNotFoundException activityException)
+        {
+            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
+        }
+    }
+
+    @OnClick(R.id.message_customer_view)
+    public void messageCustomer()
+    {
+        mBus.post(new HandyEvent.TextCustomerClicked());
+
+        String phoneNumber = mBooking.getBookingPhone();
+        try
+        {
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
+        }
+        catch (ActivityNotFoundException activityException)
+        {
+            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
+        }
+    }
+
     private void init()
     {
         inflate(getContext(), R.layout.view_claimed_booking, this);
@@ -218,6 +269,23 @@ public class ClaimedBookingView extends InjectedBusView
         else
         {
             UIUtils.replaceView(mMapLayout, new MapPlaceholderView(getContext()));
+        }
+    }
+
+    private void initGetDirections(Address address)
+    {
+        // Create a Uri from an intent string. Use the result to create an Intent.
+        String latitude = Float.toString(address.getLatitude());
+        String longitude = Float.toString(address.getLongitude());
+
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=query");
+        Intent getDirectionsIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+
+        // Use default maps app
+        if (getDirectionsIntent.resolveActivity(getContext().getPackageManager()) != null)
+        {
+            mGetDirectionsIntent = getDirectionsIntent;
+            mGetDirectionsLayout.setVisibility(VISIBLE);
         }
     }
 

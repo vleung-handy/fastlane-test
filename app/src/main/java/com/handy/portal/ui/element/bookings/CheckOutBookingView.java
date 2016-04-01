@@ -51,19 +51,20 @@ public class CheckOutBookingView extends InjectedBusView
     View mMessageCustomerView;
     @Bind(R.id.booking_action_button)
     Button mActionButton;
-//    @Bind(R.id.booking_details_job_instructions_view)
-//    BookingDetailsJobInstructionsView mJobInstructionsView;
+    @Bind(R.id.booking_details_job_instructions_view)
+    BookingDetailsJobInstructionsView mJobInstructionsView;
 
     private Booking mBooking;
     private String mSource;
     private Bundle mSourceExtras;
+    private boolean mFromPaymentsTab;
 
     public CheckOutBookingView(final Context context, @NonNull Booking booking,
-                               String source, Bundle sourceExtras)
+                               String source, Bundle sourceExtras, boolean fromPaymentsTab)
     {
         super(context);
         init();
-        setBooking(booking, source, sourceExtras);
+        setBooking(booking, source, sourceExtras, fromPaymentsTab);
     }
 
     public CheckOutBookingView(final Context context, final AttributeSet attrs)
@@ -85,13 +86,13 @@ public class CheckOutBookingView extends InjectedBusView
         init();
     }
 
-    public void setBooking(@NonNull Booking booking, String source, Bundle sourceExtras)
+    public void setBooking(@NonNull Booking booking, String source, Bundle sourceExtras,
+                           boolean fromPaymentsTab)
     {
         mBooking = booking;
         mSource = source;
         mSourceExtras = sourceExtras;
-
-        Booking.BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
+        mFromPaymentsTab = fromPaymentsTab;
 
         // Booking actions
         List<Booking.Action> allowedActions = booking.getAllowedActions();
@@ -99,6 +100,9 @@ public class CheckOutBookingView extends InjectedBusView
         {
             enableActionsIfNeeded(action);
         }
+
+        Booking.BookingStatus bookingStatus = booking.inferBookingStatus(getLoggedInUserId());
+        mJobInstructionsView.refreshDisplay(booking, mFromPaymentsTab, bookingStatus);
 
         Booking.User user = mBooking.getUser();
         if (user != null)
