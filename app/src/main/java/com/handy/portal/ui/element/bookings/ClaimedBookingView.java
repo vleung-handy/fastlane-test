@@ -15,9 +15,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.handy.portal.R;
+import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
@@ -41,6 +43,7 @@ import com.squareup.otto.Subscribe;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -126,16 +129,13 @@ public class ClaimedBookingView extends InjectedBusView
         }
 
         initMapLayout();
-        Booking.Action action = null;
-        if (mBooking.getAction(Booking.Action.ACTION_ON_MY_WAY) != null)
+
+        // Booking actions
+        List<Booking.Action> allowedActions = booking.getAllowedActions();
+        for (Booking.Action action : allowedActions)
         {
-            action = mBooking.getAction(Booking.Action.ACTION_ON_MY_WAY);
+            enableActionsIfNeeded(action);
         }
-        else if (mBooking.getAction(Booking.Action.ACTION_CHECK_IN) != null)
-        {
-            action = mBooking.getAction(Booking.Action.ACTION_CHECK_IN);
-        }
-        setActionButton(action);
 
         if (mBooking.getUser() != null)
         {
@@ -267,51 +267,64 @@ public class ClaimedBookingView extends InjectedBusView
         mCounter = DateTimeUtils.setCountDownTimer(getContext(), mActionBar, timeRemainMillis);
     }
 
-    private void setActionButton(Booking.Action action)
+    private void enableActionsIfNeeded(Booking.Action action)
     {
-        if (action == null)
+        BookingActionButtonType buttonActionType = UIUtils.getAssociatedActionType(action);
+        if (buttonActionType == null)
         {
-            mActionButton.setVisibility(GONE);
+            Crashlytics.log("Could not find action type for " + action.getActionName());
+            return;
         }
-        else
+
+        switch (buttonActionType)
         {
-            mActionButton.setVisibility(VISIBLE);
-            mActionButton.setEnabled(action.isEnabled());
-            switch (action.getActionName())
+            case ON_MY_WAY:
             {
-                case Booking.Action.ACTION_ON_MY_WAY:
-                    mActionButton.setText(R.string.on_my_way);
-                    mActionButton.setOnClickListener(new OnClickListener()
+                mActionButton.setVisibility(VISIBLE);
+                mActionButton.setText(R.string.on_my_way);
+                mActionButton.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
                     {
-                        @Override
-                        public void onClick(final View v)
-                        {
-                            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWay(
-                                    mBooking, getLocationData())));
-                            mBus.post(new HandyEvent.RequestNotifyJobOnMyWay(
-                                    mBooking.getId(), getLocationData()));
-                        }
-                    });
-                    break;
-                case Booking.Action.ACTION_CHECK_IN:
-                    mActionButton.setText(R.string.check_in);
-                    mActionButton.setOnClickListener(new OnClickListener()
+                        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                        mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWay(
+                                mBooking, getLocationData())));
+                        mBus.post(new HandyEvent.RequestNotifyJobOnMyWay(
+                                mBooking.getId(), getLocationData()));
+                    }
+                });
+                break;
+            }
+            case CHECK_IN:
+            {
+                mActionButton.setVisibility(VISIBLE);
+                mActionButton.setText(R.string.check_in);
+                mActionButton.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
                     {
-                        @Override
-                        public void onClick(final View v)
-                        {
-                            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckIn(
-                                    mBooking, getLocationData())));
-                            mBus.post(new HandyEvent.RequestNotifyJobCheckIn(
-                                    mBooking.getId(), getLocationData()));
-                        }
-                    });
-                    break;
+                        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                        mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckIn(
+                                mBooking, getLocationData())));
+                        mBus.post(new HandyEvent.RequestNotifyJobCheckIn(
+                                mBooking.getId(), getLocationData()));
+                    }
+                });
+                break;
+            }
+            case CONTACT_PHONE:
+            {
+                mCallCustomerView.setVisibility(VISIBLE);
+                break;
+            }
+            case CONTACT_TEXT:
+            {
+                mMessageCustomerView.setVisibility(VISIBLE);
+                break;
             }
         }
     }
-
 }
 

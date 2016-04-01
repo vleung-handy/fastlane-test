@@ -164,11 +164,6 @@ public class CheckOutBookingView extends InjectedBusView
 
     private void enableActionsIfNeeded(Booking.Action action)
     {
-        if (UIUtils.getAssociatedActionType(action) == null)
-        {
-            Crashlytics.log("Received an unsupported action type : " + action.getActionName());
-        }
-
         BookingActionButtonType buttonActionType = UIUtils.getAssociatedActionType(action);
         if (buttonActionType == null)
         {
