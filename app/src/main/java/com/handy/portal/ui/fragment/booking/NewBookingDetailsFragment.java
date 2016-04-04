@@ -36,7 +36,7 @@ import com.handy.portal.model.booking.BookingClaimDetails;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.AvailableBookingView;
-import com.handy.portal.ui.element.bookings.CheckOutBookingView;
+import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.bookings.ClaimedBookingView;
 import com.handy.portal.ui.element.bookings.FinishedBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -400,8 +400,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment
                 setActionBarTitle(R.string.claimed_job);
                 break;
             case READY_FOR_CHECK_OUT:
-                mCurrentView = new CheckOutBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                        mFromPaymentsTab, mOnSupportClickListener);
+                mCurrentView = new InProgressBookingView(getContext(), mBooking, mSource, mSourceExtras,
+                        mFromPaymentsTab, getActionBar(), mOnSupportClickListener);
                 setActionBarTitle(R.string.claimed_job);
                 break;
             case FINISHED:

@@ -56,6 +56,8 @@ public class AvailableBookingView extends InjectedBusView
     TextView mJobTimeText;
     @Bind(R.id.job_payment_text)
     TextView mJobPaymentText;
+    @Bind(R.id.job_number_text)
+    TextView mJobNumberText;
     @Bind(R.id.booking_claim)
     Button mActionButton;
 
@@ -111,17 +113,6 @@ public class AvailableBookingView extends InjectedBusView
 
         initMapLayout();
 
-//        Booking.Action action = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-//        if (action == null)
-//        {
-//            mActionButton.setVisibility(GONE);
-//        }
-//        else
-//        {
-//            mActionButton.setVisibility(VISIBLE);
-//            mActionButton.setEnabled(action.isEnabled());
-//        }
-
         mJobLocationText.setText(mBooking.getLocationName());
         Address address = mBooking.getAddress();
         if (address != null)
@@ -137,6 +128,7 @@ public class AvailableBookingView extends InjectedBusView
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());
+        mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, mBooking.getId()));
 
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
         if (paymentInfo != null)

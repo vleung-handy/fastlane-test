@@ -470,6 +470,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/job_number_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/default_margin"
@@ -486,6 +487,18 @@
                 android:layout_margin="@dimen/extra_margin_large"
                 android:layout_marginBottom="@dimen/extra_padding_medium"
                 android:text="@string/job_support"
+                />
+
+            <TextView
+                android:id="@+id/booking_details_action_helper_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/small_text_size"
+                android:visibility="gone"
+                tools:text="Helper text yo"
+                tools:visibility="visible"
                 />
 
         </LinearLayout>

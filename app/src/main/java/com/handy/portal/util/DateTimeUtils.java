@@ -46,6 +46,14 @@ public final class DateTimeUtils
         return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
     }
 
+    public static boolean isTimeWithinXHoursFromNow(Date date, int hours)
+    {
+        long currentTime = System.currentTimeMillis();
+        long dateOfBookingsTime = date.getTime();
+        long dateDifference = dateOfBookingsTime - currentTime;
+        return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
+    }
+
     @Nullable
     public static String getMonthShortName(Date date)
     {
