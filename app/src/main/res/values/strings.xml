@@ -335,6 +335,7 @@
     <string name="paid_extras">Paid Extras</string>
     <string name="entry_information">Entry Information</string>
     <string name="customer_request">Customer Request</string>
+    <string name="job_number_formatted">Job # %1$s</string>
 
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>

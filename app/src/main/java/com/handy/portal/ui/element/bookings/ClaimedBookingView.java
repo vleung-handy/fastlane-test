@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.common.collect.ImmutableSet;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.PrefsKey;
@@ -85,6 +86,10 @@ public class ClaimedBookingView extends InjectedBusView
     TextView mPaidExtrasText;
     @Bind(R.id.booking_support_button)
     Button mSupportButton;
+    @Bind(R.id.booking_details_action_helper_text)
+    TextView mBookingDetailsActionHelperText;
+    @Bind(R.id.job_number_text)
+    TextView mJobNumberText;
     @Bind(R.id.booking_action_button)
     Button mActionButton;
 
@@ -97,6 +102,13 @@ public class ClaimedBookingView extends InjectedBusView
 
     private static final String DATE_FORMAT = "E, MMM d";
     private static final String INTERPUNCT = "\u00B7";
+
+    private static final ImmutableSet<BookingActionButtonType> ASSOCIATED_BUTTON_ACTION_TYPES =
+            ImmutableSet.of(
+                    BookingActionButtonType.ON_MY_WAY,
+                    BookingActionButtonType.CHECK_IN
+            );
+
 
     public ClaimedBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
@@ -136,7 +148,7 @@ public class ClaimedBookingView extends InjectedBusView
         mActionBar = actionBar;
         mSupportButton.setOnClickListener(onSupportClickListener);
 
-        if (DateTimeUtils.isDateWithinXHoursFromNow(booking.getStartDate(), 3))
+        if (DateTimeUtils.isTimeWithinXHoursFromNow(booking.getStartDate(), 3))
         {
             setCountDownTimer(booking.getStartDate().getTime() - System.currentTimeMillis());
         }
@@ -173,6 +185,7 @@ public class ClaimedBookingView extends InjectedBusView
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());
+        mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, mBooking.getId()));
 
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
         if (paymentInfo != null)
@@ -366,6 +379,8 @@ public class ClaimedBookingView extends InjectedBusView
                                 mBooking.getId(), getLocationData()));
                     }
                 });
+
+                initHelperText(action);
                 break;
             }
             case CHECK_IN:
@@ -384,6 +399,8 @@ public class ClaimedBookingView extends InjectedBusView
                                 mBooking.getId(), getLocationData()));
                     }
                 });
+
+                initHelperText(action);
                 break;
             }
             case CONTACT_PHONE:
@@ -396,6 +413,15 @@ public class ClaimedBookingView extends InjectedBusView
                 mMessageCustomerView.setVisibility(VISIBLE);
                 break;
             }
+        }
+    }
+
+    private void initHelperText(Booking.Action action)
+    {
+        if (action.getHelperText() != null && !action.getHelperText().isEmpty())
+        {
+            mBookingDetailsActionHelperText.setVisibility(View.VISIBLE);
+            mBookingDetailsActionHelperText.setText(action.getHelperText());
         }
     }
 }

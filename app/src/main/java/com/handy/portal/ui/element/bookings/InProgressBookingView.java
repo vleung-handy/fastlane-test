@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +55,7 @@ import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GRO
 import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_REFRIGERATOR;
 import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_TRASH;
 
-public class CheckOutBookingView extends InjectedBusView
+public class InProgressBookingView extends InjectedBusView
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -74,12 +76,19 @@ public class CheckOutBookingView extends InjectedBusView
     TextView mEntryMethodText;
     @Bind(R.id.booking_details_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
+    @Bind(R.id.job_number_text)
+    TextView mJobNumberText;
+    @Bind(R.id.booking_details_action_helper_text)
+    TextView mBookingDetailsActionHelperText;
     @Bind(R.id.booking_action_button)
     Button mActionButton;
 
     private Booking mBooking;
     private String mSource;
     private Bundle mSourceExtras;
+    private ActionBar mActionBar;
+    private CountDownTimer mCounter;
+
     private boolean mFromPaymentsTab;
 
     private static final Map<String, Integer> GROUP_ICONS;
@@ -96,42 +105,49 @@ public class CheckOutBookingView extends InjectedBusView
         GROUP_ICONS.put(GROUP_PREFERENCES, R.drawable.ic_details_request);
     }
 
-    public CheckOutBookingView(
+    public InProgressBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            boolean fromPaymentsTab, OnClickListener onSupportClickListener)
+            boolean fromPaymentsTab, ActionBar actionBar, OnClickListener onSupportClickListener)
     {
         super(context);
         init();
-        setBooking(booking, source, sourceExtras, fromPaymentsTab, onSupportClickListener);
+        setDisplay(booking, source, sourceExtras, fromPaymentsTab, actionBar, onSupportClickListener);
     }
 
-    public CheckOutBookingView(final Context context, final AttributeSet attrs)
+    public InProgressBookingView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public CheckOutBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    public InProgressBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CheckOutBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
+    public InProgressBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    public void setBooking(@NonNull Booking booking, String source, Bundle sourceExtras,
-                           boolean fromPaymentsTab, OnClickListener onSupportClickListener)
+    public void setDisplay(
+            @NonNull Booking booking, String source, Bundle sourceExtras, boolean fromPaymentsTab,
+            ActionBar actionBar, OnClickListener onSupportClickListener)
     {
         mBooking = booking;
         mSource = source;
         mSourceExtras = sourceExtras;
+        mActionBar = actionBar;
         mFromPaymentsTab = fromPaymentsTab;
         mSupportButton.setOnClickListener(onSupportClickListener);
+
+        if (DateTimeUtils.isTimeWithinXHoursFromNow(booking.getStartDate(), 3))
+        {
+            setCountDownTimer(booking.getEndDate().getTime() - System.currentTimeMillis());
+        }
 
         // Booking actions
         List<Booking.Action> allowedActions = mBooking.getAllowedActions();
@@ -209,6 +225,8 @@ public class CheckOutBookingView extends InjectedBusView
                 }
             }
         }
+
+        mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, mBooking.getId()));
     }
 
     @OnClick(R.id.booking_action_button)
@@ -221,7 +239,7 @@ public class CheckOutBookingView extends InjectedBusView
 
     private void init()
     {
-        inflate(getContext(), R.layout.view_check_out_booking, this);
+        inflate(getContext(), R.layout.view_in_progress_booking, this);
         ButterKnife.bind(this);
         Utils.inject(getContext(), this);
     }
@@ -276,8 +294,13 @@ public class CheckOutBookingView extends InjectedBusView
         {
             case CHECK_OUT:
             {
-                mActionButton.setEnabled(true);
-                mActionButton.setAlpha(1.0f);
+                mActionButton.setVisibility(VISIBLE);
+
+                if (action.getHelperText() != null && !action.getHelperText().isEmpty())
+                {
+                    mBookingDetailsActionHelperText.setVisibility(View.VISIBLE);
+                    mBookingDetailsActionHelperText.setText(action.getHelperText());
+                }
                 break;
             }
             case CONTACT_PHONE:
@@ -297,5 +320,11 @@ public class CheckOutBookingView extends InjectedBusView
     {
         LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_section, instructionsLayout);
         return (BookingDetailsJobInstructionsSectionView) instructionsLayout.getChildAt(instructionsLayout.getChildCount() - 1);
+    }
+
+    private void setCountDownTimer(long timeRemainMillis)
+    {
+        if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
+        mCounter = DateTimeUtils.setCountDownTimer(getContext(), mActionBar, timeRemainMillis);
     }
 }

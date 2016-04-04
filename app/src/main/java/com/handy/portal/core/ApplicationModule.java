@@ -57,7 +57,7 @@ import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.AvailableBookingView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
-import com.handy.portal.ui.element.bookings.CheckOutBookingView;
+import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.bookings.ClaimedBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
@@ -188,7 +188,7 @@ import retrofit.converter.GsonConverter;
         SendReceiptCheckoutFragment.class,
         AvailableBookingView.class,
         ClaimedBookingView.class,
-        CheckOutBookingView.class,
+        InProgressBookingView.class,
         InjectedBusView.class,
 })
 public final class ApplicationModule
