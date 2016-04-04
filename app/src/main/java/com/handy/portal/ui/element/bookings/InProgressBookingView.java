@@ -60,6 +60,8 @@ public class InProgressBookingView extends InjectedBusView
     @Inject
     PrefsManager mPrefsManager;
 
+    @Bind(R.id.no_show_banner_text)
+    View mNoShowBanner;
     @Bind(R.id.customer_name_text)
     TextView mCustomerNameText;
     @Bind(R.id.job_start_time)
@@ -107,11 +109,13 @@ public class InProgressBookingView extends InjectedBusView
 
     public InProgressBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            boolean fromPaymentsTab, ActionBar actionBar, OnClickListener onSupportClickListener)
+            boolean fromPaymentsTab, ActionBar actionBar, OnClickListener onSupportClickListener,
+            boolean noShowReported)
     {
         super(context);
         init();
-        setDisplay(booking, source, sourceExtras, fromPaymentsTab, actionBar, onSupportClickListener);
+        setDisplay(booking, source, sourceExtras, fromPaymentsTab, actionBar,
+                onSupportClickListener, noShowReported);
     }
 
     public InProgressBookingView(final Context context, final AttributeSet attrs)
@@ -135,7 +139,7 @@ public class InProgressBookingView extends InjectedBusView
 
     public void setDisplay(
             @NonNull Booking booking, String source, Bundle sourceExtras, boolean fromPaymentsTab,
-            ActionBar actionBar, OnClickListener onSupportClickListener)
+            ActionBar actionBar, OnClickListener onSupportClickListener,  boolean noShowReported)
     {
         mBooking = booking;
         mSource = source;
@@ -224,6 +228,11 @@ public class InProgressBookingView extends InjectedBusView
                     mInstructionsLayout.addView(customerRequestsView);
                 }
             }
+        }
+
+        if (noShowReported)
+        {
+            mNoShowBanner.setVisibility(VISIBLE);
         }
 
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, mBooking.getId()));

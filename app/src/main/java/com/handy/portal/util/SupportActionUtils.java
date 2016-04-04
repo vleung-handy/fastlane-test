@@ -17,6 +17,7 @@ public class SupportActionUtils
 
     public static final Set<String> ISSUE_ACTION_NAMES = Sets.newHashSet(
             Action.ACTION_REPORT_NO_SHOW,
+            Action.ACTION_RETRACT_NO_SHOW,
             Action.ACTION_ISSUE_HOURS,
             Action.ACTION_ISSUE_UNSAFE,
             Action.ACTION_CUSTOMER_RESCHEDULE,
@@ -34,6 +35,7 @@ public class SupportActionUtils
         supportActionTypeMap.put(Action.ACTION_NOTIFY_LATE, SupportActionType.NOTIFY_LATE);
 
         supportActionTypeMap.put(Action.ACTION_REPORT_NO_SHOW, SupportActionType.REPORT_NO_SHOW);
+        supportActionTypeMap.put(Action.ACTION_RETRACT_NO_SHOW, SupportActionType.RETRACT_NO_SHOW);
         supportActionTypeMap.put(Action.ACTION_ISSUE_HOURS, SupportActionType.ISSUE_HOURS);
         supportActionTypeMap.put(Action.ACTION_ISSUE_UNSAFE, SupportActionType.ISSUE_UNSAFE);
         supportActionTypeMap.put(Action.ACTION_REMOVE, SupportActionType.REMOVE);

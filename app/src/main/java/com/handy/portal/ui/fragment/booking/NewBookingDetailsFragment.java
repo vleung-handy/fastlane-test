@@ -56,7 +56,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class NewBookingDetailsFragment extends ActionBarFragment
+public class NewBookingDetailsFragment extends ActionBarFragment implements View.OnClickListener
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
 
@@ -254,6 +254,9 @@ public class NewBookingDetailsFragment extends ActionBarFragment
             case REPORT_NO_SHOW:
                 showCustomerNoShowDialog(event.action);
                 break;
+            case RETRACT_NO_SHOW:
+                requestCancelNoShow();
+                break;
             case ISSUE_UNSAFE:
             case ISSUE_HOURS:
             case ISSUE_OTHER:
@@ -268,6 +271,50 @@ public class NewBookingDetailsFragment extends ActionBarFragment
                 unassignJob(event.action);
                 break;
         }
+    }
+
+    @Subscribe
+    public void onReceiveReportNoShowSuccess(HandyEvent.ReceiveReportNoShowSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        mBooking = event.booking;
+        updateDisplay();
+    }
+
+    @Subscribe
+    public void onReceiveReportNoShowError(HandyEvent.ReceiveReportNoShowError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.unable_to_report_no_show, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveCancelNoShowSuccess(HandyEvent.ReceiveCancelNoShowSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        mBooking = event.booking;
+        updateDisplay();
+        showToast(R.string.customer_no_show_cancelled, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveCancelNoShowError(HandyEvent.ReceiveCancelNoShowError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.unable_to_cancel_no_show, Toast.LENGTH_LONG);
+    }
+
+    @Override
+    public void onClick(final View v)
+    {
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportSelected(mBooking.getId())));
+
+        LinearLayout layout = UIUtils.createLinearLayout(getContext(), LinearLayout.VERTICAL);
+        layout.addView(new SupportActionContainerView(
+                getContext(), SupportActionUtils.ETA_ACTION_NAMES, mBooking));
+        layout.addView(new SupportActionContainerView(
+                getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, mBooking));
+        mSlideUpPanelContainer.showPanel(R.string.job_support, layout);
     }
 
     private String getLoggedInUserId()
@@ -368,25 +415,10 @@ public class NewBookingDetailsFragment extends ActionBarFragment
         if (mCurrentView != null)
         {
             mCurrentView.unregisterBus();
-            mSlideUpPanelContainer.removeView(mCurrentView);
         }
+        mSlideUpPanelContainer.removeAllViews();
 
-        View.OnClickListener mOnSupportClickListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportSelected(mBooking.getId())));
-
-                LinearLayout layout = UIUtils.createLinearLayout(getContext(), LinearLayout.VERTICAL);
-                layout.addView(new SupportActionContainerView(
-                        getContext(), SupportActionUtils.ETA_ACTION_NAMES, mBooking));
-                layout.addView(new SupportActionContainerView(
-                        getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, mBooking));
-                mSlideUpPanelContainer.showPanel(R.string.job_support, layout);
-            }
-        };
-
+        boolean noShowReported = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
         switch (mBooking.getBookingProgress(getLoggedInUserId()))
         {
             case READY_FOR_CLAIM:
@@ -396,12 +428,12 @@ public class NewBookingDetailsFragment extends ActionBarFragment
             case READY_FOR_ON_MY_WAY:
             case READY_FOR_CHECK_IN:
                 mCurrentView = new ClaimedBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                        getActionBar(), mOnSupportClickListener);
+                        getActionBar(), this, noShowReported);
                 setActionBarTitle(R.string.claimed_job);
                 break;
             case READY_FOR_CHECK_OUT:
                 mCurrentView = new InProgressBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                        mFromPaymentsTab, getActionBar(), mOnSupportClickListener);
+                        mFromPaymentsTab, getActionBar(), this, noShowReported);
                 setActionBarTitle(R.string.claimed_job);
                 break;
             case FINISHED:
@@ -486,6 +518,13 @@ public class NewBookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.RequestReportNoShow(mBooking.getId(), getLocationData()));
     }
 
+    private void requestCancelNoShow()
+    {
+        mSlideUpPanelContainer.hidePanel();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestCancelNoShow(mBooking.getId(), getLocationData()));
+    }
+
     private LocationData getLocationData()
     {
         return Utils.getCurrentLocation((BaseActivity) getActivity());
@@ -557,5 +596,4 @@ public class NewBookingDetailsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(mBooking));
     }
-
 }
