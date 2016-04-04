@@ -59,6 +59,7 @@ public class SlideUpPanelLayout extends RelativeLayout
         init();
     }
 
+    // TODO: considering breaking this up to showPanel and SetPanel
     public void showPanel(int titleStringId, View content)
     {
         if (!mPanelShown)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/booking_details_container"
+<com.handy.portal.ui.layout.SlideUpPanelLayout
+    android:id="@+id/booking_details_slide_up_panel_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
