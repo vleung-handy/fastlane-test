@@ -202,6 +202,7 @@
     <string name="customer_prefix">CUSTOMER: </string>
 
     <string name="customer_not_home">My customer is not home</string>
+    <string name="undo_customer_no_show">Customer arrived, undo report</string>
     <string name="add_remove_hours">Request to add/remove hours</string>
     <string name="customer_reschedule">Customer wants to reschedule</string>
     <string name="cancellation_policy">What’s the cancellation policy?</string>

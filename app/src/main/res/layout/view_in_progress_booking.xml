@@ -18,6 +18,19 @@
             android:orientation="vertical"
             >
 
+            <TextView
+                android:id="@+id/no_show_banner_text"
+                style="@style/CircularBold"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/customer_no_show_banner_height"
+                android:background="@color/pink"
+                android:gravity="center"
+                android:text="@string/customer_no_show_reported"
+                android:textColor="@color/error_red"
+                android:textSize="@dimen/default_text_size"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"

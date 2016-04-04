@@ -89,6 +89,7 @@
     <dimen name="booking_details_map_height">280dp</dimen>
     <dimen name="booking_details_date_margin">2dp</dimen>
     <dimen name="booking_details_notice_text_margin">15dp</dimen>
+    <dimen name="customer_no_show_banner_height">48dp</dimen>
 
     <!--job list-->
     <dimen name="job_cell_min_height">128dp</dimen>

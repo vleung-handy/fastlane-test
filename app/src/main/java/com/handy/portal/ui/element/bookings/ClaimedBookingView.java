@@ -62,6 +62,8 @@ public class ClaimedBookingView extends InjectedBusView
     @Inject
     PrefsManager mPrefsManager;
 
+    @Bind(R.id.no_show_banner_text)
+    View mNoShowBanner;
     @Bind(R.id.map_layout)
     FrameLayout mMapLayout;
     @Bind(R.id.customer_name_text)
@@ -112,11 +114,11 @@ public class ClaimedBookingView extends InjectedBusView
 
     public ClaimedBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            ActionBar actionBar, OnClickListener onSupportClickListener)
+            ActionBar actionBar, OnClickListener onSupportClickListener, boolean noShowReported)
     {
         super(context);
         init();
-        setDisplay(booking, source, sourceExtras, actionBar, onSupportClickListener);
+        setDisplay(booking, source, sourceExtras, actionBar, onSupportClickListener, noShowReported);
     }
 
     public ClaimedBookingView(final Context context, final AttributeSet attrs)
@@ -139,8 +141,9 @@ public class ClaimedBookingView extends InjectedBusView
         init();
     }
 
-    public void setDisplay(@NonNull Booking booking, String source, Bundle sourceExtras,
-                           ActionBar actionBar, OnClickListener onSupportClickListener)
+    public void setDisplay(
+            @NonNull Booking booking, String source, Bundle sourceExtras, ActionBar actionBar,
+            OnClickListener onSupportClickListener, boolean noShowReported)
     {
         mBooking = booking;
         mSource = source;
@@ -194,7 +197,10 @@ public class ClaimedBookingView extends InjectedBusView
             mJobPaymentText.setText(paymentText);
         }
 
-//        mPaidExtrasText.setText();
+        if (noShowReported)
+        {
+            mNoShowBanner.setVisibility(VISIBLE);
+        }
     }
 
     @Subscribe

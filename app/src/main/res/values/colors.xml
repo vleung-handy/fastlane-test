@@ -24,6 +24,7 @@
     <color name="light_grey">#606060</color>
     <color name="dark_grey">#4A4A4A</color>
     <color name="dark_grey_pressed">#949494</color>
+    <color name="pink">#FFDEDE</color>
     <color name="steel">#8B9BA6</color>
     <color name="service_sep">#D6D6D6</color>
     <color name="cell_sep">#D6D6D6</color>
