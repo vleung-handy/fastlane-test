@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/white"
     >
 
@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/booking_claim"
+        android:layout_alignParentTop="true"
         >
 
         <LinearLayout
@@ -19,10 +20,10 @@
             >
 
             <FrameLayout
-            android:id="@+id/map_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/available_booking_details_map_height"
-            />
+                android:id="@+id/map_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/available_booking_details_map_height"
+                />
 
             <TextView
                 android:id="@+id/job_location_text"
