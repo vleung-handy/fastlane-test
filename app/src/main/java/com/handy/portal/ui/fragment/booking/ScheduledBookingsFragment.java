@@ -136,7 +136,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
 
         if (bookingsForDay.size() == 0 &&
-            DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
+                DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
         {
             mFindJobsForDayButton.setVisibility(View.VISIBLE);
         }

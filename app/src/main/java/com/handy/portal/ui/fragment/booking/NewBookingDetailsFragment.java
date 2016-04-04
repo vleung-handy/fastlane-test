@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment.booking;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -36,13 +37,14 @@ import com.handy.portal.model.booking.BookingClaimDetails;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.AvailableBookingView;
-import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.bookings.ClaimedBookingView;
 import com.handy.portal.ui.element.bookings.FinishedBookingView;
+import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.InjectedBusView;
+import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -60,6 +62,9 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
 
+    public static final String START_TIMER = "start_timer";
+    public static final String END_TIMER = "end_timer";
+
     @Inject
     PrefsManager mPrefsManager;
 
@@ -74,6 +79,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     private String mSource;
     private Bundle mSourceExtras;
     private boolean mFromPaymentsTab;
+    private CountDownTimer mCounter;
+    private boolean mTimerShown;
 
     @Override
     protected MainViewTab getTab()
@@ -124,6 +131,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         {
             mCurrentView.unregisterBus();
         }
+        if (mCounter != null)
+        { mCounter.cancel(); }
     }
 
     @Nullable
@@ -409,7 +418,6 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         }
     }
 
-
     private void updateDisplay()
     {
         if (mCurrentView != null)
@@ -428,13 +436,15 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
             case READY_FOR_ON_MY_WAY:
             case READY_FOR_CHECK_IN:
                 mCurrentView = new ClaimedBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                        getActionBar(), this, noShowReported);
-                setActionBarTitle(R.string.claimed_job);
+                        this, noShowReported);
+
+                setTimerIfNeeded(START_TIMER);
                 break;
             case READY_FOR_CHECK_OUT:
                 mCurrentView = new InProgressBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                        mFromPaymentsTab, getActionBar(), this, noShowReported);
-                setActionBarTitle(R.string.claimed_job);
+                        mFromPaymentsTab, this, noShowReported);
+
+                setTimerIfNeeded(END_TIMER);
                 break;
             case FINISHED:
             default:
@@ -595,5 +605,35 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(mBooking));
+    }
+
+    private void setTimerIfNeeded(String startOrEndTimer)
+    {
+        if (startOrEndTimer.equals(START_TIMER))
+        {
+            if (DateTimeUtils.isTimeWithinXHoursFromNow(mBooking.getStartDate(), 3))
+            {
+                if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
+                mCounter = DateTimeUtils.setStartCountdownTimer(getContext(), getActionBar(),
+                        mBooking.getStartDate().getTime() - System.currentTimeMillis());
+            }
+            else
+            {
+                setActionBarTitle(R.string.claimed_job);
+            }
+        }
+        else
+        {
+            if (DateTimeUtils.isTimeWithinXHoursFromNow(mBooking.getEndDate(), 3))
+            {
+                if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
+                mCounter = DateTimeUtils.setEndCountdownTimer(getContext(), getActionBar(),
+                        mBooking.getEndDate().getTime() - System.currentTimeMillis());
+            }
+            else
+            {
+                setActionBarTitle(R.string.claimed_job);
+            }
+        }
     }
 }

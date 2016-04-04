@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,8 +86,6 @@ public class InProgressBookingView extends InjectedBusView
     private Booking mBooking;
     private String mSource;
     private Bundle mSourceExtras;
-    private ActionBar mActionBar;
-    private CountDownTimer mCounter;
 
     private boolean mFromPaymentsTab;
 
@@ -109,12 +105,12 @@ public class InProgressBookingView extends InjectedBusView
 
     public InProgressBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            boolean fromPaymentsTab, ActionBar actionBar, OnClickListener onSupportClickListener,
+            boolean fromPaymentsTab, OnClickListener onSupportClickListener,
             boolean noShowReported)
     {
         super(context);
         init();
-        setDisplay(booking, source, sourceExtras, fromPaymentsTab, actionBar,
+        setDisplay(booking, source, sourceExtras, fromPaymentsTab,
                 onSupportClickListener, noShowReported);
     }
 
@@ -139,19 +135,13 @@ public class InProgressBookingView extends InjectedBusView
 
     public void setDisplay(
             @NonNull Booking booking, String source, Bundle sourceExtras, boolean fromPaymentsTab,
-            ActionBar actionBar, OnClickListener onSupportClickListener,  boolean noShowReported)
+            OnClickListener onSupportClickListener, boolean noShowReported)
     {
         mBooking = booking;
         mSource = source;
         mSourceExtras = sourceExtras;
-        mActionBar = actionBar;
         mFromPaymentsTab = fromPaymentsTab;
         mSupportButton.setOnClickListener(onSupportClickListener);
-
-        if (DateTimeUtils.isTimeWithinXHoursFromNow(booking.getStartDate(), 3))
-        {
-            setCountDownTimer(booking.getEndDate().getTime() - System.currentTimeMillis());
-        }
 
         // Booking actions
         List<Booking.Action> allowedActions = mBooking.getAllowedActions();
@@ -329,11 +319,5 @@ public class InProgressBookingView extends InjectedBusView
     {
         LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_section, instructionsLayout);
         return (BookingDetailsJobInstructionsSectionView) instructionsLayout.getChildAt(instructionsLayout.getChildCount() - 1);
-    }
-
-    private void setCountDownTimer(long timeRemainMillis)
-    {
-        if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
-        mCounter = DateTimeUtils.setCountDownTimer(getContext(), mActionBar, timeRemainMillis);
     }
 }
