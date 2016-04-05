@@ -113,12 +113,12 @@ public class InstructionCheckItemView extends FrameLayout
     {
         if (isChecked())
         {
-            mMainLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.border_gray_gray_bg));
+            mMainLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.border_gray_bg_light_gray));
             mMainLayout.setAlpha(0.5f);
         }
         else
         {
-            mMainLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.border_gray_white_bg));
+            mMainLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.border_gray_bg_white));
             mMainLayout.setAlpha(1.0f);
         }
     }
