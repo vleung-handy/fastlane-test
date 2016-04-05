@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,8 +96,6 @@ public class ClaimedBookingView extends InjectedBusView
     private Booking mBooking;
     private String mSource;
     private Bundle mSourceExtras;
-    private CountDownTimer mCounter;
-    private ActionBar mActionBar;
     private Intent mGetDirectionsIntent;
 
     private static final String DATE_FORMAT = "E, MMM d";
@@ -114,11 +110,11 @@ public class ClaimedBookingView extends InjectedBusView
 
     public ClaimedBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            ActionBar actionBar, OnClickListener onSupportClickListener, boolean noShowReported)
+            OnClickListener onSupportClickListener, boolean noShowReported)
     {
         super(context);
         init();
-        setDisplay(booking, source, sourceExtras, actionBar, onSupportClickListener, noShowReported);
+        setDisplay(booking, source, sourceExtras, onSupportClickListener, noShowReported);
     }
 
     public ClaimedBookingView(final Context context, final AttributeSet attrs)
@@ -142,19 +138,13 @@ public class ClaimedBookingView extends InjectedBusView
     }
 
     public void setDisplay(
-            @NonNull Booking booking, String source, Bundle sourceExtras, ActionBar actionBar,
+            @NonNull Booking booking, String source, Bundle sourceExtras,
             OnClickListener onSupportClickListener, boolean noShowReported)
     {
         mBooking = booking;
         mSource = source;
         mSourceExtras = sourceExtras;
-        mActionBar = actionBar;
         mSupportButton.setOnClickListener(onSupportClickListener);
-
-        if (DateTimeUtils.isTimeWithinXHoursFromNow(booking.getStartDate(), 3))
-        {
-            setCountDownTimer(booking.getStartDate().getTime() - System.currentTimeMillis());
-        }
 
         initMapLayout();
 
@@ -349,13 +339,6 @@ public class ClaimedBookingView extends InjectedBusView
         }
 
         return prepend;
-    }
-
-
-    private void setCountDownTimer(long timeRemainMillis)
-    {
-        if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
-        mCounter = DateTimeUtils.setCountDownTimer(getContext(), mActionBar, timeRemainMillis);
     }
 
     private void enableActionsIfNeeded(Booking.Action action)

@@ -246,7 +246,7 @@ public final class DateTimeUtils
         }.start();
     }
 
-    public static CountDownTimer setCountDownTimer(final Context context, final ActionBar actionBar, long timeRemainMillis)
+    public static CountDownTimer setStartCountdownTimer(final Context context, final ActionBar actionBar, long timeRemainMillis)
     {
         return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
         {
@@ -254,6 +254,22 @@ public final class DateTimeUtils
             public void onTick(final long millisUntilFinished)
             {
                 actionBar.setTitle(context.getString(R.string.start_timer_lowercase_formatted,
+                        DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
+            }
+
+            @Override
+            public void onFinish() { }
+        }.start();
+    }
+
+    public static CountDownTimer setEndCountdownTimer(final Context context, final ActionBar actionBar, long timeRemainMillis)
+    {
+        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
+        {
+            @Override
+            public void onTick(final long millisUntilFinished)
+            {
+                actionBar.setTitle(context.getString(R.string.end_timer_lowercase_formatted,
                         DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
             }
 
