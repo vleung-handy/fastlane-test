@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,39 +18,33 @@ import com.handy.portal.ui.element.bookings.BookingCancellationPolicyListItemVie
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class ConfirmBookingDialogFragment extends ConfirmBookingActionDialogFragment
+public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialogFragment
 {
     @Bind(R.id.fragment_dialog_confirm_claim_cancellation_policy_content)
     LinearLayout mCancellationPolicyContent;
     @Bind(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
     TextView mShowCancellationPolicyButton;
+    @Bind(R.id.confirm_booking_action_button)
+    Button mConfirmBookingActionButton;
 
-    public static final String FRAGMENT_TAG = ConfirmBookingDialogFragment.class.getName();
+    public static final String FRAGMENT_TAG = ConfirmBookingClaimDialogFragment.class.getName();
 
     /*
     TODO make this cleaner
      */
-    public static ConfirmBookingDialogFragment newInstance(Booking booking)
+    public static ConfirmBookingClaimDialogFragment newInstance(Booking booking)
     {
-        ConfirmBookingDialogFragment fragment = new ConfirmBookingDialogFragment();
+        ConfirmBookingClaimDialogFragment fragment = new ConfirmBookingClaimDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
         fragment.setArguments(args);
         return fragment;
     }
 
-    /*
-    TODO make this cleaner
-     */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View getBookingActionContentView(LayoutInflater inflater, ViewGroup container)
     {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        View confirmBookingActionContentView = inflater.inflate(R.layout.fragment_dialog_confirm_claim, container, false);
-        LinearLayout confirmBookingActionContentLayout = (LinearLayout) view.findViewById(R.id.confirm_booking_action_content);
-        confirmBookingActionContentLayout.addView(confirmBookingActionContentView);
-        return view;
+        return inflater.inflate(R.layout.layout_confirm_booking_claim, container, false);
     }
 
     @Override
@@ -80,6 +75,12 @@ public class ConfirmBookingDialogFragment extends ConfirmBookingActionDialogFrag
             mShowCancellationPolicyButton.setText("Hide Cancellation Policy");
         }
 
+    }
+
+    @OnClick(R.id.confirm_booking_action_button)
+    public void onConfirmBookingActionButtonClicked()
+    {
+        super.confirmBookingActionButtonClicked();
     }
 
     private void setBookingCancellationPolicyDisplay()

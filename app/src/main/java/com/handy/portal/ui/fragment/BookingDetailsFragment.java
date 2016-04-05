@@ -62,7 +62,7 @@ import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
-import com.handy.portal.ui.fragment.dialog.ConfirmBookingDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.widget.BookingActionButton;
@@ -697,11 +697,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         if (requestCode == RequestCode.CONFIRM_REQUEST && resultCode == Activity.RESULT_OK)
         {
             Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
-//            requestClaimJob(booking);
-            bus.post(new LogEvent.AddLogEvent(
-                    new AvailableJobsLog.ClaimSubmitted(booking, mSource, mSourceExtras, 0.0f)));
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
+            requestClaimJob(booking);
         }
     }
 
@@ -710,32 +706,46 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         final BookingActionButtonType actionType = UIUtils.getAssociatedActionType(action);
         trackShowActionWarning(action);
-        //specific booking error, show an alert dialog
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        switch(action.getActionName())
+        {
+            case Booking.Action.ACTION_CLAIM:
+                if(getChildFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+                {
+                    ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mAssociatedBooking);
+                    confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST);
+                    FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+                }
+                break;
+            default:
+                //specific booking error, show an alert dialog
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
-        WarningButtonsText warningButtonsText = WarningButtonsText.forAction(actionType);
+                WarningButtonsText warningButtonsText = WarningButtonsText.forAction(actionType);
 
-        // set dialog message
-        alertDialogBuilder
-                .setTitle(warningButtonsText.getTitleStringId())
-                .setMessage(warning)
-                .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int id)
-                            {
-                                //proceed with action, we have accepted the warning
-                                bus.post(new HandyEvent.ActionWarningAccepted(actionType));
-                                takeAction(actionType, true);
-                            }
-                        }
-                )
-                .setNegativeButton(warningButtonsText.getNegativeStringId(), null)
-        ;
+                // set dialog message
+                alertDialogBuilder
+                        .setTitle(warningButtonsText.getTitleStringId())
+                        .setMessage(warning)
+                        .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int id)
+                                    {
+                                        //proceed with action, we have accepted the warning
+                                        bus.post(new HandyEvent.ActionWarningAccepted(actionType));
+                                        takeAction(actionType, true);
+                                    }
+                                }
+                        )
+                        .setNegativeButton(warningButtonsText.getNegativeStringId(), null)
+                ;
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // show it
+                alertDialog.show();
+                break;
+        }
+
     }
 
     private void trackShowActionWarning(final Booking.Action action)
@@ -764,16 +774,10 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestClaimJob(Booking booking)
     {
-        if(getChildFragmentManager().findFragmentByTag(ConfirmBookingDialogFragment.FRAGMENT_TAG) == null)
-        {
-            ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingDialogFragment.newInstance(booking);
-            confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST);
-            FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingDialogFragment.FRAGMENT_TAG);
-        }
-//        bus.post(new LogEvent.AddLogEvent(
-//                new AvailableJobsLog.ClaimSubmitted(booking, mSource, mSourceExtras, 0.0f)));
-//        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-//        bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
+        bus.post(new LogEvent.AddLogEvent(
+                new AvailableJobsLog.ClaimSubmitted(booking, mSource, mSourceExtras, 0.0f)));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
     }
 
     private void requestRemoveJob(@NonNull Booking booking)

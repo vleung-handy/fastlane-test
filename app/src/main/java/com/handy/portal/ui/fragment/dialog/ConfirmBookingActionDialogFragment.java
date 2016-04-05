@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -26,25 +25,21 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ConfirmBookingActionDialogFragment extends DialogFragment
+/**
+ * dialog fragment that slides up from the bottom.
+ * has a dismiss button and a confirm button.
+ */
+public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
 {
     @Bind(R.id.confirm_booking_action_content)
     protected LinearLayout mConfirmBookingActionContent;
-    @Bind(R.id.confirm_booking_action_button)
-    TextView mConfirmButton;
+//    @Bind(R.id.confirm_booking_action_button)
+//    TextView mConfirmButton;
 
     protected Booking mBooking;
 
-    public static final String FRAGMENT_TAG = ConfirmBookingActionDialogFragment.class.getName();
-
-    public static ConfirmBookingActionDialogFragment newInstance(Booking booking)
-    {
-        ConfirmBookingActionDialogFragment fragment = new ConfirmBookingActionDialogFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(BundleKeys.BOOKING, booking);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public abstract View getBookingActionContentView(LayoutInflater inflater, ViewGroup container);
+//    public abstract String getConfirmButtonText();
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -72,7 +67,10 @@ public class ConfirmBookingActionDialogFragment extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_dialog_confirm_booking_action, container, false);
+        View view = inflater.inflate(R.layout.fragment_dialog_confirm_booking_action, container, false);
+        LinearLayout confirmBookingActionContentLayout = (LinearLayout) view.findViewById(R.id.confirm_booking_action_content);
+        confirmBookingActionContentLayout.addView(getBookingActionContentView(inflater, container));
+        return view;
     }
 
     @Override
@@ -80,6 +78,7 @@ public class ConfirmBookingActionDialogFragment extends DialogFragment
     {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+//        mConfirmButton.setText(getConfirmButtonText());
     }
 
     @Override
@@ -92,14 +91,8 @@ public class ConfirmBookingActionDialogFragment extends DialogFragment
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         wlp.gravity = Gravity.BOTTOM;
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        Point size = new Point();
-//        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
-//        Window window = getDialog().getWindow();
-//        window.setGravity(Gravity.BOTTOM);
-//        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, size.y / 2);
     }
 
-    @OnClick(R.id.confirm_booking_action_button)
     public void confirmBookingActionButtonClicked()
     {
         Intent intent = new Intent();
