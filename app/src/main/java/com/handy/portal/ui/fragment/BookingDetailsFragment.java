@@ -61,6 +61,7 @@ import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
@@ -765,7 +766,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         if(getChildFragmentManager().findFragmentByTag(ConfirmBookingDialogFragment.FRAGMENT_TAG) == null)
         {
-            ConfirmBookingDialogFragment confirmBookingDialogFragment = ConfirmBookingDialogFragment.newInstance(booking);
+            ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingDialogFragment.newInstance(booking);
             confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST);
             FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingDialogFragment.FRAGMENT_TAG);
         }

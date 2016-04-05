@@ -1,101 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/default_padding"
+    android:paddingRight="@dimen/default_padding"
     >
 
+    <TextView
+        style="@style/TextView.Large.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:gravity="center"
+        android:text="Please make sure you can complete this job"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        style="@style/TextView.Med"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:gravity="center"
+        android:text="Every time you cancel a job, your Keep Rate is negatively impacted, even if you don't incur any fees."
+        android:textColor="@color/subtitle_grey"
+        />
+
     <LinearLayout
-        android:layout_alignParentBottom="true"
+        android:id="@+id/fragment_dialog_confirm_claim_cancellation_policy_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:animateLayoutChanges="true"
         android:orientation="vertical"
-        android:background="@color/white"
-        >
-        <LinearLayout
-            android:layout_above="@id/booking_info_claim_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/default_padding"
-            android:paddingRight="@dimen/default_padding"
-            >
-            <ImageView
-                android:id="@+id/booking_info_dismiss"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/default_padding"
-                android:paddingBottom="@dimen/default_padding"
-                android:layout_gravity="end"
-                android:src="@drawable/ic_x"
-                />
+        android:padding="@dimen/default_padding"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
 
-            <TextView
-                android:id="@+id/booking_info_address"
-                style="@style/TextView.Large.Bold"
-                android:layout_width="wrap_content"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/default_margin"
-                android:textStyle="bold"
-                android:text="Please make sure you can complete this job"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/default_margin"
-                android:textColor="@color/subtitle_grey"
-                style="@style/TextView.Med"
-                android:text="Every time you cancel a job, your Keep Rate is negatively impacted, even if you don't incur any fees."
-                />
-
-            <LinearLayout
-                android:id="@+id/fragment_dialog_confirm_claim_cancellation_policy_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:padding="@dimen/default_padding"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                tools:visibility="visible"
-                />
-
-            <TextView
-                android:id="@+id/fragment_dialog_confirm_claim_show_cancellation_policy_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/handy_blue"
-                android:textSize="@dimen/medium_text_size"
-                android:layout_marginBottom="@dimen/default_margin"
-                android:text="Show Cancellation Policy"
-                />
+    <TextView
+        android:id="@+id/fragment_dialog_confirm_claim_show_cancellation_policy_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="Show Cancellation Policy"
+        android:textColor="@color/handy_blue"
+        android:textSize="@dimen/medium_text_size"
+        />
 
 
-        </LinearLayout>
-
-
-        <Button
-            android:id="@+id/booking_info_claim_button"
-            style="@style/Button.Green"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="@dimen/default_margin"
-            android:text="@string/claim_job"
-            android:textColor="@color/white"
-            android:textSize="@dimen/large_text_size"
-            />
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
 
 

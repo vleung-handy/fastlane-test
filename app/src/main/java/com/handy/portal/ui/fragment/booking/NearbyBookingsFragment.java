@@ -32,6 +32,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.Provider;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingDialogFragment;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.MathUtils;
@@ -233,7 +234,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         }
         mBookingDistanceText.setText(distance);
 
-        final ConfirmBookingDialogFragment dialogFragment =
+        final ConfirmBookingActionDialogFragment dialogFragment =
                 ConfirmBookingDialogFragment.newInstance(booking);
         mBookingClaimButton.setText(getString(R.string.claim_n_dollar_job_formatted,
                 paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount()));
