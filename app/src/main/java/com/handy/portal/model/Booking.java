@@ -552,6 +552,11 @@ public class Booking implements Comparable<Booking>, Serializable
         private Extras mExtras;
 
 
+        public Extras getExtras()
+        {
+            return mExtras;
+        }
+
         public String getActionName()
         {
             return mActionName;
@@ -592,10 +597,49 @@ public class Booking implements Comparable<Booking>, Serializable
             private int mWithholdingAmount;
             @SerializedName("remove_reasons")
             private List<String> mRemoveReasons;
+            @SerializedName("cancellation_policy")
+            private CancellationPolicyItem mCancellationPolicyArray[];
 
             public int getWithholdingAmount() { return mWithholdingAmount; }
 
             public List<String> getRemoveReasons() { return mRemoveReasons; }
+
+            public CancellationPolicyItem[] getCancellationPolicyArray()
+            {
+                return mCancellationPolicyArray;
+            }
+
+            public static class CancellationPolicyItem
+            {
+                @SerializedName("text")
+                private String mDisplayText;
+                @SerializedName("amount")
+                private int mAmountCents;
+                @SerializedName("amount_cents_formatted")
+                private String mAmountFormatted;
+                @SerializedName("active")
+                private boolean mActive;
+
+                public String getDisplayText()
+                {
+                    return mDisplayText;
+                }
+
+                public String getAmountFormatted()
+                {
+                    return mAmountFormatted;
+                }
+
+                public int getAmountCents()
+                {
+                    return mAmountCents;
+                }
+
+                public boolean isActive()
+                {
+                    return mActive;
+                }
+            }
         }
     }
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_padding"
+        >
+
+        <!--TODO change the width/height-->
+        <ImageView
+            android:id="@+id/cancellation_policy_list_item_active_indicator"
+            android:layout_width="@dimen/cancellation_policy_active_icon_size"
+            android:layout_height="@dimen/cancellation_policy_active_icon_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/extra_margin"
+            android:layout_marginRight="@dimen/extra_margin"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:src="@drawable/circle_teal"/>
+
+        <TextView
+            android:id="@+id/cancellation_policy_list_item_left_text"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:textColor="@color/subtitle_grey"
+            tools:text="Under 48 hours"
+            />
+
+        <TextView
+            android:id="@+id/cancellation_policy_list_item_right_text"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/subtitle_grey"
+            tools:text="$10"
+            />
+    </LinearLayout>
+
+    <!--TODO get the right colors. also rename the divider dashboard layout file-->
+    <include layout="@layout/divider_dashboard"/>
+</RelativeLayout>

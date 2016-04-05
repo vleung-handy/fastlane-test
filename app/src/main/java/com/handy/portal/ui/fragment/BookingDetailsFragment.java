@@ -1,5 +1,6 @@
 package com.handy.portal.ui.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -33,6 +34,7 @@ import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.RequestCode;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
@@ -59,9 +61,11 @@ import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.widget.BookingActionButton;
+import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -686,6 +690,20 @@ public class BookingDetailsFragment extends ActionBarFragment
         return showingWarningDialog;
     }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    {
+        if (requestCode == RequestCode.CONFIRM_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
+//            requestClaimJob(booking);
+            bus.post(new LogEvent.AddLogEvent(
+                    new AvailableJobsLog.ClaimSubmitted(booking, mSource, mSourceExtras, 0.0f)));
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
+        }
+    }
+
     //Show a warning dialog for a button action, confirming triggers the original action
     private void showBookingActionWarningDialog(final String warning, final Booking.Action action)
     {
@@ -745,10 +763,16 @@ public class BookingDetailsFragment extends ActionBarFragment
 
     private void requestClaimJob(Booking booking)
     {
-        bus.post(new LogEvent.AddLogEvent(
-                new AvailableJobsLog.ClaimSubmitted(booking, mSource, mSourceExtras, 0.0f)));
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
+        if(getChildFragmentManager().findFragmentByTag(ConfirmBookingDialogFragment.FRAGMENT_TAG) == null)
+        {
+            ConfirmBookingDialogFragment confirmBookingDialogFragment = ConfirmBookingDialogFragment.newInstance(booking);
+            confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST);
+            FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingDialogFragment.FRAGMENT_TAG);
+        }
+//        bus.post(new LogEvent.AddLogEvent(
+//                new AvailableJobsLog.ClaimSubmitted(booking, mSource, mSourceExtras, 0.0f)));
+//        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+//        bus.post(new HandyEvent.RequestClaimJob(booking, mSource, mSourceExtras));
     }
 
     private void requestRemoveJob(@NonNull Booking booking)

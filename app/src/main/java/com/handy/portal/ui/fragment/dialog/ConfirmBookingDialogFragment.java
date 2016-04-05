@@ -1,14 +1,13 @@
 package com.handy.portal.ui.fragment.dialog;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
@@ -16,14 +15,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.RequestCode;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.PaymentInfo;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.ui.element.bookings.BookingCancellationPolicyListItemView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,18 +31,15 @@ import butterknife.OnClick;
 
 public class ConfirmBookingDialogFragment extends DialogFragment
 {
-
-    @Bind(R.id.booking_info_address)
-    TextView mBookingAddressText;
-    @Bind(R.id.booking_info_timer)
-    TextView mBookingTimerText;
-    @Bind(R.id.booking_info_time)
-    TextView mBookingTimeText;
+    @Bind(R.id.fragment_dialog_confirm_claim_cancellation_policy_content)
+    LinearLayout mCancellationPolicyContent;
     @Bind(R.id.booking_info_claim_button)
     TextView mBookingClaimButton;
+    @Bind(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
+    TextView mShowCancellationPolicyButton;
 
     private Booking mBooking;
-    private CountDownTimer mCounter;
+//    private CountDownTimer mCounter;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_confirm_claim";
 
@@ -83,7 +80,13 @@ public class ConfirmBookingDialogFragment extends DialogFragment
         View view = inflater.inflate(R.layout.fragment_dialog_confirm_claim, container, false);
         ButterKnife.bind(this, view);
 
-        setBookingInfoDisplay();
+
+        LayoutTransition lt = new LayoutTransition();
+        lt.enableTransitionType(LayoutTransition.DISAPPEARING);
+        lt.enableTransitionType(LayoutTransition.CHANGE_APPEARING);
+        mCancellationPolicyContent.setLayoutTransition(lt);
+
+        setBookingCancellationPolicyDisplay();
         return view;
     }
 
@@ -91,33 +94,70 @@ public class ConfirmBookingDialogFragment extends DialogFragment
     public void onStart()
     {
         super.onStart();
-        Point size = new Point();
-        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
         Window window = getDialog().getWindow();
-        window.setGravity(Gravity.BOTTOM);
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, size.y / 2);
+        WindowManager.LayoutParams wlp = window.getAttributes();
+
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        wlp.gravity = Gravity.BOTTOM;
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        Point size = new Point();
+//        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+//        Window window = getDialog().getWindow();
+//        window.setGravity(Gravity.BOTTOM);
+//        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, size.y / 2);
     }
 
     @Override
     public void onStop()
     {
-        mCounter.cancel();
+//        mCounter.cancel();
         super.onStop();
     }
 
-    private void setBookingInfoDisplay()
+    @OnClick(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
+    public void onShowCancellationPolicyButtonClicked()
     {
-        PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
+        if(mCancellationPolicyContent.getVisibility() == View.VISIBLE)
+        {
+            mCancellationPolicyContent.setVisibility(View.GONE);
+            mShowCancellationPolicyButton.setText("Show Cancellation Policy");
+        }
+        else
+        {
+            mCancellationPolicyContent.setVisibility(View.VISIBLE);
+            mShowCancellationPolicyButton.setText("Hide Cancellation Policy");
+        }
 
-        mBookingAddressText.setText(mBooking.getAddress().getShortRegion());
+    }
 
-        String startTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(mBooking.getStartDate());
-        String endTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(mBooking.getEndDate());
-        mBookingTimeText.setText(getString(R.string.time_interval_formatted, startTime, endTime));
+    private void setBookingCancellationPolicyDisplay()
+    {
+        Booking.Action bookingClaimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
+        if(bookingClaimAction == null)
+        {
+            Crashlytics.logException(new Exception("Booking claim action is null in confirm booking dialog fragment"));
+        }
+        else if(bookingClaimAction.getExtras() == null)
+        {
+            Crashlytics.logException(new Exception("Booking claim action extras is null in confirm booking dialog fragment"));
+        }
+        else
+        {
+            Booking.Action.Extras.CancellationPolicyItem cancellationPolicyItems[] =
+                    bookingClaimAction.getExtras().getCancellationPolicyArray();
 
-        mBookingClaimButton.setText(getString(R.string.claim_n_dollar_job_formatted,
-                paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount()));
-        setCountDownTimer(mBooking.getStartDate().getTime() - System.currentTimeMillis());
+            mCancellationPolicyContent.removeAllViews();
+            for(int i = 0; i<cancellationPolicyItems.length; i++)
+            {
+                Booking.Action.Extras.CancellationPolicyItem cancellationPolicyItem = cancellationPolicyItems[i];
+                BookingCancellationPolicyListItemView policyListItemView =
+                        new BookingCancellationPolicyListItemView(getContext())
+                                .setLeftText(cancellationPolicyItem.getDisplayText())
+                                .setRightText(cancellationPolicyItem.getAmountFormatted())
+                                .setHighlighted(cancellationPolicyItem.isActive());
+                mCancellationPolicyContent.addView(policyListItemView);
+            }
+        }
     }
 
     @OnClick(R.id.booking_info_claim_button)
@@ -125,24 +165,16 @@ public class ConfirmBookingDialogFragment extends DialogFragment
     {
         Intent intent = new Intent();
         intent.putExtra(BundleKeys.BOOKING, mBooking);
-        getTargetFragment().onActivityResult(RequestCode.CONFIRM_REQUEST, Activity.RESULT_OK, intent);
+        if(getTargetFragment() != null)
+        {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+        }
         dismiss();
     }
-
 
     @OnClick(R.id.booking_info_dismiss)
     public void closeDialog()
     {
         dismiss();
     }
-
-
-    private void setCountDownTimer(long timeRemainMillis)
-    {
-        if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
-
-        mCounter = DateTimeUtils.setCountDownTimer(mBookingTimerText, timeRemainMillis);
-    }
-
-
 }
