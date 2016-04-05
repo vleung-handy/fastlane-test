@@ -3,15 +3,14 @@ package com.handy.portal.ui.element.bookings;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.booking.Booking;
-import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionEntryView;
 
 import java.util.List;
 
@@ -62,10 +61,9 @@ public class NewBookingDetailsJobInstructionsSectionView extends FrameLayout
 
         for (Booking.BookingInstruction entry : entries)
         {
-            BookingDetailsJobInstructionsSectionEntryView entryView =
-                    (BookingDetailsJobInstructionsSectionEntryView) LayoutInflater.from(getContext())
-                            .inflate(R.layout.element_booking_details_job_instructions_entry, mEntriesLayout, false);
-            entryView.init(entry.getDescription());
+            TextView entryView = new TextView(getContext());
+            entryView.setText(entry.getDescription());
+            entryView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
             mEntriesLayout.addView(entryView);
 
         }
