@@ -23,9 +23,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.PrefsManager;
@@ -411,6 +414,23 @@ public class ClaimedBookingView extends InjectedBusView
                     }
                 });
 
+                initHelperText(action);
+                break;
+            }
+            case CHECK_OUT:
+            {
+                mActionButton.setText(R.string.check_out);
+                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
+                mActionButton.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(BundleKeys.BOOKING, mBooking);
+                        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
+                    }
+                });
                 initHelperText(action);
                 break;
             }
