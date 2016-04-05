@@ -147,6 +147,7 @@
     <dimen name="get_directions_margin_top">4dp</dimen>
     <dimen name="job_support_button_height">48dp</dimen>
     <dimen name="job_details_chevron_width_height">16dp</dimen>
+    <dimen name="checklist_checkbox_width_height">28dp</dimen>
 
     <!-- Overlap the underlying textview border -->
     <dimen name="customer_request_point_margin_top">-1.5dp</dimen>
