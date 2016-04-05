@@ -41,6 +41,7 @@
     <color name="subtitle_grey_disabled">#BFC8CE</color>
     <color name="requested_green">#8BC53E</color>
     <color name="partner_blue">#0BB8E3</color>
+    <color name="border_light_grey">#D1D1D1</color>
     <color name="border_grey">#EEEEEE</color>
     <color name="shadow_grey">#9CA7B2</color>
     <color name="helper_text_grey">#A1A1A1</color>

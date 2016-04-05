@@ -194,7 +194,7 @@
                 android:id="@+id/booking_details_job_instructions_list_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin_medium"
+                android:layout_marginTop="@dimen/default_margin"
                 android:orientation="vertical"
                 />
 

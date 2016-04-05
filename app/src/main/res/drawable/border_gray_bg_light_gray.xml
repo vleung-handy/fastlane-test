@@ -8,6 +8,6 @@
     <solid android:color="@color/list_divider"/>
     <stroke
         android:width="@dimen/round_button_stroke"
-        android:color="@color/list_divider"
+        android:color="@color/border_light_grey"
         />
 </shape>
