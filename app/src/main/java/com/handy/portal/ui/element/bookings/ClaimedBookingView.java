@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.common.collect.ImmutableSet;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.PrefsKey;
@@ -82,12 +82,12 @@ public class ClaimedBookingView extends InjectedBusView
     TextView mJobTimeText;
     @Bind(R.id.job_payment_text)
     TextView mJobPaymentText;
-    @Bind(R.id.paid_extras_text)
-    TextView mPaidExtrasText;
     @Bind(R.id.booking_support_button)
     Button mSupportButton;
     @Bind(R.id.booking_details_action_helper_text)
     TextView mBookingDetailsActionHelperText;
+    @Bind(R.id.booking_details_job_instructions_list_layout)
+    LinearLayout mInstructionsLayout;
     @Bind(R.id.job_number_text)
     TextView mJobNumberText;
     @Bind(R.id.booking_action_button)
@@ -100,13 +100,6 @@ public class ClaimedBookingView extends InjectedBusView
 
     private static final String DATE_FORMAT = "E, MMM d";
     private static final String INTERPUNCT = "\u00B7";
-
-    private static final ImmutableSet<BookingActionButtonType> ASSOCIATED_BUTTON_ACTION_TYPES =
-            ImmutableSet.of(
-                    BookingActionButtonType.ON_MY_WAY,
-                    BookingActionButtonType.CHECK_IN
-            );
-
 
     public ClaimedBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
@@ -185,6 +178,22 @@ public class ClaimedBookingView extends InjectedBusView
         {
             String paymentText = paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount();
             mJobPaymentText.setText(paymentText);
+        }
+
+        // Booking Instructions
+        List<Booking.BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();
+        if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
+        {
+            for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
+            {
+                if (!Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+                {
+                    NewBookingDetailsJobInstructionsSectionView sectionView =
+                            new NewBookingDetailsJobInstructionsSectionView(getContext());
+                    sectionView.setDisplay(group.getLabel(), group.getInstructions());
+                    mInstructionsLayout.addView(sectionView);
+                }
+            }
         }
 
         if (noShowReported)
