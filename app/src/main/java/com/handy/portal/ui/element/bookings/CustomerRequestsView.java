@@ -5,9 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.booking.Booking;
@@ -21,10 +19,6 @@ import butterknife.ButterKnife;
 
 public class CustomerRequestsView extends FrameLayout
 {
-    @Bind(R.id.booking_details_job_instructions_checklist_title_text)
-    TextView mSectionTitleText;
-    @Bind(R.id.booking_details_job_instructions_checklist_icon)
-    ImageView mSectionIcon;
     @Bind(R.id.booking_details_job_instructions_checklist_entries_layout)
     LinearLayout mEntriesLayout;
 
@@ -54,12 +48,6 @@ public class CustomerRequestsView extends FrameLayout
     public void setDisplay(String sectionTitle, @Nullable Integer sectionIconId,
                            @NonNull List<Booking.BookingInstructionUpdateRequest> customerPreferences)
     {
-        mSectionTitleText.setText(sectionTitle);
-        if (sectionIconId != null)
-        {
-            mSectionIcon.setImageResource(sectionIconId);
-        }
-
         for (Booking.BookingInstructionUpdateRequest instruction : customerPreferences)
         {
             InstructionCheckItemView checkItem = new InstructionCheckItemView(getContext());

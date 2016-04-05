@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import com.google.gson.Gson;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
@@ -82,6 +83,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     private CountDownTimer mCounter;
     private boolean mTimerShown;
 
+    private static final Gson GSON = new Gson();
+
     @Override
     protected MainViewTab getTab()
     {
@@ -133,6 +136,15 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         }
         if (mCounter != null)
         { mCounter.cancel(); }
+
+        if (mBooking != null && mBooking.isCheckedIn())
+        {
+            List<Booking.BookingInstructionUpdateRequest> checklist = mBooking.getCustomerPreferences();
+            if (checklist != null)
+            {
+                mPrefsManager.setBookingInstructions(mBooking.getId(), GSON.toJson(checklist));
+            }
+        }
     }
 
     @Nullable

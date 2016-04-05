@@ -4,8 +4,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -18,12 +21,12 @@ import butterknife.ButterKnife;
 
 public class InstructionCheckItemView extends FrameLayout
 {
+    @Bind(R.id.main_layout)
+    ViewGroup mMainLayout;
     @Bind(R.id.checklist_item_check_box)
     CheckBox mCheckBox;
-    @Bind(R.id.checklist_item_title)
-    TextView mTitleTextView;
-    @Bind(R.id.checklist_item_description)
-    TextView mDescriptionTextView;
+    @Bind(R.id.checklist_item_title_description)
+    TextView mTitleDescriptionTextView;
 
     // cannot user selector for alpha because it doesn't work for pre lollipop
     private final static float ALPHA_ENABLED = 1f;
@@ -58,16 +61,16 @@ public class InstructionCheckItemView extends FrameLayout
     public void refreshDisplay(@NonNull final Booking.BookingInstructionUpdateRequest instruction)
     {
         mCheckBox.setChecked(instruction.isInstructionCompleted());
+        setBackgroundAsNeeded();
+
         if (instruction.getTitle() != null && !instruction.getTitle().isEmpty())
         {
-            mTitleTextView.setVisibility(VISIBLE);
-            mTitleTextView.setText(instruction.getTitle());
+            mTitleDescriptionTextView.setText(Html.fromHtml("<b>" + instruction.getTitle() + "</b> " + instruction.getDescription()), TextView.BufferType.SPANNABLE);
         }
         else
         {
-            mTitleTextView.setVisibility(GONE);
+            mTitleDescriptionTextView.setText(instruction.getDescription());
         }
-        mDescriptionTextView.setText(instruction.getDescription());
 
         setOnClickListener(new OnClickListener()
         {
@@ -76,6 +79,7 @@ public class InstructionCheckItemView extends FrameLayout
             {
                 mCheckBox.toggle();
                 instruction.setInstructionCompleted(mCheckBox.isChecked());
+                setBackgroundAsNeeded();
             }
         });
     }
@@ -105,4 +109,17 @@ public class InstructionCheckItemView extends FrameLayout
         ButterKnife.bind(this);
     }
 
+    private void setBackgroundAsNeeded()
+    {
+        if (isChecked())
+        {
+            mMainLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.border_gray_gray_bg));
+            mMainLayout.setAlpha(0.5f);
+        }
+        else
+        {
+            mMainLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.border_gray_white_bg));
+            mMainLayout.setAlpha(1.0f);
+        }
+    }
 }

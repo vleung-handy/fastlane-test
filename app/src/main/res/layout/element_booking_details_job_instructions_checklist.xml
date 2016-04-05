@@ -1,46 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
+<LinearLayout
+    android:id="@+id/booking_details_job_instructions_checklist_entries_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/extra_margin_xlarge"
-    android:background="@color/white"
-    >
-
-    <ImageView
-        android:id="@+id/booking_details_job_instructions_checklist_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/row_margin"
-        android:layout_marginRight="@dimen/row_margin"
-        android:cropToPadding="false"
-        android:src="@drawable/ic_details_extras"
-        />
-
-    <TextView
-        android:id="@+id/booking_details_job_instructions_checklist_title_text"
-        style="@style/TextView.Bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/booking_details_job_instructions_checklist_icon"
-        android:layout_toRightOf="@id/booking_details_job_instructions_checklist_icon"
-        android:paddingTop="@dimen/checklist_title_padding_top"
-        android:textColor="@color/bg_inactive_grey"
-        android:textSize="@dimen/default_text_size"
-        tools:text="Customer Requests"
-        />
-
-    <LinearLayout
-        android:id="@+id/booking_details_job_instructions_checklist_entries_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/booking_details_job_instructions_checklist_title_text"
-        android:layout_marginTop="@dimen/row_margin"
-        android:layout_toEndOf="@id/booking_details_job_instructions_checklist_icon"
-        android:layout_toRightOf="@id/booking_details_job_instructions_checklist_icon"
-        android:orientation="vertical"
-        />
-
-</RelativeLayout>
+    android:layout_marginEnd="@dimen/default_margin"
+    android:layout_marginLeft="@dimen/default_margin"
+    android:layout_marginRight="@dimen/default_margin"
+    android:layout_marginStart="@dimen/default_margin"
+    android:orientation="vertical"
+    />

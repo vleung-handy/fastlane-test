@@ -9,12 +9,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -29,7 +31,6 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.booking.Booking;
 import com.handy.portal.model.booking.Booking.BookingInstructionGroup;
-import com.handy.portal.ui.element.BookingDetailsJobInstructionsSectionView;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.UIUtils;
@@ -58,6 +59,8 @@ public class InProgressBookingView extends InjectedBusView
     @Inject
     PrefsManager mPrefsManager;
 
+    @Bind(R.id.in_progress_scroll_view)
+    ScrollView mScrollView;
     @Bind(R.id.no_show_banner_text)
     View mNoShowBanner;
     @Bind(R.id.customer_name_text)
@@ -70,10 +73,10 @@ public class InProgressBookingView extends InjectedBusView
     View mMessageCustomerView;
     @Bind(R.id.booking_support_button)
     Button mSupportButton;
-    @Bind(R.id.entry_method_layout)
-    ViewGroup mEntryMethodLayout;
-    @Bind(R.id.entry_method_text)
-    TextView mEntryMethodText;
+    @Bind(R.id.note_to_pro_layout)
+    ViewGroup mNoteToProLayout;
+    @Bind(R.id.note_to_pro_text)
+    TextView mNoteToProText;
     @Bind(R.id.booking_details_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
     @Bind(R.id.job_number_text)
@@ -86,8 +89,8 @@ public class InProgressBookingView extends InjectedBusView
     private Booking mBooking;
     private String mSource;
     private Bundle mSourceExtras;
-
     private boolean mFromPaymentsTab;
+    private Toast mToast;
 
     private static final Map<String, Integer> GROUP_ICONS;
     private static final Gson GSON = new Gson();
@@ -169,21 +172,20 @@ public class InProgressBookingView extends InjectedBusView
             {
                 String groupString = group.getGroup();
 
-                if (groupString.equals(GROUP_ENTRY_METHOD))
+                if (groupString.equals(GROUP_NOTE_TO_PRO))
                 {
-                    mEntryMethodLayout.setVisibility(VISIBLE);
+                    List<Booking.BookingInstruction> instructions = group.getInstructions();
+                    if (instructions != null && !instructions.isEmpty())
+                    {
+                        mNoteToProText.setText(instructions.get(0).getDescription());
+                        mNoteToProLayout.setVisibility(VISIBLE);
+                    }
 
                     // TODO: Set entry method here
                 }
                 else if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
                 {
                     preferencesGroup = group;
-                }
-                else
-                {
-                    BookingDetailsJobInstructionsSectionView sectionView = addSection(mInstructionsLayout);
-                    sectionView.init(group.getLabel(), GROUP_ICONS.get(group.getGroup()),
-                            group.getInstructions());
                 }
             }
 
@@ -231,9 +233,19 @@ public class InProgressBookingView extends InjectedBusView
     @OnClick(R.id.booking_action_button)
     public void checkOut()
     {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
+        final boolean proReportedNoShow = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
+        if (proReportedNoShow || mBooking.isAnyPreferenceChecked())
+        {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(BundleKeys.BOOKING, mBooking);
+            mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
+        }
+        else
+        {
+            mScrollView.fullScroll(View.FOCUS_DOWN);
+            showToast(getContext().getString(R.string.check_customer_preferences),
+                    Toast.LENGTH_LONG, Gravity.TOP);
+        }
     }
 
     private void init()
@@ -315,9 +327,10 @@ public class InProgressBookingView extends InjectedBusView
         }
     }
 
-    private BookingDetailsJobInstructionsSectionView addSection(LinearLayout instructionsLayout)
+    protected void showToast(String message, int length, int gravity)
     {
-        LayoutInflater.from(getContext()).inflate(R.layout.element_booking_details_job_instructions_section, instructionsLayout);
-        return (BookingDetailsJobInstructionsSectionView) instructionsLayout.getChildAt(instructionsLayout.getChildCount() - 1);
+        mToast = Toast.makeText(getContext(), message, length);
+        mToast.setGravity(gravity, 0, 0);
+        mToast.show();
     }
 }
