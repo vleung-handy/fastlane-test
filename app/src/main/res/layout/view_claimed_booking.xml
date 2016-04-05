@@ -3,333 +3,359 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
     >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/booking_action_button"
+        android:layout_alignParentTop="true"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/default_margin_large"
             >
 
-            <TextView
-                android:id="@+id/no_show_banner_text"
-                style="@style/CircularBold"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/customer_no_show_banner_height"
-                android:background="@color/pink"
-                android:gravity="center"
-                android:text="@string/customer_no_show_reported"
-                android:textColor="@color/error_red"
-                android:textSize="@dimen/default_text_size"
-                android:visibility="gone"
-                tools:visibility="visible"
-                />
-
-            <FrameLayout
-                android:id="@+id/map_layout"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/check_in_booking_details_map_height"
-                />
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
                 android:background="@color/white"
+                android:orientation="vertical"
                 >
 
                 <TextView
-                    android:id="@+id/customer_name_text"
-                    style="@style/CircularMedium"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/no_show_banner_text"
+                    style="@style/CircularBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/customer_no_show_banner_height"
+                    android:background="@color/pink"
+                    android:gravity="center"
+                    android:text="@string/customer_no_show_reported"
+                    android:textColor="@color/error_red"
+                    android:textSize="@dimen/default_text_size"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    />
+
+                <FrameLayout
+                    android:id="@+id/map_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/check_in_booking_details_map_height"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/large_text_size"
-                    tools:text="Customer's Name"
+                    android:padding="@dimen/default_padding"
+                    >
+
+                    <TextView
+                        android:id="@+id/customer_name_text"
+                        style="@style/CircularMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/large_text_size"
+                        tools:text="Customer's Name"
+                        />
+
+                    <ImageView
+                        android:id="@+id/call_customer_view"
+                        android:layout_width="@dimen/customer_action_width_height"
+                        android:layout_height="@dimen/customer_action_width_height"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/default_margin_x2"
+                        android:layout_marginRight="@dimen/default_margin_x2"
+                        android:layout_toLeftOf="@+id/message_customer_view"
+                        android:layout_toStartOf="@id/message_customer_view"
+                        android:src="@drawable/customer_call"
+                        android:visibility="gone"
+                        />
+
+                    <ImageView
+                        android:id="@+id/message_customer_view"
+                        android:layout_width="@dimen/customer_action_width_height"
+                        android:layout_height="@dimen/customer_action_width_height"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/customer_message"
+                        android:visibility="gone"
+                        />
+
+                </RelativeLayout>
+
+                <include
+                    layout="@layout/divider_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
                     />
 
-                <ImageView
-                    android:id="@+id/call_customer_view"
-                    android:layout_width="@dimen/customer_action_width_height"
-                    android:layout_height="@dimen/customer_action_width_height"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/default_margin_x2"
-                    android:layout_marginRight="@dimen/default_margin_x2"
-                    android:layout_toLeftOf="@+id/message_customer_view"
-                    android:layout_toStartOf="@id/message_customer_view"
-                    android:src="@drawable/customer_call"
-                    android:visibility="gone"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            style="@style/CircularBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/address"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            />
+
+                        <TextView
+                            android:id="@+id/address_line_one_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingMultiplier="1.3"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            tools:text="123 Perry Lane, Apt 4A"
+                            />
+
+                        <TextView
+                            android:id="@+id/address_line_two_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingMultiplier="1.3"
+                            android:text="@string/address"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            tools:text="Brooklyn, NY 11231"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/get_directions_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
+
+                        <ImageView
+                            android:layout_width="@dimen/get_directions_width_height"
+                            android:layout_height="@dimen/get_directions_width_height"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/booking_get_directions"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/get_directions_margin_top"
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
+                            android:text="@string/get_directions"
+                            android:textAllCaps="false"
+                            android:textColor="@color/handy_blue"
+                            android:textSize="@dimen/small_text_size"
+                            />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <include
+                    layout="@layout/divider_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
                     />
-
-                <ImageView
-                    android:id="@+id/message_customer_view"
-                    android:layout_width="@dimen/customer_action_width_height"
-                    android:layout_height="@dimen/customer_action_width_height"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/customer_message"
-                    android:visibility="gone"
-                    />
-
-            </RelativeLayout>
-
-            <include
-                layout="@layout/divider_dashboard"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginStart="@dimen/default_margin"
-                />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
-                >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/default_padding"
                     >
 
                     <TextView
                         style="@style/CircularBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/address"
+                        android:text="@string/date"
                         android:textColor="@color/black"
                         android:textSize="@dimen/default_text_size"
                         />
 
                     <TextView
-                        android:id="@+id/address_line_one_text"
+                        android:id="@+id/job_date_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:lineSpacingMultiplier="1.3"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="123 Perry Lane, Apt 4A"
-                        />
-
-                    <TextView
-                        android:id="@+id/address_line_two_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingMultiplier="1.3"
-                        android:text="@string/address"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="Brooklyn, NY 11231"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/get_directions_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    >
-
-                    <ImageView
-                        android:layout_width="@dimen/get_directions_width_height"
-                        android:layout_height="@dimen/get_directions_width_height"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/booking_get_directions"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/get_directions_margin_top"
                         android:paddingEnd="@dimen/extra_padding"
                         android:paddingLeft="@dimen/extra_padding"
                         android:paddingRight="@dimen/extra_padding"
                         android:paddingStart="@dimen/extra_padding"
-                        android:text="@string/get_directions"
-                        android:textAllCaps="false"
-                        android:textColor="@color/handy_blue"
-                        android:textSize="@dimen/small_text_size"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="Today, Thursday, February 8"
                         />
 
                 </LinearLayout>
 
-            </RelativeLayout>
+                <include
+                    layout="@layout/divider_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    />
 
-            <include
-                layout="@layout/divider_dashboard"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginStart="@dimen/default_margin"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    style="@style/CircularBold"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/date"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/default_padding"
+                    >
+
+                    <TextView
+                        style="@style/CircularBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <TextView
+                        android:id="@+id/job_time_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="@dimen/extra_padding"
+                        android:paddingLeft="@dimen/extra_padding"
+                        android:paddingRight="@dimen/extra_padding"
+                        android:paddingStart="@dimen/extra_padding"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="8:00 am -- 10:30 am"
+                        />
+
+                </LinearLayout>
+
+                <include
+                    layout="@layout/divider_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/default_padding"
+                    >
+
+                    <TextView
+                        style="@style/CircularBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/payment"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <TextView
+                        android:id="@+id/job_payment_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="@dimen/extra_padding"
+                        android:paddingLeft="@dimen/extra_padding"
+                        android:paddingRight="@dimen/extra_padding"
+                        android:paddingStart="@dimen/extra_padding"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="$45"
+                        />
+
+                </LinearLayout>
+
+                <include
+                    layout="@layout/divider_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/booking_details_job_instructions_list_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingRight="@dimen/default_padding"
+                    android:showDividers="middle"
+                    />
+
+                <include
+                    layout="@layout/divider_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
                     />
 
                 <TextView
-                    android:id="@+id/job_date_text"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/job_number_text"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="@dimen/extra_padding"
-                    android:paddingLeft="@dimen/extra_padding"
-                    android:paddingRight="@dimen/extra_padding"
-                    android:paddingStart="@dimen/extra_padding"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    tools:text="Today, Thursday, February 8"
+                    android:background="@color/white"
+                    android:padding="@dimen/default_padding"
+                    android:textColor="@color/tertiary_grey"
+                    android:textSize="@dimen/small_text_size"
+                    tools:text="Job # 123456"
                     />
 
+                <include
+                    layout="@layout/divider_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    />
             </LinearLayout>
-
-            <include
-                layout="@layout/divider_dashboard"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginStart="@dimen/default_margin"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    style="@style/CircularBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/time"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    />
-
-                <TextView
-                    android:id="@+id/job_time_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="@dimen/extra_padding"
-                    android:paddingLeft="@dimen/extra_padding"
-                    android:paddingRight="@dimen/extra_padding"
-                    android:paddingStart="@dimen/extra_padding"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    tools:text="8:00 am -- 10:30 am"
-                    />
-
-            </LinearLayout>
-
-            <include
-                layout="@layout/divider_dashboard"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginStart="@dimen/default_margin"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    style="@style/CircularBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/payment"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    />
-
-                <TextView
-                    android:id="@+id/job_payment_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="@dimen/extra_padding"
-                    android:paddingLeft="@dimen/extra_padding"
-                    android:paddingRight="@dimen/extra_padding"
-                    android:paddingStart="@dimen/extra_padding"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    tools:text="$45"
-                    />
-
-            </LinearLayout>
-
-            <include
-                layout="@layout/divider_dashboard"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginStart="@dimen/default_margin"
-                />
-
-            <LinearLayout
-                android:id="@+id/booking_details_job_instructions_list_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/default_padding"
-                android:paddingRight="@dimen/default_padding"
-                android:divider="?android:attr/dividerHorizontal"
-                android:showDividers="middle"
-                android:orientation="vertical"
-                />
-
-            <TextView
-                android:id="@+id/job_number_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
-                android:textColor="@color/tertiary_grey"
-                android:textSize="@dimen/small_text_size"
-                tools:text="Job # 123456"
-                />
 
             <Button
                 android:id="@+id/booking_support_button"
@@ -352,7 +378,6 @@
                 tools:text="Helper text yo"
                 tools:visibility="visible"
                 />
-
         </LinearLayout>
 
     </ScrollView>
@@ -369,6 +394,7 @@
         android:textSize="@dimen/large_text_size"
         android:visibility="gone"
         tools:text="@string/on_my_way"
+        tools:visibility="visible"
         />
 
 </RelativeLayout>

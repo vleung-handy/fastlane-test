@@ -39,6 +39,7 @@ import com.handy.portal.ui.fragment.booking.BookingMapFragment;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -176,7 +177,8 @@ public class ClaimedBookingView extends InjectedBusView
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
         if (paymentInfo != null)
         {
-            String paymentText = paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount();
+            String paymentText = paymentInfo.getCurrencySymbol() +
+                    TextUtils.DECIMAL_FORMAT_TWO_ZERO.format(paymentInfo.getAdjustedAmount());
             mJobPaymentText.setText(paymentText);
         }
 
@@ -363,8 +365,8 @@ public class ClaimedBookingView extends InjectedBusView
         {
             case ON_MY_WAY:
             {
-                mActionButton.setVisibility(VISIBLE);
                 mActionButton.setText(R.string.on_my_way);
+                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
                 mActionButton.setOnClickListener(new OnClickListener()
                 {
                     @Override
@@ -383,8 +385,8 @@ public class ClaimedBookingView extends InjectedBusView
             }
             case CHECK_IN:
             {
-                mActionButton.setVisibility(VISIBLE);
                 mActionButton.setText(R.string.check_in);
+                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
                 mActionButton.setOnClickListener(new OnClickListener()
                 {
                     @Override
