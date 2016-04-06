@@ -30,6 +30,7 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
@@ -57,7 +58,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ClaimedBookingView extends InjectedBusView
+public class BookingView extends InjectedBusView
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -66,12 +67,12 @@ public class ClaimedBookingView extends InjectedBusView
     View mNoShowBanner;
     @Bind(R.id.map_layout)
     FrameLayout mMapLayout;
+    @Bind(R.id.booking_customer_contact_layout)
+    ViewGroup mBookingCustomerContactLayout;
     @Bind(R.id.customer_name_text)
     TextView mCustomerNameText;
-    @Bind(R.id.address_line_one_text)
-    TextView mAddressLineOneText;
-    @Bind(R.id.address_line_two_text)
-    TextView mAddressLineTwoText;
+    @Bind(R.id.booking_address_text)
+    TextView mBookingAddressText;
     @Bind(R.id.call_customer_view)
     ImageView mCallCustomerView;
     @Bind(R.id.message_customer_view)
@@ -97,35 +98,37 @@ public class ClaimedBookingView extends InjectedBusView
     @Bind(R.id.booking_action_button)
     Button mActionButton;
 
+    private static final String BOOKING_PROXY_ID_PREFIX = "P";
+
     private Booking mBooking;
     private String mSource;
     private Bundle mSourceExtras;
     private Intent mGetDirectionsIntent;
 
-    public ClaimedBookingView(
+    public BookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            OnClickListener onSupportClickListener, boolean noShowReported)
+            OnClickListener onSupportClickListener, boolean noShowReported, boolean fromPaymentsTab)
     {
         super(context);
         init();
-        setDisplay(booking, source, sourceExtras, onSupportClickListener, noShowReported);
+        setDisplay(booking, source, sourceExtras, onSupportClickListener, noShowReported, fromPaymentsTab);
     }
 
-    public ClaimedBookingView(final Context context, final AttributeSet attrs)
+    public BookingView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public ClaimedBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    public BookingView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ClaimedBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr,
-                              final int defStyleRes)
+    public BookingView(final Context context, final AttributeSet attrs, final int defStyleAttr,
+                       final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
@@ -133,7 +136,7 @@ public class ClaimedBookingView extends InjectedBusView
 
     public void setDisplay(
             @NonNull Booking booking, String source, Bundle sourceExtras,
-            OnClickListener onSupportClickListener, boolean noShowReported)
+            OnClickListener onSupportClickListener, boolean noShowReported, boolean fromPaymentsTab)
     {
         mBooking = booking;
         mSource = source;
@@ -154,26 +157,39 @@ public class ClaimedBookingView extends InjectedBusView
             String firstName = mBooking.getUser().getFirstName();
             mCustomerNameText.setText(firstName);
         }
+        else
+        {
+            mBookingCustomerContactLayout.setVisibility(GONE);
+        }
 
+        mBookingAddressText.setText(mBooking.getLocationName());
         Address address = mBooking.getAddress();
         if (address != null)
         {
-            mAddressLineOneText.setText(address.getAddress1());
-            mAddressLineTwoText.setText(address.getCityStateZip());
-
-            initGetDirections(address);
+            if (fromPaymentsTab || mBooking.isProxy())
+            {
+                mBookingAddressText.setText(address.getShortRegion());
+            }
+            else
+            {
+                mBookingAddressText.setText(getResources().getString(R.string.two_lines_formatted,
+                        address.getAddress1(), address.getCityStateZip()));
+                initGetDirections(address);
+            }
         }
 
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
         String formattedDate = DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
         String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
-                + getResources().getString(R.string.dash)+ " "
+                + getResources().getString(R.string.dash) + " "
                 + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());
-        mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, mBooking.getId()));
+
+        String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
+        mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
 
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
         if (paymentInfo != null)
@@ -211,6 +227,13 @@ public class ClaimedBookingView extends InjectedBusView
         if (noShowReported)
         {
             mNoShowBanner.setVisibility(VISIBLE);
+        }
+
+        // Hide map and customer contact if coming from payments tab
+        if (fromPaymentsTab)
+        {
+            mMapLayout.setVisibility(GONE);
+            mBookingCustomerContactLayout.setVisibility(GONE);
         }
     }
 
@@ -277,7 +300,7 @@ public class ClaimedBookingView extends InjectedBusView
 
     private void init()
     {
-        inflate(getContext(), R.layout.view_claimed_booking, this);
+        inflate(getContext(), R.layout.view_booking, this);
         ButterKnife.bind(this);
         Utils.inject(getContext(), this);
     }
@@ -379,6 +402,23 @@ public class ClaimedBookingView extends InjectedBusView
 
         switch (buttonActionType)
         {
+            case CLAIM:
+            {
+                mActionButton.setText(R.string.claim);
+                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
+                mActionButton.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
+                                mBooking, mSource, mSourceExtras, 0.0f)));
+                        mBus.post(new HandyEvent.RequestClaimJob(mBooking, mSource, mSourceExtras));
+                    }
+                });
+                break;
+            }
             case ON_MY_WAY:
             {
                 mActionButton.setText(R.string.on_my_way);

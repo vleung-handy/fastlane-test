@@ -47,6 +47,7 @@
                     />
 
                 <RelativeLayout
+                    android:id="@+id/booking_customer_contact_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding"
@@ -76,6 +77,7 @@
                         android:layout_toStartOf="@id/message_customer_view"
                         android:src="@drawable/customer_call"
                         android:visibility="gone"
+                        tools:visibility="visible"
                         />
 
                     <ImageView
@@ -87,6 +89,7 @@
                         android:layout_centerVertical="true"
                         android:src="@drawable/customer_message"
                         android:visibility="gone"
+                        tools:visibility="visible"
                         />
 
                 </RelativeLayout>
@@ -122,24 +125,12 @@
                             />
 
                         <TextView
-                            android:id="@+id/address_line_one_text"
+                            android:id="@+id/booking_address_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:lineSpacingMultiplier="1.3"
                             android:textColor="@color/black"
                             android:textSize="@dimen/default_text_size"
-                            tools:text="123 Perry Lane, Apt 4A"
-                            />
-
-                        <TextView
-                            android:id="@+id/address_line_two_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:lineSpacingMultiplier="1.3"
-                            android:text="@string/address"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/default_text_size"
-                            tools:text="Brooklyn, NY 11231"
+                            tools:text="123 Perry Lane, Apt 4A\nBrooklyn, NY 11231"
                             />
 
                     </LinearLayout>
@@ -153,6 +144,7 @@
                         android:layout_centerVertical="true"
                         android:orientation="vertical"
                         android:visibility="gone"
+                        tools:visibility="visible"
                         >
 
                         <ImageView
@@ -318,16 +310,6 @@
 
                 </LinearLayout>
 
-                <include
-                    layout="@layout/divider_dashboard"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    />
-
                 <LinearLayout
                     android:id="@+id/booking_details_job_instructions_list_layout"
                     android:layout_width="match_parent"
@@ -337,7 +319,7 @@
                     android:orientation="vertical"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
-                    android:showDividers="middle"
+                    android:showDividers="middle|beginning"
                     />
 
                 <include
@@ -385,8 +367,8 @@
                     android:id="@+id/booking_details_action_helper_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_margin"
                     android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_marginTop="@dimen/default_margin"
                     android:gravity="center_horizontal"
                     android:textColor="@color/tertiary_grey"
                     android:textSize="@dimen/small_text_size"

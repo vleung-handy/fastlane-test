@@ -38,8 +38,7 @@ import com.handy.portal.model.booking.Booking;
 import com.handy.portal.model.booking.BookingClaimDetails;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
-import com.handy.portal.ui.element.bookings.AvailableBookingView;
-import com.handy.portal.ui.element.bookings.ClaimedBookingView;
+import com.handy.portal.ui.element.bookings.BookingView;
 import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
@@ -507,7 +506,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         Booking.BookingProgress bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
         if (bookingProgress == Booking.BookingProgress.READY_FOR_CLAIM)
         {
-            mCurrentView = new AvailableBookingView(getContext(), mBooking, mSource, mSourceExtras);
+            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
+                    this, noShowReported, mFromPaymentsTab);
             setActionBarTitle(R.string.available_job);
         }
         else if (bookingProgress == Booking.BookingProgress.READY_FOR_ON_MY_WAY ||
@@ -515,8 +515,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
                 (bookingProgress == Booking.BookingProgress.READY_FOR_CHECK_OUT
                         && mBooking.getCustomerPreferences().size() == 0))
         {
-            mCurrentView = new ClaimedBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported);
+            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
+                    this, noShowReported, mFromPaymentsTab);
             setTimerIfNeeded();
 
         }
@@ -527,8 +527,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         }
         else
         {
-            mCurrentView = new ClaimedBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported);
+            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
+                    this, noShowReported, mFromPaymentsTab);
             setActionBarTitle(R.string.your_job);
         }
 
