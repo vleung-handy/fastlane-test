@@ -175,7 +175,7 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     /**
      * Given a map and a list of points, this functions bounds the map camera by the points
      * so they fit perfectly within the camera view with some default amount of padding.
-     *
+     * <p/>
      * In the case of normal bookings with a center point, the map zooms in too far.
      * To combat that, the camera zoom is checked after the bounding and forced to the default
      * zoom if the zoom is greater than the default.

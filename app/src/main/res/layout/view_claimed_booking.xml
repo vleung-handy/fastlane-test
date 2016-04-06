@@ -377,7 +377,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/extra_margin_large"
                 android:layout_marginBottom="@dimen/extra_padding_medium"
+                android:background="@drawable/border_gray_bg_white"
                 android:text="@string/job_support"
+                android:textColor="@color/black"
                 />
 
             <TextView
