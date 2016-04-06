@@ -75,8 +75,6 @@ public class InProgressBookingView extends InjectedBusView
     TextView mNoteToProText;
     @Bind(R.id.in_progress_booking_checklist)
     CustomerRequestsView mCustomerRequestsView;
-    @Bind(R.id.job_number_text)
-    TextView mJobNumberText;
     @Bind(R.id.booking_details_action_helper_text)
     TextView mBookingDetailsActionHelperText;
     @Bind(R.id.booking_action_button)
@@ -177,7 +175,6 @@ public class InProgressBookingView extends InjectedBusView
                         mNoteToProLayout.setVisibility(VISIBLE);
                     }
 
-                    // TODO: Set entry method here
                 }
                 else if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
                 {
@@ -219,8 +216,6 @@ public class InProgressBookingView extends InjectedBusView
         {
             mNoShowBanner.setVisibility(VISIBLE);
         }
-
-        mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, mBooking.getId()));
     }
 
     @OnClick(R.id.booking_details_view)
