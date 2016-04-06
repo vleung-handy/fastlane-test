@@ -19,6 +19,7 @@ import android.widget.ScrollView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
+import com.handy.portal.util.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,6 +53,7 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Utils.inject(getActivity(), this);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
     }
 

@@ -76,8 +76,7 @@ public class CancellationRequestFragment extends ActionBarFragment
         final View view = inflater.inflate(R.layout.fragment_cancellation_request, container, false);
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking,
-                ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
-                mAction.getWithholdingAmount()
+                ScheduledJobsLog.RemoveJobLog.REASON_FLOW
         )));
         return view;
     }
@@ -121,9 +120,7 @@ public class CancellationRequestFragment extends ActionBarFragment
         {
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                     mBooking,
-                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
-                    selectedReason,
-                    mAction.getWithholdingAmount()
+                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestRemoveJob(mBooking));
@@ -137,9 +134,7 @@ public class CancellationRequestFragment extends ActionBarFragment
         {
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
                     mBooking,
-                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
-                    getSelectedReason(),
-                    mAction.getWithholdingAmount()
+                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -161,8 +156,6 @@ public class CancellationRequestFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
-                getSelectedReason(),
-                mAction.getWithholdingAmount(),
                 errorMessage
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));

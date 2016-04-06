@@ -9,8 +9,13 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.util.CurrencyUtils;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 
@@ -31,6 +36,9 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     @Bind(R.id.withholding_fee)
     TextView mWithholdingFee;
 
+    @Inject
+    Bus mBus;
+
     public static ConfirmBookingCancelDialogFragment newInstance(final Booking booking)
     {
         ConfirmBookingCancelDialogFragment fragment = new ConfirmBookingCancelDialogFragment();
@@ -46,6 +54,11 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
         super.onViewCreated(view, savedInstanceState);
         displayWithholdingNotice();
         displayKeepRate();
+
+        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
+                mBooking,
+                ScheduledJobsLog.RemoveJobLog.KEEP_RATE
+        )));
     }
 
     private void displayWithholdingNotice()
@@ -100,6 +113,10 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     @Override
     protected void onConfirmBookingActionButtonClicked()
     {
+        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
+                mBooking,
+                ScheduledJobsLog.RemoveJobLog.KEEP_RATE
+        )));
         if (getTargetFragment() != null)
         {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
