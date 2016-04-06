@@ -47,7 +47,6 @@ import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +59,6 @@ import butterknife.OnClick;
 
 public class ClaimedBookingView extends InjectedBusView
 {
-    // TODO: this file still needs to be cleaned up.
     @Inject
     PrefsManager mPrefsManager;
 
@@ -103,8 +101,6 @@ public class ClaimedBookingView extends InjectedBusView
     private String mSource;
     private Bundle mSourceExtras;
     private Intent mGetDirectionsIntent;
-
-    private static final String DATE_FORMAT = "E, MMM d";
 
     public ClaimedBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
@@ -170,10 +166,10 @@ public class ClaimedBookingView extends InjectedBusView
 
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        String dash = getResources().getString(R.string.dash);
-        String formattedDate = dateFormat.format(startDate);
-        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " " + dash + " " + DateTimeUtils.formatDateTo12HourClock(endDate);
+        String formattedDate = DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
+        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
+                + getResources().getString(R.string.dash)+ " "
+                + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());

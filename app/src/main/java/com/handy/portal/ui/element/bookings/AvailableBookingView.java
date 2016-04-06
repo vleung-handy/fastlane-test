@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -33,7 +32,6 @@ import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -61,14 +59,10 @@ public class AvailableBookingView extends InjectedBusView
     TextView mJobPaymentBonusText;
     @Bind(R.id.job_number_text)
     TextView mJobNumberText;
-    @Bind(R.id.booking_claim)
-    Button mActionButton;
 
     private Booking mBooking;
     private String mSource;
     private Bundle mSourceExtras;
-
-    private static final String DATE_FORMAT = "E, MMM d";
 
     public AvailableBookingView(final Context context, @NonNull Booking booking, String source,
                                 Bundle sourceExtras)
@@ -116,10 +110,10 @@ public class AvailableBookingView extends InjectedBusView
 
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        String dash = getResources().getString(R.string.dash);
-        String formattedDate = dateFormat.format(startDate);
-        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " " + dash + " " + DateTimeUtils.formatDateTo12HourClock(endDate);
+        String formattedDate = DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
+        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
+                + getResources().getString(R.string.dash) + " "
+                + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());
@@ -173,7 +167,6 @@ public class AvailableBookingView extends InjectedBusView
 
     private void requestClaimJob(Booking booking)
     {
-        // TODO: handle source and source extras
         mBus.post(new LogEvent.AddLogEvent(
                 new AvailableJobsLog.ClaimSubmitted(booking, mSource, mSourceExtras, 0.0f)));
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
