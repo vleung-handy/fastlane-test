@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -62,12 +63,14 @@ import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.widget.BookingActionButton;
 import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.SupportActionUtils;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -555,7 +558,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         boolean allowAction = true;
 
-        if (!hasBeenWarned)
+        if (shouldBeWarned(actionType) && !hasBeenWarned)
         {
             allowAction = !checkShowWarningDialog(actionType);
         }
@@ -642,6 +645,22 @@ public class BookingDetailsFragment extends ActionBarFragment
                 Crashlytics.log("Could not find associated behavior for : " + actionType.getActionName());
             }
         }
+    }
+
+    private boolean shouldBeWarned(final BookingActionButtonType actionType)
+    {
+        final Booking.Action action = mAssociatedBooking.getAction(actionType.getActionName());
+        if (action != null)
+        {
+            switch (actionType)
+            {
+                case REMOVE:
+                    return action.getKeepRate() == null;
+                default:
+                    return !TextUtils.isNullOrEmpty(action.getWarningText());
+            }
+        }
+        return false;
     }
 
     private LocationData getLocationData()
@@ -788,16 +807,26 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestRemoveJob(@NonNull Booking booking)
     {
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
-        String warning = (removeAction != null) ? removeAction.getWarningText() : null;
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
-                booking,
-                ScheduledJobsLog.RemoveJobLog.POPUP,
-                null,
-                removeAction != null ? removeAction.getWithholdingAmount() : 0,
-                warning
-        )));
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestRemoveJob(booking));
+        final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
+        if (keepRate != null)
+        {
+            final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mAssociatedBooking);
+            fragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.REMOVE_BOOKING);
+            FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
+        }
+        else
+        {
+            String warning = (removeAction != null) ? removeAction.getWarningText() : null;
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
+                    booking,
+                    ScheduledJobsLog.RemoveJobLog.POPUP,
+                    null,
+                    removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                    warning
+            )));
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            bus.post(new HandyEvent.RequestRemoveJob(booking));
+        }
     }
 
     private void requestNotifyOnMyWayJob(String bookingId, LocationData locationData)
