@@ -22,7 +22,7 @@
             android:layout_marginRight="@dimen/extra_margin"
             android:visibility="gone"
             tools:visibility="visible"
-            android:src="@drawable/circle_teal"/>
+            android:src="@drawable/circle_handy_blue"/>
 
         <TextView
             android:id="@+id/cancellation_policy_list_item_left_text"
