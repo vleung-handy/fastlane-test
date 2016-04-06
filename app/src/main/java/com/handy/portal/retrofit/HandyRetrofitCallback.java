@@ -139,9 +139,10 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
 
                 if (resp >= 400 && resp <= 500)
                 {
-                    if (error.getResponse().getBody().mimeType().contains("json"))
+                    RestError restError = (RestError) error.getBodyAs(RestError.class);
+                    if (error.getResponse().getBody().mimeType().contains("json")
+                            && restError != null)
                     {
-                        RestError restError = (RestError) error.getBodyAs(RestError.class);
                         String[] messages;
 
                         if (restError.message != null)
