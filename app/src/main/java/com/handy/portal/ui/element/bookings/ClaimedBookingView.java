@@ -105,7 +105,6 @@ public class ClaimedBookingView extends InjectedBusView
     private Intent mGetDirectionsIntent;
 
     private static final String DATE_FORMAT = "E, MMM d";
-    private static final String INTERPUNCT = "\u00B7";
 
     public ClaimedBookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
@@ -172,8 +171,9 @@ public class ClaimedBookingView extends InjectedBusView
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        String dash = getResources().getString(R.string.dash);
         String formattedDate = dateFormat.format(startDate);
-        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " - " + DateTimeUtils.formatDateTo12HourClock(endDate);
+        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " " + dash + " " + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());
@@ -273,7 +273,8 @@ public class ClaimedBookingView extends InjectedBusView
         }
     }
 
-    public void hideButtons(){
+    public void hideButtons()
+    {
         mActionButton.setVisibility(GONE);
         mSupportButton.setVisibility(GONE);
     }
@@ -358,14 +359,14 @@ public class ClaimedBookingView extends InjectedBusView
 
         if (DateTimeUtils.equalCalendarDates(currentTime, bookingStartDate))
         {
-            prepend = (getContext().getString(R.string.today) + " " + INTERPUNCT + " ");
+            prepend = (getContext().getString(R.string.today) + ", ");
         }
 
         calendar.add(Calendar.DATE, 1);
         Date tomorrowTime = calendar.getTime();
         if (DateTimeUtils.equalCalendarDates(tomorrowTime, bookingStartDate))
         {
-            prepend = (getContext().getString(R.string.tomorrow) + " " + INTERPUNCT + " ");
+            prepend = (getContext().getString(R.string.tomorrow) + ", ");
         }
 
         return prepend;

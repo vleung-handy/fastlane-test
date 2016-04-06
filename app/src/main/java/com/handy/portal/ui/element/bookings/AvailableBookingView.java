@@ -69,7 +69,6 @@ public class AvailableBookingView extends InjectedBusView
     private Bundle mSourceExtras;
 
     private static final String DATE_FORMAT = "E, MMM d";
-    private static final String INTERPUNCT = "\u00B7";
 
     public AvailableBookingView(final Context context, @NonNull Booking booking, String source,
                                 Bundle sourceExtras)
@@ -79,33 +78,25 @@ public class AvailableBookingView extends InjectedBusView
         setBooking(booking, source, sourceExtras);
     }
 
-    public AvailableBookingView(final Context context, final AttributeSet attrs,
-                                @NonNull Booking booking, String source,
-                                Bundle sourceExtras)
+    public AvailableBookingView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
-        setBooking(booking, source, sourceExtras);
     }
 
     public AvailableBookingView(final Context context, final AttributeSet attrs,
-                                final int defStyleAttr, @NonNull Booking booking, String source,
-                                Bundle sourceExtras)
+                                final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();
-        setBooking(booking, source, sourceExtras);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AvailableBookingView(final Context context, final AttributeSet attrs,
-                                final int defStyleAttr, final int defStyleRes,
-                                @NonNull Booking booking, String source,
-                                Bundle sourceExtras)
+                                final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
-        setBooking(booking, source, sourceExtras);
     }
 
     public void setBooking(@NonNull Booking booking, String source, Bundle sourceExtras)
@@ -126,8 +117,9 @@ public class AvailableBookingView extends InjectedBusView
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        String dash = getResources().getString(R.string.dash);
         String formattedDate = dateFormat.format(startDate);
-        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " - " + DateTimeUtils.formatDateTo12HourClock(endDate);
+        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " " + dash + " " + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());
@@ -199,14 +191,14 @@ public class AvailableBookingView extends InjectedBusView
 
         if (DateTimeUtils.equalCalendarDates(currentTime, bookingStartDate))
         {
-            prepend = (getContext().getString(R.string.today) + " " + INTERPUNCT + " ");
+            prepend = (getContext().getString(R.string.today) + ", ");
         }
 
         calendar.add(Calendar.DATE, 1);
         Date tomorrowTime = calendar.getTime();
         if (DateTimeUtils.equalCalendarDates(tomorrowTime, bookingStartDate))
         {
-            prepend = (getContext().getString(R.string.tomorrow) + " " + INTERPUNCT + " ");
+            prepend = (getContext().getString(R.string.tomorrow) + ", ");
         }
 
         return prepend;
