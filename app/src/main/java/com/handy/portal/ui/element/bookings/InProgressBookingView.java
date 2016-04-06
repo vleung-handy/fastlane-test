@@ -81,9 +81,6 @@ public class InProgressBookingView extends InjectedBusView
     Button mActionButton;
 
     private Booking mBooking;
-    private String mSource;
-    private Bundle mSourceExtras;
-    private boolean mFromPaymentsTab;
     private Toast mToast;
 
     private static final Map<String, Integer> GROUP_ICONS;
@@ -101,14 +98,12 @@ public class InProgressBookingView extends InjectedBusView
     }
 
     public InProgressBookingView(
-            final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            boolean fromPaymentsTab, OnClickListener onSupportClickListener,
+            final Context context, @NonNull Booking booking, OnClickListener onSupportClickListener,
             boolean noShowReported)
     {
         super(context);
         init();
-        setDisplay(booking, source, sourceExtras, fromPaymentsTab,
-                onSupportClickListener, noShowReported);
+        setDisplay(booking, onSupportClickListener, noShowReported);
     }
 
     public InProgressBookingView(final Context context, final AttributeSet attrs)
@@ -131,13 +126,9 @@ public class InProgressBookingView extends InjectedBusView
     }
 
     public void setDisplay(
-            @NonNull Booking booking, String source, Bundle sourceExtras, boolean fromPaymentsTab,
-            OnClickListener onSupportClickListener, boolean noShowReported)
+            @NonNull Booking booking, OnClickListener onSupportClickListener, boolean noShowReported)
     {
         mBooking = booking;
-        mSource = source;
-        mSourceExtras = sourceExtras;
-        mFromPaymentsTab = fromPaymentsTab;
         mSupportButton.setOnClickListener(onSupportClickListener);
 
         // Booking actions
@@ -146,8 +137,6 @@ public class InProgressBookingView extends InjectedBusView
         {
             enableActionsIfNeeded(action);
         }
-
-        Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
 
         Booking.User user = mBooking.getUser();
         if (user != null)
@@ -174,7 +163,6 @@ public class InProgressBookingView extends InjectedBusView
                         mNoteToProText.setText(instructions.get(0).getDescription());
                         mNoteToProLayout.setVisibility(VISIBLE);
                     }
-
                 }
                 else if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
                 {

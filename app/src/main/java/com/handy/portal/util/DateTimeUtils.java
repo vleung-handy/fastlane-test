@@ -23,6 +23,7 @@ public final class DateTimeUtils
 
     public final static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("EEEE, MMMM d");
+    public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("E, MMM d");
     public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER = new SimpleDateFormat("MMM");
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
     public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
@@ -325,8 +326,8 @@ public final class DateTimeUtils
 
     private static SimpleDateFormat getDayOfWeekMonthDayFormatter()
     {
-        DAY_OF_WEEK_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
-        return DAY_OF_WEEK_MONTH_DAY_FORMATTER;
+        SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER;
     }
 
     private static SimpleDateFormat getMonthShortNameFormatter()

@@ -9,11 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Function;
@@ -42,6 +42,7 @@ import com.handy.portal.ui.element.bookings.AvailableBookingView;
 import com.handy.portal.ui.element.bookings.ClaimedBookingView;
 import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.InjectedBusView;
@@ -58,12 +59,11 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class NewBookingDetailsFragment extends ActionBarFragment implements View.OnClickListener
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
-    public static final String START_TIMER = "start_timer";
-    public static final String END_TIMER = "end_timer";
 
     private static final Gson GSON = new Gson();
 
@@ -72,6 +72,10 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
 
     @Bind(R.id.booking_details_slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelContainer;
+    @Bind(R.id.fetch_error_view)
+    View mFetchErrorView;
+    @Bind(R.id.fetch_error_text)
+    TextView mErrorText;
 
     private InjectedBusView mCurrentView;
     private Booking mBooking;
@@ -121,8 +125,11 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         {
             mCurrentView.registerBus();
         }
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate));
+
+        if (!MainActivityFragment.clearingBackStack)
+        {
+            requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
+        }
     }
 
     @Override
@@ -143,13 +150,18 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         }
     }
 
-    @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_new_booking_details, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @OnClick(R.id.try_again_button)
+    public void onClickRequestDetails()
+    {
+        requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
     }
 
     @Override
@@ -334,6 +346,55 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         mSlideUpPanelContainer.showPanel(R.string.job_support, layout);
     }
 
+    @Subscribe
+    public void onReceiveRemoveJobSuccess(final HandyEvent.ReceiveRemoveJobSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        if (!event.booking.isClaimedByMe() || event.booking.getProviderId().equals(Booking.NO_PROVIDER_ASSIGNED))
+        {
+            final Booking.Action removeAction =
+                    mBooking.getAction(Booking.Action.ACTION_REMOVE);
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
+                    mBooking,
+                    ScheduledJobsLog.RemoveJobLog.POPUP,
+                    null,
+                    removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                    removeAction != null ? removeAction.getWarningText() : null
+            )));
+            TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
+            returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle, null);
+        }
+        else
+        {
+            //Something has gone very wrong, show a generic error and return to date based on original associated booking
+            final String errorMessage = getString(R.string.job_remove_error_generic);
+            trackRemoveJobError(errorMessage);
+            handleBookingRemoveError(errorMessage);
+        }
+    }
+
+    @Subscribe
+    public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        trackRemoveJobError(event.error.getMessage());
+        handleBookingRemoveError(event.error.getMessage());
+    }
+
+    private void trackRemoveJobError(final String errorMessage)
+    {
+        final Booking.Action removeAction =
+                mBooking.getAction(Booking.Action.ACTION_REMOVE);
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
+                mBooking,
+                ScheduledJobsLog.RemoveJobLog.POPUP,
+                null,
+                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                removeAction != null ? removeAction.getWarningText() : null,
+                errorMessage
+        )));
+    }
+
     private String getLoggedInUserId()
     {
         return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
@@ -352,10 +413,18 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
     }
 
-    //if we had problems retrieving the booking show a toast and return to available bookings
     private void handleBookingDetailsError(String errorMessage)
     {
-        Log.d("Handy Error", "Error getting booking details: " + errorMessage);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        if (errorMessage != null)
+        {
+            mErrorText.setText(errorMessage);
+        }
+        else
+        {
+            mErrorText.setText(R.string.error_fetching_connectivity_issue);
+        }
+        mFetchErrorView.setVisibility(View.VISIBLE);
     }
 
     private void handleBookingClaimError(String errorMessage, String title, String option1, Date returnDate)
@@ -453,8 +522,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         }
         else if (bookingProgress == Booking.BookingProgress.READY_FOR_CHECK_OUT)
         {
-            mCurrentView = new InProgressBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    mFromPaymentsTab, this, noShowReported);
+            mCurrentView = new InProgressBookingView(getContext(), mBooking, this, noShowReported);
             setTimerIfNeeded();
         }
         else
@@ -604,6 +672,12 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         alertDialog.show();
     }
 
+    private void requestBookingDetails(String bookingId, Booking.BookingType type, Date bookingDate)
+    {
+        mFetchErrorView.setVisibility(View.GONE);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestBookingDetails(bookingId, type, bookingDate));
+    }
 
     private void requestRemoveJob()
     {
@@ -641,6 +715,20 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         else
         {
             setActionBarTitle(R.string.time_expired);
+        }
+    }
+
+    private void handleBookingRemoveError(String errorMessage)
+    {
+        if (errorMessage != null)
+        {
+            bus.post(new HandyEvent.RemoveJobError(errorMessage));
+            showErrorDialogReturnToAvailable(errorMessage, getString(R.string.job_remove_error),
+                    getString(R.string.return_to_schedule), mBooking.getStartDate().getTime());
+        }
+        else
+        {
+            showNetworkErrorToast();
         }
     }
 }
