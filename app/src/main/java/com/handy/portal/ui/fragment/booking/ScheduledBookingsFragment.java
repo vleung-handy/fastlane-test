@@ -189,7 +189,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
 
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
     }
 
     @Override

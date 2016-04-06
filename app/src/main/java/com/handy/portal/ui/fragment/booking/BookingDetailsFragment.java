@@ -44,6 +44,7 @@ import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.booking.Booking;
 import com.handy.portal.model.booking.Booking.BookingStatus;
@@ -200,8 +201,8 @@ public class BookingDetailsFragment extends ActionBarFragment
             @Override
             public void onScrollChanged()
             {
-                if (!mHaveTrackedSeenBookingInstructions &&
-                        mScrollView != null)
+                if (!mHaveTrackedSeenBookingInstructions && mScrollView != null
+                        && mAssociatedBooking != null)
                 {
                     float percentVis = UIUtils.getPercentViewVisibleInScrollView(mJobInstructionsView, mScrollView);
                     if (percentVis >= TRACK_JOB_INSTRUCTIONS_SEEN_PERCENT_VIEW_THRESHOLD)
@@ -597,7 +598,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
-                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
+                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
                 }
                 else
                 {
@@ -890,11 +891,21 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
     }
 
-    private void goToHelpCenter(String helpNodeId)
+    private void goToHelpCenter(final Booking.Action action)
     {
-        Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.HELP_NODE_ID, helpNodeId);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
+        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
+        if (configuration != null && configuration.shouldUseHelpCenterWebView())
+        {
+            final Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+        }
+        else
+        {
+            final Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.HELP_NODE_ID, action.getDeepLinkData());
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
+        }
     }
 
 //Event Subscription and Handling
@@ -1145,7 +1156,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             case ISSUE_OTHER:
             case RESCHEDULE:
             case CANCELLATION_POLICY:
-                goToHelpCenter(event.action.getDeepLinkData());
+                goToHelpCenter(event.action);
                 break;
             case REMOVE:
                 removeJob(event.action);
@@ -1166,7 +1177,7 @@ public class BookingDetailsFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mAssociatedBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments, true));
     }
 
     private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)

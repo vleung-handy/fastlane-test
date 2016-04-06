@@ -1,6 +1,8 @@
 package com.handy.portal.ui.fragment.dialog;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +66,15 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState)
+    {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_down_from_bottom);
+        return dialog;
     }
 
     @Override
@@ -159,7 +170,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
-        if(!event.isAuto)
+        if (!event.isAuto)
         {
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
@@ -179,7 +190,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                 args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
                 args.putParcelable(BundleKeys.MAP_CENTER,
                         new LatLng(address.getLatitude(), address.getLongitude()));
-                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args));
+                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args, true));
             }
         }
         dismiss();

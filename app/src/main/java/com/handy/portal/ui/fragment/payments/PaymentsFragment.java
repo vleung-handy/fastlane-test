@@ -25,6 +25,8 @@ import com.handy.portal.helpcenter.model.HelpNode;
 import com.handy.portal.helpcenter.ui.adapter.HelpNodesAdapter;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
@@ -41,12 +43,19 @@ import com.squareup.otto.Subscribe;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public final class PaymentsFragment extends ActionBarFragment
 {
+    private static final String HELP_PAYMENTS_SECTION_REDIRECT_PATH = "/sections/203828247";
+
+    @Inject
+    ConfigManager mConfigManager;
+
     //TODO: investigate using @Produce and make manager handle more of this logic
     @Bind(R.id.slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelLayout;
@@ -224,7 +233,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments, true));
         }
     }
 
@@ -235,17 +244,37 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             case R.id.action_help:
                 bus.post(new LogEvent.AddLogEvent(new PaymentsLog.HelpSelected()));
-                if (helpNodesListView.getCount() > 0)
+                final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+                if (configuration != null && configuration.shouldUseHelpCenterWebView())
                 {
-                    mSlideUpPanelLayout.showPanel(R.string.payment_help, helpNodesListView);
+                    goToHelpCenterWebView();
                 }
                 else
                 {
-                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP));
+                    showHelpOptions();
                 }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void goToHelpCenterWebView()
+    {
+        final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HELP_PAYMENTS_SECTION_REDIRECT_PATH);
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+    }
+
+    private void showHelpOptions()
+    {
+        if (helpNodesListView.getCount() > 0)
+        {
+            mSlideUpPanelLayout.showPanel(R.string.payment_help, helpNodesListView);
+        }
+        else
+        {
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, true));
         }
     }
 
@@ -332,7 +361,7 @@ public final class PaymentsFragment extends ActionBarFragment
                         new PaymentsLog.HelpItemSelected(childNode.getLabel())));
                 Bundle arguments = new Bundle();
                 arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
-                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
+                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
             }
         });
     }

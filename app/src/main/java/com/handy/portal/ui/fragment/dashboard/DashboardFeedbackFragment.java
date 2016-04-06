@@ -13,9 +13,9 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.FeedbackLog;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.logs.FeedbackLog;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
@@ -90,7 +90,7 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     public void switchToVideoLibrary()
     {
         bus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoLibrarySelected()));
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY, true));
     }
 
     public void swapToVideo(String youtubeId)

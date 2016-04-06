@@ -118,12 +118,15 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
+        super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
         setActionBarTitle(R.string.send_your_receipt);
         setActionBarVisible(true);
+        mSendNoteText.setVisibility(View.GONE);
+        mSendNoteEditText.setVisibility(View.GONE);
 
         initialize();
     }

@@ -11,120 +11,141 @@
 
     <include layout="@layout/layout_fetch_error"/>
 
-    <LinearLayout
-        android:id="@+id/referral_description_layout"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="@dimen/default_padding"
         >
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
             >
 
-            <ImageView
-                android:id="@+id/bling"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/referral_description_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_large"
-                android:layout_marginStart="@dimen/default_margin_large"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_toEndOf="@+id/envelope"
-                android:layout_toRightOf="@+id/envelope"
-                android:src="@drawable/img_bling"
-                android:visibility="invisible"
-                tools:visibility="visible"
-                />
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/default_padding"
+                >
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    >
+
+                    <ImageView
+                        android:id="@+id/bling"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/default_margin_large"
+                        android:layout_marginStart="@dimen/default_margin_large"
+                        android:layout_marginTop="@dimen/default_margin"
+                        android:layout_toEndOf="@+id/envelope"
+                        android:layout_toRightOf="@+id/envelope"
+                        android:src="@drawable/img_bling"
+                        android:visibility="invisible"
+                        tools:visibility="visible"
+                        />
+
+                    <ImageView
+                        android:id="@+id/envelope"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/default_margin"
+                        android:src="@drawable/img_envelope"
+                        />
+
+                    <ImageView
+                        android:id="@+id/envelope_shadow"
+                        android:layout_width="148dp"
+                        android:layout_height="8dp"
+                        android:layout_below="@+id/envelope"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/row_margin"
+                        android:src="@drawable/circle_grey"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/TextView.XXLarge.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/row_margin"
+                    tools:text="Give $35, Get $35"
+                    />
+
+                <TextView
+                    android:id="@+id/subtitle"
+                    style="@style/TextView.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:gravity="center"
+                    tools:text="Give your friends $35 off their first Handy booking, and you get $35!"
+                    />
+
+            </LinearLayout>
 
             <ImageView
-                android:id="@+id/envelope"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/referral_description_layout"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="@dimen/default_margin"
-                android:src="@drawable/img_envelope"
+                android:src="@drawable/img_point"
                 />
 
-            <ImageView
-                android:id="@+id/envelope_shadow"
-                android:layout_width="148dp"
-                android:layout_height="8dp"
-                android:layout_below="@+id/envelope"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/row_margin"
-                android:src="@drawable/circle_grey"
-                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/referral_description_layout"
+                android:orientation="vertical"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/referral_code_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_margin_large"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginTop="@dimen/default_margin_large"
+                    android:background="@color/white"
+                    android:padding="@dimen/default_padding"
+                    >
+
+                    <TextView
+                        android:id="@+id/referral_code_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:textAppearance="@style/TextView.Bold"
+                        android:textColor="@color/handy_green"
+                        android:textSize="@dimen/xlarge_text_size"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_share"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/TextView.XXLarge.Bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin"
-            tools:text="Give $35, Get $35"
-            />
-
-        <TextView
-            android:id="@+id/subtitle"
-            style="@style/TextView.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:gravity="center"
-            tools:text="Give your friends $35 off their first Handy booking, and you get $35!"
-            />
-
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/img_point"
-        />
-
-    <RelativeLayout
-        android:id="@+id/referral_code_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin_large"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginTop="@dimen/default_margin_large"
-        android:background="@color/white"
-        android:padding="@dimen/default_padding"
-        >
-
-        <TextView
-            android:id="@+id/referral_code_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/handy_green"
-            android:textSize="@dimen/xlarge_text_size"
-            />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/share"
-            android:src="@drawable/ic_share"
-            />
-
-    </RelativeLayout>
-
+    </ScrollView>
 </LinearLayout>

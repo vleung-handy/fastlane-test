@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -59,7 +58,6 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     public void givenNoTabSelected_whenActivityResumes_thenLoadJobsScreen() throws Exception
     {
         assertThat(getScreenFragment(), instanceOf(AvailableBookingsFragment.class));
-        assertTrue(mFragment.mJobsButton.isChecked());
     }
 
     public Fragment getScreenFragment()

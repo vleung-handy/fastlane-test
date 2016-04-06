@@ -40,6 +40,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     protected LinkedList<ScheduleStrategyType> mSortedStrategies;
     private AlarmManager mAlarmManager;
     protected Context mContext;
+    private boolean mIsStarted = false;
 
     private Set<StrategyHandlerType> mActiveStrategies = new HashSet<>();
 
@@ -68,10 +69,14 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     }
 
     /**
-     * starts handling this schedule
+     * should only be called once
+     * <p/>
+     * starts handling this schedule if it wasn't handled before
      */
-    public final void start()
+    public void startIfNotStarted()
     {
+        if (mIsStarted) { return; }
+        mIsStarted = true;
         scanSchedule();
     }
 
@@ -199,13 +204,12 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
         }
     }
 
-    public final void destroy()
+    private void cancelScheduledAlarms()
     {
         try
         {
             //cancels scheduled alarms
-            Intent intent = new Intent(getWakeupAlarmBroadcastAction());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, getWakeupAlarmRequestCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = getAlarmPendingIntent(new Intent());
             mAlarmManager.cancel(pendingIntent);
 
         }
@@ -213,6 +217,11 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
         {
             Crashlytics.logException(e);
         }
+    }
+
+    public final void destroy()
+    {
+        cancelScheduledAlarms();
 
         try
         {
@@ -247,13 +256,23 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
         Bundle bundle = new Bundle();
         bundle.putByteArray(getStrategyBundleExtraKey(), byteArray);
 
-        Intent intent = new Intent(getWakeupAlarmBroadcastAction());
-        intent.setAction(getWakeupAlarmBroadcastAction()); //probably redundant, test this
-        intent.setPackage(mContext.getPackageName());
+        Intent intent = new Intent();
         intent.putExtras(bundle);
-        PendingIntent operation = PendingIntent.getBroadcast(mContext, getWakeupAlarmRequestCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent operation = getAlarmPendingIntent(intent);
 
         mAlarmManager.set(AlarmManager.RTC_WAKEUP, strategy.getStartDate().getTime(), operation);
+    }
+
+    /**
+     * @param intentWithExtras this should already have any extras added to it if needed
+     * @return the pending intent used to schedule and cancel alarms
+     */
+    private PendingIntent getAlarmPendingIntent(@NonNull Intent intentWithExtras)
+    {
+        //the intent data/action/package (but NOT extras), and flags passed to PendingIntent.getBroadcast, are used as identifiers to cancel alarms
+        intentWithExtras.setAction(getWakeupAlarmBroadcastAction());
+        intentWithExtras.setPackage(mContext.getPackageName());
+        return PendingIntent.getBroadcast(mContext, getWakeupAlarmRequestCode(), intentWithExtras, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**

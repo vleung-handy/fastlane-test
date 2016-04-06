@@ -38,6 +38,7 @@ import com.handy.portal.ui.fragment.booking.BookingDetailsFragmentTest;
 import com.handy.portal.ui.fragment.booking.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.booking.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
+import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragmentTest;

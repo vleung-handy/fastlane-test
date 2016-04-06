@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.notification.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,8 +12,9 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NotificationEvent;
-import com.handy.portal.model.notifications.NotificationMessage;
-import com.handy.portal.ui.element.notifications.NotificationsListView;
+import com.handy.portal.notification.model.NotificationMessage;
+import com.handy.portal.notification.ui.view.NotificationsListView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.squareup.otto.Subscribe;
 

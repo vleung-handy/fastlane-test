@@ -14,10 +14,9 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.handy.portal.location.LocationConstants;
+import com.handy.portal.location.LocationUtils;
 import com.handy.portal.location.scheduler.geofences.model.BookingGeofenceStrategy;
 import com.handy.portal.location.scheduler.handler.ScheduleStrategyHandler;
-import com.handy.portal.util.Utils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -60,7 +59,7 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
     {
         try
         {
-            if(!Utils.areAllPermissionsGranted(mContext, LocationConstants.LOCATION_PERMISSIONS))
+            if (!LocationUtils.hasRequiredLocationPermissions(mContext))
             {
                 return;
             }
@@ -72,7 +71,7 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
             //add the geofence request
             LocationServices.GeofencingApi.addGeofences(googleApiClient,
                     geofencingRequest,
-                    mBookingGeofenceStrategyCallbacks.getPendingIntent(mBookingGeofenceStrategy)).setResultCallback(this);
+                    mBookingGeofenceStrategyCallbacks.getPendingIntent()).setResultCallback(this);
             Log.d(getClass().getName(), "Building geofence for geofence strategy: " + mBookingGeofenceStrategy.toString());
 
             //todo postdelayed or postattime?
@@ -163,6 +162,7 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
 
     public interface BookingGeofenceStrategyCallbacks extends ScheduleStrategyHandler.StrategyCallbacks<BookingGeofenceScheduleStrategyHandler>{
         GoogleApiClient getGoogleApiClient();
-        PendingIntent getPendingIntent(BookingGeofenceStrategy bookingGeofenceStrategy);
+
+        PendingIntent getPendingIntent();
     }
 }

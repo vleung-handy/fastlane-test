@@ -1,4 +1,4 @@
-package com.handy.portal.ui.element.notifications;
+package com.handy.portal.notification.ui.view;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.notifications.NotificationImage;
-import com.handy.portal.model.notifications.NotificationMessage;
+import com.handy.portal.notification.model.NotificationImage;
+import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.util.Utils;
 import com.squareup.picasso.Picasso;
 

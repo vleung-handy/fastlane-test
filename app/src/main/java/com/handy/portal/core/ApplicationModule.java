@@ -16,11 +16,14 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.scheduler.LocationScheduleService;
 import com.handy.portal.location.scheduler.geofences.handler.BookingGeofenceScheduleHandler;
 import com.handy.portal.location.scheduler.tracking.handler.LocationTrackingScheduleHandler;
+import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
+import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
@@ -28,7 +31,6 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
-import com.handy.portal.manager.NotificationMessageManager;
 import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -41,6 +43,11 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
+import com.handy.portal.notification.NotificationMessageManager;
+import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
+import com.handy.portal.notification.ui.fragment.NotificationsFragment;
+import com.handy.portal.notification.ui.view.NotificationsListEntryView;
+import com.handy.portal.notification.ui.view.NotificationsListView;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -62,13 +69,10 @@ import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
-import com.handy.portal.ui.element.notifications.NotificationsListEntryView;
-import com.handy.portal.ui.element.notifications.NotificationsListView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
@@ -87,9 +91,6 @@ import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
-import com.handy.portal.ui.fragment.dialog.LocationPermissionsBlockerDialogFragment;
-import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
-import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
@@ -141,6 +142,7 @@ import retrofit.converter.GsonConverter;
         TermsActivity.class,
         TermsFragment.class,
         HelpFragment.class,
+        HelpWebViewFragment.class,
         HelpContactFragment.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,

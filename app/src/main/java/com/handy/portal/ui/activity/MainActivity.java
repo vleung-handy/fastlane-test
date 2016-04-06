@@ -1,9 +1,7 @@
 package com.handy.portal.ui.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
@@ -16,20 +14,20 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.location.LocationConstants;
+import com.handy.portal.location.LocationUtils;
 import com.handy.portal.location.scheduler.LocationScheduleService;
+import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
+import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.notification.NotificationUtils;
+import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
-import com.handy.portal.ui.fragment.dialog.LocationPermissionsBlockerDialogFragment;
-import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
-import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.FragmentUtils;
-import com.handy.portal.util.NotificationUtils;
 import com.handy.portal.util.SystemUtils;
-import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -66,7 +64,7 @@ public class MainActivity extends BaseActivity
      */
     private void startLocationServiceIfNecessary()
     {
-        if (hasRequiredLocationPermissions() && hasRequiredLocationSettings())
+        if (LocationUtils.hasRequiredLocationPermissions(this) && LocationUtils.hasRequiredLocationSettings(this))
         {
             Intent locationServiceIntent = new Intent(this, LocationScheduleService.class);
             if (mConfigManager.getConfigurationResponse() != null
@@ -86,40 +84,6 @@ public class MainActivity extends BaseActivity
             }
             //at most one service instance will be running
         }
-    }
-
-    private boolean hasRequiredLocationPermissions()
-    {
-        return Utils.areAllPermissionsGranted(this, LocationConstants.LOCATION_PERMISSIONS);
-    }
-
-    @SuppressWarnings("deprecation")
-    private boolean hasRequiredLocationSettings()
-    {
-        boolean locationServicesEnabled;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
-            int locationMode = 0;
-            try
-            {
-                locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-            }
-            catch (Settings.SettingNotFoundException e)
-            {
-                e.printStackTrace();
-                Crashlytics.logException(e);
-            }
-            locationServicesEnabled = locationMode != Settings.Secure.LOCATION_MODE_OFF;
-        }
-        else
-        {
-            //in versions before KitKat, must check for a different settings key
-            String locationProviders =
-                    Settings.Secure.getString(getContentResolver(),
-                            Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            locationServicesEnabled = !TextUtils.isNullOrEmpty(locationProviders);
-        }
-        return locationServicesEnabled;
     }
 
     private void showNecessaryLocationSettingsAndPermissionsBlockers()
@@ -215,7 +179,7 @@ public class MainActivity extends BaseActivity
     private void showLocationSettingsBlockerIfNecessary()
     {
         //check whether location services setting is on
-        if (!hasRequiredLocationSettings() &&
+        if (!LocationUtils.hasRequiredLocationSettings(this) &&
                 getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
         //don't want to show this dialog if it's already showing
         {
@@ -231,7 +195,7 @@ public class MainActivity extends BaseActivity
      */
     private void showLocationPermissionsBlockerIfNecessary()
     {
-        if (!hasRequiredLocationPermissions() &&
+        if (!LocationUtils.hasRequiredLocationPermissions(this) &&
                 getSupportFragmentManager().findFragmentByTag(LocationPermissionsBlockerDialogFragment.FRAGMENT_TAG) == null)
         {
             if (Utils.wereAnyPermissionsRequestedPreviously(this, LocationConstants.LOCATION_PERMISSIONS))
