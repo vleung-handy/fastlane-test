@@ -1,11 +1,11 @@
 package com.handy.portal.ui.fragment.dialog;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -100,7 +100,10 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     @Override
     protected void onConfirmBookingActionButtonClicked()
     {
-        Toast.makeText(getActivity(), "", Toast.LENGTH_LONG).show();
+        if (getTargetFragment() != null)
+        {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+        }
         dismiss();
     }
 

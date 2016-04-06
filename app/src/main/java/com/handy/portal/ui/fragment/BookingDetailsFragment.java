@@ -558,9 +558,9 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         boolean allowAction = true;
 
-        if (shouldBeWarned(actionType) && !hasBeenWarned)
+        if (!hasBeenWarned)
         {
-            allowAction = !checkShowWarningDialog(actionType);
+            allowAction = !checkShowWarning(actionType);
         }
 
         if (!allowAction)
@@ -647,22 +647,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         }
     }
 
-    private boolean shouldBeWarned(final BookingActionButtonType actionType)
-    {
-        final Booking.Action action = mAssociatedBooking.getAction(actionType.getActionName());
-        if (action != null)
-        {
-            switch (actionType)
-            {
-                case REMOVE:
-                    return action.getKeepRate() == null;
-                default:
-                    return !TextUtils.isNullOrEmpty(action.getWarningText());
-            }
-        }
-        return false;
-    }
-
     private LocationData getLocationData()
     {
         return Utils.getCurrentLocation((BaseActivity) getActivity());
@@ -689,47 +673,57 @@ public class BookingDetailsFragment extends ActionBarFragment
     }
 
     //Check if the current booking data for a given action type has an associated warning to display
-    private boolean checkShowWarningDialog(BookingActionButtonType actionType)
+    private boolean checkShowWarning(final BookingActionButtonType actionType)
     {
-        boolean showingWarningDialog = false;
-
-        List<Booking.Action> allowedActions = mAssociatedBooking.getAllowedActions();
-
-        //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
-        for (Booking.Action action : allowedActions)
+        final Booking.Action action = mAssociatedBooking.getAction(actionType.getActionName());
+        boolean showingWarning = showCustomWarning(actionType);
+        if (!showingWarning && action != null && !TextUtils.isNullOrEmpty(action.getWarningText()))
         {
-            if (UIUtils.getAssociatedActionType(action) == actionType)
-            {
-                //TODO refactor/move
-                if(actionType.equals(BookingActionButtonType.CLAIM))
-                {
-                    if(getChildFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
-                        //todo do something else this doesn't actually prevent duplicates
-                    {
-                        showingWarningDialog = true;
-                        ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mAssociatedBooking);
-                        confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST); //todo consider an alternate way
-                        FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
-                        break;
-                    }
-                }
-                else if (action.getWarningText() != null && !action.getWarningText().isEmpty())
-                {
-                    showingWarningDialog = true;
-                    showBookingActionWarningDialog(action.getWarningText(), action);
-                }
-            }
+            showingWarning = true;
+            showBookingActionWarningDialog(action.getWarningText(), action);
         }
-        return showingWarningDialog;
+        return showingWarning;
+    }
+
+    private boolean showCustomWarning(final BookingActionButtonType actionType)
+    {
+        switch (actionType)
+        {
+            case CLAIM:
+                ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mAssociatedBooking);
+                confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST); //todo consider an alternate way
+                FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+                return true;
+            case REMOVE:
+                final Booking.Action removeAction = mAssociatedBooking.getAction(Booking.Action.ACTION_REMOVE);
+                final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
+                if (keepRate != null)
+                {
+                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mAssociatedBooking);
+                    fragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.REMOVE_BOOKING);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
+                    return true;
+                }
+            default:
+                return false;
+        }
     }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
     {
-        if (requestCode == RequestCode.CONFIRM_REQUEST && resultCode == Activity.RESULT_OK)
+        if (resultCode == Activity.RESULT_OK)
         {
-            Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
-            requestClaimJob(booking);
+            switch (requestCode)
+            {
+                case RequestCode.CONFIRM_REQUEST:
+                    Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
+                    requestClaimJob(booking);
+                    break;
+                case RequestCode.REMOVE_BOOKING:
+                    requestRemoveJob(mAssociatedBooking);
+                    break;
+            }
         }
     }
 
@@ -738,7 +732,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     {
         final BookingActionButtonType actionType = UIUtils.getAssociatedActionType(action);
         trackShowActionWarning(action);
-        switch(action.getActionName())
+        switch (action.getActionName())
         {
             default:
                 //specific booking error, show an alert dialog
@@ -807,26 +801,16 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestRemoveJob(@NonNull Booking booking)
     {
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
-        final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
-        if (keepRate != null)
-        {
-            final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mAssociatedBooking);
-            fragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.REMOVE_BOOKING);
-            FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
-        }
-        else
-        {
-            String warning = (removeAction != null) ? removeAction.getWarningText() : null;
-            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
-                    booking,
-                    ScheduledJobsLog.RemoveJobLog.POPUP,
-                    null,
-                    removeAction != null ? removeAction.getWithholdingAmount() : 0,
-                    warning
-            )));
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestRemoveJob(booking));
-        }
+        String warning = (removeAction != null) ? removeAction.getWarningText() : null;
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
+                booking,
+                ScheduledJobsLog.RemoveJobLog.POPUP,
+                null,
+                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                warning
+        )));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new HandyEvent.RequestRemoveJob(booking));
     }
 
     private void requestNotifyOnMyWayJob(String bookingId, LocationData locationData)
