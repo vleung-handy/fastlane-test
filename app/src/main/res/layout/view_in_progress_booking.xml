@@ -6,7 +6,6 @@
     >
 
     <ScrollView
-        android:id="@+id/in_progress_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/booking_action_button"
@@ -191,8 +190,8 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/booking_details_job_instructions_list_layout"
+            <com.handy.portal.ui.element.bookings.CustomerRequestsView
+                android:id="@+id/in_progress_booking_checklist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
@@ -256,7 +255,6 @@
         android:layout_height="@dimen/complete_button_height"
         android:layout_alignParentBottom="true"
         android:background="@color/requested_green"
-        android:enabled="false"
         android:text="@string/continue_to_check_out"
         android:textAllCaps="false"
         android:textColor="@drawable/checkout_button_selector"

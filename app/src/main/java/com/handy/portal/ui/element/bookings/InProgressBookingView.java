@@ -13,8 +13,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,8 +57,6 @@ public class InProgressBookingView extends InjectedBusView
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.in_progress_scroll_view)
-    ScrollView mScrollView;
     @Bind(R.id.no_show_banner_text)
     View mNoShowBanner;
     @Bind(R.id.customer_name_text)
@@ -77,8 +73,8 @@ public class InProgressBookingView extends InjectedBusView
     ViewGroup mNoteToProLayout;
     @Bind(R.id.note_to_pro_text)
     TextView mNoteToProText;
-    @Bind(R.id.booking_details_job_instructions_list_layout)
-    LinearLayout mInstructionsLayout;
+    @Bind(R.id.in_progress_booking_checklist)
+    CustomerRequestsView mCustomerRequestsView;
     @Bind(R.id.job_number_text)
     TextView mJobNumberText;
     @Bind(R.id.booking_details_action_helper_text)
@@ -213,11 +209,8 @@ public class InProgressBookingView extends InjectedBusView
                 }
                 if (checklist != null)
                 {
-                    CustomerRequestsView customerRequestsView = new CustomerRequestsView(getContext(),
-                            preferencesGroup.getLabel(), GROUP_ICONS.get(preferencesGroup.getGroup()),
-                            checklist);
-                    customerRequestsView.setEnabled(mBooking.isCheckedIn());
-                    mInstructionsLayout.addView(customerRequestsView);
+                    mCustomerRequestsView.setDisplay(preferencesGroup.getLabel(),
+                            GROUP_ICONS.get(preferencesGroup.getGroup()), checklist);
                 }
             }
         }
@@ -236,7 +229,6 @@ public class InProgressBookingView extends InjectedBusView
         Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
 
-        // TDOO: add to backstack
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.CHECKOUT_JOB_DETAILS, bundle, true));
     }
 
@@ -248,26 +240,13 @@ public class InProgressBookingView extends InjectedBusView
         {
             Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-            mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
+            mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
         }
         else
         {
-            mScrollView.fullScroll(View.FOCUS_DOWN);
             showToast(getContext().getString(R.string.check_customer_preferences),
                     Toast.LENGTH_LONG, Gravity.TOP);
         }
-    }
-
-    private void init()
-    {
-        inflate(getContext(), R.layout.view_in_progress_booking, this);
-        ButterKnife.bind(this);
-        Utils.inject(getContext(), this);
-    }
-
-    private String getLoggedInUserId()
-    {
-        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
     @OnClick(R.id.call_customer_view)
@@ -302,6 +281,18 @@ public class InProgressBookingView extends InjectedBusView
         }
     }
 
+    private void init()
+    {
+        inflate(getContext(), R.layout.view_in_progress_booking, this);
+        ButterKnife.bind(this);
+        Utils.inject(getContext(), this);
+    }
+
+    private String getLoggedInUserId()
+    {
+        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+    }
+
     private void enableActionsIfNeeded(Booking.Action action)
     {
         BookingActionButtonType buttonActionType = UIUtils.getAssociatedActionType(action);
@@ -315,7 +306,7 @@ public class InProgressBookingView extends InjectedBusView
         {
             case CHECK_OUT:
             {
-                mActionButton.setVisibility(VISIBLE);
+                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
 
                 if (action.getHelperText() != null && !action.getHelperText().isEmpty())
                 {

@@ -640,7 +640,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         }
         else
         {
-            setActionBarTitle(R.string.you_are_over_time);
+            setActionBarTitle(R.string.time_expired);
         }
     }
 }
