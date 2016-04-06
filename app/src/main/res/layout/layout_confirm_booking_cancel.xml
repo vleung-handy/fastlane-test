@@ -14,10 +14,41 @@
         />
 
     <TextView
+        android:id="@+id/no_fee_notice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/keep_rate_negatively_impacted"
+        android:visibility="gone"
         />
+
+    <LinearLayout
+        android:id="@+id/withholding_fee_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/withholding_fee_notice_part_1"
+            />
+
+        <TextView
+            android:id="@+id/withholding_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="$10.00 fee"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/withholding_fee_notice_part_2"
+            />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -428,10 +428,13 @@
     <!-- Job Cancellation -->
     <string name="need_to_cancel">Are you sure you need to cancel?</string>
     <string name="cancel_job">Cancel Job</string>
-    <string name="keep_rate">Keep Rate</string>
+    <string name="keep_rate">Keep rate</string>
     <string name="keep_rate_negatively_impacted">Your keep rate will be negatively impacted.</string>
     <string name="empty_keep_rate_percent">--%</string>
     <string name="keep_rate_percent_formatted">%1$d%%</string>
     <string name="no_keep_rate">Not enough data</string>
+    <string name="withholding_fee_notice_part_1">You will incur a&#160;</string>
+    <string name="withholding_fee_notice_part_2">&#160;and reduce your keep rate:</string>
+    <string name="withholding_fee_simple_formatted">%1$s fee</string>
 
 </resources>

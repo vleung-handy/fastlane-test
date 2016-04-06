@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
+import com.handy.portal.util.CurrencyUtils;
 
 import butterknife.Bind;
 
@@ -23,6 +24,12 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     TextView mNewKeepRate;
     @Bind(R.id.no_keep_rate)
     TextView mNoKeepRate;
+    @Bind(R.id.no_fee_notice)
+    View mNoFeeNotice;
+    @Bind(R.id.withholding_fee_notice)
+    View mWithholdingFeeNotice;
+    @Bind(R.id.withholding_fee)
+    TextView mWithholdingFee;
 
     public static ConfirmBookingCancelDialogFragment newInstance(final Booking booking)
     {
@@ -37,8 +44,34 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        final Booking.Action action = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        final Booking.Action.Extras.KeepRate keepRate = action.getKeepRate();
+        displayWithholdingNotice();
+        displayKeepRate();
+    }
+
+    private void displayWithholdingNotice()
+    {
+        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
+        final int withholdingAmount = removeAction.getWithholdingAmount();
+        if (withholdingAmount > 0)
+        {
+            final String currencySymbol = mBooking.getPaymentToProvider().getCurrencySymbol();
+            final String fee = CurrencyUtils.formatPriceWithCents(withholdingAmount, currencySymbol);
+            final String feeFormatted = getString(R.string.withholding_fee_simple_formatted, fee);
+            mWithholdingFee.setText(feeFormatted);
+            mNoFeeNotice.setVisibility(View.GONE);
+            mWithholdingFeeNotice.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mWithholdingFeeNotice.setVisibility(View.GONE);
+            mNoFeeNotice.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void displayKeepRate()
+    {
+        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
+        final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
         final Float oldKeepRate = keepRate.getActual();
         final Float newKeepRate = keepRate.getOnNextUnassign();
         if (oldKeepRate != null && newKeepRate != null)
