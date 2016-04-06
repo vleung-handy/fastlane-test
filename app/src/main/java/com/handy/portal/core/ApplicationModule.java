@@ -57,8 +57,8 @@ import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.AvailableBookingView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
-import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.bookings.ClaimedBookingView;
+import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
@@ -76,6 +76,7 @@ import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.booking.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.booking.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
+import com.handy.portal.ui.fragment.booking.CheckoutJobDetailsFragment;
 import com.handy.portal.ui.fragment.booking.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.booking.NewBookingDetailsFragment;
@@ -190,6 +191,7 @@ import retrofit.converter.GsonConverter;
         ClaimedBookingView.class,
         InProgressBookingView.class,
         InjectedBusView.class,
+        CheckoutJobDetailsFragment.class,
 })
 public final class ApplicationModule
 {

@@ -12,6 +12,7 @@ import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.booking.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
+import com.handy.portal.ui.fragment.booking.CheckoutJobDetailsFragment;
 import com.handy.portal.ui.fragment.booking.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.booking.NewBookingDetailsFragment;
@@ -42,6 +43,7 @@ public enum MainViewTab implements Serializable
     NEARBY_JOBS(NearbyBookingsFragment.class),
     JOB_DETAILS(NewBookingDetailsFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
+    CHECKOUT_JOB_DETAILS(CheckoutJobDetailsFragment.class),
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
 
     NOTIFICATIONS(NotificationsFragment.class),

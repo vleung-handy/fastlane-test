@@ -273,6 +273,11 @@ public class ClaimedBookingView extends InjectedBusView
         }
     }
 
+    public void hideButtons(){
+        mActionButton.setVisibility(GONE);
+        mSupportButton.setVisibility(GONE);
+    }
+
     private void init()
     {
         inflate(getContext(), R.layout.view_claimed_booking, this);
