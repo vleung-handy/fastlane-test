@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment.booking;
+package com.handy.portal.ui.fragment.bookings;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

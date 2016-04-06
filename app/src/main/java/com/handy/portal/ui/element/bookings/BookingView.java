@@ -39,7 +39,7 @@ import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.booking.Booking;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.fragment.booking.BookingMapFragment;
+import com.handy.portal.ui.fragment.bookings.BookingMapFragment;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.util.DateTimeUtils;
