@@ -67,12 +67,12 @@ public class BookingView extends InjectedBusView
     View mNoShowBanner;
     @Bind(R.id.map_layout)
     FrameLayout mMapLayout;
+    @Bind(R.id.booking_customer_contact_layout)
+    ViewGroup mBookingCustomerContactLayout;
     @Bind(R.id.customer_name_text)
     TextView mCustomerNameText;
-    @Bind(R.id.address_line_one_text)
-    TextView mAddressLineOneText;
-    @Bind(R.id.address_line_two_text)
-    TextView mAddressLineTwoText;
+    @Bind(R.id.booking_address_text)
+    TextView mBookingAddressText;
     @Bind(R.id.call_customer_view)
     ImageView mCallCustomerView;
     @Bind(R.id.message_customer_view)
@@ -98,6 +98,8 @@ public class BookingView extends InjectedBusView
     @Bind(R.id.booking_action_button)
     Button mActionButton;
 
+    private static final String BOOKING_PROXY_ID_PREFIX = "P";
+
     private Booking mBooking;
     private String mSource;
     private Bundle mSourceExtras;
@@ -105,11 +107,11 @@ public class BookingView extends InjectedBusView
 
     public BookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            OnClickListener onSupportClickListener, boolean noShowReported)
+            OnClickListener onSupportClickListener, boolean noShowReported, boolean fromPaymentsTab)
     {
         super(context);
         init();
-        setDisplay(booking, source, sourceExtras, onSupportClickListener, noShowReported);
+        setDisplay(booking, source, sourceExtras, onSupportClickListener, noShowReported, fromPaymentsTab);
     }
 
     public BookingView(final Context context, final AttributeSet attrs)
@@ -134,7 +136,7 @@ public class BookingView extends InjectedBusView
 
     public void setDisplay(
             @NonNull Booking booking, String source, Bundle sourceExtras,
-            OnClickListener onSupportClickListener, boolean noShowReported)
+            OnClickListener onSupportClickListener, boolean noShowReported, boolean fromPaymentsTab)
     {
         mBooking = booking;
         mSource = source;
@@ -155,14 +157,25 @@ public class BookingView extends InjectedBusView
             String firstName = mBooking.getUser().getFirstName();
             mCustomerNameText.setText(firstName);
         }
+        else
+        {
+            mBookingCustomerContactLayout.setVisibility(GONE);
+        }
 
+        mBookingAddressText.setText(mBooking.getLocationName());
         Address address = mBooking.getAddress();
         if (address != null)
         {
-            mAddressLineOneText.setText(address.getAddress1());
-            mAddressLineTwoText.setText(address.getCityStateZip());
-
-            initGetDirections(address);
+            if (fromPaymentsTab || mBooking.isProxy())
+            {
+                mBookingAddressText.setText(address.getShortRegion());
+            }
+            else
+            {
+                mBookingAddressText.setText(getResources().getString(R.string.two_lines_formatted,
+                        address.getAddress1(), address.getCityStateZip()));
+                initGetDirections(address);
+            }
         }
 
         Date startDate = booking.getStartDate();
@@ -174,7 +187,9 @@ public class BookingView extends InjectedBusView
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());
-        mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, mBooking.getId()));
+
+        String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
+        mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
 
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
         if (paymentInfo != null)
@@ -212,6 +227,13 @@ public class BookingView extends InjectedBusView
         if (noShowReported)
         {
             mNoShowBanner.setVisibility(VISIBLE);
+        }
+
+        // Hide map and customer contact if coming from payments tab
+        if (fromPaymentsTab)
+        {
+            mMapLayout.setVisibility(GONE);
+            mBookingCustomerContactLayout.setVisibility(GONE);
         }
     }
 

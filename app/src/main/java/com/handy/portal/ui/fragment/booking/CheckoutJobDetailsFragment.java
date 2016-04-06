@@ -54,7 +54,7 @@ public class CheckoutJobDetailsFragment extends ActionBarFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mBookingDetailsView.setDisplay(mBooking, null, null, null, false);
+        mBookingDetailsView.setDisplay(mBooking, null, null, null, false, false);
         mBookingDetailsView.hideButtons();
 
         setOptionsMenuEnabled(true);

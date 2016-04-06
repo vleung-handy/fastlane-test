@@ -507,7 +507,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         if (bookingProgress == Booking.BookingProgress.READY_FOR_CLAIM)
         {
             mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported);
+                    this, noShowReported, mFromPaymentsTab);
             setActionBarTitle(R.string.available_job);
         }
         else if (bookingProgress == Booking.BookingProgress.READY_FOR_ON_MY_WAY ||
@@ -516,7 +516,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
                         && mBooking.getCustomerPreferences().size() == 0))
         {
             mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported);
+                    this, noShowReported, mFromPaymentsTab);
             setTimerIfNeeded();
 
         }
@@ -528,7 +528,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         else
         {
             mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported);
+                    this, noShowReported, mFromPaymentsTab);
             setActionBarTitle(R.string.your_job);
         }
 
