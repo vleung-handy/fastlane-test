@@ -1,11 +1,8 @@
 package com.handy.portal.ui.fragment.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -15,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -27,19 +26,27 @@ import butterknife.OnClick;
 
 /**
  * dialog fragment that slides up from the bottom.
- * has a dismiss button and a confirm button.
+ * has a dismiss button and a confirm button
+ *
+ * shown when we want to confirm a booking action
  */
 public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
 {
-    @Bind(R.id.confirm_booking_action_content)
-    protected LinearLayout mConfirmBookingActionContent;
-//    @Bind(R.id.confirm_booking_action_button)
-//    TextView mConfirmButton;
+    @Bind(R.id.confirm_booking_action_button)
+    Button mConfirmBookingActionButton;
 
     protected Booking mBooking;
 
-    public abstract View getBookingActionContentView(LayoutInflater inflater, ViewGroup container);
-//    public abstract String getConfirmButtonText();
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @return the view that will be stuffed inside confirm_booking_action_content of this fragment's view
+     */
+    protected abstract View getBookingActionContentView(LayoutInflater inflater, ViewGroup container);
+    protected abstract void onConfirmBookingActionButtonClicked();
+    protected abstract int getConfirmButtonBackgroundResourceId();
+    protected abstract String getConfirmButtonText();
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -56,19 +63,23 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
         Window window = dialog.getWindow();
         window.requestFeature(Window.FEATURE_NO_TITLE);
         window.getAttributes().windowAnimations = R.style.dialog_animation_slide_up_down_from_bottom;
-        Drawable background = new ColorDrawable(Color.BLACK);
-        background.setAlpha(130);
-        window.setBackgroundDrawable(background);
         return dialog;
     }
 
+    /**
+     * creates the view with the subclass's specific content layout
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @NonNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_dialog_confirm_booking_action, container, false);
-        LinearLayout confirmBookingActionContentLayout = (LinearLayout) view.findViewById(R.id.confirm_booking_action_content);
+        ScrollView confirmBookingActionContentLayout = (ScrollView) view.findViewById(R.id.confirm_booking_action_content);
         confirmBookingActionContentLayout.addView(getBookingActionContentView(inflater, container));
         return view;
     }
@@ -78,7 +89,9 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
     {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-//        mConfirmButton.setText(getConfirmButtonText());
+
+        mConfirmBookingActionButton.setBackgroundResource(getConfirmButtonBackgroundResourceId());
+        mConfirmBookingActionButton.setText(getConfirmButtonText());
     }
 
     @Override
@@ -93,19 +106,14 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
-    public void confirmBookingActionButtonClicked()
+    @OnClick(R.id.confirm_booking_action_button)
+    public void onConfirmButtonClicked()
     {
-        Intent intent = new Intent();
-        intent.putExtra(BundleKeys.BOOKING, mBooking);
-        if(getTargetFragment() != null)
-        {
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-        }
-        dismiss();
+        onConfirmBookingActionButtonClicked();
     }
 
     @OnClick(R.id.confirm_booking_action_dismiss_button)
-    public void closeDialog()
+    public void onDismissButtonClicked()
     {
         dismiss();
     }

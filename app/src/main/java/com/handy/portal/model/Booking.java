@@ -599,6 +599,20 @@ public class Booking implements Comparable<Booking>, Serializable
             private List<String> mRemoveReasons;
             @SerializedName("cancellation_policy")
             private CancellationPolicyItem mCancellationPolicyArray[];
+            @SerializedName("header_text")
+            private String mHeaderText;
+            @SerializedName("sub_text")
+            private String mSubText;
+
+            public String getHeaderText()
+            {
+                return mHeaderText;
+            }
+
+            public String getSubText()
+            {
+                return mSubText;
+            }
 
             public int getWithholdingAmount() { return mWithholdingAmount; }
 
@@ -613,31 +627,31 @@ public class Booking implements Comparable<Booking>, Serializable
             {
                 @SerializedName("text")
                 private String mDisplayText;
-                @SerializedName("amount")
-                private int mAmountCents;
-                @SerializedName("amount_cents_formatted")
-                private String mAmountFormatted;
+//                @SerializedName("amount_cents_formatted")
+//                private String mAmountFormatted;
                 @SerializedName("active")
                 private boolean mActive;
+                @SerializedName("fee")
+                private PaymentInfo mPaymentInfo;
 
                 public String getDisplayText()
                 {
                     return mDisplayText;
                 }
 
-                public String getAmountFormatted()
-                {
-                    return mAmountFormatted;
-                }
-
-                public int getAmountCents()
-                {
-                    return mAmountCents;
-                }
+//                public String getAmountFormatted()
+//                {
+//                    return mAmountFormatted;
+//                }
 
                 public boolean isActive()
                 {
                     return mActive;
+                }
+
+                public PaymentInfo getPaymentInfo()
+                {
+                    return mPaymentInfo;
                 }
             }
         }

@@ -328,6 +328,7 @@
     <string name="location_details">LOCATION DETAILS</string>
     <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
     <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
+    <string name="show_booking_cancellation_policy">Show Details</string>
 
 
     <!-- Booking Cancellation -->

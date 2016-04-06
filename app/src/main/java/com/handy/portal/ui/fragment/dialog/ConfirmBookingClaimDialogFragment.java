@@ -1,11 +1,12 @@
 package com.handy.portal.ui.fragment.dialog;
 
 import android.animation.LayoutTransition;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,7 +14,9 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.Booking;
+import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.element.bookings.BookingCancellationPolicyListItemView;
+import com.handy.portal.util.CurrencyUtils;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -24,8 +27,10 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     LinearLayout mCancellationPolicyContent;
     @Bind(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
     TextView mShowCancellationPolicyButton;
-    @Bind(R.id.confirm_booking_action_button)
-    Button mConfirmBookingActionButton;
+    @Bind(R.id.confirm_booking_action_title)
+    TextView mConfirmBookingActionTitle;
+    @Bind(R.id.confirm_booking_action_subtitle)
+    TextView mConfirmBookingActionSubtitle;
 
     public static final String FRAGMENT_TAG = ConfirmBookingClaimDialogFragment.class.getName();
 
@@ -48,6 +53,18 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     }
 
     @Override
+    protected int getConfirmButtonBackgroundResourceId()
+    {
+        return R.drawable.button_green;
+    }
+
+    @Override
+    protected String getConfirmButtonText()
+    {
+        return "Confirm Claim"; //todo strings.xml
+    }
+
+    @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
@@ -56,31 +73,40 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
         LayoutTransition lt = new LayoutTransition();
         lt.enableTransitionType(LayoutTransition.DISAPPEARING);
         lt.enableTransitionType(LayoutTransition.CHANGE_APPEARING);
+        lt.enableTransitionType(LayoutTransition.CHANGE_DISAPPEARING);
+        lt.enableTransitionType(LayoutTransition.APPEARING);
         mCancellationPolicyContent.setLayoutTransition(lt);
 
+        setTitleAndSubtitle();
         setBookingCancellationPolicyDisplay();
+    }
+
+    private void setTitleAndSubtitle()
+    {
+        Booking.Action bookingClaimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
+        if(bookingClaimAction == null || bookingClaimAction.getExtras() == null) return;
+        mConfirmBookingActionTitle.setText(bookingClaimAction.getExtras().getHeaderText());
+        mConfirmBookingActionSubtitle.setText(bookingClaimAction.getExtras().getSubText());
     }
 
     @OnClick(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
     public void onShowCancellationPolicyButtonClicked()
     {
-        if(mCancellationPolicyContent.getVisibility() == View.VISIBLE)
-        {
-            mCancellationPolicyContent.setVisibility(View.GONE);
-            mShowCancellationPolicyButton.setText("Show Cancellation Policy"); //TODO strings.xml
-        }
-        else
-        {
-            mCancellationPolicyContent.setVisibility(View.VISIBLE);
-            mShowCancellationPolicyButton.setText("Hide Cancellation Policy");
-        }
-
+        mCancellationPolicyContent.setVisibility(View.VISIBLE);
+        mShowCancellationPolicyButton.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.confirm_booking_action_button)
-    public void onConfirmBookingActionButtonClicked()
+    //todo consider another way of doing this
+    @Override
+    protected void onConfirmBookingActionButtonClicked()
     {
-        super.confirmBookingActionButtonClicked();
+        Intent intent = new Intent();
+        intent.putExtra(BundleKeys.BOOKING, mBooking);
+        if(getTargetFragment() != null)
+        {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+        }
+        dismiss();
     }
 
     private void setBookingCancellationPolicyDisplay()
@@ -103,10 +129,13 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
             for(int i = 0; i<cancellationPolicyItems.length; i++)
             {
                 Booking.Action.Extras.CancellationPolicyItem cancellationPolicyItem = cancellationPolicyItems[i];
+                PaymentInfo fee = cancellationPolicyItem.getPaymentInfo();
+                String feeAmountFormatted = CurrencyUtils.formatPriceWithCents(fee.getAmount(), fee.getCurrencySymbol());
+
                 BookingCancellationPolicyListItemView policyListItemView =
                         new BookingCancellationPolicyListItemView(getContext())
                                 .setLeftText(cancellationPolicyItem.getDisplayText())
-                                .setRightText(cancellationPolicyItem.getAmountFormatted())
+                                .setRightText(feeAmountFormatted)
                                 .setHighlighted(cancellationPolicyItem.isActive());
                 mCancellationPolicyContent.addView(policyListItemView);
             }

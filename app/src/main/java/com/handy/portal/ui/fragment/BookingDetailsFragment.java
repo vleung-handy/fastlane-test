@@ -681,7 +681,20 @@ public class BookingDetailsFragment extends ActionBarFragment
         {
             if (UIUtils.getAssociatedActionType(action) == actionType)
             {
-                if (action.getWarningText() != null && !action.getWarningText().isEmpty())
+                //TODO refactor/move
+                if(actionType.equals(BookingActionButtonType.CLAIM))
+                {
+                    if(getChildFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+                        //todo do something else this doesn't actually prevent duplicates
+                    {
+                        showingWarningDialog = true;
+                        ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mAssociatedBooking);
+                        confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST); //todo consider an alternate way
+                        FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+                        break;
+                    }
+                }
+                else if (action.getWarningText() != null && !action.getWarningText().isEmpty())
                 {
                     showingWarningDialog = true;
                     showBookingActionWarningDialog(action.getWarningText(), action);
@@ -708,14 +721,6 @@ public class BookingDetailsFragment extends ActionBarFragment
         trackShowActionWarning(action);
         switch(action.getActionName())
         {
-            case Booking.Action.ACTION_CLAIM:
-                if(getChildFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
-                {
-                    ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mAssociatedBooking);
-                    confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST);
-                    FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
-                }
-                break;
             default:
                 //specific booking error, show an alert dialog
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
