@@ -60,35 +60,30 @@ public class ScheduledJobsLog extends EventLog
         private String mRemovalReason;
         @SerializedName("withholding_amount")
         private int mWithholdingAmount;
-        @SerializedName("warning_message")
-        private String mWarningMessage;
 
         public RemoveJobLog(final String eventType,
                             final Booking booking,
                             final String removalType,
                             final String removalReason,
-                            final int withholdingAmount,
-                            final String warningMessage)
+                            final int withholdingAmount)
         {
             super(eventType, EVENT_CONTEXT, booking);
             mRemovalType = removalType;
             mRemovalReason = removalReason;
             mWithholdingAmount = withholdingAmount;
-            mWarningMessage = warningMessage;
         }
     }
 
 
     public static class RemoveJobConfirmationShown extends RemoveJobLog
     {
-        private static final String EVENT_TYPE = "remove_confirmation_shown";
+        private static final String EVENT_TYPE = "remove_job_confirmation_shown";
 
         public RemoveJobConfirmationShown(final Booking booking,
                                           final String removalType,
-                                          final int withholdingAmount,
-                                          final String warningMessage)
+                                          final int withholdingAmount)
         {
-            super(EVENT_TYPE, booking, removalType, null, withholdingAmount, warningMessage);
+            super(EVENT_TYPE, booking, removalType, null, withholdingAmount);
         }
     }
 
@@ -100,10 +95,9 @@ public class ScheduledJobsLog extends EventLog
         public RemoveJobSubmitted(final Booking booking,
                                   final String removalType,
                                   final String removalReason,
-                                  final int withholdingAmount,
-                                  final String warningMessage)
+                                  final int withholdingAmount)
         {
-            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount, warningMessage);
+            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount);
         }
     }
 
@@ -115,10 +109,9 @@ public class ScheduledJobsLog extends EventLog
         public RemoveJobSuccess(final Booking booking,
                                 final String removalType,
                                 final String removalReason,
-                                final int withholdingAmount,
-                                final String warningMessage)
+                                final int withholdingAmount)
         {
-            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount, warningMessage);
+            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount);
         }
     }
 
@@ -134,10 +127,9 @@ public class ScheduledJobsLog extends EventLog
                               final String removalType,
                               final String removalReason,
                               final int withholdingAmount,
-                              final String warningMessage,
                               final String errorMessage)
         {
-            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount, warningMessage);
+            super(EVENT_TYPE, booking, removalType, removalReason, withholdingAmount);
             mErrorMessage = errorMessage;
         }
     }

@@ -778,8 +778,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                             mAssociatedBooking,
                             ScheduledJobsLog.RemoveJobLog.POPUP,
-                            action.getWithholdingAmount(),
-                            action.getWarningText()
+                            action.getWithholdingAmount()
                     )));
                     bus.post(new HandyEvent.ShowConfirmationRemoveJob());
                 }
@@ -801,13 +800,11 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestRemoveJob(@NonNull Booking booking)
     {
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
-        String warning = (removeAction != null) ? removeAction.getWarningText() : null;
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                 booking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
-                removeAction != null ? removeAction.getWithholdingAmount() : 0,
-                warning
+                removeAction != null ? removeAction.getWithholdingAmount() : 0
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
@@ -1031,8 +1028,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     mAssociatedBooking,
                     ScheduledJobsLog.RemoveJobLog.POPUP,
                     null,
-                    removeAction != null ? removeAction.getWithholdingAmount() : 0,
-                    removeAction != null ? removeAction.getWarningText() : null
+                    removeAction != null ? removeAction.getWithholdingAmount() : 0
             )));
             //TODO: can't currently remove series using portal endpoint so only removing the single job
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -1065,7 +1061,6 @@ public class BookingDetailsFragment extends ActionBarFragment
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
                 removeAction != null ? removeAction.getWithholdingAmount() : 0,
-                removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
         )));
     }

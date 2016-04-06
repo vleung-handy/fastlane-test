@@ -77,8 +77,7 @@ public class CancellationRequestFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
-                mAction.getWithholdingAmount(),
-                mAction.getWarningText()
+                mAction.getWithholdingAmount()
         )));
         return view;
     }
@@ -124,8 +123,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     selectedReason,
-                    mAction.getWithholdingAmount(),
-                    mAction.getWarningText()
+                    mAction.getWithholdingAmount()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestRemoveJob(mBooking));
@@ -141,8 +139,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     getSelectedReason(),
-                    mAction.getWithholdingAmount(),
-                    mAction.getWarningText()
+                    mAction.getWithholdingAmount()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -166,7 +163,6 @@ public class CancellationRequestFragment extends ActionBarFragment
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                 getSelectedReason(),
                 mAction.getWithholdingAmount(),
-                mAction.getWarningText(),
                 errorMessage
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
