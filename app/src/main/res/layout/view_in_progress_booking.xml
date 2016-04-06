@@ -86,6 +86,7 @@
                 />
 
             <RelativeLayout
+                android:id="@+id/booking_details_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/customer_name_height"
                 android:background="@color/white"

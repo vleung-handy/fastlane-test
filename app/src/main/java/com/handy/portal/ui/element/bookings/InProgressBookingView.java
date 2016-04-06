@@ -230,6 +230,16 @@ public class InProgressBookingView extends InjectedBusView
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, mBooking.getId()));
     }
 
+    @OnClick(R.id.booking_details_view)
+    public void swapToJobDetails()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BundleKeys.BOOKING, mBooking);
+
+        // TDOO: add to backstack
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.CHECKOUT_JOB_DETAILS, bundle));
+    }
+
     @OnClick(R.id.booking_action_button)
     public void checkOut()
     {
