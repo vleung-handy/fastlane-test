@@ -113,7 +113,7 @@
                     android:paddingStart="@dimen/extra_padding"
                     android:textColor="@color/black"
                     android:textSize="@dimen/default_text_size"
-                    tools:text="8:00 am -- 10:30 am"
+                    tools:text="8:00 am \u2013 10:30 am"
                     />
 
             </LinearLayout>
@@ -159,6 +159,7 @@
 
                 <TextView
                     android:id="@+id/job_payment_bonus_text"
+                    style="@style/CircularBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="@dimen/extra_padding"
@@ -166,7 +167,8 @@
                     android:paddingRight="@dimen/extra_padding"
                     android:paddingStart="@dimen/extra_padding"
                     android:textColor="@color/handy_green"
-                    android:textSize="@dimen/default_text_size"
+                    android:textSize="@dimen/small_text_size"
+                    android:textStyle="bold"
                     tools:text=" +$5 BONUS"
                     />
 

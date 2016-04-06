@@ -5,12 +5,14 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.booking.Booking;
+import com.handy.portal.util.FontUtils;
 
 import java.util.List;
 
@@ -61,11 +63,14 @@ public class NewBookingDetailsJobInstructionsSectionView extends FrameLayout
 
         for (Booking.BookingInstruction entry : entries)
         {
+            int textSize = (int) getResources().getDimension(R.dimen.default_text_size);
             TextView entryView = new TextView(getContext());
             entryView.setText(entry.getDescription());
+            entryView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
+            entryView.setLineSpacing(0, 1.3f);
+            entryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             entryView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
             mEntriesLayout.addView(entryView);
-
         }
     }
 }

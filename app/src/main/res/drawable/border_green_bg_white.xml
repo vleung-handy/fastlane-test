@@ -5,9 +5,9 @@
     >
 
     <corners android:radius="@dimen/round_button_radius"/>
-    <solid android:color="@color/list_divider"/>
+    <solid android:color="@color/white"/>
     <stroke
         android:width="@dimen/round_button_stroke"
-        android:color="@color/border_light_grey"
+        android:color="@color/handy_green"
         />
 </shape>

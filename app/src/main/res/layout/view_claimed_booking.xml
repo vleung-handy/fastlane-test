@@ -257,7 +257,7 @@
                         android:paddingStart="@dimen/extra_padding"
                         android:textColor="@color/black"
                         android:textSize="@dimen/default_text_size"
-                        tools:text="8:00 am -- 10:30 am"
+                        tools:text="8:00 am \u2013 10:30 am"
                         />
 
                 </LinearLayout>
@@ -303,6 +303,7 @@
 
                     <TextView
                         android:id="@+id/job_payment_bonus_text"
+                        style="@style/CircularBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingEnd="@dimen/extra_padding"
@@ -310,7 +311,8 @@
                         android:paddingRight="@dimen/extra_padding"
                         android:paddingStart="@dimen/extra_padding"
                         android:textColor="@color/handy_green"
-                        android:textSize="@dimen/default_text_size"
+                        android:textSize="@dimen/small_text_size"
+                        android:textStyle="bold"
                         tools:text=" +$5 BONUS"
                         />
 
@@ -359,40 +361,42 @@
                     tools:text="Job # 123456"
                     />
 
-                <include
-                    layout="@layout/divider_dashboard"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/booking_support_button"
-                style="@style/Button.Grey.Round"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/extra_margin_large"
-                android:layout_marginBottom="@dimen/extra_padding_medium"
-                android:background="@drawable/border_gray_bg_white"
-                android:text="@string/job_support"
-                android:textColor="@color/black"
-                />
+                android:orientation="vertical"
+                >
 
-            <TextView
-                android:id="@+id/booking_details_action_helper_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textColor="@color/tertiary_grey"
-                android:textSize="@dimen/small_text_size"
-                android:visibility="gone"
-                tools:text="Helper text yo"
-                tools:visibility="visible"
-                />
+                <Button
+                    android:id="@+id/booking_support_button"
+                    style="@style/Button.Grey.Round"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/extra_margin_large"
+                    android:layout_marginBottom="@dimen/extra_padding_medium"
+                    android:background="@drawable/border_gray_bg_white"
+                    android:text="@string/job_support"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/booking_details_action_helper_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/tertiary_grey"
+                    android:textSize="@dimen/small_text_size"
+                    android:visibility="gone"
+                    tools:text="Helper text yo"
+                    tools:visibility="visible"
+                    />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>
@@ -409,7 +413,7 @@
         android:textSize="@dimen/large_text_size"
         android:visibility="gone"
         tools:text="@string/on_my_way"
-        tools:visibility="visible"
+        tools:visibility="gone"
         />
 
 </RelativeLayout>
