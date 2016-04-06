@@ -227,7 +227,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/extra_margin_medium"
+                    android:background="@drawable/border_gray_bg_white"
                     android:text="@string/job_support"
+                    android:textColor="@color/black"
                     />
 
                 <TextView
@@ -257,7 +259,7 @@
         android:enabled="false"
         android:text="@string/continue_to_check_out"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@drawable/checkout_button_selector"
         android:textSize="@dimen/large_text_size"
         android:visibility="gone"
         tools:visibility="visible"

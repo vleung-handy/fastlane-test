@@ -237,7 +237,7 @@ public class InProgressBookingView extends InjectedBusView
         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
 
         // TDOO: add to backstack
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.CHECKOUT_JOB_DETAILS, bundle));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.CHECKOUT_JOB_DETAILS, bundle, true));
     }
 
     @OnClick(R.id.booking_action_button)
