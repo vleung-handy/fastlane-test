@@ -27,6 +27,7 @@ public class AccountSettingsFragmentTest
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
+    @Ignore
     @Test
     public void testAccountSettingsIsWorking() throws InterruptedException
     {

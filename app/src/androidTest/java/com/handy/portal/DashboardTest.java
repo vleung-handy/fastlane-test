@@ -27,6 +27,7 @@ public class DashboardTest
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
+    @Ignore
     @Test
     public void testDashboardIsWorking() throws InterruptedException
     {

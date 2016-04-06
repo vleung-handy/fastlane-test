@@ -44,6 +44,7 @@ public class LoginTest
      * - no one is logged into the app
      * - there are no popup modals (for example, promos)
      */
+    @Ignore
     @Test
     public void testCanLogIn()
     {
