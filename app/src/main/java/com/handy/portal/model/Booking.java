@@ -671,21 +671,21 @@ public class Booking implements Comparable<Booking>, Serializable
 
             public static class KeepRate
             {
-                @SerializedName("old_keep_rate")
-                private Float mOldKeepRate;
-                @SerializedName("new_keep_rate")
-                private Float mNewKeepRate;
+                @SerializedName("actual")
+                private Float mActual;
+                @SerializedName("on_next_unassign")
+                private Float mNextUnassign;
 
                 @Nullable
-                public Float getOldKeepRate()
+                public Float getActual()
                 {
-                    return mOldKeepRate;
+                    return mActual;
                 }
 
                 @Nullable
-                public Float getNewKeepRate()
+                public Float getOnNextUnassign()
                 {
-                    return mNewKeepRate;
+                    return mNextUnassign;
                 }
             }
         }

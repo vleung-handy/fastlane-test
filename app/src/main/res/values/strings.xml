@@ -166,7 +166,6 @@
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
     <string name="remove_job">Remove Job</string>
-    <string name="cancel_job">Cancel Job</string>
     <string name="job_support">Job Support</string>
     <string name="job_remove_error">Error Removing Job"</string>
     <string name="job_remove_error_generic">This job could not be removed.</string>
@@ -425,5 +424,14 @@
     <string name="date">Date</string>
     <string name="progress">Progress</string>
     <string name="share">Share</string>
+
+    <!-- Job Cancellation -->
+    <string name="need_to_cancel">Are you sure you need to cancel?</string>
+    <string name="cancel_job">Cancel Job</string>
+    <string name="keep_rate">Keep Rate</string>
+    <string name="keep_rate_negatively_impacted">Your keep rate will be negatively impacted.</string>
+    <string name="empty_keep_rate_percent">--%</string>
+    <string name="keep_rate_percent_formatted">%1$d%%</string>
+    <string name="no_keep_rate">Not enough data</string>
 
 </resources>
