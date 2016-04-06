@@ -19,7 +19,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-@Ignore //TODO ignoring for now because this is broken, but we need to set up Espresso with AWS now
+@Ignore //TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class DashboardTest
@@ -30,7 +30,7 @@ public class DashboardTest
     @Test
     public void testDashboardIsWorking() throws InterruptedException
     {
-        // Go to dashboard. TODO uncomment and fix reference
+        // Go to dashboard. TODO uncomment and fix reference and set up seed automation file
 //        onView(withId(R.id.button_more)).perform(click());
 //        onView(withId(R.id.button_more)).perform(click()); // prevent flakiness
         onView(withId(R.id.nav_link_ratings_and_feedback)).perform(click());
