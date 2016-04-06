@@ -62,9 +62,8 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
-import com.handy.portal.ui.element.bookings.AvailableBookingView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
-import com.handy.portal.ui.element.bookings.ClaimedBookingView;
+import com.handy.portal.ui.element.bookings.BookingView;
 import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
@@ -189,8 +188,7 @@ import retrofit.converter.GsonConverter;
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
         SendReceiptCheckoutFragment.class,
-        AvailableBookingView.class,
-        ClaimedBookingView.class,
+        BookingView.class,
         InProgressBookingView.class,
         InjectedBusView.class,
         CheckoutJobDetailsFragment.class,

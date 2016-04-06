@@ -30,6 +30,7 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
@@ -57,7 +58,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ClaimedBookingView extends InjectedBusView
+public class BookingView extends InjectedBusView
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -102,7 +103,7 @@ public class ClaimedBookingView extends InjectedBusView
     private Bundle mSourceExtras;
     private Intent mGetDirectionsIntent;
 
-    public ClaimedBookingView(
+    public BookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
             OnClickListener onSupportClickListener, boolean noShowReported)
     {
@@ -111,21 +112,21 @@ public class ClaimedBookingView extends InjectedBusView
         setDisplay(booking, source, sourceExtras, onSupportClickListener, noShowReported);
     }
 
-    public ClaimedBookingView(final Context context, final AttributeSet attrs)
+    public BookingView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public ClaimedBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    public BookingView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ClaimedBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr,
-                              final int defStyleRes)
+    public BookingView(final Context context, final AttributeSet attrs, final int defStyleAttr,
+                       final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
@@ -168,7 +169,7 @@ public class ClaimedBookingView extends InjectedBusView
         Date endDate = booking.getEndDate();
         String formattedDate = DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
         String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
-                + getResources().getString(R.string.dash)+ " "
+                + getResources().getString(R.string.dash) + " "
                 + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
@@ -277,7 +278,7 @@ public class ClaimedBookingView extends InjectedBusView
 
     private void init()
     {
-        inflate(getContext(), R.layout.view_claimed_booking, this);
+        inflate(getContext(), R.layout.view_booking, this);
         ButterKnife.bind(this);
         Utils.inject(getContext(), this);
     }
@@ -379,6 +380,23 @@ public class ClaimedBookingView extends InjectedBusView
 
         switch (buttonActionType)
         {
+            case CLAIM:
+            {
+                mActionButton.setText(R.string.claim);
+                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
+                mActionButton.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
+                                mBooking, mSource, mSourceExtras, 0.0f)));
+                        mBus.post(new HandyEvent.RequestClaimJob(mBooking, mSource, mSourceExtras));
+                    }
+                });
+                break;
+            }
             case ON_MY_WAY:
             {
                 mActionButton.setText(R.string.on_my_way);

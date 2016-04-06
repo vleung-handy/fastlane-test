@@ -10,7 +10,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.model.booking.Booking;
-import com.handy.portal.ui.element.bookings.ClaimedBookingView;
+import com.handy.portal.ui.element.bookings.BookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import butterknife.Bind;
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 public class CheckoutJobDetailsFragment extends ActionBarFragment
 {
     @Bind(R.id.booking_details_view)
-    ClaimedBookingView mBookingDetailsView;
+    BookingView mBookingDetailsView;
 
     private Booking mBooking;
 

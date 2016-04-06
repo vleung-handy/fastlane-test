@@ -318,16 +318,6 @@
 
                 </LinearLayout>
 
-                <include
-                    layout="@layout/divider_dashboard"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    />
-
                 <LinearLayout
                     android:id="@+id/booking_details_job_instructions_list_layout"
                     android:layout_width="match_parent"
@@ -337,7 +327,7 @@
                     android:orientation="vertical"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
-                    android:showDividers="middle"
+                    android:showDividers="middle|beginning"
                     />
 
                 <include
@@ -385,8 +375,8 @@
                     android:id="@+id/booking_details_action_helper_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_margin"
                     android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_marginTop="@dimen/default_margin"
                     android:gravity="center_horizontal"
                     android:textColor="@color/tertiary_grey"
                     android:textSize="@dimen/small_text_size"
