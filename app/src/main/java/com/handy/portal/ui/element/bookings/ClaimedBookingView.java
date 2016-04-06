@@ -23,9 +23,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.PrefsManager;
@@ -83,6 +86,8 @@ public class ClaimedBookingView extends InjectedBusView
     TextView mJobTimeText;
     @Bind(R.id.job_payment_text)
     TextView mJobPaymentText;
+    @Bind(R.id.job_payment_bonus_text)
+    TextView mJobPaymentBonusText;
     @Bind(R.id.booking_support_button)
     Button mSupportButton;
     @Bind(R.id.booking_details_action_helper_text)
@@ -180,6 +185,15 @@ public class ClaimedBookingView extends InjectedBusView
             String paymentText = paymentInfo.getCurrencySymbol() +
                     TextUtils.DECIMAL_FORMAT_TWO_ZERO.format(paymentInfo.getAdjustedAmount());
             mJobPaymentText.setText(paymentText);
+        }
+
+        PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
+        if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
+        {
+            String bonusText = getResources().getString(R.string.bonus_payment_value,
+                    bonusInfo.getCurrencySymbol() +
+                            TextUtils.DECIMAL_FORMAT_TWO_ZERO.format(bonusInfo.getAdjustedAmount()));
+            mJobPaymentBonusText.setText(bonusText);
         }
 
         // Booking Instructions
@@ -400,6 +414,23 @@ public class ClaimedBookingView extends InjectedBusView
                     }
                 });
 
+                initHelperText(action);
+                break;
+            }
+            case CHECK_OUT:
+            {
+                mActionButton.setText(R.string.check_out);
+                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
+                mActionButton.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(BundleKeys.BOOKING, mBooking);
+                        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
+                    }
+                });
                 initHelperText(action);
                 break;
             }

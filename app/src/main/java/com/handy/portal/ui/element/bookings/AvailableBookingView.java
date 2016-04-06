@@ -57,6 +57,8 @@ public class AvailableBookingView extends InjectedBusView
     TextView mJobTimeText;
     @Bind(R.id.job_payment_text)
     TextView mJobPaymentText;
+    @Bind(R.id.job_payment_bonus_text)
+    TextView mJobPaymentBonusText;
     @Bind(R.id.job_number_text)
     TextView mJobNumberText;
     @Bind(R.id.booking_claim)
@@ -137,6 +139,15 @@ public class AvailableBookingView extends InjectedBusView
             String paymentText = paymentInfo.getCurrencySymbol() +
                     TextUtils.DECIMAL_FORMAT_TWO_ZERO.format(paymentInfo.getAdjustedAmount());
             mJobPaymentText.setText(paymentText);
+        }
+
+        PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
+        if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
+        {
+            String bonusText = getResources().getString(R.string.bonus_payment_value,
+                    bonusInfo.getCurrencySymbol() +
+                            TextUtils.DECIMAL_FORMAT_TWO_ZERO.format(bonusInfo.getAdjustedAmount()));
+            mJobPaymentBonusText.setText(bonusText);
         }
     }
 

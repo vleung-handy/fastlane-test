@@ -46,12 +46,10 @@ public final class DateTimeUtils
         return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
     }
 
-    public static boolean isTimeWithinXHoursFromNow(Date date, int hours)
+    public static boolean isTimeWithinXHoursFromNow(Date date, long milliSec)
     {
-        long currentTime = System.currentTimeMillis();
-        long dateOfBookingsTime = date.getTime();
-        long dateDifference = dateOfBookingsTime - currentTime;
-        return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
+        long timeDifference = date.getTime() - System.currentTimeMillis();
+        return timeDifference >= 0 && timeDifference <= milliSec;
     }
 
     @Nullable
@@ -246,15 +244,15 @@ public final class DateTimeUtils
         }.start();
     }
 
-    public static CountDownTimer setStartCountdownTimer(final Context context, final ActionBar actionBar, long timeRemainMillis)
+    public static CountDownTimer setActionBarCountdownTimer(
+            final Context context, final ActionBar actionBar, long timeRemainMillis, final int stringId)
     {
         return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
         {
             @Override
             public void onTick(final long millisUntilFinished)
             {
-                actionBar.setTitle(context.getString(R.string.start_timer_lowercase_formatted,
-                        DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
+                actionBar.setTitle(context.getString(stringId, DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
             }
 
             @Override
@@ -262,7 +260,7 @@ public final class DateTimeUtils
         }.start();
     }
 
-    public static CountDownTimer setEndCountdownTimer(final Context context, final ActionBar actionBar, long timeRemainMillis)
+    public static CountDownTimer setEndCountdownTimer(final Context context, final ActionBar actionBar, long timeRemainMillis, String text)
     {
         return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
         {

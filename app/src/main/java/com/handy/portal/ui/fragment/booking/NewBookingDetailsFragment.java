@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,6 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.element.bookings.AvailableBookingView;
 import com.handy.portal.ui.element.bookings.ClaimedBookingView;
-import com.handy.portal.ui.element.bookings.FinishedBookingView;
 import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
@@ -62,9 +62,10 @@ import butterknife.ButterKnife;
 public class NewBookingDetailsFragment extends ActionBarFragment implements View.OnClickListener
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
-
     public static final String START_TIMER = "start_timer";
     public static final String END_TIMER = "end_timer";
+
+    private static final Gson GSON = new Gson();
 
     @Inject
     PrefsManager mPrefsManager;
@@ -81,9 +82,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     private Bundle mSourceExtras;
     private boolean mFromPaymentsTab;
     private CountDownTimer mCounter;
-    private boolean mTimerShown;
 
-    private static final Gson GSON = new Gson();
 
     @Override
     protected MainViewTab getTab()
@@ -140,10 +139,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         if (mBooking != null && mBooking.isCheckedIn())
         {
             List<Booking.BookingInstructionUpdateRequest> checklist = mBooking.getCustomerPreferences();
-            if (checklist != null)
-            {
-                mPrefsManager.setBookingInstructions(mBooking.getId(), GSON.toJson(checklist));
-            }
+            mPrefsManager.setBookingInstructions(mBooking.getId(), GSON.toJson(checklist));
         }
     }
 
@@ -439,30 +435,35 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         mSlideUpPanelContainer.removeAllViews();
 
         boolean noShowReported = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
-        switch (mBooking.getBookingProgress(getLoggedInUserId()))
+        Booking.BookingProgress bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
+        if (bookingProgress == Booking.BookingProgress.READY_FOR_CLAIM)
         {
-            case READY_FOR_CLAIM:
-                mCurrentView = new AvailableBookingView(getContext(), mBooking, mSource, mSourceExtras);
-                setActionBarTitle(R.string.available_job);
-                break;
-            case READY_FOR_ON_MY_WAY:
-            case READY_FOR_CHECK_IN:
-                mCurrentView = new ClaimedBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                        this, noShowReported);
-
-                setTimerIfNeeded(START_TIMER);
-                break;
-            case READY_FOR_CHECK_OUT:
-                mCurrentView = new InProgressBookingView(getContext(), mBooking, mSource, mSourceExtras,
-                        mFromPaymentsTab, this, noShowReported);
-
-                setTimerIfNeeded(END_TIMER);
-                break;
-            case FINISHED:
-            default:
-                mCurrentView = new FinishedBookingView(getContext());
-                break;
+            mCurrentView = new AvailableBookingView(getContext(), mBooking, mSource, mSourceExtras);
+            setActionBarTitle(R.string.available_job);
         }
+        else if (bookingProgress == Booking.BookingProgress.READY_FOR_ON_MY_WAY ||
+                bookingProgress == Booking.BookingProgress.READY_FOR_CHECK_IN ||
+                (bookingProgress == Booking.BookingProgress.READY_FOR_CHECK_OUT
+                        && mBooking.getCustomerPreferences().size() == 0))
+        {
+            mCurrentView = new ClaimedBookingView(getContext(), mBooking, mSource, mSourceExtras,
+                    this, noShowReported);
+            setTimerIfNeeded();
+
+        }
+        else if (bookingProgress == Booking.BookingProgress.READY_FOR_CHECK_OUT)
+        {
+            mCurrentView = new InProgressBookingView(getContext(), mBooking, mSource, mSourceExtras,
+                    mFromPaymentsTab, this, noShowReported);
+            setTimerIfNeeded();
+        }
+        else
+        {
+            mCurrentView = new ClaimedBookingView(getContext(), mBooking, mSource, mSourceExtras,
+                    this, noShowReported);
+            setActionBarTitle(R.string.your_job);
+        }
+
         mSlideUpPanelContainer.addView(mCurrentView);
         mCurrentView.registerBus();
     }
@@ -619,33 +620,27 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         bus.post(new HandyEvent.RequestRemoveJob(mBooking));
     }
 
-    private void setTimerIfNeeded(String startOrEndTimer)
+    private void setTimerIfNeeded()
     {
-        if (startOrEndTimer.equals(START_TIMER))
+        if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
+
+        if (DateTimeUtils.isTimeWithinXHoursFromNow(mBooking.getStartDate(),
+                DateUtils.HOUR_IN_MILLIS * 3))
         {
-            if (DateTimeUtils.isTimeWithinXHoursFromNow(mBooking.getStartDate(), 3))
-            {
-                if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
-                mCounter = DateTimeUtils.setStartCountdownTimer(getContext(), getActionBar(),
-                        mBooking.getStartDate().getTime() - System.currentTimeMillis());
-            }
-            else
-            {
-                setActionBarTitle(R.string.claimed_job);
-            }
+            mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
+                    mBooking.getStartDate().getTime() - System.currentTimeMillis(),
+                    R.string.start_timer_lowercase_formatted);
+        }
+        else if (DateTimeUtils.isTimeWithinXHoursFromNow(mBooking.getEndDate(),
+                mBooking.getEndDate().getTime() - mBooking.getStartDate().getTime()))
+        {
+            mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
+                    mBooking.getEndDate().getTime() - System.currentTimeMillis(),
+                    R.string.end_timer_lowercase_formatted);
         }
         else
         {
-            if (DateTimeUtils.isTimeWithinXHoursFromNow(mBooking.getEndDate(), 3))
-            {
-                if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
-                mCounter = DateTimeUtils.setEndCountdownTimer(getContext(), getActionBar(),
-                        mBooking.getEndDate().getTime() - System.currentTimeMillis());
-            }
-            else
-            {
-                setActionBarTitle(R.string.claimed_job);
-            }
+            setActionBarTitle(R.string.you_are_over_time);
         }
     }
 }

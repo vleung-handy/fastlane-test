@@ -145,21 +145,23 @@ public class Booking implements Comparable<Booking>, Serializable
         return mBookingInstructionGroups;
     }
 
-    @Nullable
+    @NonNull
     public List<BookingInstructionUpdateRequest> getCustomerPreferences()
     {
         if (mCustomerPreferences != null) { return mCustomerPreferences; }
-        if (mBookingInstructionGroups == null) { return null; }
-
-        for (BookingInstructionGroup group : mBookingInstructionGroups)
+        if (mBookingInstructionGroups != null)
         {
-            if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+            for (BookingInstructionGroup group : mBookingInstructionGroups)
             {
-                mCustomerPreferences = BookingInstruction.generateBookingInstructionUpdateRequests(group.getInstructions());
-                return mCustomerPreferences;
+                if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+                {
+                    mCustomerPreferences = BookingInstruction
+                            .generateBookingInstructionUpdateRequests(group.getInstructions());
+                    return mCustomerPreferences;
+                }
             }
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public void setCustomerPreferences(List<BookingInstructionUpdateRequest> customerPreferences)
@@ -170,21 +172,16 @@ public class Booking implements Comparable<Booking>, Serializable
     public boolean isAnyPreferenceChecked()
     {
         List<BookingInstructionUpdateRequest> preferences = getCustomerPreferences();
-        if (preferences != null)
+        if (preferences.size() == 0) { return true; }
+
+        for (BookingInstruction preference : preferences)
         {
-            for (BookingInstruction preference : preferences)
+            if (preference.isInstructionCompleted())
             {
-                if (preference.isInstructionCompleted())
-                {
-                    return true;
-                }
+                return true;
             }
-            return false;
         }
-        else // if there isn't a list to check
-        {
-            return true;
-        }
+        return false;
     }
 
     public int getFrequency()
