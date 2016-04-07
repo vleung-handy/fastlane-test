@@ -25,7 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @Ignore //TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class LoginTest
+public class TestLogin
 {
     private final TestUser mTestUser = TestUser.TEST_USER_NY;
 
@@ -46,7 +46,7 @@ public class LoginTest
      */
     @Ignore
     @Test
-    public void testCanLogIn()
+    public void loginTest()
     {
         //TODO: for proof of concept. we should make this more readable/reusable
         onView(withId(R.id.phone_number_edit_text)).perform(click(), typeText(mTestUser.getPhoneNumber()), closeSoftKeyboard());
