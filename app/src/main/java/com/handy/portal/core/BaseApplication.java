@@ -14,6 +14,7 @@ import com.handy.portal.R;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
+import com.handy.portal.helpcenter.HelpModule;
 import com.handy.portal.helpcenter.helpcontact.HelpContactManager;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
@@ -36,6 +37,7 @@ import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationMessageManager;
+import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.util.FontUtils;
@@ -112,6 +114,20 @@ public class BaseApplication extends MultiDexApplication
 
     @Inject
     Bus bus;
+
+    /**
+     *
+     * @return the app modules that should be active for this application
+     */
+    private Object[] getApplicationModules()
+    {
+        return new Object[]
+                {
+                        new ApplicationModule(this),
+                        new HelpModule(),
+                        new NotificationModule()
+                };
+    }
 
     @Override
     public final void onCreate()
@@ -196,7 +212,7 @@ public class BaseApplication extends MultiDexApplication
 
     protected void createObjectGraph()
     {
-        mGraph = ObjectGraph.create(new ApplicationModule(this));
+        mGraph = ObjectGraph.create(getApplicationModules());
     }
 
     public final void inject(final Object object)
