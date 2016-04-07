@@ -2,6 +2,8 @@ package com.handy.portal.ui.fragment.dialog;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +25,18 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
 {
     public static final String FRAGMENT_TAG = ConfirmBookingCancelDialogFragment.class.getSimpleName();
 
+    @Bind(R.id.keep_rate)
+    View mKeepRate;
     @Bind(R.id.old_keep_rate)
     TextView mOldKeepRate;
     @Bind(R.id.new_keep_rate)
     TextView mNewKeepRate;
     @Bind(R.id.no_keep_rate)
-    TextView mNoKeepRate;
+    View mNoKeepRate;
     @Bind(R.id.no_fee_notice)
     View mNoFeeNotice;
     @Bind(R.id.withholding_fee_notice)
-    View mWithholdingFeeNotice;
-    @Bind(R.id.withholding_fee)
-    TextView mWithholdingFee;
+    TextView mWithholdingFeeNotice;
 
     @Inject
     Bus mBus;
@@ -69,8 +71,7 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
         {
             final String currencySymbol = mBooking.getPaymentToProvider().getCurrencySymbol();
             final String fee = CurrencyUtils.formatPriceWithCents(withholdingAmount, currencySymbol);
-            final String feeFormatted = getString(R.string.withholding_fee_simple_formatted, fee);
-            mWithholdingFee.setText(feeFormatted);
+            setWithholdingFee(fee);
             mNoFeeNotice.setVisibility(View.GONE);
             mWithholdingFeeNotice.setVisibility(View.VISIBLE);
         }
@@ -95,11 +96,12 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
                     getString(R.string.keep_rate_percent_formatted, Math.round(newKeepRate * 100));
             mOldKeepRate.setText(oldKeepRateFormatted);
             mNewKeepRate.setText(newKeepRateFormatted);
+            mKeepRate.setVisibility(View.VISIBLE);
             mNoKeepRate.setVisibility(View.GONE);
         }
         else
         {
-            mOldKeepRate.setText(R.string.empty_keep_rate_percent);
+            mKeepRate.setVisibility(View.GONE);
             mNoKeepRate.setVisibility(View.VISIBLE);
         }
     }
@@ -134,5 +136,20 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     protected String getConfirmButtonText()
     {
         return getString(R.string.cancel_job);
+    }
+
+    private void setWithholdingFee(final String fee)
+    {
+        final String feeFormatted = getString(R.string.withholding_fee_simple_formatted, fee);
+        mWithholdingFeeNotice.setText(feeFormatted, TextView.BufferType.SPANNABLE);
+        final Spannable spannable = (Spannable) mWithholdingFeeNotice.getText();
+        final int start = feeFormatted.indexOf(fee);
+        final int end = start + fee.length();
+        spannable.setSpan(
+                new ForegroundColorSpan(getResources().getColor(R.color.error_red)),
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
     }
 }
