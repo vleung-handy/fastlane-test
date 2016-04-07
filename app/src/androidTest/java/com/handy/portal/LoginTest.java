@@ -37,6 +37,11 @@ public class LoginTest
     public void init() {
     }
 
+    /*
+    NOTE: for some reason AWS will run the test regardless of @Ignore
+    if the prefix is "test"
+    TODO: investigate
+     */
     /**
      * Logs in as the test user
      *
