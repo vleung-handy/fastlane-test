@@ -22,7 +22,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.booking.Booking;
+import com.handy.portal.model.Booking;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;

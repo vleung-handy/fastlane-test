@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.booking.Booking;
+import com.handy.portal.model.Booking;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -27,8 +27,8 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.booking.Booking;
-import com.handy.portal.model.booking.Booking.BookingInstructionGroup;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.Booking.BookingInstructionGroup;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.UIUtils;
@@ -45,12 +45,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_ENTRY_METHOD;
-import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_LINENS_LAUNDRY;
-import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_NOTE_TO_PRO;
-import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_PREFERENCES;
-import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_REFRIGERATOR;
-import static com.handy.portal.model.booking.Booking.BookingInstructionGroup.GROUP_TRASH;
+import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_ENTRY_METHOD;
+import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_LINENS_LAUNDRY;
+import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_NOTE_TO_PRO;
+import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_PREFERENCES;
+import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_REFRIGERATOR;
+import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_TRASH;
 
 public class InProgressBookingView extends InjectedBusView
 {

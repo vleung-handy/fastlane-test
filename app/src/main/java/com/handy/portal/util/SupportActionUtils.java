@@ -3,7 +3,7 @@ package com.handy.portal.util;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.handy.portal.constant.SupportActionType;
-import com.handy.portal.model.booking.Booking.Action;
+import com.handy.portal.model.Booking.Action;
 
 import java.util.Map;
 import java.util.Set;

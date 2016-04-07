@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.google.common.collect.ImmutableSet;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
-import com.handy.portal.model.booking.Booking;
+import com.handy.portal.model.Booking;
 import com.handy.portal.util.UIUtils;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.handy.portal.model.booking;
+package com.handy.portal.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,8 +9,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
 import com.handy.portal.constant.Country;
-import com.handy.portal.model.Address;
-import com.handy.portal.model.PaymentInfo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

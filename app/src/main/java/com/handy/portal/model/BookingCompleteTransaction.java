@@ -1,4 +1,4 @@
-package com.handy.portal.model.booking;
+package com.handy.portal.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

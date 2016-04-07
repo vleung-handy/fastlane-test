@@ -11,7 +11,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.model.booking.Booking;
+import com.handy.portal.model.Booking;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 

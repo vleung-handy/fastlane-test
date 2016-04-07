@@ -28,8 +28,8 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.LocationUtils;
+import com.handy.portal.model.Booking;
 import com.handy.portal.model.ZipClusterPolygons;
-import com.handy.portal.model.booking.Booking;
 import com.handy.portal.ui.activity.BaseActivity;
 
 import java.util.LinkedList;

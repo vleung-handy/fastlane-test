@@ -14,7 +14,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
-import com.handy.portal.model.booking.Booking;
+import com.handy.portal.model.Booking;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.Payment;
 import com.handy.portal.model.payments.PaymentGroup;

@@ -14,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.PaymentInfo;
-import com.handy.portal.model.booking.BookingClaimDetails;
 import com.handy.portal.util.CurrencyUtils;
 
 import butterknife.Bind;

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.model.booking.Booking;
+import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.bookings.BookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
