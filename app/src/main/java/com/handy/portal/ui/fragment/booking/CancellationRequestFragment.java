@@ -176,7 +176,7 @@ public class CancellationRequestFragment extends ActionBarFragment
         mTimeTextView.setText(getString(R.string.time_interval_formatted, startTime, endTime));
 
         mWithholdingAmountTextView.setText(getString(R.string.withholding_fee_formatted,
-                CurrencyUtils.formatPriceWithCents(mAction.getWithholdingAmount(),
+                CurrencyUtils.formatPriceWithCents(mAction.getWithholdingAmountCents(),
                         mBooking.getPaymentToProvider().getCurrencySymbol())));
 
         for (String reason : mAction.getRemoveReasons())

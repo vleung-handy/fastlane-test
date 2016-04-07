@@ -73,7 +73,7 @@ public class ScheduledJobsLog extends EventLog
             final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
             if (removeAction != null)
             {
-                mWithholdingAmount = removeAction.getWithholdingAmount();
+                mWithholdingAmount = removeAction.getWithholdingAmountCents();
                 final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
                 if (keepRate != null)
                 {

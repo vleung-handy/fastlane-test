@@ -582,7 +582,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return mDeepLinkData;
         }
 
-        public int getWithholdingAmount() { return mExtras.getWithholdingAmount(); }
+        public int getWithholdingAmountCents() { return mExtras.getWithholdingAmountCents(); }
 
         public List<String> getRemoveReasons() { return mExtras.getRemoveReasons(); }
 
@@ -600,7 +600,7 @@ public class Booking implements Comparable<Booking>, Serializable
         public static class Extras implements Serializable
         {
             @SerializedName("withholding_amount")
-            private int mWithholdingAmount;
+            private int mWithholdingAmountCents;
             @SerializedName("remove_reasons")
             private List<String> mRemoveReasons;
             @SerializedName("cancellation_policy")
@@ -622,7 +622,7 @@ public class Booking implements Comparable<Booking>, Serializable
                 return mSubText;
             }
 
-            public int getWithholdingAmount() { return mWithholdingAmount; }
+            public int getWithholdingAmountCents() { return mWithholdingAmountCents; }
 
             public List<String> getRemoveReasons() { return mRemoveReasons; }
 

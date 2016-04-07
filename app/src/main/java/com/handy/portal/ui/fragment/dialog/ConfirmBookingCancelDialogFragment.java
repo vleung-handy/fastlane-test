@@ -66,11 +66,11 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     private void displayWithholdingNotice()
     {
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        final int withholdingAmount = removeAction.getWithholdingAmount();
-        if (withholdingAmount > 0)
+        final int withholdingAmountCents = removeAction.getWithholdingAmountCents();
+        if (withholdingAmountCents > 0)
         {
             final String currencySymbol = mBooking.getPaymentToProvider().getCurrencySymbol();
-            final String fee = CurrencyUtils.formatPriceWithCents(withholdingAmount, currencySymbol);
+            final String fee = CurrencyUtils.formatPriceWithCents(withholdingAmountCents, currencySymbol);
             setWithholdingFee(fee);
             mNoFeeNotice.setVisibility(View.GONE);
             mWithholdingFeeNotice.setVisibility(View.VISIBLE);
