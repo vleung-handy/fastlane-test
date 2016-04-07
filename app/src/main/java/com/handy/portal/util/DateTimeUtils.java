@@ -310,8 +310,8 @@ public final class DateTimeUtils
 
     private static SimpleDateFormat getDayOfWeekMonthDayFormatter()
     {
-        SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
-        return SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER;
+        DAY_OF_WEEK_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return DAY_OF_WEEK_MONTH_DAY_FORMATTER;
     }
 
     private static SimpleDateFormat getMonthShortNameFormatter()
