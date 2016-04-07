@@ -330,7 +330,7 @@
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
     <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
-    <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
+    <string name="tap_preferences_before_checkout">Tap completed tasks before checking out.</string>
     <string name="payment">Payment</string>
     <string name="get_directions">get directions</string>
     <string name="house_details">House Details</string>
@@ -338,6 +338,7 @@
     <string name="entry_information">Entry Information</string>
     <string name="customer_request">Customer Request</string>
     <string name="job_number_formatted">Job # %1$s</string>
+    <string name="recurrence">Recurrence</string>
 
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>
@@ -364,7 +365,7 @@
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
     <string name="you_earned_money_formatted">You made %1$s!</string>
-    <string name="how_was_cleaning_formatted">How was your experience cleaning %1$s’s home?</string>
+    <string name="how_was_experience_formatted">How was your experience at %1$s’s home?</string>
 
     <!-- Nearby Booking -->
     <string name="start_timer_formatted">STARTS IN %1$s</string>

@@ -227,7 +227,7 @@ public class InProgressBookingView extends InjectedBusView
         }
         else
         {
-            showToast(getContext().getString(R.string.check_customer_preferences),
+            showToast(getContext().getString(R.string.tap_preferences_before_checkout),
                     Toast.LENGTH_LONG, Gravity.TOP);
         }
     }

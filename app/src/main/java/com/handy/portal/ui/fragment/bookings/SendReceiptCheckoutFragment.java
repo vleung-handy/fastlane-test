@@ -66,6 +66,8 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     TextView mSendNoteText;
     @Bind(R.id.send_note_edit_text)
     EditText mSendNoteEditText;
+    @Bind(R.id.completed_tasks_header)
+    View mCompletedTasksHeader;
     @Bind(R.id.checklist_column_one)
     ViewGroup mChecklistFirstColumn;
     @Bind(R.id.checklist_column_two)
@@ -226,10 +228,17 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
             if (completedTasks != null)
             {
-                for (Booking.BookingInstructionUpdateRequest completedTask : completedTasks)
+                if (completedTasks.size() == 0)
                 {
-                    if (completedTask.isInstructionCompleted())
-                    { addTaskItem(completedTask.getTitle()); }
+                    mCompletedTasksHeader.setVisibility(View.GONE);
+                }
+                else
+                {
+                    for (Booking.BookingInstructionUpdateRequest completedTask : completedTasks)
+                    {
+                        if (completedTask.isInstructionCompleted())
+                        { addTaskItem(completedTask.getTitle()); }
+                    }
                 }
             }
         }

@@ -603,7 +603,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 else
                 {
                     mScrollView.fullScroll(View.FOCUS_DOWN);
-                    showToast(R.string.check_customer_preferences, Toast.LENGTH_LONG, Gravity.TOP);
+                    showToast(R.string.tap_preferences_before_checkout, Toast.LENGTH_LONG, Gravity.TOP);
                 }
             }
             break;
