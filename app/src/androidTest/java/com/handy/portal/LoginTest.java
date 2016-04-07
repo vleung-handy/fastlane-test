@@ -25,7 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @Ignore //TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class TestLogin
+public class LoginTest
 {
     private final TestUser mTestUser = TestUser.TEST_USER_NY;
 
@@ -44,7 +44,6 @@ public class TestLogin
      * - no one is logged into the app
      * - there are no popup modals (for example, promos)
      */
-    @Ignore
     @Test
     public void loginTest()
     {

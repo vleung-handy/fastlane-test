@@ -22,12 +22,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @Ignore
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class TestDashboard
+public class DashboardTest
 {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-    @Ignore
     @Test
     public void dashboardIsWorkingTest() throws InterruptedException
     {
