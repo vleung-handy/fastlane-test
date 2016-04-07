@@ -261,22 +261,6 @@ public final class DateTimeUtils
         }.start();
     }
 
-    public static CountDownTimer setEndCountdownTimer(final Context context, final ActionBar actionBar, long timeRemainMillis, String text)
-    {
-        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
-        {
-            @Override
-            public void onTick(final long millisUntilFinished)
-            {
-                actionBar.setTitle(context.getString(R.string.end_timer_lowercase_formatted,
-                        DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
-            }
-
-            @Override
-            public void onFinish() { }
-        }.start();
-    }
-
     public static String dayDifferenceInWords(final Date date)
     {
         Calendar today = Calendar.getInstance();
