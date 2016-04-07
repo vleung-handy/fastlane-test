@@ -21,6 +21,7 @@ import com.google.common.collect.Collections2;
 import com.google.gson.Gson;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.constant.BookingProgress;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
@@ -503,16 +504,16 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         mSlideUpPanelContainer.removeAllViews();
 
         boolean noShowReported = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
-        Booking.BookingProgress bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
-        if (bookingProgress == Booking.BookingProgress.READY_FOR_CLAIM)
+        int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
+        if (bookingProgress == BookingProgress.READY_FOR_CLAIM)
         {
             mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
                     this, noShowReported, mFromPaymentsTab);
             setActionBarTitle(R.string.available_job);
         }
-        else if (bookingProgress == Booking.BookingProgress.READY_FOR_ON_MY_WAY ||
-                bookingProgress == Booking.BookingProgress.READY_FOR_CHECK_IN ||
-                (bookingProgress == Booking.BookingProgress.READY_FOR_CHECK_OUT
+        else if (bookingProgress == BookingProgress.READY_FOR_ON_MY_WAY ||
+                bookingProgress == BookingProgress.READY_FOR_CHECK_IN ||
+                (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
                         && mBooking.getCustomerPreferences().size() == 0))
         {
             mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
@@ -520,7 +521,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
             setTimerIfNeeded();
 
         }
-        else if (bookingProgress == Booking.BookingProgress.READY_FOR_CHECK_OUT)
+        else if (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT)
         {
             mCurrentView = new InProgressBookingView(getContext(), mBooking, this, noShowReported);
             setTimerIfNeeded();

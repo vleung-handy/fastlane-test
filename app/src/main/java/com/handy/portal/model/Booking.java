@@ -8,6 +8,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
+import com.handy.portal.constant.BookingProgress;
 import com.handy.portal.constant.Country;
 
 import java.io.Serializable;
@@ -404,18 +405,6 @@ public class Booking implements Comparable<Booking>, Serializable
         UNAVAILABLE,
     }
 
-
-    public enum BookingProgress
-    {
-        UNAVAILABLE,
-        READY_FOR_CLAIM,
-        READY_FOR_ON_MY_WAY,
-        READY_FOR_CHECK_IN,
-        READY_FOR_CHECK_OUT,
-        FINISHED
-    }
-
-
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
         /* KEEP IN SYNC WITH SERVER VALUES */
@@ -491,7 +480,7 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
-    public BookingProgress getBookingProgress(final String providerId)
+    public int getBookingProgress(final String providerId)
     {
         final boolean isClaimable = getAction(Action.ACTION_CLAIM) != null;
         final String assignedProviderId = getProviderId();
