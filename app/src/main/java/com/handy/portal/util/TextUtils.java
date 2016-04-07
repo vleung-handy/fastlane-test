@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 public final class TextUtils
 {
     public static final DecimalFormat DECIMAL_FORMAT_NO_ZERO = new DecimalFormat("#.##");
-    public static final Format DECIMAL_FORMAT_TWO_ZERO = new DecimalFormat("0.00");
 
     private static final String URL_PATTERN = "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
     private static final Format TIME_WINDOW_HOURS_FORMAT = new DecimalFormat("0.#");

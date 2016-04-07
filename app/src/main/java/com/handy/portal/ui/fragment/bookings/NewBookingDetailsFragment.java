@@ -699,14 +699,14 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     {
         if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
 
-        if (DateTimeUtils.isTimeWithinXHoursFromNow(mBooking.getStartDate(),
+        if (DateTimeUtils.isTimeWithinXMillisecondsFromNow(mBooking.getStartDate(),
                 DateUtils.HOUR_IN_MILLIS * 3))
         {
             mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
                     mBooking.getStartDate().getTime() - System.currentTimeMillis(),
                     R.string.start_timer_lowercase_formatted);
         }
-        else if (DateTimeUtils.isTimeWithinXHoursFromNow(mBooking.getEndDate(),
+        else if (DateTimeUtils.isTimeWithinXMillisecondsFromNow(mBooking.getEndDate(),
                 mBooking.getEndDate().getTime() - mBooking.getStartDate().getTime()))
         {
             mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),

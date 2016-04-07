@@ -42,6 +42,7 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.bookings.BookingMapFragment;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.ui.view.MapPlaceholderView;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
@@ -195,8 +196,8 @@ public class BookingView extends InjectedBusView
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
         if (paymentInfo != null)
         {
-            String paymentText = paymentInfo.getCurrencySymbol() +
-                    TextUtils.DECIMAL_FORMAT_TWO_ZERO.format(paymentInfo.getAdjustedAmount());
+            String paymentText = CurrencyUtils.formatPriceWithCents(paymentInfo.getAmount(),
+                    paymentInfo.getCurrencySymbol());
             mJobPaymentText.setText(paymentText);
         }
 
@@ -204,8 +205,7 @@ public class BookingView extends InjectedBusView
         if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
         {
             String bonusText = getResources().getString(R.string.bonus_payment_value,
-                    bonusInfo.getCurrencySymbol() +
-                            TextUtils.DECIMAL_FORMAT_TWO_ZERO.format(bonusInfo.getAdjustedAmount()));
+                    CurrencyUtils.formatPriceWithCents(bonusInfo.getAmount(), bonusInfo.getCurrencySymbol()));
             mJobPaymentBonusText.setText(bonusText);
         }
 
@@ -259,7 +259,7 @@ public class BookingView extends InjectedBusView
     {
         if (mGetDirectionsIntent != null)
         {
-            getContext().startActivity(mGetDirectionsIntent);
+            Utils.safeLaunchIntent(mGetDirectionsIntent, getContext());
         }
     }
 
@@ -494,7 +494,7 @@ public class BookingView extends InjectedBusView
 
     private void initHelperText(Booking.Action action)
     {
-        if (action.getHelperText() != null && !action.getHelperText().isEmpty())
+        if (!TextUtils.isNullOrEmpty(action.getHelperText()))
         {
             mBookingDetailsActionHelperText.setVisibility(View.VISIBLE);
             mBookingDetailsActionHelperText.setText(action.getHelperText());

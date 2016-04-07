@@ -47,7 +47,7 @@ public final class DateTimeUtils
         return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
     }
 
-    public static boolean isTimeWithinXHoursFromNow(Date date, long milliSec)
+    public static boolean isTimeWithinXMillisecondsFromNow(Date date, long milliSec)
     {
         long timeDifference = date.getTime() - System.currentTimeMillis();
         return timeDifference >= 0 && timeDifference <= milliSec;

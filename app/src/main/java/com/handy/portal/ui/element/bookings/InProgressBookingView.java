@@ -31,6 +31,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingInstructionGroup;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 
@@ -58,11 +59,11 @@ public class InProgressBookingView extends InjectedBusView
     PrefsManager mPrefsManager;
 
     @Bind(R.id.no_show_banner_text)
-    View mNoShowBanner;
+    View mNoShowBannerView;
     @Bind(R.id.customer_name_text)
     TextView mCustomerNameText;
     @Bind(R.id.job_start_time)
-    TextView mJobStartTime;
+    TextView mJobStartTimeText;
     @Bind(R.id.call_customer_view)
     View mCallCustomerView;
     @Bind(R.id.message_customer_view)
@@ -144,7 +145,8 @@ public class InProgressBookingView extends InjectedBusView
             mCustomerNameText.setText(user.getFullName());
         }
 
-        mJobStartTime.setText(DateTimeUtils.formatDateTo12HourClock(mBooking.getCheckInSummary().getCheckInTime()));
+        mJobStartTimeText.setText(DateTimeUtils.formatDateTo12HourClock(
+                mBooking.getCheckInSummary().getCheckInTime()));
 
         // Booking Instructions
         List<BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();
@@ -202,7 +204,7 @@ public class InProgressBookingView extends InjectedBusView
 
         if (noShowReported)
         {
-            mNoShowBanner.setVisibility(VISIBLE);
+            mNoShowBannerView.setVisibility(VISIBLE);
         }
     }
 
@@ -291,7 +293,7 @@ public class InProgressBookingView extends InjectedBusView
             {
                 mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
 
-                if (action.getHelperText() != null && !action.getHelperText().isEmpty())
+                if (!TextUtils.isNullOrEmpty(action.getHelperText()))
                 {
                     mBookingDetailsActionHelperText.setVisibility(View.VISIBLE);
                     mBookingDetailsActionHelperText.setText(action.getHelperText());
