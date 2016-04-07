@@ -582,7 +582,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return mDeepLinkData;
         }
 
-        public int getWithholdingAmount() { return mExtras.getWithholdingAmount(); }
+        public int getWithholdingAmountCents() { return mExtras.getWithholdingAmountCents(); }
 
         public List<String> getRemoveReasons() { return mExtras.getRemoveReasons(); }
 
@@ -591,10 +591,16 @@ public class Booking implements Comparable<Booking>, Serializable
             return mHelpRedirectPath;
         }
 
+        @Nullable
+        public Extras.KeepRate getKeepRate()
+        {
+            return mExtras != null ? mExtras.getKeepRate() : null;
+        }
+
         public static class Extras implements Serializable
         {
             @SerializedName("withholding_amount")
-            private int mWithholdingAmount;
+            private int mWithholdingAmountCents;
             @SerializedName("remove_reasons")
             private List<String> mRemoveReasons;
             @SerializedName("cancellation_policy")
@@ -603,6 +609,8 @@ public class Booking implements Comparable<Booking>, Serializable
             private String mHeaderText;
             @SerializedName("sub_text")
             private String mSubText;
+            @SerializedName("keep_rate")
+            private KeepRate mKeepRate;
 
             public String getHeaderText()
             {
@@ -614,13 +622,19 @@ public class Booking implements Comparable<Booking>, Serializable
                 return mSubText;
             }
 
-            public int getWithholdingAmount() { return mWithholdingAmount; }
+            public int getWithholdingAmountCents() { return mWithholdingAmountCents; }
 
             public List<String> getRemoveReasons() { return mRemoveReasons; }
 
             public CancellationPolicyItem[] getCancellationPolicyArray()
             {
                 return mCancellationPolicyArray;
+            }
+
+            @Nullable
+            public KeepRate getKeepRate()
+            {
+                return mKeepRate;
             }
 
             public static class CancellationPolicyItem
@@ -652,6 +666,26 @@ public class Booking implements Comparable<Booking>, Serializable
                 public PaymentInfo getPaymentInfo()
                 {
                     return mPaymentInfo;
+                }
+            }
+
+            public static class KeepRate
+            {
+                @SerializedName("actual")
+                private Float mCurrent;
+                @SerializedName("on_next_unassign")
+                private Float mNextUnassign;
+
+                @Nullable
+                public Float getCurrent()
+                {
+                    return mCurrent;
+                }
+
+                @Nullable
+                public Float getOnNextUnassign()
+                {
+                    return mNextUnassign;
                 }
             }
         }

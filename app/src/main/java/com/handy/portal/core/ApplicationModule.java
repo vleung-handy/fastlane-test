@@ -86,6 +86,8 @@ import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
@@ -182,6 +184,8 @@ import retrofit.converter.GsonConverter;
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
         SendReceiptCheckoutFragment.class,
+        ConfirmBookingClaimDialogFragment.class,
+        ConfirmBookingCancelDialogFragment.class,
 })
 public final class ApplicationModule
 {
