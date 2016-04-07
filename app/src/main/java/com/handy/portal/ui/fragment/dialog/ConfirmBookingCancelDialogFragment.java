@@ -2,6 +2,7 @@ package com.handy.portal.ui.fragment.dialog;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -26,17 +27,17 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     public static final String FRAGMENT_TAG = ConfirmBookingCancelDialogFragment.class.getSimpleName();
 
     @Bind(R.id.keep_rate)
-    View mKeepRate;
+    View mKeepRateView;
     @Bind(R.id.old_keep_rate)
-    TextView mOldKeepRate;
+    TextView mOldKeepRateText;
     @Bind(R.id.new_keep_rate)
-    TextView mNewKeepRate;
+    TextView mNewKeepRateText;
     @Bind(R.id.no_keep_rate)
-    View mNoKeepRate;
+    View mNoKeepRateView;
     @Bind(R.id.no_fee_notice)
-    View mNoFeeNotice;
+    View mNoFeeNoticeView;
     @Bind(R.id.withholding_fee_notice)
-    TextView mWithholdingFeeNotice;
+    TextView mWithholdingFeeNoticeText;
 
     @Inject
     Bus mBus;
@@ -70,15 +71,15 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
         if (withholdingAmountCents > 0)
         {
             final String currencySymbol = mBooking.getPaymentToProvider().getCurrencySymbol();
-            final String fee = CurrencyUtils.formatPriceWithCents(withholdingAmountCents, currencySymbol);
-            setWithholdingFee(fee);
-            mNoFeeNotice.setVisibility(View.GONE);
-            mWithholdingFeeNotice.setVisibility(View.VISIBLE);
+            final String feeFormatted = CurrencyUtils.formatPriceWithCents(withholdingAmountCents, currencySymbol);
+            setWithholdingFee(feeFormatted);
+            mNoFeeNoticeView.setVisibility(View.GONE);
+            mWithholdingFeeNoticeText.setVisibility(View.VISIBLE);
         }
         else
         {
-            mWithholdingFeeNotice.setVisibility(View.GONE);
-            mNoFeeNotice.setVisibility(View.VISIBLE);
+            mWithholdingFeeNoticeText.setVisibility(View.GONE);
+            mNoFeeNoticeView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -94,15 +95,15 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
                     getString(R.string.keep_rate_percent_formatted, Math.round(oldKeepRate * 100));
             final String newKeepRateFormatted =
                     getString(R.string.keep_rate_percent_formatted, Math.round(newKeepRate * 100));
-            mOldKeepRate.setText(oldKeepRateFormatted);
-            mNewKeepRate.setText(newKeepRateFormatted);
-            mKeepRate.setVisibility(View.VISIBLE);
-            mNoKeepRate.setVisibility(View.GONE);
+            mOldKeepRateText.setText(oldKeepRateFormatted);
+            mNewKeepRateText.setText(newKeepRateFormatted);
+            mKeepRateView.setVisibility(View.VISIBLE);
+            mNoKeepRateView.setVisibility(View.GONE);
         }
         else
         {
-            mKeepRate.setVisibility(View.GONE);
-            mNoKeepRate.setVisibility(View.VISIBLE);
+            mKeepRateView.setVisibility(View.GONE);
+            mNoKeepRateView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -138,13 +139,13 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
         return getString(R.string.cancel_job);
     }
 
-    private void setWithholdingFee(final String fee)
+    private void setWithholdingFee(@NonNull final String feeFormatted)
     {
-        final String feeFormatted = getString(R.string.withholding_fee_simple_formatted, fee);
-        mWithholdingFeeNotice.setText(feeFormatted, TextView.BufferType.SPANNABLE);
-        final Spannable spannable = (Spannable) mWithholdingFeeNotice.getText();
-        final int start = feeFormatted.indexOf(fee);
-        final int end = start + fee.length();
+        final String withholdingFeeMessageFormatted = getString(R.string.withholding_fee_simple_formatted, feeFormatted);
+        mWithholdingFeeNoticeText.setText(withholdingFeeMessageFormatted, TextView.BufferType.SPANNABLE);
+        final Spannable spannable = (Spannable) mWithholdingFeeNoticeText.getText();
+        final int start = withholdingFeeMessageFormatted.indexOf(feeFormatted);
+        final int end = start + feeFormatted.length();
         spannable.setSpan(
                 new ForegroundColorSpan(getResources().getColor(R.color.error_red)),
                 start,
