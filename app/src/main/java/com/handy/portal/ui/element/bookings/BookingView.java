@@ -87,6 +87,8 @@ public class BookingView extends InjectedBusView
     TextView mJobPaymentText;
     @Bind(R.id.job_payment_bonus_text)
     TextView mJobPaymentBonusText;
+    @Bind(R.id.recurrence_text)
+    TextView mRecurrenceText;
     @Bind(R.id.booking_support_button)
     Button mSupportButton;
     @Bind(R.id.booking_details_action_helper_text)
@@ -154,8 +156,7 @@ public class BookingView extends InjectedBusView
 
         if (mBooking.getUser() != null)
         {
-            String firstName = mBooking.getUser().getFirstName();
-            mCustomerNameText.setText(firstName);
+            mCustomerNameText.setText(mBooking.getUser().getFullName());
         }
         else
         {
@@ -207,6 +208,8 @@ public class BookingView extends InjectedBusView
                             TextUtils.DECIMAL_FORMAT_TWO_ZERO.format(bonusInfo.getAdjustedAmount()));
             mJobPaymentBonusText.setText(bonusText);
         }
+
+        mRecurrenceText.setText(UIUtils.getFrequencyInfo(mBooking, getContext()));
 
         // Booking Instructions
         List<Booking.BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();
@@ -470,7 +473,7 @@ public class BookingView extends InjectedBusView
                     {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-                        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle));
+                        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
                     }
                 });
                 initHelperText(action);

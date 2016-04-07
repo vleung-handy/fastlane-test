@@ -53,27 +53,29 @@
                     />
 
                 <ImageView
-                    android:id="@+id/call_customer_view"
+                    android:id="@+id/message_customer_view"
                     android:layout_width="@dimen/customer_action_width_height"
                     android:layout_height="@dimen/customer_action_width_height"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/default_margin_x2"
                     android:layout_marginRight="@dimen/default_margin_x2"
-                    android:layout_toLeftOf="@+id/message_customer_view"
-                    android:layout_toStartOf="@id/message_customer_view"
-                    android:src="@drawable/customer_call"
+                    android:layout_toLeftOf="@+id/call_customer_view"
+                    android:layout_toStartOf="@id/call_customer_view"
+                    android:src="@drawable/customer_message"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     />
 
                 <ImageView
-                    android:id="@+id/message_customer_view"
+                    android:id="@+id/call_customer_view"
                     android:layout_width="@dimen/customer_action_width_height"
                     android:layout_height="@dimen/customer_action_width_height"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/customer_message"
+                    android:src="@drawable/customer_call"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     />
 
             </RelativeLayout>
@@ -181,8 +183,10 @@
                     />
 
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/customer_request_point_margin_left"
+                    android:layout_marginStart="@dimen/customer_request_point_margin_left"
                     android:layout_marginTop="@dimen/customer_request_point_margin_top"
                     android:src="@drawable/customer_request_point"
                     />

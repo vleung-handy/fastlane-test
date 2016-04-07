@@ -100,7 +100,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                     TextUtils.DECIMAL_FORMAT_NO_ZERO.format(mBooking.getPaymentToProvider().getAdjustedAmount());
             mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
             String name = mBooking.getUser().getFirstName();
-            mExperienceText.setText(getString(R.string.how_was_cleaning_formatted, name));
+            mExperienceText.setText(getString(R.string.how_was_experience_formatted, name));
         }
 
         if (mBooking == null)

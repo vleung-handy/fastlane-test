@@ -136,7 +136,7 @@
 
     <!-- New Checkout -->
     <dimen name="job_times_margin">12dp</dimen>
-    <dimen name="swipe_checkout_text_size">16sp</dimen>
+    <dimen name="swipe_checkout_text_size">18sp</dimen>
     <dimen name="completed_task_width">104dp</dimen>
     <dimen name="completed_task_text_margin">14dp</dimen>
     <dimen name="completed_task_margin_bottom">8dp</dimen>
@@ -154,6 +154,7 @@
 
     <!-- Overlap the underlying textview border -->
     <dimen name="customer_request_point_margin_top">-1.5dp</dimen>
+    <dimen name="customer_request_point_margin_left">11dp</dimen>
 
     <dimen name="customer_name_height">60dp</dimen>
 

@@ -67,7 +67,6 @@ public class NewBookingDetailsJobInstructionsSectionView extends FrameLayout
             TextView entryView = new TextView(getContext());
             entryView.setText(entry.getDescription());
             entryView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
-            entryView.setLineSpacing(0, 1.3f);
             entryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             entryView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
             mEntriesLayout.addView(entryView);
