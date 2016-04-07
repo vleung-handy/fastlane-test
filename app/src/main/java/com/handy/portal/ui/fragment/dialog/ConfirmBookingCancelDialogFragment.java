@@ -86,7 +86,7 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     {
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
-        final Float oldKeepRate = keepRate.getActual();
+        final Float oldKeepRate = keepRate.getCurrent();
         final Float newKeepRate = keepRate.getOnNextUnassign();
         if (oldKeepRate != null && newKeepRate != null)
         {

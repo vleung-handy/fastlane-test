@@ -77,7 +77,7 @@ public class ScheduledJobsLog extends EventLog
                 final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
                 if (keepRate != null)
                 {
-                    mOldKeepRate = keepRate.getActual();
+                    mOldKeepRate = keepRate.getCurrent();
                     mNewKeepRate = keepRate.getOnNextUnassign();
                 }
             }
