@@ -186,7 +186,7 @@ public class BookingView extends InjectedBusView
                 + getResources().getString(R.string.dash) + " "
                 + DateTimeUtils.formatDateTo12HourClock(endDate);
 
-        mJobDateText.setText(getPrependByStartDate(startDate) + formattedDate);
+        mJobDateText.setText(getTodayTomorrowStringByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toUpperCase());
 
         String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
@@ -341,9 +341,6 @@ public class BookingView extends InjectedBusView
     private void initGetDirections(Address address)
     {
         // Create a Uri from an intent string. Use the result to create an Intent.
-        String latitude = Float.toString(address.getLatitude());
-        String longitude = Float.toString(address.getLongitude());
-
         Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + address.getAddress1() + " " + address.getCityStateZip());
         Intent getDirectionsIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 
@@ -371,7 +368,7 @@ public class BookingView extends InjectedBusView
     }
 
     //returns a today or tomorrow prepend as needed
-    private String getPrependByStartDate(Date bookingStartDate)
+    private String getTodayTomorrowStringByStartDate(Date bookingStartDate)
     {
         String prepend = "";
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -38,6 +39,9 @@ public class CheckoutJobDetailsFragment extends ActionBarFragment
         if (bundle != null)
         {
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
+        }
+        else{
+            Crashlytics.log("Booking missing for Checkout Job Details");
         }
     }
 
