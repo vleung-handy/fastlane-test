@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.bookings;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -33,6 +33,7 @@ import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.view.CheckoutCompletedTaskView;
 import com.handy.portal.util.DateTimeUtils;
@@ -65,6 +66,8 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     TextView mSendNoteText;
     @Bind(R.id.send_note_edit_text)
     EditText mSendNoteEditText;
+    @Bind(R.id.completed_tasks_header)
+    View mCompletedTasksHeader;
     @Bind(R.id.checklist_column_one)
     ViewGroup mChecklistFirstColumn;
     @Bind(R.id.checklist_column_two)
@@ -225,10 +228,17 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
             if (completedTasks != null)
             {
-                for (Booking.BookingInstructionUpdateRequest completedTask : completedTasks)
+                if (completedTasks.size() == 0)
                 {
-                    if (completedTask.isInstructionCompleted())
-                    { addTaskItem(completedTask.getTitle()); }
+                    mCompletedTasksHeader.setVisibility(View.GONE);
+                }
+                else
+                {
+                    for (Booking.BookingInstructionUpdateRequest completedTask : completedTasks)
+                    {
+                        if (completedTask.isInstructionCompleted())
+                        { addTaskItem(completedTask.getTitle()); }
+                    }
                 }
             }
         }

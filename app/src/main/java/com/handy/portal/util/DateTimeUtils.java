@@ -1,7 +1,9 @@
 package com.handy.portal.util;
 
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ public final class DateTimeUtils
 
     public final static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("EEEE, MMMM d");
+    public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("E, MMM d");
     public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER = new SimpleDateFormat("MMM");
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
     public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
@@ -42,6 +45,12 @@ public final class DateTimeUtils
         long dateOfBookingsTime = date.getTime();
         long dateDifference = dateOfBookingsTime - currentTime;
         return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
+    }
+
+    public static boolean isTimeWithinXMillisecondsFromNow(Date date, long milliSec)
+    {
+        long timeDifference = date.getTime() - System.currentTimeMillis();
+        return timeDifference >= 0 && timeDifference <= milliSec;
     }
 
     @Nullable
@@ -229,6 +238,22 @@ public final class DateTimeUtils
             {
                 textView.setText(textView.getContext().getString(R.string.start_timer_formatted,
                         DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
+            }
+
+            @Override
+            public void onFinish() { }
+        }.start();
+    }
+
+    public static CountDownTimer setActionBarCountdownTimer(
+            final Context context, final ActionBar actionBar, long timeRemainMillis, final int stringId)
+    {
+        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
+        {
+            @Override
+            public void onTick(final long millisUntilFinished)
+            {
+                actionBar.setTitle(context.getString(stringId, DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
             }
 
             @Override

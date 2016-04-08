@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.bookings;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +18,7 @@ import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.MainActivity;
+import com.squareup.otto.Bus;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -62,6 +63,8 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
     private ConfigurationResponse mConfigurationResponse;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    Bus mBus;
 
     private BookingDetailsFragment fragment;
 
@@ -169,13 +172,13 @@ public class BookingDetailsFragmentTest extends RobolectricGradleTestWrapper
 
     private void assertBusPost(Matcher matcher)
     {
-        verify(fragment.bus, atLeastOnce()).post(captor.capture());
+        verify(mBus, atLeastOnce()).post(captor.capture());
         assertThat(captor.getAllValues(), hasItem(matcher));
     }
 
     private <T> T getBusCaptorValue(Class<T> classType)
     {
-        verify(fragment.bus, atLeastOnce()).post(captor.capture());
+        verify(mBus, atLeastOnce()).post(captor.capture());
         return TestUtils.getBusCaptorValue(captor, classType);
     }
 

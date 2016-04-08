@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.bookings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +24,8 @@ import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementMediator;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.ScheduledBookingElementView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.squareup.otto.Subscribe;
 
 import java.util.Collections;

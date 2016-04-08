@@ -7,6 +7,7 @@ public enum SupportActionType
     NOTIFY_EARLY(R.string.will_be_early, R.drawable.ic_early),
     NOTIFY_LATE(R.string.will_be_late, R.drawable.ic_alarm_clock),
     REPORT_NO_SHOW(R.string.customer_not_home, R.drawable.ic_person_x),
+    RETRACT_NO_SHOW(R.string.undo_customer_no_show, R.drawable.ic_person_x),
     ISSUE_UNSAFE(R.string.i_feel_unsafe, R.drawable.ic_sad_face),
     ISSUE_HOURS(R.string.add_remove_hours, R.drawable.ic_hourglass),
     RESCHEDULE(R.string.customer_reschedule, R.drawable.ic_document),

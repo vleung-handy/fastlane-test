@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.bookings;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -136,7 +136,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
 
         if (bookingsForDay.size() == 0 &&
-            DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
+                DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
         {
             mFindJobsForDayButton.setVisibility(View.VISIBLE);
         }

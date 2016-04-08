@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.ui.fragment.bookings;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -58,6 +58,8 @@ import com.handy.portal.ui.element.bookings.BookingDetailsDateView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.bookings.BookingDetailsTitleView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
@@ -601,7 +603,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 else
                 {
                     mScrollView.fullScroll(View.FOCUS_DOWN);
-                    showToast(R.string.check_customer_preferences, Toast.LENGTH_LONG, Gravity.TOP);
+                    showToast(R.string.tap_preferences_before_checkout, Toast.LENGTH_LONG, Gravity.TOP);
                 }
             }
             break;

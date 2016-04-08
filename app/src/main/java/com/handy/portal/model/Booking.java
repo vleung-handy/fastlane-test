@@ -8,6 +8,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
+import com.handy.portal.constant.BookingProgress;
 import com.handy.portal.constant.Country;
 
 import java.io.Serializable;
@@ -143,21 +144,23 @@ public class Booking implements Comparable<Booking>, Serializable
         return mBookingInstructionGroups;
     }
 
-    @Nullable
+    @NonNull
     public List<BookingInstructionUpdateRequest> getCustomerPreferences()
     {
         if (mCustomerPreferences != null) { return mCustomerPreferences; }
-        if (mBookingInstructionGroups == null) { return null; }
-
-        for (BookingInstructionGroup group : mBookingInstructionGroups)
+        if (mBookingInstructionGroups != null)
         {
-            if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+            for (BookingInstructionGroup group : mBookingInstructionGroups)
             {
-                mCustomerPreferences = BookingInstruction.generateBookingInstructionUpdateRequests(group.getInstructions());
-                return mCustomerPreferences;
+                if (BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+                {
+                    mCustomerPreferences = BookingInstruction
+                            .generateBookingInstructionUpdateRequests(group.getInstructions());
+                    return mCustomerPreferences;
+                }
             }
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public void setCustomerPreferences(List<BookingInstructionUpdateRequest> customerPreferences)
@@ -168,21 +171,16 @@ public class Booking implements Comparable<Booking>, Serializable
     public boolean isAnyPreferenceChecked()
     {
         List<BookingInstructionUpdateRequest> preferences = getCustomerPreferences();
-        if (preferences != null)
+        if (preferences.size() == 0) { return true; }
+
+        for (BookingInstruction preference : preferences)
         {
-            for (BookingInstruction preference : preferences)
+            if (preference.isInstructionCompleted())
             {
-                if (preference.isInstructionCompleted())
-                {
-                    return true;
-                }
+                return true;
             }
-            return false;
         }
-        else // if there isn't a list to check
-        {
-            return true;
-        }
+        return false;
     }
 
     public int getFrequency()
@@ -407,7 +405,6 @@ public class Booking implements Comparable<Booking>, Serializable
         UNAVAILABLE,
     }
 
-
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
         /* KEEP IN SYNC WITH SERVER VALUES */
@@ -480,6 +477,32 @@ public class Booking implements Comparable<Booking>, Serializable
         else
         {
             return BookingStatus.UNAVAILABLE;
+        }
+    }
+
+    public int getBookingProgress(final String providerId)
+    {
+        final boolean isClaimable = getAction(Action.ACTION_CLAIM) != null;
+        final String assignedProviderId = getProviderId();
+        final boolean isClaimedByMe = isProxy() ? isClaimedByMe() : assignedProviderId.equals(providerId);
+        if (!isClaimable && !isClaimedByMe)
+        {
+            return BookingProgress.UNAVAILABLE;
+        }
+        else if (isClaimable)
+        {
+            return BookingProgress.READY_FOR_CLAIM;
+        }
+        else
+        {
+            if (getAction(Action.ACTION_ON_MY_WAY) != null)
+            { return BookingProgress.READY_FOR_ON_MY_WAY; }
+            else if (getAction(Action.ACTION_CHECK_IN) != null)
+            { return BookingProgress.READY_FOR_CHECK_IN; }
+            else if (getAction(Action.ACTION_CHECK_OUT) != null)
+            { return BookingProgress.READY_FOR_CHECK_OUT; }
+            else
+            { return BookingProgress.FINISHED; }
         }
     }
 
