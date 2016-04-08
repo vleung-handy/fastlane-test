@@ -64,39 +64,39 @@ public class BookingView extends InjectedBusView
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.no_show_banner_text)
+    @Bind(R.id.booking_no_show_banner_text)
     View mNoShowBanner;
-    @Bind(R.id.map_layout)
+    @Bind(R.id.booking_map_layout)
     FrameLayout mMapLayout;
     @Bind(R.id.booking_customer_contact_layout)
     ViewGroup mBookingCustomerContactLayout;
-    @Bind(R.id.customer_name_text)
+    @Bind(R.id.booking_customer_name_text)
     TextView mCustomerNameText;
     @Bind(R.id.booking_address_text)
     TextView mBookingAddressText;
-    @Bind(R.id.call_customer_view)
+    @Bind(R.id.booking_call_customer_view)
     ImageView mCallCustomerView;
-    @Bind(R.id.message_customer_view)
+    @Bind(R.id.booking_message_customer_view)
     ImageView mMessageCustomerView;
-    @Bind(R.id.get_directions_layout)
+    @Bind(R.id.booking_get_directions_layout)
     ViewGroup mGetDirectionsLayout;
-    @Bind(R.id.job_date_text)
+    @Bind(R.id.booking_job_date_text)
     TextView mJobDateText;
-    @Bind(R.id.job_time_text)
+    @Bind(R.id.booking_job_time_text)
     TextView mJobTimeText;
-    @Bind(R.id.job_payment_text)
+    @Bind(R.id.booking_job_payment_text)
     TextView mJobPaymentText;
-    @Bind(R.id.job_payment_bonus_text)
+    @Bind(R.id.booking_job_payment_bonus_text)
     TextView mJobPaymentBonusText;
-    @Bind(R.id.recurrence_text)
+    @Bind(R.id.booking_recurrence_text)
     TextView mRecurrenceText;
     @Bind(R.id.booking_support_button)
     Button mSupportButton;
-    @Bind(R.id.booking_details_action_helper_text)
+    @Bind(R.id.booking_action_helper_text)
     TextView mBookingDetailsActionHelperText;
-    @Bind(R.id.booking_details_job_instructions_list_layout)
+    @Bind(R.id.booking_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
-    @Bind(R.id.job_number_text)
+    @Bind(R.id.booking_job_number_text)
     TextView mJobNumberText;
     @Bind(R.id.booking_action_button)
     Button mActionButton;
@@ -255,7 +255,7 @@ public class BookingView extends InjectedBusView
         transaction.replace(mMapLayout.getId(), fragment).commit();
     }
 
-    @OnClick(R.id.get_directions_layout)
+    @OnClick(R.id.booking_get_directions_layout)
     public void getDirections()
     {
         if (mGetDirectionsIntent != null)
@@ -264,7 +264,7 @@ public class BookingView extends InjectedBusView
         }
     }
 
-    @OnClick(R.id.call_customer_view)
+    @OnClick(R.id.booking_call_customer_view)
     public void callCustomer()
     {
         mBus.post(new HandyEvent.CallCustomerClicked());
@@ -280,7 +280,7 @@ public class BookingView extends InjectedBusView
         }
     }
 
-    @OnClick(R.id.message_customer_view)
+    @OnClick(R.id.booking_message_customer_view)
     public void messageCustomer()
     {
         mBus.post(new HandyEvent.TextCustomerClicked());

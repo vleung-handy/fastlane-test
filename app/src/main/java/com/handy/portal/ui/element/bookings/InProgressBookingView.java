@@ -58,27 +58,27 @@ public class InProgressBookingView extends InjectedBusView
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.no_show_banner_text)
+    @Bind(R.id.in_progress_booking_no_show_banner_text)
     View mNoShowBannerView;
-    @Bind(R.id.customer_name_text)
+    @Bind(R.id.in_progress_booking_customer_name_text)
     TextView mCustomerNameText;
-    @Bind(R.id.job_start_time)
+    @Bind(R.id.in_progress_booking_job_start_time)
     TextView mJobStartTimeText;
-    @Bind(R.id.call_customer_view)
+    @Bind(R.id.in_progress_booking_call_customer_view)
     View mCallCustomerView;
-    @Bind(R.id.message_customer_view)
+    @Bind(R.id.in_progress_booking_message_customer_view)
     View mMessageCustomerView;
-    @Bind(R.id.booking_support_button)
+    @Bind(R.id.in_progress_booking_booking_support_button)
     Button mSupportButton;
-    @Bind(R.id.note_to_pro_layout)
+    @Bind(R.id.in_progress_booking_note_to_pro_layout)
     ViewGroup mNoteToProLayout;
-    @Bind(R.id.note_to_pro_text)
+    @Bind(R.id.in_progress_booking_note_to_pro_text)
     TextView mNoteToProText;
     @Bind(R.id.in_progress_booking_checklist)
     CustomerRequestsView mCustomerRequestsView;
-    @Bind(R.id.booking_details_action_helper_text)
+    @Bind(R.id.in_progress_booking_details_action_helper_text)
     TextView mBookingDetailsActionHelperText;
-    @Bind(R.id.booking_action_button)
+    @Bind(R.id.in_progress_booking_action_button)
     Button mActionButton;
 
     private Booking mBooking;
@@ -208,7 +208,7 @@ public class InProgressBookingView extends InjectedBusView
         }
     }
 
-    @OnClick(R.id.booking_details_view)
+    @OnClick(R.id.in_progress_booking_details_view)
     public void swapToJobDetails()
     {
         Bundle bundle = new Bundle();
@@ -217,7 +217,7 @@ public class InProgressBookingView extends InjectedBusView
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.CHECKOUT_JOB_DETAILS, bundle, true));
     }
 
-    @OnClick(R.id.booking_action_button)
+    @OnClick(R.id.in_progress_booking_action_button)
     public void checkOut()
     {
         final boolean proReportedNoShow = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
@@ -234,7 +234,7 @@ public class InProgressBookingView extends InjectedBusView
         }
     }
 
-    @OnClick(R.id.call_customer_view)
+    @OnClick(R.id.in_progress_booking_call_customer_view)
     public void callCustomer()
     {
         mBus.post(new HandyEvent.CallCustomerClicked());
@@ -250,7 +250,7 @@ public class InProgressBookingView extends InjectedBusView
         }
     }
 
-    @OnClick(R.id.message_customer_view)
+    @OnClick(R.id.in_progress_booking_message_customer_view)
     public void messageCustomer()
     {
         mBus.post(new HandyEvent.TextCustomerClicked());

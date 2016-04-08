@@ -27,7 +27,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/no_show_banner_text"
+                    android:id="@+id/booking_no_show_banner_text"
                     style="@style/CircularBold"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/customer_no_show_banner_height"
@@ -41,7 +41,7 @@
                     />
 
                 <FrameLayout
-                    android:id="@+id/map_layout"
+                    android:id="@+id/booking_map_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/check_in_booking_details_map_height"
                     />
@@ -54,7 +54,7 @@
                     >
 
                     <TextView
-                        android:id="@+id/customer_name_text"
+                        android:id="@+id/booking_customer_name_text"
                         style="@style/CircularMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -67,21 +67,7 @@
                         />
 
                     <ImageView
-                        android:id="@+id/message_customer_view"
-                        android:layout_width="@dimen/customer_action_width_height"
-                        android:layout_height="@dimen/customer_action_width_height"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/default_margin_x2"
-                        android:layout_marginRight="@dimen/default_margin_x2"
-                        android:layout_toLeftOf="@+id/call_customer_view"
-                        android:layout_toStartOf="@id/call_customer_view"
-                        android:src="@drawable/customer_message"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        />
-
-                    <ImageView
-                        android:id="@+id/call_customer_view"
+                        android:id="@+id/booking_call_customer_view"
                         android:layout_width="@dimen/customer_action_width_height"
                         android:layout_height="@dimen/customer_action_width_height"
                         android:layout_alignParentEnd="true"
@@ -92,6 +78,19 @@
                         tools:visibility="visible"
                         />
 
+                    <ImageView
+                        android:id="@+id/booking_message_customer_view"
+                        android:layout_width="@dimen/customer_action_width_height"
+                        android:layout_height="@dimen/customer_action_width_height"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/default_margin_x2"
+                        android:layout_marginRight="@dimen/default_margin_x2"
+                        android:layout_toLeftOf="@id/booking_call_customer_view"
+                        android:layout_toStartOf="@id/booking_call_customer_view"
+                        android:src="@drawable/customer_message"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        />
                 </RelativeLayout>
 
                 <include
@@ -136,7 +135,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/get_directions_layout"
+                        android:id="@+id/booking_get_directions_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -199,7 +198,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/job_date_text"
+                        android:id="@+id/booking_job_date_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingEnd="@dimen/extra_padding"
@@ -240,7 +239,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/job_time_text"
+                        android:id="@+id/booking_job_time_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingEnd="@dimen/extra_padding"
@@ -281,7 +280,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/job_payment_text"
+                        android:id="@+id/booking_job_payment_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingEnd="@dimen/extra_padding"
@@ -294,7 +293,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/job_payment_bonus_text"
+                        android:id="@+id/booking_job_payment_bonus_text"
                         style="@style/CircularBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -337,7 +336,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/recurrence_text"
+                        android:id="@+id/booking_recurrence_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingEnd="@dimen/extra_padding"
@@ -352,7 +351,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/booking_details_job_instructions_list_layout"
+                    android:id="@+id/booking_job_instructions_list_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -374,7 +373,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/job_number_text"
+                    android:id="@+id/booking_job_number_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -405,7 +404,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/booking_details_action_helper_text"
+                    android:id="@+id/booking_action_helper_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/default_margin"

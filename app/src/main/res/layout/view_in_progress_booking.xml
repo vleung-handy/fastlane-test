@@ -8,7 +8,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/booking_action_button"
+        android:layout_above="@+id/in_progress_booking_action_button"
         android:layout_alignParentTop="true"
         >
 
@@ -19,7 +19,7 @@
             >
 
             <TextView
-                android:id="@+id/no_show_banner_text"
+                android:id="@+id/in_progress_booking_no_show_banner_text"
                 style="@style/CircularBold"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/customer_no_show_banner_height"
@@ -40,7 +40,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/customer_name_text"
+                    android:id="@+id/in_progress_booking_customer_name_text"
                     style="@style/CircularMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,27 +53,27 @@
                     />
 
                 <ImageView
-                    android:id="@+id/message_customer_view"
-                    android:layout_width="@dimen/customer_action_width_height"
-                    android:layout_height="@dimen/customer_action_width_height"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/default_margin_x2"
-                    android:layout_marginRight="@dimen/default_margin_x2"
-                    android:layout_toLeftOf="@+id/call_customer_view"
-                    android:layout_toStartOf="@id/call_customer_view"
-                    android:src="@drawable/customer_message"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    />
-
-                <ImageView
-                    android:id="@+id/call_customer_view"
+                    android:id="@+id/in_progress_booking_call_customer_view"
                     android:layout_width="@dimen/customer_action_width_height"
                     android:layout_height="@dimen/customer_action_width_height"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/customer_call"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    />
+
+                <ImageView
+                    android:id="@+id/in_progress_booking_message_customer_view"
+                    android:layout_width="@dimen/customer_action_width_height"
+                    android:layout_height="@dimen/customer_action_width_height"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/default_margin_x2"
+                    android:layout_marginRight="@dimen/default_margin_x2"
+                    android:layout_toLeftOf="@id/in_progress_booking_call_customer_view"
+                    android:layout_toStartOf="@id/in_progress_booking_call_customer_view"
+                    android:src="@drawable/customer_message"
                     android:visibility="gone"
                     tools:visibility="visible"
                     />
@@ -87,7 +87,7 @@
                 />
 
             <RelativeLayout
-                android:id="@+id/booking_details_view"
+                android:id="@+id/in_progress_booking_details_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/customer_name_height"
                 android:background="@color/white"
@@ -113,7 +113,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/job_start_time"
+                        android:id="@+id/in_progress_booking_job_start_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingEnd="@dimen/extra_padding"
@@ -158,7 +158,7 @@
                 />
 
             <LinearLayout
-                android:id="@+id/note_to_pro_layout"
+                android:id="@+id/in_progress_booking_note_to_pro_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_margin"
@@ -172,7 +172,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/note_to_pro_text"
+                    android:id="@+id/in_progress_booking_note_to_pro_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_text_view"
@@ -214,7 +214,7 @@
                 >
 
                 <Button
-                    android:id="@+id/booking_support_button"
+                    android:id="@+id/in_progress_booking_booking_support_button"
                     style="@style/Button.Grey.Round"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -225,7 +225,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/booking_details_action_helper_text"
+                    android:id="@+id/in_progress_booking_details_action_helper_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -243,7 +243,7 @@
     </ScrollView>
 
     <Button
-        android:id="@id/booking_action_button"
+        android:id="@id/in_progress_booking_action_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/complete_button_height"
         android:layout_alignParentBottom="true"
