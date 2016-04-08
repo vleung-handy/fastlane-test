@@ -175,7 +175,7 @@ public class InProgressBookingView extends InjectedBusView
             if (preferencesGroup != null)
             {
                 List<Booking.BookingInstructionUpdateRequest> checklist = null;
-                if (mPrefsManager.getBookingInstructions(mBooking.getId()).isEmpty())
+                if (TextUtils.isNullOrEmpty(mPrefsManager.getBookingInstructions(mBooking.getId())))
                 {
                     checklist = mBooking.getCustomerPreferences();
                 }
