@@ -40,7 +40,8 @@ public class CheckoutJobDetailsFragment extends ActionBarFragment
         {
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
         }
-        else{
+        else
+        {
             Crashlytics.log("Booking missing for Checkout Job Details");
         }
     }

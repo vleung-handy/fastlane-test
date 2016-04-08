@@ -145,7 +145,8 @@ public class BookingView extends InjectedBusView
         mSourceExtras = sourceExtras;
         mSupportButton.setOnClickListener(onSupportClickListener);
 
-        initMapLayout();
+        if (!fromPaymentsTab)
+        { initMapLayout(); }
 
         // Booking actions
         List<Booking.Action> allowedActions = booking.getAllowedActions();

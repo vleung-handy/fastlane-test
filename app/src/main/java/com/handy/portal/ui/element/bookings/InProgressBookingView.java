@@ -31,6 +31,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.BookingInstructionGroup;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 
