@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment.profile;
+package com.handy.portal.ui.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +29,6 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
