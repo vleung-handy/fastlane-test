@@ -530,7 +530,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         {
             mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
                     this, noShowReported, mFromPaymentsTab);
-            setActionBarTitle(R.string.your_job);
+            setActionBarTitle(R.string.completed_job);
         }
 
         mSlideUpPanelContainer.addView(mCurrentView);
@@ -712,6 +712,11 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
             mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
                     mBooking.getEndDate().getTime() - System.currentTimeMillis(),
                     R.string.end_timer_lowercase_formatted);
+        }
+        else if (System.currentTimeMillis() < mBooking.getStartDate().getTime())
+        {
+            // More than 3 hours before booking start
+            setActionBarTitle(R.string.your_job);
         }
         else
         {

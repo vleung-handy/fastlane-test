@@ -127,8 +127,6 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         setBackButtonEnabled(true);
         setActionBarTitle(R.string.send_your_receipt);
         setActionBarVisible(true);
-        mSendNoteText.setVisibility(View.GONE);
-        mSendNoteEditText.setVisibility(View.GONE);
 
         initialize();
     }
