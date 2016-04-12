@@ -75,6 +75,7 @@ import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
+import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.bookings.BookingDetailsFragment;
@@ -192,6 +193,7 @@ import retrofit.converter.GsonConverter;
         InProgressBookingView.class,
         InjectedBusView.class,
         CheckoutJobDetailsFragment.class,
+        RequestSuppliesWebViewFragment.class,
 })
 public final class ApplicationModule
 {

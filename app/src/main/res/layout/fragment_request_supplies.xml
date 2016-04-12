@@ -243,7 +243,7 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/request_supplies_button"
+        android:id="@+id/request_supplies_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/complete_button_height"
         android:background="@color/requested_green"

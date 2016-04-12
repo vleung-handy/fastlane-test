@@ -4,10 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.manager.ConfigManager;
 
+import javax.inject.Inject;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -36,15 +42,16 @@ public class RequestSuppliesFragment extends ActionBarFragment
     }
 
     @Override
-    public void onResume()
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
-        super.onResume();
+        super.onViewCreated(view, savedInstanceState);
         setActionBar(R.string.request_supplies, false);
         setBackButtonEnabled(true);
     }
-    @OnClick(R.id.request_supplies_button)
+
+    @OnClick(R.id.request_supplies_text)
     public void onRequestSuppliesButtonClicked()
     {
-
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES_WEB_VIEW, true));
     }
 }
