@@ -92,7 +92,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
 
     /**
      * this button should be disabled if the required request supplies info is missing
-     *
+     * <p/>
      * see setRequestSuppliesButton() and canProviderRequestSupplies()
      */
     @OnClick(R.id.request_supplies_button)

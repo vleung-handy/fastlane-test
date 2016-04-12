@@ -771,14 +771,14 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestNotifyOnMyWayJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWay(mAssociatedBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(mAssociatedBooking, locationData)));
         bus.post(new HandyEvent.RequestNotifyJobOnMyWay(bookingId, locationData));
     }
 
     private void requestNotifyCheckInJob(String bookingId, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckIn(mAssociatedBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(mAssociatedBooking, locationData)));
         bus.post(new HandyEvent.RequestNotifyJobCheckIn(bookingId, locationData));
     }
 
