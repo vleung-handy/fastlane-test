@@ -323,7 +323,6 @@
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
     <string name="video_library">Video Library</string>
 
-
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
     <string name="nearby_transit">Nearby Transit</string>
@@ -401,6 +400,18 @@
     <string name="order_resupply_kit">Order a Resupply Kit</string>
     <string name="income_verification">Income Verification</string>
     <string name="send_email">Send Email</string>
+    <string name="shop_on_boxed">Shop on Boxed.com</string>
+    <string name="handy_boxed_store">Handy + Boxed.com Store</string>
+    <string name="supplies_instruction1">Professionals should arrive prepared, so we partnered with Boxed.com to create a recommended set of supplies.</string>
+    <string name="supplies_instruction2">The most successful pros on the platform say their standard kit includes:</string>
+    <string name="vacuum">A vacuum</string>
+    <string name="cloths_paper_towels">Microfiber cloths and paper towels</string>
+    <string name="gloves">Gloves</string>
+    <string name="leave_behinds">Leave behinds for your name</string>
+    <string name="mop">Dust mop and wet mop</string>
+    <string name="duster">Duster</string>
+    <string name="cleaning_solutions">Cleaning solutions for all surfaces</string>
+    <string name="apron">Apron</string>
 
     <!-- Referrals -->
     <string name="chevron_description">Chevron</string>

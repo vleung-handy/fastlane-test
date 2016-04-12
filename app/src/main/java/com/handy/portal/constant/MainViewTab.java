@@ -11,6 +11,7 @@ import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
+import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.bookings.CancellationRequestFragment;
 import com.handy.portal.ui.fragment.bookings.CheckoutJobDetailsFragment;
@@ -64,6 +65,7 @@ public enum MainViewTab implements Serializable
 
     ACCOUNT_SETTINGS(AccountSettingsFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
+    REQUEST_SUPPLIES_WEB_VIEW(RequestSuppliesWebViewFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
 
     REFER_A_FRIEND(ReferAFriendFragment.class),

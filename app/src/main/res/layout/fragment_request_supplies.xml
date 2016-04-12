@@ -1,111 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:orientation="vertical"
     >
 
-    <LinearLayout
-        android:id="@+id/request_supplies_layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/default_padding"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         >
 
-        <TextView
-            style="@style/TextView.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/supply_kit_includes"
-            android:textColor="@color/subtitle_grey"
-            />
-
         <LinearLayout
-            android:id="@+id/requested_supplies_list"
+            android:id="@+id/request_supplies_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/row_margin"
             android:orientation="vertical"
+            android:padding="@dimen/default_padding"
             >
 
+            <TextView
+                style="@style/CircularBold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:gravity="center"
+                android:text="@string/handy_boxed_store"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_text_size"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin"
+                android:lineSpacingExtra="@dimen/lineSpacing"
+                android:text="@string/supplies_instruction1"
+                android:textSize="@dimen/default_text_size"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin"
+                android:lineSpacingExtra="@dimen/lineSpacing"
+                android:text="@string/supplies_instruction2"
+                android:textSize="@dimen/default_text_size"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                >
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:layout_weight="1"
+                    >
+
+                    <ImageView
+                        android:id="@+id/supplies_image_l1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/vacuum"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_vacuum"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_l1"
+                        android:layout_centerInParent="true"
+                        android:text="@string/vacuum"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <ImageView
+                        android:id="@+id/supplies_image_l2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_l1"
+                        android:layout_marginTop="56dp"
+                        android:contentDescription="@string/cloths_paper_towels"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_cloth"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_l2"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:text="@string/cloths_paper_towels"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <ImageView
+                        android:id="@+id/supplies_image_l3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_l2"
+                        android:layout_marginTop="56dp"
+                        android:contentDescription="@string/gloves"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_gloves"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_l3"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:text="@string/gloves"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <ImageView
+                        android:id="@+id/supplies_image_l4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_l3"
+                        android:layout_marginTop="56dp"
+                        android:contentDescription="@string/leave_behinds"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_card"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_l4"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:text="@string/leave_behinds"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:layout_weight="1"
+                    >
+
+                    <ImageView
+                        android:id="@+id/supplies_image_r1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/mop"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_swiffer"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_r1"
+                        android:layout_centerInParent="true"
+                        android:text="@string/mop"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <ImageView
+                        android:id="@+id/supplies_image_r2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_r1"
+                        android:layout_marginTop="56dp"
+                        android:contentDescription="@string/duster"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_duster"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_r2"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:text="@string/duster"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <ImageView
+                        android:id="@+id/supplies_image_r3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_r2"
+                        android:layout_marginTop="56dp"
+                        android:contentDescription="@string/cleaning_solutions"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_bottles"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_r3"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:text="@string/cleaning_solutions"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <ImageView
+                        android:id="@+id/supplies_image_r4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_r3"
+                        android:layout_marginTop="56dp"
+                        android:contentDescription="@string/apron"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_apron"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/supplies_image_r4"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:text="@string/apron"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/supply_kit_contents_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/handy_bg"
-            android:orientation="vertical"
-            />
-
-        <TextView
-            style="@style/TextView.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin_x2"
-            android:text="@string/shipping_address"
-            android:textColor="@color/subtitle_grey"
-            />
-
-        <TextView
-            android:id="@+id/shipping_address_line_1_content_text"
-            style="@style/TextView.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/row_margin"
-            android:textColor="@color/dark_grey"
-            tools:text="shipping address line 1"
-            />
-
-        <TextView
-            android:id="@+id/shipping_address_line_2_content_text"
-            style="@style/TextView.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_grey"
-            tools:text="shipping address line 2"
-            />
-
-        <!-- Hiding for now; will show for phase 2 -->
-        <TextView
-            android:id="@+id/update_shipping_address"
-            style="@style/TextView.ActionText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/row_margin"
-            android:text="@string/update"
-            android:visibility="gone"
-            />
-
-        <TextView
-            style="@style/TextView.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin_x2"
-            android:text="@string/withholding_amount"
-            android:textColor="@color/subtitle_grey"
-            />
-
-        <TextView
-            android:id="@+id/request_supplies_withholding_amount"
-            style="@style/TextView.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/row_margin"
-            android:textColor="@color/dark_grey"
-            />
-
-        <Button
-            android:id="@+id/request_supplies_button"
-            style="@style/Button.Green.Round"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/default_margin_x2"
-            android:text="@string/complete_purchase"
-            />
-
-    </LinearLayout>
-
-</ScrollView>
+    <TextView
+        android:id="@+id/request_supplies_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_button_height"
+        android:background="@color/requested_green"
+        android:drawableEnd="@drawable/ic_external_link"
+        android:drawableRight="@drawable/ic_external_link"
+        android:gravity="center"
+        android:paddingEnd="@dimen/default_padding_large"
+        android:paddingRight="@dimen/default_padding_large"
+        android:text="@string/shop_on_boxed"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
+        />
+</LinearLayout>
