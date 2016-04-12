@@ -338,6 +338,7 @@
     <string name="customer_request">Customer Request</string>
     <string name="job_number_formatted">Job # %1$s</string>
     <string name="recurrence">Recurrence</string>
+    <string name="completed_job">Completed Job</string>
 
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>
