@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
@@ -114,10 +113,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
-        final Bundle args = new Bundle();
-        args.putSerializable(BundleKeys.PROVIDER_PROFILE, mProviderProfile);
         mBus.post(new NavigationEvent.NavigateToTab(
-                MainViewTab.REQUEST_SUPPLIES, args, TransitionStyle.NATIVE_TO_NATIVE, true));
+                MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
 
