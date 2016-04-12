@@ -190,6 +190,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         if (!event.isAutoCheckIn)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
+                    mBooking, getLocationData())));
+
             mPrefsManager.setBookingInstructions(mBooking.getId(), null);
 
             //return to schedule page
@@ -205,6 +208,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         if (!event.isAuto)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
+                    mBooking, getLocationData())));
+            
             handleNotifyCheckOutError(event);
         }
     }
@@ -274,7 +280,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
         bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
     }
 

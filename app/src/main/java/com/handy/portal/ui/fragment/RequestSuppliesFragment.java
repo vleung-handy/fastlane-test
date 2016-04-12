@@ -4,16 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.manager.ConfigManager;
 
-import javax.inject.Inject;
-
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 

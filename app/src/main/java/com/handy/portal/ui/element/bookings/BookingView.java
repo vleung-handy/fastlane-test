@@ -430,7 +430,7 @@ public class BookingView extends InjectedBusView
                     public void onClick(final View v)
                     {
                         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWay(
+                        mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(
                                 mBooking, getLocationData())));
                         mBus.post(new HandyEvent.RequestNotifyJobOnMyWay(
                                 mBooking.getId(), getLocationData()));
@@ -450,7 +450,7 @@ public class BookingView extends InjectedBusView
                     public void onClick(final View v)
                     {
                         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckIn(
+                        mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
                                 mBooking, getLocationData())));
                         mBus.post(new HandyEvent.RequestNotifyJobCheckIn(
                                 mBooking.getId(), getLocationData()));

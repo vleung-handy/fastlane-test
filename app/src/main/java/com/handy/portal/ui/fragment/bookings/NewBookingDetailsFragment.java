@@ -32,6 +32,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
+import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
@@ -229,6 +230,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     public void onReceiveNotifyJobOnMyWaySuccess(final HandyEvent.ReceiveNotifyJobOnMyWaySuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySuccess(
+                mBooking, getLocationData())));
 
         //refresh the page with the new booking
         mBooking = event.booking;
@@ -239,6 +242,9 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     public void onReceiveNotifyJobOnMyWayError(final HandyEvent.ReceiveNotifyJobOnMyWayError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayError(
+                mBooking, getLocationData())));
+
         handleNotifyOnMyWayError(event);
     }
 
@@ -248,6 +254,8 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         if (!event.isAuto)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSuccess(
+                    mBooking, getLocationData())));
 
             //refresh the page with the new booking
             mBooking = event.booking;
@@ -261,6 +269,9 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         if (!event.isAuto)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInError(
+                    mBooking, getLocationData())));
+
             handleNotifyCheckInError(event);
         }
     }
