@@ -50,6 +50,9 @@
     <color name="list_divider">#E2E2E2</color>
     <color name="payments_batch_list_entry_subtitle">#999999</color>
 
+    <!-- Payment Job Details -->
+    <color name="job_status_layout_background">#F4FAEC</color>
+
     <!--List colors-->
     <color name="section_header_text_color">#999999</color>
 

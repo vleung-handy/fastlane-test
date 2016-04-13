@@ -449,6 +449,12 @@
     <string name="see_job_details">see job details</string>
     <string name="continue_to_check_out">Continue to check out </string>
 
+    <!-- Payment Job Details -->
+    <string name="transaction_summary">Transaction Summary</string>
+    <string name="net_earnings">Net earnings</string>
+    <string name="questions_about_your_payments">Questions about your payments?</string>
+    <string name="get_help">Get Help</string>
+
     <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
 
