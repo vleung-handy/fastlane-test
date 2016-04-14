@@ -50,7 +50,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import retrofit.mime.TypedInput;
+import okhttp3.RequestBody;
 
 public class DataManager
 {
@@ -248,7 +248,7 @@ public class DataManager
         mService.getHelpPayments(new HelpNodeResponseHandyRetroFitCallback(cb));
     }
 
-    public void createHelpCase(TypedInput body, final Callback<Void> cb)
+    public void createHelpCase(RequestBody body, final Callback<Void> cb)
     {
         mService.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
     }

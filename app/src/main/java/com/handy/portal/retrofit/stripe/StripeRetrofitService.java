@@ -4,9 +4,9 @@ import com.handy.portal.retrofit.HandyRetrofitCallback;
 
 import java.util.Map;
 
-import retrofit.http.FieldMap;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.POST;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.POST;
 
 public interface StripeRetrofitService
 {

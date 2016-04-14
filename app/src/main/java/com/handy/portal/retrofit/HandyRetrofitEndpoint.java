@@ -9,9 +9,7 @@ import java.util.Properties;
 
 import javax.inject.Inject;
 
-import retrofit.Endpoint;
-
-public class HandyRetrofitEndpoint implements Endpoint
+public class HandyRetrofitEndpoint implements BaseEndpoint
 {
     private static final String PROD_IDENTIFIER = "p";
 
@@ -26,13 +24,11 @@ public class HandyRetrofitEndpoint implements Endpoint
         baseUrl = config.getProperty(UrlName.BASE_URL);
     }
 
-    @Override
     public String getUrl()
     {
         return apiEndpoint;
     }
 
-    @Override
     public String getName()
     {
         return PROD_IDENTIFIER;

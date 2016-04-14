@@ -106,9 +106,9 @@ import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.OnboardingFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
+import java.io.IOException;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -117,13 +117,14 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module(injects = {
         BookingDetailsFragment.class,
@@ -247,61 +248,67 @@ public final class ApplicationModule
                                                    final PrefsManager prefsManager,
                                                    final Bus bus)
     {
-
-        final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
-
         final String username = configs.getProperty("api_username");
         final String password = configs.getProperty("api_password");
 
-        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor()
+        final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
+                .readTimeout(60, TimeUnit.SECONDS).addInterceptor(new Interceptor()
                 {
                     final String auth = "Basic " + Base64.encodeToString((username + ":" + password)
                             .getBytes(), Base64.NO_WRAP);
 
                     @Override
-                    public void intercept(RequestFacade request)
+                    public okhttp3.Response intercept(final Chain chain) throws IOException
                     {
+                        okhttp3.Request request = chain.request();
+                        HttpUrl url = request.url().newBuilder()
+                                .addQueryParameter("client", "android")
+                                .addQueryParameter("app_version", BuildConfig.VERSION_NAME)
+                                .addQueryParameter("device_id", getDeviceId())
+                                .addQueryParameter("device_model", BaseApplication.getDeviceModel())
+                                .addQueryParameter("os_version", Build.VERSION.RELEASE)
+                                .addQueryParameter("device_carrier", getDeviceCarrier())
+                                .addQueryParameter("timezone", TimeZone.getDefault().getID())
+                                .build();
+
+                        Request.Builder headerBuilder = request.newBuilder();
                         String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
                         if (authToken != null)
                         {
-                            request.addHeader("X-Auth-Token", authToken);
+                            headerBuilder.addHeader("X-Auth-Token", authToken);
                         }
 
-                        request.addHeader("Authorization", auth);
-                        request.addHeader("Accept", "application/json");
-                        request.addQueryParam("client", "android");
-                        request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
-                        request.addQueryParam("device_id", getDeviceId());
-                        request.addQueryParam("device_model", BaseApplication.getDeviceModel());
-                        request.addQueryParam("os_version", Build.VERSION.RELEASE);
-                        request.addQueryParam("device_carrier", getDeviceCarrier());
-                        request.addQueryParam("timezone", TimeZone.getDefault().getID());
-                    }
-                }).setErrorHandler(new ErrorHandler()
-                {
-                    @Override
-                    public Throwable handleError(final RetrofitError cause)
-                    {
-                        Response response = cause.getResponse();
-                        if (response != null && response.getStatus() == 401)
+                        headerBuilder.addHeader("Authorization", auth);
+                        headerBuilder.addHeader("Accept", "application/json");
+
+                        Response response = chain.proceed(headerBuilder.url(url).build());
+
+                        if (response != null && response.code() == 401)
                         {
                             bus.post(new HandyEvent.LogOutProvider());
                         }
 
-                        return cause;
+                        return response;
                     }
-                }).setConverter(new GsonConverter(new GsonBuilder()
-                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                        .create())).setClient(new OkClient(okHttpClient)).build();
+                });
 
         if (buildConfigWrapper.isDebug())
         {
-            restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            okHttpClientBuilder.addInterceptor(interceptor);
         }
 
-        return restAdapter.create(HandyRetrofitService.class);
+        OkHttpClient okHttpClient = okHttpClientBuilder.build();
+
+        final Retrofit retrofit = new Retrofit.Builder().baseUrl(endpoint.getUrl())
+                .client(okHttpClient).addConverterFactory(
+                        GsonConverterFactory.create(new GsonBuilder()
+                                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                                .create())).build();
+
+        return retrofit.create(HandyRetrofitService.class);
     }
 
     //stripe
@@ -316,16 +323,11 @@ public final class ApplicationModule
     @Singleton
     final StripeRetrofitService provideStripeService(final StripeRetrofitEndpoint endpoint) //TODO: clean up
     {
-        final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
-
-        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor()
-                {
-                    @Override
-                    public void intercept(RequestFacade request) { }
-                }).setClient(new OkClient(okHttpClient)).build();
-        return restAdapter.create(StripeRetrofitService.class);
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(60, TimeUnit.SECONDS).build();
+        final Retrofit retrofit = new Retrofit.Builder().baseUrl(endpoint.getUrl())
+                .client(okHttpClient).build();
+        return retrofit.create(StripeRetrofitService.class);
     }
 
     @Provides

@@ -33,9 +33,9 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 
- /*
- TODO this manager needs refactoring
-  */
+/*
+TODO this manager needs refactoring
+ */
 public class VersionManager
 {
     //TODO: parameterize these strings
@@ -132,7 +132,7 @@ public class VersionManager
                                     so simply caching the entire response object instead of just the download url
                                      */
                                     mUpdateDetails = updateDetails;
-                                    if(mUpdateDetails.isUpdateBlocking())
+                                    if (mUpdateDetails.isUpdateBlocking())
                                     {
                                         //blocking update
                                         bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
@@ -142,7 +142,7 @@ public class VersionManager
                                         //non-blocking update
                                         long currentTimeMs = System.currentTimeMillis();
                                         long hideNonBlockingUpdateDurationMs = mUpdateDetails.getHideNonBlockingUpdateDurationMins() * DateUtils.MINUTE_IN_MILLIS;
-                                        if(currentTimeMs - lastNonblockingUpdateShownTimeMs > hideNonBlockingUpdateDurationMs)
+                                        if (currentTimeMs - lastNonblockingUpdateShownTimeMs > hideNonBlockingUpdateDurationMs)
                                         //only show the non-blocking update if the given time interval has passed
                                         {
                                             bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
@@ -180,7 +180,7 @@ public class VersionManager
      */
     public void downloadApk()
     {
-        if(mUpdateDetails == null)
+        if (mUpdateDetails == null)
         {
             Crashlytics.logException(new Exception("Tried to download apk when update details is null"));
             return;
@@ -288,9 +288,10 @@ public class VersionManager
     /**
      * This was previously:
      * public String getDownloadUrl()
-     *
+     * <p/>
      * TODO don't like this, but simply replacing it with the UpdateDetails model for now
      * not going to refactor right now because update flow is delicate and no time to test extensively
+     *
      * @return
      */
     public UpdateDetails getUpdateDetails()

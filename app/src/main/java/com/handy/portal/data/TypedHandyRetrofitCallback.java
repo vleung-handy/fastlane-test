@@ -333,6 +333,7 @@ class NotificationMessagesHandyRetroFitCallback extends TypedHandyRetrofitCallba
     }
 }
 
+
 class NotificationUnreadCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>>
 {
     NotificationUnreadCountHandyRetroFitCallback(DataManager.Callback callback)
@@ -367,6 +368,7 @@ class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<Pro
         super(callback);
     }
 }
+
 
 class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationScheduleStrategies>
 {

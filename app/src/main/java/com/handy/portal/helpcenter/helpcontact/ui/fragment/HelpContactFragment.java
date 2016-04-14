@@ -25,14 +25,15 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.mime.TypedByteArray;
-import retrofit.mime.TypedInput;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okio.BufferedSink;
 
 public final class HelpContactFragment extends ActionBarFragment
 {
@@ -70,7 +71,7 @@ public final class HelpContactFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.contact_us, true);
-        if(!MainActivityFragment.clearingBackStack)
+        if (!MainActivityFragment.clearingBackStack)
         {
             bus.post(new HandyEvent.RequestProviderInfo());
         }
@@ -162,19 +163,26 @@ public final class HelpContactFragment extends ActionBarFragment
         try
         {
             salesforceWrapper.put(SALESFORCE_DATA_WRAPPER_KEY, new JSONObject(contactFormInfo));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Crashlytics.logException(e);
         }
 
-        TypedInput body;
-        try
+        RequestBody body = new RequestBody()
         {
-            body = new TypedByteArray("application/json", salesforceWrapper.toString().getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e)
-        {
-            body = null;
-        }
+            @Override
+            public MediaType contentType()
+            {
+                return MediaType.parse("application/json; charset=utf-8");
+            }
+
+            @Override
+            public void writeTo(final BufferedSink sink) throws IOException
+            {
+
+            }
+        };
 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
 
@@ -191,7 +199,7 @@ public final class HelpContactFragment extends ActionBarFragment
         HashMap<String, String> params = new HashMap<>();
         for (HelpNode childNode : node.getChildren())
         {
-            if(childNode == null || childNode.getType() == null)
+            if (childNode == null || childNode.getType() == null)
             {
                 continue;
             }

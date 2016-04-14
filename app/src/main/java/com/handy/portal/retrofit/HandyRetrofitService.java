@@ -4,23 +4,25 @@ import com.google.gson.JsonObject;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ProviderSettings;
+import com.handy.portal.updater.model.UpdateDetails;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FieldMap;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Part;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.mime.TypedInput;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface HandyRetrofitService
 {
@@ -43,9 +45,9 @@ public interface HandyRetrofitService
             HandyRetrofitCallback cb);
 
     @GET("/check_for_update")
-    void checkUpdates(@Query("app_flavor") String appFlavor,
-                      @Query("version_code") int versionCode,
-                      HandyRetrofitCallback cb);
+    Call<UpdateDetails> checkUpdates(@Query("app_flavor") String appFlavor,
+                                     @Query("version_code") int versionCode,
+                                     HandyRetrofitCallback cb);
 
     @GET("/check_all_pending_terms")
     void checkAllPendingTerms(HandyRetrofitCallback cb);
@@ -218,7 +220,7 @@ public interface HandyRetrofitService
     void getHelpPayments(HandyRetrofitCallback cb);
 
     @POST(SELF_SERVICE_PATH + "create_case")
-    void createHelpCase(@Body TypedInput body, HandyRetrofitCallback cb);
+    void createHelpCase(@Body RequestBody body, HandyRetrofitCallback cb);
     //********End Help Center********
 
     //Configuration wrapper, eventually replacing direct config params access

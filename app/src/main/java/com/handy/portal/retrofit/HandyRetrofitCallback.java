@@ -1,6 +1,5 @@
 package com.handy.portal.retrofit;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.DataManager.DataManagerError;
@@ -12,10 +11,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import okhttp3.MediaType;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 
-public abstract class HandyRetrofitCallback implements retrofit.Callback<Response>
+
+public abstract class HandyRetrofitCallback implements Callback<Response>
 {
     protected final DataManager.Callback callback;
 
@@ -27,17 +30,67 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
     public abstract void success(JSONObject response);
 
     @Override
-    public final void success(final Response response, final Response raw)
+    public void onResponse(final Call<Response> call, final retrofit2.Response<Response> response)
     {
-        final StringBuilder resp;
+        // Error handling first
+        if (response != null && !response.isSuccessful() && response.errorBody() != null)
+        {
+            ResponseBody errorResponseBody = response.errorBody();
 
+//            Crashlytics.logException(new HandyRetrofitCallbackError(callback, errorResponseBody));//only log if not network error
+
+            final DataManagerError err;
+            int resp = response.code();
+
+            if (resp >= 400 && resp <= 500)
+            {
+                if (response.errorBody().contentType().equals(MediaType.parse("application/json; charset=utf-8")))
+                {
+//                    Converter<RestError> converter =
+//                            (Converter<RestError>) GsonConverterFactory.create()
+//                                    .responseBodyConverter(RestError.class, RestError.class.getAnnotations(), null);
+//                    RestError error = converter.convert(errorResponseBody);
+//
+//                    RestError restError = (RestError) error(RestError.class);
+//                    String[] messages;
+//                    if (restError != null)
+//                    {
+//                        if (restError.message != null)
+//                        {
+//                            err = new DataManagerError(DataManagerError.Type.CLIENT, restError.message);
+//                        }
+//                        else if ((messages = restError.messages) != null && messages.length > 0)
+//                        {
+//                            err = new DataManagerError(DataManagerError.Type.CLIENT, messages[0]);
+//                        }
+//                        err.setInvalidInputs(restError.invalidInputs);
+//                    }
+                }
+            }
+            else if (resp > 500 && resp < 600)
+            {
+                err = new DataManagerError(DataManagerError.Type.SERVER);
+            }
+            else
+            {
+                err = new DataManagerError(DataManagerError.Type.OTHER);
+            }
+
+//            callback.onError(err);
+            return;
+        }
+
+        // Success
+        final StringBuilder resp;
         JSONArray objArray = new JSONArray();
         JSONObject obj = new JSONObject();
         Boolean responseIsJSONArray = false;
+
         try
         {
             final BufferedReader br
-                    = new BufferedReader(new InputStreamReader(raw.getBody().in()));
+                    = new BufferedReader(
+                    new InputStreamReader(response.body().body().byteStream()));
 
             String line;
             resp = new StringBuilder();
@@ -119,54 +172,12 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
     }
 
     @Override
-    public final void failure(final RetrofitError error)
+    public void onFailure(final Call<Response> call, final Throwable t)
     {
-        if (callback != null && error != null)
+        // Network Error
+        if (callback != null)
         {
-            DataManagerError err = new DataManagerError(DataManagerError.Type.CLIENT);
-            if (error.isNetworkError())
-            {
-                err = new DataManagerError(DataManagerError.Type.NETWORK);
-            }
-            else
-            {
-                Crashlytics.logException(new HandyRetrofitCallbackError(callback, error));//only log if not network error
-                int resp = 0;
-                if (error.getResponse() != null)
-                {
-                    resp = error.getResponse().getStatus();
-                }
-
-                if (resp >= 400 && resp <= 500)
-                {
-                    if (error.getResponse().getBody().mimeType().contains("json"))
-                    {
-                        RestError restError = (RestError) error.getBodyAs(RestError.class);
-                        String[] messages;
-                        if (restError != null)
-                        {
-                            if (restError.message != null)
-                            {
-                                err = new DataManagerError(DataManagerError.Type.CLIENT, restError.message);
-                            }
-                            else if ((messages = restError.messages) != null && messages.length > 0)
-                            {
-                                err = new DataManagerError(DataManagerError.Type.CLIENT, messages[0]);
-                            }
-                            err.setInvalidInputs(restError.invalidInputs);
-                        }
-                    }
-                }
-                else if (resp > 500 && resp < 600)
-                {
-                    err = new DataManagerError(DataManagerError.Type.SERVER);
-                }
-                else
-                {
-                    err = new DataManagerError(DataManagerError.Type.OTHER);
-                }
-            }
-            callback.onError(err);
+            callback.onError(new DataManagerError(DataManagerError.Type.NETWORK));
         }
     }
 

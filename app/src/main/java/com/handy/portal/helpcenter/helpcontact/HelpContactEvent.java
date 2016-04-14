@@ -4,7 +4,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.mixpanel.annotation.Track;
 
-import retrofit.mime.TypedInput;
+import okhttp3.RequestBody;
 
 public abstract class HelpContactEvent extends HandyEvent
 {
@@ -12,9 +12,9 @@ public abstract class HelpContactEvent extends HandyEvent
     @Track("pro help contact form submitted")
     public static class RequestNotifyHelpContact extends HandyEvent
     {
-        public TypedInput body;
+        public RequestBody body;
 
-        public RequestNotifyHelpContact(TypedInput body)
+        public RequestNotifyHelpContact(RequestBody body)
         {
             this.body = body;
         }

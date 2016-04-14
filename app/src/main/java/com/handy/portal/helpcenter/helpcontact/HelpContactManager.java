@@ -6,7 +6,7 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-import retrofit.mime.TypedInput;
+import okhttp3.RequestBody;
 
 public class HelpContactManager
 {
@@ -24,7 +24,7 @@ public class HelpContactManager
     @Subscribe
     public void onRequestNotifyHelpContact(HelpContactEvent.RequestNotifyHelpContact event)
     {
-        TypedInput body = event.body;
+        RequestBody body = event.body;
 
         dataManager.createHelpCase(body, new DataManager.Callback<Void>()
         {
