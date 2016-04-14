@@ -331,7 +331,7 @@
     <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
     <string name="tap_preferences_before_checkout">Tap completed tasks before checking out.</string>
     <string name="payment">Payment</string>
-    <string name="get_directions">get directions</string>
+    <string name="get_directions">Get directions</string>
     <string name="house_details">House Details</string>
     <string name="paid_extras">Paid Extras</string>
     <string name="entry_information">Entry Information</string>

@@ -43,7 +43,7 @@
                 <FrameLayout
                     android:id="@+id/booking_map_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/check_in_booking_details_map_height"
+                    android:layout_height="@dimen/on_my_way_booking_details_map_height"
                     />
 
                 <RelativeLayout
@@ -74,8 +74,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/customer_call"
-                        android:visibility="gone"
-                        tools:visibility="visible"
+                        tools:alpha="0.5"
                         />
 
                     <ImageView
@@ -88,8 +87,7 @@
                         android:layout_toLeftOf="@id/booking_call_customer_view"
                         android:layout_toStartOf="@id/booking_call_customer_view"
                         android:src="@drawable/customer_message"
-                        android:visibility="gone"
-                        tools:visibility="visible"
+                        tools:alpha="0.5"
                         />
                 </RelativeLayout>
 
@@ -127,6 +125,8 @@
                             android:id="@+id/booking_address_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/row_margin"
+                            android:lineSpacingMultiplier="1.2"
                             android:textColor="@color/black"
                             android:textSize="@dimen/default_text_size"
                             tools:text="123 Perry Lane, Apt 4A\nBrooklyn, NY 11231"
@@ -371,6 +371,34 @@
                     android:layout_marginRight="@dimen/default_margin"
                     android:layout_marginStart="@dimen/default_margin"
                     />
+
+                <LinearLayout
+                    android:id="@+id/booking_proxy_location_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    >
+
+                    <com.handy.portal.ui.element.bookings.ProxyLocationView
+                        android:id="@+id/booking_details_location_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/extra_margin_medium"
+                        />
+
+                    <include
+                        layout="@layout/divider_dashboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/divider_height"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:layout_marginRight="@dimen/default_margin"
+                        android:layout_marginStart="@dimen/default_margin"
+                        />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/booking_job_number_text"
