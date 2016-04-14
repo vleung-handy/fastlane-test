@@ -7,6 +7,8 @@
         <item name="colorControlActivated">@color/handy_blue</item>
     </style>
 
+    <style name="AppTheme.Translucent"/>
+
     <style name="AppTheme.AppBarOverlay"
            parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="actionOverflowButtonStyle">@style/ToolbarOverFlowIcon</item>

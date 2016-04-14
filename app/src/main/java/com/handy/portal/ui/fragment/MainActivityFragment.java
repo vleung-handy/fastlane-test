@@ -38,6 +38,7 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
+import com.handy.portal.ui.activity.OnboardActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.layout.TabbedLayout;
 import com.handy.portal.ui.widget.TabButton;
@@ -169,6 +170,9 @@ public class MainActivityFragment extends InjectedFragment
     {
         //If the config response came back for the first time may need to navigate away
         //Normally the fragment would take care of itself, but this would launch the fragment if needed
+
+//        TODO: JIA: remove this hard coding = true stuff
+        mFirstTimeConfigReturned = true;
         if (mFirstTimeConfigReturned)
         {
             mFirstTimeConfigReturned = false;
@@ -190,8 +194,7 @@ public class MainActivityFragment extends InjectedFragment
                 configManager.getConfigurationResponse().shouldShowOnboarding()
                 )
         {
-            //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
-            switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
+            startActivity(new Intent(getContext(), OnboardActivity.class));
         }
     }
 

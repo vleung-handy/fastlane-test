@@ -59,8 +59,13 @@ public class OnboardingParams
         return mOnboardingBlocking;
     }
 
+    /**
+     * Shows the native onboarding process if we have to onboard, and there is no URL
+     *
+     * @return
+     */
     public boolean shouldShowOnboarding()
     {
-        return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
+        return isOnboardingEnabled() && TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
     }
 }

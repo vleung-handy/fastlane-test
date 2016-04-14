@@ -100,7 +100,9 @@ public class ConfigurationResponse
 
     public boolean shouldShowOnboarding()
     {
-        return getOnboardingParams() != null && mOnboardingParams.shouldShowOnboarding();
+        //        TODO: JIA: remove this hard coding = true stuff
+        return true;
+//        return getOnboardingParams() != null && mOnboardingParams.shouldShowOnboarding();
     }
 
     public boolean shouldUseHelpCenterWebView()
