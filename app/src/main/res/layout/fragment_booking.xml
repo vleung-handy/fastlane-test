@@ -6,6 +6,7 @@
     >
 
     <ScrollView
+        android:id="@+id/booking_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/booking_action_button"
@@ -40,8 +41,8 @@
                     tools:visibility="visible"
                     />
 
-                <FrameLayout
-                    android:id="@+id/booking_map_layout"
+                <com.handy.portal.ui.element.bookings.BookingMapView
+                    android:id="@+id/booking_map_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/on_my_way_booking_details_map_height"
                     />
