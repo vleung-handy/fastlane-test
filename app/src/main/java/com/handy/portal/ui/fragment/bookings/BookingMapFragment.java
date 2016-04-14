@@ -39,7 +39,8 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
 {
     private static final ViewGroup.LayoutParams LAYOUT_PARAMS =
             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    private static final int DEFAULT_ZOOM_LEVEL = 15;
+    private static final int ON_MY_WAY_DEFAULT_ZOOM_LEVEL = 15;
+    private static final int CHECK_IN_DEFAULT_ZOOM_LEVEL = 12;
     private static final int DEFAULT_BOUND_PADDING = 15;
     private static final float DEFAULT_RADIUS_METERS = 500f;
 
@@ -217,9 +218,14 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
     private void moveCamera(final @NonNull GoogleMap map, final CameraUpdate cameraUpdate)
     {
         map.moveCamera(cameraUpdate);
-        if (map.getCameraPosition().zoom > DEFAULT_ZOOM_LEVEL)
+        if (mBooking.getAction(Booking.Action.ACTION_CHECK_IN) != null
+                && map.getCameraPosition().zoom > CHECK_IN_DEFAULT_ZOOM_LEVEL)
         {
-            map.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_LEVEL));
+            map.moveCamera(CameraUpdateFactory.zoomTo(CHECK_IN_DEFAULT_ZOOM_LEVEL));
+        }
+        else if (map.getCameraPosition().zoom > ON_MY_WAY_DEFAULT_ZOOM_LEVEL)
+        {
+            map.moveCamera(CameraUpdateFactory.zoomTo(ON_MY_WAY_DEFAULT_ZOOM_LEVEL));
         }
     }
 

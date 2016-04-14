@@ -144,7 +144,8 @@
     <dimen name="customer_note_text_min_height">120dp</dimen>
     <dimen name="sign_helper_text_margin_top">4dp</dimen>
     <dimen name="available_booking_details_map_height">248dp</dimen>
-    <dimen name="check_in_booking_details_map_height">200dp</dimen>
+    <dimen name="on_my_way_booking_details_map_height">200dp</dimen>
+    <dimen name="check_in_booking_details_map_height">250dp</dimen>
     <dimen name="customer_action_width_height">32dp</dimen>
     <dimen name="get_directions_width_height">16dp</dimen>
     <dimen name="get_directions_margin_top">4dp</dimen>
