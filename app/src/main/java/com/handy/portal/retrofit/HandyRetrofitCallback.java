@@ -121,9 +121,9 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
     @Override
     public final void failure(final RetrofitError error)
     {
-        if (callback != null)
+        if (callback != null && error != null)
         {
-            final DataManagerError err;
+            DataManagerError err = new DataManagerError(DataManagerError.Type.CLIENT);
             if (error.isNetworkError())
             {
                 err = new DataManagerError(DataManagerError.Type.NETWORK);
@@ -132,7 +132,7 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
             {
                 Crashlytics.logException(new HandyRetrofitCallbackError(callback, error));//only log if not network error
                 int resp = 0;
-                if (error != null && error.getResponse() != null)
+                if (error.getResponse() != null)
                 {
                     resp = error.getResponse().getStatus();
                 }
@@ -143,25 +143,18 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
                     {
                         RestError restError = (RestError) error.getBodyAs(RestError.class);
                         String[] messages;
-
-                        if (restError.message != null)
+                        if (restError != null)
                         {
-                            err = new DataManagerError(DataManagerError.Type.CLIENT, restError.message);
+                            if (restError.message != null)
+                            {
+                                err = new DataManagerError(DataManagerError.Type.CLIENT, restError.message);
+                            }
+                            else if ((messages = restError.messages) != null && messages.length > 0)
+                            {
+                                err = new DataManagerError(DataManagerError.Type.CLIENT, messages[0]);
+                            }
+                            err.setInvalidInputs(restError.invalidInputs);
                         }
-                        else if ((messages = restError.messages) != null && messages.length > 0)
-                        {
-                            err = new DataManagerError(DataManagerError.Type.CLIENT, messages[0]);
-                        }
-                        else
-                        {
-                            err = new DataManagerError(DataManagerError.Type.CLIENT);
-                        }
-
-                        err.setInvalidInputs(restError.invalidInputs);
-                    }
-                    else
-                    {
-                        err = new DataManagerError(DataManagerError.Type.CLIENT);
                     }
                 }
                 else if (resp > 500 && resp < 600)

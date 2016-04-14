@@ -45,6 +45,7 @@ public abstract class LocationUtils
 
     /**
      * convenience method for checking if the device has required location permissions
+     *
      * @param context
      * @return
      */

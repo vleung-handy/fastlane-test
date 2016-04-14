@@ -264,7 +264,6 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     }
 
     /**
-     *
      * @param intentWithExtras this should already have any extras added to it if needed
      * @return the pending intent used to schedule and cancel alarms
      */

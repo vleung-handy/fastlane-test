@@ -77,7 +77,7 @@ public class DeepLinkService extends IntentService
                 String bookingId = deepLink.getQuery();
                 bundle.putString(BundleKeys.BOOKING_ID, bookingId);
                 bundle.putString(BundleKeys.BOOKING_TYPE, BookingType.BOOKING.toString());
-                NavigationEvent.NavigateToTab navigateToTab = new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, bundle);
+                NavigationEvent.NavigateToTab navigateToTab = new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, bundle, true);
                 bus.post(navigateToTab);
             }
             break;

@@ -155,7 +155,7 @@ public class PleaseUpdateFragment extends InjectedFragment
         installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
         boolean successfullyLaunchedInstallIntent = Utils.safeLaunchIntent(installIntent, getActivity());
-        if(!successfullyLaunchedInstallIntent)
+        if (!successfullyLaunchedInstallIntent)
         {
             bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Failed(getApkDownloadUrl())));
         }
@@ -254,7 +254,7 @@ public class PleaseUpdateFragment extends InjectedFragment
 
     private void showUpdateLaterButtonForUpdateDetails()
     {
-        if(mVersionManager.getUpdateDetails() == null || mVersionManager.getUpdateDetails().isUpdateBlocking())
+        if (mVersionManager.getUpdateDetails() == null || mVersionManager.getUpdateDetails().isUpdateBlocking())
         {
             mUpdateLaterButton.setVisibility(View.GONE);
         }

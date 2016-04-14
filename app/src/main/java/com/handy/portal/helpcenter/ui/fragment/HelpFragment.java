@@ -242,7 +242,7 @@ public final class HelpFragment extends ActionBarFragment
                             Bundle arguments = new Bundle();
                             arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
                             arguments.putString(BundleKeys.PATH, currentPathNodeLabels);
-                            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
+                            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
                         }
                     }
                 });
@@ -276,7 +276,7 @@ public final class HelpFragment extends ActionBarFragment
                             arguments.putString(BundleKeys.PATH, currentPathNodeLabels);
                             arguments.putParcelable(BundleKeys.HELP_NODE, childNode);
                             NavigationEvent.NavigateToTab navigateEvent =
-                                    new NavigationEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments);
+                                    new NavigationEvent.NavigateToTab(MainViewTab.HELP_CONTACT, arguments, true);
                             bus.post(navigateEvent);
                         }
                     });

@@ -77,7 +77,7 @@ public class TabNavigationManager
                 event.currentTab,
                 event.arguments,
                 event.transitionStyle,
-                event.userTriggered
+                event.addToBackStack
         );
 
         mBus.post(new NavigationEvent.SwapFragmentNavigation(swapFragmentArguments));
@@ -115,7 +115,7 @@ public class TabNavigationManager
                                                                MainViewTab currentTab,
                                                                Bundle argumentsBundle,
                                                                TransitionStyle overrideTransitionStyle,
-                                                               boolean userTriggered
+                                                               boolean addToBackStack
     )
     {
         SwapFragmentArguments swapFragmentArguments = new SwapFragmentArguments();
@@ -125,7 +125,7 @@ public class TabNavigationManager
 
         swapFragmentArguments.transitionStyle = getTransitionStyle(overrideTransitionStyle, targetTab, currentTab);
         swapFragmentArguments.argumentsBundle = getSwapFragmentArgumentsBundle(argumentsBundle, targetTab, currentTab);
-        swapFragmentArguments.addToBackStack = getAddToBackStack(userTriggered, targetTab, currentTab);
+        swapFragmentArguments.addToBackStack = addToBackStack;
 
         swapFragmentArguments.clearBackStack = !swapFragmentArguments.addToBackStack;
 
@@ -163,45 +163,5 @@ public class TabNavigationManager
 
         return inputArgumentsBundle;
     }
-
-    private boolean getAddToBackStack(boolean userTriggered, MainViewTab targetTab, MainViewTab currentTab)
-    {
-        boolean addToBackStack = false;
-
-        if (!userTriggered)
-        {
-            //TODO: Some really ugly logic about adding to the backstack, clean this up `
-            addToBackStack = targetTab == MainViewTab.COMPLEMENTARY_JOBS;
-            addToBackStack |= targetTab == MainViewTab.UPDATE_BANK_ACCOUNT;
-            addToBackStack |= targetTab == MainViewTab.UPDATE_DEBIT_CARD;
-            addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
-            addToBackStack |= targetTab == MainViewTab.JOB_DETAILS;
-            addToBackStack |= targetTab == MainViewTab.PAYMENTS_DETAIL;
-            addToBackStack |= targetTab == MainViewTab.HELP_CONTACT;
-            addToBackStack |= targetTab == MainViewTab.REQUEST_SUPPLIES;
-            addToBackStack |= targetTab == MainViewTab.NEARBY_JOBS;
-            addToBackStack |= targetTab == MainViewTab.CANCELLATION_REQUEST;
-            addToBackStack |= targetTab == MainViewTab.DASHBOARD_TIERS;
-            addToBackStack |= targetTab == MainViewTab.DASHBOARD_FEEDBACK;
-            addToBackStack |= targetTab == MainViewTab.DASHBOARD_REVIEWS;
-            addToBackStack |= targetTab == MainViewTab.DASHBOARD_VIDEO_LIBRARY;
-            addToBackStack |= currentTab == MainViewTab.JOB_DETAILS && targetTab == MainViewTab.HELP;
-            addToBackStack |= currentTab == MainViewTab.JOB_DETAILS && targetTab == MainViewTab.HELP_WEBVIEW;
-            addToBackStack |= currentTab == MainViewTab.HELP && targetTab == MainViewTab.HELP;
-            addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP;
-            addToBackStack |= currentTab == MainViewTab.PAYMENTS && targetTab == MainViewTab.HELP_WEBVIEW;
-
-            // Account Settings
-            addToBackStack |= targetTab == MainViewTab.SELECT_PAYMENT_METHOD;
-            addToBackStack |= targetTab == MainViewTab.PROFILE_UPDATE;
-            addToBackStack |= targetTab == MainViewTab.YOUTUBE_PLAYER;
-
-            // New Checkout
-            addToBackStack |= targetTab == MainViewTab.SEND_RECEIPT_CHECKOUT;
-        }
-
-        return addToBackStack;
-    }
-
 
 }

@@ -1,6 +1,8 @@
 package com.handy.portal.webview;
 
-import com.handy.portal.R;
+import android.os.Bundle;
+import android.view.View;
+
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -21,10 +23,16 @@ public class OnboardingFragment extends PortalWebViewFragment
     }
 
     @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setActionBarVisible(false);
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.onboarding_tab_title, false);
 
         //Make sure we should still be showing onboarding, and this version of it, otherwise nav away
         //Store current values of config response to compare to the next one

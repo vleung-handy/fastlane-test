@@ -1,7 +1,9 @@
 package com.handy.portal.util;
 
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.widget.TextView;
@@ -42,6 +44,12 @@ public final class DateTimeUtils
         long dateOfBookingsTime = date.getTime();
         long dateDifference = dateOfBookingsTime - currentTime;
         return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
+    }
+
+    public static boolean isTimeWithinXMillisecondsFromNow(Date date, long milliSec)
+    {
+        long timeDifference = date.getTime() - System.currentTimeMillis();
+        return timeDifference >= 0 && timeDifference <= milliSec;
     }
 
     @Nullable
@@ -229,6 +237,22 @@ public final class DateTimeUtils
             {
                 textView.setText(textView.getContext().getString(R.string.start_timer_formatted,
                         DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
+            }
+
+            @Override
+            public void onFinish() { }
+        }.start();
+    }
+
+    public static CountDownTimer setActionBarCountdownTimer(
+            final Context context, final ActionBar actionBar, long timeRemainMillis, final int stringId)
+    {
+        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
+        {
+            @Override
+            public void onTick(final long millisUntilFinished)
+            {
+                actionBar.setTitle(context.getString(stringId, DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
             }
 
             @Override

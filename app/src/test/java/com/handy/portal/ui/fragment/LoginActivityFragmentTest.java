@@ -86,18 +86,18 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void givenValidPinCode_whenLogInButtonClicked_thenRequestLogin() throws Exception
     {
-        makeLoginRequest("5353");
+        makeLoginRequest("535353");
 
         final HandyEvent.RequestLogin event = TestUtils.getFirstMatchingBusEvent(bus, HandyEvent.RequestLogin.class);
         assertNotNull(event);
         assertThat(event.phoneNumber, equalTo(VALID_PHONE_NUMBER));
-        assertThat(event.pinCode, equalTo("5353"));
+        assertThat(event.pinCode, equalTo("535353"));
     }
 
     @Test
     public void givenValidPinCode_whenLoginRequestDetailsReceived_thenGoToSplashActivity() throws Exception
     {
-        makeLoginRequest("5353");
+        makeLoginRequest("535353");
         receiveLoginRequest(true, null);
 
         Intent expectedIntent = new Intent(activity, SplashActivity.class);
@@ -116,7 +116,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void givenUnrecognizedPhoneNumber_whenPinCodeRequestDetailsReceived_thenDisplayErrorToast() throws Exception
     {
-        makePinRequest("7777777777"); // triggers stage change
+        makePinRequest("7777777777"); // triggers state change
         receivePinCodeRequest(false);
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.login_error_bad_phone)));
@@ -125,7 +125,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void givenWrongPinCode_whenLoginRequestDetailsReceived_thenDisplayErrorToast() throws Exception
     {
-        makeLoginRequest("7777");
+        makeLoginRequest("777777");
         receiveLoginRequest(false, null);
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.login_error_bad_login)));

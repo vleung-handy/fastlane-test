@@ -33,6 +33,9 @@ public class ConfigurationResponse
     @SerializedName("booking_geofencing_service_enabled")
     private boolean mBookingGeofenceServiceEnabled;
 
+    @SerializedName("boxed_supplies_enabled")
+    private boolean mBoxedSuppliesEnabled;
+
     @SerializedName("onboarding_info")
     private OnboardingParams mOnboardingParams;
 
@@ -47,6 +50,11 @@ public class ConfigurationResponse
     public boolean isBookingGeofenceServiceEnabled()
     {
         return mBookingGeofenceServiceEnabled;
+    }
+
+    public boolean isBoxedSuppliesEnabled()
+    {
+        return mBoxedSuppliesEnabled;
     }
 
     public boolean isComplementaryJobsEnabled()

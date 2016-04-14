@@ -3,16 +3,13 @@ package com.handy.portal.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
@@ -21,11 +18,10 @@ import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
-import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -41,21 +37,15 @@ public class AccountSettingsFragment extends ActionBarFragment
     Bus mBus;
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    ConfigManager mConfigManager;
 
     @Bind(R.id.provider_name_text)
     TextView mProviderNameText;
     @Bind(R.id.verification_status_text)
     TextView mVerificationStatusText;
-
     @Bind(R.id.order_resupply_layout)
     ViewGroup mOrderResupplyLayout;
-    @Bind(R.id.order_resupply_text)
-    TextView mOrderResupplyText;
-    @Bind(R.id.order_resupply_helper_text)
-    TextView mOrderResupplyHelperText;
-    @Bind(R.id.payment_tier_chevron)
-    ImageView mPaymentTierChevron;
-
     @Bind(R.id.account_settings_layout)
     ViewGroup mAccountSettingsLayout;
     @Bind(R.id.fetch_error_view)
@@ -100,13 +90,13 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void switchToProfile()
     {
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.edit_payment_option)
     public void switchToPayments()
     {
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.order_resupply_layout)
@@ -114,10 +104,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
-        final Bundle args = new Bundle();
-        args.putSerializable(BundleKeys.PROVIDER_PROFILE, mProviderProfile);
         mBus.post(new NavigationEvent.NavigateToTab(
-                MainViewTab.REQUEST_SUPPLIES, args, TransitionStyle.NATIVE_TO_NATIVE));
+                MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
 
@@ -200,46 +188,15 @@ public class AccountSettingsFragment extends ActionBarFragment
         {
             requestProviderProfile();
         }
-        else
-        {
-            final ResupplyInfo resupplyInfo = mProviderProfile.getResupplyInfo();
-            if (resupplyInfo != null && resupplyInfo.providerCanRequestSupplies())
-            {
-                if (!resupplyInfo.providerCanRequestSuppliesNow())
-                {
-                    disableResupplyOptionWithHelperText(resupplyInfo.getHelperText());
-                }
-            }
-            else
-            {
-                disableResupplyOption();
-            }
-        }
+
+        if (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().isBoxedSuppliesEnabled())
+        { mOrderResupplyLayout.setVisibility(View.VISIBLE); }
     }
 
     private void requestProviderProfile()
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mBus.post(new ProfileEvent.RequestProviderProfile());
-    }
-
-    private void disableResupplyOption()
-    {
-        mOrderResupplyLayout.setVisibility(View.GONE);
-    }
-
-    private void disableResupplyOptionWithHelperText(String resupplyHelperText)
-    {
-        mOrderResupplyLayout.setClickable(false);
-        mPaymentTierChevron.setVisibility(View.GONE);
-
-        mOrderResupplyText.setTextColor(
-                ContextCompat.getColor(getContext(), R.color.subtitle_grey));
-        if (resupplyHelperText != null && !resupplyHelperText.isEmpty())
-        {
-            mOrderResupplyLayout.setLayoutParams(UIUtils.MATCH_WIDTH_WRAP_HEIGHT_PARAMS);
-            mOrderResupplyHelperText.setVisibility(View.VISIBLE);
-            mOrderResupplyHelperText.setText(resupplyHelperText);
-        }
     }
 }

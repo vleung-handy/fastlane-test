@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:alpha="0.5"
         tools:src="@drawable/ic_menu_notifications"
         />
 
@@ -45,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tab_icon"
         android:layout_centerHorizontal="true"
+        android:alpha="0.5"
         android:textColor="@color/white"
         tools:text="@string/tab_notifications"
         />

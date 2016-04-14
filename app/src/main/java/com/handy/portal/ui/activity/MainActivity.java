@@ -16,17 +16,17 @@ import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.location.scheduler.LocationScheduleService;
+import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
+import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.notification.NotificationUtils;
+import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
-import com.handy.portal.ui.fragment.dialog.LocationPermissionsBlockerDialogFragment;
-import com.handy.portal.ui.fragment.dialog.LocationSettingsBlockerDialogFragment;
-import com.handy.portal.ui.fragment.dialog.NotificationBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.util.FragmentUtils;
-import com.handy.portal.util.NotificationUtils;
 import com.handy.portal.util.SystemUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -123,7 +123,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void onPause()
     {
-        bus.post(new LogEvent.SaveLogsEvent());
         try
         {
              /*
