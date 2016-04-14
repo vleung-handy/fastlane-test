@@ -96,6 +96,10 @@ public class BookingView extends InjectedBusView
     TextView mBookingDetailsActionHelperText;
     @Bind(R.id.booking_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
+    @Bind(R.id.booking_proxy_location_layout)
+    ViewGroup mBookingProxyLocationlayout;
+    @Bind(R.id.booking_details_location_view)
+    ProxyLocationView mProxyLocationView;
     @Bind(R.id.booking_job_number_text)
     TextView mJobNumberText;
     @Bind(R.id.booking_action_button)
@@ -149,6 +153,11 @@ public class BookingView extends InjectedBusView
         if (!fromPaymentsTab)
         { initMapLayout(); }
 
+        mCallCustomerView.setEnabled(false);
+        mCallCustomerView.setAlpha(0.5f);
+        mMessageCustomerView.setEnabled(false);
+        mMessageCustomerView.setAlpha(0.5f);
+
         // Booking actions
         List<Booking.Action> allowedActions = booking.getAllowedActions();
         for (Booking.Action action : allowedActions)
@@ -183,13 +192,23 @@ public class BookingView extends InjectedBusView
 
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
-        String formattedDate = DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
+        String formattedDate = DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
         String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
                 + getResources().getString(R.string.dash) + " "
                 + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         mJobDateText.setText(getTodayTomorrowStringByStartDate(startDate) + formattedDate);
-        mJobTimeText.setText(formattedTime.toUpperCase());
+        mJobTimeText.setText(formattedTime.toLowerCase());
+
+        if (booking.isProxy() && booking.getZipCluster() != null &&
+                ((booking.getZipCluster().getTransitDescription() != null
+                        && !booking.getZipCluster().getTransitDescription().isEmpty()) ||
+                        (booking.getZipCluster().getLocationDescription() != null
+                                && !booking.getZipCluster().getLocationDescription().isEmpty())))
+        {
+            mBookingProxyLocationlayout.setVisibility(VISIBLE);
+            mProxyLocationView.refreshDisplay(mBooking);
+        }
 
         String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
@@ -442,6 +461,14 @@ public class BookingView extends InjectedBusView
             }
             case CHECK_IN:
             {
+                if (mMapLayout.getVisibility() == VISIBLE)
+                {
+                    mMapLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            (int) getResources().getDimension(
+                                    R.dimen.check_in_booking_details_map_height)));
+                }
+
                 mActionButton.setText(R.string.check_in);
                 mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
                 mActionButton.setOnClickListener(new OnClickListener()
@@ -479,12 +506,20 @@ public class BookingView extends InjectedBusView
             }
             case CONTACT_PHONE:
             {
-                mCallCustomerView.setVisibility(VISIBLE);
+                if (action.isEnabled())
+                {
+                    mCallCustomerView.setEnabled(true);
+                    mCallCustomerView.setAlpha(1.0f);
+                }
                 break;
             }
             case CONTACT_TEXT:
             {
-                mMessageCustomerView.setVisibility(VISIBLE);
+                if (action.isEnabled())
+                {
+                    mMessageCustomerView.setEnabled(true);
+                    mMessageCustomerView.setAlpha(1.0f);
+                }
                 break;
             }
         }
