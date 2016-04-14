@@ -146,7 +146,7 @@ public class InProgressBookingView extends InjectedBusView
         }
 
         mJobStartTimeText.setText(DateTimeUtils.formatDateTo12HourClock(
-                mBooking.getCheckInSummary().getCheckInTime()));
+                mBooking.getCheckInSummary().getCheckInTime()).toLowerCase());
 
         // Booking Instructions
         List<BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();
