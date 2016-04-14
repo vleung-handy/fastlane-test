@@ -23,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.constant.BookingProgress;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
@@ -165,20 +166,24 @@ public class BookingView extends InjectedBusView
             enableActionsIfNeeded(action);
         }
 
-        if (mBooking.getUser() != null)
-        {
-            mCustomerNameText.setText(mBooking.getUser().getFullName());
-        }
-        else
+        int bookingProgress = mBooking.getBookingProgress(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        if (bookingProgress == BookingProgress.UNAVAILABLE ||
+                bookingProgress == BookingProgress.READY_FOR_CLAIM ||
+                mBooking.getUser() == null || fromPaymentsTab)
         {
             mBookingCustomerContactLayout.setVisibility(GONE);
         }
+        else
+        {
+            mCustomerNameText.setText(mBooking.getUser().getFullName());
+        }
 
-        mBookingAddressText.setText(mBooking.getLocationName());
         Address address = mBooking.getAddress();
         if (address != null)
         {
-            if (fromPaymentsTab || mBooking.isProxy())
+            if (bookingProgress == BookingProgress.UNAVAILABLE ||
+                    bookingProgress == BookingProgress.READY_FOR_CLAIM ||
+                    fromPaymentsTab || mBooking.isProxy())
             {
                 mBookingAddressText.setText(address.getShortRegion());
             }
@@ -188,6 +193,10 @@ public class BookingView extends InjectedBusView
                         address.getAddress1(), address.getCityStateZip()));
                 initGetDirections(address);
             }
+        }
+        else
+        {
+            mBookingAddressText.setText(mBooking.getLocationName());
         }
 
         Date startDate = booking.getStartDate();
