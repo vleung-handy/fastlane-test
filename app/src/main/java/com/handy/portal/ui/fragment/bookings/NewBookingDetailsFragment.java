@@ -104,7 +104,16 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         if (arguments == null) { return; }
 
         mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
-        mRequestedBookingType = Booking.BookingType.valueOf(arguments.getString(BundleKeys.BOOKING_TYPE));
+
+        // TODO: pass enum value as serializable instead of string wrapping/unwrapping
+        // http://stackoverflow.com/questions/3293020/android-how-to-put-an-enum-in-a-bundle
+
+        final String bookingType = arguments.getString(BundleKeys.BOOKING_TYPE);
+        if (bookingType != null)
+        {
+            mRequestedBookingType = Booking.BookingType.valueOf(bookingType.toUpperCase());
+        }
+
         mAssociatedBookingDate = new Date(arguments.getLong(BundleKeys.BOOKING_DATE, 0L));
         if (arguments.containsKey(BundleKeys.BOOKING_SOURCE))
         {
@@ -223,7 +232,9 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     {
         bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(event.getBooking(), mSource, mSourceExtras, 0.0f, event.error.getMessage())));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        handleBookingClaimError(event.error.getMessage(), null, null, null);
+        handleBookingClaimError(event.error.getMessage(),
+                getString(R.string.job_claim_error), getString(R.string.return_to_available_jobs),
+                event.getBooking().getStartDate());
     }
 
     @Subscribe
