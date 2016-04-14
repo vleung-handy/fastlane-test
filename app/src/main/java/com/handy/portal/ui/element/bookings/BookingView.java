@@ -183,13 +183,13 @@ public class BookingView extends InjectedBusView
 
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
-        String formattedDate = DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
+        String formattedDate = DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
         String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
                 + getResources().getString(R.string.dash) + " "
                 + DateTimeUtils.formatDateTo12HourClock(endDate);
 
         mJobDateText.setText(getTodayTomorrowStringByStartDate(startDate) + formattedDate);
-        mJobTimeText.setText(formattedTime.toUpperCase());
+        mJobTimeText.setText(formattedTime.toLowerCase());
 
         String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
