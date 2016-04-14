@@ -8,6 +8,7 @@
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_margin_medium">24dp</dimen>
     <dimen name="extra_margin_xsmall">3dp</dimen>
+    <dimen name="extra_margin_xxsmall">2dp</dimen>
     <dimen name="extra_margin">5dp</dimen>
     <dimen name="extra_margin_medium">10dp</dimen>
     <dimen name="extra_margin_large">15dp</dimen>
