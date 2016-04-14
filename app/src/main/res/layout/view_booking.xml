@@ -330,7 +330,7 @@
                         style="@style/CircularBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/recurrence"
+                        android:text="@string/frequency"
                         android:textColor="@color/black"
                         android:textSize="@dimen/default_text_size"
                         />

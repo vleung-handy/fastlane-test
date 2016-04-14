@@ -337,7 +337,7 @@
     <string name="entry_information">Entry Information</string>
     <string name="customer_request">Customer Request</string>
     <string name="job_number_formatted">Job # %1$s</string>
-    <string name="recurrence">Recurrence</string>
+    <string name="frequency">Frequency</string>
     <string name="completed_job">Completed Job</string>
 
     <!-- Booking Cancellation -->
