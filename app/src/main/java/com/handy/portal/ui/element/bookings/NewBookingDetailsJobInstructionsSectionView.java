@@ -6,7 +6,6 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -66,30 +65,16 @@ public class NewBookingDetailsJobInstructionsSectionView extends FrameLayout
 
             for (Object entry : entries)
             {
-                int textSize = (int) getResources().getDimension(R.dimen.default_text_size);
-                TextView entryView = new TextView(getContext());
-
-                LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                llp.setMargins(0, 0, 0, (int) getResources()
-                        .getDimension(R.dimen.extra_margin_xxsmall));
-                entryView.setLayoutParams(llp);
-                entryView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
-                entryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-                entryView.setLineSpacing(0, 1.2f);
-                entryView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-
                 if (entry instanceof Booking.BookingInstruction)
                 {
                     Booking.BookingInstruction instruction = (Booking.BookingInstruction) entry;
-                    entryView.setText(instruction.getDescription());
+                    setDisplay(sectionTitle, instruction.getDescription());
                 }
                 else if (entry instanceof String)
                 {
-                    entryView.setText(entry.toString());
-                }
+                    setDisplay(sectionTitle, entry.toString());
 
-                mEntriesLayout.addView(entryView);
+                }
             }
         }
     }
