@@ -57,20 +57,39 @@ public class NewBookingDetailsJobInstructionsSectionView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void setDisplay(String sectionTitle, List<Booking.BookingInstruction> entries)
+    public void setDisplay(String sectionTitle, List<?> entries)
+    {
+        if (entries != null && !entries.isEmpty())
+        {
+            mSectionTitleText.setText(sectionTitle);
+
+            for (Object entry : entries)
+            {
+                if (entry instanceof Booking.BookingInstruction)
+                {
+                    Booking.BookingInstruction instruction = (Booking.BookingInstruction) entry;
+                    setDisplay(sectionTitle, instruction.getDescription());
+                }
+                else if (entry instanceof String)
+                {
+                    setDisplay(sectionTitle, entry.toString());
+
+                }
+            }
+        }
+    }
+
+    public void setDisplay(String sectionTitle, String entry)
     {
         mSectionTitleText.setText(sectionTitle);
 
-        for (Booking.BookingInstruction entry : entries)
-        {
-            int textSize = (int) getResources().getDimension(R.dimen.default_text_size);
-            TextView entryView = new TextView(getContext());
-            entryView.setText(entry.getDescription());
-            entryView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
-            entryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-            entryView.setLineSpacing(0, 1.2f);
-            entryView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-            mEntriesLayout.addView(entryView);
-        }
+        int textSize = (int) getResources().getDimension(R.dimen.default_text_size);
+        TextView entryView = new TextView(getContext());
+        entryView.setText(entry);
+        entryView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
+        entryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        entryView.setLineSpacing(0, 1.2f);
+        entryView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+        mEntriesLayout.addView(entryView);
     }
 }

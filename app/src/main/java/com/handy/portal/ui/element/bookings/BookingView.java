@@ -23,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.constant.BookingProgress;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
@@ -49,6 +50,7 @@ import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -88,8 +90,8 @@ public class BookingView extends InjectedBusView
     TextView mJobPaymentText;
     @Bind(R.id.booking_job_payment_bonus_text)
     TextView mJobPaymentBonusText;
-    @Bind(R.id.booking_recurrence_text)
-    TextView mRecurrenceText;
+    @Bind(R.id.booking_frequency_text)
+    TextView mFrequencyTest;
     @Bind(R.id.booking_support_button)
     Button mSupportButton;
     @Bind(R.id.booking_action_helper_text)
@@ -165,20 +167,24 @@ public class BookingView extends InjectedBusView
             enableActionsIfNeeded(action);
         }
 
-        if (mBooking.getUser() != null)
-        {
-            mCustomerNameText.setText(mBooking.getUser().getFullName());
-        }
-        else
+        int bookingProgress = mBooking.getBookingProgress(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        if (bookingProgress == BookingProgress.UNAVAILABLE ||
+                bookingProgress == BookingProgress.READY_FOR_CLAIM ||
+                mBooking.getUser() == null || fromPaymentsTab)
         {
             mBookingCustomerContactLayout.setVisibility(GONE);
         }
+        else
+        {
+            mCustomerNameText.setText(mBooking.getUser().getFullName());
+        }
 
-        mBookingAddressText.setText(mBooking.getLocationName());
         Address address = mBooking.getAddress();
         if (address != null)
         {
-            if (fromPaymentsTab || mBooking.isProxy())
+            if (bookingProgress == BookingProgress.UNAVAILABLE ||
+                    bookingProgress == BookingProgress.READY_FOR_CLAIM ||
+                    fromPaymentsTab || mBooking.isProxy())
             {
                 mBookingAddressText.setText(address.getShortRegion());
             }
@@ -188,6 +194,10 @@ public class BookingView extends InjectedBusView
                         address.getAddress1(), address.getCityStateZip()));
                 initGetDirections(address);
             }
+        }
+        else
+        {
+            mBookingAddressText.setText(mBooking.getLocationName());
         }
 
         Date startDate = booking.getStartDate();
@@ -229,20 +239,75 @@ public class BookingView extends InjectedBusView
             mJobPaymentBonusText.setText(bonusText);
         }
 
-        mRecurrenceText.setText(UIUtils.getFrequencyInfo(mBooking, getContext()));
+        mFrequencyTest.setText(UIUtils.getFrequencyInfo(mBooking, getContext()));
+
+        //Show description field regardless of claim status if the booking is not for cleaning (e.g. furniture assembly)
+        boolean isHomeCleaning = mBooking.getServiceInfo().isHomeCleaning();
+        if (!isHomeCleaning && mBooking.getDescription() != null && !mBooking.getDescription().isEmpty())
+        {
+            NewBookingDetailsJobInstructionsSectionView descriptionSectionView =
+                    new NewBookingDetailsJobInstructionsSectionView(getContext());
+            descriptionSectionView.setDisplay(getContext().getString(R.string.description),
+                    mBooking.getDescription());
+
+            mInstructionsLayout.addView(descriptionSectionView);
+        }
+
+        //Special section for "Supplies" extras (UK only)
+        List<Booking.ExtraInfoWrapper> cleaningSuppliesExtrasInfo =
+                booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES);
+        if (booking.isUK() && cleaningSuppliesExtrasInfo.size() > 0)
+        {
+            List<String> entries = new ArrayList<>();
+            entries.add(getContext().getString(R.string.bring_cleaning_supplies));
+
+            NewBookingDetailsJobInstructionsSectionView suppliesSectionView =
+                    new NewBookingDetailsJobInstructionsSectionView(getContext());
+            suppliesSectionView.setDisplay(getContext().getString(R.string.supplies), entries);
+
+            mInstructionsLayout.addView(suppliesSectionView);
+        }
+
+        //Extras - excluding Supplies instructions
+        if (booking.getExtrasInfo() != null && booking.getExtrasInfo().size() > 0)
+        {
+            List<String> entries = new ArrayList<>();
+            for (int i = 0; i < booking.getExtrasInfo().size(); i++)
+            {
+                Booking.ExtraInfo extra = booking.getExtrasInfo().get(i).getExtraInfo();
+                if (!extra.getMachineName().equals(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES))
+                {
+                    entries.add(extra.getName());
+                }
+            }
+
+            if (entries.size() > 0)
+            {
+                NewBookingDetailsJobInstructionsSectionView suppliesSectionView =
+                        new NewBookingDetailsJobInstructionsSectionView(getContext());
+                suppliesSectionView.setDisplay(getContext().getString(R.string.supplies), entries);
+
+                mInstructionsLayout.addView(suppliesSectionView);
+            }
+        }
 
         // Booking Instructions
-        List<Booking.BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();
-        if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
+        if (fromPaymentsTab || !isHomeCleaning ||
+                mBooking.inferBookingStatus(getLoggedInUserId()) == Booking.BookingStatus.CLAIMED)
         {
-            for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
+            List<Booking.BookingInstructionGroup> bookingInstructionGroups =
+                    mBooking.getBookingInstructionGroups();
+            if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
             {
-                if (!Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+                for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
                 {
-                    NewBookingDetailsJobInstructionsSectionView sectionView =
-                            new NewBookingDetailsJobInstructionsSectionView(getContext());
-                    sectionView.setDisplay(group.getLabel(), group.getInstructions());
-                    mInstructionsLayout.addView(sectionView);
+                    if (!Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
+                    {
+                        NewBookingDetailsJobInstructionsSectionView sectionView =
+                                new NewBookingDetailsJobInstructionsSectionView(getContext());
+                        sectionView.setDisplay(group.getLabel(), group.getInstructions());
+                        mInstructionsLayout.addView(sectionView);
+                    }
                 }
             }
         }
@@ -256,7 +321,6 @@ public class BookingView extends InjectedBusView
         if (fromPaymentsTab)
         {
             mMapLayout.setVisibility(GONE);
-            mBookingCustomerContactLayout.setVisibility(GONE);
         }
     }
 
