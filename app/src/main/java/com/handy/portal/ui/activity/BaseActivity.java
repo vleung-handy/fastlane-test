@@ -170,7 +170,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
         if (googleApiClient != null)
         {
-            googleApiClient.connect();
+            googleApiClient.disconnect();
         }
     }
 
