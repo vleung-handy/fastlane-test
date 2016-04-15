@@ -453,7 +453,7 @@
     <string name="share">Share</string>
 
     <!-- Onboarding -->
-    <string name="onboard_congratulations">Congratulations, %1$s</string>
+    <string name="onboard_congratulations_formatted">Congratulations, %1$s</string>
     <string name="onboard_get_started">Let\'s Get Started</string>
     <string name="onboard_welcome">You have officially been accepted to the Handy Platform. We are so excited to welcome you aboard.</string>
 

@@ -17,6 +17,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+//TODO: JIA: maybe change the name of this class, per Xi's comment that this process may not be
+//called "OnBoarding"
 public class OnboardActivity extends AppCompatActivity
 {
     public static final int COLORS = 12;
@@ -85,7 +87,7 @@ public class OnboardActivity extends AppCompatActivity
     public void shootingConfetti()
     {
         int partNumPerSecond = 2;
-        int emitTime = 5000;
+        int emitTime = 1000;
         for (int i = 0; i < COLORS; i++)
         {
             new ParticleSystem(this, 5, mDrawables.get(i), 5000)
