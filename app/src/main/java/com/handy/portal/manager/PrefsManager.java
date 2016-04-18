@@ -55,6 +55,12 @@ public class PrefsManager
         mDefaultPrefs.edit().putBoolean(prefsKey, value).apply();
     }
 
+    public void clear()
+    {
+        mDefaultPrefs.edit().clear().apply();
+        mBookingInstructionsPrefs.edit().clear().apply();
+    }
+
     public void setBookingInstructions(String bookingId, String value)
     {
         mBookingInstructionsPrefs.edit().putString(bookingId, value).apply();
