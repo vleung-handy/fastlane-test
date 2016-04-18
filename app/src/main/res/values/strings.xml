@@ -187,7 +187,7 @@
     <string name="booking_details_claim_target_reached_title">Congratulations!</string>
     <string name="booking_details_claim_target_expected_pay_label">Expected pay in next %1$d days</string>
 
-    <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d withholdings</string>
+    <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d fees</string>
     <string name="payment_detail_list_group_header">%1$s (%2$d)</string>
 
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
@@ -243,9 +243,9 @@
     <string name="previous_job">Previous Job</string>
     <string name="total_payment">Total Payment</string>
     <string name="expected_payment">Expected Payment</string>
-    <string name="remaining_withholdings">Remaining Withholdings</string>
+    <string name="remaining_fees">Remaining Fees</string>
     <string name="previous_pay_weeks">PREVIOUS PAY WEEKS</string>
-    <string name="withholdings">Withholdings</string>
+    <string name="fees">Fees</string>
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments to load.</string>
@@ -346,7 +346,7 @@
     <string name="select_a_reason">Let us know why you need to cancel.</string>
     <string name="sure_to_cancel">Are you sure you need to cancel?</string>
     <string name="will_be_charged">You’ll be charged a&#160;</string>
-    <string name="withholding_fee_formatted">%1$s withholding fee.</string>
+    <string name="fee_formatted">%1$s fee.</string>
     <string name="confirm_cancellation">Confirm Cancellation</string>
 
     <!-- Special -->
@@ -356,7 +356,6 @@
     <string name="request_supplies">Request Supplies</string>
     <string name="supply_kit_includes">Supply Kit Includes</string>
     <string name="shipping_address">Shipping Address</string>
-    <string name="withholding_amount">Withholding Amount</string>
     <string name="complete_purchase">Complete Purchase</string>
     <string name="no_address_on_file">No Address On File</string>
 
@@ -377,7 +376,7 @@
     <string name="claim_n_dollar_job_formatted">Claim %1$s Job</string>
     <string name="miles_away_formatted">%1$s miles away</string>
     <string name="kilometers_away_formatted">%1$s kilometers away</string>
-    <string name="withholding_charge">Canceling this job will result in a withholding</string>
+    <string name="fee_charge">Canceling this job will result in a fee</string>
     <string name="please_confirm">Please confirm:</string>
 
     <!-- Logging out a deactivated pro -->
