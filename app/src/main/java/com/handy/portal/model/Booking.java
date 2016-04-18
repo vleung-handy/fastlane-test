@@ -664,8 +664,15 @@ public class Booking implements Comparable<Booking>, Serializable
             {
                 @SerializedName("header_text")
                 private String mHeaderText;
+                @SerializedName("sub_text")
+                private String mSubtitleText;
                 @SerializedName("policy")
                 private CancellationPolicyItem mCancellationPolicyItems[];
+
+                public String getSubtitleText()
+                {
+                    return mSubtitleText;
+                }
 
                 public String getHeaderText()
                 {

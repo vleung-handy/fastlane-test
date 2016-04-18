@@ -31,7 +31,6 @@ import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
@@ -41,10 +40,13 @@ import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.bookings.BookingMapFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -475,6 +477,42 @@ public class BookingView extends InjectedBusView
         return prepend;
     }
 
+//    private boolean showCustomWarning(final BookingActionButtonType actionType)
+//    {
+//        switch (actionType)
+//        {
+//            case CLAIM:
+//                ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
+////                confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST); //todo consider an alternate way
+//                FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, (MainActivity) getContext(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+//                return true;
+//            case REMOVE:
+//                final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
+//                final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
+//                if (keepRate != null)
+//                {
+//                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
+////                    fragment.setTargetFragment(NewBookingDetailsFragment.this, RequestCode.REMOVE_BOOKING);
+//                    FragmentUtils.safeLaunchDialogFragment(fragment, (MainActivity) getContext(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
+//                    return true;
+//                }
+//            default:
+//                return false;
+//        }
+//    }
+
+    private void claimJob()
+    {
+        ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
+//                confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST); //todo consider an alternate way
+        FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, (MainActivity) getContext(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+        //TODO test only
+//        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+//        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
+//                mBooking, mSource, mSourceExtras, 0.0f)));
+//        mBus.post(new HandyEvent.RequestClaimJob(mBooking, mSource, mSourceExtras));
+    }
+
     private void enableActionsIfNeeded(Booking.Action action)
     {
         BookingActionButtonType buttonActionType = UIUtils.getAssociatedActionType(action);
@@ -495,10 +533,7 @@ public class BookingView extends InjectedBusView
                     @Override
                     public void onClick(final View v)
                     {
-                        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
-                                mBooking, mSource, mSourceExtras, 0.0f)));
-                        mBus.post(new HandyEvent.RequestClaimJob(mBooking, mSource, mSourceExtras));
+                        claimJob();
                     }
                 });
                 break;

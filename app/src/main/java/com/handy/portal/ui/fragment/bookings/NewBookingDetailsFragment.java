@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
@@ -25,6 +26,7 @@ import com.handy.portal.constant.BookingProgress;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.RequestCode;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
@@ -45,9 +47,11 @@ import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -664,6 +668,29 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         showRemoveJobWarningDialog(removeAction.getWarningText(), removeAction);
     }
 
+    private boolean showCustomWarning(final Booking.Action bookingAction)
+    {
+        switch (bookingAction.toString())
+        {
+//            case CLAIM:
+//                ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mAssociatedBooking);
+//                confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST); //todo consider an alternate way
+//                FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+//                return true;
+            case Booking.Action.ACTION_REMOVE:
+                final Booking.Action.Extras.KeepRate keepRate = bookingAction.getKeepRate();
+                if (keepRate != null)
+                {
+                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
+                    fragment.setTargetFragment(NewBookingDetailsFragment.this, RequestCode.REMOVE_BOOKING);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
+                    return true;
+                }
+            default:
+                return false;
+        }
+    }
+
     private void showRemoveJobWarningDialog(final String warning, final Booking.Action action)
     {
 //        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
@@ -671,28 +698,34 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
 //                action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        WarningButtonsText warningButtonsText = WarningButtonsText.REMOVE_JOB;
+        boolean customWarningShown = showCustomWarning(action);
+        if(!customWarningShown)
+        {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            WarningButtonsText warningButtonsText = WarningButtonsText.REMOVE_JOB;
 
-        // set dialog message
-        alertDialogBuilder
-                .setTitle(warningButtonsText.getTitleStringId())
-                .setMessage(warning)
-                .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
+            // set dialog message
+            alertDialogBuilder
+                    .setTitle(warningButtonsText.getTitleStringId())
+                    .setMessage(warning)
+                    .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
                     {
-                        //proceed with action, we have accepted the warning
-                        bus.post(new HandyEvent.ActionWarningAccepted(BookingActionButtonType.REMOVE));
-                        requestRemoveJob();
-                    }
-                })
-                .setNegativeButton(warningButtonsText.getNegativeStringId(), null);
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            //proceed with action, we have accepted the warning
+                            bus.post(new HandyEvent.ActionWarningAccepted(BookingActionButtonType.REMOVE));
+                            requestRemoveJob();
+                        }
+                    })
+                    .setNegativeButton(warningButtonsText.getNegativeStringId(), null);
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            // show it
+            alertDialog.show();
+        }
+
+
     }
 
     private void requestBookingDetails(String bookingId, Booking.BookingType type, Date bookingDate)

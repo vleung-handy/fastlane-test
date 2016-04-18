@@ -84,9 +84,16 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     private void setTitleAndSubtitle()
     {
         Booking.Action bookingClaimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-        if(bookingClaimAction == null || bookingClaimAction.getExtras() == null) return;
-        mConfirmBookingActionTitle.setText(bookingClaimAction.getExtras().getHeaderText());
-        mConfirmBookingActionSubtitle.setText(bookingClaimAction.getExtras().getSubText());
+        if(bookingClaimAction == null
+                || bookingClaimAction.getExtras() == null
+                || bookingClaimAction.getExtras().getCancellationPolicy() == null)
+        {
+            return;
+        }
+
+        Booking.Action.Extras.CancellationPolicy cancellationPolicy = bookingClaimAction.getExtras().getCancellationPolicy();
+        mConfirmBookingActionTitle.setText(cancellationPolicy.getHeaderText());
+        mConfirmBookingActionSubtitle.setText(cancellationPolicy.getSubtitleText());
     }
 
     @OnClick(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
@@ -130,7 +137,7 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
             {
                 Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicy = cancellationPolicies[i];
                 PaymentInfo fee = cancellationPolicy.getPaymentInfo();
-                String feeAmountFormatted = CurrencyUtils.formatPriceWithCents(fee.getAmount(), fee.getCurrencySymbol());
+                String feeAmountFormatted = CurrencyUtils.formatPriceWithoutCents(fee.getAmount(), fee.getCurrencySymbol());
 
                 BookingCancellationPolicyListItemView policyListItemView =
                         new BookingCancellationPolicyListItemView(getContext())
