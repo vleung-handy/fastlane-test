@@ -46,8 +46,8 @@ public class CancellationRequestFragment extends ActionBarFragment
     TextView mDateTextView;
     @Bind(R.id.cancellation_time)
     TextView mTimeTextView;
-    @Bind(R.id.cancellation_withholding_amount)
-    TextView mWithholdingAmountTextView;
+    @Bind(R.id.cancellation_fee_amount)
+    TextView mFeeAmountTextView;
     @Bind(R.id.cancellation_reasons)
     RadioGroup mReasonsRadioGroup;
 
@@ -77,7 +77,7 @@ public class CancellationRequestFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
-                mAction.getWithholdingAmount(),
+                mAction.getFeeAmount(),
                 mAction.getWarningText()
         )));
         return view;
@@ -124,7 +124,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     selectedReason,
-                    mAction.getWithholdingAmount(),
+                    mAction.getFeeAmount(),
                     mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -141,7 +141,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     getSelectedReason(),
-                    mAction.getWithholdingAmount(),
+                    mAction.getFeeAmount(),
                     mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -165,7 +165,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                 getSelectedReason(),
-                mAction.getWithholdingAmount(),
+                mAction.getFeeAmount(),
                 mAction.getWarningText(),
                 errorMessage
         )));
@@ -186,8 +186,8 @@ public class CancellationRequestFragment extends ActionBarFragment
         String endTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(mBooking.getEndDate());
         mTimeTextView.setText(getString(R.string.time_interval_formatted, startTime, endTime));
 
-        mWithholdingAmountTextView.setText(getString(R.string.withholding_fee_formatted,
-                CurrencyUtils.formatPriceWithCents(mAction.getWithholdingAmount(),
+        mFeeAmountTextView.setText(getString(R.string.fee_formatted,
+                CurrencyUtils.formatPriceWithCents(mAction.getFeeAmount(),
                         mBooking.getPaymentToProvider().getCurrencySymbol())));
 
         for (String reason : mAction.getRemoveReasons())

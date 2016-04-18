@@ -380,7 +380,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.POPUP,
                     null,
-                    removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                    removeAction != null ? removeAction.getFeeAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -411,7 +411,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
-                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                removeAction != null ? removeAction.getFeeAmount() : 0,
                 removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
         )));
@@ -667,7 +667,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     private void showRemoveJobWarningDialog(final String warning, final Booking.Action action)
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
-                mBooking, ScheduledJobsLog.RemoveJobLog.POPUP, action.getWithholdingAmount(),
+                mBooking, ScheduledJobsLog.RemoveJobLog.POPUP, action.getFeeAmount(),
                 action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
@@ -710,7 +710,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
-                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                removeAction != null ? removeAction.getFeeAmount() : 0,
                 warning
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));

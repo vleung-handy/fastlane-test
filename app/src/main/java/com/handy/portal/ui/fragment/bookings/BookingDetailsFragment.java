@@ -733,7 +733,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                             mAssociatedBooking,
                             ScheduledJobsLog.RemoveJobLog.POPUP,
-                            action.getWithholdingAmount(),
+                            action.getFeeAmount(),
                             action.getWarningText()
                     )));
                     bus.post(new HandyEvent.ShowConfirmationRemoveJob());
@@ -761,7 +761,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 booking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
-                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                removeAction != null ? removeAction.getFeeAmount() : 0,
                 warning
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -986,7 +986,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                     mAssociatedBooking,
                     ScheduledJobsLog.RemoveJobLog.POPUP,
                     null,
-                    removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                    removeAction != null ? removeAction.getFeeAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
             //TODO: can't currently remove series using portal endpoint so only removing the single job
@@ -1019,7 +1019,7 @@ public class BookingDetailsFragment extends ActionBarFragment
                 mAssociatedBooking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
-                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                removeAction != null ? removeAction.getFeeAmount() : 0,
                 removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
         )));

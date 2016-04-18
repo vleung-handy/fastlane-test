@@ -14,7 +14,7 @@ public class ResupplyInfo implements Serializable
     @SerializedName("helper_text")
     private String helperText;
     @SerializedName("withholding_amount")
-    private String withholdingAmount;
+    private String feeAmount;
     @SerializedName("supply_list")
     private List<SupplyListItem> supplyList;
 
@@ -33,9 +33,9 @@ public class ResupplyInfo implements Serializable
         return helperText;
     }
 
-    public String getWithholdingAmount()
+    public String getFeeAmount()
     {
-        return withholdingAmount;
+        return feeAmount;
     }
 
     public List<SupplyListItem> getSupplyList()
