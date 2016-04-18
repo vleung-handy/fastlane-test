@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,14 +29,12 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
@@ -88,7 +87,6 @@ public class MainActivityFragment extends InjectedFragment
     @Bind(R.id.content_frame)
     TabbedLayout mContentFrame;
 
-    //What tab are we currently displaying
     private MainViewTab currentTab = null;
 
     //Are we currently clearing out the backstack?
@@ -289,44 +287,16 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
+    public void onSwapFragment(NavigationEvent.SwapFragmentEvent event)
     {
-        //Catch this event then throw one to have the manager do the processing
-        //We need to bother catching it here because we need to know the current tab of this fragment
-        requestProcessNavigateToTab(event.targetTab, this.currentTab, event.arguments, event.transitionStyle, event.addToBackStack);
-    }
-
-    //Ask the managers to do all the argument processing and post back a SwapFragmentNavigation event
-    private void requestProcessNavigateToTab(
-            MainViewTab targetTab, MainViewTab currentTab, Bundle arguments,
-            TransitionStyle transitionStyle, boolean addToBackStack)
-    {
-        bus.post(new NavigationEvent.RequestProcessNavigateToTab(targetTab, currentTab, arguments,
-                transitionStyle, addToBackStack));
-        bus.post(new LogEvent.AddLogEvent(
-                new BasicLog.Navigation(targetTab.name().toLowerCase())));
-    }
-
-    @Subscribe
-    public void onSwapFragmentNavigation(NavigationEvent.SwapFragmentNavigation event)
-    {
-        SwapFragmentArguments swapFragmentArguments = event.swapFragmentArguments;
-
-        //Add our fragment specific callback to update tab buttons
-        addUpdateTabCallback(swapFragmentArguments);
-        //Track in analytics
-        trackSwitchToTab(swapFragmentArguments.targetTab);
-        //Turn navigation tabs and drawer on by default, some fragments may lock these afterwards
+        addUpdateTabCallback(event.arguments);
+        trackSwitchToTab(event.targetTab);
         setTabVisibility(true);
         setDrawerActive(false);
-        //Swap the fragments
-        swapFragment(swapFragmentArguments);
-        //Update the tab button display
-        updateSelectedTabButton(swapFragmentArguments.targetTab);
-        //Clear the back pressed listeners from the old fragment(s)
+        swapFragment(event);
+        updateSelectedTabButton(event.targetTab);
         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-        //Set correct currentTab
-        currentTab = swapFragmentArguments.targetTab;
+        currentTab = event.targetTab;
     }
 
     @Subscribe
@@ -420,7 +390,10 @@ public class MainActivityFragment extends InjectedFragment
             {
                 mTabButton.toggle();
             }
-            switchToTab(mTab, true);
+            if (mTab != currentTab)
+            {
+                switchToTab(mTab, true);
+            }
         }
     }
 
@@ -447,7 +420,7 @@ public class MainActivityFragment extends InjectedFragment
             mButtonMore.toggle();
             if (mTransitionStyle != null)
             {
-                switchToTab(mTab, null, mTransitionStyle, false);
+                switchToTab(mTab, new Bundle(), mTransitionStyle, false);
             }
             else
             {
@@ -468,27 +441,27 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void switchToTab(MainViewTab tab, boolean userTriggered)
+    private void switchToTab(@NonNull MainViewTab tab, boolean userTriggered)
     {
-        switchToTab(tab, null, null, userTriggered);
+        switchToTab(tab, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
     }
 
-    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, boolean userTriggered)
+    private void switchToTab(@NonNull MainViewTab targetTab, @NonNull Bundle argumentsBundle, boolean userTriggered)
     {
-        switchToTab(targetTab, argumentsBundle, null, userTriggered);
+        switchToTab(targetTab, argumentsBundle, TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
     }
 
-    private void switchToTab(MainViewTab targetTab, Bundle argumentsBundle, TransitionStyle overrideTransitionStyle, boolean userTriggered)
+    private void switchToTab(@NonNull MainViewTab targetTab, @NonNull Bundle argumentsBundle,
+                             @NonNull TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
         //If the user navved away from a non-blocking onboarding log it
         if (currentTab == MainViewTab.ONBOARDING_WEBVIEW &&
-                targetTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                userTriggered)
+                targetTab != MainViewTab.ONBOARDING_WEBVIEW && userTriggered)
         {
             bus.post(new LogEvent.AddLogEvent(new WebOnboardingLog.Dismissed()));
         }
 
-        requestProcessNavigateToTab(targetTab, currentTab, argumentsBundle, overrideTransitionStyle, false);
+        bus.post(new NavigationEvent.NavigateToTab(targetTab, argumentsBundle, overrideTransitionStyle, false));
     }
 
 ///Fragment swapping and related
@@ -507,9 +480,9 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
     }
 
-    private void addUpdateTabCallback(SwapFragmentArguments swapFragmentArguments)
+    private void addUpdateTabCallback(Bundle argumentsBundle)
     {
-        swapFragmentArguments.argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
+        argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
         {
             @Override
             public int describeContents() { return 0; }
@@ -589,9 +562,9 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void swapFragment(SwapFragmentArguments swapArguments)
+    private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)
     {
-        if (swapArguments.clearBackStack)
+        if (!swapFragmentEvent.addToBackStack)
         {
             clearFragmentBackStack();
         }
@@ -600,11 +573,11 @@ public class MainActivityFragment extends InjectedFragment
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
         Fragment newFragment = null;
-        if (swapArguments.targetClassType != null)
+        if (swapFragmentEvent.targetTab != null)
         {
             try
             {
-                newFragment = (Fragment) swapArguments.targetClassType.newInstance();
+                newFragment = (Fragment) swapFragmentEvent.targetTab.getClassType().newInstance();
             }
             catch (Exception e)
             {
@@ -613,31 +586,26 @@ public class MainActivityFragment extends InjectedFragment
             }
         }
 
-        if (swapArguments.overrideFragment != null)
+        if (newFragment != null && swapFragmentEvent.arguments != null)
         {
-            newFragment = swapArguments.overrideFragment;
-        }
-
-        if (newFragment != null && swapArguments.argumentsBundle != null)
-        {
-            newFragment.setArguments(swapArguments.argumentsBundle);
+            newFragment.setArguments(swapFragmentEvent.arguments);
         }
 
         //Animate the transition, animations must come before the .replace call
-        if (swapArguments.transitionStyle != null)
+        if (swapFragmentEvent.transitionStyle != null)
         {
             transaction.setCustomAnimations(
-                    swapArguments.transitionStyle.getIncomingAnimId(),
-                    swapArguments.transitionStyle.getOutgoingAnimId(),
-                    swapArguments.transitionStyle.getPopIncomingAnimId(),
-                    swapArguments.transitionStyle.getPopOutgoingAnimId()
+                    swapFragmentEvent.transitionStyle.getIncomingAnimId(),
+                    swapFragmentEvent.transitionStyle.getOutgoingAnimId(),
+                    swapFragmentEvent.transitionStyle.getPopIncomingAnimId(),
+                    swapFragmentEvent.transitionStyle.getPopOutgoingAnimId()
             );
 
             //Runs async, covers the transition
-            if (swapArguments.transitionStyle.shouldShowOverlay())
+            if (swapFragmentEvent.transitionStyle.shouldShowOverlay())
             {
                 TransientOverlayDialogFragment overlayDialogFragment = TransientOverlayDialogFragment
-                        .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapArguments.transitionStyle.getOverlayStringId());
+                        .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapFragmentEvent.transitionStyle.getOverlayStringId());
                 overlayDialogFragment.show(getFragmentManager(), "overlay dialog fragment");
             }
         }
@@ -646,7 +614,7 @@ public class MainActivityFragment extends InjectedFragment
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.main_container, newFragment);
 
-        if (swapArguments.addToBackStack)
+        if (swapFragmentEvent.addToBackStack)
         {
             transaction.addToBackStack(null);
         }

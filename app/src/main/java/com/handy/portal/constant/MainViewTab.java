@@ -107,20 +107,4 @@ public enum MainViewTab implements Serializable
     {
         return mWebViewTarget;
     }
-
-    //If this gets complex setup small state machines to have a transition for each to/from tab
-    public TransitionStyle getDefaultTransitionStyle(MainViewTab targetTab)
-    {
-        if (this.equals(targetTab))
-        {
-            return TransitionStyle.REFRESH_TAB;
-        }
-
-        if (this.equals(MainViewTab.AVAILABLE_JOBS) && targetTab.equals(MainViewTab.JOB_DETAILS))
-        {
-            return TransitionStyle.JOB_LIST_TO_DETAILS;
-        }
-
-        return TransitionStyle.NATIVE_TO_NATIVE;
-    }
 }
