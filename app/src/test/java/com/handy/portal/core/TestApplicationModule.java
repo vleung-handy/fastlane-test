@@ -6,6 +6,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.BookingManager;
@@ -28,20 +29,19 @@ import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
-import com.handy.portal.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
-import com.handy.portal.ui.fragment.BookingDetailsFragmentTest;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
-import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
-import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
+import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.SendReceiptCheckoutFragmentTest;
-import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
+import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.bookings.BookingDetailsFragmentTest;
+import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragmentTest;
-import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.securepreferences.SecurePreferences;
@@ -125,6 +125,7 @@ public class TestApplicationModule
     }
 
     @Provides
+    @Singleton
     final Bus provideBus()
     {
         return mock(Bus.class);

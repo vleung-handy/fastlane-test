@@ -8,16 +8,19 @@ import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
-import com.handy.portal.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
-import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
+import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
-import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
-import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
-import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
-import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
+import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.CancellationRequestFragment;
+import com.handy.portal.ui.fragment.bookings.CheckoutJobDetailsFragment;
+import com.handy.portal.ui.fragment.bookings.ComplementaryBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.NewBookingDetailsFragment;
+import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
@@ -29,7 +32,6 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.OnboardingFragment;
 
@@ -41,8 +43,9 @@ public enum MainViewTab implements Serializable
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
     NEARBY_JOBS(NearbyBookingsFragment.class),
-    JOB_DETAILS(BookingDetailsFragment.class),
+    JOB_DETAILS(NewBookingDetailsFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
+    CHECKOUT_JOB_DETAILS(CheckoutJobDetailsFragment.class),
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
 
     NOTIFICATIONS(NotificationsFragment.class),
@@ -62,6 +65,7 @@ public enum MainViewTab implements Serializable
 
     ACCOUNT_SETTINGS(AccountSettingsFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
+    REQUEST_SUPPLIES_WEB_VIEW(RequestSuppliesWebViewFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
 
     REFER_A_FRIEND(ReferAFriendFragment.class),

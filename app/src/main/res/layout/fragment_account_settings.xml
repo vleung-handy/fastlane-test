@@ -110,60 +110,51 @@
 
         <include layout="@layout/divider_dashboard"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/order_resupply_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/account_settings_cell_height"
-            android:background="@drawable/background_list_entry"
+            android:layout_height="wrap_content"
             android:clickable="true"
-            android:padding="@dimen/default_padding"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
             >
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="vertical"
+                android:layout_height="@dimen/account_settings_cell_height"
+                android:background="@drawable/background_list_entry"
+                android:padding="@dimen/default_padding"
                 >
 
                 <TextView
                     android:id="@+id/order_resupply_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:text="@string/order_resupply_kit"
                     android:textColor="@color/dark_grey"
                     android:textSize="@dimen/default_text_size"
                     />
 
-                <TextView
-                    android:id="@+id/order_resupply_helper_text"
+                <ImageView
+                    android:id="@+id/payment_tier_chevron"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/extra_margin"
-                    android:textColor="@color/subtitle_grey"
-                    android:textSize="@dimen/small_text_size"
-                    android:visibility="gone"
-                    tools:text="You cannot order resupply yet."
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:contentDescription="@string/chevron_description"
+                    android:src="@drawable/ic_chevron_dashboard_gray"
                     />
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/payment_tier_chevron"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginStart="@dimen/default_margin"
-                android:contentDescription="@string/chevron_description"
-                android:src="@drawable/ic_chevron_dashboard_gray"
-                />
+            <include layout="@layout/divider_dashboard"/>
 
-        </RelativeLayout>
-
-        <include layout="@layout/divider_dashboard"/>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/income_verification_layout"

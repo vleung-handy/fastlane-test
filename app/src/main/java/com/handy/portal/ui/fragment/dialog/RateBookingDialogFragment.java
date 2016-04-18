@@ -100,7 +100,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                     TextUtils.DECIMAL_FORMAT_NO_ZERO.format(mBooking.getPaymentToProvider().getAdjustedAmount());
             mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
             String name = mBooking.getUser().getFirstName();
-            mExperienceText.setText(getString(R.string.how_was_cleaning_formatted, name));
+            mExperienceText.setText(getString(R.string.how_was_experience_formatted, name));
         }
 
         if (mBooking == null)
@@ -108,7 +108,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             final LocationData locationData = getLocationData();
-            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
+            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
                     locationData, new ProBookingFeedback(getBookingRatingScore(),
                     getBookingRatingComment()), mNoteToCustomer, null)));
@@ -134,7 +134,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             // TODO: combine this with line 71
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             final LocationData locationData = getLocationData();
-            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
+            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
                     locationData, new ProBookingFeedback(bookingRatingScore,
                     getBookingRatingComment()), mNoteToCustomer, mBooking.getCustomerPreferences())

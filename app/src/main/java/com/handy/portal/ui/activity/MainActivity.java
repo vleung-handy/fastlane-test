@@ -123,7 +123,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void onPause()
     {
-        bus.post(new LogEvent.SaveLogsEvent());
         try
         {
              /*

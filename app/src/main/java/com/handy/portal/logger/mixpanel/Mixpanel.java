@@ -49,13 +49,15 @@ public class Mixpanel
     private void setupBaseProperties()
     {
         final JSONObject baseProps = new JSONObject();
+        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
         addProps(baseProps, "product_type", PROVIDER);
         addProps(baseProps, "platform", ANDROID);
         addProps(baseProps, "os_version", Build.VERSION.RELEASE);
         addProps(baseProps, "app_version", BuildConfig.VERSION_NAME);
         addProps(baseProps, "version_track", BuildConfig.FLAVOR);
         addProps(baseProps, "device_id", BaseApplication.getDeviceId());
-        addProps(baseProps, "provider_id", prefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        addProps(baseProps, "provider_id", providerId);
+        mixpanelAPI.identify(providerId);
         mixpanelAPI.registerSuperProperties(baseProps);
     }
 
@@ -125,7 +127,8 @@ public class Mixpanel
                 try
                 {
                     value = field.get(event);
-                } catch (IllegalAccessException e)
+                }
+                catch (IllegalAccessException e)
                 {
                     e.printStackTrace();
                 }
@@ -141,7 +144,8 @@ public class Mixpanel
         try
         {
             object.put(key, value);
-        } catch (final JSONException e)
+        }
+        catch (final JSONException e)
         {
             throw new RuntimeException(e);
         }

@@ -7,6 +7,7 @@
     <string name="no_data">--</string>
     <string name="none">None</string>
     <string name="time_interval_formatted">%1$s – %2$s</string>
+    <string name="two_lines_formatted">%1$s\n%2$s</string>
 
     <!-- Generic Single Word -->
     <string name="success">Success</string>
@@ -43,6 +44,7 @@
     <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
+    <string name="claimed_job">Claimed Job</string>
     <string name="claim_job">Claim Job</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
@@ -201,6 +203,7 @@
     <string name="customer_prefix">CUSTOMER: </string>
 
     <string name="customer_not_home">My customer is not home</string>
+    <string name="undo_customer_no_show">Customer arrived, undo report</string>
     <string name="add_remove_hours">Request to add/remove hours</string>
     <string name="customer_reschedule">Customer wants to reschedule</string>
     <string name="cancellation_policy">What’s the cancellation policy?</string>
@@ -320,7 +323,6 @@
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
     <string name="video_library">Video Library</string>
 
-
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
     <string name="nearby_transit">Nearby Transit</string>
@@ -329,6 +331,16 @@
     <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
     <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
     <string name="show_booking_cancellation_policy">Show Details</string>
+    <string name="tap_preferences_before_checkout">Tap completed tasks before checking out.</string>
+    <string name="payment">Payment</string>
+    <string name="get_directions">Get directions</string>
+    <string name="house_details">House Details</string>
+    <string name="paid_extras">Paid Extras</string>
+    <string name="entry_information">Entry Information</string>
+    <string name="customer_request">Customer Request</string>
+    <string name="job_number_formatted">Job # %1$s</string>
+    <string name="frequency">Frequency</string>
+    <string name="completed_job">Completed Job</string>
 
 
     <!-- Booking Cancellation -->
@@ -356,10 +368,13 @@
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
     <string name="you_earned_money_formatted">You made %1$s!</string>
-    <string name="how_was_cleaning_formatted">How was your experience cleaning %1$s’s home?</string>
+    <string name="how_was_experience_formatted">How was your experience at %1$s’s home?</string>
 
     <!-- Nearby Booking -->
     <string name="start_timer_formatted">STARTS IN %1$s</string>
+    <string name="start_timer_lowercase_formatted">Starts in %1$s</string>
+    <string name="end_timer_lowercase_formatted">Ends in %1$s</string>
+    <string name="time_expired">Time expired</string>
     <string name="nearby_booking_one">There is 1 open job nearby! Claim it now.</string>
     <string name="nearby_booking_formatted">There are %1$d open jobs nearby! Claim one now.</string>
     <string name="claim_n_dollar_job_formatted">Claim %1$s Job</string>
@@ -389,6 +404,18 @@
     <string name="order_resupply_kit">Order a Resupply Kit</string>
     <string name="income_verification">Income Verification</string>
     <string name="send_email">Send Email</string>
+    <string name="shop_on_boxed">Shop on Boxed.com</string>
+    <string name="handy_boxed_store">Handy + Boxed.com Store</string>
+    <string name="supplies_instruction1">Professionals should arrive prepared, so we partnered with Boxed.com to create a recommended set of supplies.</string>
+    <string name="supplies_instruction2">The most successful pros on the platform say their standard kit includes:</string>
+    <string name="vacuum">A vacuum</string>
+    <string name="cloths_paper_towels">Microfiber cloths and paper towels</string>
+    <string name="gloves">Gloves</string>
+    <string name="leave_behinds">Leave behinds for your name</string>
+    <string name="mop">Dust mop and wet mop</string>
+    <string name="duster">Duster</string>
+    <string name="cleaning_solutions">Cleaning solutions for all surfaces</string>
+    <string name="apron">Apron</string>
 
     <!-- Referrals -->
     <string name="chevron_description">Chevron</string>
@@ -413,6 +440,9 @@
     <string name="clear_signature">clear signature</string>
     <string name="use_finger_to_sign">use your finger to sign</string>
     <string name="complete_checkout">Complete checkout</string>
+    <string name="job_started">Job started:</string>
+    <string name="see_job_details">see job details</string>
+    <string name="continue_to_check_out">Continue to check out </string>
 
     <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
