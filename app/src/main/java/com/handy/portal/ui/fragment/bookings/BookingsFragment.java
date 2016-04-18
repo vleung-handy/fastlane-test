@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.BookingEvent;
 import com.handy.portal.event.HandyEvent;
@@ -358,6 +359,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
         arguments.putString(BundleKeys.BOOKING_SOURCE, getBookingSourceName());
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments, true));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments,
+                TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 }
