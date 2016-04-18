@@ -120,23 +120,23 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
         {
             Crashlytics.logException(new Exception("Booking claim action extras is null in confirm booking dialog fragment"));
         }
-        else
+        else if(bookingClaimAction.getExtras().getCancellationPolicy() != null)
         {
-            Booking.Action.Extras.CancellationPolicyItem cancellationPolicyItems[] =
-                    bookingClaimAction.getExtras().getCancellationPolicyArray();
+            Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicies[] =
+                    bookingClaimAction.getExtras().getCancellationPolicy().getCancellationPolicyItems();
 
             mCancellationPolicyContent.removeAllViews();
-            for(int i = 0; i<cancellationPolicyItems.length; i++)
+            for(int i = 0; i< cancellationPolicies.length; i++)
             {
-                Booking.Action.Extras.CancellationPolicyItem cancellationPolicyItem = cancellationPolicyItems[i];
-                PaymentInfo fee = cancellationPolicyItem.getPaymentInfo();
+                Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicy = cancellationPolicies[i];
+                PaymentInfo fee = cancellationPolicy.getPaymentInfo();
                 String feeAmountFormatted = CurrencyUtils.formatPriceWithCents(fee.getAmount(), fee.getCurrencySymbol());
 
                 BookingCancellationPolicyListItemView policyListItemView =
                         new BookingCancellationPolicyListItemView(getContext())
-                                .setLeftText(cancellationPolicyItem.getDisplayText())
+                                .setLeftText(cancellationPolicy.getDisplayText())
                                 .setRightText(feeAmountFormatted)
-                                .setHighlighted(cancellationPolicyItem.isActive());
+                                .setHighlighted(cancellationPolicy.isActive());
                 mCancellationPolicyContent.addView(policyListItemView);
             }
         }

@@ -627,7 +627,7 @@ public class Booking implements Comparable<Booking>, Serializable
             @SerializedName("remove_reasons")
             private List<String> mRemoveReasons;
             @SerializedName("cancellation_policy")
-            private CancellationPolicyItem mCancellationPolicyArray[];
+            private CancellationPolicy mCancellationPolicy;
             @SerializedName("header_text")
             private String mHeaderText;
             @SerializedName("sub_text")
@@ -649,9 +649,9 @@ public class Booking implements Comparable<Booking>, Serializable
 
             public List<String> getRemoveReasons() { return mRemoveReasons; }
 
-            public CancellationPolicyItem[] getCancellationPolicyArray()
+            public CancellationPolicy getCancellationPolicy()
             {
-                return mCancellationPolicyArray;
+                return mCancellationPolicy;
             }
 
             @Nullable
@@ -660,35 +660,51 @@ public class Booking implements Comparable<Booking>, Serializable
                 return mKeepRate;
             }
 
-            public static class CancellationPolicyItem
+            public static class CancellationPolicy
             {
-                @SerializedName("text")
-                private String mDisplayText;
-//                @SerializedName("amount_cents_formatted")
-//                private String mAmountFormatted;
-                @SerializedName("active")
-                private boolean mActive;
-                @SerializedName("fee")
-                private PaymentInfo mPaymentInfo;
+                @SerializedName("header_text")
+                private String mHeaderText;
+                @SerializedName("policy")
+                private CancellationPolicyItem mCancellationPolicyItems[];
 
-                public String getDisplayText()
+                public String getHeaderText()
                 {
-                    return mDisplayText;
+                    return mHeaderText;
                 }
+
+                public CancellationPolicyItem[] getCancellationPolicyItems()
+                {
+                    return mCancellationPolicyItems;
+                }
+
+                public static class CancellationPolicyItem
+                {
+                    @SerializedName("text")
+                    private String mDisplayText;
+                    @SerializedName("active")
+                    private boolean mActive;
+                    @SerializedName("fee")
+                    private PaymentInfo mPaymentInfo;
+
+                    public String getDisplayText()
+                    {
+                        return mDisplayText;
+                    }
 
 //                public String getAmountFormatted()
 //                {
 //                    return mAmountFormatted;
 //                }
 
-                public boolean isActive()
-                {
-                    return mActive;
-                }
+                    public boolean isActive()
+                    {
+                        return mActive;
+                    }
 
-                public PaymentInfo getPaymentInfo()
-                {
-                    return mPaymentInfo;
+                    public PaymentInfo getPaymentInfo()
+                    {
+                        return mPaymentInfo;
+                    }
                 }
             }
 
