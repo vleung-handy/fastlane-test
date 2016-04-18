@@ -13,6 +13,7 @@ import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.helpcenter.HelpModule;
 import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.scheduler.LocationScheduleService;
@@ -39,6 +40,7 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
+import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -166,7 +168,12 @@ import retrofit.converter.GsonConverter;
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
         SendReceiptCheckoutFragment.class,
-})
+},
+includes ={
+        HelpModule.class,
+        NotificationModule.class
+}
+)
 public final class ApplicationModule
 {
     private final Application application;

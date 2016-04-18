@@ -13,7 +13,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(injects = {
+@Module(
+        library=true,
+        complete=false,
+        injects = {
         NotificationsFragment.class,
         NotificationsListView.class,
         NotificationsListEntryView.class,

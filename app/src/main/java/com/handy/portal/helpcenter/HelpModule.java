@@ -11,7 +11,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(injects = {
+@Module(
+        library=true,
+        complete=false,
+        injects = {
         HelpFragment.class,
         HelpWebViewFragment.class,
         HelpContactFragment.class,

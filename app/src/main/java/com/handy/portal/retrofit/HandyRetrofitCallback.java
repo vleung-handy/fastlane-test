@@ -123,7 +123,7 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
     {
         if (callback != null)
         {
-            final DataManagerError err;
+            DataManagerError err = null;
             if (error.isNetworkError())
             {
                 err = new DataManagerError(DataManagerError.Type.NETWORK);
@@ -139,31 +139,39 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
 
                 if (resp >= 400 && resp <= 500)
                 {
-                    RestError restError = (RestError) error.getBodyAs(RestError.class);
-                    if (error.getResponse().getBody().mimeType().contains("json")
-                            && restError != null)
+                    try
                     {
-                        String[] messages;
+                        RestError restError = (RestError) error.getBodyAs(RestError.class);
+                        if (error.getResponse().getBody().mimeType().contains("json")
+                                && restError != null)
+                        {
+                            String[] messages;
 
-                        if (restError.message != null)
-                        {
-                            err = new DataManagerError(DataManagerError.Type.CLIENT, restError.message);
-                        }
-                        else if ((messages = restError.messages) != null && messages.length > 0)
-                        {
-                            err = new DataManagerError(DataManagerError.Type.CLIENT, messages[0]);
+                            if (restError.message != null)
+                            {
+                                err = new DataManagerError(DataManagerError.Type.CLIENT, restError.message);
+                            }
+                            else if ((messages = restError.messages) != null && messages.length > 0)
+                            {
+                                err = new DataManagerError(DataManagerError.Type.CLIENT, messages[0]);
+                            }
+                            else
+                            {
+                                err = new DataManagerError(DataManagerError.Type.CLIENT);
+                            }
+
+                            err.setInvalidInputs(restError.invalidInputs);
                         }
                         else
                         {
                             err = new DataManagerError(DataManagerError.Type.CLIENT);
                         }
-
-                        err.setInvalidInputs(restError.invalidInputs);
                     }
-                    else
+                    catch (Exception e)
                     {
-                        err = new DataManagerError(DataManagerError.Type.CLIENT);
+                        e.printStackTrace();
                     }
+
                 }
                 else if (resp > 500 && resp < 600)
                 {
