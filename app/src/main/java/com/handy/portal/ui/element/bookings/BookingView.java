@@ -177,6 +177,7 @@ public class BookingView extends InjectedBusView
         else
         {
             mCustomerNameText.setText(mBooking.getUser().getFullName());
+            mSupportButton.setVisibility(VISIBLE);
         }
 
         Address address = mBooking.getAddress();
