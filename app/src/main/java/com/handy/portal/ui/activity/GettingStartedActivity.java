@@ -2,6 +2,7 @@ package com.handy.portal.ui.activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import com.handy.portal.R;
 import com.handy.portal.model.onboarding.Job;
 import com.handy.portal.model.onboarding.JobGroup;
 import com.handy.portal.ui.adapter.JobsRecyclerAdapter;
+import com.handy.portal.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.ui.view.HandyJobGroupView;
 
 import java.util.ArrayList;
@@ -57,9 +59,6 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         mNoThanks = getString(R.string.onboard_no_thanks);
 
         createJobs();
-        mAdapter = new JobsRecyclerAdapter(mJobs, getString(R.string.onboard_getting_started_title), this);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
 
         mGreenDrawable = ContextCompat.getDrawable(this, R.drawable.button_green);
         mGrayDrawable = ContextCompat.getDrawable(this, R.drawable.button_gray);
@@ -69,6 +68,31 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_x_white);
         updateButton();
+
+        showDialog();
+    }
+
+    public void showDialog()
+    {
+        final OnboardLoadingDialog dialog = new OnboardLoadingDialog();
+        dialog.show(getFragmentManager(), OnboardLoadingDialog.TAG);
+
+        //TODO: JIA: dismiss the dialog after the jobs have loaded, or 4 seconds, whichever one is slowest
+        //Right now, the endpoint is not ready to load the data yet.
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (dialog != null)
+                {
+                    dialog.dismiss();
+                    mAdapter = new JobsRecyclerAdapter(mJobs, getString(R.string.onboard_getting_started_title), GettingStartedActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mRecyclerView.startLayoutAnimation();
+                }
+            }
+        }, 4000);
     }
 
     //    TODO: JIA: delete this method that generates fake data

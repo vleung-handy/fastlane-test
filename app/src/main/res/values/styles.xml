@@ -27,6 +27,10 @@
         <item name="android:windowExitAnimation">@anim/slide_up_to_top</item>
     </style>
 
+    <style name="dialog_animation_slide_out">
+        <item name="android:windowExitAnimation">@anim/slide_down_to_bottom</item>
+    </style>
+
     <style name="dialog_animation_slide_up_down_from_bottom">
         <item name="android:windowEnterAnimation">@anim/slide_up_from_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_down_to_bottom</item>

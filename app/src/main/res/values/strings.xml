@@ -460,4 +460,5 @@
     <string name="onboard_getting_started_title">Start building your schedule with these jobs.</string>
     <string name="onboard_claim_and_earn_formatted">Claim &amp; Earn %s</string>
     <string name="onboard_no_thanks">No thanks, I\'ll find my own jobs</string>
+    <string name="onboard_loading">Choosing jobs in your city...</string>
 </resources>

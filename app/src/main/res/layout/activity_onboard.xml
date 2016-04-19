@@ -15,16 +15,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerInParent="true"
+        android:gravity="center"
         >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_badge"
+            />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="@string/onboard_congratulations"
+            tools:text="@string/onboard_congratulations_formatted"
             style="@style/TextView.XXLarge.Bold"
             android:layout_marginLeft="@dimen/default_margin_x3"
             android:layout_marginRight="@dimen/default_margin_x3"
+            android:layout_marginTop="@dimen/default_margin_x4"
             android:gravity="center"
             />
 
