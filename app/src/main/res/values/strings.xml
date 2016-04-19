@@ -268,8 +268,11 @@
     <string name="pending">Pending</string>
 
     <!-- Payments Bill Blocker -->
-    <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>
-    <string name="payments_bill_blocker_content">Head to the Profile tab to set up your payment method.</string>
+    <string name="payments_bill_blocker_title">Your payment info is missing!</string>
+    <string name="payments_bill_blocker_content_formatted">
+        Please update your bank details, otherwise %1$s via direct deposit
+    </string>
+    <string name="payment_bill_blocker_content_colored">we can’t issue payments</string>
     <string name="payments_bill_blocker_update_now_button">Update Now</string>
     <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
     <string name="bank_account">Bank Account</string>
