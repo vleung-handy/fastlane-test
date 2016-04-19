@@ -1,11 +1,11 @@
-package com.handy.portal.test;
+package com.handy.portal.testdata;
 
 public class TestUser
 {
     //disable pin request by setting disable_pin_request=true in override.properties
-    public static TestUser TEST_USER_NY = new TestUser(
+    public static TestUser FIRST_TIME_PROVIDER_NY = new TestUser(
             "6466466464",
-            "1234"
+            "123456"
     );
 
     //strings just in case we want them to be empty or have weird characters
