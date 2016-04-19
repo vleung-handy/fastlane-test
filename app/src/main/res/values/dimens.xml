@@ -13,6 +13,7 @@
     <dimen name="extra_margin_large">15dp</dimen>
     <dimen name="extra_margin_xlarge">20dp</dimen>
     <dimen name="section_item_margin">20dp</dimen>
+    <dimen name="default_margin_half">8dp</dimen>
     <dimen name="default_margin_x2">32dp</dimen>
     <dimen name="default_margin_x3">48dp</dimen>
     <dimen name="default_margin_large">32dp</dimen>
@@ -69,6 +70,7 @@
     <dimen name="supply_list_bullet_width">25dp</dimen>
     <dimen name="x_icon_size">60dp</dimen>
     <dimen name="default_elevation">2dp</dimen>
+    <dimen name="medium_elevation">4dp</dimen>
 
     <!-- Generic -->
     <dimen name="complete_button_height">64dp</dimen>
@@ -171,4 +173,5 @@
     <!-- Pro Onboarding-->
     <dimen name="particle_view_width">20dp</dimen>
     <dimen name="particle_view_width_margin">-60dp</dimen>
+    <dimen name="medium_corner_radius">4dp</dimen>
 </resources>

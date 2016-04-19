@@ -293,6 +293,8 @@
             android:name=".ui.activity.OnboardActivity"
             android:theme="@style/AppTheme.Translucent"
             />
+        <activity android:name=".ui.activity.GettingStartedActivity">
+        </activity>
     </application>
 
 </manifest>

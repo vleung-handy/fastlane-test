@@ -1,0 +1,125 @@
+package com.handy.portal.ui.view;
+
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.handy.portal.R;
+import com.handy.portal.model.onboarding.Job;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+/**
+ * This is a custom view used for showing jobs in the onboarding screen. It'll hold a check box,
+ * job title & hours, and pricing
+ * <p/>
+ * Created by jtse on 4/18/16.
+ */
+public class HandyJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
+{
+
+    int mCornerRadius;
+
+    @Bind(R.id.check_box)
+    CheckBox mCheckBox;
+
+    @Bind(R.id.relative_layout)
+    RelativeLayout mRelativeLayout;
+
+    @Bind(R.id.price)
+    TextView mTvPrice;
+
+    @Bind(R.id.tv_title)
+    TextView mTitle;
+
+    @Bind(R.id.tv_subtitle)
+    TextView mSubTitle;
+
+    Drawable mCheckedDrawable;
+    Drawable mUncheckedDrawable;
+
+    CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
+
+    Job mJob;
+
+    public HandyJobView(Context context)
+    {
+        super(context);
+        init();
+    }
+
+    public HandyJobView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+        init();
+    }
+
+    public HandyJobView(Context context, AttributeSet attrs, int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init()
+    {
+        mCornerRadius = getResources().getDimensionPixelSize(R.dimen.medium_corner_radius);
+        inflate(getContext(), R.layout.handy_job_layout, this);
+        ButterKnife.bind(this);
+
+        mUncheckedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.border_gray_bg_white);
+        mCheckedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.border_green_bg_white);
+
+        setBackground(mUncheckedDrawable);
+        mCheckBox.setOnCheckedChangeListener(this);
+        setClickable(true);
+
+        setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mCheckBox.setChecked(!mJob.selected);
+            }
+        });
+    }
+
+    public void setOnCheckedChangeListener(final CompoundButton.OnCheckedChangeListener onCheckedChangeListener)
+    {
+        mOnCheckedChangeListener = onCheckedChangeListener;
+    }
+
+    public void bind(Job job)
+    {
+        mJob = job;
+        mTvPrice.setText(job.getFormattedPrice());
+        mTitle.setText(job.title);
+        mSubTitle.setText(job.subTitle);
+        mCheckBox.setChecked(job.selected);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    {
+        mJob.selected = isChecked;
+        if (isChecked)
+        {
+            this.setBackground(mCheckedDrawable);
+        }
+        else
+        {
+            this.setBackground(mUncheckedDrawable);
+        }
+        if (mOnCheckedChangeListener != null)
+        {
+            mOnCheckedChangeListener.onCheckedChanged(buttonView, isChecked);
+        }
+    }
+}

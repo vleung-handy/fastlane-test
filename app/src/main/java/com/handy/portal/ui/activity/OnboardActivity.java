@@ -1,5 +1,6 @@
 package com.handy.portal.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
@@ -62,7 +63,7 @@ public class OnboardActivity extends AppCompatActivity
 
         //TODO: JIA: remove this hardcoded name with a real name passed in
         String userName = "Jaclyn";
-        mTvTitle.setText(String.format(getString(R.string.onboard_congratulations), userName));
+        mTvTitle.setText(String.format(getString(R.string.onboard_congratulations_formatted), userName));
 
         //we only play the confetti after the anchors have been rendered, otherwise
         //the confetti will come out weird.
@@ -82,8 +83,13 @@ public class OnboardActivity extends AppCompatActivity
 
     }
 
-    //    TODO: JIA: make the next button do something useful
     @OnClick(R.id.btn_next)
+    public void getStarted()
+    {
+        startActivity(new Intent(this, GettingStartedActivity.class));
+    }
+
+
     public void shootingConfetti()
     {
         int partNumPerSecond = 2;
