@@ -2,6 +2,7 @@ package com.handy.portal.constant;
 
 public class BundleKeys
 {
+    //TODO consider not having all these keys at this scope
     public static final String BOOKING = "booking";
     public static final String BOOKING_ID = "booking_id";
     public static final String BOOKING_TYPE = "booking_type";
@@ -9,6 +10,9 @@ public class BundleKeys
     public static final String BOOKING_SOURCE = "booking_source";
     public static final String BOOKING_STATUS = "booking_status";
     public static final String BOOKING_ACTION = "booking_action";
+    public static final String BOOKING_FROM_PAYMENT_TAB = "booking_from_payment_tab";
+    public static final String BOOKING_SHOULD_HIDE_ACTION_BUTTONS = "booking_should_hide_action_buttons";
+
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
     public static final String HELP_NODE = "help_node";
     public static final String HELP_NODE_ID = "help_node_id";
