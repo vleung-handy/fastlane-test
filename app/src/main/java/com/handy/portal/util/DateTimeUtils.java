@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +24,8 @@ public final class DateTimeUtils
 
     public final static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("EEEE, MMMM d");
+    public final static SimpleDateFormat DAY_OF_WEEK_FORMATTER = new SimpleDateFormat("EEEE");
+    public final static SimpleDateFormat DAY_OF_YEAR_FORMATTER = new SimpleDateFormat("D");
     public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("E, MMM d");
     public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER = new SimpleDateFormat("MMM");
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
@@ -31,6 +34,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
+    public final static SimpleDateFormat YEAR_MONTH_DAY_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
     public final static SimpleDateFormat MONTH_YEAR_FORMATTER = new SimpleDateFormat("MMM yyyy");
     public final static SimpleDateFormat ISO8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     public final static SimpleDateFormat LOCAL_TIME_12_HOURS = new SimpleDateFormat("hh:mm a");
@@ -83,6 +87,29 @@ public final class DateTimeUtils
         return c.get(Calendar.YEAR);
     }
 
+    /**
+     * Day of the week/
+     * Monday, Tuesday, Wednesday, etc.
+     *
+     * @param date
+     * @return
+     */
+    public static String getDayOfWeek(Date date)
+    {
+        return DAY_OF_WEEK_FORMATTER.format(date);
+    }
+
+    /**
+     * Day of the year. If today was new year's eve, it would return 365
+     *
+     * @param date
+     * @return
+     */
+    public static int getDayOfYear(Date date)
+    {
+        return Integer.parseInt(DAY_OF_YEAR_FORMATTER.format(date));
+    }
+
     public static int getDayOfMonth(Date date)
     {
         Calendar c = Calendar.getInstance();
@@ -123,6 +150,51 @@ public final class DateTimeUtils
     {
         if (date == null) { return null; }
         return getMonthDateFormatter().format(date);
+    }
+
+    /**
+     * Incoming date is in format: 2016-04-08
+     * Returns string in the formats:
+     * <p/>
+     * Friday, April 8, 2016
+     * Tomorrow, April 8, 2016
+     *
+     * @return
+     */
+    @Nullable
+    public static String toJobViewDateString(String date)
+    {
+        if (android.text.TextUtils.isEmpty(date)) { return null; }
+
+        try
+        {
+            Date d = YEAR_MONTH_DAY_FORMATTER.parse(date);
+            String rval = MONTH_DATE_YEAR_FORMATTER.format(d);
+
+            int jobDate = getDayOfYear(d);
+            int today = getDayOfYear(new Date());
+
+            String prefix = "";
+            if (jobDate - today == 0)
+            {
+                prefix = "TODAY, ";
+            }
+            else if (jobDate - today == 1)
+            {
+                prefix = "TOMORROW, ";
+            }
+            else
+            {
+                prefix = getDayOfWeek(d).toUpperCase() + ", ";
+            }
+
+            return prefix + rval;
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Nullable

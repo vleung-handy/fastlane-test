@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  * <p/>
  * Created by jtse on 4/18/16.
  */
-public class HandyJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
+public class OnboardJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
 {
 
     int mCornerRadius;
@@ -50,19 +50,19 @@ public class HandyJobView extends FrameLayout implements CompoundButton.OnChecke
 
     Job mJob;
 
-    public HandyJobView(Context context)
+    public OnboardJobView(Context context)
     {
         super(context);
         init();
     }
 
-    public HandyJobView(Context context, AttributeSet attrs)
+    public OnboardJobView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public HandyJobView(Context context, AttributeSet attrs, int defStyleAttr)
+    public OnboardJobView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();
@@ -71,7 +71,7 @@ public class HandyJobView extends FrameLayout implements CompoundButton.OnChecke
     private void init()
     {
         mCornerRadius = getResources().getDimensionPixelSize(R.dimen.medium_corner_radius);
-        inflate(getContext(), R.layout.handy_job_layout, this);
+        inflate(getContext(), R.layout.onboard_job_layout, this);
         ButterKnife.bind(this);
 
         mUncheckedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.border_gray_bg_white);

@@ -71,6 +71,7 @@
     <dimen name="x_icon_size">60dp</dimen>
     <dimen name="default_elevation">2dp</dimen>
     <dimen name="medium_elevation">4dp</dimen>
+    <dimen name="medium_corner_radius">4dp</dimen>
 
     <!-- Generic -->
     <dimen name="complete_button_height">64dp</dimen>
@@ -171,7 +172,9 @@
     <dimen name="notification_unread_count_min_width">20dp</dimen>
 
     <!-- Pro Onboarding-->
-    <dimen name="particle_view_width">20dp</dimen>
-    <dimen name="particle_view_width_margin">-60dp</dimen>
-    <dimen name="medium_corner_radius">4dp</dimen>
+    <dimen name="onboard_particle_view_width">20dp</dimen>
+    <dimen name="onboard_particle_view_width_margin">-60dp</dimen>
+    <dimen name="onboard_list_header_padding">28dp</dimen>
+    <dimen name="onboard_claim_button_margin">20dp</dimen>
+    <dimen name="onboard_checkbox_width_height">32dp</dimen>
 </resources>

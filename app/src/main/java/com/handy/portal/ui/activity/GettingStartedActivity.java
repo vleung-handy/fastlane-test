@@ -57,8 +57,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         mNoThanks = getString(R.string.onboard_no_thanks);
 
         createJobs();
-        String title = String.format(getString(R.string.onboard_getting_started_title_formatted), mJobs.size());
-        mAdapter = new JobsRecyclerAdapter(mJobs, title, this);
+        mAdapter = new JobsRecyclerAdapter(mJobs, getString(R.string.onboard_getting_started_title), this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
@@ -77,14 +76,14 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
     {
         ArrayList<JobGroup> jobs = new ArrayList<>();
 
-        JobGroup group1 = new JobGroup("Tomorrow, April 7, 2016");
+        JobGroup group1 = new JobGroup("2016-04-19");
         group1.jobs.add(new Job("Upper East Manhattan", "1:00pm - 4:00pm", 45, true));
         group1.jobs.add(new Job("Upper East Manhattan", "1:00pm - 4:00pm", 45, true));
 
-        JobGroup group2 = new JobGroup("Friday, April 8, 2016");
+        JobGroup group2 = new JobGroup("2016-04-20");
         group2.jobs.add(new Job("Upper West Manhattan", "8:00am - 11:00am", 45, true));
 
-        JobGroup group3 = new JobGroup("Saturday, April 9, 2016");
+        JobGroup group3 = new JobGroup("2016-04-21");
         group3.jobs.add(new Job("Midtown East, Murray Hill, Gramercy", "8:00am - 11:00am", 45, true));
         group3.jobs.add(new Job("Midtown East, Murray Hill, Gramercy", "1:00pm - 4:00pm", 45, true));
 

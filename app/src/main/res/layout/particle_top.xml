@@ -6,41 +6,41 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:orientation="horizontal"
-    android:layout_marginTop="@dimen/particle_view_width_margin"
+    android:layout_marginTop="@dimen/onboard_particle_view_width_margin"
     >
 
     <View
         android:id="@+id/left_view"
-        android:layout_width="@dimen/particle_view_width"
-        android:layout_height="@dimen/particle_view_width"
+        android:layout_width="@dimen/onboard_particle_view_width"
+        android:layout_height="@dimen/onboard_particle_view_width"
         android:layout_weight="1"
         />
 
     <View
         android:id="@+id/left_center_view"
-        android:layout_width="@dimen/particle_view_width"
-        android:layout_height="@dimen/particle_view_width"
+        android:layout_width="@dimen/onboard_particle_view_width"
+        android:layout_height="@dimen/onboard_particle_view_width"
         android:layout_weight="1"
         />
 
     <View
         android:id="@+id/middle_view"
-        android:layout_width="@dimen/particle_view_width"
-        android:layout_height="@dimen/particle_view_width"
+        android:layout_width="@dimen/onboard_particle_view_width"
+        android:layout_height="@dimen/onboard_particle_view_width"
         android:layout_weight="1"
         />
 
     <View
         android:id="@+id/right_center_view"
-        android:layout_width="@dimen/particle_view_width"
-        android:layout_height="@dimen/particle_view_width"
+        android:layout_width="@dimen/onboard_particle_view_width"
+        android:layout_height="@dimen/onboard_particle_view_width"
         android:layout_weight="1"
         />
 
     <View
         android:id="@+id/right_view"
-        android:layout_width="@dimen/particle_view_width"
-        android:layout_height="@dimen/particle_view_width"
+        android:layout_width="@dimen/onboard_particle_view_width"
+        android:layout_height="@dimen/onboard_particle_view_width"
         android:layout_weight="1"
         />
 

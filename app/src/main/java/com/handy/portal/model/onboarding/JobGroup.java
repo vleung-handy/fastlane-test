@@ -11,11 +11,12 @@ import java.util.List;
 public class JobGroup
 {
     public List<Job> jobs;
-    public String title;
 
-    public JobGroup(String title)
+    public String sanitizedDate;    //yyyy-MM-dd
+
+    public JobGroup(String sanitizedDate)
     {
-        this.title = title;
+        this.sanitizedDate = sanitizedDate;
         jobs = new ArrayList<>();
     }
 }

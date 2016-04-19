@@ -457,7 +457,7 @@
     <string name="onboard_get_started">Let\'s Get Started</string>
     <string name="onboard_getting_started">Getting Started</string>
     <string name="onboard_welcome">You have officially been accepted to the Handy Platform. We are so excited to welcome you aboard.</string>
-    <string name="onboard_getting_started_title_formatted">Start building your schedule with these %s jobs.</string>
+    <string name="onboard_getting_started_title">Start building your schedule with these jobs.</string>
     <string name="onboard_claim_and_earn_formatted">Claim &amp; Earn %s</string>
     <string name="onboard_no_thanks">No thanks, I\'ll find my own jobs</string>
 </resources>
