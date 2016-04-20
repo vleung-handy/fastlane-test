@@ -1,15 +1,14 @@
-package com.handy.portal.ui.element.bookings;
+package com.handy.portal.ui.fragment.bookings;
 
-import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
-import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,8 +39,9 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.fragment.bookings.BookingMapFragment;
-import com.handy.portal.ui.view.InjectedBusView;
+import com.handy.portal.ui.element.bookings.NewBookingDetailsJobInstructionsSectionView;
+import com.handy.portal.ui.element.bookings.ProxyLocationView;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
@@ -61,7 +61,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BookingView extends InjectedBusView
+/**
+ * fragment for handling bookings that are
+ * not in progress i.e. ready for claim, check-in, on my way, etc
+ */
+public class BookingFragment extends ActionBarFragment
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -114,45 +118,72 @@ public class BookingView extends InjectedBusView
     private Bundle mSourceExtras;
     private Intent mGetDirectionsIntent;
 
-    public BookingView(
-            final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
-            OnClickListener onSupportClickListener, boolean noShowReported, boolean fromPaymentsTab)
+    private View.OnClickListener mOnSupportClickListener;
+    private boolean mFromPaymentsTab;
+    private boolean mHideActionButtons;
+
+    public static BookingFragment newInstance(@NonNull final Booking booking, final String source,
+                                              boolean fromPaymentsTab, boolean hideActionButtons)
     {
-        super(context);
-        init();
-        setDisplay(booking, source, sourceExtras, onSupportClickListener, noShowReported, fromPaymentsTab);
+        BookingFragment fragment = new BookingFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(BundleKeys.BOOKING, booking);
+        args.putString(BundleKeys.BOOKING_SOURCE, source);
+        args.putBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB, fromPaymentsTab);
+        args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, hideActionButtons);
+
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    public BookingView(final Context context, final AttributeSet attrs)
+    @Override
+    public void onAttach(final Context context)
     {
-        super(context, attrs);
-        init();
+        super.onAttach(context);
+        mOnSupportClickListener = (View.OnClickListener) getParentFragment();
     }
 
-    public BookingView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    @Override
+    protected MainViewTab getTab()
     {
-        super(context, attrs, defStyleAttr);
-        init();
+        return null;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BookingView(final Context context, final AttributeSet attrs, final int defStyleAttr,
-                       final int defStyleRes)
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
     {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        super.onCreate(savedInstanceState);
+        mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
+        mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
+        mSourceExtras = getArguments();
+
+        mFromPaymentsTab = getArguments().getBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB);
+        mHideActionButtons = getArguments().getBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS);
     }
 
-    public void setDisplay(
-            @NonNull Booking booking, String source, Bundle sourceExtras,
-            OnClickListener onSupportClickListener, boolean noShowReported, boolean fromPaymentsTab)
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
     {
-        mBooking = booking;
-        mSource = source;
-        mSourceExtras = sourceExtras;
-        mSupportButton.setOnClickListener(onSupportClickListener);
+        View view = inflater.inflate(R.layout.fragment_booking, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
 
-        if (!fromPaymentsTab)
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
+        setDisplay();
+    }
+
+    public void setDisplay()
+    {
+        setActionButtonVisibility();
+        mSupportButton.setOnClickListener(mOnSupportClickListener);
+
+        if (!mFromPaymentsTab)
         { initMapLayout(); }
 
         mCallCustomerView.setEnabled(false);
@@ -161,7 +192,7 @@ public class BookingView extends InjectedBusView
         mMessageCustomerView.setAlpha(0.5f);
 
         // Booking actions
-        List<Booking.Action> allowedActions = booking.getAllowedActions();
+        List<Booking.Action> allowedActions = mBooking.getAllowedActions();
         for (Booking.Action action : allowedActions)
         {
             enableActionsIfNeeded(action);
@@ -170,14 +201,14 @@ public class BookingView extends InjectedBusView
         int bookingProgress = mBooking.getBookingProgress(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
         if (bookingProgress == BookingProgress.UNAVAILABLE ||
                 bookingProgress == BookingProgress.READY_FOR_CLAIM ||
-                mBooking.getUser() == null || fromPaymentsTab)
+                mBooking.getUser() == null || mFromPaymentsTab)
         {
-            mBookingCustomerContactLayout.setVisibility(GONE);
+            mBookingCustomerContactLayout.setVisibility(View.GONE);
         }
         else
         {
             mCustomerNameText.setText(mBooking.getUser().getFullName());
-            mSupportButton.setVisibility(VISIBLE);
+            mSupportButton.setVisibility(View.VISIBLE);
         }
 
         Address address = mBooking.getAddress();
@@ -185,7 +216,7 @@ public class BookingView extends InjectedBusView
         {
             if (bookingProgress == BookingProgress.UNAVAILABLE ||
                     bookingProgress == BookingProgress.READY_FOR_CLAIM ||
-                    fromPaymentsTab || mBooking.isProxy())
+                    mFromPaymentsTab || mBooking.isProxy())
             {
                 mBookingAddressText.setText(mBooking.isUK() ?
                         getResources().getString(R.string.comma_formatted,
@@ -204,8 +235,8 @@ public class BookingView extends InjectedBusView
             mBookingAddressText.setText(mBooking.getLocationName());
         }
 
-        Date startDate = booking.getStartDate();
-        Date endDate = booking.getEndDate();
+        Date startDate = mBooking.getStartDate();
+        Date endDate = mBooking.getEndDate();
         String formattedDate = DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
         String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
                 + getResources().getString(R.string.dash) + " "
@@ -214,13 +245,13 @@ public class BookingView extends InjectedBusView
         mJobDateText.setText(getTodayTomorrowStringByStartDate(startDate) + formattedDate);
         mJobTimeText.setText(formattedTime.toLowerCase());
 
-        if (booking.isProxy() && booking.getZipCluster() != null &&
-                ((booking.getZipCluster().getTransitDescription() != null
-                        && !booking.getZipCluster().getTransitDescription().isEmpty()) ||
-                        (booking.getZipCluster().getLocationDescription() != null
-                                && !booking.getZipCluster().getLocationDescription().isEmpty())))
+        if (mBooking.isProxy() && mBooking.getZipCluster() != null &&
+                ((mBooking.getZipCluster().getTransitDescription() != null
+                        && !mBooking.getZipCluster().getTransitDescription().isEmpty()) ||
+                        (mBooking.getZipCluster().getLocationDescription() != null
+                                && !mBooking.getZipCluster().getLocationDescription().isEmpty())))
         {
-            mBookingProxyLocationlayout.setVisibility(VISIBLE);
+            mBookingProxyLocationlayout.setVisibility(View.VISIBLE);
             mProxyLocationView.refreshDisplay(mBooking);
         }
 
@@ -259,8 +290,8 @@ public class BookingView extends InjectedBusView
 
         //Special section for "Supplies" extras (UK only)
         List<Booking.ExtraInfoWrapper> cleaningSuppliesExtrasInfo =
-                booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES);
-        if (booking.isUK() && cleaningSuppliesExtrasInfo.size() > 0)
+                mBooking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES);
+        if (mBooking.isUK() && cleaningSuppliesExtrasInfo.size() > 0)
         {
             List<String> entries = new ArrayList<>();
             entries.add(getContext().getString(R.string.bring_cleaning_supplies));
@@ -273,12 +304,12 @@ public class BookingView extends InjectedBusView
         }
 
         //Extras - excluding Supplies instructions
-        if (booking.getExtrasInfo() != null && booking.getExtrasInfo().size() > 0)
+        if (mBooking.getExtrasInfo() != null && mBooking.getExtrasInfo().size() > 0)
         {
             List<String> entries = new ArrayList<>();
-            for (int i = 0; i < booking.getExtrasInfo().size(); i++)
+            for (int i = 0; i < mBooking.getExtrasInfo().size(); i++)
             {
-                Booking.ExtraInfo extra = booking.getExtrasInfo().get(i).getExtraInfo();
+                Booking.ExtraInfo extra = mBooking.getExtrasInfo().get(i).getExtraInfo();
                 if (!extra.getMachineName().equals(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES))
                 {
                     entries.add(extra.getName());
@@ -296,7 +327,7 @@ public class BookingView extends InjectedBusView
         }
 
         // Booking Instructions
-        if (fromPaymentsTab || !isHomeCleaning ||
+        if (mFromPaymentsTab || !isHomeCleaning ||
                 mBooking.inferBookingStatus(getLoggedInUserId()) == Booking.BookingStatus.CLAIMED)
         {
             List<Booking.BookingInstructionGroup> bookingInstructionGroups =
@@ -316,15 +347,16 @@ public class BookingView extends InjectedBusView
             }
         }
 
+        boolean noShowReported = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
         if (noShowReported)
         {
-            mNoShowBanner.setVisibility(VISIBLE);
+            mNoShowBanner.setVisibility(View.VISIBLE);
         }
 
         // Hide map and customer contact if coming from payments tab
-        if (fromPaymentsTab)
+        if (mFromPaymentsTab)
         {
-            mMapLayout.setVisibility(GONE);
+            mMapLayout.setVisibility(View.GONE);
         }
     }
 
@@ -354,7 +386,7 @@ public class BookingView extends InjectedBusView
     @OnClick(R.id.booking_call_customer_view)
     public void callCustomer()
     {
-        mBus.post(new HandyEvent.CallCustomerClicked());
+        bus.post(new HandyEvent.CallCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
         try
@@ -370,7 +402,7 @@ public class BookingView extends InjectedBusView
     @OnClick(R.id.booking_message_customer_view)
     public void messageCustomer()
     {
-        mBus.post(new HandyEvent.TextCustomerClicked());
+        bus.post(new HandyEvent.TextCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
         try
@@ -383,17 +415,14 @@ public class BookingView extends InjectedBusView
         }
     }
 
-    public void hideButtons()
+    private void setActionButtonVisibility()
     {
-        mActionButton.setVisibility(GONE);
-        mSupportButton.setVisibility(GONE);
-    }
-
-    private void init()
-    {
-        inflate(getContext(), R.layout.view_booking, this);
-        ButterKnife.bind(this);
-        Utils.inject(getContext(), this);
+        if(mHideActionButtons)
+        {
+            mActionButton.setVisibility(View.GONE);
+            mSupportButton.setVisibility(View.GONE);
+        }
+        //else keep the current visibility
     }
 
     private void initMapLayout()
@@ -436,7 +465,7 @@ public class BookingView extends InjectedBusView
         if (getDirectionsIntent.resolveActivity(getContext().getPackageManager()) != null)
         {
             mGetDirectionsIntent = getDirectionsIntent;
-            mGetDirectionsLayout.setVisibility(VISIBLE);
+            mGetDirectionsLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -447,7 +476,7 @@ public class BookingView extends InjectedBusView
 
     private void requestZipClusterPolygons(final String zipClusterId)
     {
-        mBus.post(new BookingEvent.RequestZipClusterPolygons(zipClusterId));
+        bus.post(new BookingEvent.RequestZipClusterPolygons(zipClusterId));
     }
 
     private String getLoggedInUserId()
@@ -493,16 +522,16 @@ public class BookingView extends InjectedBusView
             case CLAIM:
             {
                 mActionButton.setText(R.string.claim);
-                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
-                mActionButton.setOnClickListener(new OnClickListener()
+                mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
+                mActionButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(final View v)
                     {
-                        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
                                 mBooking, mSource, mSourceExtras, 0.0f)));
-                        mBus.post(new HandyEvent.RequestClaimJob(mBooking, mSource, mSourceExtras));
+                        bus.post(new HandyEvent.RequestClaimJob(mBooking, mSource, mSourceExtras));
                     }
                 });
                 break;
@@ -510,16 +539,16 @@ public class BookingView extends InjectedBusView
             case ON_MY_WAY:
             {
                 mActionButton.setText(R.string.on_my_way);
-                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
-                mActionButton.setOnClickListener(new OnClickListener()
+                mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
+                mActionButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(final View v)
                     {
-                        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(
                                 mBooking, getLocationData())));
-                        mBus.post(new HandyEvent.RequestNotifyJobOnMyWay(
+                        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(
                                 mBooking.getId(), getLocationData()));
                     }
                 });
@@ -529,7 +558,7 @@ public class BookingView extends InjectedBusView
             }
             case CHECK_IN:
             {
-                if (mMapLayout.getVisibility() == VISIBLE)
+                if (mMapLayout.getVisibility() == View.VISIBLE)
                 {
                     mMapLayout.setLayoutParams(new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -538,16 +567,16 @@ public class BookingView extends InjectedBusView
                 }
 
                 mActionButton.setText(R.string.check_in);
-                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
-                mActionButton.setOnClickListener(new OnClickListener()
+                mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
+                mActionButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(final View v)
                     {
-                        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
                                 mBooking, getLocationData())));
-                        mBus.post(new HandyEvent.RequestNotifyJobCheckIn(
+                        bus.post(new HandyEvent.RequestNotifyJobCheckIn(
                                 mBooking.getId(), getLocationData()));
                     }
                 });
@@ -558,15 +587,15 @@ public class BookingView extends InjectedBusView
             case CHECK_OUT:
             {
                 mActionButton.setText(R.string.check_out);
-                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
-                mActionButton.setOnClickListener(new OnClickListener()
+                mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
+                mActionButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(final View v)
                     {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-                        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
+                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
                     }
                 });
                 initHelperText(action);
@@ -595,11 +624,10 @@ public class BookingView extends InjectedBusView
 
     private void initHelperText(Booking.Action action)
     {
-        if (!TextUtils.isNullOrEmpty(action.getHelperText()))
+        if (!TextUtils.isNullOrEmpty(action.getHelperText()) && !mHideActionButtons)
         {
             mBookingDetailsActionHelperText.setVisibility(View.VISIBLE);
             mBookingDetailsActionHelperText.setText(action.getHelperText());
         }
     }
 }
-

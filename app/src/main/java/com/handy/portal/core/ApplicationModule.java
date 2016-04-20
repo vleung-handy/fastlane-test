@@ -63,8 +63,6 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
-import com.handy.portal.ui.element.bookings.BookingView;
-import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
@@ -80,11 +78,12 @@ import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
 import com.handy.portal.ui.fragment.bookings.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.bookings.BookingDetailsWrapperFragment;
+import com.handy.portal.ui.fragment.bookings.BookingFragment;
 import com.handy.portal.ui.fragment.bookings.CancellationRequestFragment;
-import com.handy.portal.ui.fragment.bookings.CheckoutJobDetailsFragment;
 import com.handy.portal.ui.fragment.bookings.ComplementaryBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.InProgressBookingFragment;
 import com.handy.portal.ui.fragment.bookings.NearbyBookingsFragment;
-import com.handy.portal.ui.fragment.bookings.NewBookingDetailsFragment;
 import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
@@ -99,7 +98,6 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
@@ -127,7 +125,7 @@ import retrofit.converter.GsonConverter;
 
 @Module(injects = {
         BookingDetailsFragment.class,
-        NewBookingDetailsFragment.class,
+        BookingDetailsWrapperFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
         ScheduledBookingsFragment.class,
@@ -189,11 +187,9 @@ import retrofit.converter.GsonConverter;
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
         SendReceiptCheckoutFragment.class,
-        BookingView.class,
-        InProgressBookingView.class,
-        InjectedBusView.class,
-        CheckoutJobDetailsFragment.class,
         RequestSuppliesWebViewFragment.class,
+        BookingFragment.class,
+        InProgressBookingFragment.class
 })
 public final class ApplicationModule
 {

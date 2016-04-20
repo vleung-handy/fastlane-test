@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
@@ -41,13 +42,10 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
-import com.handy.portal.ui.element.bookings.BookingView;
-import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
-import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
@@ -63,7 +61,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NewBookingDetailsFragment extends ActionBarFragment implements View.OnClickListener
+public class BookingDetailsWrapperFragment extends ActionBarFragment implements View.OnClickListener
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
 
@@ -79,7 +77,6 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     @Bind(R.id.fetch_error_text)
     TextView mErrorText;
 
-    private InjectedBusView mCurrentView;
     private Booking mBooking;
     private String mRequestedBookingId;
     private Booking.BookingType mRequestedBookingType;
@@ -132,10 +129,6 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     public void onResume()
     {
         super.onResume();
-        if (mCurrentView != null)
-        {
-            mCurrentView.registerBus();
-        }
 
         if (!MainActivityFragment.clearingBackStack)
         {
@@ -147,10 +140,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     public void onPause()
     {
         super.onPause();
-        if (mCurrentView != null)
-        {
-            mCurrentView.unregisterBus();
-        }
+
         if (mCounter != null)
         { mCounter.cancel(); }
 
@@ -520,44 +510,38 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
 
     private void updateDisplay()
     {
-        if (mCurrentView != null)
-        {
-            mCurrentView.unregisterBus();
-        }
         mSlideUpPanelContainer.removeAllViews();
 
-        boolean noShowReported = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
         int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
-        if (bookingProgress == BookingProgress.READY_FOR_CLAIM)
-        {
-            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported, mFromPaymentsTab);
-            setActionBarTitle(R.string.available_job);
-        }
-        else if (bookingProgress == BookingProgress.READY_FOR_ON_MY_WAY ||
-                bookingProgress == BookingProgress.READY_FOR_CHECK_IN ||
-                (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
-                        && mBooking.getCustomerPreferences().size() == 0))
-        {
-            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported, mFromPaymentsTab);
-            setTimerIfNeeded();
 
-        }
-        else if (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT)
+        if(bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
+                && mBooking.getCustomerPreferences().size() > 0)
+        //in progress booking (after check in and before check out)
         {
-            mCurrentView = new InProgressBookingView(getContext(), mBooking, this, noShowReported);
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(mSlideUpPanelContainer.getId(), InProgressBookingFragment.newInstance(mBooking, mSource)).commit();
             setTimerIfNeeded();
         }
-        else
+        else //not in progress booking
         {
-            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported, mFromPaymentsTab);
-            setActionBarTitle(R.string.completed_job);
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(mSlideUpPanelContainer.getId(),
+                    BookingFragment.newInstance(mBooking, mSource, mFromPaymentsTab, false)).commit();
+            if(bookingProgress == BookingProgress.READY_FOR_CLAIM)
+            {
+                setActionBarTitle(R.string.available_job);
+            }
+            else if(bookingProgress == BookingProgress.READY_FOR_ON_MY_WAY ||
+                    bookingProgress == BookingProgress.READY_FOR_CHECK_IN ||
+                    bookingProgress == BookingProgress.READY_FOR_CHECK_OUT)
+            {
+                setTimerIfNeeded();
+            }
+            else //completed
+            {
+                setActionBarTitle(R.string.completed_job);
+            }
         }
-
-        mSlideUpPanelContainer.addView(mCurrentView);
-        mCurrentView.registerBus();
     }
 
     private ActionBar getActionBar()
