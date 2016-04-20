@@ -37,6 +37,7 @@ import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
@@ -313,7 +314,7 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
             case ISSUE_OTHER:
             case RESCHEDULE:
             case CANCELLATION_POLICY:
-                goToHelpCenter(event.action.getDeepLinkData());
+                goToHelpCenter(event.action);
                 break;
             case REMOVE:
                 removeJob(event.action);
@@ -644,11 +645,21 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         return Utils.getCurrentLocation((BaseActivity) getActivity());
     }
 
-    private void goToHelpCenter(String helpNodeId)
+    private void goToHelpCenter(final Booking.Action action)
     {
-        Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.HELP_NODE_ID, helpNodeId);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments));
+        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
+        if (configuration != null && configuration.shouldUseHelpCenterWebView())
+        {
+            final Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+        }
+        else
+        {
+            final Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.HELP_NODE_ID, action.getDeepLinkData());
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
+        }
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction)
