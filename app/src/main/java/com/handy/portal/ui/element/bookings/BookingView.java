@@ -187,7 +187,10 @@ public class BookingView extends InjectedBusView
                     bookingProgress == BookingProgress.READY_FOR_CLAIM ||
                     fromPaymentsTab || mBooking.isProxy())
             {
-                mBookingAddressText.setText(address.getShortRegion());
+                mBookingAddressText.setText(mBooking.isUK() ?
+                        getResources().getString(R.string.comma_formatted,
+                                address.getShortRegion(), address.getZip()) :
+                        address.getShortRegion());
             }
             else
             {

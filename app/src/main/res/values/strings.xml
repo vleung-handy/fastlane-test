@@ -8,6 +8,7 @@
     <string name="none">None</string>
     <string name="time_interval_formatted">%1$s – %2$s</string>
     <string name="two_lines_formatted">%1$s\n%2$s</string>
+    <string name="comma_formatted">%1$s, %2$s</string>
 
     <!-- Generic Single Word -->
     <string name="success">Success</string>
