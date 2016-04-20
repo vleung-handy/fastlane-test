@@ -562,7 +562,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         if (!hasBeenWarned)
         {
-            allowAction = !checkShowWarningDialog(actionType);
+            allowAction = !checkShowWarning(actionType);
         }
 
         if (!allowAction)
@@ -803,6 +803,7 @@ public class BookingDetailsFragment extends ActionBarFragment
     private void requestRemoveJob(@NonNull Booking booking)
     {
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
+        String warning = (removeAction != null) ? removeAction.getWarningText() : null;
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                 booking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
