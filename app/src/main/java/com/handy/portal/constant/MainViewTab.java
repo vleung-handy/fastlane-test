@@ -45,7 +45,7 @@ public enum MainViewTab implements Serializable
     NEARBY_JOBS(NearbyBookingsFragment.class),
     JOB_DETAILS(BookingDetailsWrapperFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
-    CHECKOUT_JOB_DETAILS(BookingFragment.class),
+    NOT_IN_PROGRESS_JOB_DETAILS(BookingFragment.class),
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
 
     NOTIFICATIONS(NotificationsFragment.class),

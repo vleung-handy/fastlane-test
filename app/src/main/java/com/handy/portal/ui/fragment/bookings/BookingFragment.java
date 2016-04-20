@@ -208,7 +208,7 @@ public class BookingFragment extends ActionBarFragment
         else
         {
             mCustomerNameText.setText(mBooking.getUser().getFullName());
-            mSupportButton.setVisibility(VISIBLE);
+            mSupportButton.setVisibility(View.VISIBLE);
         }
 
         Address address = mBooking.getAddress();

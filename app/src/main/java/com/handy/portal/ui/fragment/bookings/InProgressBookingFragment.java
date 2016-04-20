@@ -234,7 +234,7 @@ public class InProgressBookingFragment extends InjectedFragment
         args.putBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB, false);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, true);
 
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CHECKOUT_JOB_DETAILS, args, true));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.NOT_IN_PROGRESS_JOB_DETAILS, args, true));
     }
 
     @OnClick(R.id.in_progress_booking_action_button)
