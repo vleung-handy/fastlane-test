@@ -65,7 +65,13 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
         Window window = dialog.getWindow();
         window.requestFeature(Window.FEATURE_NO_TITLE);
         window.getAttributes().windowAnimations = R.style.dialog_animation_slide_up_down_from_bottom;
+        dialog.setCanceledOnTouchOutside(cancelDialogOnTouchOutside());
         return dialog;
+    }
+
+    public boolean cancelDialogOnTouchOutside()
+    {
+        return true;
     }
 
     /**

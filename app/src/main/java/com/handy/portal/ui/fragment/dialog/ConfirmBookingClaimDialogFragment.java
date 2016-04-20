@@ -13,10 +13,15 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.element.bookings.BookingCancellationPolicyListItemView;
 import com.handy.portal.util.CurrencyUtils;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -43,6 +48,9 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Inject
+    Bus mBus;
 
     @Override
     public View getBookingActionContentView(LayoutInflater inflater, ViewGroup container)
@@ -77,6 +85,8 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
 
         setTitleAndSubtitle();
         setBookingCancellationPolicyDisplay();
+
+        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimShown()));
     }
 
     private void setTitleAndSubtitle()
@@ -99,9 +109,9 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     {
         mCancellationPolicyContent.setVisibility(View.VISIBLE);
         mShowCancellationPolicyButton.setVisibility(View.GONE);
+        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimDetailsShown()));
     }
 
-    //todo consider another way of doing this
     @Override
     protected void onConfirmBookingActionButtonClicked()
     {
@@ -111,6 +121,7 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
         {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         }
+        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimConfirmed()));
         dismiss();
     }
 
