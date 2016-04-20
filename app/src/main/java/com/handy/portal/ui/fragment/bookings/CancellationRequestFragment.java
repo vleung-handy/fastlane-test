@@ -46,8 +46,8 @@ public class CancellationRequestFragment extends ActionBarFragment
     TextView mDateTextView;
     @Bind(R.id.cancellation_time)
     TextView mTimeTextView;
-    @Bind(R.id.cancellation_withholding_amount)
-    TextView mWithholdingAmountTextView;
+    @Bind(R.id.cancellation_fee_amount)
+    TextView mFeeAmountTextView;
     @Bind(R.id.cancellation_reasons)
     RadioGroup mReasonsRadioGroup;
 
@@ -76,7 +76,9 @@ public class CancellationRequestFragment extends ActionBarFragment
         final View view = inflater.inflate(R.layout.fragment_cancellation_request, container, false);
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking,
-                ScheduledJobsLog.RemoveJobLog.REASON_FLOW
+                ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
+                mAction.getFeeAmount(),
+                mAction.getWarningText()
         )));
         return view;
     }
@@ -120,7 +122,10 @@ public class CancellationRequestFragment extends ActionBarFragment
         {
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                     mBooking,
-                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW
+                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
+                    selectedReason,
+                    mAction.getFeeAmount(),
+                    mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestRemoveJob(mBooking));
@@ -134,7 +139,10 @@ public class CancellationRequestFragment extends ActionBarFragment
         {
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
                     mBooking,
-                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW
+                    ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
+                    getSelectedReason(),
+                    mAction.getFeeAmount(),
+                    mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -156,6 +164,9 @@ public class CancellationRequestFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
+                getSelectedReason(),
+                mAction.getFeeAmount(),
+                mAction.getWarningText(),
                 errorMessage
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -175,8 +186,8 @@ public class CancellationRequestFragment extends ActionBarFragment
         String endTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(mBooking.getEndDate());
         mTimeTextView.setText(getString(R.string.time_interval_formatted, startTime, endTime));
 
-        mWithholdingAmountTextView.setText(getString(R.string.withholding_fee_formatted,
-                CurrencyUtils.formatPriceWithCents(mAction.getWithholdingAmountCents(),
+        mFeeAmountTextView.setText(getString(R.string.fee_formatted,
+                CurrencyUtils.formatPriceWithCents(mAction.getFeeAmount(),
                         mBooking.getPaymentToProvider().getCurrencySymbol())));
 
         for (String reason : mAction.getRemoveReasons())

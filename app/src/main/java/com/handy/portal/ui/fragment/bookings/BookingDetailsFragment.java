@@ -562,7 +562,7 @@ public class BookingDetailsFragment extends ActionBarFragment
 
         if (!hasBeenWarned)
         {
-            allowAction = !checkShowWarning(actionType);
+            allowAction = !checkShowWarningDialog(actionType);
         }
 
         if (!allowAction)
@@ -779,7 +779,9 @@ public class BookingDetailsFragment extends ActionBarFragment
                 {
                     bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                             mAssociatedBooking,
-                            ScheduledJobsLog.RemoveJobLog.POPUP
+                            ScheduledJobsLog.RemoveJobLog.POPUP,
+                            action.getFeeAmount(),
+                            action.getWarningText()
                     )));
                     bus.post(new HandyEvent.ShowConfirmationRemoveJob());
                 }
@@ -803,7 +805,10 @@ public class BookingDetailsFragment extends ActionBarFragment
         final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                 booking,
-                ScheduledJobsLog.RemoveJobLog.POPUP
+                ScheduledJobsLog.RemoveJobLog.POPUP,
+                null,
+                removeAction != null ? removeAction.getFeeAmount() : 0,
+                warning
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(booking));
@@ -1027,7 +1032,10 @@ public class BookingDetailsFragment extends ActionBarFragment
                     ScheduledJobsLog.RemoveJobLog.KEEP_RATE : ScheduledJobsLog.RemoveJobLog.POPUP;
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
                     mAssociatedBooking,
-                    removalType
+                    ScheduledJobsLog.RemoveJobLog.POPUP,
+                    null,
+                    removeAction != null ? removeAction.getFeeAmount() : 0,
+                    removeAction != null ? removeAction.getWarningText() : null
             )));
             //TODO: can't currently remove series using portal endpoint so only removing the single job
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -1059,7 +1067,10 @@ public class BookingDetailsFragment extends ActionBarFragment
                 ScheduledJobsLog.RemoveJobLog.KEEP_RATE : ScheduledJobsLog.RemoveJobLog.POPUP;
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
                 mAssociatedBooking,
-                removalType,
+                ScheduledJobsLog.RemoveJobLog.POPUP,
+                null,
+                removeAction != null ? removeAction.getFeeAmount() : 0,
+                removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
         )));
     }

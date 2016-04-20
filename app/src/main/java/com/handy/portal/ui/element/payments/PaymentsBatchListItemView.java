@@ -63,7 +63,7 @@ public class PaymentsBatchListItemView extends TableLayout
 
             PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
             int numJobs = 0;
-            int numWithholdings = 0;
+            int numFees = 0;
             for (int i = 0; i < paymentGroups.length; i++)
             {
                 if (PaymentGroup.MachineName.completed_jobs.name().equals(paymentGroups[i].getMachineName()))
@@ -72,10 +72,10 @@ public class PaymentsBatchListItemView extends TableLayout
                 }
                 else if (PaymentGroup.MachineName.withholdings.name().equals(paymentGroups[i].getMachineName()))
                 {
-                    numWithholdings = paymentGroups[i].getPayments().length;
+                    numFees = paymentGroups[i].getPayments().length;
                 }
             }
-            jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numWithholdings));
+            jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numFees));
             setEnabled(true);
         }
         else if (paymentBatch instanceof LegacyPaymentBatch)

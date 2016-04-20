@@ -31,7 +31,7 @@ public class NeoPaymentBatch extends PaymentBatch
     private int numCompletedJobs;
 
     @SerializedName("num_withholdings")
-    private int numWithholdings;
+    private int numFees;
 
     @SerializedName("net_earnings_total_amount")
     private int netEarningsTotalAmount;
@@ -41,10 +41,10 @@ public class NeoPaymentBatch extends PaymentBatch
     private int grossEarningsTotalAmount;
 
     @SerializedName("withholdings_total_amount")
-    private int withholdingsTotalAmount;
+    private int feesTotalAmount;
 
     @SerializedName("remaining_withholding_amount")
-    private int remainingWithholdingAmount;
+    private int remainingFeeAmount;
 
     @SerializedName("payment_groups")
     private PaymentGroup paymentGroups[];
@@ -67,9 +67,9 @@ public class NeoPaymentBatch extends PaymentBatch
         }
     }
 
-    public int getNumWithholdings()
+    public int getNumFees()
     {
-        return numWithholdings;
+        return numFees;
     }
 
     public int getGrossEarningsTotalAmount()
@@ -77,9 +77,9 @@ public class NeoPaymentBatch extends PaymentBatch
         return grossEarningsTotalAmount;
     }
 
-    public int getWithholdingsTotalAmount()
+    public int getFeesTotalAmount()
     {
-        return withholdingsTotalAmount;
+        return feesTotalAmount;
     }
 
     public int getNumCompletedJobs()
@@ -122,9 +122,9 @@ public class NeoPaymentBatch extends PaymentBatch
         return netEarningsTotalAmount;
     }
 
-    public int getRemainingWithholdingAmount()
+    public int getRemainingFeeAmount()
     {
-        return remainingWithholdingAmount;
+        return remainingFeeAmount;
     }
 
     public PaymentGroup[] getPaymentGroups()

@@ -57,19 +57,29 @@ public class ScheduledJobsLog extends EventLog
 
         @SerializedName("removal_type")
         private String mRemovalType;
+        @SerializedName("removal_reason")
+        private String mRemovalReason;
         @SerializedName("withholding_amount")
-        private int mWithholdingAmount;
+        private int mFeeAmount;
         @SerializedName("old_keep_rate")
         private Float mOldKeepRate;
         @SerializedName("new_keep_rate")
         private Float mNewKeepRate;
+        @SerializedName("warning_message")
+        private String mWarningMessage;
 
         public RemoveJobLog(final String eventType,
                             final Booking booking,
-                            final String removalType)
+                            final String removalType,
+                            final String removalReason,
+                            final int feeAmount,
+                            final String warningMessage)
         {
             super(eventType, EVENT_CONTEXT, booking);
             mRemovalType = removalType;
+            mRemovalReason = removalReason;
+            mFeeAmount = feeAmount;
+            mWarningMessage = warningMessage;
             final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
             if (removeAction != null)
             {
@@ -90,9 +100,11 @@ public class ScheduledJobsLog extends EventLog
         private static final String EVENT_TYPE = "remove_job_confirmation_shown";
 
         public RemoveJobConfirmationShown(final Booking booking,
-                                          final String removalType)
+                                          final String removalType,
+                                          final int feeAmount,
+                                          final String warningMessage)
         {
-            super(EVENT_TYPE, booking, removalType);
+            super(EVENT_TYPE, booking, removalType, null, feeAmount, warningMessage);
         }
     }
 
@@ -102,9 +114,12 @@ public class ScheduledJobsLog extends EventLog
         private static final String EVENT_TYPE = "remove_job_submitted";
 
         public RemoveJobSubmitted(final Booking booking,
-                                  final String removalType)
+                                  final String removalType,
+                                  final String removalReason,
+                                  final int feeAmount,
+                                  final String warningMessage)
         {
-            super(EVENT_TYPE, booking, removalType);
+            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, warningMessage);
         }
     }
 
@@ -114,10 +129,12 @@ public class ScheduledJobsLog extends EventLog
         private static final String EVENT_TYPE = "remove_job_success";
 
         public RemoveJobSuccess(final Booking booking,
-                                final String removalType
-        )
+                                final String removalType,
+                                final String removalReason,
+                                final int feeAmount,
+                                final String warningMessage)
         {
-            super(EVENT_TYPE, booking, removalType);
+            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, warningMessage);
         }
     }
 
@@ -131,9 +148,12 @@ public class ScheduledJobsLog extends EventLog
 
         public RemoveJobError(final Booking booking,
                               final String removalType,
+                              final String removalReason,
+                              final int feeAmount,
+                              final String warningMessage,
                               final String errorMessage)
         {
-            super(EVENT_TYPE, booking, removalType);
+            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, warningMessage);
             mErrorMessage = errorMessage;
         }
     }

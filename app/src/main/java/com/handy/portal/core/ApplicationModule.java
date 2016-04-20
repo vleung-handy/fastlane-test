@@ -70,6 +70,9 @@ import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
+import com.handy.portal.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
@@ -87,6 +90,16 @@ import com.handy.portal.ui.fragment.bookings.NearbyBookingsFragment;
 import com.handy.portal.ui.fragment.bookings.NewBookingDetailsFragment;
 import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
+import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.bookings.BookingDetailsWrapperFragment;
+import com.handy.portal.ui.fragment.bookings.BookingFragment;
+import com.handy.portal.ui.fragment.bookings.CancellationRequestFragment;
+import com.handy.portal.ui.fragment.bookings.ComplementaryBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.InProgressBookingFragment;
+import com.handy.portal.ui.fragment.bookings.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
@@ -101,7 +114,6 @@ import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
@@ -129,7 +141,7 @@ import retrofit.converter.GsonConverter;
 
 @Module(injects = {
         BookingDetailsFragment.class,
-        NewBookingDetailsFragment.class,
+        BookingDetailsWrapperFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
         ScheduledBookingsFragment.class,
@@ -198,6 +210,9 @@ import retrofit.converter.GsonConverter;
         InjectedBusView.class,
         CheckoutJobDetailsFragment.class,
         RequestSuppliesWebViewFragment.class,
+        RequestSuppliesWebViewFragment.class,
+        BookingFragment.class,
+        InProgressBookingFragment.class,
 })
 public final class ApplicationModule
 {
