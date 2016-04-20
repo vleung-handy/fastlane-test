@@ -21,6 +21,7 @@ import com.handy.portal.util.CurrencyUtils;
 import butterknife.Bind;
 import butterknife.OnClick;
 
+//todo add validation/null checks
 public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialogFragment
 {
     @Bind(R.id.fragment_dialog_confirm_claim_cancellation_policy_content)
@@ -34,9 +35,6 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
 
     public static final String FRAGMENT_TAG = ConfirmBookingClaimDialogFragment.class.getName();
 
-    /*
-    TODO make this cleaner
-     */
     public static ConfirmBookingClaimDialogFragment newInstance(Booking booking)
     {
         ConfirmBookingClaimDialogFragment fragment = new ConfirmBookingClaimDialogFragment();
@@ -61,7 +59,7 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     @Override
     protected String getConfirmButtonText()
     {
-        return "Confirm Claim"; //todo strings.xml
+        return getString(R.string.claim_job);
     }
 
     @Override

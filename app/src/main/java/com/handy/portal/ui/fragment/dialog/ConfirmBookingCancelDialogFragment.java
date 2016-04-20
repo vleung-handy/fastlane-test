@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 
+//todo add validation/null checks
 public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDialogFragment
 {
     public static final String FRAGMENT_TAG = ConfirmBookingCancelDialogFragment.class.getSimpleName();
@@ -127,10 +128,10 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
-                null,
+                null, //don't have a remove reason
                 removeAction.getFeeAmount(),
                 removeAction.getWarningText()
-        ))); //TODO fix this
+        )));
         if (getTargetFragment() != null)
         {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
