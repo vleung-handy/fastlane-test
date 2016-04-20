@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment.bookings;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -35,7 +33,6 @@ import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.constant.RequestCode;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
@@ -64,15 +61,10 @@ import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
-import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
-import com.handy.portal.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
-import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.ui.view.MapPlaceholderView;
 import com.handy.portal.ui.widget.BookingActionButton;
-import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.SupportActionUtils;
-import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -86,7 +78,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BookingDetailsFragment extends ActionBarFragment //TODO remove changes to this file as we're not gonna use it anymore
+public class BookingDetailsFragment extends ActionBarFragment
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
     @Bind(R.id.booking_details_map_layout)
@@ -562,7 +554,7 @@ public class BookingDetailsFragment extends ActionBarFragment //TODO remove chan
 
         if (!hasBeenWarned)
         {
-            allowAction = !checkShowWarning(actionType);
+            allowAction = !checkShowWarningDialog(actionType);
         }
 
         if (!allowAction)
@@ -675,58 +667,25 @@ public class BookingDetailsFragment extends ActionBarFragment //TODO remove chan
     }
 
     //Check if the current booking data for a given action type has an associated warning to display
-    private boolean checkShowWarning(final BookingActionButtonType actionType)
+    private boolean checkShowWarningDialog(BookingActionButtonType actionType)
     {
-        final Booking.Action action = mAssociatedBooking.getAction(actionType.getActionName());
-        boolean showingWarning = showCustomWarning(actionType);
-        if (!showingWarning && action != null && !TextUtils.isNullOrEmpty(action.getWarningText()))
-        {
-            showingWarning = true;
-            showBookingActionWarningDialog(action.getWarningText(), action);
-        }
-        return showingWarning;
-    }
+        boolean showingWarningDialog = false;
 
-    private boolean showCustomWarning(final BookingActionButtonType actionType)
-    {
-        switch (actionType)
-        {
-            case CLAIM:
-                ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mAssociatedBooking);
-                confirmBookingDialogFragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.CONFIRM_REQUEST); //todo consider an alternate way
-                FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
-                return true;
-            case REMOVE:
-                final Booking.Action removeAction = mAssociatedBooking.getAction(Booking.Action.ACTION_REMOVE);
-                final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
-                if (keepRate != null)
-                {
-                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mAssociatedBooking);
-                    fragment.setTargetFragment(BookingDetailsFragment.this, RequestCode.REMOVE_BOOKING);
-                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
-                    return true;
-                }
-            default:
-                return false;
-        }
-    }
+        List<Booking.Action> allowedActions = mAssociatedBooking.getAllowedActions();
 
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-    {
-        if (resultCode == Activity.RESULT_OK)
+        //crawl through our list of allowed actions to retrieve the data from the booking for this allowed action
+        for (Booking.Action action : allowedActions)
         {
-            switch (requestCode)
+            if (UIUtils.getAssociatedActionType(action) == actionType)
             {
-                case RequestCode.CONFIRM_REQUEST:
-                    Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
-                    requestClaimJob(booking);
-                    break;
-                case RequestCode.REMOVE_BOOKING:
-                    requestRemoveJob(mAssociatedBooking);
-                    break;
+                if (action.getWarningText() != null && !action.getWarningText().isEmpty())
+                {
+                    showingWarningDialog = true;
+                    showBookingActionWarningDialog(action.getWarningText(), action);
+                }
             }
         }
+        return showingWarningDialog;
     }
 
     //Show a warning dialog for a button action, confirming triggers the original action
@@ -734,38 +693,32 @@ public class BookingDetailsFragment extends ActionBarFragment //TODO remove chan
     {
         final BookingActionButtonType actionType = UIUtils.getAssociatedActionType(action);
         trackShowActionWarning(action);
-        switch (action.getActionName())
-        {
-            default:
-                //specific booking error, show an alert dialog
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        //specific booking error, show an alert dialog
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
-                WarningButtonsText warningButtonsText = WarningButtonsText.forAction(actionType);
+        WarningButtonsText warningButtonsText = WarningButtonsText.forAction(actionType);
 
-                // set dialog message
-                alertDialogBuilder
-                        .setTitle(warningButtonsText.getTitleStringId())
-                        .setMessage(warning)
-                        .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
-                                {
-                                    public void onClick(DialogInterface dialog, int id)
-                                    {
-                                        //proceed with action, we have accepted the warning
-                                        bus.post(new HandyEvent.ActionWarningAccepted(actionType));
-                                        takeAction(actionType, true);
-                                    }
-                                }
-                        )
-                        .setNegativeButton(warningButtonsText.getNegativeStringId(), null)
-                ;
+        // set dialog message
+        alertDialogBuilder
+                .setTitle(warningButtonsText.getTitleStringId())
+                .setMessage(warning)
+                .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                //proceed with action, we have accepted the warning
+                                bus.post(new HandyEvent.ActionWarningAccepted(actionType));
+                                takeAction(actionType, true);
+                            }
+                        }
+                )
+                .setNegativeButton(warningButtonsText.getNegativeStringId(), null)
+        ;
 
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                // show it
-                alertDialog.show();
-                break;
-        }
-
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
     }
 
     private void trackShowActionWarning(final Booking.Action action)
@@ -1029,12 +982,10 @@ public class BookingDetailsFragment extends ActionBarFragment //TODO remove chan
         {
             final Booking.Action removeAction =
                     mAssociatedBooking.getAction(Booking.Action.ACTION_REMOVE);
-            final String removalType = removeAction != null && removeAction.getKeepRate() != null ?
-                    ScheduledJobsLog.RemoveJobLog.KEEP_RATE : ScheduledJobsLog.RemoveJobLog.POPUP;
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
                     mAssociatedBooking,
                     ScheduledJobsLog.RemoveJobLog.POPUP,
-                    removalType,
+                    null,
                     removeAction != null ? removeAction.getFeeAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
@@ -1064,8 +1015,6 @@ public class BookingDetailsFragment extends ActionBarFragment //TODO remove chan
     {
         final Booking.Action removeAction =
                 mAssociatedBooking.getAction(Booking.Action.ACTION_REMOVE);
-        final String removalType = removeAction != null && removeAction.getKeepRate() != null ?
-                ScheduledJobsLog.RemoveJobLog.KEEP_RATE : ScheduledJobsLog.RemoveJobLog.POPUP;
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
                 mAssociatedBooking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
