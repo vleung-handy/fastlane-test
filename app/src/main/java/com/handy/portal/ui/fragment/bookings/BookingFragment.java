@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -121,7 +122,7 @@ public class BookingFragment extends ActionBarFragment
     private boolean mFromPaymentsTab;
     private boolean mHideActionButtons;
 
-    public static BookingFragment newInstance(final Booking booking, final String source,
+    public static BookingFragment newInstance(@NonNull final Booking booking, final String source,
                                               boolean fromPaymentsTab, boolean hideActionButtons)
     {
         BookingFragment fragment = new BookingFragment();
@@ -158,7 +159,6 @@ public class BookingFragment extends ActionBarFragment
 
         mFromPaymentsTab = getArguments().getBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB);
         mHideActionButtons = getArguments().getBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS);
-
     }
 
     @Override
