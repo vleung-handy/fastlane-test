@@ -214,7 +214,7 @@ public class InProgressBookingView extends InjectedBusView
         Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
 
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.CHECKOUT_JOB_DETAILS, bundle, true));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NOT_IN_PROGRESS_JOB_DETAILS, bundle, true));
     }
 
     @OnClick(R.id.in_progress_booking_action_button)

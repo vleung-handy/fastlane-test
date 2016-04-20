@@ -83,7 +83,6 @@ import com.handy.portal.ui.fragment.bookings.BookingDetailsFragment;
 import com.handy.portal.ui.fragment.bookings.BookingDetailsWrapperFragment;
 import com.handy.portal.ui.fragment.bookings.BookingFragment;
 import com.handy.portal.ui.fragment.bookings.CancellationRequestFragment;
-import com.handy.portal.ui.fragment.bookings.CheckoutJobDetailsFragment;
 import com.handy.portal.ui.fragment.bookings.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.bookings.InProgressBookingFragment;
 import com.handy.portal.ui.fragment.bookings.NearbyBookingsFragment;
@@ -196,8 +195,6 @@ import retrofit.converter.GsonConverter;
         ConfirmBookingCancelDialogFragment.class,
         BookingView.class,
         InProgressBookingView.class,
-        InjectedBusView.class,
-        CheckoutJobDetailsFragment.class,
         RequestSuppliesWebViewFragment.class,
         RequestSuppliesWebViewFragment.class,
         BookingFragment.class,

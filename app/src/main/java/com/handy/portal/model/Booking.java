@@ -646,8 +646,6 @@ public class Booking implements Comparable<Booking>, Serializable
                 return mSubText;
             }
 
-            public int getWithholdingAmountCents() { return mWithholdingAmountCents; }
-
             public List<String> getRemoveReasons() { return mRemoveReasons; }
 
             public CancellationPolicy getCancellationPolicy()

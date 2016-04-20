@@ -58,16 +58,22 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
         displayWithholdingNotice();
         displayKeepRate();
 
+
+        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
+        final int withholdingAmountCents = removeAction.getFeeAmount();
+
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking,
-                ScheduledJobsLog.RemoveJobLog.KEEP_RATE
+                ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
+                withholdingAmountCents,
+                removeAction.getWarningText()
         )));
     }
 
     private void displayWithholdingNotice()
     {
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        final int withholdingAmountCents = removeAction.getWithholdingAmountCents();
+        final int withholdingAmountCents = removeAction.getFeeAmount();
         if (withholdingAmountCents > 0)
         {
             final String currencySymbol = mBooking.getPaymentToProvider().getCurrencySymbol();
@@ -116,10 +122,15 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     @Override
     protected void onConfirmBookingActionButtonClicked()
     {
+
+        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                 mBooking,
-                ScheduledJobsLog.RemoveJobLog.KEEP_RATE
-        )));
+                ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
+                null,
+                removeAction.getFeeAmount(),
+                removeAction.getWarningText()
+        ))); //TODO fix this
         if (getTargetFragment() != null)
         {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
