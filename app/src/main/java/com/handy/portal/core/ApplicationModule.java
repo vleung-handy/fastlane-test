@@ -63,8 +63,6 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
-import com.handy.portal.ui.element.bookings.BookingView;
-import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
@@ -193,8 +191,6 @@ import retrofit.converter.GsonConverter;
         SendReceiptCheckoutFragment.class,
         ConfirmBookingClaimDialogFragment.class,
         ConfirmBookingCancelDialogFragment.class,
-        BookingView.class,
-        InProgressBookingView.class,
         RequestSuppliesWebViewFragment.class,
         RequestSuppliesWebViewFragment.class,
         BookingFragment.class,

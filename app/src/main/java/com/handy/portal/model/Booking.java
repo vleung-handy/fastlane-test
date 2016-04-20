@@ -648,6 +648,7 @@ public class Booking implements Comparable<Booking>, Serializable
 
             public List<String> getRemoveReasons() { return mRemoveReasons; }
 
+            @Nullable
             public CancellationPolicy getCancellationPolicy()
             {
                 return mCancellationPolicy;
@@ -696,11 +697,6 @@ public class Booking implements Comparable<Booking>, Serializable
                     {
                         return mDisplayText;
                     }
-
-//                public String getAmountFormatted()
-//                {
-//                    return mAmountFormatted;
-//                }
 
                     public boolean isActive()
                     {

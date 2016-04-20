@@ -86,7 +86,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BookingDetailsFragment extends ActionBarFragment
+public class BookingDetailsFragment extends ActionBarFragment //TODO remove changes to this file as we're not gonna use it anymore
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
     @Bind(R.id.booking_details_map_layout)
@@ -1034,7 +1034,7 @@ public class BookingDetailsFragment extends ActionBarFragment
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
                     mAssociatedBooking,
                     ScheduledJobsLog.RemoveJobLog.POPUP,
-                    null,
+                    removalType,
                     removeAction != null ? removeAction.getFeeAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
