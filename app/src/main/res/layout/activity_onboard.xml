@@ -52,7 +52,7 @@
     <Button
         android:id="@+id/btn_next"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/complete_button_height"
         android:text="@string/onboard_get_started"
         android:layout_alignParentBottom="true"
         style="@style/Button.Green"

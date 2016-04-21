@@ -57,6 +57,7 @@ import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
@@ -194,6 +195,7 @@ import retrofit.converter.GsonConverter;
         InjectedBusView.class,
         CheckoutJobDetailsFragment.class,
         RequestSuppliesWebViewFragment.class,
+        GettingStartedActivity.class,
 })
 public final class ApplicationModule
 {

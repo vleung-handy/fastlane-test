@@ -63,6 +63,9 @@ public interface HandyRetrofitService
     void getAvailableBookings(@Query("dates[]") Date[] dates,
                               HandyRetrofitCallback cb);
 
+    @GET(JOBS_PATH + "onboarding_jobs")
+    void getOnboardingJobs(HandyRetrofitCallback cb);
+
     @GET(JOBS_PATH + "scheduled_jobs")
     void getScheduledBookings(@Query("dates[]") Date[] date,
                               HandyRetrofitCallback cb);

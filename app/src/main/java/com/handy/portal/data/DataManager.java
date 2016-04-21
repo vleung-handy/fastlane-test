@@ -89,6 +89,11 @@ public class DataManager
         mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
+    public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
+    {
+        mService.getOnboardingJobs(new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
+
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
         mService.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));

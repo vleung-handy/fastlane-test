@@ -148,6 +148,26 @@ public class BookingManager
         }
     }
 
+    @Subscribe
+    public void onRequestOnboardingJobs(HandyEvent.RequestOnboardingJobs event)
+    {
+        mDataManager.getOnboardingJobs(new DataManager.Callback<BookingsListWrapper>()
+                                       {
+                                           @Override
+                                           public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+                                           {
+                                               mBus.post(new HandyEvent.ReceiveOnboardingJobsSuccess(bookingsListWrapper));
+                                           }
+
+                                           @Override
+                                           public void onError(final DataManager.DataManagerError error)
+                                           {
+                                               mBus.post(new HandyEvent.ReceiveOnboardingJobsError(error));
+                                           }
+                                       }
+        );
+    }
+
     /**
      * TODO: need to detect when pull to fresh happens, and make sure this is called again
      * unlike onRequestScheduledBookings, this will not fire events containing bookings for a specific date,

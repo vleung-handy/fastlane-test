@@ -37,7 +37,6 @@
         android:layout_height="@dimen/complete_button_height"
         style="@style/Button"
         android:layout_alignParentBottom="true"
-        android:elevation="@dimen/default_elevation"
         />
 </RelativeLayout>
 

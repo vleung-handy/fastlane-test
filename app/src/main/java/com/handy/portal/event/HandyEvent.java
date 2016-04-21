@@ -13,6 +13,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.Booking.Action;
 import com.handy.portal.model.Booking.BookingType;
 import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
@@ -248,6 +249,14 @@ public abstract class HandyEvent
     }
 
 
+    public static class RequestOnboardingJobs extends RequestEvent
+    {
+        public RequestOnboardingJobs()
+        {
+        }
+    }
+
+
     public static class RequestScheduledBookings extends RequestBookingsEvent
     {
         public final List<Date> dates;
@@ -313,6 +322,17 @@ public abstract class HandyEvent
     }
 
 
+    public static class ReceiveOnboardingJobsSuccess extends ReceiveSuccessEvent
+    {
+        public BookingsListWrapper bookings;
+
+        public ReceiveOnboardingJobsSuccess(BookingsListWrapper bookings)
+        {
+            this.bookings = bookings;
+        }
+    }
+
+
     public static class ReceiveScheduledBookingsSuccess extends ReceiveBookingsSuccess
     {
         public ReceiveScheduledBookingsSuccess(List<Booking> bookings, Date day)
@@ -334,6 +354,15 @@ public abstract class HandyEvent
         public ReceiveAvailableBookingsError(DataManager.DataManagerError error, List<Date> days)
         {
             this.days = days;
+            this.error = error;
+        }
+    }
+
+
+    public static class ReceiveOnboardingJobsError extends ReceiveErrorEvent
+    {
+        public ReceiveOnboardingJobsError(DataManager.DataManagerError error)
+        {
             this.error = error;
         }
     }

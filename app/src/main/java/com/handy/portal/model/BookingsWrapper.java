@@ -9,12 +9,21 @@ public class BookingsWrapper
 {
     @SerializedName("date")
     private Date date;
+
+    @SerializedName("sanitized_date")
+    private String sanitizedDate;
+
     @SerializedName("jobs")
     private List<Booking> bookings;
 
     public final Date getDate()
     {
         return date;
+    }
+
+    public String getSanitizedDate()
+    {
+        return sanitizedDate;
     }
 
     public final List<Booking> getBookings()

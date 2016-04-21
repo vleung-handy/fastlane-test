@@ -4,10 +4,9 @@
                 android:id="@+id/relative_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/default_padding"
-                android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/default_padding"
-                android:paddingRight="@dimen/default_padding"
+                android:minHeight="90dp"
+                android:padding="@dimen/default_padding"
+                tools:background="@color/handy_green"
     >
 
     <CheckBox
@@ -44,7 +43,7 @@
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Upper East Manhattan"
+            tools:text="Midtown East, Murray Hill, Gramercy"
             style="@style/TextView.Med"
             />
 

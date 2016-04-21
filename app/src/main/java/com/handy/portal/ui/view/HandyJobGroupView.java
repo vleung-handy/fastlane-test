@@ -8,9 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.onboarding.Job;
-import com.handy.portal.model.onboarding.JobGroup;
+import com.handy.portal.model.onboarding.BookingViewModel;
+import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
 import com.handy.portal.util.DateTimeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is a custom view that holds a collection of HandyJobView. It has a title to label
@@ -25,7 +28,7 @@ public class HandyJobGroupView extends LinearLayout implements CompoundButton.On
 
     int mMargin;
     int mMarginHalf;
-    JobGroup mJobs;
+    BookingsWrapperViewModel mViewModel;
 
     OnJobChangeListener mOnJobChangeListener;
 
@@ -80,14 +83,14 @@ public class HandyJobGroupView extends LinearLayout implements CompoundButton.On
         return "<b>" + rval.substring(0, idx) + "</b>" + rval.substring(idx, rval.length());
     }
 
-    public void bind(JobGroup group)
+    public void bind(BookingsWrapperViewModel model)
     {
-        mJobs = group;
-        mTitle.setText(Html.fromHtml(getHtmlFormattedDateString(group.sanitizedDate)));
+        mViewModel = model;
 
-        for (Job job : group.jobs)
+        mTitle.setText(Html.fromHtml(getHtmlFormattedDateString(mViewModel.getSanitizedDate())));
+
+        for (BookingViewModel bookingViewModel : mViewModel.mBookingViewModels)
         {
-
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -95,7 +98,7 @@ public class HandyJobGroupView extends LinearLayout implements CompoundButton.On
             layoutParams.setMargins(mMargin, mMarginHalf, mMargin, 0);
 
             OnboardJobView view = new OnboardJobView(getContext());
-            view.bind(job);
+            view.bind(bookingViewModel);
             view.setLayoutParams(layoutParams);
             view.setOnCheckedChangeListener(this);
             addView(view);
@@ -114,6 +117,26 @@ public class HandyJobGroupView extends LinearLayout implements CompoundButton.On
         {
             mOnJobChangeListener.onPriceChanged();
         }
+    }
+
+    /**
+     * Returns a copy of all the jobs that are selected
+     *
+     * @return
+     */
+    public List<BookingViewModel> getSelectedJobs()
+    {
+        List<BookingViewModel> rval = new ArrayList<>(mViewModel.mBookingViewModels);
+
+        for (BookingViewModel j : rval)
+        {
+            if (!j.selected)
+            {
+                rval.remove(j);
+            }
+        }
+
+        return rval;
     }
 
     public interface OnJobChangeListener

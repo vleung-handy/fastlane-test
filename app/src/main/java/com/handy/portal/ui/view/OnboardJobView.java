@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.onboarding.Job;
+import com.handy.portal.model.onboarding.BookingViewModel;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,7 +48,7 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
 
     CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
 
-    Job mJob;
+    BookingViewModel mBookingViewModel;
 
     public OnboardJobView(Context context)
     {
@@ -86,7 +86,7 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
             @Override
             public void onClick(View v)
             {
-                mCheckBox.setChecked(!mJob.selected);
+                mCheckBox.setChecked(!mBookingViewModel.selected);
             }
         });
     }
@@ -96,19 +96,19 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
         mOnCheckedChangeListener = onCheckedChangeListener;
     }
 
-    public void bind(Job job)
+    public void bind(BookingViewModel bookingViewModel)
     {
-        mJob = job;
-        mTvPrice.setText(job.getFormattedPrice());
-        mTitle.setText(job.title);
-        mSubTitle.setText(job.subTitle);
-        mCheckBox.setChecked(job.selected);
+        mBookingViewModel = bookingViewModel;
+        mTvPrice.setText(bookingViewModel.getFormattedPrice());
+        mTitle.setText(bookingViewModel.getTitle());
+        mSubTitle.setText(bookingViewModel.getSubTitle());
+        mCheckBox.setChecked(bookingViewModel.selected);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
-        mJob.selected = isChecked;
+        mBookingViewModel.selected = isChecked;
         if (isChecked)
         {
             this.setBackground(mCheckedDrawable);

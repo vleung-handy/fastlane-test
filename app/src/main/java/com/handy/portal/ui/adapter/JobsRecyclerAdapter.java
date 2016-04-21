@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.onboarding.JobGroup;
+import com.handy.portal.model.BookingsWrapper;
+import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
 import com.handy.portal.ui.view.HandyJobGroupView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,21 +25,34 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
 
     private final String TAG = JobsRecyclerAdapter.class.getName();
 
-    List<JobGroup> mJobs;
+    //this is the view model
+    List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
     String mTitle;
 
     HandyJobGroupView.OnJobChangeListener mOnJobChangeListener;
 
-    public JobsRecyclerAdapter(List<JobGroup> jobs, String title,
+    public JobsRecyclerAdapter(List<BookingsWrapper> bookings, String title,
                                HandyJobGroupView.OnJobChangeListener mListener)
     {
 
-        mOnJobChangeListener = mListener;
-        mTitle = title;
-        mJobs = jobs;
+        mBookingsWrapperViewModels = new ArrayList<>();
 
         //adding place holders for the header position
-        mJobs.add(0, null);
+        mBookingsWrapperViewModels.add(null);
+
+        //We assume there is at least one job. We filter out the wrappers without a job
+        for (BookingsWrapper booking : bookings)
+        {
+            if (booking.getBookings() == null || booking.getBookings().isEmpty())
+            {
+                continue;
+            }
+
+            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(booking));
+        }
+
+        mOnJobChangeListener = mListener;
+        mTitle = title;
     }
 
     @Override
@@ -65,13 +80,18 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
         return rcv;
     }
 
+    public List<BookingsWrapperViewModel> getBookingsWrapperViewModels()
+    {
+        return mBookingsWrapperViewModels;
+    }
+
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position)
     {
         if (holder.getItemViewType() == TYPE_ITEM)
         {
             Log.d(TAG, "onBindViewHolder:" + position);
-            holder.mJobView.bind(mJobs.get(position));
+            holder.mJobView.bind(mBookingsWrapperViewModels.get(position));
         }
     }
 
@@ -91,7 +111,7 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     @Override
     public int getItemCount()
     {
-        return mJobs.size();
+        return mBookingsWrapperViewModels.size();
     }
 
     static class RecyclerViewHolder extends RecyclerView.ViewHolder
