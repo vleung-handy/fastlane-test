@@ -212,11 +212,10 @@ public class BookingView extends InjectedBusView
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
         String formattedDate = DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
-        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
-                + getResources().getString(R.string.dash) + " "
-                + DateTimeUtils.formatDateTo12HourClock(endDate);
-
-        mJobDateText.setText(getTodayTomorrowStringByStartDate(startDate) + formattedDate);
+        String formattedTime = getResources().getString(R.string.dash_formatted,
+                DateTimeUtils.formatDateTo12HourClock(startDate), DateTimeUtils.formatDateTo12HourClock(endDate));
+        String dateTimeText = getTodayTomorrowStringByStartDate(startDate) + formattedDate;
+        mJobDateText.setText(dateTimeText);
         mJobTimeText.setText(formattedTime.toLowerCase());
 
         if (booking.isProxy() && booking.getZipCluster() != null &&
@@ -232,50 +231,31 @@ public class BookingView extends InjectedBusView
         String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
 
-        PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
-        if (paymentInfo != null)
+        final PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
+        final PaymentInfo hourlyRate = booking.getHourlyRate();
+        if (mBooking.hasFlexPayRate())
+        {
+            final float minimumHours = booking.getMinimumHours();
+            final float maximumHours = booking.getHours();
+            final String currencySymbol = hourlyRate.getCurrencySymbol();
+            final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                    (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
+            final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                    (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
+            String paymentText = getResources().getString(R.string.dash_formatted,
+                    minimumPaymentFormatted, maximumPaymentFormatted);
+            mJobPaymentText.setText(paymentText);
+
+            if (booking.getRevealDate() != null && booking.isClaimedByMe())
+            {
+                setRevealNoticeText(minimumHours, maximumHours, minimumPaymentFormatted, maximumPaymentFormatted);
+            }
+        }
+        else if (paymentInfo != null)
         {
             String paymentText = CurrencyUtils.formatPriceWithCents(paymentInfo.getAmount(),
                     paymentInfo.getCurrencySymbol());
             mJobPaymentText.setText(paymentText);
-        }
-
-        if (booking.getRevealDate() != null && booking.isClaimedByMe())
-        {
-            Spanned noticeText;
-            final PaymentInfo hourlyRate = booking.getHourlyRate();
-            if (hourlyRate != null && booking.hasFlexibleHours())
-            {
-                final float minimumHours = booking.getMinimumHours();
-                final float maximumHours = booking.getHours();
-                final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
-                final String maximumHoursFormatted = TextUtils.formatHours(maximumHours);
-                final String currencySymbol = hourlyRate.getCurrencySymbol();
-                final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
-                        (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
-                final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
-                        (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
-                final String startDateFormatted = DateTimeUtils.formatDetailedDate(booking.getStartDate());
-                final String endDateFormatted = DateTimeUtils.formatDetailedDate(booking.getEndDate());
-                noticeText = Html.fromHtml(getResources()
-                        .getString(R.string.full_details_and_more_available_on_date_flex,
-                                minimumHoursFormatted, maximumHoursFormatted,
-                                startDateFormatted, endDateFormatted,
-                                minimumPaymentFormatted, minimumHoursFormatted,
-                                maximumPaymentFormatted, maximumHoursFormatted
-                        ));
-                String paymentText = getResources().getString(R.string.dash_formatted,
-                        minimumPaymentFormatted, maximumPaymentFormatted);
-                mJobPaymentText.setText(paymentText);
-            }
-            else
-            {
-                noticeText = Html.fromHtml(getResources().getString(
-                        R.string.full_details_and_more_available_on_date,
-                        DateTimeUtils.formatDetailedDate(booking.getRevealDate())));
-            }
-            mRevealNoticeText.setText(noticeText);
-            mRevealNoticeText.setVisibility(View.VISIBLE);
         }
 
         PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
@@ -653,6 +633,35 @@ public class BookingView extends InjectedBusView
         Booking.BookingStatus bookingStatus =
                 mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
         return !mFromPaymentsTab && bookingStatus == Booking.BookingStatus.CLAIMED;
+    }
+
+    private void setRevealNoticeText(
+            final float minimumHours, final float maximumHours,
+            final String minimumPaymentFormatted, final String maximumPaymentFormatted)
+    {
+        Spanned noticeText;
+        if (mBooking.hasFlexPayRate())
+        {
+            final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
+            final String maximumHoursFormatted = TextUtils.formatHours(maximumHours);
+            final String startDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getStartDate());
+            final String endDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getEndDate());
+            noticeText = Html.fromHtml(getResources()
+                    .getString(R.string.full_details_and_more_available_on_date_flex,
+                            minimumHoursFormatted, maximumHoursFormatted,
+                            startDateFormatted, endDateFormatted,
+                            minimumPaymentFormatted, minimumHoursFormatted,
+                            maximumPaymentFormatted, maximumHoursFormatted
+                    ));
+        }
+        else
+        {
+            noticeText = Html.fromHtml(getResources().getString(
+                    R.string.full_details_and_more_available_on_date,
+                    DateTimeUtils.formatDetailedDate(mBooking.getRevealDate())));
+        }
+        mRevealNoticeText.setText(noticeText);
+        mRevealNoticeText.setVisibility(View.VISIBLE);
     }
 }
 
