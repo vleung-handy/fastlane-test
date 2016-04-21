@@ -541,8 +541,11 @@ public class BookingFragment extends ActionBarFragment
                     @Override
                     public void onClick(final View v)
                     {
-                        showConfirmBookingClaimDialog();
-//                        requestClaimJob();
+                        boolean confirmClaimDialogShown = showConfirmBookingClaimDialogIfNecessary();
+                        if(!confirmClaimDialogShown)
+                        {
+                            requestClaimJob();
+                        }
                     }
                 });
                 break;
@@ -633,14 +636,30 @@ public class BookingFragment extends ActionBarFragment
         }
     }
 
-    private void showConfirmBookingClaimDialog()
+    /**
+     * shows the confirm booking claim dialog if the cancellation policy data is there
+     *
+     * @return true if the confirm dialog is shown/is showing, false otherwise
+     */
+    private boolean showConfirmBookingClaimDialogIfNecessary()
     {
-        if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+        final Booking.Action claimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
+
+        if(claimAction != null && claimAction.getExtras() != null)
         {
-            ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
-            confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
-            FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+            Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
+            if(cancellationPolicy != null)
+            {
+                if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+                {
+                    ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
+                    confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
+                    FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+                }
+                return true;
+            }
         }
+        return false;
     }
 
     @Override

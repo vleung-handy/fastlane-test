@@ -687,9 +687,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     }
 
     /**
+     * shows the custom remove job warning dialog if the keep rate data is there
+     *
      * @return true if the custom warning dialog was shown/is already showing, false otherwise
      */
-    private boolean showCustomRemoveJobWarningDialog()
+    private boolean showCustomRemoveJobWarningDialogIfNecessary()
     {
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         if(removeAction != null)
@@ -716,7 +718,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
-        boolean customWarningDialogShown = showCustomRemoveJobWarningDialog();
+        boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
         if(!customWarningDialogShown)
         {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
