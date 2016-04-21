@@ -22,7 +22,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -666,8 +665,7 @@ public class MainActivityFragment extends InjectedFragment
 
     private void logOutProvider()
     {
-        mPrefsManager.setString(PrefsKey.AUTH_TOKEN, null);
-        mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, null);
+        mPrefsManager.clear();
         clearFragmentBackStack();
         CookieManager.getInstance().removeAllCookie();
         startActivity(new Intent(getActivity(), LoginActivity.class));
