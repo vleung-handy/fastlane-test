@@ -12,7 +12,6 @@
         android:padding="@dimen/default_padding"
         >
 
-        <!--TODO change the width/height-->
         <ImageView
             android:id="@+id/cancellation_policy_list_item_active_indicator"
             android:layout_width="@dimen/cancellation_policy_active_icon_size"
@@ -47,6 +46,6 @@
             />
     </LinearLayout>
 
-    <!--TODO get the right colors. also rename the divider dashboard layout file-->
+    <!--TODO rename the divider dashboard layout file-->
     <include layout="@layout/divider_dashboard"/>
 </RelativeLayout>

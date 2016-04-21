@@ -65,6 +65,12 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
         Window window = dialog.getWindow();
         window.requestFeature(Window.FEATURE_NO_TITLE);
         window.getAttributes().windowAnimations = R.style.dialog_animation_slide_up_down_from_bottom;
+
+        /* TODO the line below won't actually work for now because we are making the layout full screen
+         * as a hacky fix for the weird resize animation
+         * (the layout overflows at the bottom and then it gets redrawn so that it's not)
+         * seen when cancellation policy is shown in confirm claim
+         * */
         dialog.setCanceledOnTouchOutside(cancelDialogOnTouchOutside());
         return dialog;
     }
@@ -112,6 +118,19 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         wlp.gravity = Gravity.BOTTOM;
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    /**
+     * TODO need this because we're making the layout full screen instead of half screen
+     * as a hacky fix for the weird resize animation seen
+     * (the layout overflows at the bottom and then it gets redrawn so that it's not)
+     * when cancellation policy screen is shown
+     * in the confirm claim dialog
+     */
+    @OnClick(R.id.confirm_booking_action_transparent_background_layout)
+    public void onTransparentBackgroundClicked()
+    {
+        dismiss();
     }
 
     @OnClick(R.id.confirm_booking_action_button)

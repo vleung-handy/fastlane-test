@@ -327,7 +327,6 @@
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
     <string name="video_library">Video Library</string>
 
-
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
     <string name="nearby_transit">Nearby Transit</string>
@@ -346,7 +345,6 @@
     <string name="job_number_formatted">Job # %1$s</string>
     <string name="frequency">Frequency</string>
     <string name="completed_job">Completed Job</string>
-
 
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>

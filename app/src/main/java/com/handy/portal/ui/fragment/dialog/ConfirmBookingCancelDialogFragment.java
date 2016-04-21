@@ -22,7 +22,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 
-//todo add validation/null checks
 public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDialogFragment
 {
     public static final String FRAGMENT_TAG = ConfirmBookingCancelDialogFragment.class.getSimpleName();

@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment.dialog;
 
-import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-//todo add validation/null checks
 public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialogFragment
 {
     @Bind(R.id.fragment_dialog_confirm_claim_cancellation_policy_content)
@@ -75,14 +73,6 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-
-        //tODO make this actually work
-        LayoutTransition lt = new LayoutTransition();
-        lt.enableTransitionType(LayoutTransition.DISAPPEARING);
-        lt.enableTransitionType(LayoutTransition.CHANGE_APPEARING);
-        lt.enableTransitionType(LayoutTransition.CHANGE_DISAPPEARING);
-        lt.enableTransitionType(LayoutTransition.APPEARING);
-        mCancellationPolicyContent.setLayoutTransition(lt);
 
         setTitleAndSubtitle();
         setBookingCancellationPolicyDisplay();
