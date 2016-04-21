@@ -45,11 +45,11 @@ import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.bookings.BookingMapView;
 import com.handy.portal.ui.element.bookings.NewBookingDetailsJobInstructionsSectionView;
-import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.view.MapPlaceholderView;
+import com.handy.portal.ui.view.RoundedTextView;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.FragmentUtils;
@@ -88,8 +88,12 @@ public class BookingFragment extends ActionBarFragment
     ViewGroup mBookingCustomerContactLayout;
     @Bind(R.id.booking_customer_name_text)
     TextView mCustomerNameText;
+    @Bind(R.id.booking_address_title_text)
+    TextView mBookingAddressTitleText;
     @Bind(R.id.booking_address_text)
     TextView mBookingAddressText;
+    @Bind(R.id.booking_address_location_description_text)
+    TextView mBookingAddressLocationDescriptionText;
     @Bind(R.id.booking_call_customer_view)
     ImageView mCallCustomerView;
     @Bind(R.id.booking_message_customer_view)
@@ -112,10 +116,12 @@ public class BookingFragment extends ActionBarFragment
     TextView mBookingDetailsActionHelperText;
     @Bind(R.id.booking_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
-    @Bind(R.id.booking_details_location_view)
-    ProxyLocationView mProxyLocationView;
     @Bind(R.id.booking_reveal_notice_text)
     TextView mRevealNoticeText;
+    @Bind(R.id.booking_nearby_transit_layout)
+    ViewGroup mBookingNearbyTransitLayout;
+    @Bind(R.id.nearby_transits)
+    LinearLayout mNearbyTransits;
     @Bind(R.id.booking_job_number_text)
     TextView mJobNumberText;
     @Bind(R.id.booking_action_button)
@@ -269,28 +275,54 @@ public class BookingFragment extends ActionBarFragment
 
         mSupportButton.setVisibility(shouldShowSupportButton() ? View.VISIBLE : View.GONE);
 
-        Address address = mBooking.getAddress();
-        if (address != null)
+        if (mBooking.isProxy())
         {
-            if (bookingProgress == BookingProgress.UNAVAILABLE ||
-                    bookingProgress == BookingProgress.READY_FOR_CLAIM ||
-                    mFromPaymentsTab || mBooking.isProxy())
+            mBookingAddressTitleText.setText(mBooking.getLocationName());
+            mBookingAddressText.setVisibility(View.GONE);
+
+            if (mBooking.getZipCluster() != null)
             {
-                mBookingAddressText.setText(mBooking.isUK() ?
-                        getResources().getString(R.string.comma_formatted,
-                                address.getShortRegion(), address.getZip()) :
-                        address.getShortRegion());
-            }
-            else
-            {
-                mBookingAddressText.setText(getResources().getString(R.string.two_lines_formatted,
-                        address.getAddress1(), address.getCityStateZip()));
-                initGetDirections(address);
+                if (mBooking.getZipCluster().getTransitDescription() != null &&
+                        !mBooking.getZipCluster().getTransitDescription().isEmpty())
+                {
+                    setNearbyTransit(mBooking.getZipCluster().getTransitDescription());
+                }
+
+                if (mBooking.getZipCluster().getLocationDescription() != null
+                        && !mBooking.getZipCluster().getLocationDescription().isEmpty())
+                {
+                    mBookingAddressLocationDescriptionText.setText(
+                            mBooking.getZipCluster().getLocationDescription());
+                    mBookingAddressLocationDescriptionText.setVisibility(View.VISIBLE);
+                }
             }
         }
         else
         {
-            mBookingAddressText.setText(mBooking.getLocationName());
+            Address address = mBooking.getAddress();
+            if (address != null)
+            {
+                Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(
+                        mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+                if (bookingStatus != Booking.BookingStatus.CLAIMED || mFromPaymentsTab)
+                {
+                    mBookingAddressTitleText.setText(mBooking.isUK() ?
+                            getResources().getString(R.string.comma_formatted,
+                                    address.getShortRegion(), address.getZip()) :
+                            address.getShortRegion());
+                    mBookingAddressText.setVisibility(View.GONE);
+                }
+                else
+                {
+                    mBookingAddressText.setText(getResources().getString(R.string.two_lines_formatted,
+                            address.getAddress1(), address.getCityStateZip()));
+                    initGetDirections(address);
+                }
+            }
+            else
+            {
+                mBookingAddressText.setText(mBooking.getLocationName());
+            }
         }
 
         Date startDate = mBooking.getStartDate();
@@ -301,16 +333,6 @@ public class BookingFragment extends ActionBarFragment
         String dateTimeText = getTodayTomorrowStringByStartDate(startDate) + formattedDate;
         mJobDateText.setText(dateTimeText);
         mJobTimeText.setText(formattedTime.toLowerCase());
-
-        if (mBooking.isProxy() && mBooking.getZipCluster() != null &&
-                ((mBooking.getZipCluster().getTransitDescription() != null
-                        && !mBooking.getZipCluster().getTransitDescription().isEmpty()) ||
-                        (mBooking.getZipCluster().getLocationDescription() != null
-                                && !mBooking.getZipCluster().getLocationDescription().isEmpty())))
-        {
-            mProxyLocationView.setVisibility(View.VISIBLE);
-            mProxyLocationView.refreshDisplay(mBooking);
-        }
 
         String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
@@ -779,5 +801,17 @@ public class BookingFragment extends ActionBarFragment
         }
         mRevealNoticeText.setText(noticeText);
         mRevealNoticeText.setVisibility(View.VISIBLE);
+    }
+
+    private void setNearbyTransit(List<String> transitDescription)
+    {
+        mBookingNearbyTransitLayout.setVisibility(View.VISIBLE);
+        mNearbyTransits.removeAllViews();
+        for (String transitMarker : transitDescription)
+        {
+            RoundedTextView transitMarkerView = new RoundedTextView(getContext());
+            transitMarkerView.setText(transitMarker);
+            mNearbyTransits.addView(transitMarkerView);
+        }
     }
 }
