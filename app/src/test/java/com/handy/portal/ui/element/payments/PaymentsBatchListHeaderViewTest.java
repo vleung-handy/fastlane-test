@@ -30,7 +30,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     {
         batchListHeaderView = (PaymentsBatchListHeaderView) LayoutInflater
                 .from(Robolectric.setupActivity(TestActivity.class)).inflate(R.layout.element_payments_batch_list_current_week_header, null);
-        remainingRow = batchListHeaderView.findViewById(R.id.payments_current_week_remaining_withholdings_row);
+        remainingRow = batchListHeaderView.findViewById(R.id.payments_current_week_remaining_fees_row);
 
         neoPaymentBatch = mock(NeoPaymentBatch.class);
         paymentBatches = mock(PaymentBatches.class);
@@ -41,18 +41,18 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     @Test
     public void shouldNotDisplayRemainingIfItIsZero()
     {
-        when(neoPaymentBatch.getRemainingWithholdingAmount()).thenReturn(0);
+        when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(0);
         batchListHeaderView.updateDisplay(paymentBatches.getNeoPaymentBatches()[0]);
 
-        assertEquals("Should not see remaining payments row if remaining withholding is 0", View.GONE, remainingRow.getVisibility());
+        assertEquals("Should not see remaining payments row if remaining fee is 0", View.GONE, remainingRow.getVisibility());
     }
 
     @Test
     public void shouldDisplayRemainingIfItIsNotZero()
     {
-        when(neoPaymentBatch.getRemainingWithholdingAmount()).thenReturn(100);
+        when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(100);
         batchListHeaderView.updateDisplay(paymentBatches.getNeoPaymentBatches()[0]);
 
-        assertEquals("Should see remaining payments row if remaining withholding is not 0", View.VISIBLE, remainingRow.getVisibility());
+        assertEquals("Should see remaining payments row if remaining fee is not 0", View.VISIBLE, remainingRow.getVisibility());
     }
 }

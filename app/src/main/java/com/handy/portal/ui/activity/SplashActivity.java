@@ -164,6 +164,7 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
+            // TODO: Maybe remove this since we remove all cookies on logout
             Crashlytics.log("No cookies found in this device");
         }
         return null;

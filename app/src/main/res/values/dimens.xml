@@ -134,6 +134,8 @@
 
     <!-- Account Settings -->
     <dimen name="account_settings_cell_height">70dp</dimen>
+    <dimen name="log_out_button_width">150dp</dimen>
+    <dimen name="log_out_button_height">48dp</dimen>
 
     <!-- New Checkout -->
     <dimen name="job_times_margin">12dp</dimen>
