@@ -660,7 +660,7 @@ public class Booking implements Comparable<Booking>, Serializable
                 return mKeepRate;
             }
 
-            public static class CancellationPolicy
+            public static class CancellationPolicy implements Serializable
             {
                 @SerializedName("header_text")
                 private String mHeaderText;
@@ -684,7 +684,7 @@ public class Booking implements Comparable<Booking>, Serializable
                     return mCancellationPolicyItems;
                 }
 
-                public static class CancellationPolicyItem
+                public static class CancellationPolicyItem implements Serializable
                 {
                     @SerializedName("text")
                     private String mDisplayText;
@@ -710,7 +710,7 @@ public class Booking implements Comparable<Booking>, Serializable
                 }
             }
 
-            public static class KeepRate
+            public static class KeepRate implements Serializable
             {
                 @SerializedName("actual")
                 private Float mCurrent;
