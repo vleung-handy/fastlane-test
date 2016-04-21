@@ -113,6 +113,7 @@ public class BookingView extends InjectedBusView
     private String mSource;
     private Bundle mSourceExtras;
     private Intent mGetDirectionsIntent;
+    private boolean mFromPaymentsTab;
 
     public BookingView(
             final Context context, @NonNull Booking booking, String source, Bundle sourceExtras,
@@ -150,6 +151,7 @@ public class BookingView extends InjectedBusView
         mBooking = booking;
         mSource = source;
         mSourceExtras = sourceExtras;
+        mFromPaymentsTab = fromPaymentsTab;
         mSupportButton.setOnClickListener(onSupportClickListener);
 
         if (!fromPaymentsTab)
@@ -177,8 +179,9 @@ public class BookingView extends InjectedBusView
         else
         {
             mCustomerNameText.setText(mBooking.getUser().getFullName());
-            mSupportButton.setVisibility(VISIBLE);
         }
+
+        mSupportButton.setVisibility(shouldShowSupportButton() ? View.VISIBLE : View.GONE);
 
         Address address = mBooking.getAddress();
         if (address != null)
@@ -600,6 +603,13 @@ public class BookingView extends InjectedBusView
             mBookingDetailsActionHelperText.setVisibility(View.VISIBLE);
             mBookingDetailsActionHelperText.setText(action.getHelperText());
         }
+    }
+
+    private boolean shouldShowSupportButton()
+    {
+        Booking.BookingStatus bookingStatus =
+                mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        return !mFromPaymentsTab && bookingStatus == Booking.BookingStatus.CLAIMED;
     }
 }
 
