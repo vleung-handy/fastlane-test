@@ -46,6 +46,5 @@
             />
     </LinearLayout>
 
-    <!--TODO rename the divider dashboard layout file-->
-    <include layout="@layout/divider_dashboard"/>
+    <include layout="@layout/divider"/>
 </RelativeLayout>

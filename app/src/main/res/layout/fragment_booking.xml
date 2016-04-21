@@ -92,7 +92,7 @@
                 </RelativeLayout>
 
                 <include
-                    layout="@layout/divider_dashboard"
+                    layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     />
@@ -172,7 +172,7 @@
                 </RelativeLayout>
 
                 <include
-                    layout="@layout/divider_dashboard"
+                    layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     android:layout_marginEnd="@dimen/default_margin"
@@ -213,7 +213,7 @@
                 </LinearLayout>
 
                 <include
-                    layout="@layout/divider_dashboard"
+                    layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     android:layout_marginEnd="@dimen/default_margin"
@@ -254,7 +254,7 @@
                 </LinearLayout>
 
                 <include
-                    layout="@layout/divider_dashboard"
+                    layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     android:layout_marginEnd="@dimen/default_margin"
@@ -310,7 +310,7 @@
                 </LinearLayout>
 
                 <include
-                    layout="@layout/divider_dashboard"
+                    layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     android:layout_marginEnd="@dimen/default_margin"
@@ -363,7 +363,7 @@
                     />
 
                 <include
-                    layout="@layout/divider_dashboard"
+                    layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     android:layout_marginEnd="@dimen/default_margin"
@@ -389,7 +389,7 @@
                         />
 
                     <include
-                        layout="@layout/divider_dashboard"
+                        layout="@layout/divider"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/divider_height"
                         android:layout_marginEnd="@dimen/default_margin"
