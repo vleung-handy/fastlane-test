@@ -54,7 +54,7 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
     {
         super.onCreate(savedInstanceState);
         Utils.inject(getActivity(), this);
-        mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
+        mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING); //should not be null
     }
 
     @NonNull

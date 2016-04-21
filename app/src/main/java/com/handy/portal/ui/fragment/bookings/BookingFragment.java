@@ -635,9 +635,12 @@ public class BookingFragment extends ActionBarFragment
 
     private void showConfirmBookingClaimDialog()
     {
-        ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
-        confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST); //todo consider an alternate way
-        FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+        if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+        {
+            ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
+            confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
+            FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+        }
     }
 
     @Override

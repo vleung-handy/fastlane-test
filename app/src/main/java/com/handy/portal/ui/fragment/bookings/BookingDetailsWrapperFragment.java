@@ -686,6 +686,29 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         showRemoveJobWarningDialog(removeAction.getWarningText(), removeAction);
     }
 
+    /**
+     * @return true if the custom warning dialog was shown/is already showing, false otherwise
+     */
+    private boolean showCustomRemoveJobWarningDialog()
+    {
+        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
+        if(removeAction != null)
+        {
+            final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
+            if (keepRate != null)
+            {
+                if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelDialogFragment.FRAGMENT_TAG) == null)
+                {
+                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
+                    fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void showRemoveJobWarningDialog(final String warning, final Booking.Action action)
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
@@ -693,21 +716,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
-
-        boolean customWarningDialogShown = false;
-        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        if(removeAction != null)
-        {
-            final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
-            if (keepRate != null)
-            {
-                final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
-                fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
-                FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
-                customWarningDialogShown = true;
-            }
-        }
-
+        boolean customWarningDialogShown = showCustomRemoveJobWarningDialog();
         if(!customWarningDialogShown)
         {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());

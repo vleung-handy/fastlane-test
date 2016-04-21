@@ -43,7 +43,7 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     @Inject
     Bus mBus;
 
-    public static ConfirmBookingCancelDialogFragment newInstance(final Booking booking)
+    public static ConfirmBookingCancelDialogFragment newInstance(@NonNull final Booking booking)
     {
         ConfirmBookingCancelDialogFragment fragment = new ConfirmBookingCancelDialogFragment();
         Bundle arguments = new Bundle();

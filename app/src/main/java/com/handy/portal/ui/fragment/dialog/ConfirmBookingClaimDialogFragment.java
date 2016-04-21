@@ -4,6 +4,7 @@ import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
 
     public static final String FRAGMENT_TAG = ConfirmBookingClaimDialogFragment.class.getName();
 
-    public static ConfirmBookingClaimDialogFragment newInstance(Booking booking)
+    public static ConfirmBookingClaimDialogFragment newInstance(@NonNull Booking booking)
     {
         ConfirmBookingClaimDialogFragment fragment = new ConfirmBookingClaimDialogFragment();
         Bundle args = new Bundle();
@@ -96,6 +97,7 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
                 || bookingClaimAction.getExtras() == null
                 || bookingClaimAction.getExtras().getCancellationPolicy() == null)
         {
+            Crashlytics.logException(new Exception("Booking claim action object is null or missing cancellation policy"));
             return;
         }
 
@@ -121,6 +123,10 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
         {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         }
+        else
+        {
+            Crashlytics.logException(new Exception("getTargetFragment() is null for confirm booking claim dialog fragment"));
+        }
         mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimConfirmed()));
         dismiss();
     }
@@ -128,33 +134,43 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     private void setBookingCancellationPolicyDisplay()
     {
         Booking.Action bookingClaimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-        if(bookingClaimAction == null)
+        if(bookingClaimAction == null
+                || bookingClaimAction.getExtras() == null
+                || bookingClaimAction.getExtras().getCancellationPolicy() == null)
         {
-            Crashlytics.logException(new Exception("Booking claim action is null in confirm booking dialog fragment"));
+            Crashlytics.logException(new Exception("Booking claim action object is null or missing cancellation policy"));
+            return;
         }
-        else if(bookingClaimAction.getExtras() == null)
-        {
-            Crashlytics.logException(new Exception("Booking claim action extras is null in confirm booking dialog fragment"));
-        }
-        else if(bookingClaimAction.getExtras().getCancellationPolicy() != null)
-        {
-            Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicies[] =
-                    bookingClaimAction.getExtras().getCancellationPolicy().getCancellationPolicyItems();
+        Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicies[] =
+                bookingClaimAction.getExtras().getCancellationPolicy().getCancellationPolicyItems();
 
-            mCancellationPolicyContent.removeAllViews();
+        mCancellationPolicyContent.removeAllViews();
+        if(cancellationPolicies != null)
+        {
             for(int i = 0; i< cancellationPolicies.length; i++)
             {
                 Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicy = cancellationPolicies[i];
                 PaymentInfo fee = cancellationPolicy.getPaymentInfo();
-                String feeAmountFormatted = CurrencyUtils.formatPriceWithoutCents(fee.getAmount(), fee.getCurrencySymbol());
+                if(fee != null)
+                {
+                    String feeAmountFormatted = CurrencyUtils.formatPriceWithoutCents(fee.getAmount(), fee.getCurrencySymbol());
 
-                BookingCancellationPolicyListItemView policyListItemView =
-                        new BookingCancellationPolicyListItemView(getContext())
-                                .setLeftText(cancellationPolicy.getDisplayText())
-                                .setRightText(feeAmountFormatted)
-                                .setHighlighted(cancellationPolicy.isActive());
-                mCancellationPolicyContent.addView(policyListItemView);
+                    BookingCancellationPolicyListItemView policyListItemView =
+                            new BookingCancellationPolicyListItemView(getContext())
+                                    .setLeftText(cancellationPolicy.getDisplayText())
+                                    .setRightText(feeAmountFormatted)
+                                    .setHighlighted(cancellationPolicy.isActive());
+                    mCancellationPolicyContent.addView(policyListItemView);
+                }
+                else
+                {
+                    Crashlytics.logException(new Exception("Cancellation policy item payment info is null"));
+                }
             }
+        }
+        else
+        {
+            Crashlytics.logException(new Exception("Cancellation policies array is null"));
         }
     }
 }
