@@ -39,6 +39,9 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     @Bind(R.id.confirm_booking_action_subtitle)
     TextView mConfirmBookingActionSubtitle;
 
+    @Inject
+    Bus mBus;
+
     public static final String FRAGMENT_TAG = ConfirmBookingClaimDialogFragment.class.getName();
 
     public static ConfirmBookingClaimDialogFragment newInstance(@NonNull Booking booking)
@@ -49,9 +52,6 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
         fragment.setArguments(args);
         return fragment;
     }
-
-    @Inject
-    Bus mBus;
 
     @Override
     public View getBookingActionContentView(LayoutInflater inflater, ViewGroup container)

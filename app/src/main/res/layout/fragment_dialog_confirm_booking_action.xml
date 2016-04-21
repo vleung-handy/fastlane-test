@@ -27,11 +27,11 @@
 
     <Button
         android:id="@+id/confirm_booking_action_button"
-        style="@style/Button.Green"
+        style="@style/Button.Green.Round"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_margin="@dimen/default_margin"
         android:text="@string/confirm"
         android:textColor="@color/white"
         android:textSize="@dimen/large_text_size"
