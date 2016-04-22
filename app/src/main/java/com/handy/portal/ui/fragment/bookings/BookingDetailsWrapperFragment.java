@@ -389,12 +389,10 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             final Booking.Action removeAction =
                     mBooking.getAction(Booking.Action.ACTION_REMOVE);
 
-            final String removalType = removeAction != null && removeAction.getKeepRate() != null ?
-                    ScheduledJobsLog.RemoveJobLog.KEEP_RATE : ScheduledJobsLog.RemoveJobLog.POPUP;
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.POPUP,
-                    removalType,
+                    getRemovalTypeFromBookingRemoveAction(removeAction),
                     removeAction != null ? removeAction.getFeeAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
@@ -418,17 +416,22 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         handleBookingRemoveError(event.error.getMessage());
     }
 
+    @NonNull
+    private String getRemovalTypeFromBookingRemoveAction(@Nullable Booking.Action bookingRemoveAction)
+    {
+        return bookingRemoveAction != null && bookingRemoveAction.getKeepRate() != null ?
+                ScheduledJobsLog.RemoveJobLog.KEEP_RATE : ScheduledJobsLog.RemoveJobLog.POPUP;
+    }
+
     private void trackRemoveJobError(final String errorMessage)
     {
         final Booking.Action removeAction =
                 mBooking.getAction(Booking.Action.ACTION_REMOVE);
 
-        final String removalType = removeAction != null && removeAction.getKeepRate() != null ?
-                ScheduledJobsLog.RemoveJobLog.KEEP_RATE : ScheduledJobsLog.RemoveJobLog.POPUP;
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
-                removalType,
+                getRemovalTypeFromBookingRemoveAction(removeAction),
                 removeAction != null ? removeAction.getFeeAmount() : 0,
                 removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
