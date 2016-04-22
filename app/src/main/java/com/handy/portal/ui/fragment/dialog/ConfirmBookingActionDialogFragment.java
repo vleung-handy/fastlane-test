@@ -36,9 +36,9 @@ public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFr
      * @param container
      * @return the view that will be stuffed inside confirm_booking_action_content of this fragment's view
      */
-    protected abstract View getBookingActionContentView(LayoutInflater inflater, ViewGroup container);
+    protected abstract View inflateBookingActionContentView(LayoutInflater inflater, ViewGroup container);
 
-    protected final View getContentView(LayoutInflater inflater, ViewGroup container)
+    protected final View inflateContentView(LayoutInflater inflater, ViewGroup container)
     {
         return inflater.inflate(R.layout.layout_confirm_booking_action, container, false);
     }
@@ -75,7 +75,7 @@ public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFr
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         ScrollView confirmBookingActionContentLayout = (ScrollView) view.findViewById(R.id.confirm_booking_action_content);
-        confirmBookingActionContentLayout.addView(getBookingActionContentView(inflater, container));
+        confirmBookingActionContentLayout.addView(inflateBookingActionContentView(inflater, container));
         return view;
     }
 

@@ -31,7 +31,7 @@ public abstract class SlideUpDialogFragment extends DialogFragment
      * @param container
      * @return the view that will be stuffed inside confirm_booking_action_content of this fragment's view
      */
-    protected abstract View getContentView(LayoutInflater inflater, ViewGroup container);
+    protected abstract View inflateContentView(LayoutInflater inflater, ViewGroup container);
 
     @NonNull
     @Override
@@ -70,7 +70,7 @@ public abstract class SlideUpDialogFragment extends DialogFragment
     {
         View view = inflater.inflate(R.layout.fragment_dialog_slide_up, container, false);
         LinearLayout contentLayout = (LinearLayout) view.findViewById(R.id.fragment_dialog_slide_up_content_layout);
-        contentLayout.addView(getContentView(inflater, container));
+        contentLayout.addView(inflateContentView(inflater, container));
         return view;
     }
 

@@ -52,7 +52,7 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     }
 
     @Override
-    public View getBookingActionContentView(LayoutInflater inflater, ViewGroup container)
+    public View inflateBookingActionContentView(LayoutInflater inflater, ViewGroup container)
     {
         return inflater.inflate(R.layout.layout_confirm_booking_claim, container, false);
     }

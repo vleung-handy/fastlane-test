@@ -114,7 +114,7 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     }
 
     @Override
-    protected View getBookingActionContentView(final LayoutInflater inflater, final ViewGroup container)
+    protected View inflateBookingActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
         return inflater.inflate(R.layout.layout_confirm_booking_cancel, container, false);
     }
