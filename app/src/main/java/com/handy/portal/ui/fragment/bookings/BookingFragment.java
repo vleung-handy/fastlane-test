@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,10 +109,10 @@ public class BookingFragment extends ActionBarFragment
     TextView mBookingDetailsActionHelperText;
     @Bind(R.id.booking_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
-    @Bind(R.id.booking_proxy_location_layout)
-    ViewGroup mBookingProxyLocationlayout;
     @Bind(R.id.booking_details_location_view)
     ProxyLocationView mProxyLocationView;
+    @Bind(R.id.booking_reveal_notice_text)
+    TextView mRevealNoticeText;
     @Bind(R.id.booking_job_number_text)
     TextView mJobNumberText;
     @Bind(R.id.booking_action_button)
@@ -122,7 +124,6 @@ public class BookingFragment extends ActionBarFragment
     private String mSource;
     private Bundle mSourceExtras;
     private Intent mGetDirectionsIntent;
-
     private View.OnClickListener mOnSupportClickListener;
     private boolean mFromPaymentsTab;
     private boolean mHideActionButtons;
@@ -213,8 +214,9 @@ public class BookingFragment extends ActionBarFragment
         else
         {
             mCustomerNameText.setText(mBooking.getUser().getFullName());
-            mSupportButton.setVisibility(View.VISIBLE);
         }
+
+        mSupportButton.setVisibility(shouldShowSupportButton() ? View.VISIBLE : View.GONE);
 
         Address address = mBooking.getAddress();
         if (address != null)
@@ -243,11 +245,10 @@ public class BookingFragment extends ActionBarFragment
         Date startDate = mBooking.getStartDate();
         Date endDate = mBooking.getEndDate();
         String formattedDate = DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
-        String formattedTime = DateTimeUtils.formatDateTo12HourClock(startDate) + " "
-                + getResources().getString(R.string.dash) + " "
-                + DateTimeUtils.formatDateTo12HourClock(endDate);
-
-        mJobDateText.setText(getTodayTomorrowStringByStartDate(startDate) + formattedDate);
+        String formattedTime = getResources().getString(R.string.dash_formatted,
+                DateTimeUtils.formatDateTo12HourClock(startDate), DateTimeUtils.formatDateTo12HourClock(endDate));
+        String dateTimeText = getTodayTomorrowStringByStartDate(startDate) + formattedDate;
+        mJobDateText.setText(dateTimeText);
         mJobTimeText.setText(formattedTime.toLowerCase());
 
         if (mBooking.isProxy() && mBooking.getZipCluster() != null &&
@@ -256,15 +257,34 @@ public class BookingFragment extends ActionBarFragment
                         (mBooking.getZipCluster().getLocationDescription() != null
                                 && !mBooking.getZipCluster().getLocationDescription().isEmpty())))
         {
-            mBookingProxyLocationlayout.setVisibility(View.VISIBLE);
+            mProxyLocationView.setVisibility(View.VISIBLE);
             mProxyLocationView.refreshDisplay(mBooking);
         }
 
         String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
 
-        PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
-        if (paymentInfo != null)
+        final PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
+        final PaymentInfo hourlyRate = mBooking.getHourlyRate();
+        if (mBooking.hasFlexPayRate())
+        {
+            final float minimumHours = mBooking.getMinimumHours();
+            final float maximumHours = mBooking.getHours();
+            final String currencySymbol = hourlyRate.getCurrencySymbol();
+            final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                    (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
+            final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                    (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
+            String paymentText = getResources().getString(R.string.dash_formatted,
+                    minimumPaymentFormatted, maximumPaymentFormatted);
+            mJobPaymentText.setText(paymentText);
+
+            if (mBooking.getRevealDate() != null && mBooking.isClaimedByMe())
+            {
+                setRevealNoticeText(minimumHours, maximumHours, minimumPaymentFormatted, maximumPaymentFormatted);
+            }
+        }
+        else if (paymentInfo != null)
         {
             String paymentText = CurrencyUtils.formatPriceWithCents(paymentInfo.getAmount(),
                     paymentInfo.getCurrencySymbol());
@@ -289,7 +309,7 @@ public class BookingFragment extends ActionBarFragment
                     new NewBookingDetailsJobInstructionsSectionView(getContext());
             descriptionSectionView.setDisplay(getContext().getString(R.string.description),
                     mBooking.getDescription());
-
+            mInstructionsLayout.setVisibility(View.VISIBLE);
             mInstructionsLayout.addView(descriptionSectionView);
         }
 
@@ -305,6 +325,7 @@ public class BookingFragment extends ActionBarFragment
                     new NewBookingDetailsJobInstructionsSectionView(getContext());
             suppliesSectionView.setDisplay(getContext().getString(R.string.supplies), entries);
 
+            mInstructionsLayout.setVisibility(View.VISIBLE);
             mInstructionsLayout.addView(suppliesSectionView);
         }
 
@@ -327,6 +348,7 @@ public class BookingFragment extends ActionBarFragment
                         new NewBookingDetailsJobInstructionsSectionView(getContext());
                 suppliesSectionView.setDisplay(getContext().getString(R.string.supplies), entries);
 
+                mInstructionsLayout.setVisibility(View.VISIBLE);
                 mInstructionsLayout.addView(suppliesSectionView);
             }
         }
@@ -346,6 +368,7 @@ public class BookingFragment extends ActionBarFragment
                         NewBookingDetailsJobInstructionsSectionView sectionView =
                                 new NewBookingDetailsJobInstructionsSectionView(getContext());
                         sectionView.setDisplay(group.getLabel(), group.getInstructions());
+                        mInstructionsLayout.setVisibility(View.VISIBLE);
                         mInstructionsLayout.addView(sectionView);
                     }
                 }
@@ -422,7 +445,7 @@ public class BookingFragment extends ActionBarFragment
 
     private void setActionButtonVisibility()
     {
-        if(mHideActionButtons)
+        if (mHideActionButtons)
         {
             mActionButton.setVisibility(View.GONE);
             mSupportButton.setVisibility(View.GONE);
@@ -683,5 +706,41 @@ public class BookingFragment extends ActionBarFragment
             mBookingDetailsActionHelperText.setVisibility(View.VISIBLE);
             mBookingDetailsActionHelperText.setText(action.getHelperText());
         }
+    }
+
+    private boolean shouldShowSupportButton()
+    {
+        Booking.BookingStatus bookingStatus =
+                mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        return !mFromPaymentsTab && bookingStatus == Booking.BookingStatus.CLAIMED;
+    }
+
+    private void setRevealNoticeText(
+            final float minimumHours, final float maximumHours,
+            final String minimumPaymentFormatted, final String maximumPaymentFormatted)
+    {
+        Spanned noticeText;
+        if (mBooking.hasFlexPayRate())
+        {
+            final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
+            final String maximumHoursFormatted = TextUtils.formatHours(maximumHours);
+            final String startDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getStartDate());
+            final String endDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getEndDate());
+            noticeText = Html.fromHtml(getResources()
+                    .getString(R.string.full_details_and_more_available_on_date_flex,
+                            minimumHoursFormatted, maximumHoursFormatted,
+                            startDateFormatted, endDateFormatted,
+                            minimumPaymentFormatted, minimumHoursFormatted,
+                            maximumPaymentFormatted, maximumHoursFormatted
+                    ));
+        }
+        else
+        {
+            noticeText = Html.fromHtml(getResources().getString(
+                    R.string.full_details_and_more_available_on_date,
+                    DateTimeUtils.formatDetailedDate(mBooking.getRevealDate())));
+        }
+        mRevealNoticeText.setText(noticeText);
+        mRevealNoticeText.setVisibility(View.VISIBLE);
     }
 }

@@ -544,7 +544,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
         int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
 
-        if(bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
+        if (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
                 && mBooking.getCustomerPreferences().size() > 0)
         //in progress booking (after check in and before check out)
         {
@@ -557,11 +557,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(mSlideUpPanelContainer.getId(),
                     BookingFragment.newInstance(mBooking, mSource, mFromPaymentsTab, false)).commit();
-            if(bookingProgress == BookingProgress.READY_FOR_CLAIM)
+            if (bookingProgress == BookingProgress.READY_FOR_CLAIM)
             {
                 setActionBarTitle(R.string.available_job);
             }
-            else if(bookingProgress == BookingProgress.READY_FOR_ON_MY_WAY ||
+            else if (bookingProgress == BookingProgress.READY_FOR_ON_MY_WAY ||
                     bookingProgress == BookingProgress.READY_FOR_CHECK_IN ||
                     bookingProgress == BookingProgress.READY_FOR_CHECK_OUT)
             {

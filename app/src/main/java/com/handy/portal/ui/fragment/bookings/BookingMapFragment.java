@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -238,7 +239,10 @@ public class BookingMapFragment extends SupportMapFragment implements OnMapReady
         }
         LatLngBounds bounds = boundsBuilder.build();
 
-        return CameraUpdateFactory.newLatLngBounds(bounds, DEFAULT_BOUND_PADDING);
+        final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
+        return CameraUpdateFactory.newLatLngBounds(bounds, displayMetrics.widthPixels,
+                displayMetrics.heightPixels, DEFAULT_BOUND_PADDING);
     }
 
     /**

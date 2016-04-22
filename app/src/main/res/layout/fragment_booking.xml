@@ -97,319 +97,272 @@
                     android:layout_height="@dimen/divider_height"
                     />
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/default_padding"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:dividerPadding="@dimen/default_padding"
+                    android:orientation="vertical"
+                    android:showDividers="middle"
                     >
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerInParent="true"
-                        android:orientation="vertical"
+                        android:padding="@dimen/default_padding"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical"
+                            >
+
+                            <TextView
+                                style="@style/CircularBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/address"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/default_text_size"
+                                />
+
+                            <TextView
+                                android:id="@+id/booking_address_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/row_margin"
+                                android:lineSpacingMultiplier="1.2"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/default_text_size"
+                                tools:text="123 Perry Lane, Apt 4A\nBrooklyn, NY 11231"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/booking_get_directions_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            tools:visibility="visible"
+                            >
+
+                            <ImageView
+                                android:layout_width="@dimen/get_directions_width_height"
+                                android:layout_height="@dimen/get_directions_width_height"
+                                android:layout_gravity="center_horizontal"
+                                android:src="@drawable/booking_get_directions"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/get_directions_margin_top"
+                                android:paddingEnd="@dimen/extra_padding"
+                                android:paddingLeft="@dimen/extra_padding"
+                                android:paddingRight="@dimen/extra_padding"
+                                android:paddingStart="@dimen/extra_padding"
+                                android:text="@string/get_directions"
+                                android:textAllCaps="false"
+                                android:textColor="@color/handy_blue"
+                                android:textSize="@dimen/small_text_size"
+                                />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_padding"
                         >
 
                         <TextView
                             style="@style/CircularBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/address"
+                            android:text="@string/date"
                             android:textColor="@color/black"
                             android:textSize="@dimen/default_text_size"
                             />
 
                         <TextView
-                            android:id="@+id/booking_address_text"
+                            android:id="@+id/booking_job_date_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/row_margin"
-                            android:lineSpacingMultiplier="1.2"
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
                             android:textColor="@color/black"
                             android:textSize="@dimen/default_text_size"
-                            tools:text="123 Perry Lane, Apt 4A\nBrooklyn, NY 11231"
+                            tools:text="Today, Thursday, February 8"
                             />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/booking_get_directions_layout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        tools:visibility="visible"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_padding"
                         >
 
-                        <ImageView
-                            android:layout_width="@dimen/get_directions_width_height"
-                            android:layout_height="@dimen/get_directions_width_height"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/booking_get_directions"
+                        <TextView
+                            style="@style/CircularBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/time"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
                             />
 
                         <TextView
+                            android:id="@+id/booking_job_time_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/get_directions_margin_top"
                             android:paddingEnd="@dimen/extra_padding"
                             android:paddingLeft="@dimen/extra_padding"
                             android:paddingRight="@dimen/extra_padding"
                             android:paddingStart="@dimen/extra_padding"
-                            android:text="@string/get_directions"
-                            android:textAllCaps="false"
-                            android:textColor="@color/handy_blue"
-                            android:textSize="@dimen/small_text_size"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            tools:text="8:00 am \u2013 10:30 am"
                             />
 
                     </LinearLayout>
 
-                </RelativeLayout>
-
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/default_padding"
-                    >
-
-                    <TextView
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/date"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        />
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_padding"
+                        >
 
-                    <TextView
-                        android:id="@+id/booking_job_date_text"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            style="@style/CircularBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/payment"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            />
+
+                        <TextView
+                            android:id="@+id/booking_job_payment_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            tools:text="$45"
+                            />
+
+                        <TextView
+                            android:id="@+id/booking_job_payment_bonus_text"
+                            style="@style/CircularBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
+                            android:textColor="@color/handy_green"
+                            android:textSize="@dimen/small_text_size"
+                            android:textStyle="bold"
+                            tools:text=" +$5 BONUS"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/extra_padding"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:paddingRight="@dimen/extra_padding"
-                        android:paddingStart="@dimen/extra_padding"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="Today, Thursday, February 8"
-                        />
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_padding"
+                        >
 
-                </LinearLayout>
+                        <TextView
+                            style="@style/CircularBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/frequency"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            />
 
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    />
+                        <TextView
+                            android:id="@+id/booking_frequency_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            tools:text="@string/booking_frequency_every_week"
+                            />
+                    </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/default_padding"
-                    >
-
-                    <TextView
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/booking_job_instructions_list_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/time"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
+                        android:background="@color/white"
+                        android:divider="?android:attr/dividerHorizontal"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/default_padding"
+                        android:paddingRight="@dimen/default_padding"
+                        android:showDividers="middle"
+                        android:visibility="gone"
                         />
-
-                    <TextView
-                        android:id="@+id/booking_job_time_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/extra_padding"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:paddingRight="@dimen/extra_padding"
-                        android:paddingStart="@dimen/extra_padding"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="8:00 am \u2013 10:30 am"
-                        />
-
-                </LinearLayout>
-
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/default_padding"
-                    >
-
-                    <TextView
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/payment"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        />
-
-                    <TextView
-                        android:id="@+id/booking_job_payment_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/extra_padding"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:paddingRight="@dimen/extra_padding"
-                        android:paddingStart="@dimen/extra_padding"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="$45"
-                        />
-
-                    <TextView
-                        android:id="@+id/booking_job_payment_bonus_text"
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/extra_padding"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:paddingRight="@dimen/extra_padding"
-                        android:paddingStart="@dimen/extra_padding"
-                        android:textColor="@color/handy_green"
-                        android:textSize="@dimen/small_text_size"
-                        android:textStyle="bold"
-                        tools:text=" +$5 BONUS"
-                        />
-
-                </LinearLayout>
-
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/default_padding"
-                    >
-
-                    <TextView
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/frequency"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        />
-
-                    <TextView
-                        android:id="@+id/booking_frequency_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/extra_padding"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:paddingRight="@dimen/extra_padding"
-                        android:paddingStart="@dimen/extra_padding"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="@string/booking_frequency_every_week"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/booking_job_instructions_list_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:divider="?android:attr/dividerHorizontal"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/default_padding"
-                    android:paddingRight="@dimen/default_padding"
-                    android:showDividers="middle|beginning"
-                    />
-
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/booking_proxy_location_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    >
 
                     <com.handy.portal.ui.element.bookings.ProxyLocationView
                         android:id="@+id/booking_details_location_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/extra_margin_medium"
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         />
 
-                    <include
-                        layout="@layout/divider"
+                    <TextView
+                        android:id="@+id/booking_reveal_notice_text"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/divider_height"
-                        android:layout_marginEnd="@dimen/default_margin"
-                        android:layout_marginLeft="@dimen/default_margin"
-                        android:layout_marginRight="@dimen/default_margin"
-                        android:layout_marginStart="@dimen/default_margin"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="@dimen/lineSpacing"
+                        android:padding="@dimen/default_padding"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        android:visibility="gone"
+                        tools:text="@string/full_details_and_more_available_on_date_flex"
+                        tools:visibility="visible"
                         />
 
+                    <TextView
+                        android:id="@+id/booking_job_number_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/default_padding"
+                        android:textColor="@color/tertiary_grey"
+                        android:textSize="@dimen/small_text_size"
+                        tools:text="Job # 123456"
+                        />
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/booking_job_number_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="@dimen/default_padding"
-                    android:textColor="@color/tertiary_grey"
-                    android:textSize="@dimen/small_text_size"
-                    tools:text="Job # 123456"
-                    />
 
             </LinearLayout>
 
@@ -446,7 +399,6 @@
                     tools:text="Helper text yo"
                     tools:visibility="visible"
                     />
-
             </LinearLayout>
 
         </LinearLayout>

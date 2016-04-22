@@ -186,7 +186,8 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:paddingRight="2dp"
-                        android:src="@drawable/ic_fee_balance"/>
+                        android:src="@drawable/ic_fee_balance"
+                        />
 
                     <TextView
                         android:layout_width="0dp"
