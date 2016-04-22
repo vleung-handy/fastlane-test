@@ -1,19 +1,13 @@
 package com.handy.portal.ui.fragment.dialog;
 
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.handy.portal.R;
@@ -31,7 +25,7 @@ import butterknife.OnClick;
  *
  * shown when we want to confirm a booking action
  */
-public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
+public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFragment
 {
     @Bind(R.id.confirm_booking_action_button)
     Button mConfirmBookingActionButton;
@@ -45,6 +39,12 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
      * @return the view that will be stuffed inside confirm_booking_action_content of this fragment's view
      */
     protected abstract View getBookingActionContentView(LayoutInflater inflater, ViewGroup container);
+
+    protected final View getContentView(LayoutInflater inflater, ViewGroup container)
+    {
+        return inflater.inflate(R.layout.layout_confirm_booking_action, container, false);
+    }
+
     protected abstract void onConfirmBookingActionButtonClicked();
     protected abstract int getConfirmButtonBackgroundResourceId();
     protected abstract String getConfirmButtonText();
@@ -92,7 +92,8 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_dialog_confirm_booking_action, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
         ScrollView confirmBookingActionContentLayout = (ScrollView) view.findViewById(R.id.confirm_booking_action_content);
         confirmBookingActionContentLayout.addView(getBookingActionContentView(inflater, container));
         return view;
@@ -106,31 +107,6 @@ public abstract class ConfirmBookingActionDialogFragment extends DialogFragment
 
         mConfirmBookingActionButton.setBackgroundResource(getConfirmButtonBackgroundResourceId());
         mConfirmBookingActionButton.setText(getConfirmButtonText());
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        Window window = getDialog().getWindow();
-        WindowManager.LayoutParams wlp = window.getAttributes();
-
-        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        wlp.gravity = Gravity.BOTTOM;
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-    }
-
-    /**
-     * TODO need this because we're making the layout full screen instead of half screen
-     * as a hacky fix for the weird resize animation seen
-     * (the layout overflows at the bottom and then it gets redrawn so that it's not)
-     * when cancellation policy screen is shown
-     * in the confirm claim dialog
-     */
-    @OnClick(R.id.confirm_booking_action_transparent_background_layout)
-    public void onTransparentBackgroundClicked()
-    {
-        dismiss();
     }
 
     @OnClick(R.id.confirm_booking_action_button)
