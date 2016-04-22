@@ -690,13 +690,14 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     }
 
     /**
-     * shows the custom remove job warning dialog if the keep rate data is there
+     * shows the custom remove job warning dialog if the keep rate data is there,
+     * based on the given booking
      *
      * @return true if the custom warning dialog was shown/is already showing, false otherwise
      */
-    private boolean showCustomRemoveJobWarningDialogIfNecessary()
+    private boolean showCustomRemoveJobWarningDialogIfNecessary(@NonNull Booking booking)
     {
-        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
+        final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
         if(removeAction != null)
         {
             final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
@@ -704,7 +705,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             {
                 if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelDialogFragment.FRAGMENT_TAG) == null)
                 {
-                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
+                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(booking);
                     fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
                     FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
                 }
@@ -721,7 +722,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
-        boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
+        boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary(mBooking);
         if(!customWarningDialogShown)
         {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
