@@ -1,12 +1,10 @@
 package com.handy.portal.ui.fragment.dialog;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ScrollView;
 
@@ -55,24 +53,6 @@ public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFr
         super.onCreate(savedInstanceState);
         Utils.inject(getActivity(), this);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING); //should not be null
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        Window window = dialog.getWindow();
-        window.requestFeature(Window.FEATURE_NO_TITLE);
-        window.getAttributes().windowAnimations = R.style.dialog_animation_slide_up_down_from_bottom;
-
-        /* TODO the line below won't actually work for now because we are making the layout full screen
-         * as a hacky fix for the weird resize animation
-         * (the layout overflows at the bottom and then it gets redrawn so that it's not)
-         * seen when cancellation policy is shown in confirm claim
-         * */
-        dialog.setCanceledOnTouchOutside(cancelDialogOnTouchOutside());
-        return dialog;
     }
 
     public boolean cancelDialogOnTouchOutside()
