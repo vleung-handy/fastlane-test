@@ -54,7 +54,7 @@
     <string name="job_claim_success">Success! Job claimed!</string>
     <string name="series_claim_success">Success! Series claimed!</string>
 
-    <string name="job_remove_success">Success! Job removed!</string>
+    <string name="job_remove_success">You have cancelled this job.</string>
     <string name="series_remove_success">Success! Series removed!</string>
 
     <string name="send_verification_success">Your income verification has been sent.</string>
