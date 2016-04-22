@@ -77,7 +77,11 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     @SuppressWarnings({"ResourceType", "MissingPermission"})
     public void onMapReady(GoogleMap map)
     {
-        if (mBooking == null) { return; }
+        if (mBooking == null)
+        {
+            Crashlytics.log("mBooking is null in onMapReady()");
+            return;
+        }
 
         if (!LocationUtils.hasRequiredLocationPermissions(getContext()))
         {
