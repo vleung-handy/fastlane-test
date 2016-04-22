@@ -60,7 +60,7 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     @Override
     protected int getConfirmButtonBackgroundResourceId()
     {
-        return R.drawable.button_green;
+        return R.drawable.button_green_round;
     }
 
     @Override

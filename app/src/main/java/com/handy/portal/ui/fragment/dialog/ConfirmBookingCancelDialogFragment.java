@@ -141,7 +141,7 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     @Override
     protected int getConfirmButtonBackgroundResourceId()
     {
-        return R.color.error_red;
+        return R.drawable.button_red_round;
     }
 
     @Override
