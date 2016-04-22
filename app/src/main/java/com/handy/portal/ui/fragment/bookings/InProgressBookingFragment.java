@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment.bookings;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -260,14 +259,12 @@ public class InProgressBookingFragment extends InjectedFragment
         bus.post(new HandyEvent.CallCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
-        try
+        if(phoneNumber == null)
         {
-            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
         }
-        catch (ActivityNotFoundException activityException)
-        {
-            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
-        }
+        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
     }
 
     @OnClick(R.id.in_progress_booking_message_customer_view)
@@ -276,14 +273,12 @@ public class InProgressBookingFragment extends InjectedFragment
         bus.post(new HandyEvent.TextCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
-        try
+        if(phoneNumber == null)
         {
-            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
         }
-        catch (ActivityNotFoundException activityException)
-        {
-            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
-        }
+        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
     }
 
     private String getLoggedInUserId()
