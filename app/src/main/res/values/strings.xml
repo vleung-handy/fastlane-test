@@ -54,7 +54,7 @@
     <string name="job_claim_success">Success! Job claimed!</string>
     <string name="series_claim_success">Success! Series claimed!</string>
 
-    <string name="job_remove_success">Success! Job removed!</string>
+    <string name="job_remove_success">You have cancelled this job.</string>
     <string name="series_remove_success">Success! Series removed!</string>
 
     <string name="send_verification_success">Your income verification has been sent.</string>
@@ -334,6 +334,8 @@
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
     <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
+    <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
+    <string name="show_booking_cancellation_policy">Show Details</string>
     <string name="tap_preferences_before_checkout">Tap completed tasks before checking out.</string>
     <string name="payment">Payment</string>
     <string name="get_directions">Get directions</string>
@@ -457,5 +459,15 @@
     <string name="date">Date</string>
     <string name="progress">Progress</string>
     <string name="share">Share</string>
+
+    <!-- Job Cancellation -->
+    <string name="need_to_cancel">Are you sure you need to cancel?</string>
+    <string name="cancel_job">Cancel Job</string>
+    <string name="keep_rate">Keep rate</string>
+    <string name="keep_rate_negatively_impacted">Your keep rate will be negatively impacted.</string>
+    <string name="empty_keep_rate_percent">- - %</string>
+    <string name="keep_rate_percent_formatted">%1$d%%</string>
+    <string name="no_keep_rate">Not enough data</string>
+    <string name="withholding_fee_simple_formatted">You will incur a %1$s fee and reduce your keep rate:</string>
 
 </resources>

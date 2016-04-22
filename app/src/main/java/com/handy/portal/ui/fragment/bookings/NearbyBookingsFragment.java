@@ -32,7 +32,8 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.Provider;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.fragment.dialog.ConfirmBookingDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.MathUtils;
 import com.squareup.otto.Subscribe;
@@ -233,8 +234,8 @@ public class NearbyBookingsFragment extends ActionBarFragment
         }
         mBookingDistanceText.setText(distance);
 
-        final ConfirmBookingDialogFragment dialogFragment =
-                ConfirmBookingDialogFragment.newInstance(booking);
+        final ConfirmBookingActionDialogFragment dialogFragment =
+                ConfirmBookingClaimDialogFragment.newInstance(booking);
         mBookingClaimButton.setText(getString(R.string.claim_n_dollar_job_formatted,
                 paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount()));
         mBookingClaimButton.setOnClickListener(new View.OnClickListener()
@@ -244,7 +245,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
             {
                 if (dialogFragment.isVisible()) { return; }
                 dialogFragment.setTargetFragment(NearbyBookingsFragment.this, RequestCode.CONFIRM_REQUEST);
-                dialogFragment.show(getFragmentManager(), ConfirmBookingDialogFragment.FRAGMENT_TAG);
+                dialogFragment.show(getFragmentManager(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
             }
         });
     }

@@ -81,7 +81,7 @@
             </RelativeLayout>
 
             <include
-                layout="@layout/divider_dashboard"
+                layout="@layout/divider"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_height"
                 />
@@ -152,7 +152,7 @@
             </RelativeLayout>
 
             <include
-                layout="@layout/divider_dashboard"
+                layout="@layout/divider"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_height"
                 />

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     >
 
-    <include layout="@layout/divider_dashboard"/>
+    <include layout="@layout/divider"/>
 
     <RelativeLayout
         android:id="@+id/tier_option"
@@ -54,7 +54,7 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/divider_dashboard"/>
+    <include layout="@layout/divider"/>
 
     <RelativeLayout
         android:id="@+id/feedback_option"
@@ -115,7 +115,7 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/divider_dashboard"/>
+    <include layout="@layout/divider"/>
 
     <LinearLayout
         android:id="@+id/reviews_option"
@@ -204,6 +204,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/divider_dashboard"/>
+    <include layout="@layout/divider"/>
 
 </LinearLayout>

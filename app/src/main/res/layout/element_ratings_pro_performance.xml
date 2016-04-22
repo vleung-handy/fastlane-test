@@ -47,7 +47,7 @@
             android:layout_marginTop="@dimen/default_margin"
             />
 
-        <include layout="@layout/divider_dashboard"/>
+        <include layout="@layout/divider"/>
 
         <LinearLayout
             android:layout_width="match_parent"

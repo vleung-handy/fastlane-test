@@ -68,7 +68,7 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/divider_dashboard"/>
+            <include layout="@layout/divider"/>
 
             <RelativeLayout
                 android:id="@+id/edit_payment_option"
@@ -115,7 +115,7 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/divider_dashboard"/>
+            <include layout="@layout/divider"/>
 
             <LinearLayout
                 android:id="@+id/order_resupply_layout"
@@ -159,7 +159,7 @@
 
                 </RelativeLayout>
 
-                <include layout="@layout/divider_dashboard"/>
+                <include layout="@layout/divider"/>
 
             </LinearLayout>
 
@@ -199,7 +199,7 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/divider_dashboard"/>
+            <include layout="@layout/divider"/>
 
         </LinearLayout>
 

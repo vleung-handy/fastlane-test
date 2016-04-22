@@ -580,6 +580,11 @@ public class Booking implements Comparable<Booking>, Serializable
         private Extras mExtras;
 
 
+        public Extras getExtras()
+        {
+            return mExtras;
+        }
+
         public String getActionName()
         {
             return mActionName;
@@ -614,16 +619,121 @@ public class Booking implements Comparable<Booking>, Serializable
             return mHelpRedirectPath;
         }
 
+        @Nullable
+        public Extras.KeepRate getKeepRate()
+        {
+            return mExtras != null ? mExtras.getKeepRate() : null;
+        }
+
         public static class Extras implements Serializable
         {
             @SerializedName("withholding_amount")
             private int mFeeAmount;
             @SerializedName("remove_reasons")
             private List<String> mRemoveReasons;
+            @SerializedName("cancellation_policy")
+            private CancellationPolicy mCancellationPolicy;
+            @SerializedName("header_text")
+            private String mHeaderText;
+            @SerializedName("sub_text")
+            private String mSubText;
+            @SerializedName("keep_rate")
+            private KeepRate mKeepRate;
 
             public int getFeeAmount() { return mFeeAmount; }
+            public String getHeaderText()
+            {
+                return mHeaderText;
+            }
+
+            public String getSubText()
+            {
+                return mSubText;
+            }
 
             public List<String> getRemoveReasons() { return mRemoveReasons; }
+
+            @Nullable
+            public CancellationPolicy getCancellationPolicy()
+            {
+                return mCancellationPolicy;
+            }
+
+            @Nullable
+            public KeepRate getKeepRate()
+            {
+                return mKeepRate;
+            }
+
+            public static class CancellationPolicy implements Serializable
+            {
+                @SerializedName("header_text")
+                private String mHeaderText;
+                @SerializedName("sub_text")
+                private String mSubtitleText;
+                @SerializedName("policy")
+                private CancellationPolicyItem mCancellationPolicyItems[];
+
+                public String getSubtitleText()
+                {
+                    return mSubtitleText;
+                }
+
+                public String getHeaderText()
+                {
+                    return mHeaderText;
+                }
+
+                public CancellationPolicyItem[] getCancellationPolicyItems()
+                {
+                    return mCancellationPolicyItems;
+                }
+
+                public static class CancellationPolicyItem implements Serializable
+                {
+                    @SerializedName("text")
+                    private String mDisplayText;
+                    @SerializedName("active")
+                    private boolean mActive;
+                    @SerializedName("fee")
+                    private PaymentInfo mPaymentInfo;
+
+                    public String getDisplayText()
+                    {
+                        return mDisplayText;
+                    }
+
+                    public boolean isActive()
+                    {
+                        return mActive;
+                    }
+
+                    public PaymentInfo getPaymentInfo()
+                    {
+                        return mPaymentInfo;
+                    }
+                }
+            }
+
+            public static class KeepRate implements Serializable
+            {
+                @SerializedName("actual")
+                private Float mCurrent;
+                @SerializedName("on_next_unassign")
+                private Float mNextUnassign;
+
+                @Nullable
+                public Float getCurrent()
+                {
+                    return mCurrent;
+                }
+
+                @Nullable
+                public Float getOnNextUnassign()
+                {
+                    return mNextUnassign;
+                }
+            }
         }
     }
 

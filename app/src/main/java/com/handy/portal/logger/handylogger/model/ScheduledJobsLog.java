@@ -53,6 +53,7 @@ public class ScheduledJobsLog extends EventLog
     {
         public static final String REASON_FLOW = "reason_flow";
         public static final String POPUP = "popup";
+        public static final String KEEP_RATE = "keep_rate";
 
         @SerializedName("removal_type")
         private String mRemovalType;
@@ -60,6 +61,10 @@ public class ScheduledJobsLog extends EventLog
         private String mRemovalReason;
         @SerializedName("withholding_amount")
         private int mFeeAmount;
+        @SerializedName("old_keep_rate")
+        private Float mOldKeepRate;
+        @SerializedName("new_keep_rate")
+        private Float mNewKeepRate;
         @SerializedName("warning_message")
         private String mWarningMessage;
 
@@ -75,13 +80,23 @@ public class ScheduledJobsLog extends EventLog
             mRemovalReason = removalReason;
             mFeeAmount = feeAmount;
             mWarningMessage = warningMessage;
+            final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
+            if (removeAction != null)
+            {
+                final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
+                if (keepRate != null)
+                {
+                    mOldKeepRate = keepRate.getCurrent();
+                    mNewKeepRate = keepRate.getOnNextUnassign();
+                }
+            }
         }
     }
 
 
     public static class RemoveJobConfirmationShown extends RemoveJobLog
     {
-        private static final String EVENT_TYPE = "remove_confirmation_shown";
+        private static final String EVENT_TYPE = "remove_job_confirmation_shown";
 
         public RemoveJobConfirmationShown(final Booking booking,
                                           final String removalType,

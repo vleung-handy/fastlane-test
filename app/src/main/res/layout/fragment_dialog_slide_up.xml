@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO nesting inside a relative layout to make this full screen as a hacky fix for weird resize animation
+(the layout overflows at the bottom and then it gets redrawn so that it's not)
+that is shown when cancellation policy is shown in confirm claim. i don't know how to disable or change that animation-->
+<RelativeLayout
+    android:id="@+id/fragment_dialog_slide_up_transparent_background_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    >
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_dialog_slide_up_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:orientation="vertical"
+        />
+
+</RelativeLayout>
+

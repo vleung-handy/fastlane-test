@@ -88,6 +88,7 @@
 
     <!--bookings-->
     <dimen name="checklist_title_padding_top">2dp</dimen>
+    <dimen name="cancellation_policy_active_icon_size">7dp</dimen>
 
     <!--booking details-->
     <dimen name="booking_details_map_height">280dp</dimen>
