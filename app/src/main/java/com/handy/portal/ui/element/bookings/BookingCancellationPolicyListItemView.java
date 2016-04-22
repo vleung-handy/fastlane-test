@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
     TextView mRightText;
     @Bind(R.id.cancellation_policy_list_item_active_indicator)
     ImageView mActiveItemIndicator;
+    @Bind(R.id.cancellation_policy_list_item_divider)
+    View mDivider;
 
     public BookingCancellationPolicyListItemView(final Context context)
     {
@@ -80,6 +83,12 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         }
         mLeftText.setTextColor(getContext().getResources().getColor(colorResourceId));
         mRightText.setTextColor(getContext().getResources().getColor(colorResourceId));
+        return this;
+    }
+
+    public BookingCancellationPolicyListItemView setDividerVisible(boolean visible)
+    {
+        mDivider.setVisibility(visible ? VISIBLE : GONE);
         return this;
     }
 }

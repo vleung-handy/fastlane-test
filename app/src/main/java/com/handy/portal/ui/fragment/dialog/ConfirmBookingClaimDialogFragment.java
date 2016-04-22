@@ -149,7 +149,8 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
                             new BookingCancellationPolicyListItemView(getContext())
                                     .setLeftText(cancellationPolicy.getDisplayText())
                                     .setRightText(feeAmountFormatted)
-                                    .setHighlighted(cancellationPolicy.isActive());
+                                    .setHighlighted(cancellationPolicy.isActive())
+                                    .setDividerVisible(i != (cancellationPolicies.length - 1));
                     mCancellationPolicyContent.addView(policyListItemView);
                 }
                 else

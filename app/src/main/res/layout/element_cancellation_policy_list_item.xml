@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
     >
 
     <LinearLayout
@@ -19,9 +20,10 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/extra_margin"
             android:layout_marginRight="@dimen/extra_margin"
+            android:src="@drawable/circle_handy_blue"
             android:visibility="gone"
             tools:visibility="visible"
-            android:src="@drawable/circle_handy_blue"/>
+            />
 
         <TextView
             android:id="@+id/cancellation_policy_list_item_left_text"
@@ -46,5 +48,5 @@
             />
     </LinearLayout>
 
-    <include layout="@layout/divider"/>
-</RelativeLayout>
+    <include android:id="@+id/cancellation_policy_list_item_divider" layout="@layout/divider"/>
+</LinearLayout>
