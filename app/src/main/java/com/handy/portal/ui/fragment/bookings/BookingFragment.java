@@ -183,7 +183,6 @@ public class BookingFragment extends ActionBarFragment
         mBookingMapView.disableParentScrolling(mScrollView);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
-        setDisplay();
     }
 
     @Override
@@ -194,6 +193,8 @@ public class BookingFragment extends ActionBarFragment
         {
             mBookingMapView.onResume();
         }
+
+        setDisplay();
     }
 
     @Override
