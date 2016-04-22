@@ -139,6 +139,16 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     }
 
     @Override
+    public void dismiss()
+    {
+        if(getTargetFragment() != null)
+        {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
+        }
+        super.dismiss();
+    }
+
+    @Override
     protected int getConfirmButtonBackgroundResourceId()
     {
         return R.drawable.button_red_round;

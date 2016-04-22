@@ -332,6 +332,16 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 case RequestCode.REMOVE_BOOKING:
                     requestRemoveJob();
                     break;
+
+            }
+        }
+        else if(resultCode == Activity.RESULT_CANCELED)
+        {
+            switch (requestCode)
+            {
+                case RequestCode.REMOVE_BOOKING:
+                    showJobSupportSlideUpPanel(); //show it again
+                    break;
             }
         }
     }
@@ -369,6 +379,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     @Override
     public void onClick(final View v)
+    {
+        showJobSupportSlideUpPanel();
+    }
+
+    private void showJobSupportSlideUpPanel()
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportSelected(mBooking.getId())));
 
@@ -723,7 +738,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
         boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
-        if(!customWarningDialogShown)
+        if(customWarningDialogShown)
+        {
+            mSlideUpPanelContainer.hidePanel();
+        }
+        else
         {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
             WarningButtonsText warningButtonsText = WarningButtonsText.REMOVE_JOB;
