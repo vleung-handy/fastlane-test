@@ -564,7 +564,7 @@ public class BookingFragment extends ActionBarFragment
                     @Override
                     public void onClick(final View v)
                     {
-                        boolean confirmClaimDialogShown = showConfirmBookingClaimDialogIfNecessary(mBooking);
+                        boolean confirmClaimDialogShown = showConfirmBookingClaimDialogIfNecessary();
                         if(!confirmClaimDialogShown)
                         {
                             requestClaimJob();
@@ -664,9 +664,9 @@ public class BookingFragment extends ActionBarFragment
      *
      * @return true if the confirm dialog is shown/is showing, false otherwise
      */
-    private boolean showConfirmBookingClaimDialogIfNecessary(@NonNull Booking booking)
+    private boolean showConfirmBookingClaimDialogIfNecessary()
     {
-        final Booking.Action claimAction = booking.getAction(Booking.Action.ACTION_CLAIM);
+        final Booking.Action claimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
 
         if(claimAction != null && claimAction.getExtras() != null)
         {
@@ -675,7 +675,7 @@ public class BookingFragment extends ActionBarFragment
             {
                 if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
                 {
-                    ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(booking);
+                    ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
                     confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
                     FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
                 }

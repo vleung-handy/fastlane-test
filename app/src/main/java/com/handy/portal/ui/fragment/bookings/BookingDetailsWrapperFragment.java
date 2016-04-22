@@ -695,9 +695,9 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
      *
      * @return true if the custom warning dialog was shown/is already showing, false otherwise
      */
-    private boolean showCustomRemoveJobWarningDialogIfNecessary(@NonNull Booking booking)
+    private boolean showCustomRemoveJobWarningDialogIfNecessary()
     {
-        final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
+        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         if(removeAction != null)
         {
             final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
@@ -705,7 +705,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             {
                 if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelDialogFragment.FRAGMENT_TAG) == null)
                 {
-                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(booking);
+                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
                     fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
                     FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
                 }
@@ -722,7 +722,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
-        boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary(mBooking);
+        boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
         if(!customWarningDialogShown)
         {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
