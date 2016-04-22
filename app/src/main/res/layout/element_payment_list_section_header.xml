@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dark_grey_border_bottom_light_background"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dark_grey_border_bottom_light_background"
+                android:paddingBottom="@dimen/default_padding"
+                android:paddingLeft="@dimen/payment_container_horizontal_padding"
+                android:paddingRight="@dimen/payment_container_horizontal_padding"
+                android:paddingTop="@dimen/default_padding"
     >
 
     <TextView
@@ -11,12 +15,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingBottom="@dimen/default_padding"
-        android:paddingLeft="@dimen/payment_container_horizontal_padding"
-        android:paddingRight="@dimen/payment_container_horizontal_padding"
-        android:paddingTop="@dimen/default_padding"
         android:textColor="@color/section_header_text_color"
         android:textSize="@dimen/small_text_size"
+        tools:text="2016"
         />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/year_to_date"
+            android:textColor="@color/tertiary_grey"
+            />
+
+        <TextView
+            android:id="@+id/payment_list_section_year_to_date_fee_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/extra_margin"
+            android:layout_marginStart="@dimen/extra_margin"
+            android:textColor="@color/tertiary_grey"
+            tools:text="$2,560"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

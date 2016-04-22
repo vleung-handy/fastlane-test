@@ -255,6 +255,9 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/feedback")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
 
+    @GET(PAYMENTS_PATH + "outstanding_fees")
+    void getPaymentOutstandingFees(HandyRetrofitCallback cb);
+
     @POST("/events")
     void postLogs(@Body JsonObject eventLogBundle, HandyRetrofitCallback cb);
 }

@@ -31,6 +31,7 @@ import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentFlow;
+import com.handy.portal.model.payments.PaymentOutstandingFees;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.notification.model.NotificationMessages;
@@ -159,6 +160,11 @@ public class DataManager
     public void getAnnualPaymentSummaries(final Callback<AnnualPaymentSummaries> cb)
     {
         mService.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
+    }
+
+    public void getPaymentOutstandingFees(final Callback<PaymentOutstandingFees> cb)
+    {
+        mService.getPaymentOutstandingFees(new PaymentOutstandingFeesRetroFitCallback(cb));
     }
 
     public void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> cb)

@@ -5,6 +5,7 @@ import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentFlow;
+import com.handy.portal.model.payments.PaymentOutstandingFees;
 
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public abstract class PaymentEvent extends HandyEvent
             this.isInitialBatchRequest = isInitialRequest;
         }
     }
+
 
     public static class ReceivePaymentBatchesSuccess extends ReceiveSuccessEvent
     {
@@ -66,6 +68,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceivePaymentBatchesError extends ReceiveErrorEvent
     {
         public ReceivePaymentBatchesError(DataManager.DataManagerError error)
@@ -74,10 +77,12 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class RequestAnnualPaymentSummaries extends RequestEvent
     {
         public RequestAnnualPaymentSummaries() { }
     }
+
 
     public static class ReceiveAnnualPaymentSummariesSuccess extends ReceiveSuccessEvent
     {
@@ -94,6 +99,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveAnnualPaymentSummariesError extends ReceiveErrorEvent
     {
         public ReceiveAnnualPaymentSummariesError(DataManager.DataManagerError error)
@@ -101,6 +107,38 @@ public abstract class PaymentEvent extends HandyEvent
             this.error = error;
         }
     }
+
+
+    public static class RequestPaymentOutstandingFees extends RequestEvent
+    {
+        public RequestPaymentOutstandingFees() { }
+    }
+
+
+    public static class ReceivePaymentOutstandingFeesSuccess extends ReceiveSuccessEvent
+    {
+        private final PaymentOutstandingFees paymentOutstandingFees;
+
+        public ReceivePaymentOutstandingFeesSuccess(PaymentOutstandingFees paymentOutstandingFees)
+        {
+            this.paymentOutstandingFees = paymentOutstandingFees;
+        }
+
+        public PaymentOutstandingFees getPaymentOutstandingFees()
+        {
+            return paymentOutstandingFees;
+        }
+    }
+
+
+    public static class ReceivePaymentOutstandingFeesError extends ReceiveErrorEvent
+    {
+        public ReceivePaymentOutstandingFeesError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
 
     public static class ReceiveShouldUserUpdatePaymentInfoSuccess extends ReceiveSuccessEvent
     {
@@ -112,6 +150,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveShouldUserUpdatePaymentInfoError extends ReceiveErrorEvent
     {
         public ReceiveShouldUserUpdatePaymentInfoError(DataManager.DataManagerError error)
@@ -120,10 +159,12 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class RequestShouldUserUpdatePaymentInfo extends RequestEvent
     {
 
     }
+
 
     public static class ReceiveCreateBankAccountSuccess extends ReceiveSuccessEvent
     {
@@ -135,6 +176,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveCreateBankAccountError extends ReceiveErrorEvent
     {
         public ReceiveCreateBankAccountError(DataManager.DataManagerError error)
@@ -142,6 +184,7 @@ public abstract class PaymentEvent extends HandyEvent
             this.error = error;
         }
     }
+
 
     public static class RequestCreateBankAccount extends RequestEvent
     {
@@ -168,6 +211,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveCreateDebitCardRecipientError extends ReceiveErrorEvent
     {
         public ReceiveCreateDebitCardRecipientError(DataManager.DataManagerError error)
@@ -175,6 +219,7 @@ public abstract class PaymentEvent extends HandyEvent
             this.error = error;
         }
     }
+
 
     public static class RequestCreateDebitCardRecipient extends RequestEvent
     {
@@ -195,6 +240,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveCreateDebitCardForChargeSuccess extends ReceiveSuccessEvent
     {
         public final CreateDebitCardResponse response;
@@ -205,6 +251,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveCreateDebitCardForChargeError extends ReceiveErrorEvent
     {
         public ReceiveCreateDebitCardForChargeError(DataManager.DataManagerError error)
@@ -212,6 +259,7 @@ public abstract class PaymentEvent extends HandyEvent
             this.error = error;
         }
     }
+
 
     public static class RequestCreateDebitCardForCharge extends RequestEvent
     {
@@ -223,6 +271,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceivePaymentFlowSuccess extends ReceiveSuccessEvent
     {
         public final PaymentFlow paymentFlow;
@@ -233,6 +282,7 @@ public abstract class PaymentEvent extends HandyEvent
         }
     }
 
+
     public static class ReceivePaymentFlowError extends ReceiveErrorEvent
     {
         public ReceivePaymentFlowError(DataManager.DataManagerError error)
@@ -240,6 +290,7 @@ public abstract class PaymentEvent extends HandyEvent
             this.error = error;
         }
     }
+
 
     public static class RequestPaymentFlow extends RequestEvent {}
 }

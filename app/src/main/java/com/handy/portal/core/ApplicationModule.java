@@ -61,11 +61,13 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
+import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
+import com.handy.portal.ui.element.payments.PaymentFeeBreakdownView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
@@ -95,6 +97,7 @@ import com.handy.portal.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
+import com.handy.portal.ui.fragment.payments.OutstandingFeesFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
@@ -195,6 +198,9 @@ import retrofit.converter.GsonConverter;
         RequestSuppliesWebViewFragment.class,
         BookingFragment.class,
         InProgressBookingFragment.class,
+        OutstandingFeesFragment.class,
+        PaymentFeeBreakdownView.class,
+        PaymentBatchListAdapter.class,
 })
 public final class ApplicationModule
 {

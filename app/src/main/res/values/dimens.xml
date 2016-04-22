@@ -159,13 +159,6 @@
     <dimen name="checklist_checkbox_width_height">32dp</dimen>
     <dimen name="signature_height">200dp</dimen>
 
-    <!-- Job Payment Details -->
-    <dimen name="job_status_icon_width_height">24dp</dimen>
-    <dimen name="job_status_layout_height">48dp</dimen>
-    <dimen name="job_status_icon_margin">12dp</dimen>
-    <dimen name="job_status_icon_padding">12dp</dimen>
-    <dimen name="job_checkout_status_subtitle_margin">2dp</dimen>
-
     <!-- Overlap the underlying textview border -->
     <dimen name="customer_request_point_margin_top">-1.5dp</dimen>
     <dimen name="customer_request_point_margin_left">11dp</dimen>
@@ -179,5 +172,8 @@
     <dimen name="notification_image_margin_left">3dp</dimen>
     <dimen name="notification_image_margin_top">10dp</dimen>
     <dimen name="notification_unread_count_min_width">20dp</dimen>
+
+    <!-- Payments -->
+    <dimen name="outstanding_week_question_mark_width_height">72dp</dimen>
 
 </resources>

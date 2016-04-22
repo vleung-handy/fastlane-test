@@ -245,7 +245,6 @@
     <string name="previous_job">Previous Job</string>
     <string name="total_payment">Total Payment</string>
     <string name="expected_payment">Expected Payment</string>
-    <string name="remaining_fees">Remaining Fees</string>
     <string name="previous_pay_weeks">PREVIOUS PAY WEEKS</string>
     <string name="fees">Fees</string>
     <string name="current_pay_week">CURRENT PAY WEEK</string>
@@ -268,6 +267,12 @@
     <string name="verified">Verified</string>
     <string name="failed">Failed</string>
     <string name="pending">Pending</string>
+    <string name="outstanding_fees">Outstanding Fees</string>
+    <string name="year_to_date">Year to date:</string>
+    <string name="fees_applied_to_future_payments">Will be applied to future payments</string>
+    <string name="no_outstanding_withholdings">No outstanding withholdings</string>
+    <string name="withholdings_not_deducted_description">Withholdings that have not yet been deducted from payments will show up here.</string>
+    <string name="error_outstanding_fees">Oops! There was an error retrieving your outstanding fees.</string>
 
     <!-- Payments Bill Blocker -->
     <string name="payments_bill_blocker_title">Your payment info is missing!</string>
@@ -448,12 +453,6 @@
     <string name="job_started">Job started:</string>
     <string name="see_job_details">see job details</string>
     <string name="continue_to_check_out">Continue to check out </string>
-
-    <!-- Payment Job Details -->
-    <string name="transaction_summary">Transaction Summary</string>
-    <string name="net_earnings">Net earnings</string>
-    <string name="questions_about_your_payments">Questions about your payments?</string>
-    <string name="get_help">Get Help</string>
 
     <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>

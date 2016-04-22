@@ -10,6 +10,7 @@ import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentGroup;
+import com.handy.portal.model.payments.PaymentOutstandingFees;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -131,6 +132,25 @@ public class PaymentsManager
             public void onError(DataManager.DataManagerError error)
             {
                 mBus.post(new PaymentEvent.ReceiveAnnualPaymentSummariesError(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestPaymentOutstandingFees(final PaymentEvent.RequestPaymentOutstandingFees event)
+    {
+        mDataManager.getPaymentOutstandingFees(new DataManager.Callback<PaymentOutstandingFees>()
+        {
+            @Override
+            public void onSuccess(final PaymentOutstandingFees response)
+            {
+                mBus.post(new PaymentEvent.ReceivePaymentOutstandingFeesSuccess(response));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                mBus.post(new PaymentEvent.ReceivePaymentOutstandingFeesError(error));
             }
         });
     }

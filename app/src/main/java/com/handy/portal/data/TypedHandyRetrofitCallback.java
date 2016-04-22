@@ -29,6 +29,7 @@ import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.model.payments.PaymentFlow;
+import com.handy.portal.model.payments.PaymentOutstandingFees;
 import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
 import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.notification.model.NotificationMessages;
@@ -98,6 +99,13 @@ class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<
     }
 }
 
+class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentOutstandingFees>
+{
+    PaymentOutstandingFeesRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
 
 class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresPaymentInfoUpdate>
 {
