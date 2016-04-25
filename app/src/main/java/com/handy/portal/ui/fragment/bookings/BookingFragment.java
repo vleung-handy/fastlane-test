@@ -8,21 +8,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.MapsInitializer;
 import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BookingProgress;
@@ -42,7 +43,7 @@ import com.handy.portal.model.Booking;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.element.bookings.BookingMapView;
 import com.handy.portal.ui.element.bookings.NewBookingDetailsJobInstructionsSectionView;
 import com.handy.portal.ui.element.bookings.ProxyLocationView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -77,10 +78,12 @@ public class BookingFragment extends ActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
+    @Bind(R.id.booking_scroll_view)
+    ScrollView mScrollView;
     @Bind(R.id.booking_no_show_banner_text)
     View mNoShowBanner;
-    @Bind(R.id.booking_map_layout)
-    FrameLayout mMapLayout;
+    @Bind(R.id.booking_map_view)
+    BookingMapView mBookingMapView;
     @Bind(R.id.booking_customer_contact_layout)
     ViewGroup mBookingCustomerContactLayout;
     @Bind(R.id.booking_customer_name_text)
@@ -165,6 +168,8 @@ public class BookingFragment extends ActionBarFragment
 
         mFromPaymentsTab = getArguments().getBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB);
         mHideActionButtons = getArguments().getBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS);
+
+        MapsInitializer.initialize(getContext());
     }
 
     @Override
@@ -179,9 +184,55 @@ public class BookingFragment extends ActionBarFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        mBookingMapView.onCreate(savedInstanceState);
+        mBookingMapView.disableParentScrolling(mScrollView);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mBookingMapView.onResume();
+
         setDisplay();
+    }
+
+    @Override
+    public void onPause()
+    {
+        mBookingMapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        try
+        {
+            mBookingMapView.onDestroy();
+        }
+        catch (NullPointerException e)
+        {
+            Log.e(getClass().getSimpleName(),
+                    "Error while attempting MapView.onDestroy(), ignoring exception", e);
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        mBookingMapView.onLowMemory();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        mBookingMapView.onSaveInstanceState(outState);
     }
 
     public void setDisplay()
@@ -384,7 +435,7 @@ public class BookingFragment extends ActionBarFragment
         // Hide map and customer contact if coming from payments tab
         if (mFromPaymentsTab)
         {
-            mMapLayout.setVisibility(View.GONE);
+            mBookingMapView.setVisibility(View.GONE);
         }
     }
 
@@ -392,14 +443,7 @@ public class BookingFragment extends ActionBarFragment
     public void onReceiveZipClusterPolygonsSuccess(final BookingEvent.ReceiveZipClusterPolygonsSuccess event)
     {
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
-        BookingMapFragment fragment = BookingMapFragment.newInstance(
-                mBooking,
-                mSource,
-                bookingStatus,
-                event.zipClusterPolygons
-        );
-        FragmentTransaction transaction = ((MainActivity) getContext()).getSupportFragmentManager().beginTransaction();
-        transaction.replace(mMapLayout.getId(), fragment).commit();
+        mBookingMapView.setDisplay(mBooking, mSource, bookingStatus, event.zipClusterPolygons);
     }
 
     @OnClick(R.id.booking_get_directions_layout)
@@ -467,19 +511,12 @@ public class BookingFragment extends ActionBarFragment
             }
             else
             {
-                BookingMapFragment fragment = BookingMapFragment.newInstance(
-                        mBooking,
-                        mSource,
-                        bookingStatus
-                );
-                FragmentTransaction transaction =
-                        ((MainActivity) getContext()).getSupportFragmentManager().beginTransaction();
-                transaction.replace(mMapLayout.getId(), fragment).commit();
+                mBookingMapView.setDisplay(mBooking, mSource, bookingStatus, null);
             }
         }
         else
         {
-            UIUtils.replaceView(mMapLayout, new MapPlaceholderView(getContext()));
+            UIUtils.replaceView(mBookingMapView, new MapPlaceholderView(getContext()));
         }
     }
 
@@ -595,9 +632,9 @@ public class BookingFragment extends ActionBarFragment
             }
             case CHECK_IN:
             {
-                if (mMapLayout.getVisibility() == View.VISIBLE)
+                if (mBookingMapView.getVisibility() == View.VISIBLE)
                 {
-                    mMapLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    mBookingMapView.setLayoutParams(new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             (int) getResources().getDimension(
                                     R.dimen.check_in_booking_details_map_height)));
