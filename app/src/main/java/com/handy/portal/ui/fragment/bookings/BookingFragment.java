@@ -189,10 +189,7 @@ public class BookingFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        if (mBookingMapView != null)
-        {
-            mBookingMapView.onResume();
-        }
+        mBookingMapView.onResume();
 
         setDisplay();
     }
@@ -200,27 +197,21 @@ public class BookingFragment extends ActionBarFragment
     @Override
     public void onPause()
     {
-        if (mBookingMapView != null)
-        {
-            mBookingMapView.onPause();
-        }
+        mBookingMapView.onPause();
         super.onPause();
     }
 
     @Override
     public void onDestroy()
     {
-        if (mBookingMapView != null)
+        try
         {
-            try
-            {
-                mBookingMapView.onDestroy();
-            }
-            catch (NullPointerException e)
-            {
-                Log.e(getClass().getSimpleName(),
-                        "Error while attempting MapView.onDestroy(), ignoring exception", e);
-            }
+            mBookingMapView.onDestroy();
+        }
+        catch (NullPointerException e)
+        {
+            Log.e(getClass().getSimpleName(),
+                    "Error while attempting MapView.onDestroy(), ignoring exception", e);
         }
         super.onDestroy();
     }
@@ -229,20 +220,14 @@ public class BookingFragment extends ActionBarFragment
     public void onLowMemory()
     {
         super.onLowMemory();
-        if (mBookingMapView != null)
-        {
-            mBookingMapView.onLowMemory();
-        }
+        mBookingMapView.onLowMemory();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        if (mBookingMapView != null)
-        {
-            mBookingMapView.onSaveInstanceState(outState);
-        }
+        mBookingMapView.onSaveInstanceState(outState);
     }
 
     public void setDisplay()
