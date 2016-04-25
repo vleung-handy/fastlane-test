@@ -105,12 +105,12 @@ public class ConfigurationResponse
 
     public boolean shouldUseHelpCenterWebView()
     {
-        return mHelpCenterInfo.shouldUseHelpCenterWebView();
+        return mHelpCenterInfo == null ? false : mHelpCenterInfo.shouldUseHelpCenterWebView();
     }
 
     public String getHelpCenterUrl()
     {
-        return mHelpCenterInfo.getHelpCenterUrl();
+        return mHelpCenterInfo == null ? null : mHelpCenterInfo.getHelpCenterUrl();
     }
 
     public static class HelpCenterInfo
