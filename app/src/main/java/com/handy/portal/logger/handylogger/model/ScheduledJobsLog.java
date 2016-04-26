@@ -61,9 +61,9 @@ public class ScheduledJobsLog extends EventLog
         private String mRemovalReason;
         @SerializedName("withholding_amount")
         private int mFeeAmount;
-        @SerializedName("old_keep_rate")
+        @SerializedName("keep_rate_old")
         private Float mOldKeepRate;
-        @SerializedName("new_keep_rate")
+        @SerializedName("keep_rate_new")
         private Float mNewKeepRate;
         @SerializedName("warning_message")
         private String mWarningMessage;
