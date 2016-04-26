@@ -38,5 +38,13 @@
         style="@style/Button"
         android:layout_alignParentBottom="true"
         />
+
+    <include
+        layout="@layout/overlay_loading"
+        android:layout_below="@id/toolbar"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        />
 </RelativeLayout>
 

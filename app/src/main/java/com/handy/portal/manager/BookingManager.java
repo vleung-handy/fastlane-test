@@ -17,6 +17,7 @@ import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
+import com.handy.portal.model.onboarding.JobClaimResponse;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -383,6 +384,27 @@ public class BookingManager
                 mBus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
             }
         });
+    }
+
+
+    @Subscribe
+    public void onRequestClaimJobs(final HandyEvent.RequestClaimJobs event)
+    {
+        mDataManager.claimBookings(event.mJobClaimRequest, new DataManager.Callback<JobClaimResponse>()
+        {
+            @Override
+            public void onSuccess(JobClaimResponse response)
+            {
+                mBus.post(new HandyEvent.ReceiveClaimJobsSuccess(response));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                mBus.post(new HandyEvent.ReceiveClaimJobsError(error));
+            }
+        });
+
     }
 
     @Subscribe

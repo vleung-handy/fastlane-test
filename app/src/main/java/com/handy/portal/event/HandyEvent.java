@@ -22,6 +22,8 @@ import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
+import com.handy.portal.model.onboarding.JobClaimRequest;
+import com.handy.portal.model.onboarding.JobClaimResponse;
 
 import java.util.Date;
 import java.util.List;
@@ -438,6 +440,16 @@ public abstract class HandyEvent
     }
 
 
+    public static class RequestClaimJobs extends RequestEvent
+    {
+        public final JobClaimRequest mJobClaimRequest;
+
+        public RequestClaimJobs(JobClaimRequest jobClaimRequests)
+        {
+            mJobClaimRequest = jobClaimRequests;
+        }
+    }
+
     @Track("cancel claim confirmation accepted")
     public static class RequestRemoveJob extends RequestBookingActionEvent
     {
@@ -545,6 +557,18 @@ public abstract class HandyEvent
     }
 
 
+    //    TODO: JIA: Verify this tracking
+    @Track("claim jobs")
+    public static class ReceiveClaimJobsSuccess extends ReceiveSuccessEvent
+    {
+        public JobClaimResponse mJobClaimResponse;
+
+        public ReceiveClaimJobsSuccess(JobClaimResponse jobClaimResponse)
+        {
+            mJobClaimResponse = jobClaimResponse;
+        }
+    }
+
     @Track("remove job")
     public static class ReceiveRemoveJobSuccess extends ReceiveBookingSuccessEvent
     {
@@ -617,6 +641,14 @@ public abstract class HandyEvent
         }
     }
 
+
+    public static class ReceiveClaimJobsError extends ReceiveErrorEvent
+    {
+        public ReceiveClaimJobsError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
     public static class ReceiveRemoveJobError extends ReceiveErrorEvent
     {

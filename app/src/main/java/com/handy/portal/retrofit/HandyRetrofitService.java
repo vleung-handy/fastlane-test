@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ProviderSettings;
+import com.handy.portal.model.onboarding.JobClaimRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,6 +80,10 @@ public interface HandyRetrofitService
     @PUT(JOBS_PATH + "{id}/claim")
     void claimBooking(@Path("id") String bookingId,
                       @Query("type") String type,
+                      HandyRetrofitCallback cb);
+
+    @PUT(JOBS_PATH + "claim_proxies")
+    void claimBookings(@Body JobClaimRequest jobClaimRequest,
                       HandyRetrofitCallback cb);
 
     @PUT(JOBS_PATH + "{id}/remove")

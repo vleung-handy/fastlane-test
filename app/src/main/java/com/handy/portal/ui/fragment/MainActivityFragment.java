@@ -170,9 +170,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         //If the config response came back for the first time may need to navigate away
         //Normally the fragment would take care of itself, but this would launch the fragment if needed
-
-//        TODO: JIA: remove this hard coding = true stuff
-        mFirstTimeConfigReturned = true;
         if (mFirstTimeConfigReturned)
         {
             mFirstTimeConfigReturned = false;

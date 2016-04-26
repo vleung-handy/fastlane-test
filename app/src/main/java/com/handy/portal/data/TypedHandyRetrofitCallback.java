@@ -25,6 +25,7 @@ import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
+import com.handy.portal.model.onboarding.JobClaimResponse;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -111,6 +112,15 @@ class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallbac
 class BookingClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingClaimDetails>
 {
     BookingClaimHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class BookingsClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<JobClaimResponse>
+{
+    BookingsClaimHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

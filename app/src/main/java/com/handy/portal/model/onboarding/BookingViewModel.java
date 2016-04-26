@@ -21,7 +21,9 @@ public class BookingViewModel
     public BookingViewModel(final Booking booking)
     {
         this.booking = booking;
-        selected = false;
+
+        //we want to default the jobs to selected, and allow the user to unselect
+        selected = true;
     }
 
     public String getTitle()

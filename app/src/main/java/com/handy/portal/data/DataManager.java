@@ -27,6 +27,8 @@ import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
+import com.handy.portal.model.onboarding.JobClaimRequest;
+import com.handy.portal.model.onboarding.JobClaimResponse;
 import com.handy.portal.model.payments.AnnualPaymentSummaries;
 import com.handy.portal.model.payments.CreateDebitCardResponse;
 import com.handy.portal.model.payments.PaymentBatches;
@@ -114,6 +116,11 @@ public class DataManager
     public void claimBooking(String bookingId, BookingType type, final Callback<BookingClaimDetails> cb)
     {
         mService.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
+    }
+
+    public void claimBookings(JobClaimRequest jobClaimRequest, final Callback<JobClaimResponse> cb)
+    {
+        mService.claimBookings(jobClaimRequest, new BookingsClaimHandyRetroFitCallback(cb));
     }
 
     public void removeBooking(String bookingId, BookingType type, final Callback<Booking> cb)

@@ -87,6 +87,7 @@ public class OnboardActivity extends AppCompatActivity
     public void getStarted()
     {
         startActivity(new Intent(this, GettingStartedActivity.class));
+        finish();
     }
 
 

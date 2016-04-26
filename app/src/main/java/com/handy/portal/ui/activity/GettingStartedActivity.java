@@ -3,6 +3,7 @@ package com.handy.portal.ui.activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,16 +11,25 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.mixpanel.Mixpanel;
+import com.handy.portal.model.Booking;
+import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.onboarding.BookingViewModel;
 import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
+import com.handy.portal.model.onboarding.JobClaim;
+import com.handy.portal.model.onboarding.JobClaimRequest;
+import com.handy.portal.model.onboarding.JobClaimResponse;
 import com.handy.portal.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.ui.view.HandyJobGroupView;
@@ -27,10 +37,14 @@ import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class GettingStartedActivity extends AppCompatActivity implements HandyJobGroupView.OnJobChangeListener
 {
@@ -45,6 +59,9 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+
+    @Bind(R.id.loading_overlay)
+    View mLoadingOverlayView;
 
     @Inject
     Mixpanel mixpanel;
@@ -66,6 +83,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
     Drawable mGrayDrawable;
     private long mRequestTime;
     private int mWaitTime;
+    private boolean mDestroyed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -101,12 +119,16 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
 
         if (!hasJobs(mJobs2))
         {
-            mJobs2 = null;
-            mRequestTime = System.currentTimeMillis();
-            showDialog();
-
-            bus.post(new HandyEvent.RequestOnboardingJobs());
+            loadJobs();
         }
+    }
+
+    private void loadJobs()
+    {
+        mJobs2 = null;
+        mRequestTime = System.currentTimeMillis();
+        showLoadingDialog();
+        bus.post(new HandyEvent.RequestOnboardingJobs());
     }
 
     /**
@@ -144,7 +166,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
      * The dialog will only be displayed for a certain time, then it will check whether it can be
      * dismissed.
      */
-    public void showDialog()
+    public void showLoadingDialog()
     {
         mLoadingDialog = new OnboardLoadingDialog();
         mLoadingDialog.show(getFragmentManager(), OnboardLoadingDialog.TAG);
@@ -167,11 +189,17 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         switch (item.getItemId())
         {
             case android.R.id.home:
-                finish();
+                goToAvailableJobs();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        goToAvailableJobs();
     }
 
     /**
@@ -186,7 +214,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         mJobs2 = event.bookings;
         if (!hasJobs(mJobs2))
         {
-            //TODO: JIA: when there are no jobs, finish this activity and redirect somewhere else
+            goToAvailableJobs();
         }
         else
         {
@@ -197,13 +225,23 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
     @Subscribe
     public void onJobLoadError(HandyEvent.ReceiveOnboardingJobsError error)
     {
-        if (mLoadingDialog != null)
+        if (dialogDismissable())
         {
             mLoadingDialog.dismiss();
-            //TODO: JIA: figure out what to do here if there is a network error.
         }
 
-        Toast.makeText(this, error.error.getMessage(), Toast.LENGTH_LONG).show();
+        String msg;
+        if (error.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        {
+            msg = getString(R.string.error_fetching_connectivity_issue);
+        }
+        else
+        {
+            msg = getString(R.string.onboard_job_load_error);
+        }
+
+        //TODO: JIA offer them a way to try again
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -217,7 +255,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
             Log.d(TAG, "safeDialogRemoval: job is null");
         }
         long elapsedTime = System.currentTimeMillis() - mRequestTime;
-        if (elapsedTime <= mWaitTime)
+        if (elapsedTime < mWaitTime)
         {
             Log.d(TAG, "safeDialogRemoval: not enough time have elapsed, not closing: " + elapsedTime);
         }
@@ -226,7 +264,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         {
             Log.d(TAG, "safeDialogRemoval: dialog is null, not closing");
         }
-        if (mJobs2 != null && (elapsedTime > mWaitTime) && mLoadingDialog != null)
+        if (mJobs2 != null && (elapsedTime > mWaitTime) && dialogDismissable())
         {
             Log.d(TAG, "safeDialogRemoval: Dismissing Dialog");
             mLoadingDialog.dismiss();
@@ -239,6 +277,16 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
             mRecyclerView.startLayoutAnimation();
             updateButton();
         }
+    }
+
+    /**
+     * The dialog is only dismissable under these conditions.
+     *
+     * @return
+     */
+    private boolean dialogDismissable()
+    {
+        return mLoadingDialog != null && !this.isFinishing() && !this.mDestroyed;
     }
 
     @Override
@@ -254,7 +302,6 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
     {
         //one of the jobs changed price, re-calculate
         float sum = 0;
-        String symbol = "";
         for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
         {
             //model could be null, if it's just a header
@@ -270,10 +317,9 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
             }
         }
 
-
         if (sum > 0)
         {
-            symbol = mAdapter.getBookingsWrapperViewModels().get(1).mBookingViewModels.get(0).getCurrencySymbol();
+            String symbol = mAdapter.getBookingsWrapperViewModels().get(1).mBookingViewModels.get(0).getCurrencySymbol();
             String formattedPrice = symbol + String.format("%.0f", sum);
             String text = String.format(getString(R.string.onboard_claim_and_earn_formatted), formattedPrice);
             mBtnNext.setText(text);
@@ -286,4 +332,111 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         }
     }
 
+    @OnClick(R.id.btn_next)
+    public void buttonClicked()
+    {
+        JobClaimRequest request = new JobClaimRequest();
+        for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
+        {
+            //model could be null, if it's just a header
+            if (model != null)
+            {
+                for (BookingViewModel bookingView : model.mBookingViewModels)
+                {
+                    if (bookingView.selected)
+                    {
+                        request.mJobs.add(new JobClaim(bookingView.booking.getId(), bookingView.booking.getType().name().toLowerCase()));
+                    }
+                }
+            }
+        }
+
+        if (!request.mJobs.isEmpty())
+        {
+            mLoadingOverlayView.setVisibility(View.VISIBLE);
+            bus.post(new HandyEvent.RequestClaimJobs(request));
+        }
+        else
+        {
+            //no jobs were selected, send the user to claim job screen.
+            goToAvailableJobs();
+        }
+    }
+
+    private void goToAvailableJobs()
+    {
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
+        finish();
+    }
+
+
+    private void goToScheduledJobs()
+    {
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
+        finish();
+    }
+
+    /**
+     * A success here means the server successfully processed the request. Does not mean all the
+     * jobs requested to be claimed were actually claimed. ie..., if I requested 3 jobs, the response
+     * can come back: 0 out of 3 claimed.
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
+    {
+        mLoadingOverlayView.setVisibility(View.GONE);
+
+        List<Booking> bookings = jobsClaimedByMe(event.mJobClaimResponse);
+
+        if (bookings.isEmpty())
+        {
+            Toast.makeText(this, getString(R.string.onboard_no_longer_available), Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, event.mJobClaimResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            goToScheduledJobs();
+        }
+    }
+
+    @NonNull
+    private List<Booking> jobsClaimedByMe(JobClaimResponse jobsClaimed)
+    {
+        List<Booking> rval = new ArrayList<>();
+        for (BookingClaimDetails bcd : jobsClaimed.getJobs())
+        {
+            if (bcd.getBooking().isClaimedByMe())
+            {
+                rval.add(bcd.getBooking());
+            }
+        }
+
+        return rval;
+    }
+
+    @Subscribe
+    public void onReceiveClaimJobsError(HandyEvent.ReceiveClaimJobsError error)
+    {
+        mLoadingOverlayView.setVisibility(View.GONE);
+        String msg = "";
+        if (error.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        {
+            msg = getString(R.string.error_fetching_connectivity_issue);
+        }
+        else
+        {
+            msg = getString(R.string.onboard_job_claim_error);
+        }
+
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        mDestroyed = true;
+    }
 }
