@@ -1,7 +1,9 @@
 package com.handy.portal.ui.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,11 +31,23 @@ public class OnboardLoadingDialog extends DialogFragment
     @Bind(R.id.image_view)
     ImageView mImageView;
 
+    DialogInterface.OnCancelListener mOnCancelListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);
+    }
+
+    @Override
+    public void onAttach(final Activity activity)
+    {
+        super.onAttach(activity);
+        if (activity instanceof DialogInterface.OnCancelListener)
+        {
+            mOnCancelListener = (DialogInterface.OnCancelListener) activity;
+        }
     }
 
     @Nullable
@@ -59,5 +73,15 @@ public class OnboardLoadingDialog extends DialogFragment
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation_slide_out;
         return dialog;
+    }
+
+    @Override
+    public void onCancel(final DialogInterface dialog)
+    {
+        super.onCancel(dialog);
+        if (mOnCancelListener != null)
+        {
+            mOnCancelListener.onCancel(dialog);
+        }
     }
 }

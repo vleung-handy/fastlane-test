@@ -1,7 +1,6 @@
 package com.handy.portal.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,6 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
 {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-
-    private final String TAG = JobsRecyclerAdapter.class.getName();
 
     //this is the view model
     List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
@@ -58,8 +55,6 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        Log.d(TAG, "onCreateViewHolder");
-
         View layoutView = null;
         switch (viewType)
         {
@@ -90,7 +85,6 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     {
         if (holder.getItemViewType() == TYPE_ITEM)
         {
-            Log.d(TAG, "onBindViewHolder:" + position);
             holder.mJobView.bind(mBookingsWrapperViewModels.get(position));
         }
     }

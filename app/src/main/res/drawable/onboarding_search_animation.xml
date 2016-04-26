@@ -7,85 +7,85 @@
     >
     <item
         android:drawable="@drawable/onboard_search_animation_1"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_2"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_3"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_4"
-        android:duration="50"
+        android:duration="75"
         />
 
 
     <item
         android:drawable="@drawable/onboard_search_animation_5"
-        android:duration="50"
+        android:duration="75"
         />
 
 
     <item
         android:drawable="@drawable/onboard_search_animation_6"
-        android:duration="50"
+        android:duration="75"
         />
 
 
     <item
         android:drawable="@drawable/onboard_search_animation_7"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_8"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_9"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_10"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_11"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_12"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_13"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_14"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_15"
-        android:duration="50"
+        android:duration="75"
         />
 
     <item
         android:drawable="@drawable/onboard_search_animation_16"
-        android:duration="50"
+        android:duration="75"
         />
 
 

@@ -1,5 +1,6 @@
 package com.handy.portal.ui.activity;
 
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
@@ -20,7 +22,6 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
@@ -45,28 +46,28 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class GettingStartedActivity extends AppCompatActivity implements HandyJobGroupView.OnJobChangeListener
+public class GettingStartedActivity extends AppCompatActivity
+        implements HandyJobGroupView.OnJobChangeListener,
+        DialogInterface.OnCancelListener
 {
 
     private static final String TAG = GettingStartedActivity.class.getName();
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
-
     @Bind(R.id.btn_next)
     Button mBtnNext;
-
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
-
     @Bind(R.id.loading_overlay)
     View mLoadingOverlayView;
+    @Bind(R.id.fetch_error_view)
+    View mFetchErrorView;
+    @Bind(R.id.fetch_error_text)
+    TextView mErrorText;
 
     @Inject
-    Mixpanel mixpanel;
-
-    @Inject
-    Bus bus;
+    Bus mBus;
 
     OnboardLoadingDialog mLoadingDialog;
 
@@ -114,10 +115,11 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
     protected void onResume()
     {
         super.onResume();
-        this.bus.register(this);
+        mBus.register(this);
 
         if (!hasJobs(mJobs2))
         {
+            showLoadingDialog();
             loadJobs();
         }
     }
@@ -126,8 +128,9 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
     {
         mJobs2 = null;
         mRequestTime = System.currentTimeMillis();
-        showLoadingDialog();
-        bus.post(new HandyEvent.RequestOnboardingJobs());
+        mFetchErrorView.setVisibility(View.GONE);
+        mBus.post(new HandyEvent.RequestOnboardingJobs());
+
     }
 
     /**
@@ -153,7 +156,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
     protected void onPause()
     {
         super.onPause();
-        this.bus.unregister(this);
+        mBus.unregister(this);
     }
 
     /**
@@ -171,6 +174,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
             public void run()
             {
                 Log.d(TAG, "run: DialogRunCompleted");
+                bindJobs();
                 safeDialogRemoval();
             }
         }, mWaitTime);
@@ -212,30 +216,28 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         }
         else
         {
+            bindJobs();
             safeDialogRemoval();
         }
     }
 
     @Subscribe
-    public void onJobLoadError(HandyEvent.ReceiveOnboardingJobsError error)
+    public void onJobLoadError(HandyEvent.ReceiveOnboardingJobsError event)
     {
         if (dialogDismissable())
         {
             mLoadingDialog.dismiss();
         }
 
-        String msg;
-        if (error.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {
-            msg = getString(R.string.error_fetching_connectivity_issue);
+            mErrorText.setText(R.string.error_fetching_connectivity_issue);
         }
         else
         {
-            msg = getString(R.string.onboard_job_load_error);
+            mErrorText.setText(getString(R.string.onboard_job_load_error));
         }
-
-        //TODO: JIA offer them a way to try again
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        mFetchErrorView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -243,32 +245,28 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
      */
     private void safeDialogRemoval()
     {
-//        TODO: JIA remove some of this excessive logging when feature complete
-        if (mJobs2 == null)
-        {
-            Log.d(TAG, "safeDialogRemoval: job is null");
-        }
         long elapsedTime = System.currentTimeMillis() - mRequestTime;
-        if (elapsedTime < mWaitTime)
-        {
-            Log.d(TAG, "safeDialogRemoval: not enough time have elapsed, not closing: " + elapsedTime);
-        }
-
-        if (mLoadingDialog == null)
-        {
-            Log.d(TAG, "safeDialogRemoval: dialog is null, not closing");
-        }
         if (mJobs2 != null && (elapsedTime > mWaitTime) && dialogDismissable())
         {
-            Log.d(TAG, "safeDialogRemoval: Dismissing Dialog");
-            mLoadingDialog.dismiss();
+            if (mLoadingDialog.isVisible())
+            {
+                mLoadingDialog.dismiss();
+                mRecyclerView.startLayoutAnimation();
+            }
+        }
+    }
+
+    private void bindJobs()
+    {
+        Log.d(TAG, "bindJobs: ");
+        if (mJobs2 != null)
+        {
             mAdapter = new JobsRecyclerAdapter(
                     mJobs2.getBookingsWrappers(),
                     getString(R.string.onboard_getting_started_title),
                     GettingStartedActivity.this
             );
             mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.startLayoutAnimation();
             updateButton();
         }
     }
@@ -280,7 +278,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
      */
     private boolean dialogDismissable()
     {
-        return mLoadingDialog != null && !this.isFinishing() && !this.mDestroyed;
+        return mLoadingDialog != null && !isFinishing() && !mDestroyed;
     }
 
     @Override
@@ -352,7 +350,7 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         if (!request.mJobs.isEmpty())
         {
             mLoadingOverlayView.setVisibility(View.VISIBLE);
-            bus.post(new HandyEvent.RequestClaimJobs(request));
+            mBus.post(new HandyEvent.RequestClaimJobs(request));
         }
         else
         {
@@ -363,15 +361,21 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
 
     private void goToAvailableJobs()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
         finish();
     }
 
 
     private void goToScheduledJobs()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
         finish();
+    }
+
+    @OnClick(R.id.try_again_button)
+    public void doRequestBookingsAgain()
+    {
+        loadJobs();
     }
 
     /**
@@ -436,5 +440,20 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
     {
         super.onDestroy();
         mDestroyed = true;
+    }
+
+    @Override
+    public void onCancel(final DialogInterface dialog)
+    {
+        //the loading dialog is being dismissed. If it was being dismissed because the user
+        //hit back/or didn't want to wait, then we need to exit this activity and go to available jobs.
+        if (mJobs2 == null || !mJobs2.hasJobs())
+        {
+            finish();
+        }
+        else
+        {
+            mRecyclerView.startLayoutAnimation();
+        }
     }
 }

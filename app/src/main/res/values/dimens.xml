@@ -175,6 +175,8 @@
     <!-- Pro Onboarding-->
     <dimen name="onboard_particle_view_width">20dp</dimen>
     <dimen name="onboard_particle_view_width_margin">-60dp</dimen>
+    <dimen name="onboard_search_animation_top_offset">-150dp</dimen>
+    <dimen name="onboard_search_animation_width_height">160dp</dimen>
     <dimen name="onboard_list_header_padding">28dp</dimen>
     <dimen name="onboard_claim_button_margin">20dp</dimen>
     <dimen name="onboard_checkbox_width_height">32dp</dimen>
