@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment.bookings;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,6 +35,7 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.ui.view.CheckoutCompletedTaskView;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -179,7 +178,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onFocusChange(final View v, final boolean hasFocus)
     {
         if (!hasFocus)
-        { hideKeyboard(); }
+        { UIUtils.dismissKeyboard(getActivity()); }
     }
 
     @Subscribe
@@ -208,7 +207,6 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
                     mBooking, getLocationData())));
-            
             handleNotifyCheckOutError(event);
         }
     }
@@ -327,14 +325,6 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     private LocationData getLocationData()
     {
         return Utils.getCurrentLocation((BaseActivity) getActivity());
-    }
-
-    // Hide keyboard if user taps anywhere outside EditText
-    private void hideKeyboard()
-    {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
     @Override
