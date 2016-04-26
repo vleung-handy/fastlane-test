@@ -12,6 +12,7 @@ public class BundleKeys
     public static final String BOOKING_FROM_PAYMENT_TAB = "booking_from_payment_tab";
     public static final String BOOKING_SHOULD_HIDE_ACTION_BUTTONS = "booking_should_hide_action_buttons";
     public static final String BOOKING_PRIORITY_ACCESS = "BUNDLE_KEY_PRIORITIY_ACCESS";
+    public static final String BOOKING_TRANSACTIONS = "booking_transactions";
 
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
     public static final String HELP_NODE = "help_node";

@@ -4,6 +4,8 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentFeeBreakdownView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
+import com.handy.portal.payments.ui.fragment.BookingTransactionsFragment;
+import com.handy.portal.payments.ui.fragment.BookingTransactionsWrapperFragment;
 import com.handy.portal.payments.ui.fragment.OutstandingFeesFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBillBlockerDialogFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
@@ -34,6 +36,8 @@ import dagger.Provides;
                 SelectPaymentMethodFragment.class,
                 PaymentsBatchListView.class,
                 PaymentBlockingFragment.class,
+                BookingTransactionsFragment.class,
+                BookingTransactionsWrapperFragment.class,
         })
 public final class PaymentsModule
 {

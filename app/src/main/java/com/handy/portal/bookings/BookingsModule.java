@@ -39,7 +39,7 @@ import dagger.Provides;
                 InProgressBookingFragment.class,
                 SendReceiptCheckoutFragment.class,
                 EarlyAccessTrialDialogFragment.class,
-                JobAccessUnlockedDialogFragment.class
+                JobAccessUnlockedDialogFragment.class,
         })
 public final class BookingsModule
 {
