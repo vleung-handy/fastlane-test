@@ -5,14 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +47,6 @@ import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
-import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
@@ -90,8 +85,6 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private String mSource;
     private Bundle mSourceExtras;
     private boolean mFromPaymentsTab;
-    private CountDownTimer mCounter;
-
 
     @Override
     protected MainViewTab getTab()
@@ -146,9 +139,6 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onPause()
     {
         super.onPause();
-
-        if (mCounter != null)
-        { mCounter.cancel(); }
 
         if (mBooking != null && mBooking.isCheckedIn())
         {
@@ -335,7 +325,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
             }
         }
-        else if(resultCode == Activity.RESULT_CANCELED)
+        else if (resultCode == Activity.RESULT_CANCELED)
         {
             switch (requestCode)
             {
@@ -553,45 +543,25 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         }
     }
 
-    private void updateDisplay()
+    public void updateDisplay()
     {
         mSlideUpPanelContainer.removeAllViews();
 
         int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
-
         if (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
                 && mBooking.getCustomerPreferences().size() > 0)
         //in progress booking (after check in and before check out)
         {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(mSlideUpPanelContainer.getId(), InProgressBookingFragment.newInstance(mBooking, mSource)).commit();
-            setTimerIfNeeded();
         }
         else //not in progress booking
         {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(mSlideUpPanelContainer.getId(),
-                    BookingFragment.newInstance(mBooking, mSource, mFromPaymentsTab, false)).commit();
-            if (bookingProgress == BookingProgress.READY_FOR_CLAIM)
-            {
-                setActionBarTitle(R.string.available_job);
-            }
-            else if (bookingProgress == BookingProgress.READY_FOR_ON_MY_WAY ||
-                    bookingProgress == BookingProgress.READY_FOR_CHECK_IN ||
-                    bookingProgress == BookingProgress.READY_FOR_CHECK_OUT)
-            {
-                setTimerIfNeeded();
-            }
-            else //completed
-            {
-                setActionBarTitle(R.string.completed_job);
-            }
+                    BookingFragment.newInstance(mBooking, mSource, mFromPaymentsTab, false))
+                    .commit();
         }
-    }
-
-    private ActionBar getActionBar()
-    {
-        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
@@ -713,12 +683,12 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private boolean showCustomRemoveJobWarningDialogIfNecessary()
     {
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        if(removeAction != null)
+        if (removeAction != null)
         {
             final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
             if (keepRate != null)
             {
-                if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelDialogFragment.FRAGMENT_TAG) == null)
+                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelDialogFragment.FRAGMENT_TAG) == null)
                 {
                     final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
                     fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
@@ -738,7 +708,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
         boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
-        if(customWarningDialogShown)
+        if (customWarningDialogShown)
         {
             mSlideUpPanelContainer.hidePanel();
         }
@@ -789,35 +759,6 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(mBooking));
-    }
-
-    private void setTimerIfNeeded()
-    {
-        if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
-
-        if (DateTimeUtils.isTimeWithinXMillisecondsFromNow(mBooking.getStartDate(),
-                DateUtils.HOUR_IN_MILLIS * 3))
-        {
-            mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
-                    mBooking.getStartDate().getTime() - System.currentTimeMillis(),
-                    R.string.start_timer_lowercase_formatted);
-        }
-        else if (DateTimeUtils.isTimeWithinXMillisecondsFromNow(mBooking.getEndDate(),
-                mBooking.getEndDate().getTime() - mBooking.getStartDate().getTime()))
-        {
-            mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
-                    mBooking.getEndDate().getTime() - System.currentTimeMillis(),
-                    R.string.end_timer_lowercase_formatted);
-        }
-        else if (System.currentTimeMillis() < mBooking.getStartDate().getTime())
-        {
-            // More than 3 hours before booking start
-            setActionBarTitle(R.string.your_job);
-        }
-        else
-        {
-            setActionBarTitle(R.string.time_expired);
-        }
     }
 
     private void handleBookingRemoveError(String errorMessage)

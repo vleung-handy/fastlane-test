@@ -21,13 +21,12 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.element.bookings.CustomerRequestsView;
-import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
@@ -54,7 +53,7 @@ import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_TRASH
 /**
  * fragment for handling bookings that are in progress/after provider has checked in & before check out
  */
-public class InProgressBookingFragment extends InjectedFragment
+public class InProgressBookingFragment extends TimerActionBarFragment
 {
 
     @Inject
@@ -85,7 +84,6 @@ public class InProgressBookingFragment extends InjectedFragment
 
     private Booking mBooking;
     private String mSource; // TODO: refactor this into a enum?
-    private Toast mToast;
 
     private static final Map<String, Integer> GROUP_ICONS;
     private static final Gson GSON = new Gson();
@@ -112,6 +110,12 @@ public class InProgressBookingFragment extends InjectedFragment
 
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    protected MainViewTab getTab()
+    {
+        return null;
     }
 
     @Override
@@ -222,6 +226,8 @@ public class InProgressBookingFragment extends InjectedFragment
         {
             mNoShowBannerView.setVisibility(View.VISIBLE);
         }
+
+        setTimerIfNeeded(mBooking.getStartDate(), mBooking.getEndDate());
     }
 
     @OnClick(R.id.in_progress_booking_details_view)
@@ -281,11 +287,6 @@ public class InProgressBookingFragment extends InjectedFragment
         Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
     }
 
-    private String getLoggedInUserId()
-    {
-        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-    }
-
     private void enableActionsIfNeeded(Booking.Action action)
     {
         BookingActionButtonType buttonActionType = UIUtils.getAssociatedActionType(action);
@@ -319,12 +320,5 @@ public class InProgressBookingFragment extends InjectedFragment
                 break;
             }
         }
-    }
-
-    protected void showToast(String message, int length, int gravity)
-    {
-        mToast = Toast.makeText(getContext(), message, length);
-        mToast.setGravity(gravity, 0, 0);
-        mToast.show();
     }
 }

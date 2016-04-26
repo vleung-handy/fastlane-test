@@ -45,7 +45,7 @@ import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.bookings.BookingMapView;
 import com.handy.portal.ui.element.bookings.NewBookingDetailsJobInstructionsSectionView;
-import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.view.MapPlaceholderView;
@@ -73,7 +73,7 @@ import butterknife.OnClick;
  * fragment for handling bookings that are
  * not in progress i.e. ready for claim, check-in, on my way, etc
  */
-public class BookingFragment extends ActionBarFragment
+public class BookingFragment extends TimerActionBarFragment
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -459,6 +459,8 @@ public class BookingFragment extends ActionBarFragment
         {
             mBookingMapView.setVisibility(View.GONE);
         }
+
+        setActionBarTitle();
     }
 
     @Subscribe
@@ -624,7 +626,7 @@ public class BookingFragment extends ActionBarFragment
                     public void onClick(final View v)
                     {
                         boolean confirmClaimDialogShown = showConfirmBookingClaimDialogIfNecessary();
-                        if(!confirmClaimDialogShown)
+                        if (!confirmClaimDialogShown)
                         {
                             requestClaimJob();
                         }
@@ -727,12 +729,12 @@ public class BookingFragment extends ActionBarFragment
     {
         final Booking.Action claimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
 
-        if(claimAction != null && claimAction.getExtras() != null)
+        if (claimAction != null && claimAction.getExtras() != null)
         {
             Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
-            if(cancellationPolicy != null)
+            if (cancellationPolicy != null)
             {
-                if(getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
                 {
                     ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
                     confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
@@ -801,6 +803,25 @@ public class BookingFragment extends ActionBarFragment
         }
         mRevealNoticeText.setText(noticeText);
         mRevealNoticeText.setVisibility(View.VISIBLE);
+    }
+
+    private void setActionBarTitle()
+    {
+        int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
+        if (bookingProgress == BookingProgress.READY_FOR_CLAIM)
+        {
+            setActionBarTitle(R.string.available_job);
+        }
+        else if (bookingProgress == BookingProgress.READY_FOR_ON_MY_WAY ||
+                bookingProgress == BookingProgress.READY_FOR_CHECK_IN ||
+                bookingProgress == BookingProgress.READY_FOR_CHECK_OUT)
+        {
+            setTimerIfNeeded(mBooking.getStartDate(), mBooking.getEndDate());
+        }
+        else //completed
+        {
+            setActionBarTitle(R.string.completed_job);
+        }
     }
 
     private void setNearbyTransit(List<String> transitDescription)
